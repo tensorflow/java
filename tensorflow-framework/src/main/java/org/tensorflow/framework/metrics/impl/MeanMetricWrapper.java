@@ -32,7 +32,8 @@ import java.util.List;
  * </code> then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
  * loss over many iterations or epochs
  *
- * @param <U> the data type for the loss.
+ * @param <U> the data type for the predictions.
+ * @param <T> The data type for the metric result
  */
 public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mean<U, T> {
 
@@ -86,40 +87,17 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    * @param <V> the datatype of the predictions
    * @return a List of control operations that updates the Mean state variables.
    */
-  public <V extends TNumber> List<Op> updateLossStateList(
+  public <V extends TNumber> List<Op> updateStateList(
       Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
     if (labels == null || predictions == null)
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
 
-    Class<U> type = predictions.type();
-    Operand<T> tPredicitons = CastHelper.cast(getTF(), predictions, getType());
+    Operand<T> tLabels = CastHelper.cast(getTF(), labels, getType());
+    Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getType());
 
-    Operand<T> losses = loss.call(labels, tPredicitons);
-    Operand<U> uLossess = CastHelper.cast(getTF(), losses, type);
 
-    return super.updateStateList(uLossess, sampleWeights);
-  }
+    Operand<T> losses = loss.call(tLabels, tPredictions);
 
-  /**
-   * Creates a Control Operation that updates the state of the mean metric by calculating the loss
-   * between the <code>labels</code> and <code>predictions</code> and then applying a weighted mean
-   * metric across the multiple iterations.
-   *
-   * @param labels the truth values or labels
-   * @param predictions the predictions
-   * @param sampleWeights Optional sampleWeights acts as a coefficient for the loss. If a scalar is
-   *     provided, then the loss is simply scaled by the given value. If sampleWeights is a tensor
-   *     of size [batch_size], then the total loss for each sample of the batch is rescaled by the
-   *     corresponding element in the sampleWeights vector. If the shape of sampleWeights is
-   *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
-   *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
-   *     functions reduce by 1 dimension, usually axis=-1.)
-   * @param <V> the datatype of the labels
-   * @return a NoOp with control dependencies that update the state of the mean metric.
-   */
-  public final <V extends TNumber> Op updateLossState(
-      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
-    List<Op> controlOps = updateLossStateList(labels, predictions, sampleWeights);
-    return getTF().withSubScope("updateState").withControlDependencies(controlOps).noOp();
+    return super.updateStateList(CastHelper.cast(getTF(), losses, predictions.type()), sampleWeights);
   }
 }

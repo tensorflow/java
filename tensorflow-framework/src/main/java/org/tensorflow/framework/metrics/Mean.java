@@ -33,8 +33,9 @@ public class Mean<U extends TNumber, T extends TNumber> extends Reduce<U, T> {
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the result.
    */
   protected Mean(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, MetricReduction.WEIGHTED_MEAN, type);
+    super(tf, name, MetricReduction.WEIGHTED_MEAN, seed, type);
   }
 }

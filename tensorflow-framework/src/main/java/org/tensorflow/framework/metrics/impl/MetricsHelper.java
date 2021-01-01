@@ -15,24 +15,30 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.utils.CastHelper;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.math.Mean;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * These are helper methods for Metrics and will be module private when Java modularity is applied
  * to TensorFlow Java. These methods should not be used outside of the metrics packages.
  */
 public class MetricsHelper {
-  private static final String ASSERT_BROADCASTABLE_ERROR_PREFIX =
+  public static final float NEG_INF = -1e10f;
+  private static final String ASSERT_BROADCAST_ERROR_PREFIX =
       "weights can not be broadcast to values.";
 
   /**
@@ -53,12 +59,12 @@ public class MetricsHelper {
 
     Operand<TInt32> weightsShape = tf.shape(sampleWeights);
     Operand<TInt32> weightsRank = tf.rank(sampleWeights);
-    Shape weightsShapeStatic = sampleWeights.asOutput().shape();
+    Shape weightsShapeStatic = sampleWeights.shape();
     int weightsRankStatic = weightsShapeStatic.numDimensions();
 
     Operand<TInt32> valuesShape = tf.shape(values);
     Operand<TInt32> valuesRank = tf.rank(values);
-    Shape valuesShapeStatic = values.asOutput().shape();
+    Shape valuesShapeStatic = values.shape();
     int valuesRankStatic = valuesShapeStatic.numDimensions();
 
     if (weightsRankStatic != -1 && valuesRankStatic != -1) {
@@ -71,7 +77,7 @@ public class MetricsHelper {
         throw new IllegalArgumentException(
             String.format(
                 "%s values.rank=%d. weights.rank=%d.  values.shape=%s. weights.shape=%s.",
-                ASSERT_BROADCASTABLE_ERROR_PREFIX,
+                ASSERT_BROADCAST_ERROR_PREFIX,
                 valuesRankStatic,
                 weightsRankStatic,
                 valuesShapeStatic.toString(),
@@ -83,7 +89,7 @@ public class MetricsHelper {
           throw new IllegalArgumentException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
-                  ASSERT_BROADCASTABLE_ERROR_PREFIX,
+                  ASSERT_BROADCAST_ERROR_PREFIX,
                   i,
                   valuesShapeStatic.toString(),
                   weightsShapeStatic.toString()));
@@ -97,7 +103,7 @@ public class MetricsHelper {
     Operand<TBool> is_scalar = tf.math.equal(weightsRank, tf.constant(0));
     List<Operand<?>> data =
         Arrays.asList(
-            tf.constant(ASSERT_BROADCASTABLE_ERROR_PREFIX),
+            tf.constant(ASSERT_BROADCAST_ERROR_PREFIX),
             tf.constant("weights.shape="),
             weightsShape,
             tf.constant("values.shape="),
@@ -111,7 +117,7 @@ public class MetricsHelper {
             is_scalar,
             hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape));
 
-    return tf.assertThat(isValidShape, data);
+    return tf.withSubScope("broadcastWeights-dynamic").assertThat(isValidShape, data);
   }
 
   /**
@@ -149,6 +155,82 @@ public class MetricsHelper {
       Ops tf, Operand<T> weightsShape, Operand<T> valuesShape) {
     tf = tf.withSubScope("has_invalid_dims");
     Operand<T> diff = tf.reduceSum(tf.math.sub(weightsShape, valuesShape), tf.constant(0));
-    return tf.math.equal(CastHelper.cast(tf, tf.constant(0), diff.type()), diff);
+    return tf.math.equal(cast(tf, tf.constant(0), diff.asOutput().type()), diff);
+  }
+
+  // alias for mean
+
+  /**
+   * Calculate the mean of the operand, along all axes and <code>keepDims</code> is <code>false
+   * </code>
+   *
+   * @param tf the TensorFlow Ops
+   * @param x the Operand used to calculate the mean
+   * @param <T> the type of the Operand.
+   * @return the mean of the operand
+   */
+  public static <T extends TType> Operand<T> mean(Ops tf, Operand<T> x) {
+    return mean(tf, x, null, false);
+  }
+
+  /**
+   * Calculate the mean of the operand, alongside the specified axis with <code>keepDims</code> is
+   * <code>false</code>
+   *
+   * @param tf the TensorFlow Ops
+   * @param x the Operand used to calculate the mean
+   * @param axis Axes to compute the mean.
+   * @param <T> the type of the Operand.
+   * @param <U> the type of the axis.
+   * @return the mean of the operand, alongside the specified axis.
+   */
+  public static <T extends TType, U extends TNumber> Operand<T> mean(
+      Ops tf, Operand<T> x, Operand<U> axis) {
+    return mean(tf, x, axis, false);
+  }
+
+  /**
+   * Calculate the mean of the operand, along all axis.
+   *
+   * @param tf the TensorFlow Ops
+   * @param x the Operand used to calculate the mean
+   * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
+   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axis
+   *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
+   *     with length 1.
+   * @param <T> the type of the operand
+   * @return the mean of elements of <code>x</code>.
+   */
+  public static <T extends TType> Operand<T> mean(Ops tf, Operand<T> x, boolean keepDims) {
+    return mean(tf, x, null, keepDims);
+  }
+
+  /**
+   * Calculate the mean of the operand, alongside the specified axis.
+   *
+   * @param tf the TensorFlow Ops
+   * @param x the Operand used to calculate the mean
+   * @param axis Axes to compute the mean.
+   * @param keepDims Indicates whether to keep the dimensions or not. If `keepdims` is `false`, the
+   *     * rank of the tensor is reduced by 1 for each entry in `axis`. If `keepdims` is `true`, the
+   *     * reduced dimensions are retained with length 1.
+   * @param <T> the data type of the Operand
+   * @param <U> the data type of the axis
+   * @return the mean of elements of `x`.
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static <T extends TType, U extends TNumber> Operand<T> mean(
+      Ops tf, Operand<T> x, Operand<U> axis, boolean keepDims) {
+    // Cannot use generics here because xf may change from TBool to TFloat32
+    Operand xf;
+    if (x.asOutput().type() == TBool.class) {
+      xf = tf.dtypes.cast(x, TFloat32.class);
+    } else {
+      xf = x;
+    }
+    if (axis == null) {
+      axis = allAxes(tf, xf);
+    }
+    return tf.math.mean(xf, axis, Mean.keepDims(keepDims));
   }
 }
