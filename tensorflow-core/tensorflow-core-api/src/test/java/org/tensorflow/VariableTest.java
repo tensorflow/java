@@ -35,90 +35,94 @@ public class VariableTest {
 
   @Test
   public void testEager() {
-    Ops tf = Ops.create(EagerSession.create());
-    MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
+    try(EagerSession es = EagerSession.create()) {
+      Ops tf = Ops.create(es);
+      MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
 
-    assertFalse(variable.isInitialized());
-    assertFalse(variable.isValueInitialized().asTensor().getBoolean(0));
+      assertFalse(variable.isInitialized());
+      assertFalse(variable.isValueInitialized().asTensor().getBoolean(0));
 
-    variable.initialize(tf.ones(tf.array(10, 10), TFloat32.class));
+      variable.initialize(tf.ones(tf.array(10, 10), TFloat32.class));
 
-    assertTrue(variable.isInitialized());
-    assertTrue(variable.isValueInitialized().asTensor().getBoolean(0));
+      assertTrue(variable.isInitialized());
+      assertTrue(variable.isValueInitialized().asTensor().getBoolean(0));
 
-    assertEquals(1, variable.value().asTensor().getFloat(0, 0));
+      assertEquals(1, variable.value().asTensor().getFloat(0, 0));
 
-    variable.assign(tf.math.add(tf.ones(tf.array(10, 10), TFloat32.class), tf.constant(2f)));
+      variable.assign(tf.math.add(tf.ones(tf.array(10, 10), TFloat32.class), tf.constant(2f)));
 
-    assertEquals(3, variable.value().asTensor().getFloat(0, 0));
+      assertEquals(3, variable.value().asTensor().getFloat(0, 0));
 
-    variable.assignAdd(tf.ones(tf.array(10, 10), TFloat32.class));
+      variable.assignAdd(tf.ones(tf.array(10, 10), TFloat32.class));
 
-    assertEquals(4, variable.value().asTensor().getFloat(0, 0));
+      assertEquals(4, variable.value().asTensor().getFloat(0, 0));
 
-    variable.assignSub(tf.ones(tf.array(10, 10), TFloat32.class));
+      variable.assignSub(tf.ones(tf.array(10, 10), TFloat32.class));
 
-    assertEquals(3, variable.value().asTensor().getFloat(0, 0));
+      assertEquals(3, variable.value().asTensor().getFloat(0, 0));
+    }
   }
 
   @Test
   public void testGraph() {
-    Graph graph = new Graph();
-    Ops tf = Ops.create(graph);
-    MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
+    try(Graph graph = new Graph()) {
+      Ops tf = Ops.create(graph);
+      MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
 
-    assertFalse(variable.isInitialized());
+      assertFalse(variable.isInitialized());
 
-    variable.initialize(tf.ones(tf.array(10, 10), TFloat32.class));
+      variable.initialize(tf.ones(tf.array(10, 10), TFloat32.class));
 
-    assertTrue(variable.isInitialized());
+      assertTrue(variable.isInitialized());
 
-    Operand<TFloat32> original = variable.value();
+      Operand<TFloat32> original = variable.value();
 
-    Op assign = variable.assign(tf.math.add(tf.ones(tf.array(10, 10), TFloat32.class), tf.constant(2f)));
-    Operand<TFloat32> afterAssign = variable.value();
+      Op assign = variable.assign(tf.math.add(tf.ones(tf.array(10, 10), TFloat32.class), tf.constant(2f)));
+      Operand<TFloat32> afterAssign = variable.value();
 
-    Op increment = variable.assignAdd(tf.ones(tf.array(10, 10), TFloat32.class));
-    Operand<TFloat32> afterIncrement = variable.value();
+      Op increment = variable.assignAdd(tf.ones(tf.array(10, 10), TFloat32.class));
+      Operand<TFloat32> afterIncrement = variable.value();
 
-    Op decrement = variable.assignSub(tf.ones(tf.array(10, 10), TFloat32.class));
-    Operand<TFloat32> afterDecrement = variable.value();
+      Op decrement = variable.assignSub(tf.ones(tf.array(10, 10), TFloat32.class));
+      Operand<TFloat32> afterDecrement = variable.value();
 
-    Session session = new Session(graph);
+      try(Session session = new Session(graph)) {
 
-    assertFalse(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
+        assertFalse(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
 
-    session.run(tf.init());
+        session.run(tf.init());
 
-    assertTrue(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
+        assertTrue(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
 
-    // test control deps (in-run assign)
+        // test control deps (in-run assign)
 
-    assertEquals(1, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
+        assertEquals(1, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
 
-    assertEquals(3, ((TFloat32) session.runner().fetch(afterAssign).run().get(0)).getFloat(0, 0));
+        assertEquals(3, ((TFloat32) session.runner().fetch(afterAssign).run().get(0)).getFloat(0, 0));
 
-    assertEquals(4, ((TFloat32) session.runner().fetch(afterIncrement).run().get(0)).getFloat(0, 0));
+        assertEquals(4, ((TFloat32) session.runner().fetch(afterIncrement).run().get(0)).getFloat(0, 0));
 
-    assertEquals(3, ((TFloat32) session.runner().fetch(afterDecrement).run().get(0)).getFloat(0, 0));
+        assertEquals(3, ((TFloat32) session.runner().fetch(afterDecrement).run().get(0)).getFloat(0, 0));
 
-    // test persistence (multi-run assign)
+        // test persistence (multi-run assign)
 
-    session.run(decrement);
-    session.run(decrement);
+        session.run(decrement);
+        session.run(decrement);
 
-    assertEquals(1, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
+        assertEquals(1, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
 
-    session.run(increment);
-    session.run(increment);
-    session.run(increment);
-    session.run(increment);
+        session.run(increment);
+        session.run(increment);
+        session.run(increment);
+        session.run(increment);
 
-    assertEquals(5, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
+        assertEquals(5, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
 
-    session.run(assign);
+        session.run(assign);
 
-    assertEquals(3, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
+        assertEquals(3, ((TFloat32) session.runner().fetch(original).run().get(0)).getFloat(0, 0));
+      }
+    }
 
   }
 
