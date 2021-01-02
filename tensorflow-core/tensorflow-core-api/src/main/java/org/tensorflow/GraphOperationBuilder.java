@@ -54,7 +54,9 @@ import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
 
-/** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
+/**
+ * An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}.
+ */
 public final class GraphOperationBuilder implements OperationBuilder {
 
   GraphOperationBuilder(Graph graph, String type, String name) {
@@ -103,7 +105,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder addInput(Output<?> input) {
     Graph.Reference r = graph.ref();
     try {
-      addInput(unsafeNativeHandle, (TF_Operation)input.getUnsafeNativeHandle(), input.index());
+      addInput(unsafeNativeHandle, (TF_Operation) input.getUnsafeNativeHandle(), input.index());
     } finally {
       r.close();
     }
@@ -117,7 +119,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
       TF_Operation[] opHandles = new TF_Operation[inputs.length];
       int[] indices = new int[inputs.length];
       for (int i = 0; i < inputs.length; ++i) {
-        opHandles[i] = (TF_Operation)inputs[i].getUnsafeNativeHandle();
+        opHandles[i] = (TF_Operation) inputs[i].getUnsafeNativeHandle();
         indices[i] = inputs[i].index();
       }
       addInputList(unsafeNativeHandle, opHandles, indices);
@@ -444,7 +446,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private static void setAttrBool(TF_OperationDescription handle, String name, boolean value) {
     requireHandle(handle);
-    TF_SetAttrBool(handle, name, (byte)(value ? 1 : 0));
+    TF_SetAttrBool(handle, name, (byte) (value ? 1 : 0));
   }
 
   private static void setAttrBoolList(TF_OperationDescription handle, String name, boolean[] value) {

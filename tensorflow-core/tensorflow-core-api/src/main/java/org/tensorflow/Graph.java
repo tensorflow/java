@@ -147,6 +147,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   @Override
   public GraphOperationBuilder opBuilder(String type, String name) {
+    if (!isOpEnabled(type)) {
+      throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
+    }
     return new GraphOperationBuilder(this, type, name);
   }
 

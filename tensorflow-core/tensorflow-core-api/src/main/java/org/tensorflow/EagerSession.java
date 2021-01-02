@@ -27,6 +27,9 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.op.core.Assign;
+import org.tensorflow.op.core.Placeholder;
+import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.framework.ConfigProto;
 
 /**
@@ -271,12 +274,27 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   @Override
   public OperationBuilder opBuilder(String type, String name) {
     checkSession();
+    if (!isOpEnabled(type)) {
+      throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
+    }
     return new EagerOperationBuilder(this, type, name);
   }
 
   @Override
   public Types environmentType() {
     return Types.EAGER;
+  }
+
+  @Override
+  public boolean isOpEnabled(String opType) {
+    switch (opType) {
+      case Variable.OP_NAME:
+      case Placeholder.OP_NAME:
+      case Assign.OP_NAME:
+        return false;
+      default:
+        return true;
+    }
   }
 
   TFE_Context nativeHandle() {
