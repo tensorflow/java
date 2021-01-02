@@ -35,6 +35,15 @@ public interface ExecutionEnvironment {
   OperationBuilder opBuilder(String type, String name);
 
   /**
+   * Returns true if the given operation is valid in this execution environment.
+   * @param opType The op to check.
+   * @return Whether the given operation is valid in this execution environment.
+   */
+  default boolean isOpEnabled(String opType){
+    return true;
+  }
+
+  /**
    * Get the type of this environment (from the `Environments` enumeration.
    *
    * @return An `Environments` value indicating the type of execution environment.

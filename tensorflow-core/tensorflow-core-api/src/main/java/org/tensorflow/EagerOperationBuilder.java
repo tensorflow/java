@@ -75,7 +75,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder addInput(Output<?> input) {
-    addInput(opHandle, (TFE_TensorHandle)input.getUnsafeNativeHandle());
+    addInput(opHandle, (TFE_TensorHandle) input.getUnsafeNativeHandle());
     return this;
   }
 
@@ -83,7 +83,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   public EagerOperationBuilder addInputList(Output<?>[] inputs) {
     TFE_TensorHandle[] inputHandles = new TFE_TensorHandle[inputs.length];
     for (int i = 0; i < inputs.length; ++i) {
-      inputHandles[i] = (TFE_TensorHandle)inputs[i].getUnsafeNativeHandle();
+      inputHandles[i] = (TFE_TensorHandle) inputs[i].getUnsafeNativeHandle();
     }
     addInputList(opHandle, inputHandles);
     return this;
@@ -226,7 +226,9 @@ final class EagerOperationBuilder implements OperationBuilder {
   private final String type;
   private final String name;
 
-  /** This value should be >= to the maximum number of outputs in any op */
+  /**
+   * This value should be >= to the maximum number of outputs in any op
+   */
   private static final int MAX_OUTPUTS_PER_OP = 1000;
 
   private static void requireOp(TFE_Op handle) {
@@ -358,7 +360,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   private static void setAttrBool(TFE_Op opHandle, String name, boolean value) {
     requireOp(opHandle);
-    TFE_OpSetAttrBool(opHandle, name, (byte)(value ? 1 : 0));
+    TFE_OpSetAttrBool(opHandle, name, (byte) (value ? 1 : 0));
   }
 
   private static void setAttrBoolList(TFE_Op opHandle, String name, boolean[] values) {
@@ -410,7 +412,7 @@ final class EagerOperationBuilder implements OperationBuilder {
       }
       TF_Status status = TF_Status.newStatus();
       TFE_OpSetAttrShapeList(opHandle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-                            numDims.length, status);
+          numDims.length, status);
     }
   }
 }
