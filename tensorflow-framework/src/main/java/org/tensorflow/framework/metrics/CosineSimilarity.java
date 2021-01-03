@@ -53,6 +53,7 @@ public class CosineSimilarity<U extends TNumber, T extends TNumber> extends Mean
    * @param axis The dimension along which the cosine similarity is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CosineSimilarity(Ops tf, String name, int axis, long seed, Class<T> type) {
     this(tf, name, new int[] {axis}, seed, type);
@@ -65,6 +66,7 @@ public class CosineSimilarity<U extends TNumber, T extends TNumber> extends Mean
    * @param axis The dimension along which the cosine similarity is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CosineSimilarity(Ops tf, String name, int[] axis, long seed, Class<T> type) {
     super(tf, name, seed, type);
