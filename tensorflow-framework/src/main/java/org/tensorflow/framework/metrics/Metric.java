@@ -164,11 +164,13 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   /**
    * Adds a variable to collect metric values
    *
+   * @param varName the name for the variable
    * @param variable the variable
    * @param initializer the initializer for the variable, if null, then the default for floating
    *     point types is {@link org.tensorflow.framework.initializers.Glorot} with distribution
    *     {@link org.tensorflow.framework.initializers.VarianceScaling.Distribution#UNIFORM}, for
    *     other types the default initializer is {@link org.tensorflow.framework.initializers.Zeros}
+   * @param <V> the date type for the variable
    */
   protected <V extends TNumber> void addVariable(
       String varName, Variable<V> variable, Initializer<V> initializer) {

@@ -223,7 +223,9 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
     return count;
   }
 
-  /** Gets the type for the variables */
+  /** Gets the type for the variables
+   * @return  the type for the variables
+   */
   public Class<T> getType() {
     return type;
   }
