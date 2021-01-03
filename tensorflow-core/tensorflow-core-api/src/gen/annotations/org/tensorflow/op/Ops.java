@@ -2755,7 +2755,7 @@ public final class Ops {
    *
    *  <p>Registered initializers are then grouped as a single unit of computation by adding
    *  and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   *  session.  No-ops if the session is eager.
+   *  session.  This is a no-op if executed in an eager session.
    *
    * @param scope
    * @param initializer
