@@ -79,6 +79,7 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
    *     channels_first</code>.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   public CategoricalCrossentropy(
       Ops tf,
