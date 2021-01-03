@@ -18,15 +18,21 @@ package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Gradients;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 import org.tensorflow.variable.MutableVariable;
+import org.tensorflow.variable.Variable;
 
 /**
  * Unit tests for {@link org.tensorflow.variable.Variable}/{@link org.tensorflow.variable.MutableVariable}
@@ -35,7 +41,7 @@ public class VariableTest {
 
   @Test
   public void testEager() {
-    try(EagerSession es = EagerSession.create()) {
+    try (EagerSession es = EagerSession.create()) {
       Ops tf = Ops.create(es);
       MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
 
@@ -65,7 +71,7 @@ public class VariableTest {
 
   @Test
   public void testGraph() {
-    try(Graph graph = new Graph()) {
+    try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
       MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
 
@@ -86,7 +92,7 @@ public class VariableTest {
       Op decrement = variable.assignSub(tf.ones(tf.array(10, 10), TFloat32.class));
       Operand<TFloat32> afterDecrement = variable.value();
 
-      try(Session session = new Session(graph)) {
+      try (Session session = new Session(graph)) {
 
         assertFalse(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
 
@@ -124,6 +130,36 @@ public class VariableTest {
       }
     }
 
+  }
+
+  @Test
+  @Ignore // gradient not specified at c++ level: https://github.com/tensorflow/tensorflow/issues/46114.
+  public void gradientTest() {
+    try (Graph g = new Graph();
+        Session sess = new Session(g)) {
+      Ops tf = Ops.create(g);
+
+      Variable<TFloat32> variable = tf.Variable(tf.placeholder(TFloat32.class));
+
+      Output<TFloat32> y0 = tf.math.square(variable.value()).y();
+      Output<TFloat32> y1 = tf.math.square(tf.math.square(variable.value())).y();
+
+      Output<TType> x = variable.getHandle().asOutput();
+
+      Gradients grads = Gradients.create(tf.scope(), Arrays.asList(y0, y1), Arrays.asList(x));
+
+      assertNotNull(grads);
+      assertNotNull(grads.dy());
+      assertEquals(1, grads.dy().size());
+
+      try (TFloat32 c = TFloat32.scalarOf(3.0f);
+          AutoCloseableList<Tensor> outputs =
+              new AutoCloseableList<>(sess.runner().feed(x, c).fetch(grads.dy(0)).run())) {
+
+        //TODO expected value may be wrong, check once C++ gradient exists
+        assertEquals(114.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
+      }
+    }
   }
 
 }
