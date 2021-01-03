@@ -209,6 +209,10 @@ public class MutableVariable<T extends TType> implements Variable<T> {
     if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not decrement.");
     }
+
+    if(cachedRead != null)
+      scope = scope.withControlDependencies(Collections.singletonList(cachedRead));
+
     checkInput(value);
     lastAssign = AssignSubVariableOp.create(scope, handle, value);
     hasInitialized = true;
@@ -237,6 +241,10 @@ public class MutableVariable<T extends TType> implements Variable<T> {
     if (!hasInitialized) {
       throw new IllegalStateException("Variable has not been initialized, can not increment.");
     }
+
+    if(cachedRead != null)
+      scope = scope.withControlDependencies(Collections.singletonList(cachedRead));
+
     checkInput(value);
     lastAssign = AssignAddVariableOp.create(scope, handle, value);
     hasInitialized = true;
