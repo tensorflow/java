@@ -59,7 +59,7 @@ import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
-import org.tensorflow.variable.MutableVariable;
+import org.tensorflow.variable.Variable;
 
 
 /**
@@ -481,15 +481,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   private final List<Op> initializers = new ArrayList<>();
 
-  private final Map<String, MutableVariable<?>> variables = new LinkedHashMap<>();
+  private final Map<String, Variable<?>> variables = new LinkedHashMap<>();
 
   @Override
-  public void registerVariable(MutableVariable<?> variable) {
+  public void registerVariable(Variable<?> variable) {
     variables.put(variable.getName(), variable);
   }
 
   @Override
-  public Map<String, MutableVariable<?>> variables() {
+  public Map<String, Variable<?>> variables() {
     return Collections.unmodifiableMap(variables);
   }
 

@@ -36,7 +36,7 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.variable.MutableVariable;
+import org.tensorflow.variable.Variable;
 
 /**
  * An environment for executing TensorFlow operations eagerly.
@@ -361,15 +361,15 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  private final Map<String, MutableVariable<?>> variables = new LinkedHashMap<>();
+  private final Map<String, Variable<?>> variables = new LinkedHashMap<>();
 
   @Override
-  public void registerVariable(MutableVariable<?> variable) {
+  public void registerVariable(Variable<?> variable) {
     variables.put(variable.getName(), variable);
   }
 
   @Override
-  public Map<String, MutableVariable<?>> variables() {
+  public Map<String, Variable<?>> variables() {
     return Collections.unmodifiableMap(variables);
   }
 

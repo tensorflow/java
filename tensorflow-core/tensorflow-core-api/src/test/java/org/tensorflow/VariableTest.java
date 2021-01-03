@@ -31,11 +31,10 @@ import org.tensorflow.op.core.Gradients;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-import org.tensorflow.variable.MutableVariable;
 import org.tensorflow.variable.Variable;
 
 /**
- * Unit tests for {@link org.tensorflow.variable.Variable}/{@link org.tensorflow.variable.MutableVariable}
+ * Unit tests for {@link org.tensorflow.variable.Variable}/{@link Variable}
  */
 public class VariableTest {
 
@@ -43,7 +42,7 @@ public class VariableTest {
   public void testEager() {
     try (EagerSession es = EagerSession.create()) {
       Ops tf = Ops.create(es);
-      MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
+      Variable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class);
 
       assertFalse(variable.isInitialized());
       assertFalse(variable.isValueInitialized().asTensor().getBoolean(0));
@@ -73,7 +72,7 @@ public class VariableTest {
   public void testGraph() {
     try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
-      MutableVariable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class).asMutableVariable();
+      Variable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class);
 
       assertFalse(variable.isInitialized());
 

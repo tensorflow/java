@@ -17,7 +17,7 @@ package org.tensorflow;
 
 import org.tensorflow.op.Op;
 import java.util.Map;
-import org.tensorflow.variable.MutableVariable;
+import org.tensorflow.variable.Variable;
 /** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
 public interface ExecutionEnvironment {
 
@@ -63,14 +63,12 @@ public interface ExecutionEnvironment {
    */
   Types environmentType();
 
-  Map<String, MutableVariable<?>> variables();
+  Map<String, Variable<?>> variables();
 
   /**
-   * Registers a variable with this execution environment.
-   * @deprecated Done automatically in Variable's constructor, should only be used internally.
+   * Registers a variable with this execution environment.  For internal use only.
    */
-  @Deprecated
-  void registerVariable(MutableVariable<?> variable);
+  void registerVariable(Variable<?> variable);
 
   default boolean isEager() {
     return environmentType() == Types.EAGER;
