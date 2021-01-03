@@ -177,7 +177,7 @@ public interface Variable<T extends TType> extends Operand<T> {
   @Endpoint(name = "Variable")
   public static <T extends TType> Variable<T> create(Scope scope, Operand<T> initialValue){
     Variable<T> variable = create(scope, initialValue.shape(), initialValue.type());
-    variable.initialize(variable);
+    variable.initialize(initialValue);
     return variable;
   }
 }
