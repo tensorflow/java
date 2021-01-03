@@ -29,6 +29,7 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.VarHandleOp;
+import org.tensorflow.op.core.Variable.Options;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
@@ -49,6 +50,11 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public interface Variable<T extends TType> extends Operand<T> {
+
+  /**
+   * Get whether the variable is trainable (whether it should be updated by optimizers).
+   */
+  boolean isTrainable();
 
   /**
    * Get the variable handle operation.
@@ -147,6 +153,26 @@ public interface Variable<T extends TType> extends Operand<T> {
   }
 
   /**
+   * Optional attributes for {@link org.tensorflow.op.core.Variable}
+   */
+  public static class Options {
+
+    /**
+     * @param trainable If non-null, this variable's trainability is as given.
+     * Otherwise, it is trainable.
+     */
+    public Options trainable(boolean trainable) {
+      this.trainable = trainable;
+      return this;
+    }
+
+    Boolean trainable = null;
+
+    private Options() {
+    }
+  }
+
+  /**
    * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
    * support for assignment and initialization that works in both eager and graph modes.
    * <p>
@@ -154,12 +180,13 @@ public interface Variable<T extends TType> extends Operand<T> {
    * @param scope
    * @param shape the static shape of the variable.
    * @param dataType the data type of the variable.
+   * @param options carries optional attributes values
    * @return a new {@link Variable} instance.
    * @see Variable
    */
   @Endpoint(name = "Variable")
-  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dataType){
-    return new MutableVariable<>(scope, shape, dataType);
+  public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dataType, Options... options){
+    return new MutableVariable<>(scope, shape, dataType, options);
   }
 
   /**
@@ -171,12 +198,13 @@ public interface Variable<T extends TType> extends Operand<T> {
    * The name can be set using {@link org.tensorflow.op.Ops#withName(String)} just like any other op.
    * @param scope
    * @param initialValue the initial value of the variable.
+   * @param options carries optional attributes values
    * @return a new {@link Variable} instance.
    * @see Variable
    */
   @Endpoint(name = "Variable")
-  public static <T extends TType> Variable<T> create(Scope scope, Operand<T> initialValue){
-    Variable<T> variable = create(scope, initialValue.shape(), initialValue.type());
+  public static <T extends TType> Variable<T> create(Scope scope, Operand<T> initialValue, Options... options){
+    Variable<T> variable = create(scope, initialValue.shape(), initialValue.type(), options);
     variable.initialize(initialValue);
     return variable;
   }

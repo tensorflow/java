@@ -404,11 +404,13 @@ public final class Ops {
    *
    * @param scope
    * @param initialValue the initial value of the variable.
+   * @param options carries optional attributes values
    * @return a new {@link Variable} instance.
    * @see Variable
    */
-  public <T extends TType> Variable<T> Variable(Operand<T> initialValue) {
-    return Variable.create(scope, initialValue);
+  public <T extends TType> Variable<T> Variable(Operand<T> initialValue,
+      Variable.Options... options) {
+    return Variable.create(scope, initialValue, options);
   }
 
   /**
@@ -420,11 +422,13 @@ public final class Ops {
    * @param scope
    * @param shape the static shape of the variable.
    * @param dataType the data type of the variable.
+   * @param options carries optional attributes values
    * @return a new {@link Variable} instance.
    * @see Variable
    */
-  public <T extends TType> Variable<T> Variable(Shape shape, Class<T> dataType) {
-    return Variable.create(scope, shape, dataType);
+  public <T extends TType> Variable<T> Variable(Shape shape, Class<T> dataType,
+      Variable.Options... options) {
+    return Variable.create(scope, shape, dataType, options);
   }
 
   /**

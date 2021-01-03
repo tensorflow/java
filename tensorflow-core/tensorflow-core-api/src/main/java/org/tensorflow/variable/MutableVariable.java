@@ -48,6 +48,7 @@ public class MutableVariable<T extends TType> implements Variable<T> {
 
   private final Shape shape;
   private final DataType dataType;
+  private final boolean trainable;
   private final Class<T> tType;
 
   private final VarHandleOp handle;
@@ -59,27 +60,45 @@ public class MutableVariable<T extends TType> implements Variable<T> {
 
   private boolean hasInitialized = false;
 
-  protected MutableVariable(Scope scope, Shape shape, Class<T> dataType) {
+  protected MutableVariable(Scope scope, Shape shape, Class<T> dataType,
+      Options[] options) {
     this.shape = shape;
     this.dataType = Operands.toDataType(dataType);
     this.tType = dataType;
+
+    boolean trainable = true;
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.trainable != null) {
+          trainable = opts.trainable;
+        }
+      }
+    }
+    this.trainable = trainable;
 
     this.name = scope.makeOpName("Variable");
 
     scope = scope.withName(null);
     this.initialScope = scope.withSubScope(this.name);
 
-    VarHandleOp.Options[] options;
+
+
+    VarHandleOp.Options[] handleOptions;
 
     if (scope.env().isGraph()) {
-      options = new Options[]{VarHandleOp.sharedName(this.name)};
+      handleOptions = new VarHandleOp.Options[]{VarHandleOp.sharedName(this.name)};
     } else {
-      options = new Options[0];
+      handleOptions = new VarHandleOp.Options[0];
     }
 
-    this.handle = VarHandleOp.create(initialScope.withName(name), dataType, shape, options);
+    this.handle = VarHandleOp.create(initialScope.withName(name), dataType, shape, handleOptions);
 
     scope.env().registerVariable(this);
+  }
+
+  @Override
+  public boolean isTrainable() {
+    return trainable;
   }
 
   @Override
