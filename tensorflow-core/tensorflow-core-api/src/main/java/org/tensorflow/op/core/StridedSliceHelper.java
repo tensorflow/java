@@ -28,7 +28,7 @@ import org.tensorflow.types.family.TType;
  * @see org.tensorflow.ndarray.index.Indices
  */
 @Operator
-public class StridedSliceHelper {
+public abstract class StridedSliceHelper {
 
   static class StridedSliceArgs {
 
@@ -70,10 +70,17 @@ public class StridedSliceHelper {
         idx = Indices.all();
       }
 
-      //TODO warnings for out of bounds?
       begin[i] = (int) idx.begin();
+      if(begin[i] != idx.begin())
+        throw new IllegalArgumentException("Can't convert long begin value to int for index " + idx + ": Out of bounds");
+
       end[i] = (int) idx.end();
+      if(end[i] != idx.end())
+        throw new IllegalArgumentException("Can't convert long end value to int for index " + idx + ": Out of bounds");
+
       strides[i] = (int) idx.stride();
+      if(strides[i] != idx.stride())
+        throw new IllegalArgumentException("Can't convert long stride value to int for index " + idx + ": Out of bounds");
 
       if (idx.beginMask()) {
         beginMask |= 1L << i;
