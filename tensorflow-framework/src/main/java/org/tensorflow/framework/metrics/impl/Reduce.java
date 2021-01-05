@@ -112,7 +112,9 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   @Override
   public  List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
 
-    if (values == null) throw new IllegalArgumentException("values is required.");
+    if (values == null) {
+      throw new IllegalArgumentException("values is required.");
+    }
     List<Op> updateOperations = new ArrayList<>();
     // cast everything to match the variables
     Operand<U> lSampleWeights = null;
@@ -124,7 +126,6 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
           LossesHelper.squeezeOrExpandDimensions(getTF(), null, lValues, lSampleWeights);
       lValues = tuple.getTarget();
       lSampleWeights = tuple.getSampleWeights();
-      // lSampleWeights = WeightsBroadcastOps.broadcastWeights(getTF(), lSampleWeights, lValues);
       try {
 
         Op broadcastWeightsCheck = MetricsHelper.broadcastWeights(getTF(), lSampleWeights, lValues);

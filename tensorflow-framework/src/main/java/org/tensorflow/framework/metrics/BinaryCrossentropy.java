@@ -16,7 +16,7 @@ package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
-import org.tensorflow.framework.metrics.impl.LossInterface;
+import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -24,20 +24,20 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
  *
+ * <p>This is the crossentropy metric class to be used when there are only two label classes (0 and
+ * 1).
+ *
  * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
 public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossInterface<T> {
+    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
 
   /**
    * Creates a BinaryCrossentropy metric
-   *
-   * <p>This is the crossentropy metric class to be used when there are only two label classes (0
-   * and 1).
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
