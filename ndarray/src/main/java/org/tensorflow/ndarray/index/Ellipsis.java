@@ -16,6 +16,7 @@
  */
 package org.tensorflow.ndarray.index;
 
+import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 final class Ellipsis implements TensorIndex{
@@ -44,5 +45,10 @@ final class Ellipsis implements TensorIndex{
   @Override
   public boolean ellipsisMask() {
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Ellipsis()";
   }
 }

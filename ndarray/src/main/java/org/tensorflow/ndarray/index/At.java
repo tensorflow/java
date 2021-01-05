@@ -16,6 +16,7 @@
  */
 package org.tensorflow.ndarray.index;
 
+import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 final class At implements TensorIndex {
@@ -67,5 +68,13 @@ final class At implements TensorIndex {
   @Override
   public boolean shrinkAxisMask() {
     return !keepDim;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", At.class.getSimpleName() + "(", ")")
+        .add("coord=" + coord)
+        .add("keepDim=" + keepDim)
+        .toString();
   }
 }

@@ -16,6 +16,7 @@
  */
 package org.tensorflow.ndarray.index;
 
+import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 final class Slice implements TensorIndex {
@@ -97,5 +98,14 @@ final class Slice implements TensorIndex {
   @Override
   public boolean endMask() {
     return end == null;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", Slice.class.getSimpleName() + "(", ")")
+        .add("start=" + start)
+        .add("end=" + end)
+        .add("stride=" + stride)
+        .toString();
   }
 }

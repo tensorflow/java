@@ -49,4 +49,9 @@ final class All implements TensorIndex {
   public boolean endMask() {
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "All()";
+  }
 }

@@ -50,4 +50,9 @@ final class NewAxis implements TensorIndex {
   public boolean newAxisMask() {
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "NewAxis()";
+  }
 }
