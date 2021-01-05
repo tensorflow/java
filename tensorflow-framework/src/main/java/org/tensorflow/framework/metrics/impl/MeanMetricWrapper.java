@@ -38,7 +38,7 @@ import java.util.List;
 public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mean<U, T> {
 
   /** The loss function interface */
-  protected LossInterface<T> loss;
+  protected LossMetric<T> loss;
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
@@ -58,7 +58,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *
    * @return the loss function.
    */
-  public LossInterface<T> getLoss() {
+  public LossMetric<T> getLoss() {
     return loss;
   }
 
@@ -67,7 +67,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *
    * @param loss the loss function.
    */
-  public void setLoss(LossInterface<T> loss) {
+  protected void setLoss(LossMetric<T> loss) {
     this.loss = loss;
   }
 
@@ -90,8 +90,9 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    */
   public <V extends TNumber> List<Op> updateStateList(
       Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
-    if (labels == null || predictions == null)
+    if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
+    }
 
     Operand<T> tLabels = CastHelper.cast(getTF(), labels, getType());
     Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getType());

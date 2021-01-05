@@ -65,8 +65,9 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    *     will always produce the same random tensor for a given shape and data type.
    */
   protected Metric(Ops tf, String name, long seed) {
-    if (!tf.scope().env().isGraph())
+    if (!tf.scope().env().isGraph()) {
       throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
+    }
     this.seed = seed;
     this.name = name != null ? name : this.getClass().getSimpleName();
     this.tf = tf.withSubScope(this.name);
@@ -81,7 +82,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return a List of Operations to update the metric state
    */
-  @SuppressWarnings({"unchecked","unused"})
+  @SuppressWarnings({"unchecked", "unused"})
   public List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
@@ -97,7 +98,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param <V> the data type for the sample weights
    * @return a List of Operations to update the metric state
    */
-  @SuppressWarnings({"unchecked","unused"})
+  @SuppressWarnings({"unchecked", "unused"})
   public <V extends TNumber> List<Op> updateStateList(
       Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
     return Collections.EMPTY_LIST;
@@ -154,8 +155,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return the result, possibly with control dependencies
    */
-  public final  Operand<T> callOnce(
-      Operand<U> values, Operand<T> sampleWeights) {
+  public final Operand<T> callOnce(Operand<U> values, Operand<T> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     Ops ltf = tf.withSubScope("callOnce").withControlDependencies(controlOps);
     return result(ltf);
