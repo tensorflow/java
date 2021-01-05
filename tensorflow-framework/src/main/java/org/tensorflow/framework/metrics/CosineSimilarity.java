@@ -15,7 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.metrics.impl.LossInterface;
+import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -27,7 +27,7 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result.
  */
 public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
-    implements LossInterface<T> {
+    implements LossMetric<T> {
   public static final int DEFAULT_AXIS = -1;
   private final int[] axis;
 

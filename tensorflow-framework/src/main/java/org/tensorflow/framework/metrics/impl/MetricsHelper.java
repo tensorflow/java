@@ -42,16 +42,16 @@ public class MetricsHelper {
       "weights can not be broadcast to values.";
 
   /**
-   * Asserts that the <code>sampleWeight</code> can be broadcast to <code>values</code>
+   * Asserts that the <code>sampleWeights</code> can be broadcast to <code>values</code>
    *
    * @param tf the TensorFlow Ops
    * @param sampleWeights the sample weights.
    * @param values the values to which weights are applied.
-   * @return <code>Operation</code> raising <code>InvalidArgumentError</code> if <code>sampleWeight
-   *     </code> has incorrect shape. <code>no_op</code> if static checks determine <code>
-   *     sampleWeight</code> has correct shape.
+   * @return <code>Operation</code> with control dependencies to ensure <code>sampleWeight</code>
+   *     can be broadcast to <code>values</code>
    * @param <U> the type of Operand
-   * @throws IllegalArgumentException If static checks determine `weights` has incorrect shape.
+   * @throws IllegalArgumentException If static checks determine <code>sampleWeights</code> has an
+   *     incorrect shape that prohibit broadcasting to to <code>values</code>
    */
   @SuppressWarnings("unchecked")
   public static <U extends TNumber> Op broadcastWeights(

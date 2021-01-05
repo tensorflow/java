@@ -16,7 +16,7 @@ package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
-import org.tensorflow.framework.metrics.impl.LossInterface;
+import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -34,14 +34,14 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result
  */
 public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossInterface<T> {
+    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
   private final int axis;
 
   /**
-   * Creates a CategoricalCrossentropy metric that Computes the crossentropy metric between the
+   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
    * labels and predictions.
    *
    * <p>Uses a {@link Losses#CHANNELS_LAST} for the channel axis.
@@ -63,7 +63,7 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
   }
 
   /**
-   * Creates a CategoricalCrossentropy metric that Computes the crossentropy metric between the
+   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
    * labels and predictions.
    *
    * @param tf the TensorFlow Ops
