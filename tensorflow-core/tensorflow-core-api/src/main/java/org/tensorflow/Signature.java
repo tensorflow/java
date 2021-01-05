@@ -15,9 +15,11 @@
  */
 package org.tensorflow;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;
@@ -172,6 +174,28 @@ public class Signature  {
       printTensorInfo(signatureDef.getOutputsMap(), strBuilder);
     }
     return strBuilder.toString();
+  }
+
+  /**
+   * Returns the names of the inputs in this signature mapped to their expected data type
+   */
+  public Map<String, DataType> getInputs() {
+    Map<String, DataType> dataTypeMap = new HashMap<>();
+    signatureDef.getInputsMap().forEach((a,b) -> {
+      dataTypeMap.put(a, b.getDtype());
+    });
+    return dataTypeMap;
+  }
+
+  /**
+   * Returns the names of the outputs in this signature mapped to their expected data type
+   */
+  public Map<String, DataType> getOutputs() {
+    Map<String, DataType> dataTypeMap = new HashMap<>();
+    signatureDef.getOutputsMap().forEach((a,b) -> {
+      dataTypeMap.put(a, b.getDtype());
+    });
+    return dataTypeMap;
   }
 
   Signature(String key, SignatureDef signatureDef) {
