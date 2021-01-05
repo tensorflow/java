@@ -35,7 +35,7 @@ public class DimensionalSpace {
   }
 
   public RelativeDimensionalSpace mapTo(Index[] indices) {
-    if (dimensions == null || indices.length > dimensions.length) {
+    if (dimensions == null) {
       throw new ArrayIndexOutOfBoundsException();
     }
     int dimIdx = 0;
@@ -63,7 +63,7 @@ public class DimensionalSpace {
     Dimension[] newDimensions = new Dimension[newLength];
     while (indexIdx < indices.length) {
 
-      if (indices[dimIdx].isPoint()) {
+      if (indices[indexIdx].isPoint()) {
         // When an index targets a single point in a given dimension, calculate the offset of this
         // point and cumulate the offset of any subsequent point as well
         long offset = 0;

@@ -157,8 +157,8 @@ public final class Indices {
    *
    * @return index
    */
-  public static Index even() {
-    return Even.INSTANCE;
+  public static TensorIndex even() {
+    return slice(null, null, 2);
   }
 
   /**
@@ -170,8 +170,8 @@ public final class Indices {
    *
    * @return index
    */
-  public static Index odd() {
-    return Odd.INSTANCE;
+  public static TensorIndex odd() {
+    return slice(1, null, 2);
   }
 
   /**
@@ -183,8 +183,8 @@ public final class Indices {
    * @param stepLength the number of elements between each steps
    * @return index
    */
-  public static Index step(long stepLength) {
-    return new Step(stepLength);
+  public static TensorIndex step(long stepLength) {
+    return slice(null, null, stepLength);
   }
 
   /**
@@ -197,8 +197,8 @@ public final class Indices {
    * @param start coordinate of the first element of the sequence
    * @return index
    */
-  public static Index from(long start) {
-    return new From(start);
+  public static TensorIndex from(long start) {
+    return slice(start, null);
   }
 
   /**
@@ -211,8 +211,8 @@ public final class Indices {
    * @param end coordinate of the last element of the sequence (exclusive)
    * @return index
    */
-  public static Index to(long end) {
-    return new To(end);
+  public static TensorIndex to(long end) {
+    return slice(null, end);
   }
 
   /**
@@ -225,8 +225,8 @@ public final class Indices {
    * @param end coordinate of the last element of the sequence (exclusive)
    * @return index
    */
-  public static Index range(long start, long end) {
-    return new Range(start, end);
+  public static TensorIndex range(long start, long end) {
+    return slice(start, end);
   }
 
   /**
@@ -237,8 +237,8 @@ public final class Indices {
    *
    * @return index
    */
-  public static Index flip() {
-    return Flip.INSTANCE;
+  public static TensorIndex flip() {
+    return slice(null, null, -1);
   }
   
   /**
@@ -256,49 +256,128 @@ public final class Indices {
     return new Hyperslab(start, stride, count, block);
   }
 
-  //TODO comments, tests, remove extra classes in favor of helper methods
-
   /**
+   * An index that inserts a new dimension of size 1 into the resulting array.
    *
-   * @return
+   * @return index
    */
   public static TensorIndex newAxis(){
     return NewAxis.INSTANCE;
   }
 
+  /**
+   * An index that expands to fill all available source dimensions.
+   * Works the same as Python's {@code ...}.
+   * @see #expand()
+   * @return index
+   */
   public static TensorIndex ellipsis(){
     return Ellipsis.INSTANCE;
   }
 
+  /**
+   * An index that expands to fill all available source dimensions.
+   * Works the same as Python's {@code ...}.
+   *
+   * @return index
+   */
   public static TensorIndex expand(){
     return ellipsis();
   }
 
+  /**
+   * An index that returns elements between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
   public static TensorIndex slice(Long start, Long end){
     return slice(start, end, 1);
   }
 
+  /**
+   * An index that returns elements between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(long start, Long end){
+    return slice(start, end, 1);
+  }
+
+  /**
+   * An index that returns elements between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(Long start, long end){
+    return slice(start, end, 1);
+  }
+
+  /**
+   * An index that returns elements between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(long start, long end){
+    return slice(start, end, 1);
+  }
+
+  /**
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
   public static TensorIndex slice(Long start, Long end, long stride){
     return new Slice(start, end, stride);
   }
 
-  public static TensorIndex slice(Integer start, int end){
-    return intSlice(start, end, 1);
+  /**
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(long start, Long end, long stride){
+    return new Slice(start, end, stride);
   }
 
-  public static TensorIndex slice(int start, Integer end){
-    return intSlice(start, end, 1);
+  /**
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(Long start, long end, long stride){
+    return new Slice(start, end, stride);
   }
 
-  public static TensorIndex slice(Integer start, int end, long stride){
-    return intSlice(start, end, stride);
-  }
-
-  public static TensorIndex slice(int start, Integer end, long stride){
-    return intSlice(start, end, stride);
-  }
-
-  private static TensorIndex intSlice(Integer start, Integer end, long stride){
-    return new Slice(start == null ? null : start.longValue(), end == null ? null : end.longValue(), stride);
+  /**
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
+   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static TensorIndex slice(long start, long end, long stride){
+    return new Slice(start, end, stride);
   }
 }

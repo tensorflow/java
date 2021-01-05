@@ -65,9 +65,6 @@ final class Slice implements TensorIndex {
   @Override
   public long numElements(Dimension dim) {
     long length = end(dim) - start(dim);
-    if(stride < 0){
-      length *= -1;
-    }
 
     return (length / stride) + (length % stride != 0 ? 1 : 0);
   }

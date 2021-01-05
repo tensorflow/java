@@ -27,7 +27,7 @@ final class At implements TensorIndex {
 
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
-    long coord = this.coord > 0 ? this.coord : dim.numElements() - this.coord;
+    long coord = this.coord >= 0 ? this.coord : dim.numElements() + this.coord;
     return dim.positionOf(coord); // TODO validate coordinate is 0?
   }
 
