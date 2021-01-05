@@ -22,7 +22,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type of the predictions.
  */
-public interface LossInterface<T extends TNumber> {
+public interface LossMetric<T extends TNumber> {
 
   /**
    * Calculates the weighted loss between <code>labels</code> and <code>predictions</code>

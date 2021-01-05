@@ -69,13 +69,9 @@ public class Metrics {
    * @param <T> the data type for the predictions and result
    * @return Cosine similarity value.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends TNumber, U extends TNumber> Operand<T> cosineProximity(
       Ops tf, Operand<U> labels, Operand<T> predictions, int[] axis) {
-    Operand<T> labelsNorm;
-    if (labels.type() != predictions.type())
-      labelsNorm = CastHelper.cast(tf, labels, predictions.type());
-    else labelsNorm = (Operand<T>) labels;
+    Operand<T> labelsNorm = CastHelper.cast(tf, labels, predictions.type());
     labelsNorm = l2Normalize(tf, labelsNorm, axis);
 
     Operand<T> predictionsNorm = l2Normalize(tf, predictions, axis);
