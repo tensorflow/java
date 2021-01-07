@@ -99,7 +99,7 @@ public final class Init extends RawOp {
   public static void add(Scope scope, Op initializer) {
     ExecutionEnvironment exEnv = scope.env();
 
-    if(exEnv.isGraph()) {
+    if (exEnv.isGraph()) {
       ((Graph) exEnv).addInitializer(initializer);
     }
   }
