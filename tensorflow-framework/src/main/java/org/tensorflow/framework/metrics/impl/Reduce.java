@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.Metric;
@@ -50,7 +49,6 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   /** the variable that holds the count of the metric values */
   protected Variable<T> count;
 
-  protected boolean initialized;
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}
@@ -81,23 +79,31 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
     this.type = type;
     setupVars();
   }
-  /** initialize the Variables */
-  @SuppressWarnings("unchecked")
+  /** Initializes the Variables */
   private void setupVars() {
-    Zeros<T> fZeros = new Zeros<>(getTF());
-    total = (Variable<T>) getVariable(totalName);
     if (total == null) {
-      total = getTF().withSubScope(totalName).variable(Shape.scalar(), type);
-      addVariable(totalName, total, fZeros);
+      total = getTF().withName(totalName).variable(Shape.scalar(), type);
     }
     if (reduction == MetricReduction.SUM_OVER_BATCH_SIZE
         || reduction == MetricReduction.WEIGHTED_MEAN) {
-      count = (Variable<T>) getVariable(countName);
       if (count == null) {
-        count = getTF().withSubScope(countName).variable(Shape.scalar(), type);
-        addVariable(countName, count, fZeros);
+        count = getTF().withName(countName).variable(Shape.scalar(), type);
       }
     }
+  }
+
+  /** {@inheritDoc} */
+  public Op resetStates() {
+    List<Op> controls = new ArrayList<>();
+    if (total != null) {
+      controls.add(
+          getTF().assign(total, CastHelper.cast(getTF(), getTF().constant(0), total.type())));
+    }
+    if (count != null) {
+      controls.add(
+          getTF().assign(count, CastHelper.cast(getTF(), getTF().constant(0), count.type())));
+    }
+    return getTF().withControlDependencies(controls).noOp();
   }
 
   /**
@@ -110,7 +116,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    * @throws IllegalArgumentException if values is null
    */
   @Override
-  public  List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
+  public List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
 
     if (values == null) {
       throw new IllegalArgumentException("values is required.");
@@ -136,7 +142,6 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
                 .math
                 .mul(lValues, lSampleWeights);
       } catch (IllegalArgumentException ex) {
-        System.out.println("Reduce: Fall back from broadcast");
         // reduce the values down to the rank of the samples
         int nDim = lValues.shape().numDimensions();
         int wDim = lSampleWeights.shape().numDimensions();
@@ -224,8 +229,10 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
     return count;
   }
 
-  /** Gets the type for the variables
-   * @return  the type for the variables
+  /**
+   * Gets the type for the variables
+   *
+   * @return the type for the variables
    */
   public Class<T> getType() {
     return type;
