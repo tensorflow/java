@@ -14,17 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.initializers.Initializer;
-import org.tensorflow.framework.metrics.impl.MetricVariable;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Base class for Metrics
@@ -34,12 +30,8 @@ import java.util.stream.Collectors;
  */
 public abstract class Metric<U extends TNumber, T extends TNumber> {
 
-  /** variables are stored by ExecutionEnvironment, and then by an identifier name */
-  protected static Map<ExecutionEnvironment, Map<String, MetricVariable<? extends TNumber>>>
-      variableMap = new WeakHashMap<>();
   /** The TensorFlow Ops */
   private final Ops tf;
-  /** The random number generator seed value */
   private final long seed;
 
   /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
@@ -70,7 +62,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
     }
     this.seed = seed;
     this.name = name != null ? name : this.getClass().getSimpleName();
-    this.tf = tf.withSubScope(this.name);
+    this.tf = tf.withName(this.getClass().getSimpleName());
   }
 
   /**
@@ -140,6 +132,13 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   public abstract Operand<T> result(Ops tf);
 
   /**
+   * Resets any state variables to their initial values
+   *
+   * @return the control operation for doing the reset
+   */
+  public abstract Op resetStates();
+
+  /**
    * Gets the current result of the metric using the metric's {@link #getTF()}
    *
    * @return the result, possibly with control dependencies
@@ -162,36 +161,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   }
 
   /**
-   * Adds a variable to collect metric values
-   *
-   * @param varName the name for the variable
-   * @param variable the variable
-   * @param initializer the initializer for the variable, if null, then the default for floating
-   *     point types is {@link org.tensorflow.framework.initializers.Glorot} with distribution
-   *     {@link org.tensorflow.framework.initializers.VarianceScaling.Distribution#UNIFORM}, for
-   *     other types the default initializer is {@link org.tensorflow.framework.initializers.Zeros}
-   * @param <V> the date type for the variable
-   */
-  protected <V extends TNumber> void addVariable(
-      String varName, Variable<V> variable, Initializer<V> initializer) {
-    Map<String, MetricVariable<? extends TNumber>> variables =
-        variableMap.computeIfAbsent(tf.scope().env(), k -> new HashMap<>());
-    variables.put(varName, new MetricVariable<>(tf, variable, initializer, seed, variable.type()));
-  }
-
-  /**
-   * Gets the list of added variables
-   *
-   * @return the list of added variables
-   */
-  public List<Variable<? extends TNumber>> getVariables() {
-    List<Variable<? extends TNumber>> result = new ArrayList<>();
-    Map<String, MetricVariable<? extends TNumber>> variables = variableMap.get(tf.scope().env());
-    if (variables != null) variables.values().forEach(mv -> result.add(mv.getVariable()));
-    return result;
-  }
-
-  /**
    * Gets a formatted name for a variable, in the form {@link #name} + "_" + varName.
    *
    * @param varName the base name for the variable
@@ -199,71 +168,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   protected String getVariableName(String varName) {
     return String.format("%s_%s", this.name, varName);
-  }
-
-  /**
-   * Gets an Operation that initializes the variables.
-   *
-   * @param subScopeName the sub scope name
-   * @return the Operation used to initialize the variables.
-   */
-  public Op initialize(String subScopeName) {
-
-    List<Op> initializeOperations = initializeVarsList(subScopeName);
-    return tf.withControlDependencies(initializeOperations).noOp();
-  }
-
-  /**
-   * Gets the list of Operations that initializes the variables
-   *
-   * @param subScopeName the sub scope name
-   * @return the list of Operations that initializes the variables
-   */
-  @SuppressWarnings("unchecked")
-  private List<Op> initializeVarsList(String subScopeName) {
-    Map<String, MetricVariable<? extends TNumber>> variables = variableMap.get(tf.scope().env());
-    if (variables != null)
-      return variables.values().stream()
-          .map(metricVariable -> variableAssign(subScopeName, metricVariable))
-          .collect(Collectors.toList());
-    else return Collections.EMPTY_LIST;
-  }
-
-  /**
-   * Resets all variables to their initial state
-   *
-   * @return An Operation that sets all variables to their initial state
-   */
-  public Op resetStates() {
-    return initialize("resetStates");
-  }
-
-  /**
-   * Assigns a value to a Variable
-   *
-   * <p>This assumes the variable has already been initialized
-   *
-   * @param subScopeName the subscope for creating the variable
-   * @param mv the metric value used to assign the initializer to the variable.
-   * @return the variable add operation with necessary control dependencies
-   */
-  private <V extends TNumber> Operand<? extends TNumber> variableAssign(
-      String subScopeName, MetricVariable<V> mv) {
-    return tf.withSubScope(subScopeName).assign(mv.getVariable(), mv.initialize());
-  }
-
-  /**
-   * Gets a stored variable by name, Variables are cached first by the TensorFlow Environment, then
-   * by a variable name.
-   *
-   * @param varName the name assigned to the variable
-   * @return the variable, or null if the variable is not found.
-   */
-  public Variable<? extends TNumber> getVariable(String varName) {
-    Map<String, MetricVariable<? extends TNumber>> variables = variableMap.get(tf.scope().env());
-    if (variables == null) return null;
-    MetricVariable<? extends TNumber> mv = variables.get(varName);
-    return mv != null ? mv.getVariable() : null;
   }
 
   /**
@@ -282,5 +186,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   public String getName() {
     return name;
+  }
+
+  /** The random number generator seed value */
+  public long getSeed() {
+    return seed;
   }
 }
