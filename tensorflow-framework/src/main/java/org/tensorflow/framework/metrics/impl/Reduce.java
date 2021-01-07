@@ -49,7 +49,6 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   /** the variable that holds the count of the metric values */
   protected Variable<T> count;
 
-
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}
    *
