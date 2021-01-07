@@ -55,7 +55,7 @@ public abstract class BooleanMask {
     Shape tensorShape = x.shape();
 
     if (maskShape.numDimensions() == 0) {
-      throw new IllegalArgumentException("Mask cannot be scalar.");
+      throw new IllegalArgumentException("Mask cannot be a scalar.");
     }
     if (maskShape.hasUnknownDimension()) {
       throw new IllegalArgumentException("Mask cannot have unknown number of dimensions");
@@ -65,7 +65,7 @@ public abstract class BooleanMask {
     Shape requiredMaskShape = tensorShape.subShape(axis, axis + maskShape.numDimensions());
     if (!requiredMaskShape.isCompatibleWith(maskShape)) {
       throw new IllegalArgumentException(
-          "Mask shape " + maskShape + " is not compatible with required mask shape: " + requiredMaskShape + ".");
+          "Mask shape " + maskShape + " is not compatible with the required mask shape: " + requiredMaskShape + ".");
     }
 
     org.tensorflow.op.core.Shape<TInt32> liveShape = org.tensorflow.op.core.Shape.create(scope, x);
@@ -87,6 +87,7 @@ public abstract class BooleanMask {
         ),
         Constant.scalarOf(scope, 0)
     ));
+
     Operand<TBool> flatMask = Reshape.create(scope, mask, Constant.arrayOf(scope, -1));
 
     Operand<TInt64> indices = Squeeze.create(scope, Where.create(scope, flatMask), Squeeze.axis(Collections.singletonList(1L)));

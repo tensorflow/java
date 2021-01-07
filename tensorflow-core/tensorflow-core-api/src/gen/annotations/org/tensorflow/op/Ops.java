@@ -59,6 +59,7 @@ import org.tensorflow.op.core.Batch;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
+import org.tensorflow.op.core.BooleanMask;
 import org.tensorflow.op.core.BroadcastDynamicShape;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
@@ -987,6 +988,14 @@ public final class Ops {
    */
   public <U extends TType> Bitcast<U> bitcast(Operand<? extends TType> input, Class<U> type) {
     return Bitcast.create(scope, input, type);
+  }
+
+  /**
+   * empty
+   */
+  public <T extends TType> Operand<T> booleanMask(Operand<T> x, Operand<TBool> mask,
+      BooleanMask.Options... options) {
+    return BooleanMask.create(scope, x, mask, options);
   }
 
   /**
