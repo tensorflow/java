@@ -347,9 +347,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -372,8 +372,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -2755,11 +2755,10 @@ public final class Ops {
    *
    *  <p>Registered initializers are then grouped as a single unit of computation by adding
    *  and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   *  session.
+   *  session.  This is a no-op if executed in an eager session.
    *
    * @param scope
    * @param initializer
-   * @throws IllegalArgumentException if the execution environment in scope is not a graph
    * @see org.tensorflow.op.core.Init#create(Scope) init
    */
   public void initAdd(Op initializer) {

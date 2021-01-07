@@ -490,6 +490,19 @@ public final class Session implements AutoCloseable {
     runner().addTarget(op.op()).run();
   }
 
+
+  /**
+   * Execute the graph's initializers.
+   *
+   * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
+   *
+   */
+  public void runInit(){
+    Runner runner = runner();
+    graph.initializers().forEach(runner::addTarget);
+    runner.run();
+  }
+
   /**
    * Saves the actual state of the variables of this session's graph.
    *
