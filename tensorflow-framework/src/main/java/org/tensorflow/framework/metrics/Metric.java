@@ -32,6 +32,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
 
   /** The TensorFlow Ops */
   private final Ops tf;
+
   private final long seed;
 
   /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
