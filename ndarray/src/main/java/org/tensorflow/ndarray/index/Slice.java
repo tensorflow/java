@@ -21,44 +21,12 @@ import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 final class Slice implements TensorIndex {
 
-  private final Long start;
-  private final Long end;
-  private final long stride;
-
-  private long start(Dimension dim){
-    if(start == null){
-      if(stride > 0){
-        return 0;
-      } else {
-        return dim.numElements() - 1; // it's inclusive
-      }
-    } else if(start < 0){
-      return dim.numElements() + start;
-    } else {
-      return start;
-    }
-  }
-
-  private long end(Dimension dim){
-    if(end == null){
-      if(stride > 0){
-        return dim.numElements();
-      } else {
-        return -1; // it's exclusive
-      }
-    } else if(end < 0){
-      return dim.numElements() + end;
-    } else {
-      return end;
-    }
-  }
-
   Slice(Long start, Long end, long stride) {
     this.start = start;
     this.end = end;
     this.stride = stride;
 
-    if(stride == 0){
+    if (stride == 0) {
       throw new IllegalArgumentException("Can not have a stride of 0");
     }
   }
@@ -108,4 +76,36 @@ final class Slice implements TensorIndex {
         .add("stride=" + stride)
         .toString();
   }
+
+  private long start(Dimension dim) {
+    if (start == null) {
+      if (stride > 0) {
+        return 0;
+      }
+
+      return dim.numElements() - 1; // it's inclusive
+    } else if (start < 0) {
+      return dim.numElements() + start;
+    }
+
+    return start;
+  }
+
+  private long end(Dimension dim) {
+    if (end == null) {
+      if (stride > 0) {
+        return dim.numElements();
+      } else {
+        return -1; // it's exclusive
+      }
+    } else if (end < 0) {
+      return dim.numElements() + end;
+    } else {
+      return end;
+    }
+  }
+
+  private final Long start;
+  private final Long end;
+  private final long stride;
 }

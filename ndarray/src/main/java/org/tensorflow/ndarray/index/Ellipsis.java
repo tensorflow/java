@@ -19,22 +19,22 @@ package org.tensorflow.ndarray.index;
 import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class Ellipsis implements TensorIndex{
+final class Ellipsis implements TensorIndex {
 
   static final Ellipsis INSTANCE = new Ellipsis();
 
-  private Ellipsis(){
+  private Ellipsis() {
 
   }
 
   @Override
   public long numElements(Dimension dim) {
-    throw new IllegalStateException();
+    throw new UnsupportedOperationException("Should be handled in DimensionalSpace.");
   }
 
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
-    throw new IllegalStateException();
+    throw new UnsupportedOperationException("Should be handled in DimensionalSpace.");
   }
 
   @Override
@@ -49,6 +49,6 @@ final class Ellipsis implements TensorIndex{
 
   @Override
   public String toString() {
-    return "Ellipsis()";
+    return Ellipsis.class.getSimpleName() + "()";
   }
 }

@@ -22,7 +22,7 @@ final class NewAxis implements TensorIndex {
 
   static final NewAxis INSTANCE = new NewAxis();
 
-  private NewAxis(){
+  private NewAxis() {
 
   }
 
@@ -53,6 +53,6 @@ final class NewAxis implements TensorIndex {
 
   @Override
   public String toString() {
-    return "NewAxis()";
+    return NewAxis.class.getSimpleName() + "()";
   }
 }

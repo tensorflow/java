@@ -18,8 +18,8 @@
 package org.tensorflow.ndarray.impl.dimension;
 
 import java.util.Arrays;
-import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.index.Index;
 
 public class DimensionalSpace {
 
@@ -46,12 +46,12 @@ public class DimensionalSpace {
 
     int newAxes = 0;
     boolean seenEllipsis = false;
-    for(Index idx : indices){
-      if(idx.isNewAxis()){
+    for (Index idx : indices) {
+      if (idx.isNewAxis()) {
         newAxes += 1;
       }
-      if(idx.isEllipsis()){
-        if(seenEllipsis){
+      if (idx.isEllipsis()) {
+        if (seenEllipsis) {
           throw new IllegalArgumentException("Only one ellipsis allowed");
         } else {
           seenEllipsis = true;
@@ -83,9 +83,9 @@ public class DimensionalSpace {
           segmentationIdx = newDimIdx - 1;
         }
 
-      } else if(indices[indexIdx].isNewAxis()) {
+      } else if (indices[indexIdx].isNewAxis()) {
         long newSize;
-        if(dimIdx == 0){
+        if (dimIdx == 0) {
           // includes everything.  Should really include future reduction (at()) but that doesn't seem to cause issues
           //   elsewhere
           newSize = dimensions[0].numElements() * dimensions[0].elementSize();
@@ -97,16 +97,16 @@ public class DimensionalSpace {
         segmentationIdx = newDimIdx; // is this correct?
         ++newDimIdx;
         ++indexIdx;
-      } else if(indices[indexIdx].isEllipsis()){
+      } else if (indices[indexIdx].isEllipsis()) {
         int remainingDimensions = dimensions.length - dimIdx;
         int requiredDimensions = 0;
-        for(int i = indexIdx + 1 ; i < indices.length ; i++){
-          if(!indices[i].isNewAxis()){
+        for (int i = indexIdx + 1; i < indices.length; i++) {
+          if (!indices[i].isNewAxis()) {
             requiredDimensions++;
           }
         }
         // while the number of dimensions left < the number of indices that consume axes
-        while(remainingDimensions > requiredDimensions){
+        while (remainingDimensions > requiredDimensions) {
           Dimension dim = dimensions[dimIdx++];
           if (dim.isSegmented()) {
             segmentationIdx = newDimIdx;

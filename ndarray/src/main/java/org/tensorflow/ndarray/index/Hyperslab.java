@@ -75,7 +75,7 @@ final class Hyperslab implements Index {
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", Hyperslab.class.getSimpleName() + "(", ")")
+    return new StringJoiner(", ", Hyperslab.class.getSimpleName() + "Hyperslab(", ")")
         .add("start=" + start)
         .add("stride=" + stride)
         .add("count=" + count)

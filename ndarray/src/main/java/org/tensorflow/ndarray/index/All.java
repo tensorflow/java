@@ -52,6 +52,6 @@ final class All implements TensorIndex {
 
   @Override
   public String toString() {
-    return "All()";
+    return All.class.getSimpleName() + "()";
   }
 }

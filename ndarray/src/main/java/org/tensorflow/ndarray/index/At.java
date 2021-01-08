@@ -29,17 +29,16 @@ final class At implements TensorIndex {
   @Override
   public long mapCoordinate(long coordinate, Dimension dim) {
     long coord = this.coord >= 0 ? this.coord : dim.numElements() + this.coord;
-    return dim.positionOf(coord); // TODO validate coordinate is 0?
+    return dim.positionOf(coord);
   }
 
   @Override
   public Dimension apply(Dimension dim) {
-    if(keepDim){
-      return dim.withIndex(this);
+    if (!keepDim) {
+      throw new UnsupportedOperationException("Should be handled in DimensionalSpace.");
     }
-    else {
-      throw new IllegalStateException(); // FIXME?
-    }
+
+    return dim.withIndex(this);
   }
 
   @Override
