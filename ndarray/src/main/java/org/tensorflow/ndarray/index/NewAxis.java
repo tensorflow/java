@@ -18,7 +18,7 @@ package org.tensorflow.ndarray.index;
 
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class NewAxis implements TensorIndex {
+final class NewAxis implements Index {
 
   static final NewAxis INSTANCE = new NewAxis();
 

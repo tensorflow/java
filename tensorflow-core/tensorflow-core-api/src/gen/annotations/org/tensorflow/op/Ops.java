@@ -38,7 +38,7 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
-import org.tensorflow.ndarray.index.TensorIndex;
+import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.op.core.Abort;
 import org.tensorflow.op.core.All;
 import org.tensorflow.op.core.Any;
@@ -5953,7 +5953,7 @@ public final class Ops {
    * @return a new instance of StridedSlice
    * @see Indices
    */
-  public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, TensorIndex... indices) {
+  public <T extends TType> StridedSlice<T> stridedSlice(Operand<T> input, Index... indices) {
     return StridedSliceHelper.stridedSlice(scope, input, indices);
   }
 
@@ -6085,10 +6085,10 @@ public final class Ops {
    * @param value the value to assign.
    * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, TensorIndex...)
+   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
    */
   public <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Operand<T> ref,
-      Operand<T> value, TensorIndex... indices) {
+      Operand<T> value, Index... indices) {
     return StridedSliceHelper.stridedSliceAssign(scope, ref, value, indices);
   }
 

@@ -40,7 +40,7 @@ public final class Indices {
    * @param coord coordinate of the element on the indexed axis
    * @return index
    */
-  public static TensorIndex at(long coord) {
+  public static Index at(long coord) {
     return new At(coord, false);
   }
 
@@ -54,7 +54,7 @@ public final class Indices {
    * @return index
    * @throws IllegalRankException if {@code coord} is not a scalar (rank 0)
    */
-  public static TensorIndex at(NdArray<? extends Number> coord) {
+  public static Index at(NdArray<? extends Number> coord) {
     if (coord.rank() > 0) {
       throw new IllegalRankException("Only scalars are accepted as a value index");
     }
@@ -76,7 +76,7 @@ public final class Indices {
    * @param keepDim whether to remove the dimension.
    * @return index
    */
-  public static TensorIndex at(long coord, boolean keepDim) {
+  public static Index at(long coord, boolean keepDim) {
     return new At(coord, keepDim);
   }
 
@@ -93,7 +93,7 @@ public final class Indices {
    * @param keepDim whether to remove the dimension.
    * @throws IllegalRankException if {@code coord} is not a scalar (rank 0)
    */
-  public static TensorIndex at(NdArray<? extends Number> coord, boolean keepDim) {
+  public static Index at(NdArray<? extends Number> coord, boolean keepDim) {
     if (coord.rank() > 0) {
       throw new IllegalRankException("Only scalars are accepted as a value index");
     }
@@ -111,7 +111,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex all() {
+  public static Index all() {
     return All.INSTANCE;
   }
 
@@ -157,7 +157,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex even() {
+  public static Index even() {
     return slice(null, null, 2);
   }
 
@@ -170,7 +170,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex odd() {
+  public static Index odd() {
     return slice(1, null, 2);
   }
 
@@ -183,7 +183,7 @@ public final class Indices {
    * @param stepLength the number of elements between each steps
    * @return index
    */
-  public static TensorIndex step(long stepLength) {
+  public static Index step(long stepLength) {
     return slice(null, null, stepLength);
   }
 
@@ -197,7 +197,7 @@ public final class Indices {
    * @param start coordinate of the first element of the sequence
    * @return index
    */
-  public static TensorIndex from(long start) {
+  public static Index from(long start) {
     return slice(start, null);
   }
 
@@ -211,7 +211,7 @@ public final class Indices {
    * @param end coordinate of the last element of the sequence (exclusive)
    * @return index
    */
-  public static TensorIndex to(long end) {
+  public static Index to(long end) {
     return slice(null, end);
   }
 
@@ -225,7 +225,7 @@ public final class Indices {
    * @param end coordinate of the last element of the sequence (exclusive)
    * @return index
    */
-  public static TensorIndex range(long start, long end) {
+  public static Index range(long start, long end) {
     return slice(start, end);
   }
 
@@ -237,7 +237,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex flip() {
+  public static Index flip() {
     return slice(null, null, -1);
   }
   
@@ -261,7 +261,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex newAxis(){
+  public static Index newAxis(){
     return NewAxis.INSTANCE;
   }
 
@@ -271,7 +271,7 @@ public final class Indices {
    * @see #expand()
    * @return index
    */
-  public static TensorIndex ellipsis(){
+  public static Index ellipsis(){
     return Ellipsis.INSTANCE;
   }
 
@@ -281,7 +281,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex expand(){
+  public static Index expand(){
     return ellipsis();
   }
 
@@ -293,7 +293,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(Long start, Long end){
+  public static Index slice(Long start, Long end){
     return slice(start, end, 1);
   }
 
@@ -305,7 +305,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(long start, Long end){
+  public static Index slice(long start, Long end){
     return slice(start, end, 1);
   }
 
@@ -317,7 +317,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(Long start, long end){
+  public static Index slice(Long start, long end){
     return slice(start, end, 1);
   }
 
@@ -329,7 +329,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(long start, long end){
+  public static Index slice(long start, long end){
     return slice(start, end, 1);
   }
 
@@ -341,7 +341,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(Long start, Long end, long stride){
+  public static Index slice(Long start, Long end, long stride){
     return new Slice(start, end, stride);
   }
 
@@ -353,7 +353,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(long start, Long end, long stride){
+  public static Index slice(long start, Long end, long stride){
     return new Slice(start, end, stride);
   }
 
@@ -365,7 +365,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(Long start, long end, long stride){
+  public static Index slice(Long start, long end, long stride){
     return new Slice(start, end, stride);
   }
 
@@ -377,7 +377,7 @@ public final class Indices {
    *
    * @return index
    */
-  public static TensorIndex slice(long start, long end, long stride){
+  public static Index slice(long start, long end, long stride){
     return new Slice(start, end, stride);
   }
 }

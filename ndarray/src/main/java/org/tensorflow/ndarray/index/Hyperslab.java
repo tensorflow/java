@@ -82,4 +82,9 @@ final class Hyperslab implements Index {
         .add("block=" + block)
         .toString();
   }
+
+  @Override
+  public boolean tensorSupport() {
+    return false;
+  }
 }

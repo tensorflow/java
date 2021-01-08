@@ -44,4 +44,9 @@ final class Sequence implements Index {
         .add("coords=" + coords)
         .toString();
   }
+
+  @Override
+  public boolean tensorSupport() {
+    return false;
+  }
 }

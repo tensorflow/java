@@ -19,7 +19,7 @@ package org.tensorflow.ndarray.index;
 import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class Slice implements TensorIndex {
+final class Slice implements Index {
 
   Slice(Long start, Long end, long stride) {
     this.start = start;

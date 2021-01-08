@@ -19,7 +19,7 @@ package org.tensorflow.ndarray.index;
 import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class At implements TensorIndex {
+final class At implements Index {
 
   @Override
   public long numElements(Dimension dim) {

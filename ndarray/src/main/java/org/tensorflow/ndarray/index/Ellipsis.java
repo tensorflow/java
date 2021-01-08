@@ -16,10 +16,9 @@
  */
 package org.tensorflow.ndarray.index;
 
-import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class Ellipsis implements TensorIndex {
+final class Ellipsis implements Index {
 
   static final Ellipsis INSTANCE = new Ellipsis();
 

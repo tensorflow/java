@@ -16,7 +16,7 @@ package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.index.Indices;
-import org.tensorflow.ndarray.index.TensorIndex;
+import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -54,7 +54,7 @@ public abstract class StridedSliceHelper {
     }
   }
 
-  static StridedSliceArgs mergeIndexes(TensorIndex[] indices) {
+  static StridedSliceArgs mergeIndexes(Index[] indices) {
     int[] begin = new int[indices.length];
     int[] end = new int[indices.length];
     int[] strides = new int[indices.length];
@@ -65,9 +65,14 @@ public abstract class StridedSliceHelper {
     long shrinkAxisMask = 0;
 
     for (int i = 0; i < indices.length; i++) {
-      TensorIndex idx = indices[i];
+      Index idx = indices[i];
+
       if (idx == null) {
         idx = Indices.all();
+      }
+
+      if (!idx.tensorSupport()) {
+        throw new UnsupportedOperationException("Index " + idx + " is not supported for Tensors");
       }
 
       begin[i] = (int) idx.begin();
@@ -95,18 +100,18 @@ public abstract class StridedSliceHelper {
         endMask |= 1L << i;
       }
 
-      if (idx.ellipsisMask()) {
+      if (idx.isEllipsis()) {
         if (ellipsisMask != 0) {
           throw new IllegalArgumentException("Can not have two ellipsis in a slice");
         }
         ellipsisMask |= 1L << i;
       }
 
-      if (idx.newAxisMask()) {
+      if (idx.isNewAxis()) {
         newAxisMask |= 1L << i;
       }
 
-      if (idx.shrinkAxisMask()) {
+      if (idx.isPoint()) {
         shrinkAxisMask |= 1L << i;
       }
     }
@@ -155,7 +160,7 @@ public abstract class StridedSliceHelper {
    * @see Indices
    */
   @Endpoint(name = "stridedSlice")
-  public static <T extends TType> StridedSlice<T> stridedSlice(Scope scope, Operand<T> input, TensorIndex... indices) {
+  public static <T extends TType> StridedSlice<T> stridedSlice(Scope scope, Operand<T> input, Index... indices) {
     StridedSliceArgs args = mergeIndexes(indices);
     return StridedSlice.create(
         scope,
@@ -186,11 +191,11 @@ public abstract class StridedSliceHelper {
    * @param value the value to assign.
    * @param indices The indices to slice.  See {@link Indices}.
    * @return a new instance of StridedSliceAssign
-   * @see org.tensorflow.op.Ops#stridedSlice(Operand, TensorIndex...)
+   * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
    */
   @Endpoint(name = "stridedSliceAssign")
   public static <T extends TType> StridedSliceAssign<T> stridedSliceAssign(Scope scope, Operand<T> ref,
-      Operand<T> value, TensorIndex... indices) {
+      Operand<T> value, Index... indices) {
     StridedSliceArgs args = mergeIndexes(indices);
     return StridedSliceAssign.create(
         scope,

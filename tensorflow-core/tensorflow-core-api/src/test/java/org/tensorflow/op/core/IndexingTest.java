@@ -20,17 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
-import org.tensorflow.ndarray.index.TensorIndex;
+import org.tensorflow.ndarray.index.Index;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 
 public class IndexingTest {
 
   // [2, 1:2, :, tf.newaxis, ..., :4, 4::2]
-  private static final TensorIndex[] slice = new TensorIndex[]{
+  private static final Index[] slice = new Index[]{
       Indices.at(2),
       Indices.at(1, true),
       Indices.all(),
