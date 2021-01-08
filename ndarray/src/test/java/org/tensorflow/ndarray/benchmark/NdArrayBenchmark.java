@@ -38,7 +38,7 @@ import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.StdArrays;
 
-@Fork(value = 0, jvmArgs = {"-Xms4G", "-Xmx4G"})
+@Fork(value = 1, jvmArgs = {"-Xms4G", "-Xmx4G"})
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 3)
 @Measurement(iterations = 5)
