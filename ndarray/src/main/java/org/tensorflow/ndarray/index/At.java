@@ -65,11 +65,6 @@ final class At implements Index {
   }
 
   @Override
-  public boolean shrinkAxisMask() {
-    return !keepDim;
-  }
-
-  @Override
   public String toString() {
     return new StringJoiner(", ", At.class.getSimpleName() + "(", ")")
         .add("coord=" + coord)

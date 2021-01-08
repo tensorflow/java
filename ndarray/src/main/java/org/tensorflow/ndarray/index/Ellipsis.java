@@ -42,11 +42,6 @@ final class Ellipsis implements Index {
   }
 
   @Override
-  public boolean ellipsisMask() {
-    return true;
-  }
-
-  @Override
   public String toString() {
     return Ellipsis.class.getSimpleName() + "()";
   }

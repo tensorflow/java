@@ -197,7 +197,7 @@ public final class Indices {
    * @param start coordinate of the first element of the sequence
    * @return index
    */
-  public static Index from(long start) {
+  public static Index sliceFrom(long start) {
     return slice(start, null);
   }
 
@@ -211,8 +211,40 @@ public final class Indices {
    * @param end coordinate of the last element of the sequence (exclusive)
    * @return index
    */
-  public static Index to(long end) {
+  public static Index sliceTo(long end) {
     return slice(null, end);
+  }
+
+  /**
+   * An index that returns only elements on a given dimension starting at a
+   * specific coordinate, using the given stride.
+   *
+   * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
+   * {@code from(k)} returns x<sub>k</sub>, x<sub>k+1</sub>, ..., x<sub>n-1</sub>
+   *
+   * @param start coordinate of the first element of the sequence
+   * @param stride the stride to use
+   * @return index
+   * @see #slice(long, long, long)
+   */
+  public static Index sliceFrom(long start, long stride) {
+    return slice(start, null, stride);
+  }
+
+  /**
+   * An index that returns only elements on a given dimension up to a
+   * specific coordinate, using the given stride.
+   *
+   * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
+   * {@code to(k)} returns x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>k</sub>
+   *
+   * @param end coordinate of the last element of the sequence (exclusive)
+   * @param stride the stride to use
+   * @return index
+   * @see #slice(long, long, long)
+   */
+  public static Index sliceTo(long end, long stride) {
+    return slice(null, end, stride);
   }
 
   /**

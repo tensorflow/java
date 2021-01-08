@@ -47,11 +47,6 @@ final class NewAxis implements Index {
   }
 
   @Override
-  public boolean newAxisMask() {
-    return true;
-  }
-
-  @Override
   public String toString() {
     return NewAxis.class.getSimpleName() + "()";
   }

@@ -40,7 +40,7 @@ public class DenseNdArrayTest {
         {{3, 4}, {6, 7}}
     });
 
-    assertTrue(vector1.equals(vector2.slice(Indices.from(2))));
+    assertTrue(vector1.equals(vector2.slice(Indices.sliceFrom(2))));
     assertTrue(vector1.equals(matrix1.get(1)));
     assertTrue(vector1.equals(matrix2.get(1).slice(Indices.even())));
     assertTrue(matrix1.equals(matrix2.slice(Indices.all(), Indices.even())));
