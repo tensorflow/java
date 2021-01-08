@@ -25,19 +25,19 @@ import org.tensorflow.ndarray.index.Indices;
 public class IndexTest {
   @Test
   public void testNullConversions(){
-    assertTrue(Indices.slice(null, 0).beginMask(),
+    assertTrue(Indices.slice(null, 0L).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
-    assertTrue(Indices.slice(null, 0).beginMask(),
+    assertTrue(Indices.slice(null, 0L).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
     assertTrue(Indices.slice(null, null).beginMask(),
         "Passed null for slice start but didn't set begin mask");
 
-    assertTrue(Indices.slice(0, null).endMask(),
+    assertTrue(Indices.slice(0L, null).endMask(),
         "Passed null for slice end but didn't set end mask");
 
-    assertTrue(Indices.slice(0, null).endMask(),
+    assertTrue(Indices.slice(0L, null).endMask(),
         "Passed null for slice end but didn't set end mask");
 
     assertTrue(Indices.slice(null, null).endMask(),
@@ -135,7 +135,7 @@ public class IndexTest {
         scalar.setInt((int)coords[2])
     );
 
-    IntNdArray slice1 = matrix3d.slice(Indices.all(), Indices.slice(null, 3), Indices.all());
+    IntNdArray slice1 = matrix3d.slice(Indices.all(), Indices.sliceTo(3), Indices.all());
 
     assertEquals(Shape.of(5, 3, 5), slice1.shape());
     assertEquals(0, slice1.getInt(0, 0, 0));

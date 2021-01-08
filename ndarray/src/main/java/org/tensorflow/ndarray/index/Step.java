@@ -19,11 +19,9 @@ package org.tensorflow.ndarray.index;
 import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
-final class Slice implements Index {
+final class Step implements Index {
 
-  Slice(long start, long end, long stride) {
-    this.start = start;
-    this.end = end;
+  Step(long stride) {
     this.stride = stride;
 
     if (stride == 0) {
@@ -44,13 +42,13 @@ final class Slice implements Index {
   }
 
   @Override
-  public long begin() {
-    return start;
+  public boolean beginMask() {
+    return true;
   }
 
   @Override
-  public long end() {
-    return end;
+  public boolean endMask() {
+    return true;
   }
 
   @Override
@@ -60,30 +58,26 @@ final class Slice implements Index {
 
   @Override
   public String toString() {
-    return new StringJoiner(", ", Slice.class.getSimpleName() + "(", ")")
-        .add("start=" + start)
-        .add("end=" + end)
+    return new StringJoiner(", ", Step.class.getSimpleName() + "(", ")")
         .add("stride=" + stride)
         .toString();
   }
 
   private long start(Dimension dim) {
-    if (start < 0) {
-      return dim.numElements() + start;
+    if (stride > 0) {
+      return 0;
     }
 
-    return start;
+    return dim.numElements() - 1; // it's inclusive
   }
 
   private long end(Dimension dim) {
-    if (end < 0) {
-      return dim.numElements() + end;
+    if (stride > 0) {
+      return dim.numElements();
     } else {
-      return end;
+      return -1; // it's exclusive
     }
   }
 
-  private final long start;
-  private final long end;
   private final long stride;
 }

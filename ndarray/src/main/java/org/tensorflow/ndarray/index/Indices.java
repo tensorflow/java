@@ -34,8 +34,8 @@ public final class Indices {
    * single element and therefore is excluded from the computation of the rank.
    *
    * <p>For example, given a 3D matrix on the axis [x, y, z], if
-   * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its
-   * number of elements is {@code x.numElements()}
+   * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its number of elements is
+   * {@code x.numElements()}
    *
    * @param coord coordinate of the element on the indexed axis
    * @return index
@@ -65,12 +65,12 @@ public final class Indices {
    * A coordinate that selects a specific element on a given dimension.
    *
    * <p>When this index is applied to a given dimension, the dimension is resolved as a
-   * single element and therefore, if {@code keepDim} is false, is excluded from the computation of the rank.
-   * If {@code} keepDim is true, the dimension is collapsed down to one element.
+   * single element and therefore, if {@code keepDim} is false, is excluded from the computation of the rank. If {@code}
+   * keepDim is true, the dimension is collapsed down to one element.
    *
    * <p>For example, given a 3D matrix on the axis [x, y, z], if
-   * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its
-   * number of elements is {@code x.numElements()}
+   * {@code matrix.slice(all(), at(0), at(0)}, then the rank of the returned slice is 1 and its number of elements is
+   * {@code x.numElements()}
    *
    * @param coord coordinate of the element on the indexed axis
    * @param keepDim whether to remove the dimension.
@@ -89,8 +89,8 @@ public final class Indices {
    * If {@code} keepDim is true, the dimension is collapsed down to one element instead of being removed.
    *
    * @param coord scalar indicating the coordinate of the element on the indexed axis
-   * @return index
    * @param keepDim whether to remove the dimension.
+   * @return index
    * @throws IllegalRankException if {@code coord} is not a scalar (rank 0)
    */
   public static Index at(NdArray<? extends Number> coord, boolean keepDim) {
@@ -149,8 +149,7 @@ public final class Indices {
   }
 
   /**
-   * An index that returns only elements found at an even position in the
-   * original dimension.
+   * An index that returns only elements found at an even position in the original dimension.
    *
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and n is even,
    * {@code even()} returns x<sub>0</sub>, x<sub>2</sub>, ..., x<sub>n-2</sub>
@@ -158,12 +157,11 @@ public final class Indices {
    * @return index
    */
   public static Index even() {
-    return slice(null, null, 2);
+    return step(2);
   }
 
   /**
-   * An index that returns only elements found at an odd position in the
-   * original dimension.
+   * An index that returns only elements found at an odd position in the original dimension.
    *
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and n is even,
    * {@code odd()} returns x<sub>1</sub>, x<sub>3</sub>, ..., x<sub>n-1</sub>
@@ -171,7 +169,7 @@ public final class Indices {
    * @return index
    */
   public static Index odd() {
-    return slice(1, null, 2);
+    return sliceFrom(1, 2);
   }
 
   /**
@@ -180,16 +178,15 @@ public final class Indices {
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis,
    * {@code step(k)} returns x<sub>0</sub>, x<sub>k</sub>, x<sub>k*2</sub>, ...
    *
-   * @param stepLength the number of elements between each steps
+   * @param stride the number of elements between each steps
    * @return index
    */
-  public static Index step(long stepLength) {
-    return slice(null, null, stepLength);
+  public static Index step(long stride) {
+    return new Step(stride);
   }
 
   /**
-   * An index that returns only elements on a given dimension starting at a
-   * specific coordinate.
+   * An index that returns only elements on a given dimension starting at a specific coordinate.
    *
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
    * {@code from(k)} returns x<sub>k</sub>, x<sub>k+1</sub>, ..., x<sub>n-1</sub>
@@ -198,26 +195,12 @@ public final class Indices {
    * @return index
    */
   public static Index sliceFrom(long start) {
-    return slice(start, null);
+    return sliceFrom(start, 1);
   }
 
   /**
-   * An index that returns only elements on a given dimension up to a
-   * specific coordinate.
-   *
-   * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
-   * {@code to(k)} returns x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>k</sub>
-   *
-   * @param end coordinate of the last element of the sequence (exclusive)
-   * @return index
-   */
-  public static Index sliceTo(long end) {
-    return slice(null, end);
-  }
-
-  /**
-   * An index that returns only elements on a given dimension starting at a
-   * specific coordinate, using the given stride.
+   * An index that returns only elements on a given dimension starting at a specific coordinate, using the given
+   * stride.
    *
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
    * {@code from(k)} returns x<sub>k</sub>, x<sub>k+1</sub>, ..., x<sub>n-1</sub>
@@ -228,12 +211,24 @@ public final class Indices {
    * @see #slice(long, long, long)
    */
   public static Index sliceFrom(long start, long stride) {
-    return slice(start, null, stride);
+    return new SliceFrom(start, stride);
   }
 
   /**
-   * An index that returns only elements on a given dimension up to a
-   * specific coordinate, using the given stride.
+   * An index that returns only elements on a given dimension up to a specific coordinate.
+   *
+   * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
+   * {@code to(k)} returns x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>k</sub>
+   *
+   * @param end coordinate of the last element of the sequence (exclusive)
+   * @return index
+   */
+  public static Index sliceTo(long end) {
+    return sliceTo(end, 1);
+  }
+
+  /**
+   * An index that returns only elements on a given dimension up to a specific coordinate, using the given stride.
    *
    * <p>For example, given a vector with {@code n} elements on the {@code x} axis, and {@code n > k},
    * {@code to(k)} returns x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>k</sub>
@@ -244,7 +239,7 @@ public final class Indices {
    * @see #slice(long, long, long)
    */
   public static Index sliceTo(long end, long stride) {
-    return slice(null, end, stride);
+    return new SliceTo(end, stride);
   }
 
   /**
@@ -272,16 +267,15 @@ public final class Indices {
   public static Index flip() {
     return slice(null, null, -1);
   }
-  
+
   /**
-   * An index that returns elements according to an hyperslab defined by {@code start},
-   * {@code stride}, {@code count}, {@code block}. See {@link Hyperslab}.
-   * 
+   * An index that returns elements according to an hyperslab defined by {@code start}, {@code stride}, {@code count},
+   * {@code block}. See {@link Hyperslab}.
+   *
    * @param start Starting location for the hyperslab.
    * @param stride The number of elements to separate each element or block to be selected.
    * @param count The number of elements or blocks to select along the dimension.
    * @param block The size of the block selected from the dimension.
-   * 
    * @return index
    */
   public static Index hyperslab(long start, long stride, long count, long block) {
@@ -293,123 +287,87 @@ public final class Indices {
    *
    * @return index
    */
-  public static Index newAxis(){
+  public static Index newAxis() {
     return NewAxis.INSTANCE;
   }
 
   /**
-   * An index that expands to fill all available source dimensions.
-   * Works the same as Python's {@code ...}.
-   * @see #expand()
+   * An index that expands to fill all available source dimensions. Works the same as Python's {@code ...}.
+   *
    * @return index
+   * @see #expand()
    */
-  public static Index ellipsis(){
+  public static Index ellipsis() {
     return Ellipsis.INSTANCE;
   }
 
   /**
-   * An index that expands to fill all available source dimensions.
-   * Works the same as Python's {@code ...}.
+   * An index that expands to fill all available source dimensions. Works the same as Python's {@code ...}.
    *
    * @return index
    */
-  public static Index expand(){
+  public static Index expand() {
     return ellipsis();
   }
 
   /**
-   * An index that returns elements between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * An index that returns elements between {@code start} and {@code end}. If {@code start} or {@code end} is {@code
+   * null}, starts or ends at the beginning or the end, respectively.
    * <p>
    * Analogous to Python's {@code :} slice syntax.
    *
    * @return index
    */
-  public static Index slice(Long start, Long end){
+  public static Index slice(long start, long end) {
     return slice(start, end, 1);
   }
 
   /**
-   * An index that returns elements between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}. If {@code start} or
+   * {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
    * <p>
    * Analogous to Python's {@code :} slice syntax.
    *
    * @return index
    */
-  public static Index slice(long start, Long end){
+  public static Index slice(long start, long end, long stride) {
+    return new Slice(start, end, stride);
+  }
+
+  /**
+   * An index that returns elements between {@code start} and {@code end}. If {@code start} or {@code end} is {@code
+   * null}, starts or ends at the beginning or the end, respectively.
+   * <p>
+   * Analogous to Python's {@code :} slice syntax.
+   *
+   * @return index
+   */
+  public static Index slice(Long start, Long end) {
     return slice(start, end, 1);
   }
 
   /**
-   * An index that returns elements between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
+   * An index that returns every {@code stride}-th element between {@code start} and {@code end}. If {@code start} or
+   * {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
    * <p>
    * Analogous to Python's {@code :} slice syntax.
    *
    * @return index
    */
-  public static Index slice(Long start, long end){
-    return slice(start, end, 1);
+  public static Index slice(Long start, Long end, long stride) {
+    if (start == null && end == null) {
+      if (stride == 1) {
+        return Indices.all();
+      } else {
+        return Indices.step(stride);
+      }
+    } else if (start == null) {
+      return Indices.sliceTo(end, stride);
+    } else if (end == null) {
+      return Indices.sliceFrom(start, stride);
+    }
+
+    return slice(start.longValue(), end.longValue(), stride);
   }
 
-  /**
-   * An index that returns elements between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
-   * <p>
-   * Analogous to Python's {@code :} slice syntax.
-   *
-   * @return index
-   */
-  public static Index slice(long start, long end){
-    return slice(start, end, 1);
-  }
-
-  /**
-   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
-   * <p>
-   * Analogous to Python's {@code :} slice syntax.
-   *
-   * @return index
-   */
-  public static Index slice(Long start, Long end, long stride){
-    return new Slice(start, end, stride);
-  }
-
-  /**
-   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
-   * <p>
-   * Analogous to Python's {@code :} slice syntax.
-   *
-   * @return index
-   */
-  public static Index slice(long start, Long end, long stride){
-    return new Slice(start, end, stride);
-  }
-
-  /**
-   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
-   * <p>
-   * Analogous to Python's {@code :} slice syntax.
-   *
-   * @return index
-   */
-  public static Index slice(Long start, long end, long stride){
-    return new Slice(start, end, stride);
-  }
-
-  /**
-   * An index that returns every {@code stride}-th element between {@code start} and {@code end}.
-   * If {@code start} or {@code end} is {@code null}, starts or ends at the beginning or the end, respectively.
-   * <p>
-   * Analogous to Python's {@code :} slice syntax.
-   *
-   * @return index
-   */
-  public static Index slice(long start, long end, long stride){
-    return new Slice(start, end, stride);
-  }
 }

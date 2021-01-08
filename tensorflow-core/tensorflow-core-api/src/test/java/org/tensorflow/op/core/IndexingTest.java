@@ -35,8 +35,8 @@ public class IndexingTest {
       Indices.all(),
       Indices.newAxis(),
       Indices.ellipsis(),
-      Indices.slice(null, 4),
-      Indices.slice(4, null, 2)
+      Indices.sliceTo( 4),
+      Indices.sliceFrom(4, 2)
   };
 
   @Test
