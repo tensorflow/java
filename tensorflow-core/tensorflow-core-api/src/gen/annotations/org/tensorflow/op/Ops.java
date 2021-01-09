@@ -991,11 +991,28 @@ public final class Ops {
   }
 
   /**
-   * empty
+   * Apply boolean mask to tensor.
+   *  <p>
+   *  Numpy equivalent is `tensor[mask]`.
+   *  <p>
+   *  In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
+   *  the first K dimensions of {@code tensor}'s shape.  We then have:
+   *    {@code booleanMask(tensor, mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]}
+   *  where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major order).
+   *  <p>
+   *  The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default).
+   *  In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
+   *  the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   *
+   * @param scope
+   * @param tensor The tensor to mask.
+   * @param mask The mask to apply.
+   * @param options carries optional attributes values
+   * @return The masked tensor.
    */
-  public <T extends TType> Operand<T> booleanMask(Operand<T> x, Operand<TBool> mask,
+  public <T extends TType> Operand<T> booleanMask(Operand<T> tensor, Operand<TBool> mask,
       BooleanMask.Options... options) {
-    return BooleanMask.create(scope, x, mask, options);
+    return BooleanMask.create(scope, tensor, mask, options);
   }
 
   /**
