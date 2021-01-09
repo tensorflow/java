@@ -32,27 +32,73 @@ import org.tensorflow.types.family.TType;
 @Operator
 public abstract class BooleanMaskUpdate {
 
+  /*
+  Python:
+  def boolean_mask_update(tensor, mask, update, axis=0, name="boolean_mask_update"):
+  with tf.name_scope(name):
+    tensor = tf.convert_to_tensor(tensor, name="tensor")
+    mask = tf.convert_to_tensor(mask, name="mask")
+    update = tf.convert_to_tensor(update, name="value")
+
+    shape_mask = mask.get_shape()
+    ndims_mask = shape_mask.ndims
+    shape_tensor = tensor.get_shape()
+    if ndims_mask == 0:
+      raise ValueError("mask cannot be scalar.")
+    if ndims_mask is None:
+      raise ValueError(
+          "Number of mask dimensions must be specified, even if some dimensions"
+          " are None.  E.g. shape=[None] is ok, but shape=None is not.")
+    axis = 0 if axis is None else axis
+    axis_value = tf.constant(axis)
+    if axis_value is not None:
+      axis = axis_value
+      shape_tensor[axis:axis + ndims_mask].assert_is_compatible_with(shape_mask)
+
+    leading_size = tf.reduce_prod(tf.shape(tensor)[:axis + ndims_mask], [0])
+    innerShape = tf.shape(tensor)[axis + ndims_mask:]
+
+    tensor = tf.reshape(
+        tensor,
+        tf.concat([
+          [leading_size],
+          innerShape
+        ], 0))
+
+    indices = tf.where(mask)
+
+    updateShape = tf.concat([tf.shape(indices)[:-1], innerShape], 0)
+
+    update = tf.broadcast_to(update, updateShape)
+    result = tf.tensor_scatter_nd_update(tensor, indices, update)
+    return tf.reshape(result, shape_tensor)
+   */
+
   /**
    * TODO
    *
-   * @param scope
    * @param tensor The tensor to mask.
    * @param mask The mask to apply.
-   * @param value the new values
+   * @param updates the new values
    * @param options carries optional attributes values
    * @return The masked tensor.
    */
   @Endpoint(name = "booleanMaskUpdate")
-  public static <T extends TType> Operand<T> create(Scope scope, Operand<T> tensor, Operand<TBool> mask, Operand<T> value,
+  public static <T extends TType> Operand<T> create(Scope scope, Operand<T> tensor, Operand<TBool> mask,
+      Operand<T> updates,
       Options... options) {
 
     scope = scope.withNameAsSubScope("BooleanMaskUpdate");
 
     int axis = 0;
+    boolean broadcast = true;
     if (options != null) {
       for (Options opts : options) {
         if (opts.axis != null) {
           axis = opts.axis;
+        }
+        if (opts.broadcast != null) {
+          broadcast = opts.broadcast;
         }
       }
     }
@@ -77,7 +123,7 @@ public abstract class BooleanMaskUpdate {
           "Mask shape " + maskShape + " is not compatible with the required mask shape: " + requiredMaskShape + ".");
     }
 
-    org.tensorflow.op.core.Shape<TInt32> liveShape = org.tensorflow.op.core.Shape.create(scope, tensor);
+    Operand<TInt32> liveShape = org.tensorflow.op.core.Shape.create(scope, tensor);
 
     Operand<TInt32> leadingSize = ReduceProd.create(scope,
         StridedSliceHelper.stridedSlice(scope,
@@ -87,40 +133,55 @@ public abstract class BooleanMaskUpdate {
         Constant.arrayOf(scope, 0)
     );
 
+    Operand<TInt32> innerShape = StridedSliceHelper
+        .stridedSlice(scope, liveShape, Indices.sliceFrom(axis + maskShape.numDimensions()));
+
     Operand<T> reshaped = Reshape.create(scope, tensor, Concat.create(
         scope,
         Arrays.asList(
             Reshape.create(scope, leadingSize, Constant.arrayOf(scope, 1)),
-            StridedSliceHelper.stridedSlice(scope, liveShape, Indices.sliceFrom(axis + maskShape.numDimensions()))
+            innerShape
         ),
         Constant.scalarOf(scope, 0)
     ));
 
     Operand<TInt64> indices = Where.create(scope, mask);
-    //TODO I'd like to broadcast value to the required shape.  Need to figure out the shape first
-    Operand<T> newValue = TensorScatterNdUpdate.create(scope, reshaped, indices, value);
+
+    if(broadcast) {
+      Operand<TInt32> indicesShape = org.tensorflow.op.core.Shape.create(scope, indices);
+      Operand<TInt32> batchShape = StridedSliceHelper.stridedSlice(scope, indicesShape, Indices.sliceTo(-1));
+
+      Operand<TInt32> updateShape = Concat.create(
+          scope,
+          Arrays.asList(
+              batchShape,
+              innerShape
+          ),
+          Constant.scalarOf(scope, 0)
+      );
+
+      updates = BroadcastTo.create(scope, updates, updateShape);
+    }
+
+    Operand<T> newValue = TensorScatterNdUpdate.create(scope, reshaped, indices, updates);
     return Reshape.create(scope, newValue, liveShape);
   }
 
   /**
-   * Used to indicate the axis to mask from.
-   * {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
+   * Used to indicate the axis to mask from. {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
    * the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   *
    * @param axis the axis to mask from.  Uses 0 if null.
    */
-  public static Options axis(Integer axis){
+  public static Options axis(Integer axis) {
     return new Options().axis(axis);
   }
 
-
   /**
-   * Used to indicate the axis to mask from.
-   * {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
-   * the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
-   * @param axis the axis to mask from.
+   * Whether to try broadcasting update.  True by default.
    */
-  public static Options axis(int axis){
-    return new Options().axis(axis);
+  public static Options broadcast(Boolean broadcast){
+    return new Options().broadcast(broadcast);
   }
 
   /**
@@ -137,14 +198,15 @@ public abstract class BooleanMaskUpdate {
     }
 
     /**
-     * @param axis (Optional) The axis to mask from, or 0 if not set.
+     * @param broadcast (Optional) Whether to try broadcasting update.  True by default.
      */
-    public Options axis(int axis) {
-      this.axis = axis;
+    public Options broadcast(Boolean broadcast) {
+      this.broadcast = broadcast;
       return this;
     }
 
     private Integer axis;
+    private Boolean broadcast;
 
     private Options() {
     }

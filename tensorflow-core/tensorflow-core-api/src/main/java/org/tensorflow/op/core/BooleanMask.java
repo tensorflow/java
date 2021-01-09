@@ -149,14 +149,6 @@ public abstract class BooleanMask {
       return this;
     }
 
-    /**
-     * @param axis (Optional) The axis to mask from, or 0 if not set.
-     */
-    public Options axis(int axis) {
-      this.axis = axis;
-      return this;
-    }
-
     private Integer axis;
 
     private Options() {

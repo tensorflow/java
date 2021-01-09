@@ -18,10 +18,13 @@ package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
+import org.tensorflow.Session.Run;
+import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Scope;
@@ -37,7 +40,7 @@ public class BooleanMaskUpdateTest {
         Session sess = new Session(g)) {
       Scope scope = new Scope(g);
 
-      Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{ {0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+      Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
 
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
@@ -45,18 +48,25 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output).run().get(0)) {
-        // expected shape from Python tensorflow
+      Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
+
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      try (TInt32 result = (TInt32) results.get(0);
+          TInt32 bcastResult = (TInt32) results.get(1)) {
+
         assertEquals(Shape.of(3, 3), result.shape());
-        assertEquals(-1, result.getFloat(0, 0));
-        assertEquals(-1, result.getFloat(0, 1));
-        assertEquals(-1, result.getFloat(0, 2));
-        assertEquals(1, result.getFloat(1, 0));
-        assertEquals(1, result.getFloat(1, 1));
-        assertEquals(1, result.getFloat(1, 2));
-        assertEquals(2, result.getFloat(2, 0));
-        assertEquals(2, result.getFloat(2, 1));
-        assertEquals(2, result.getFloat(2, 2));
+
+        assertEquals(-1, result.getInt(0, 0));
+        assertEquals(-1, result.getInt(0, 1));
+        assertEquals(-1, result.getInt(0, 2));
+        assertEquals(1, result.getInt(1, 0));
+        assertEquals(1, result.getInt(1, 1));
+        assertEquals(1, result.getInt(1, 2));
+        assertEquals(2, result.getInt(2, 0));
+        assertEquals(2, result.getInt(2, 1));
+        assertEquals(2, result.getInt(2, 2));
+
+        assertEquals(result, bcastResult);
       }
     }
   }
@@ -75,19 +85,27 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value, BooleanMaskUpdate.axis(2));
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output).run().get(0)) {
-        // expected shape from Python tensorflow
+      Operand<TInt32> bcastOutput = BooleanMaskUpdate
+          .create(scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));
+
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      try (TInt32 result = (TInt32) results.get(0);
+          TInt32 bcastResult = (TInt32) results.get(1)) {
+
         assertEquals(Shape.of(1, 1, 10), result.shape());
-        assertEquals(-1, result.getFloat(0, 0, 0));
-        assertEquals(-1, result.getFloat(0, 0, 1));
-        assertEquals(2, result.getFloat(0, 0, 2));
-        assertEquals(3, result.getFloat(0, 0, 3));
-        assertEquals(-1, result.getFloat(0, 0, 4));
-        assertEquals(-1, result.getFloat(0, 0, 5));
-        assertEquals(-1, result.getFloat(0, 0, 6));
-        assertEquals(7, result.getFloat(0, 0, 7));
-        assertEquals(8, result.getFloat(0, 0, 8));
-        assertEquals(9, result.getFloat(0, 0, 9));
+
+        assertEquals(-1, result.getInt(0, 0, 0));
+        assertEquals(-1, result.getInt(0, 0, 1));
+        assertEquals(2, result.getInt(0, 0, 2));
+        assertEquals(3, result.getInt(0, 0, 3));
+        assertEquals(-1, result.getInt(0, 0, 4));
+        assertEquals(-1, result.getInt(0, 0, 5));
+        assertEquals(-1, result.getInt(0, 0, 6));
+        assertEquals(7, result.getInt(0, 0, 7));
+        assertEquals(8, result.getInt(0, 0, 8));
+        assertEquals(9, result.getInt(0, 0, 9));
+
+        assertEquals(result, bcastResult);
       }
     }
   }
