@@ -21,7 +21,6 @@ import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -31,33 +30,23 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 @Operator
-public abstract class BooleanMask {
+public abstract class BooleanMaskUpdate {
 
   /**
-   * Apply boolean mask to tensor.  Returns the flat array of each element corresponding to a {@code true} in the mask.
-   * <p>
-   * Numpy equivalent is `tensor[mask]`.
-   * <p>
-   * In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
-   * the first K dimensions of {@code tensor}'s shape.  We then have:
-   *   {@code booleanMask(tensor, mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]}
-   * where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major order).
-   * <p>
-   * The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default).
-   * In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
-   * the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   * TODO
    *
    * @param scope
    * @param tensor The tensor to mask.
    * @param mask The mask to apply.
+   * @param value the new values
    * @param options carries optional attributes values
    * @return The masked tensor.
    */
-  @Endpoint(name = "booleanMask")
-  public static <T extends TType> Operand<T> create(Scope scope, Operand<T> tensor, Operand<TBool> mask,
+  @Endpoint(name = "booleanMaskUpdate")
+  public static <T extends TType> Operand<T> create(Scope scope, Operand<T> tensor, Operand<TBool> mask, Operand<T> value,
       Options... options) {
 
-    scope = scope.withNameAsSubScope("BooleanMask");
+    scope = scope.withNameAsSubScope("BooleanMaskUpdate");
 
     int axis = 0;
     if (options != null) {
@@ -82,7 +71,6 @@ public abstract class BooleanMask {
       throw new IllegalArgumentException("Mask cannot have unknown number of dimensions");
     }
 
-    Operand<TInt32> axisTensor = Constant.scalarOf(scope, axis);
     Shape requiredMaskShape = tensorShape.subShape(axis, axis + maskShape.numDimensions());
     if (!requiredMaskShape.isCompatibleWith(maskShape)) {
       throw new IllegalArgumentException(
@@ -94,25 +82,24 @@ public abstract class BooleanMask {
     Operand<TInt32> leadingSize = ReduceProd.create(scope,
         StridedSliceHelper.stridedSlice(scope,
             liveShape,
-            Indices.range(axis, axis + maskShape.numDimensions())
+            Indices.sliceTo(axis + maskShape.numDimensions())
         ),
         Constant.arrayOf(scope, 0)
     );
 
-    Operand<T> flattened = Reshape.create(scope, tensor, Concat.create(
+    Operand<T> reshaped = Reshape.create(scope, tensor, Concat.create(
         scope,
         Arrays.asList(
-            StridedSliceHelper.stridedSlice(scope, liveShape, Indices.sliceTo(axis)),
             Reshape.create(scope, leadingSize, Constant.arrayOf(scope, 1)),
             StridedSliceHelper.stridedSlice(scope, liveShape, Indices.sliceFrom(axis + maskShape.numDimensions()))
         ),
         Constant.scalarOf(scope, 0)
     ));
 
-    Operand<TBool> flatMask = Reshape.create(scope, mask, Constant.arrayOf(scope, -1));
-
-    Operand<TInt64> indices = Squeeze.create(scope, Where.create(scope, flatMask), Squeeze.axis(Collections.singletonList(1L)));
-    return Gather.create(scope, flattened, indices, axisTensor);
+    Operand<TInt64> indices = Where.create(scope, mask);
+    //TODO I'd like to broadcast value to the required shape.  Need to figure out the shape first
+    Operand<T> newValue = TensorScatterNdUpdate.create(scope, reshaped, indices, value);
+    return Reshape.create(scope, newValue, liveShape);
   }
 
   /**
@@ -137,7 +124,7 @@ public abstract class BooleanMask {
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.BooleanMask}
+   * Optional attributes for {@link BooleanMaskUpdate}
    */
   public static class Options {
 

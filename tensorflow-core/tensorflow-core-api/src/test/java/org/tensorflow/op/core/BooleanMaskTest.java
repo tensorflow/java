@@ -46,21 +46,21 @@ public class BooleanMaskTest {
       try (TFloat32 result = (TFloat32) sess.runner().fetch(output1).run().get(0)) {
         // expected shape from Python tensorflow
         assertEquals(Shape.of(5), result.shape());
-        assertEquals(result.getFloat(0), 0);
-        assertEquals(result.getFloat(1), 1);
-        assertEquals(result.getFloat(2), 4);
-        assertEquals(result.getFloat(3), 5);
-        assertEquals(result.getFloat(4), 6);
+        assertEquals(0, result.getFloat(0));
+        assertEquals(1, result.getFloat(1));
+        assertEquals(4, result.getFloat(2));
+        assertEquals(5, result.getFloat(3));
+        assertEquals(6, result.getFloat(4));
       }
 
       try (TFloat32 result = (TFloat32) sess.runner().fetch(output2).run().get(0)) {
         // expected shape from Python tensorflow
         assertEquals(Shape.of(5), result.shape());
-        assertEquals(result.getFloat(0), 0);
-        assertEquals(result.getFloat(1), 1);
-        assertEquals(result.getFloat(2), 4);
-        assertEquals(result.getFloat(3), 5);
-        assertEquals(result.getFloat(4), 6);
+        assertEquals(0, result.getFloat(0));
+        assertEquals(1, result.getFloat(1));
+        assertEquals(4, result.getFloat(2));
+        assertEquals(5, result.getFloat(3));
+        assertEquals(6, result.getFloat(4));
       }
     }
   }
