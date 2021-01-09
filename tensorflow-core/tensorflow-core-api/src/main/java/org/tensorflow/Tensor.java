@@ -212,4 +212,23 @@ public interface Tensor extends Shaped, AutoCloseable {
    */
   @Override
   void close();
+
+  /**
+   * Get whether this tensor has been closed.
+   */
+  boolean isClosed();
+
+  /**
+   * Detach this tensor from any scopes managing it.  It must be manually closed or attached to another scope.
+   */
+  default void detach(){
+    asRawTensor().detach();
+  }
+
+  /**
+   * Attach this tensor to the current scope.  No-ops and returns false if there is no current scope.
+   */
+  default boolean attachToCurrentScope(){
+    return asRawTensor().attachToCurrentScope();
+  }
 }

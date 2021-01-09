@@ -34,9 +34,9 @@ import org.tensorflow.types.family.TType;
  * A tensor which memory has not been mapped to a data space directly accessible from the JVM.
  *
  * <p>A raw tensor is a minimalist representation of a tensor allocated in native memory by the
- * TensorFlow runtime library and it controls its lifetime within the current process. The data
- * is represented by a flat {@link ByteDataBuffer buffer of bytes}, until it is mapped in a
- * n-dimensional typed space by a {@link TType typed tensor}.</p>
+ * TensorFlow runtime library and it controls its lifetime within the current process. The data is represented by a flat
+ * {@link ByteDataBuffer buffer of bytes}, until it is mapped in a n-dimensional typed space by a {@link TType typed
+ * tensor}.</p>
  *
  * <p>Instances of a RawTensor are <b>not</b> thread-safe and their resource must be released
  * by calling {@link #close()} explicitly or implicitly via try-with-resources.</p>
@@ -65,7 +65,30 @@ public final class RawTensor implements Tensor {
 
   @Override
   public void close() {
-    tensorScope.close();
+    if (!closed) {
+      tensorScope.close();
+      closed = true;
+    }
+  }
+
+  @Override
+  public boolean isClosed() {
+    return closed;
+  }
+
+  @Override
+  public void detach() {
+    TensorScope.detach(this);
+  }
+
+  @Override
+  public boolean attachToCurrentScope() {
+    TensorScope currentScope = TensorScope.getInnerScope();
+    if (currentScope != null) {
+      currentScope.attach(this);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -93,19 +116,19 @@ public final class RawTensor implements Tensor {
    * Allocates a new tensor in native memory of the given type, shape and size.
    *
    * <p>The size of the tensor must be at least large enough to contain all scalars for the
-   * given type and shape. More memory can also be allocated to store also metadata within the
-   * tensor itself, e.g. a lookup table in a string tensor.
+   * given type and shape. More memory can also be allocated to store also metadata within the tensor itself, e.g. a
+   * lookup table in a string tensor.
    *
    * @param type tensor type class
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor, or -1 to compute the size from the shape
    * @return allocated tensor
-   * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
-   *                                  store the tensor data
-   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given
-   *                                  {@code type} are of variable length (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
+   * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to store the tensor
+   * data
+   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given {@code type} are of
+   * variable length (e.g. strings)
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link Shape#hasUnknownDimension()
+   * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
    */
   static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
@@ -147,9 +170,9 @@ public final class RawTensor implements Tensor {
     TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(DataType.forNumber(dtype(handle)));
     RawTensor t = new RawTensor(typeInfo, Shape.of(shape(handle)));
     try (PointerScope scope = new PointerScope()) {
-        scope.attach(handle);
-        t.tensorHandle = handle;
-        t.tensorScope = scope.extend();
+      scope.attach(handle);
+      t.tensorHandle = handle;
+      t.tensorScope = scope.extend();
     }
     return t;
   }
@@ -168,6 +191,7 @@ public final class RawTensor implements Tensor {
 
   /**
    * Returns the native handle to this tensor
+   *
    * @throws IllegalStateException if tensor has been closed
    */
   TF_Tensor nativeHandle() {
@@ -219,9 +243,14 @@ public final class RawTensor implements Tensor {
   RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
     this.typeInfo = typeInfo;
     this.shape = shape;
+    TensorScope currentScope = TensorScope.getInnerScope();
+    if (currentScope != null) {
+      currentScope.attach(this);
+    }
   }
 
   private PointerScope tensorScope;
+  private boolean closed;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;
