@@ -32,6 +32,10 @@
     Utility library for N-dimensional data I/O operations.
   </description>
 
+  <properties>
+    <java.module.name>org.tensorflow.ndarray</java.module.name>
+  </properties>
+
   <dependencies>
       <dependency>
         <groupId>org.junit.jupiter</groupId>
@@ -57,6 +61,17 @@
 
   <build>
     <plugins>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.2.0</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

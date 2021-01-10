@@ -29,6 +29,7 @@
 
   <properties>
     <javacpp.moduleId>tensorflow-core-api</javacpp.moduleId>
+    <java.module.name>org.tensorflow.core.platform</java.module.name>
   </properties>
 
   <dependencies>
@@ -91,6 +92,7 @@
               <archive>
                 <manifestEntries>
                   <Class-Path>${javacpp.moduleId}.jar ${javacpp.moduleId}-linux-x86_64.jar ${javacpp.moduleId}-macosx-x86_64.jar ${javacpp.moduleId}-windows-x86_64.jar</Class-Path>
+                  <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
                 </manifestEntries>
               </archive>
             </configuration>
