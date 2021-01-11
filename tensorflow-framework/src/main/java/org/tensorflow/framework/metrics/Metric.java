@@ -76,7 +76,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @return a List of Operations to update the metric state
    */
   @SuppressWarnings({"unchecked", "unused"})
-  public List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
+  public <V extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<V> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -88,7 +88,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
-   * @param <V> the data type for the sample weights
+   * @param <V> the data type for the labels
    * @return a List of Operations to update the metric state
    */
   @SuppressWarnings({"unchecked", "unused"})
@@ -104,7 +104,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return the Operation to update the metric state
    */
-  public final Op updateState(Operand<U> values, Operand<T> sampleWeights) {
+  public final <V extends TNumber> Op updateState(Operand<U> values, Operand<V> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
@@ -115,7 +115,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
-   * @param <V> the data type for the sample weights
+   * @param <V> the data type for the labels
    * @return the Operation to update the metric state
    */
   public final <V extends TNumber> Op updateState(
@@ -127,10 +127,9 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   /**
    * Gets the current result of the metric
    *
-   * @param tf the TensorFlow Ops used to create the result
    * @return the result, possibly with control dependencies
    */
-  public abstract Operand<T> result(Ops tf);
+  public abstract Operand<T> result();
 
   /**
    * Resets any state variables to their initial values
@@ -139,14 +138,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   public abstract Op resetStates();
 
-  /**
-   * Gets the current result of the metric using the metric's {@link #getTF()}
-   *
-   * @return the result, possibly with control dependencies
-   */
-  public Operand<T> result() {
-    return result(this.tf);
-  }
 
   /**
    * Calls update state once, followed by a call to get the result
@@ -158,7 +149,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   public final Operand<T> callOnce(Operand<U> values, Operand<T> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     Ops ltf = tf.withSubScope("callOnce").withControlDependencies(controlOps);
-    return result(ltf);
+    return ltf.identity(result());
   }
 
   /**
