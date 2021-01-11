@@ -79,7 +79,7 @@ public class MetricVariable<U extends TNumber> {
       } else {
         throw new IllegalArgumentException(
             String.format(
-                "Type %s is not a supported for metric variables",
+                "Type %s is not supported for metric variables",
                 type.getSimpleName()));
       }
     } else {
