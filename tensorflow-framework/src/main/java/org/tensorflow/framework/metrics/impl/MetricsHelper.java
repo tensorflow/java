@@ -18,6 +18,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.SetDiff1d;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
@@ -30,7 +31,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * These are helper methods for Metrics and will be module private when Java modularity is applied
@@ -42,7 +42,12 @@ public class MetricsHelper {
       "weights can not be broadcast to values.";
 
   /**
-   * Asserts that the <code>sampleWeights</code> can be broadcast to <code>values</code>
+   * Asserts that the <code>sampleWeights</code> can be broadcast to the same shape as <code>values
+   * </code>
+   *
+   * <p>In losses and metrics, limited weight broadcasting is supported. Weights be either scalar,
+   * or the same rank as the target values, with each dimension either 1, or the same as the
+   * corresponding values dimension.
    *
    * @param tf the TensorFlow Ops
    * @param sampleWeights the sample weights.
@@ -54,9 +59,10 @@ public class MetricsHelper {
    *     incorrect shape that prohibit broadcasting to to <code>values</code>
    */
   @SuppressWarnings("unchecked")
-  public static <U extends TNumber> Op broadcastWeights(
+  public static <U extends TNumber> Op assertBroadcastable(
       Ops tf, Operand<U> sampleWeights, Operand<U> values) {
 
+    // try static check for exact match
     Operand<TInt32> weightsShape = tf.shape(sampleWeights);
     Operand<TInt32> weightsRank = tf.rank(sampleWeights);
     Shape weightsShapeStatic = sampleWeights.shape();
@@ -67,9 +73,9 @@ public class MetricsHelper {
     Shape valuesShapeStatic = values.shape();
     int valuesRankStatic = valuesShapeStatic.numDimensions();
 
-    if (weightsRankStatic != -1 && valuesRankStatic != -1) {
+    if (weightsRankStatic != Shape.UNKNOWN_SIZE && valuesRankStatic != Shape.UNKNOWN_SIZE) {
       if (weightsRankStatic == 0) {
-        return tf.withSubScope("static_scalar_check_success")
+        return tf.withSubScope("staticScalarCheckSuccess")
             .withControlDependencies(Collections.EMPTY_LIST)
             .noOp();
       }
@@ -85,7 +91,7 @@ public class MetricsHelper {
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
-        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i)) {
+        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i) && weightsShapeStatic.size(i) != 1) {
           throw new IllegalArgumentException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
@@ -95,12 +101,12 @@ public class MetricsHelper {
                   weightsShapeStatic.toString()));
         }
       }
-      return tf.withSubScope("static_dims_check_success")
+      return tf.withSubScope("staticDimsCheckSuccess")
           .withControlDependencies(Collections.EMPTY_LIST)
           .noOp();
     }
     // Dynamic checks.
-    Operand<TBool> is_scalar = tf.math.equal(weightsRank, tf.constant(0));
+    Operand<TBool> isScalar = tf.math.equal(weightsRank, tf.constant(0));
     List<Operand<?>> data =
         Arrays.asList(
             tf.constant(ASSERT_BROADCAST_ERROR_PREFIX),
@@ -108,14 +114,13 @@ public class MetricsHelper {
             weightsShape,
             tf.constant("values.shape="),
             valuesShape,
-            tf.constant("is_scalar="),
-            is_scalar);
+            tf.constant("isScalar="),
+            isScalar);
 
-    Operand<TBool> isValidShape =
-        tf.select(
-            is_scalar,
-            is_scalar,
-            hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape));
+    Operand<TBool> validNonsclar =
+        hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape);
+
+    Operand<TBool> isValidShape = tf.select(isScalar, isScalar, validNonsclar);
 
     return tf.withSubScope("broadcastWeights-dynamic").assertThat(isValidShape, data);
   }
@@ -137,7 +142,7 @@ public class MetricsHelper {
       Operand<T> weightsShape,
       Operand<T> valuesRank,
       Operand<T> valuesShape) {
-    tf = tf.withSubScope("has_valid_nonscalar_shape");
+    tf = tf.withSubScope("hasValidNonscalarShape");
     Operand<TBool> isSameRank = tf.math.equal(valuesRank, weightsRank);
     return tf.select(isSameRank, hasValidDims(tf, weightsShape, valuesShape), isSameRank);
   }
@@ -153,9 +158,15 @@ public class MetricsHelper {
    */
   private static <T extends TNumber> Operand<TBool> hasValidDims(
       Ops tf, Operand<T> weightsShape, Operand<T> valuesShape) {
-    tf = tf.withSubScope("has_invalid_dims");
-    Operand<T> diff = tf.reduceSum(tf.math.sub(weightsShape, valuesShape), tf.constant(0));
-    return tf.math.equal(cast(tf, tf.constant(0), diff.asOutput().type()), diff);
+    tf = tf.withSubScope("hasValidDims");
+    Operand<T> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
+    Operand<T> validDims =
+        tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
+    SetDiff1d<T, TInt32> invalidDimsDiff =
+        tf.setDiff1d(tf.shape.flatten(valuesShape2d), tf.shape.flatten(validDims));
+    Operand<T> invalidDims = invalidDimsDiff.out();
+    Operand<TInt32> numInvalidDims = tf.size(invalidDims);
+    return tf.math.equal(tf.constant(0), numInvalidDims);
   }
 
   // alias for mean
