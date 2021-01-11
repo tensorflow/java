@@ -94,8 +94,8 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
 
-    Operand<T> tLabels = CastHelper.cast(getTF(), labels, getType());
-    Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getType());
+    Operand<T> tLabels = CastHelper.cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getResultType());
 
     Operand<T> losses = loss.call(tLabels, tPredictions);
 
