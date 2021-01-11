@@ -43,7 +43,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   private final String totalName;
   private final String countName;
 
-  private final Class<T> type;
+  private final Class<T> resultType;
   /** the variable that holds the total of the metric values */
   protected Variable<T> total;
   /** the variable that holds the count of the metric values */
@@ -56,10 +56,10 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
+   * @param resultType the type for the variables and result
    */
-  protected Reduce(Ops tf, String name, long seed, Class<T> type) {
-    this(tf, name, MetricReduction.SUM, seed, type);
+  protected Reduce(Ops tf, String name, long seed, Class<T> resultType) {
+    this(tf, name, MetricReduction.SUM, seed, resultType);
   }
 
   /**
@@ -68,25 +68,25 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    * @param reduction The type of metric reduction to apply
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
+   * @param resultType the type for the variables and result
    */
-  protected Reduce(Ops tf, String name, MetricReduction reduction, long seed, Class<T> type) {
+  protected Reduce(Ops tf, String name, MetricReduction reduction, long seed, Class<T> resultType) {
     super(tf, name, seed);
     this.reduction = reduction;
     this.totalName = this.getVariableName(TOTAL);
     this.countName = this.getVariableName(COUNT);
-    this.type = type;
+    this.resultType = resultType;
     setupVars();
   }
   /** Initializes the Variables */
   private void setupVars() {
     if (total == null) {
-      total = getTF().withName(totalName).variable(Shape.scalar(), type);
+      total = getTF().withName(totalName).variable(Shape.scalar(), resultType);
     }
     if (reduction == MetricReduction.SUM_OVER_BATCH_SIZE
         || reduction == MetricReduction.WEIGHTED_MEAN) {
       if (count == null) {
-        count = getTF().withName(countName).variable(Shape.scalar(), type);
+        count = getTF().withName(countName).variable(Shape.scalar(), resultType);
       }
     }
   }
@@ -115,7 +115,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    * @throws IllegalArgumentException if values is null
    */
   @Override
-  public List<Op> updateStateList(Operand<U> values, Operand<T> sampleWeights) {
+  public <V extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<V> sampleWeights) {
 
     if (values == null) {
       throw new IllegalArgumentException("values is required.");
@@ -133,7 +133,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
       lSampleWeights = tuple.getSampleWeights();
       try {
 
-        Op broadcastWeightsCheck = MetricsHelper.broadcastWeights(getTF(), lSampleWeights, lValues);
+        Op broadcastWeightsCheck = MetricsHelper.assertBroadcastable(getTF(), lSampleWeights, lValues);
         lValues =
             getTF()
                 .withSubScope("broadcastWeightsCheck")
@@ -141,16 +141,20 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
                 .math
                 .mul(lValues, lSampleWeights);
       } catch (IllegalArgumentException ex) {
-        // reduce the values down to the rank of the samples
-        int nDim = lValues.shape().numDimensions();
-        int wDim = lSampleWeights.shape().numDimensions();
-        int numAxes = nDim - wDim;
-        int[] axes = new int[numAxes];
-        for (int i = 0; i < numAxes; i++) axes[i] = i + wDim;
-        if (reduction == MetricReduction.SUM) {
-          lValues = getTF().reduceSum(lValues, getTF().constant(axes));
-        } else {
-          lValues = getTF().math.mean(lValues, getTF().constant(axes));
+        // if we get here we have static shapes with either
+        // different ranks or different dimension sizes.
+        // first, reduce the values down to the rank of the samples
+        int valuesDim = lValues.shape().numDimensions();
+        int weightsDim = lSampleWeights.shape().numDimensions();
+        int numAxes = Math.min(0, valuesDim - weightsDim);
+        if (numAxes > 0) { // values rank is greater than weights rank, reduce values to weights rank.
+          int[] axes = new int[numAxes];
+          for (int i = 0; i < numAxes; i++) axes[i] = i + weightsDim;
+          if (reduction == MetricReduction.SUM) {
+            lValues = getTF().reduceSum(lValues, getTF().constant(axes));
+          } else {
+            lValues = getTF().math.mean(lValues, getTF().constant(axes));
+          }
         }
         lValues = getTF().math.mul(lValues, lSampleWeights);
       }
@@ -164,18 +168,18 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
     if (reduction != MetricReduction.SUM) {
       switch (reduction) {
         case SUM_OVER_BATCH_SIZE:
-          numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), type);
+          numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
           break;
         case WEIGHTED_MEAN:
           if (lSampleWeights == null) {
-            numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), type);
+            numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
           } else {
             numValues =
                 CastHelper.cast(
                     getTF(),
                     getTF()
                         .reduceSum(lSampleWeights, LossesHelper.allAxes(getTF(), lSampleWeights)),
-                    type);
+                        resultType);
           }
           break;
         default:
@@ -192,16 +196,16 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result(Ops rtf) {
+  public Operand<T> result() {
     Operand<T> fResult;
 
     switch (this.reduction) {
       case SUM:
-        fResult = rtf.identity(total);
+        fResult = getTF().identity(total);
         break;
       case WEIGHTED_MEAN:
       case SUM_OVER_BATCH_SIZE:
-        fResult = rtf.math.divNoNan(total, CastHelper.cast(rtf, count, type));
+        fResult = getTF().math.divNoNan(total, CastHelper.cast(getTF(), count, resultType));
         break;
       default:
         throw new UnsupportedOperationException(
@@ -233,7 +237,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    *
    * @return the type for the variables
    */
-  public Class<T> getType() {
-    return type;
+  public Class<T> getResultType() {
+    return resultType;
   }
 }
