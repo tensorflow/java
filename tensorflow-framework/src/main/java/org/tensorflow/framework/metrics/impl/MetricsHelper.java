@@ -23,6 +23,7 @@ import org.tensorflow.op.math.Mean;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -91,7 +92,8 @@ public class MetricsHelper {
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
-        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i) && weightsShapeStatic.size(i) != 1) {
+        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i)
+            && weightsShapeStatic.size(i) != 1) {
           throw new IllegalArgumentException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
@@ -152,7 +154,7 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param weightsShape the operand for the shape of the sample weights
-   * @param valuesShape the operand for the shape of the sample weights
+   * @param valuesShape the operand for the shape of the values
    * @param <T> the data type for the operands
    * @return a boolean operand to determine if the shapes have valid dimensions or not.
    */
@@ -163,7 +165,7 @@ public class MetricsHelper {
     Operand<T> validDims =
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     SetDiff1d<T, TInt32> invalidDimsDiff =
-        tf.setDiff1d(tf.shape.flatten(valuesShape2d), tf.shape.flatten(validDims));
+        tf.setDiff1d(weightsShape, tf.shape.flatten(validDims));
     Operand<T> invalidDims = invalidDimsDiff.out();
     Operand<TInt32> numInvalidDims = tf.size(invalidDims);
     return tf.math.equal(tf.constant(0), numInvalidDims);
@@ -178,9 +180,10 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
    * @param <T> the type of the Operand.
+   * @param <Z> the data type for the result
    * @return the mean of the operand
    */
-  public static <T extends TType> Operand<T> mean(Ops tf, Operand<T> x) {
+  public static <T extends TType, Z extends TNumber> Operand<Z> mean(Ops tf, Operand<T> x) {
     return mean(tf, x, null, false);
   }
 
@@ -190,58 +193,63 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
-   * @param axis Axes to compute the mean.
+   * @param axes Axes to compute the mean.
    * @param <T> the type of the Operand.
-   * @param <U> the type of the axis.
-   * @return the mean of the operand, alongside the specified axis.
+   * @param <U> the type of the axes.
+   * @param <Z> the data type for the result
+   * @return the mean of the operand, along the specified axes.
    */
-  public static <T extends TType, U extends TNumber> Operand<T> mean(
-      Ops tf, Operand<T> x, Operand<U> axis) {
-    return mean(tf, x, axis, false);
+  public static <T extends TType, U extends TIntegral, Z extends TNumber> Operand<Z> mean(
+      Ops tf, Operand<T> x, Operand<U> axes) {
+    return mean(tf, x, axes, false);
   }
 
   /**
-   * Calculate the mean of the operand, along all axis.
+   * Calculate the mean of the operand, along all axes.
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
    * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
-   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axis
+   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
    *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
    *     with length 1.
    * @param <T> the type of the operand
+   * @param <Z> the data type for the result
    * @return the mean of elements of <code>x</code>.
    */
-  public static <T extends TType> Operand<T> mean(Ops tf, Operand<T> x, boolean keepDims) {
+  public static <T extends TType, Z extends TNumber> Operand<Z> mean(
+      Ops tf, Operand<T> x, boolean keepDims) {
     return mean(tf, x, null, keepDims);
   }
 
   /**
-   * Calculate the mean of the operand, alongside the specified axis.
+   * Calculate the mean of the operand, alongside the specified axes.
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
-   * @param axis Axes to compute the mean.
+   * @param axes Axes to compute the mean.
    * @param keepDims Indicates whether to keep the dimensions or not. If `keepdims` is `false`, the
-   *     * rank of the tensor is reduced by 1 for each entry in `axis`. If `keepdims` is `true`, the
+   *     * rank of the tensor is reduced by 1 for each entry in `axes`. If `keepdims` is `true`, the
    *     * reduced dimensions are retained with length 1.
    * @param <T> the data type of the Operand
-   * @param <U> the data type of the axis
+   * @param <U> the data type of the axes
+   * @param <Z> the data type for the result
    * @return the mean of elements of `x`.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static <T extends TType, U extends TNumber> Operand<T> mean(
-      Ops tf, Operand<T> x, Operand<U> axis, boolean keepDims) {
+  public static <T extends TType, U extends TIntegral, Z extends TNumber> Operand<Z> mean(
+      Ops tf, Operand<T> x, Operand<U> axes, boolean keepDims) {
     // Cannot use generics here because xf may change from TBool to TFloat32
-    Operand xf;
-    if (x.asOutput().type() == TBool.class) {
-      xf = tf.dtypes.cast(x, TFloat32.class);
+    Operand<Z> xf;
+    if (x.type().equals(TBool.class)) {
+      xf = (Operand<Z>) tf.dtypes.cast(x, TFloat32.class);
     } else {
-      xf = x;
+      xf = (Operand<Z>) x;
     }
-    if (axis == null) {
-      axis = allAxes(tf, xf);
+    if (axes == null) {
+      axes = (Operand<U>) allAxes(tf, xf);
     }
-    return tf.math.mean(xf, axis, Mean.keepDims(keepDims));
+    Operand theMean = tf.math.mean(xf, axes, Mean.keepDims(keepDims));
+    return x.type().equals(TBool.class) ? tf.dtypes.cast(theMean, TBool.class) : theMean;
   }
 }
