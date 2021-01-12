@@ -74,9 +74,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return a List of Operations to update the metric state
+   * @param <S> the data type for sampleWeights
    */
   @SuppressWarnings({"unchecked", "unused"})
-  public <V extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<V> sampleWeights) {
+  public <S extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<S> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -89,11 +90,12 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @param <V> the data type for the labels
+   * @param <S> the data type for the sampleWeights
    * @return a List of Operations to update the metric state
    */
   @SuppressWarnings({"unchecked", "unused"})
-  public <V extends TNumber> List<Op> updateStateList(
-      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
+  public <V extends TNumber, S extends TNumber> List<Op> updateStateList(
+      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -102,9 +104,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    *
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
+   * @param <S> the data type for sampleWeights
    * @return the Operation to update the metric state
    */
-  public final <V extends TNumber> Op updateState(Operand<U> values, Operand<V> sampleWeights) {
+  public final <S extends TNumber> Op updateState(Operand<U> values, Operand<S> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
@@ -116,10 +119,11 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @param <V> the data type for the labels
+   * @param <S> the data type for the sampleWeights
    * @return the Operation to update the metric state
    */
-  public final <V extends TNumber> Op updateState(
-      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
+  public final <V extends TNumber, S extends TNumber> Op updateState(
+      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
     List<Op> controlOps = updateStateList(labels, predictions, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }

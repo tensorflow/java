@@ -86,10 +86,11 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
    * @param <V> the datatype of the predictions
+   * @param <S> the data type for sampleWeights
    * @return a List of control operations that updates the Mean state variables.
    */
-  public <V extends TNumber> List<Op> updateStateList(
-      Operand<V> labels, Operand<U> predictions, Operand<T> sampleWeights) {
+  public <V extends TNumber,S extends TNumber> List<Op> updateStateList(
+      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
     if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
