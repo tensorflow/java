@@ -142,7 +142,6 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    */
   public abstract Op resetStates();
 
-
   /**
    * Calls update state once, followed by a call to get the result
    *

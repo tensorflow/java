@@ -61,7 +61,8 @@ public class MetricVariable<U extends TNumber> {
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variable
-   * @throws IllegalArgumentException if the type does not inherit from TNumber and the initializer is null
+   * @throws IllegalArgumentException if the type does not inherit from TNumber and the initializer
+   *     is null
    */
   @SuppressWarnings("unchecked")
   public MetricVariable(
@@ -78,9 +79,7 @@ public class MetricVariable<U extends TNumber> {
         this.initializer = new Zeros<>(tf);
       } else {
         throw new IllegalArgumentException(
-            String.format(
-                "Type %s is not supported for metric variables",
-                type.getSimpleName()));
+            String.format("Type %s is not supported for metric variables", type.getSimpleName()));
       }
     } else {
       this.initializer = initializer;

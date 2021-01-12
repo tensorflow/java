@@ -117,8 +117,8 @@ public class Metrics {
    * @param tf The TensorFlow ops
    * @param x The operand to normalize
    * @param axes Dimension(s) along which to normalize.
-   * @param epsilon A lower bound value for the norm. Will use <code>sqrt(epsilon)</code> as the divisor if
-   *     <code>norm &lt; sqrt(epsilon)</code>.
+   * @param epsilon A lower bound value for the norm. Will use <code>sqrt(epsilon)</code> as the
+   *     divisor if <code>norm &lt; sqrt(epsilon)</code>.
    * @param <U> The data type for the values.
    * @return the normalized values of x.
    */
