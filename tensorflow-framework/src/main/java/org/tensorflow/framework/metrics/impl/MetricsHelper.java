@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -56,8 +57,8 @@ public class MetricsHelper {
    * @return <code>Operation</code> with control dependencies to ensure <code>sampleWeight</code>
    *     can be broadcast to <code>values</code>
    * @param <U> the type of Operand
-   * @throws IllegalArgumentException If static checks determine <code>sampleWeights</code> has an
-   *     incorrect shape that prohibit broadcasting to to <code>values</code>
+   * @throws NotBroadcastableException If static checks determine <code>sampleWeights</code> has an
+   *     incorrect shape that prohibit broadcasting  to <code>values</code>
    */
   @SuppressWarnings("unchecked")
   public static <U extends TNumber> Op assertBroadcastable(
@@ -81,7 +82,7 @@ public class MetricsHelper {
             .noOp();
       }
       if (weightsRankStatic != valuesRankStatic) {
-        throw new IllegalArgumentException(
+        throw new NotBroadcastableException(
             String.format(
                 "%s values.rank=%d. weights.rank=%d.  values.shape=%s. weights.shape=%s.",
                 ASSERT_BROADCAST_ERROR_PREFIX,
@@ -94,7 +95,7 @@ public class MetricsHelper {
       for (int i = 0; i < valuesRankStatic; i++) {
         if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i)
             && weightsShapeStatic.size(i) != 1) {
-          throw new IllegalArgumentException(
+          throw new NotBroadcastableException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
                   ASSERT_BROADCAST_ERROR_PREFIX,
@@ -120,7 +121,7 @@ public class MetricsHelper {
             isScalar);
 
     Operand<TBool> validNonsclar =
-        hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape);
+            canBroadcastNonscalarShapes(tf, weightsRank, weightsShape, valuesRank, valuesShape);
 
     Operand<TBool> isValidShape = tf.select(isScalar, isScalar, validNonsclar);
 
@@ -138,7 +139,7 @@ public class MetricsHelper {
    * @param <T> the data type for the operands
    * @return a boolean operand to determine if the Shape is scalar or not.
    */
-  private static <T extends TNumber> Operand<TBool> hasValidNonscalarShape(
+  private static <T extends TNumber> Operand<TBool> canBroadcastNonscalarShapes(
       Ops tf,
       Operand<T> weightsRank,
       Operand<T> weightsShape,
@@ -146,7 +147,7 @@ public class MetricsHelper {
       Operand<T> valuesShape) {
     tf = tf.withSubScope("hasValidNonscalarShape");
     Operand<TBool> isSameRank = tf.math.equal(valuesRank, weightsRank);
-    return tf.select(isSameRank, hasValidDims(tf, weightsShape, valuesShape), isSameRank);
+    return tf.select(isSameRank, canBroadcastDims(tf, weightsShape, valuesShape), isSameRank);
   }
 
   /**
@@ -158,7 +159,7 @@ public class MetricsHelper {
    * @param <T> the data type for the operands
    * @return a boolean operand to determine if the shapes have valid dimensions or not.
    */
-  private static <T extends TNumber> Operand<TBool> hasValidDims(
+  private static <T extends TNumber> Operand<TBool> canBroadcastDims(
       Ops tf, Operand<T> weightsShape, Operand<T> valuesShape) {
     tf = tf.withSubScope("hasValidDims");
     Operand<T> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
