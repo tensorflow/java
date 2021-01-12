@@ -204,8 +204,14 @@ public class WeightBroadcastTest {
     }
   }
 
+  // Note: For invalid tests, either NotBroadcastableException is thrown for static shapes or
+  // TFInvalidInvalidException is thrown for dynamic shapes. Both of these extend
+  // IllegalArgumentException,
+  // To simply the assertThrows, only IllegalArgumentException is expected.
+  // The private method, testValid, tests for both static and dynamic shapes.
   @Test
   public void testInvalid1x1() {
+
     assertThrows(
         IllegalArgumentException.class,
         () -> {
@@ -267,69 +273,75 @@ public class WeightBroadcastTest {
   @Test
   public void testInvalidOnesExtraDim() {
     assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              try (TestSession testSession = TestSession.createTestSession(tfMode)) {
-                Ops tf = testSession.getTF();
-                Operand<TInt32> values =
-                        tf.constant(
-                                new int[][][] {
-                                        {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                                        {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                                        {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                                });
-                Operand<TInt32> weights = tf.constant(new int[][][][] {{{{5}}}} );
-                testValid(testSession, tf, weights, values, TInt32.class);
-              }
-            });
+        IllegalArgumentException.class,
+        () -> {
+          try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+            Ops tf = testSession.getTF();
+            Operand<TInt32> values =
+                tf.constant(
+                    new int[][][] {
+                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
+                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
+                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
+                    });
+            Operand<TInt32> weights = tf.constant(new int[][][][] {{{{5}}}});
+            testValid(testSession, tf, weights, values, TInt32.class);
+          }
+        });
   }
 
   @Test
   public void testInvalidPrefixMatchExtraDim() {
     assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              try (TestSession testSession = TestSession.createTestSession(tfMode)) {
-                Ops tf = testSession.getTF();
-                Operand<TInt32> values =
-                        tf.constant(
-                                new int[][][] {
-                                        {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                                        {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                                        {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                                });
+        IllegalArgumentException.class,
+        () -> {
+          try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+            Ops tf = testSession.getTF();
+            Operand<TInt32> values =
+                tf.constant(
+                    new int[][][] {
+                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
+                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
+                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
+                    });
 
-                Operand<TInt32> weights = tf.constant(new int[][][][]   {
-                        {{ { 5},{ 7}, {11}, { 3}}, {{ 2}, {12}, { 7}, { 5}} },
-                        {{ { 2}, {17}, {11}, { 3}}, {{ 2}, {17}, {11}, { 3}} },
-                        {{ { 5}, { 7}, {11}, { 3}}, {{ 2}, {12}, { 7}, { 5}} }
-                });
-                testValid(testSession, tf, weights, values, TInt32.class);
-              }
-            });
+            Operand<TInt32> weights =
+                tf.constant(
+                    new int[][][][] {
+                      {{{5}, {7}, {11}, {3}}, {{2}, {12}, {7}, {5}}},
+                      {{{2}, {17}, {11}, {3}}, {{2}, {17}, {11}, {3}}},
+                      {{{5}, {7}, {11}, {3}}, {{2}, {12}, {7}, {5}}}
+                    });
+            testValid(testSession, tf, weights, values, TInt32.class);
+          }
+        });
   }
 
   @Test
   public void testInvalidSuffixMatchExtraDim() {
     assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              try (TestSession testSession = TestSession.createTestSession(tfMode)) {
-                Ops tf = testSession.getTF();
-                Operand<TInt32> values =
-                        tf.constant(
-                                new int[][][] {
-                                        {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                                        {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                                        {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                                });
-                Operand<TInt32> weights = tf.constant(new int[][][][]   {{
-                        { { 5, 7, 11,   3}, { 2, 12,  7,  5} },
-                        { {  2, 17, 11, 3}, { 2, 17, 11,  3} },
-                        { {  5,  7, 11, 3}, { 2, 12,  7,  5} }
-                }});
-                testValid(testSession, tf, weights, values, TInt32.class);
-              }
-            });
+        IllegalArgumentException.class,
+        () -> {
+          try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+            Ops tf = testSession.getTF();
+            Operand<TInt32> values =
+                tf.constant(
+                    new int[][][] {
+                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
+                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
+                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
+                    });
+            Operand<TInt32> weights =
+                tf.constant(
+                    new int[][][][] {
+                      {
+                        {{5, 7, 11, 3}, {2, 12, 7, 5}},
+                        {{2, 17, 11, 3}, {2, 17, 11, 3}},
+                        {{5, 7, 11, 3}, {2, 12, 7, 5}}
+                      }
+                    });
+            testValid(testSession, tf, weights, values, TInt32.class);
+          }
+        });
   }
 }
