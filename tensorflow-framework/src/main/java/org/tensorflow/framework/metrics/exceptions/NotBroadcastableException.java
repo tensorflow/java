@@ -17,15 +17,15 @@ package org.tensorflow.framework.metrics.exceptions;
 import org.tensorflow.ndarray.Shape;
 
 /**
- * Exception that indicates that static shapes are not able to broadcast among each other during
- * arithmetic operations. Static shapes do not have unknown rank or any unknown dimensions {@link
- * Shape#hasUnknownDimension()}. The term broadcasting describes how TensorFlow treats arrays with
- * different shapes during arithmetic operations.
+ * Exception that indicates that static shapes are not able to broadcast among each other during arithmetic operations.
+ * Static shapes do not have unknown rank or any unknown dimensions {@link Shape#hasUnknownDimension()}.
+ * The term broadcasting describes how TensorFlow treats arrays with different shapes during arithmetic operations.
  *
  * <p>Broadcasting is the process of making arrays to have compatible shapes for arithmetic
  * operations. Two shapes are compatible if for each dimension pair they are either equal or one of
  * them is one. When trying to broadcast a Tensor to a shape, it starts with the trailing
  * dimensions, and works its way forward.
+ *
  *
  * @see <a href="https://numpy.org/doc/stable/user/basics.broadcasting.html">Numpy Broadcasting</a>
  */
@@ -33,7 +33,6 @@ public class NotBroadcastableException extends IllegalArgumentException {
 
   /**
    * Creates a new NotBroadcastableException exception with the specified detail message
-   *
    * @param message the detail message.
    */
   public NotBroadcastableException(String message) {
@@ -42,7 +41,6 @@ public class NotBroadcastableException extends IllegalArgumentException {
 
   /**
    * Creates a new NotBroadcastableException exception with the specified detail message
-   *
    * @param message the detail message.
    * @param cause the cause
    */
