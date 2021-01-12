@@ -58,7 +58,7 @@ public class MetricsHelper {
    *     can be broadcast to <code>values</code>
    * @param <U> the type of Operand
    * @throws NotBroadcastableException If static checks determine <code>sampleWeights</code> has an
-   *     incorrect shape that prohibit broadcasting  to <code>values</code>
+   *     incorrect shape that prohibit broadcasting to <code>values</code>
    */
   @SuppressWarnings("unchecked")
   public static <U extends TNumber> Op assertBroadcastable(
@@ -121,7 +121,7 @@ public class MetricsHelper {
             isScalar);
 
     Operand<TBool> validNonsclar =
-            canBroadcastNonscalarShapes(tf, weightsRank, weightsShape, valuesRank, valuesShape);
+        canBroadcastNonscalarShapes(tf, weightsRank, weightsShape, valuesRank, valuesShape);
 
     Operand<TBool> isValidShape = tf.select(isScalar, isScalar, validNonsclar);
 
@@ -165,8 +165,7 @@ public class MetricsHelper {
     Operand<T> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
     Operand<T> validDims =
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
-    SetDiff1d<T, TInt32> invalidDimsDiff =
-        tf.setDiff1d(weightsShape, tf.shape.flatten(validDims));
+    SetDiff1d<T, TInt32> invalidDimsDiff = tf.setDiff1d(weightsShape, tf.shape.flatten(validDims));
     Operand<T> invalidDims = invalidDimsDiff.out();
     Operand<TInt32> numInvalidDims = tf.size(invalidDims);
     return tf.math.equal(tf.constant(0), numInvalidDims);

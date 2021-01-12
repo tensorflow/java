@@ -133,7 +133,8 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
       lSampleWeights = tuple.getSampleWeights();
       try {
 
-        Op broadcastWeightsCheck = MetricsHelper.assertBroadcastable(getTF(), lSampleWeights, lValues);
+        Op broadcastWeightsCheck =
+            MetricsHelper.assertBroadcastable(getTF(), lSampleWeights, lValues);
         lValues =
             getTF()
                 .withSubScope("broadcastWeightsCheck")
@@ -147,7 +148,8 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
         int valuesDim = lValues.shape().numDimensions();
         int weightsDim = lSampleWeights.shape().numDimensions();
         int numAxes = Math.min(0, valuesDim - weightsDim);
-        if (numAxes > 0) { // values rank is greater than weights rank, reduce values to weights rank.
+        if (numAxes
+            > 0) { // values rank is greater than weights rank, reduce values to weights rank.
           int[] axes = new int[numAxes];
           for (int i = 0; i < numAxes; i++) axes[i] = i + weightsDim;
           if (reduction == MetricReduction.SUM) {
@@ -168,18 +170,20 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
     if (reduction != MetricReduction.SUM) {
       switch (reduction) {
         case SUM_OVER_BATCH_SIZE:
-          numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
+          numValues =
+              CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
           break;
         case WEIGHTED_MEAN:
           if (lSampleWeights == null) {
-            numValues = CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
+            numValues =
+                CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
           } else {
             numValues =
                 CastHelper.cast(
                     getTF(),
                     getTF()
                         .reduceSum(lSampleWeights, LossesHelper.allAxes(getTF(), lSampleWeights)),
-                        resultType);
+                    resultType);
           }
           break;
         default:

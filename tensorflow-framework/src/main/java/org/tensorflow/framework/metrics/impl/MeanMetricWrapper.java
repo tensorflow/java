@@ -89,7 +89,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    * @param <S> the data type for sampleWeights
    * @return a List of control operations that updates the Mean state variables.
    */
-  public <V extends TNumber,S extends TNumber> List<Op> updateStateList(
+  public <V extends TNumber, S extends TNumber> List<Op> updateStateList(
       Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
     if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
