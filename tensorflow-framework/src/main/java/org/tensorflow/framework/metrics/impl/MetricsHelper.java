@@ -47,8 +47,8 @@ public class MetricsHelper {
    * Asserts that the <code>sampleWeights</code> can be broadcast to the same shape as <code>values
    * </code>
    *
-   * <p>In losses and metrics, limited weight broadcasting is supported. Weights be either scalar,
-   * or the same rank as the target values, with each dimension either 1, or the same as the
+   * <p>In losses and metrics, limited weight broadcasting is supported. Weights must be either
+   * scalar, or the same rank as the target values, with each dimension either 1, or the same as the
    * corresponding values dimension.
    *
    * @param tf the TensorFlow Ops
@@ -65,17 +65,17 @@ public class MetricsHelper {
       Ops tf, Operand<U> sampleWeights, Operand<U> values) {
 
     // try static check for exact match
-    Operand<TInt32> weightsShape = tf.shape(sampleWeights);
-    Operand<TInt32> weightsRank = tf.rank(sampleWeights);
+
     Shape weightsShapeStatic = sampleWeights.shape();
     int weightsRankStatic = weightsShapeStatic.numDimensions();
 
-    Operand<TInt32> valuesShape = tf.shape(values);
-    Operand<TInt32> valuesRank = tf.rank(values);
     Shape valuesShapeStatic = values.shape();
     int valuesRankStatic = valuesShapeStatic.numDimensions();
 
-    if (weightsRankStatic != Shape.UNKNOWN_SIZE && valuesRankStatic != Shape.UNKNOWN_SIZE) {
+    // if (weightsRankStatic != Shape.UNKNOWN_SIZE && valuesRankStatic != Shape.UNKNOWN_SIZE) {
+    if (!weightsShapeStatic.isUnknown()
+        && !valuesShapeStatic.isUnknown()
+        && !weightsShapeStatic.hasUnknownDimension() & !valuesShapeStatic.hasUnknownDimension()) {
       if (weightsRankStatic == 0) {
         return tf.withSubScope("staticScalarCheckSuccess")
             .withControlDependencies(Collections.EMPTY_LIST)
@@ -109,6 +109,11 @@ public class MetricsHelper {
           .noOp();
     }
     // Dynamic checks.
+    Operand<TInt32> weightsShape = tf.shape(sampleWeights);
+    Operand<TInt32> weightsRank = tf.rank(sampleWeights);
+    Operand<TInt32> valuesShape = tf.shape(values);
+    Operand<TInt32> valuesRank = tf.rank(values);
+
     Operand<TBool> isScalar = tf.math.equal(weightsRank, tf.constant(0));
     List<Operand<?>> data =
         Arrays.asList(
