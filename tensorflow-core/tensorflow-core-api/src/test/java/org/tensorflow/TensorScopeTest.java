@@ -55,6 +55,7 @@ public class TensorScopeTest {
     assertTrue(tensor.isClosed());
     assertTrue(scope.isClosed());
     assertFalse(detachTensor.isClosed());
+    detachTensor.close();
   }
 
   @Test
@@ -78,6 +79,7 @@ public class TensorScopeTest {
     assertTrue(scope.isClosed());
     assertTrue(outerScope.isClosed());
     assertFalse(detachTensor.isClosed());
+    detachTensor.close();
   }
 
   @Test
@@ -92,6 +94,25 @@ public class TensorScopeTest {
     secondScope.close();
 
     assertTrue(tensor.isClosed());
+  }
+
+  @Test
+  public void testNoAutoAttach(){
+    TensorScope scope = new TensorScope(false);
+    TFloat32 tensor = makeTensor(10);
+    assertFalse(tensor.isAttached());
+
+    TFloat32 detachTensor = makeTensor(10);
+    assertFalse(detachTensor.isAttached());
+
+    scope.attach(detachTensor);
+    assertTrue(detachTensor.isAttached());
+
+    detachTensor.detach();
+    assertFalse(detachTensor.isAttached());
+
+    tensor.close();
+    detachTensor.close();
   }
 
 
