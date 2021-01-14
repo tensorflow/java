@@ -94,6 +94,7 @@ public class TensorScopeTest {
     secondScope.close();
 
     assertTrue(tensor.isClosed());
+    firstScope.close();
   }
 
   @Test
@@ -113,6 +114,7 @@ public class TensorScopeTest {
 
     tensor.close();
     detachTensor.close();
+    scope.close();
   }
 
 
