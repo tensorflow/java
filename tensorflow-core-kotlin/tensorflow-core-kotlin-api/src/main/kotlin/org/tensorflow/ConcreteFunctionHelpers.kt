@@ -93,7 +93,6 @@ public fun Signature(
 ): Signature =
     Signature.builder().methodName(methodName).key(key).input("input", inputs).output("output", outputs).build()
 
-
 /**
  * Add [inputs] to the signature.
  */
@@ -112,12 +111,10 @@ public fun Signature.Builder.outputs(outputs: Map<String, Operand<*>>): Signatur
     }
 }
 
-
 /**
  * Add [inputs] to the signature.
  */
 public fun Signature.Builder.inputs(vararg inputs: Pair<String, Operand<*>>): Signature.Builder = inputs(inputs.toMap())
-
 
 /**
  * Add [outputs] to the signature.
