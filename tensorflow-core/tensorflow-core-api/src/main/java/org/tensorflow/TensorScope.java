@@ -65,6 +65,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Create a new tensor scope with the given thread locality.
+   * @see TensorScope
    */
   public TensorScope() {
     localScopeStack = scopeStack.get();
@@ -77,6 +78,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Create a new tensor scope with the given thread locality, and attach the given tensors.
+   * @see TensorScope
    */
   public TensorScope(Tensor... tensors) {
     this();
