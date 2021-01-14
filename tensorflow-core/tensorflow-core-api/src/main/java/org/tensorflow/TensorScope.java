@@ -17,64 +17,138 @@
 package org.tensorflow;
 
 import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.Deque;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.ndarray.NdArray;
+import java.util.WeakHashMap;
 
-public class TensorScope implements AutoCloseable{
 
-  static final ThreadLocal<Deque<TensorScope>> scopeStack = ThreadLocal.withInitial(ArrayDeque::new);
+/**
+ * A scope that can be used to manage tensor resources.  Any tensors created between a scope's creation and calling
+ * {@code close()}, that haven't been detached, are guaranteed to be closed with the scope (even if they are created in
+ * a sub-scope).  Tensors may be manually closed earlier without issue.
+ * <p>
+ * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
+ * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}, or by passing them to {@link
+ * TensorScope#TensorScope(Tensor...)}.  The tensor will then be closed when the first of it's managing scopes closes.
+ * <p>
+ * {@link Tensor#detach()} detaches the tensor from all scopes, requiring the user to close it manually or attach it to
+ * another scope.
+ * <p>
+ * Note that scope management is thread local, except for detach, which will detach even from scopes on other threads.
+ */
+public class TensorScope implements AutoCloseable {
 
-  /** Returns {@code scopeStack.get().peek()}, the last opened scope not yet closed. */
-  public static TensorScope getInnerScope() {
+  private static final Set<TensorScope> allScopes = Collections.newSetFromMap(new WeakHashMap<>());
+
+  private static final ThreadLocal<Deque<TensorScope>> scopeStack = ThreadLocal.withInitial(ArrayDeque::new);
+
+  /**
+   * Returns {@code scopeStack.get().peek()}, the last opened scope not yet closed on this thread.
+   */
+  static TensorScope getCurrentScope() {
     return scopeStack.get().peek();
-  }
-
-  /** Returns {@code scopeStack.get().iterator()}, all scopes not yet closed. */
-  public static Iterator<TensorScope> getScopeIterator() {
-    return scopeStack.get().iterator();
   }
 
   /**
    * Detaches the given tensor from any scopes managing it, requiring it to be manually closed.
    */
-  public static void detach(Tensor t){
+  public static void detach(Tensor t) {
     RawTensor raw = t.asRawTensor();
-    getScopeIterator().forEachRemaining(scope -> scope.detachTensor(raw));
+    synchronized (TensorScope.class) {
+      allScopes.forEach(x -> x.detachTensor(raw));
+    }
+    raw.attached = false;
   }
 
-  public TensorScope(){
-    scopeStack.get().push(this);
+  /**
+   * Create a new tensor scope with the given thread locality.
+   */
+  public TensorScope() {
+    localScopeStack = scopeStack.get();
+
+    synchronized (TensorScope.class) {
+      allScopes.add(this);
+    }
+    localScopeStack.push(this);
+  }
+
+  /**
+   * Create a new tensor scope with the given thread locality, and attach the given tensors.
+   */
+  public TensorScope(Tensor... tensors) {
+    this();
+    attach(tensors);
   }
 
   /**
    * Attach a tensor to this scope.  This happens automatically to tensors that are created in the scope.
    */
-  public void attach(Tensor t){
-    tensors.add(t.asRawTensor());
+  public void attach(Tensor t) {
+    RawTensor rt = t.asRawTensor();
+    rt.attached = true;
+    tensors.add(rt);
   }
 
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
    */
-  public void attach(Tensor... tensors){
-    for(Tensor t : tensors){
-      attach(t);
+  public void attach(Tensor... tensors) {
+    if (tensors != null) {
+      for (Tensor t : tensors) {
+        attach(t);
+      }
     }
   }
 
-  private void detachTensor(Tensor t){
+  private void detachTensor(Tensor t) {
     tensors.remove(t.asRawTensor());
   }
 
-  @Override
-  public void close() throws Exception {
+  private void closeScope() {
     tensors.forEach(Tensor::close);
+
+    synchronized (TensorScope.class) {
+      allScopes.remove(this);
+    }
+
+    closed = true;
   }
 
-  private final Set<RawTensor> tensors = new LinkedHashSet<>();
+  /**
+   * Closes this scope and its tensors, and any inner scopes.
+   */
+  @Override
+  public void close() {
+    if (closed) {
+      return;
+    }
+
+    if (!localScopeStack.contains(this)) {
+      throw new IllegalStateException("This scope is not on the scope stack, but was not closed."
+          + "  This should not be possible.");
+    }
+
+    while (true) {
+      TensorScope ts = localScopeStack.removeLast();
+      ts.closeScope();
+      if (ts == this) {
+        return;
+      }
+    }
+  }
+
+  /**
+   * Gets whether the scope is closed.
+   */
+  public boolean isClosed() {
+    return closed;
+  }
+
+  private boolean closed = false;
+  private final Set<RawTensor> tensors = new HashSet<>();
+  private final Deque<TensorScope> localScopeStack;
 }

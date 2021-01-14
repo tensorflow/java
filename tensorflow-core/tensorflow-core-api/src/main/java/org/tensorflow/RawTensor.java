@@ -82,8 +82,13 @@ public final class RawTensor implements Tensor {
   }
 
   @Override
+  public boolean isAttached() {
+    return attached;
+  }
+
+  @Override
   public boolean attachToCurrentScope() {
-    TensorScope currentScope = TensorScope.getInnerScope();
+    TensorScope currentScope = TensorScope.getCurrentScope();
     if (currentScope != null) {
       currentScope.attach(this);
       return true;
@@ -178,18 +183,6 @@ public final class RawTensor implements Tensor {
   }
 
   /**
-   * Create an eager Tensor object from a handle to the C TF_Tensor object.
-   *
-   * <p>Takes ownership of the handle.
-   */
-  static RawTensor fromHandle(TF_Tensor handle, EagerSession session) {
-    RawTensor t = fromHandle(handle);
-    session.attach(handle);
-    t.tensorScope.detach(handle);
-    return t;
-  }
-
-  /**
    * Returns the native handle to this tensor
    *
    * @throws IllegalStateException if tensor has been closed
@@ -243,14 +236,15 @@ public final class RawTensor implements Tensor {
   RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
     this.typeInfo = typeInfo;
     this.shape = shape;
-    TensorScope currentScope = TensorScope.getInnerScope();
-    if (currentScope != null) {
-      currentScope.attach(this);
+    TensorScope scope = TensorScope.getCurrentScope();
+    if (scope != null) {
+      scope.attach(this);
     }
   }
 
   private PointerScope tensorScope;
   private boolean closed;
+  boolean attached = false;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;

@@ -221,14 +221,15 @@ public interface Tensor extends Shaped, AutoCloseable {
   /**
    * Detach this tensor from any scopes managing it.  It must be manually closed or attached to another scope.
    */
-  default void detach(){
-    asRawTensor().detach();
-  }
+  void detach();
+
+  /**
+   * Returns true if this tensor is attached to a {@link TensorScope}.
+   */
+  boolean isAttached();
 
   /**
    * Attach this tensor to the current scope.  No-ops and returns false if there is no current scope.
    */
-  default boolean attachToCurrentScope(){
-    return asRawTensor().attachToCurrentScope();
-  }
+  boolean attachToCurrentScope();
 }
