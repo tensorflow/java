@@ -361,6 +361,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
+  private final TensorScope tensorScope = new TensorScope();
 
   private EagerSession(Options options) {
     this.nativeResources = new WeakPointerScope();
@@ -374,6 +375,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   private synchronized void doClose() {
+    tensorScope.close();
     if (nativeHandle != null && !nativeHandle.isNull()) {
       nativeResources.close();
       delete(nativeHandle);
