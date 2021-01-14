@@ -27,13 +27,12 @@ import java.util.WeakHashMap;
 
 
 /**
- * A scope that can be used to manage tensor resources.  If auto-attach is used, any tensors created between a scope's creation and calling
- * {@code close()}, that haven't been detached, are guaranteed to be closed with the scope (even if they are created in
- * a sub-scope).  Tensors may be manually closed earlier without issue.
+ * A scope that can be used to manage tensor resources.  If auto-attach is used, any tensors created between a scope's
+ * creation and calling {@code close()}, that haven't been detached, are guaranteed to be closed with the scope (even if
+ * they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
  * <p>
- * When auto-attach is true, tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
- * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}, or by passing them to {@link
- * TensorScope#TensorScope(Tensor...)}.  The tensor will then be closed when the first of it's managing scopes closes.
+ * When auto-attach is true, tensors are automatically tracked on creation.  A tensor can me manually added to a scope
+ * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  The tensor will then be closed when the first of it's managing scopes closes.
  * <p>
  * {@link Tensor#detach()} detaches the tensor from all scopes, requiring the user to close it manually or attach it to
  * another scope.
@@ -48,6 +47,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Attach the tensor to the most recent scope that accepts automatic attachment.
+   *
    * @return true if attached.
    */
   static boolean autoAttach(Tensor tensor) {
@@ -56,6 +56,20 @@ public class TensorScope implements AutoCloseable {
       TensorScope scope = iterator.next();
       if (scope.autoAttach) {
         scope.attach(tensor);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Return true if there is a scope that accepts auto attachment on the stack.
+   */
+  public static boolean hasAutoScope() {
+    Iterator<TensorScope> iterator = scopeStack.get().descendingIterator();
+    while (iterator.hasNext()) {
+      TensorScope scope = iterator.next();
+      if (scope.autoAttach) {
         return true;
       }
     }
@@ -97,44 +111,53 @@ public class TensorScope implements AutoCloseable {
   }
 
   /**
-   * Create a new tensor, and attach the given tensors.  If {@code autoAttach} is false, will not automatically manage
-   * tensors.
-   *
-   * @see TensorScope
-   */
-  public TensorScope(boolean autoAttach, Tensor... tensors) {
-    this(autoAttach);
-    attach(tensors);
-  }
-
-  /**
-   * Create a new tensor scope that automatically manages tensors, and attach the given tensors.
-   *
-   * @see TensorScope
-   */
-  public TensorScope(Tensor... tensors) {
-    this(true, tensors);
-  }
-
-  /**
    * Attach a tensor to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
    */
-  public void attach(Tensor t) {
+  public TensorScope attach(Tensor t) {
     RawTensor rt = t.asRawTensor();
     rt.attached = true;
     tensors.add(rt);
-  }
 
+    return this;
+  }
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
    */
-  public void attach(Tensor... tensors) {
+  public TensorScope attach(Tensor... tensors) {
     if (tensors != null) {
       for (Tensor t : tensors) {
         attach(t);
       }
     }
+
+    return this;
+  }
+
+  /**
+   * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
+   */
+  public TensorScope attach(HasTensors tensors) {
+    tensors.tensors().forEach(this::attach);
+
+    return this;
+  }
+
+  /**
+   * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
+   */
+  public TensorScope attach(HasTensors... tensors) {
+    if (tensors != null) {
+      for (HasTensors ht : tensors) {
+        attach(ht);
+      }
+    }
+
+    return this;
   }
 
   private void detachTensor(Tensor t) {

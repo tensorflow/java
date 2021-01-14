@@ -206,7 +206,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * Release resources associated with the Tensor.
    *
    * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager
-   * operation or memory will be leaked.
+   * operation or memory will be leaked.  May be done automatically via {@link TensorScope}.
    *
    * <p>The Tensor object is no longer usable after {@code close} returns.
    */
