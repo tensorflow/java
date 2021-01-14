@@ -180,6 +180,7 @@
                   classpathref="maven.plugin.classpath" classname="com.pinterest.ktlint.Main">
                   <arg value="-F"/>
                   <arg value="src/**/*.kt"/>
+                  <arg value="!src/gen/**/*.kt"/>
                   <arg value="--reporter=plain?group_by_file"/>
                 </java>
               </target>
@@ -212,7 +213,6 @@
             <artifactId>ktlint</artifactId>
             <version>0.39.0</version>
           </dependency>
-          <!-- additional 3rd party ruleset(s) can be specified here -->
         </dependencies>
       </plugin>
     </plugins>

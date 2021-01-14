@@ -27,7 +27,7 @@ import kotlin.reflect.KClass
  * @return data type
  * @see Operands.toDataType
  */
-public fun <T: TType> Class<T>.dataType(): DataType = Operands.toDataType(this)
+public fun <T : TType> Class<T>.dataType(): DataType = Operands.toDataType(this)
 
 /**
  * Converts a tensor type class to a [DataType] attribute.
@@ -35,7 +35,7 @@ public fun <T: TType> Class<T>.dataType(): DataType = Operands.toDataType(this)
  * @return data type
  * @see Operands.toDataType
  */
-public fun <T: TType> KClass<T>.dataType(): DataType = Operands.toDataType(this.java)
+public fun <T : TType> KClass<T>.dataType(): DataType = Operands.toDataType(this.java)
 
 /**
  * Converts a tensor type class to a [DataType] attribute.
@@ -43,7 +43,7 @@ public fun <T: TType> KClass<T>.dataType(): DataType = Operands.toDataType(this.
  * @return data type
  * @see Operands.toDataType
  */
-public inline fun <reified T: TType> dataType(): DataType = T::class.dataType()
+public inline fun <reified T : TType> dataType(): DataType = T::class.dataType()
 
 /**
  * Converts a [DataType] attribute to a tensor type class.
@@ -51,4 +51,4 @@ public inline fun <reified T: TType> dataType(): DataType = T::class.dataType()
  * @return the tensor type class
  * @see TensorTypeRegistry.find
  */
-public fun <T: TType> DataType.tType(): Class<T> = TensorTypeRegistry.find<T>(this).type()
+public fun <T : TType> DataType.tType(): Class<T> = TensorTypeRegistry.find<T>(this).type()
