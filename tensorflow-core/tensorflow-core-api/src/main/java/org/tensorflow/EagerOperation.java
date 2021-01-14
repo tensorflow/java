@@ -30,6 +30,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.types.family.TType;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
@@ -166,7 +167,9 @@ class EagerOperation extends AbstractOperation {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      return RawTensor.fromHandle(tensor).asTypedTensor();
+      TType typedTensor = RawTensor.fromHandle(tensor).asTypedTensor();
+      session.attachTensor(typedTensor);
+      return typedTensor;
     }
   }
 

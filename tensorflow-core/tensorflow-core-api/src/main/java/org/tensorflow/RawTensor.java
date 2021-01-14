@@ -88,12 +88,7 @@ public final class RawTensor implements Tensor {
 
   @Override
   public boolean attachToCurrentScope() {
-    TensorScope currentScope = TensorScope.getCurrentScope();
-    if (currentScope != null) {
-      currentScope.attach(this);
-      return true;
-    }
-    return false;
+    return TensorScope.autoAttach(this);
   }
 
   /**
@@ -236,10 +231,7 @@ public final class RawTensor implements Tensor {
   RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
     this.typeInfo = typeInfo;
     this.shape = shape;
-    TensorScope scope = TensorScope.getCurrentScope();
-    if (scope != null) {
-      scope.attach(this);
-    }
+    TensorScope.autoAttach(this);
   }
 
   private PointerScope tensorScope;

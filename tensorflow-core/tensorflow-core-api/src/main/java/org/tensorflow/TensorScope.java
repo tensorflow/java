@@ -20,17 +20,18 @@ import java.util.ArrayDeque;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 
 /**
- * A scope that can be used to manage tensor resources.  Any tensors created between a scope's creation and calling
+ * A scope that can be used to manage tensor resources.  If auto-attach is used, any tensors created between a scope's creation and calling
  * {@code close()}, that haven't been detached, are guaranteed to be closed with the scope (even if they are created in
  * a sub-scope).  Tensors may be manually closed earlier without issue.
  * <p>
- * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
+ * When auto-attach is true, tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
  * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}, or by passing them to {@link
  * TensorScope#TensorScope(Tensor...)}.  The tensor will then be closed when the first of it's managing scopes closes.
  * <p>
@@ -46,10 +47,19 @@ public class TensorScope implements AutoCloseable {
   private static final ThreadLocal<Deque<TensorScope>> scopeStack = ThreadLocal.withInitial(ArrayDeque::new);
 
   /**
-   * Returns {@code scopeStack.get().peek()}, the last opened scope not yet closed on this thread.
+   * Attach the tensor to the most recent scope that accepts automatic attachment.
+   * @return true if attached.
    */
-  static TensorScope getCurrentScope() {
-    return scopeStack.get().peek();
+  static boolean autoAttach(Tensor tensor) {
+    Iterator<TensorScope> iterator = scopeStack.get().descendingIterator();
+    while (iterator.hasNext()) {
+      TensorScope scope = iterator.next();
+      if (scope.autoAttach) {
+        scope.attach(tensor);
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -64,25 +74,46 @@ public class TensorScope implements AutoCloseable {
   }
 
   /**
-   * Create a new tensor scope with the given thread locality.
+   * Create a new tensor scope.  If {@code autoAttach} is false, will not automatically manage tensors.
+   *
    * @see TensorScope
    */
-  public TensorScope() {
-    localScopeStack = scopeStack.get();
+  public TensorScope(boolean autoAttach) {
+    this.autoAttach = autoAttach;
 
     synchronized (TensorScope.class) {
       allScopes.add(this);
     }
+
+    localScopeStack = scopeStack.get();
     localScopeStack.push(this);
   }
 
   /**
-   * Create a new tensor scope with the given thread locality, and attach the given tensors.
+   * Create a new tensor scope that automatically manages tensors.
+   */
+  public TensorScope() {
+    this(true);
+  }
+
+  /**
+   * Create a new tensor, and attach the given tensors.  If {@code autoAttach} is false, will not automatically manage
+   * tensors.
+   *
+   * @see TensorScope
+   */
+  public TensorScope(boolean autoAttach, Tensor... tensors) {
+    this(autoAttach);
+    attach(tensors);
+  }
+
+  /**
+   * Create a new tensor scope that automatically manages tensors, and attach the given tensors.
+   *
    * @see TensorScope
    */
   public TensorScope(Tensor... tensors) {
-    this();
-    attach(tensors);
+    this(true, tensors);
   }
 
   /**
@@ -150,6 +181,7 @@ public class TensorScope implements AutoCloseable {
     return closed;
   }
 
+  private final boolean autoAttach;
   private boolean closed = false;
   private final Set<RawTensor> tensors = new HashSet<>();
   private final Deque<TensorScope> localScopeStack;

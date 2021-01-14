@@ -229,7 +229,8 @@ public interface Tensor extends Shaped, AutoCloseable {
   boolean isAttached();
 
   /**
-   * Attach this tensor to the current scope.  No-ops and returns false if there is no current scope.
+   * Attach this tensor to the most recent scope that accepts automatic attachment.
+   * No-ops and returns false if there is no scope that does so.
    */
   boolean attachToCurrentScope();
 }
