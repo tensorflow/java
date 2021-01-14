@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.utils;
 
 import org.tensorflow.*;
+import org.tensorflow.ndarray.DoubleNdArray;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -490,6 +491,17 @@ public abstract class TestSession implements AutoCloseable {
    */
   public void evaluate(FloatNdArray input, Predicate<Number> predicate) {
     input.scalars().forEach(f -> assertTrue(predicate.test(f.getFloat())));
+  }
+
+  /**
+   * Evaluates the input against the expected value
+   *
+   * @param input the operand to evaluate
+   * @param predicate The Predicate that evaluates the each value from input
+   * @throws org.opentest4j.AssertionFailedError if the evaluation fails
+   */
+  public void evaluate(DoubleNdArray input, Predicate<Number> predicate) {
+    input.scalars().forEach(f -> assertTrue(predicate.test(f.getDouble())));
   }
 
   /**
