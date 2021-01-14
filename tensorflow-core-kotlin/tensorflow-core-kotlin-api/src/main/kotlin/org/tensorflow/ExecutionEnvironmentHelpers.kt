@@ -31,6 +31,7 @@ public inline fun <R> Graph(block: Graph.() -> R): R {
 
 /**
  * Construct a new session with the associated {@link Graph} and configuration options, and run [block] on it.
+ * Closes the session afterwards.
  *
  * @param g The {@link Graph} the created Session will operate on.
  * @param config Configuration parameters for the session specified as a [ConfigProto](https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto)
