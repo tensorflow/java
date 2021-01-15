@@ -160,6 +160,30 @@ public class TensorScope implements AutoCloseable {
     return this;
   }
 
+  /**
+   * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
+   */
+  public TensorScope attach(Iterable<Tensor> tensors) {
+    tensors.forEach(this::attach);
+
+    return this;
+  }
+
+  /**
+   * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   * @return this
+   */
+  public TensorScope attach(Iterable<Tensor>... tensors) {
+    if (tensors != null) {
+      for (Iterable<Tensor> ht : tensors) {
+        attach(ht);
+      }
+    }
+
+    return this;
+  }
+
   private void detachTensor(Tensor t) {
     tensors.remove(t.asRawTensor());
   }
