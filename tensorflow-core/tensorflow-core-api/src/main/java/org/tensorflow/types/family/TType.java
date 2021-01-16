@@ -27,10 +27,9 @@ import org.tensorflow.proto.framework.DataType;
  * to a n-dimensional data space allowing direct I/O access from the JVM.</p>
  *
  * <p>Subinterfaces of {@code TType} are propagated as a generic parameter to various entities of
- * TensorFlow to identify the type of the tensor they carry. For example, a
- * {@link org.tensorflow.Operand Operand<TFloat32>} is an operand which outputs a 32-bit floating
- * point tensor. This parameter ensure type-compatibility between operands of a computation at
- * compile-time. For example:
+ * TensorFlow to identify the type of the tensor they carry. For example, a {@link org.tensorflow.Operand
+ * Operand<TFloat32>} is an operand which outputs a 32-bit floating point tensor. This parameter ensure
+ * type-compatibility between operands of a computation at compile-time. For example:
  *
  * <pre>{@code
  * Ops tf = Ops.create();
@@ -44,8 +43,8 @@ import org.tensorflow.proto.framework.DataType;
  * }</pre>
  *
  * <p>Even if all typed tensors implements somehow {@link org.tensorflow.ndarray.NdArray NdArray}
- * to provide access to their data, {@code TType} deliberately does not extend directly from this
- * interface, for the following reasons:
+ * to provide access to their data, {@code TType} deliberately does not extend directly from this interface, for the
+ * following reasons:
  * <ul>
  *   <li>Implementing {@code NdArray} at this level could only expose boxed-type accessors, which
  *   are less performant than their primitive equivalent, only exposed by subinterfaces of
@@ -82,27 +81,27 @@ public interface TType extends Tensor {
   }
 
   @Override
-  default boolean isClosed(){
+  default boolean isClosed() {
     return asRawTensor().isClosed();
   }
 
   @Override
-  default void detach(){
+  default void detach() {
     asRawTensor().detach();
   }
 
   @Override
-  default void attachToParent(){
-    asRawTensor().attachToParent();
+  default void attachToParent(boolean requireParent) {
+    asRawTensor().attachToParent(requireParent);
   }
 
   @Override
-  default boolean isAttached(){
+  default boolean isAttached() {
     return asRawTensor().isAttached();
   }
 
   @Override
-  default void attachToCurrentScope(){
+  default void attachToCurrentScope() {
     asRawTensor().attachToCurrentScope();
   }
 }

@@ -87,15 +87,19 @@ public final class RawTensor implements Tensor {
   }
 
   @Override
-  public synchronized void attachToParent() {
+  public synchronized void attachToParent(boolean requireParent) {
     if (scope == null) {
       throw new IllegalStateException("Can't attach to parent: no scope.");
     }
-    if (scope.parent == null) {
+    if (scope.parent == null && requireParent) {
       throw new IllegalStateException("Can't attach to parent: scope does not have a parent.");
     }
 
-    scope.parent.attach(this);
+    if (scope.parent != null) {
+      scope.parent.attach(this);
+    } else {
+      this.detach();
+    }
   }
 
   @Override
