@@ -97,25 +97,25 @@ public class TensorScopeTest {
     firstScope.close();
   }
 
-  @Test
-  public void testNoAutoAttach(){
-    TensorScope scope = new TensorScope(false);
-    TFloat32 tensor = makeTensor(10);
-    assertFalse(tensor.isAttached());
-
-    TFloat32 detachTensor = makeTensor(10);
-    assertFalse(detachTensor.isAttached());
-
-    scope.attach(detachTensor);
-    assertTrue(detachTensor.isAttached());
-
-    detachTensor.detach();
-    assertFalse(detachTensor.isAttached());
-
-    tensor.close();
-    detachTensor.close();
-    scope.close();
-  }
+//  @Test
+//  public void testNoAutoAttach(){
+//    TensorScope scope = new TensorScope(false);
+//    TFloat32 tensor = makeTensor(10);
+//    assertFalse(tensor.isAttached());
+//
+//    TFloat32 detachTensor = makeTensor(10);
+//    assertFalse(detachTensor.isAttached());
+//
+//    scope.attach(detachTensor);
+//    assertTrue(detachTensor.isAttached());
+//
+//    detachTensor.detach();
+//    assertFalse(detachTensor.isAttached());
+//
+//    tensor.close();
+//    detachTensor.close();
+//    scope.close();
+//  }
 
 
 }

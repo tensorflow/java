@@ -167,9 +167,7 @@ class EagerOperation extends AbstractOperation {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      TType typedTensor = RawTensor.fromHandle(tensor).asTypedTensor();
-      session.attachTensor(typedTensor);
-      return typedTensor;
+      return RawTensor.fromHandle(tensor).asTypedTensor();
     }
   }
 

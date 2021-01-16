@@ -28,23 +28,34 @@ public interface HasTensors extends AutoCloseable {
 
   /**
    * Detach these tensors from any scopes managing them.  They must be manually closed or attached to another scope.
+   *
    * @see Tensor#detach()
    */
-  default void detach(){
+  default void detach() {
     tensors().forEach(Tensor::detach);
   }
 
   /**
-   * Attach all of these tensors to the most recent scope that accepts automatic attachment.
-   * No-ops and returns false if there is no scope that does so.
-   * @see Tensor#detach()
+   * Attach all of these tensors to the most recent scope.
+   *
+   * @throws IllegalStateException if there is no active scope.
+   * @see Tensor#attachToCurrentScope()
    */
-  default boolean attachToCurrentScope(){
-    if(!TensorScope.hasAutoScope()){
-      return false;
+  default void attachToCurrentScope() {
+    TensorScope scope = TensorScope.currentScope();
+    if (scope == null) {
+      throw new IllegalStateException("Can't attach to current scope: no active tensor scopes.");
     }
-    tensors().forEach(Tensor::attachToCurrentScope);
-    return true;
+
+    tensors().forEach(scope::attach);
+  }
+
+  /**
+   * Attach these tensors to the parent of their current scope, removing it from it's current scope.
+   * @throws IllegalStateException if any tensors do not have a scope, or their scope does not have a parent.
+   */
+  default void attachToParent(){
+    tensors().forEach(Tensor::attachToParent);
   }
 
   /**
@@ -54,10 +65,11 @@ public interface HasTensors extends AutoCloseable {
    * operation or memory will be leaked.  May be done automatically via {@link TensorScope}.
    *
    * <p>The Tensor objects are no longer usable after {@code close} returns.
+   *
    * @see Tensor#close()
    */
   @Override
-  default void close(){
+  default void close() {
     tensors().forEach(Tensor::close);
   }
 }

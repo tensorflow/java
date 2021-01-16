@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
@@ -32,7 +33,8 @@ import java.util.WeakHashMap;
  * they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
  * <p>
  * When auto-attach is true, tensors are automatically tracked on creation.  A tensor can me manually added to a scope
- * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  The tensor will then be closed when the first of it's managing scopes closes.
+ * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  The tensor will then be closed
+ * when the first of it's managing scopes closes.
  * <p>
  * {@link Tensor#detach()} detaches the tensor from all scopes, requiring the user to close it manually or attach it to
  * another scope.
@@ -41,50 +43,32 @@ import java.util.WeakHashMap;
  */
 public class TensorScope implements AutoCloseable {
 
-  private static final Set<TensorScope> allScopes = Collections.newSetFromMap(new WeakHashMap<>());
+  private static final InheritableThreadLocal<TensorScope> currentScope = new InheritableThreadLocal<>();
 
-  private static final ThreadLocal<Deque<TensorScope>> scopeStack = ThreadLocal.withInitial(ArrayDeque::new);
+  public static TensorScope currentScope() {
+    TensorScope scope = currentScope.get();
 
-  /**
-   * Attach the tensor to the most recent scope that accepts automatic attachment.
-   *
-   * @return true if attached.
-   */
-  static boolean autoAttach(Tensor tensor) {
-    Iterator<TensorScope> iterator = scopeStack.get().descendingIterator();
-    while (iterator.hasNext()) {
-      TensorScope scope = iterator.next();
-      if (scope.autoAttach) {
-        scope.attach(tensor);
-        return true;
-      }
+    if (scope == null || !scope.closed) {
+      return scope;
     }
-    return false;
+
+    // scope could be closed in another thread, in which case this thread's currentScope wouldn't be updated
+    while (scope != null && scope.closed) {
+      scope = scope.parent;
+    }
+    currentScope.set(scope);
+    return scope;
   }
 
-  /**
-   * Return true if there is a scope that accepts auto attachment on the stack.
-   */
-  public static boolean hasAutoScope() {
-    Iterator<TensorScope> iterator = scopeStack.get().descendingIterator();
-    while (iterator.hasNext()) {
-      TensorScope scope = iterator.next();
-      if (scope.autoAttach) {
-        return true;
+  public static void detach(Tensor tensor) {
+    // ensure that I'm not attaching or detaching at the same time in different threads
+    RawTensor rt = tensor.asRawTensor();
+    synchronized (rt) {
+      if (rt.scope != null) {
+        rt.scope.tensors.remove(rt);
+        rt.scope = null;
       }
     }
-    return false;
-  }
-
-  /**
-   * Detaches the given tensor from any scopes managing it, requiring it to be manually closed.
-   */
-  public static void detach(Tensor t) {
-    RawTensor raw = t.asRawTensor();
-    synchronized (TensorScope.class) {
-      allScopes.forEach(x -> x.detachTensor(raw));
-    }
-    raw.attached = false;
   }
 
   /**
@@ -92,38 +76,41 @@ public class TensorScope implements AutoCloseable {
    *
    * @see TensorScope
    */
-  public TensorScope(boolean autoAttach) {
-    this.autoAttach = autoAttach;
-
-    synchronized (TensorScope.class) {
-      allScopes.add(this);
-    }
-
-    localScopeStack = scopeStack.get();
-    localScopeStack.push(this);
-  }
-
-  /**
-   * Create a new tensor scope that automatically manages tensors.
-   */
   public TensorScope() {
-    this(true);
+    this.parent = currentScope();
+    currentScope.set(this);
+
+    if (this.parent != null) {
+      synchronized (this.parent) {
+        this.parent.children.add(this);
+      }
+    }
   }
 
   /**
    * Attach a tensor to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
-  public TensorScope attach(Tensor t) {
-    RawTensor rt = t.asRawTensor();
-    rt.attached = true;
-    tensors.add(rt);
+  public synchronized TensorScope attach(Tensor tensor) {
+    if (this.closed) {
+      throw new IllegalStateException("Scope has been closed, can not attach new tensor.");
+    }
+
+    RawTensor rt = tensor.asRawTensor();
+    // ensure that I'm not attaching or detaching at the same time in different threads
+    synchronized (rt) {
+      detach(tensor);
+      rt.scope = this;
+      tensors.add(rt);
+    }
 
     return this;
   }
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
   public TensorScope attach(Tensor... tensors) {
@@ -138,6 +125,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
   public TensorScope attach(HasTensors tensors) {
@@ -148,6 +136,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
   public TensorScope attach(HasTensors... tensors) {
@@ -162,6 +151,7 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
   public TensorScope attach(Iterable<Tensor> tensors) {
@@ -172,9 +162,11 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Attach tensors to this scope.  This happens automatically to tensors that are created in the scope.
+   *
    * @return this
    */
-  public TensorScope attach(Iterable<Tensor>... tensors) {
+  @SafeVarargs
+  public final TensorScope attach(Iterable<Tensor>... tensors) {
     if (tensors != null) {
       for (Iterable<Tensor> ht : tensors) {
         attach(ht);
@@ -184,52 +176,76 @@ public class TensorScope implements AutoCloseable {
     return this;
   }
 
-  private void detachTensor(Tensor t) {
-    tensors.remove(t.asRawTensor());
-  }
-
-  private void closeScope() {
-    tensors.forEach(Tensor::close);
-
-    synchronized (TensorScope.class) {
-      allScopes.remove(this);
-    }
-
-    closed = true;
-  }
-
   /**
    * Closes this scope and its tensors, and any inner scopes.
    */
   @Override
-  public void close() {
+  public synchronized void close() {
     if (closed) {
       return;
     }
 
-    if (!localScopeStack.contains(this)) {
-      throw new IllegalStateException("This scope is not on the scope stack, but was not closed."
-          + "  This should not be possible.");
+    children.forEach(TensorScope::close);
+    tensors.forEach(Tensor::close);
+
+    closed = true;
+
+    parent.children.remove(this);
+
+    if (currentScope() == this) {
+      currentScope.set(this.parent);
+    }
+  }
+
+  /**
+   * Release the tensors and child scopes of this scope to it's parent, <b>without closing them</b>.
+   *
+   * @throws IllegalStateException if this scope has no parent.
+   */
+  public synchronized void releaseToParent() {
+    release(true);
+  }
+
+  /**
+   * Release the tensors and child scopes of this scope <b>without closing them</b>, to it's parent if it has one.
+   *
+   * @param requireParent Whether to require a parent scope to release resources to.
+   * @throws IllegalStateException if this scope has no parent, but {@code requireParent} is true.
+   */
+  public synchronized void release(boolean requireParent) {
+    if (closed) {
+      return;
     }
 
-    while (true) {
-      TensorScope ts = localScopeStack.removeLast();
-      ts.closeScope();
-      if (ts == this) {
-        return;
-      }
+    if (this.parent == null && requireParent) {
+      throw new IllegalStateException("Can't release to parent: scope does not have parent.");
     }
+
+    if (this.parent != null) {
+      TensorScope newParent = this.parent;
+      newParent.children.addAll(children);
+      children.forEach(x -> x.parent = newParent);
+      tensors.forEach(newParent::attach);
+    } else {
+      children.forEach(x -> x.parent = null);
+      tensors.forEach(TensorScope::detach);
+    }
+
+    children.clear();
+    tensors.clear();
+
+    close();
   }
 
   /**
    * Gets whether the scope is closed.
    */
-  public boolean isClosed() {
+  public synchronized boolean isClosed() {
     return closed;
   }
 
-  private final boolean autoAttach;
   private boolean closed = false;
-  private final Set<RawTensor> tensors = new HashSet<>();
-  private final Deque<TensorScope> localScopeStack;
+  private final Set<RawTensor> tensors = ConcurrentHashMap.newKeySet();
+  TensorScope parent;
+  private final Set<TensorScope> children = ConcurrentHashMap.newKeySet();
 }

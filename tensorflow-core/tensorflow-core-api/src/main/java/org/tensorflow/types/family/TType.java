@@ -92,12 +92,17 @@ public interface TType extends Tensor {
   }
 
   @Override
+  default void attachToParent(){
+    asRawTensor().attachToParent();
+  }
+
+  @Override
   default boolean isAttached(){
     return asRawTensor().isAttached();
   }
 
   @Override
-  default boolean attachToCurrentScope(){
-    return asRawTensor().attachToCurrentScope();
+  default void attachToCurrentScope(){
+    asRawTensor().attachToCurrentScope();
   }
 }

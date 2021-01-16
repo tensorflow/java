@@ -83,12 +83,28 @@ public final class RawTensor implements Tensor {
 
   @Override
   public boolean isAttached() {
-    return attached;
+    return scope != null;
   }
 
   @Override
-  public boolean attachToCurrentScope() {
-    return TensorScope.autoAttach(this);
+  public synchronized void attachToParent() {
+    if(scope == null){
+      throw new IllegalStateException("Can't attach to parent: no scope.");
+    }
+    if(scope.parent == null){
+      throw new IllegalStateException("Can't attach to parent: scope does not have a parent.");
+    }
+
+    scope.parent.attach(this);
+  }
+
+  @Override
+  public void attachToCurrentScope() {
+    TensorScope scope = TensorScope.currentScope();
+    if(scope == null){
+      throw new IllegalStateException("Can't attach to current scope: no active tensor scopes.");
+    }
+    scope.attach(this);
   }
 
   /**
@@ -231,12 +247,16 @@ public final class RawTensor implements Tensor {
   RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
     this.typeInfo = typeInfo;
     this.shape = shape;
-    TensorScope.autoAttach(this);
+
+    TensorScope currentScope = TensorScope.currentScope();
+    if(currentScope != null) {
+      this.scope = currentScope.attach(this);
+    }
   }
 
   private PointerScope tensorScope;
   private boolean closed;
-  boolean attached = false;
+  TensorScope scope;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;

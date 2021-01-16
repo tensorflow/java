@@ -224,13 +224,20 @@ public interface Tensor extends Shaped, AutoCloseable {
   void detach();
 
   /**
+   * Attach this tensor to the parent of it's current scope, removing it from it's current scope.
+   * @throws IllegalStateException if it does not have a scope, or it's scope does not have a parent.
+   */
+  void attachToParent();
+
+  /**
    * Returns true if this tensor is attached to a {@link TensorScope}.
    */
   boolean isAttached();
 
   /**
-   * Attach this tensor to the most recent scope that accepts automatic attachment.
-   * No-ops and returns false if there is no scope that does so.
+   * Attach this tensor to the most recent scope.
+   *
+   * @throws IllegalStateException if there are no active scopes
    */
-  boolean attachToCurrentScope();
+  void attachToCurrentScope();
 }
