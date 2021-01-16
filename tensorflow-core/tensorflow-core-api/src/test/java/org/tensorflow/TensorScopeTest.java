@@ -97,25 +97,67 @@ public class TensorScopeTest {
     firstScope.close();
   }
 
-//  @Test
-//  public void testNoAutoAttach(){
-//    TensorScope scope = new TensorScope(false);
-//    TFloat32 tensor = makeTensor(10);
-//    assertFalse(tensor.isAttached());
-//
-//    TFloat32 detachTensor = makeTensor(10);
-//    assertFalse(detachTensor.isAttached());
-//
-//    scope.attach(detachTensor);
-//    assertTrue(detachTensor.isAttached());
-//
-//    detachTensor.detach();
-//    assertFalse(detachTensor.isAttached());
-//
-//    tensor.close();
-//    detachTensor.close();
-//    scope.close();
-//  }
+  @Test
+  public void testUpwardsAttach(){
+    TensorScope firstScope = new TensorScope();
+    TFloat32 tensor = makeTensor(10);
+    TensorScope secondScope = new TensorScope().attach(tensor);
+
+    firstScope.close();
+
+    assertTrue(tensor.isAttached());
+    assertFalse(tensor.isClosed());
+
+    secondScope.close();
+
+    assertTrue(tensor.isClosed());
+  }
+
+  @Test
+  public void testReleaseToParentScope() {
+    TensorScope outerScope = new TensorScope();
+    TensorScope scope = new TensorScope();
+
+    TFloat32 tensor = makeTensor(10);
+
+    assertTrue(tensor.isAttached());
+    assertFalse(tensor.isClosed());
+
+    scope.releaseToParent();
+
+    assertTrue(scope.isClosed());
+    assertTrue(tensor.isAttached());
+    assertFalse(tensor.isClosed());
+
+    outerScope.close();
+
+    assertTrue(tensor.isClosed());
+    assertTrue(outerScope.isClosed());
+  }
+
+  @Test
+  public void testAttachToParentScope() {
+    TensorScope outerScope = new TensorScope();
+    TensorScope scope = new TensorScope();
+
+    TFloat32 tensor = makeTensor(10);
+
+    assertTrue(tensor.isAttached());
+    assertFalse(tensor.isClosed());
+
+    tensor.attachToParent();
+
+    scope.close();
+
+    assertTrue(scope.isClosed());
+    assertTrue(tensor.isAttached());
+    assertFalse(tensor.isClosed());
+
+    outerScope.close();
+
+    assertTrue(tensor.isClosed());
+    assertTrue(outerScope.isClosed());
+  }
 
 
 }
