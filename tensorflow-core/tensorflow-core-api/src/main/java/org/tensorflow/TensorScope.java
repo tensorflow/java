@@ -28,18 +28,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * A scope that can be used to manage tensor resources.  If auto-attach is used, any tensors created between a scope's
- * creation and calling {@code close()}, that haven't been detached, are guaranteed to be closed with the scope (even if
- * they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
+ * A scope that can be used to manage tensor resources.  Any tensors created between a scope's
+ * creation and calling {@code close()} that haven't been detached or attached to a different scope are guaranteed to
+ * be closed with the scope (even if they are created in a sub-scope).  Tensors may be manually closed earlier without
+ * issue.
  * <p>
- * When auto-attach is true, tensors are automatically tracked on creation.  A tensor can me manually added to a scope
- * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  The tensor will then be closed
- * when the first of it's managing scopes closes.
+ * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope
+ * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  A tensor may only have one scope:
+ * if it currently has a scope when {@code attach} is called, it is removed from it's original scope.
  * <p>
- * {@link Tensor#detach()} detaches the tensor from all scopes, requiring the user to close it manually or attach it to
+ * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
  * another scope.
  * <p>
- * Note that scope management is thread local, except for detach, which will detach even from scopes on other threads.
+ * Note that scope management is mostly thread local.  The current scope hierarchy will be inherited by new threads,
+ * and closing a scope will close it's children regardless of which threads they are on, but the active scope is
+ * thread local.
  */
 public class TensorScope implements AutoCloseable {
 
@@ -210,6 +213,9 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Release the tensors and child scopes of this scope <b>without closing them</b>, to it's parent if it has one.
+   *
+   * <p><b>WARNING:</b> this method may release resources without assigning them to another scope if
+   * {@code requireParent} is false.  {@link #releaseToParent()} should be used instead wherever possible.
    *
    * @param requireParent Whether to require a parent scope to release resources to.
    * @throws IllegalStateException if this scope has no parent, but {@code requireParent} is true.

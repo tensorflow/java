@@ -39,6 +39,7 @@ import org.tensorflow.types.family.TType;
  *   doSomethingWith(t);
  * }
  * }</pre>
+ * <p>This can be done automatically using {@link TensorScope}.
  * <p>Instances of a Tensor are <b>not</b> thread-safe.
  */
 public interface Tensor extends Shaped, AutoCloseable {
