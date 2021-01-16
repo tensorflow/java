@@ -35,7 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope
  * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  A tensor may only have one scope:
- * if it currently has a scope when {@code attach} is called, it is removed from it's original scope.
+ * if it currently has a scope when {@code attach} is called, it is removed from its original scope.
  * <p>
  * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
  * another scope.
