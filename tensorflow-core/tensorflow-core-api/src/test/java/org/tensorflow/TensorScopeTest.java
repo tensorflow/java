@@ -83,7 +83,7 @@ public class TensorScopeTest {
   }
 
   @Test
-  public void testAttach(){
+  public void testAttach() {
     TensorScope firstScope = new TensorScope();
     TFloat32 tensor = makeTensor(10);
     TensorScope secondScope = new TensorScope().attach(tensor);

@@ -28,14 +28,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * A scope that can be used to manage tensor resources.  Any tensors created between a scope's
- * creation and calling {@code close()} that haven't been detached or attached to a different scope are guaranteed to
- * be closed with the scope (even if they are created in a sub-scope).  Tensors may be manually closed earlier without
- * issue.
+ * A scope that can be used to manage tensor resources.  Any tensors created between a scope's creation and calling
+ * {@code close()} that haven't been detached or attached to a different scope are guaranteed to be closed with the
+ * scope (even if they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
  * <p>
- * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope
- * with {@link TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  A tensor may only have one scope:
- * if it currently has a scope when {@code attach} is called, it is removed from its original scope.
+ * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
+ * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrentScope()}.  A tensor may only have one scope: if it
+ * currently has a scope when {@code attach} is called, it is removed from its original scope.
  * <p>
  * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
  * another scope.
@@ -192,7 +191,7 @@ public class TensorScope implements AutoCloseable {
 
     closed = true;
 
-    if(parent != null) {
+    if (parent != null) {
       parent.children.remove(this);
     }
 

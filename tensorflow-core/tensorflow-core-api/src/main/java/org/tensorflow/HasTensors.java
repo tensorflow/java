@@ -52,9 +52,10 @@ public interface HasTensors extends AutoCloseable {
 
   /**
    * Attach these tensors to the parent of their current scope, removing it from its current scope.
+   *
    * @throws IllegalStateException if any tensors do not have a scope, or their scope does not have a parent.
    */
-  default void attachToParent(){
+  default void attachToParent() {
     tensors().forEach(Tensor::attachToParent);
   }
 

@@ -88,10 +88,10 @@ public final class RawTensor implements Tensor {
 
   @Override
   public synchronized void attachToParent() {
-    if(scope == null){
+    if (scope == null) {
       throw new IllegalStateException("Can't attach to parent: no scope.");
     }
-    if(scope.parent == null){
+    if (scope.parent == null) {
       throw new IllegalStateException("Can't attach to parent: scope does not have a parent.");
     }
 
@@ -101,7 +101,7 @@ public final class RawTensor implements Tensor {
   @Override
   public void attachToCurrentScope() {
     TensorScope scope = TensorScope.currentScope();
-    if(scope == null){
+    if (scope == null) {
       throw new IllegalStateException("Can't attach to current scope: no active tensor scopes.");
     }
     scope.attach(this);
@@ -249,7 +249,7 @@ public final class RawTensor implements Tensor {
     this.shape = shape;
 
     TensorScope currentScope = TensorScope.currentScope();
-    if(currentScope != null) {
+    if (currentScope != null) {
       this.scope = currentScope.attach(this);
     }
   }
