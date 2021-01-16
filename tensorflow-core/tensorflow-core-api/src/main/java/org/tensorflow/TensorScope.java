@@ -40,9 +40,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
  * another scope.
  * <p>
- * Note that scope management is mostly thread local.  The current scope hierarchy will be inherited by new threads,
- * and closing a scope will close it's children regardless of which threads they are on, but the active scope is
- * thread local.
+ * Scopes will be inherited at thread creation, but further scope creation on different threads will be independent,
+ * other than having the same parent. Closing a scope will close it's children regardless of which threads they are on.
  */
 public class TensorScope implements AutoCloseable {
 
