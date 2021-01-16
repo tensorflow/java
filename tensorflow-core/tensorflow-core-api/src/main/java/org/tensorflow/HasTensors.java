@@ -53,6 +53,10 @@ public interface HasTensors extends AutoCloseable {
   /**
    * Attach these tensors to the parent of their current scope, removing it from its current scope.
    *
+   * <p>Note that if tensors have different scopes, each tensor will be attached to its scope's parent.
+   * {@link TensorScope#attach(HasTensors)} or {@link #attachToCurrentScope()} can be used to ensure all tensors have
+   * the same scope.
+   *
    * @throws IllegalStateException if any tensors do not have a scope, or their scope does not have a parent.
    */
   default void attachToParent() {
