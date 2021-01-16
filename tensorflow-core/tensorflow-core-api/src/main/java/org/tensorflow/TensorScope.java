@@ -190,7 +190,9 @@ public class TensorScope implements AutoCloseable {
 
     closed = true;
 
-    parent.children.remove(this);
+    if(parent != null) {
+      parent.children.remove(this);
+    }
 
     if (currentScope() == this) {
       currentScope.set(this.parent);
