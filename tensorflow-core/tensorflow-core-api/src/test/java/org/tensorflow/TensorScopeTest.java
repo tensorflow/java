@@ -98,22 +98,6 @@ public class TensorScopeTest {
   }
 
   @Test
-  public void testUpwardsAttach(){
-    TensorScope firstScope = new TensorScope();
-    TFloat32 tensor = makeTensor(10);
-    TensorScope secondScope = new TensorScope().attach(tensor);
-
-    firstScope.close();
-
-    assertTrue(tensor.isAttached());
-    assertFalse(tensor.isClosed());
-
-    secondScope.close();
-
-    assertTrue(tensor.isClosed());
-  }
-
-  @Test
   public void testReleaseToParentScope() {
     TensorScope outerScope = new TensorScope();
     TensorScope scope = new TensorScope();
