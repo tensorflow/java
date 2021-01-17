@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.utils.TestSession;
-import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -27,18 +26,53 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class WeightBroadcastTest {
-
+public class BroadcastWeightsTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
-  private <T extends TNumber> void testValid(
-      TestSession testSession, Ops tf, Operand<T> weights, Operand<T> values, Class<T> type) {
+  int[][][] valueArrayI =
+      new int[][][] {
+        {{1, 2, 3, 4}, {5, 6, 7, 8}},
+        {{9, 10, 11, 12}, {13, 14, 15, 16}},
+        {{17, 18, 19, 20}, {21, 22, 23, 24}}
+      };
+  long[][][] valueArrayL =
+      new long[][][] {
+        {{1, 2, 3, 4}, {5, 6, 7, 8}},
+        {{9, 10, 11, 12}, {13, 14, 15, 16}},
+        {{17, 18, 19, 20}, {21, 22, 23, 24}}
+      };
+  float[][][] valueArrayF =
+      new float[][][] {
+        {{1, 2, 3, 4}, {5, 6, 7, 8}},
+        {{9, 10, 11, 12}, {13, 14, 15, 16}},
+        {{17, 18, 19, 20}, {21, 22, 23, 24}}
+      };
+  double[][][] valueArrayD =
+      new double[][][] {
+        {{1, 2, 3, 4}, {5, 6, 7, 8}},
+        {{9, 10, 11, 12}, {13, 14, 15, 16}},
+        {{17, 18, 19, 20}, {21, 22, 23, 24}}
+      };
 
-    Op staticOp = MetricsHelper.assertBroadcastable(tf, weights, values);
-    testSession.run(staticOp);
+  private <T extends TNumber> void testValid(
+      TestSession testSession,
+      Ops tf,
+      Operand<T> weights,
+      Operand<T> values,
+      Number[] expected, // flattened array
+      Class<T> type) {
+
+    Operand<T> staticOp = MetricsHelper.broadcastWeights(tf, weights, values);
+    if (expected != null) {
+      testSession.evaluate(expected, staticOp);
+    } else {
+      testSession.run(staticOp);
+    }
 
     // dynamic test
     Operand<T> weightsPlaceholder = tf.placeholder(type);
@@ -49,15 +83,52 @@ public class WeightBroadcastTest {
     try (Tensor weightsTensor = tensors.get(0);
         Tensor valuesTensor = tensors.get(1)) {
 
-      Op dynamicOp = MetricsHelper.assertBroadcastable(tf, weightsPlaceholder, valuesPlaceholder);
+      Operand<T> dynamicOp =
+          MetricsHelper.broadcastWeights(tf, weightsPlaceholder, valuesPlaceholder);
 
-      testSession
-          .getGraphSession()
-          .runner()
-          .feed(weightsPlaceholder, weightsTensor)
-          .feed(valuesPlaceholder, valuesTensor)
-          .addTarget(dynamicOp)
-          .run();
+      List<Tensor> result =
+          testSession
+              .getGraphSession()
+              .runner()
+              .feed(weightsPlaceholder, weightsTensor)
+              .feed(valuesPlaceholder, valuesTensor)
+              .fetch(dynamicOp)
+              .run();
+
+      if (expected != null) {
+        if (type.equals(TInt32.class)) {
+          TInt32 intT = (TInt32) result.get(0);
+          AtomicInteger i = new AtomicInteger();
+          intT.scalars()
+              .forEachIndexed(
+                  (idx, f) -> assertEquals(expected[i.getAndIncrement()].intValue(), f.getInt()));
+        } else if (type.equals(TInt64.class)) {
+          TInt64 floatT = (TInt64) result.get(0);
+          AtomicInteger i = new AtomicInteger();
+          floatT
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) -> assertEquals(expected[i.getAndIncrement()].longValue(), f.getLong()));
+        } else if (type.equals(TFloat32.class)) {
+          TFloat32 floatT = (TFloat32) result.get(0);
+          AtomicInteger i = new AtomicInteger();
+          floatT
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) ->
+                      assertEquals(
+                          expected[i.getAndIncrement()].floatValue(), f.getFloat(), 1e-5F));
+        } else if (type.equals(TFloat64.class)) {
+          TFloat64 doubleT = (TFloat64) result.get(0);
+          AtomicInteger i = new AtomicInteger();
+          doubleT
+              .scalars()
+              .forEachIndexed(
+                  (idx, f) ->
+                      assertEquals(
+                          expected[i.getAndIncrement()].doubleValue(), f.getDouble(), 1e-5F));
+        }
+      }
     }
   }
 
@@ -66,15 +137,13 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TFloat32> values =
-          tf.constant(
-              new float[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TFloat32> values = tf.constant(valueArrayF);
       Operand<TFloat32> weights = tf.constant(5f);
-      testValid(testSession, tf, weights, values, TFloat32.class);
+      Float[] expected = {
+        5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f, 5f,
+        5f
+      };
+      testValid(testSession, tf, weights, values, expected, TFloat32.class);
     }
   }
 
@@ -83,15 +152,14 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TFloat64> values =
-          tf.constant(
-              new double[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TFloat64> values = tf.constant(valueArrayD);
       Operand<TFloat64> weights = tf.constant(new double[][][] {{{5}}});
-      testValid(testSession, tf, weights, values, TFloat64.class);
+      Double[] expected = {
+        5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5., 5.,
+        5.
+      };
+
+      testValid(testSession, tf, weights, values, expected, TFloat64.class);
     }
   }
 
@@ -100,15 +168,13 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt64> values =
-          tf.constant(
-              new long[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt64> values = tf.constant(valueArrayL);
       Operand<TInt64> weights = tf.constant(new long[][][] {{{5, 7, 11, 3}}});
-      testValid(testSession, tf, weights, values, TInt64.class);
+      Long[] expected = {
+        5L, 7L, 11L, 3L, 5L, 7L, 11L, 3L, 5L, 7L, 11L, 3L, 5L, 7L, 11L, 3L, 5L, 7L, 11L, 3L, 5L, 7L,
+        11L, 3L,
+      };
+      testValid(testSession, tf, weights, values, expected, TInt64.class);
     }
   }
 
@@ -117,15 +183,12 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt32> values =
-          tf.constant(
-              new int[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights = tf.constant(new int[][][] {{{5}, {11}}});
-      testValid(testSession, tf, weights, values, TInt32.class);
+      Integer[] expected = {
+        5, 5, 5, 5, 11, 11, 11, 11, 5, 5, 5, 5, 11, 11, 11, 11, 5, 5, 5, 5, 11, 11, 11, 11
+      };
+      testValid(testSession, tf, weights, values, expected, TInt32.class);
     }
   }
 
@@ -134,15 +197,12 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt32> values =
-          tf.constant(
-              new int[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights = tf.constant(new int[][][] {{{5, 7, 11, 3}, {2, 13, 7, 5}}});
-      testValid(testSession, tf, weights, values, TInt32.class);
+      Integer[] expected = {
+        5, 7, 11, 3, 2, 13, 7, 5, 5, 7, 11, 3, 2, 13, 7, 5, 5, 7, 11, 3, 2, 13, 7, 5,
+      };
+      testValid(testSession, tf, weights, values, expected, TInt32.class);
     }
   }
 
@@ -151,15 +211,12 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt32> values =
-          tf.constant(
-              new int[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights = tf.constant(new int[][][] {{{5}}, {{7}}, {{11}}});
-      testValid(testSession, tf, weights, values, TInt32.class);
+      Integer[] expected = {
+        5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 11, 11, 11, 11, 11, 11, 11, 11
+      };
+      testValid(testSession, tf, weights, values, expected, TInt32.class);
     }
   }
 
@@ -168,16 +225,13 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt32> values =
-          tf.constant(
-              new int[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights =
           tf.constant(new int[][][] {{{5, 7, 11, 3}}, {{2, 12, 7, 5}}, {{2, 17, 11, 3}}});
-      testValid(testSession, tf, weights, values, TInt32.class);
+      Integer[] expected = {
+        5, 7, 11, 3, 5, 7, 11, 3, 2, 12, 7, 5, 2, 12, 7, 5, 2, 17, 11, 3, 2, 17, 11, 3
+      };
+      testValid(testSession, tf, weights, values, expected, TInt32.class);
     }
   }
 
@@ -186,13 +240,8 @@ public class WeightBroadcastTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
-      Operand<TInt32> values =
-          tf.constant(
-              new int[][][] {
-                {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                {{17, 18, 19, 20}, {21, 22, 23, 24}}
-              });
+      Operand<TInt32> values = tf.constant(valueArrayI);
+
       Operand<TInt32> weights =
           tf.constant(
               new int[][][] {
@@ -200,7 +249,10 @@ public class WeightBroadcastTest {
                 {{2, 17, 11, 3}, {2, 17, 11, 3}},
                 {{5, 7, 11, 3}, {2, 12, 7, 5}}
               });
-      testValid(testSession, tf, weights, values, TInt32.class);
+      Integer[] expected = {
+        5, 7, 11, 3, 2, 12, 7, 5, 2, 17, 11, 3, 2, 17, 11, 3, 5, 7, 11, 3, 2, 12, 7, 5
+      };
+      testValid(testSession, tf, weights, values, expected, TInt32.class);
     }
   }
 
@@ -210,6 +262,22 @@ public class WeightBroadcastTest {
   // To simply the assertThrows, only IllegalArgumentException is expected.
   // The private method, testValid, tests for both static and dynamic shapes.
   @Test
+  public void testInvalid1() {
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          try (TestSession testSession = TestSession.createTestSession(tfMode)) {
+            Ops tf = testSession.getTF();
+            Operand<TInt32> values = tf.constant(valueArrayI);
+            Operand<TInt32> weights = tf.constant(new int[] {5});
+
+            testValid(testSession, tf, weights, values, null, TInt32.class);
+          }
+        });
+  }
+
+  @Test
   public void testInvalid1x1() {
 
     assertThrows(
@@ -217,15 +285,10 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
             Operand<TInt32> weights = tf.constant(new int[][] {{5}});
-            testValid(testSession, tf, weights, values, TInt32.class);
+
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }
@@ -237,15 +300,9 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
             Operand<TInt32> weights = tf.constant(new int[][] {{5, 7}, {11, 3}, {2, 12}});
-            testValid(testSession, tf, weights, values, TInt32.class);
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }
@@ -257,15 +314,9 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
             Operand<TInt32> weights = tf.constant(new int[][] {{5, 7, 11, 3}, {2, 12, 7, 5}});
-            testValid(testSession, tf, weights, values, TInt32.class);
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }
@@ -277,15 +328,9 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
             Operand<TInt32> weights = tf.constant(new int[][][][] {{{{5}}}});
-            testValid(testSession, tf, weights, values, TInt32.class);
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }
@@ -297,13 +342,7 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
 
             Operand<TInt32> weights =
                 tf.constant(
@@ -312,7 +351,7 @@ public class WeightBroadcastTest {
                       {{{2}, {17}, {11}, {3}}, {{2}, {17}, {11}, {3}}},
                       {{{5}, {7}, {11}, {3}}, {{2}, {12}, {7}, {5}}}
                     });
-            testValid(testSession, tf, weights, values, TInt32.class);
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }
@@ -324,13 +363,7 @@ public class WeightBroadcastTest {
         () -> {
           try (TestSession testSession = TestSession.createTestSession(tfMode)) {
             Ops tf = testSession.getTF();
-            Operand<TInt32> values =
-                tf.constant(
-                    new int[][][] {
-                      {{1, 2, 3, 4}, {5, 6, 7, 8}},
-                      {{9, 10, 11, 12}, {13, 14, 15, 16}},
-                      {{17, 18, 19, 20}, {21, 22, 23, 24}}
-                    });
+            Operand<TInt32> values = tf.constant(valueArrayI);
             Operand<TInt32> weights =
                 tf.constant(
                     new int[][][][] {
@@ -340,7 +373,7 @@ public class WeightBroadcastTest {
                         {{5, 7, 11, 3}, {2, 12, 7, 5}}
                       }
                     });
-            testValid(testSession, tf, weights, values, TInt32.class);
+            testValid(testSession, tf, weights, values, null, TInt32.class);
           }
         });
   }

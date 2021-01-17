@@ -27,7 +27,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -132,39 +131,32 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
       lValues = tuple.getTarget();
       lSampleWeights = tuple.getSampleWeights();
       try {
-
-        Op broadcastWeightsCheck =
-            MetricsHelper.assertBroadcastable(getTF(), lSampleWeights, lValues);
-        lValues =
-            getTF()
-                .withSubScope("broadcastWeightsCheck")
-                .withControlDependencies(Collections.singletonList(broadcastWeightsCheck))
-                .math
-                .mul(lValues, lSampleWeights);
+        lSampleWeights = MetricsHelper.broadcastWeights(getTF(), lSampleWeights, lValues);
       } catch (IllegalArgumentException ex) {
         // if we get here we have static shapes with either
         // different ranks or different dimension sizes.
         // first, reduce the values down to the rank of the samples
-        int valuesDim = lValues.shape().numDimensions();
-        int weightsDim = lSampleWeights.shape().numDimensions();
-        int numAxes = Math.min(0, valuesDim - weightsDim);
+        int valuesRank = lValues.shape().numDimensions();
+        int weightsRank = lSampleWeights.shape().numDimensions();
+        int numAxes = Math.min(0, valuesRank - weightsRank);
         if (numAxes
             > 0) { // values rank is greater than weights rank, reduce values to weights rank.
           int[] axes = new int[numAxes];
-          for (int i = 0; i < numAxes; i++) axes[i] = i + weightsDim;
+          for (int i = 0; i < numAxes; i++) axes[i] = i + weightsRank;
           if (reduction == MetricReduction.SUM) {
             lValues = getTF().reduceSum(lValues, getTF().constant(axes));
           } else {
             lValues = getTF().math.mean(lValues, getTF().constant(axes));
           }
         }
-        lValues = getTF().math.mul(lValues, lSampleWeights);
       }
+      lValues = getTF().math.mul(lValues, lSampleWeights);
     }
 
-    Operand<U> valueSum = getTF().reduceSum(lValues, LossesHelper.allAxes(getTF(), lValues));
+    Operand<U> weightedValueSum =
+        getTF().reduceSum(lValues, LossesHelper.allAxes(getTF(), lValues));
     Operand<T> totalUpdate =
-        getTF().assignAdd(total, CastHelper.cast(getTF(), valueSum, total.type()));
+        getTF().assignAdd(total, CastHelper.cast(getTF(), weightedValueSum, total.type()));
     updateOperations.add(totalUpdate);
     Operand<T> numValues;
     if (reduction != MetricReduction.SUM) {

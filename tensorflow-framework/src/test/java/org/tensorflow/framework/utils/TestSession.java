@@ -493,6 +493,16 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
+   * Print the input to standard out
+   *
+
+   * @param input the operand to print
+   * @param <T> the data type of the input
+   */
+  public <T extends TType> void print(Operand<T> input) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input.asOutput());
+  }
+  /**
    * Print the input
    *
    * @param out the output stream
@@ -504,6 +514,15 @@ public abstract class TestSession implements AutoCloseable {
   }
 
   /**
+   * Print the input to standard out
+   *
+   * @param input the op to print
+   */
+  public void print(Op input) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input.op().output(0));
+  }
+
+  /**
    * Print the input
    *
    * @param out the output stream
@@ -511,6 +530,16 @@ public abstract class TestSession implements AutoCloseable {
    */
   public void print(OutputStream out, Op input) {
     print(new PrintWriter(new OutputStreamWriter(out)), input.op().output(0));
+  }
+
+  /**
+   * Print the input to standard out
+   *
+   * @param input the op to print
+   * @param <T> the data type of the input
+   */
+  public <T extends TType> void print(Output<T> input) {
+    print(new PrintWriter(new OutputStreamWriter(System.out)), input);
   }
 
   /**
