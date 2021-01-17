@@ -33,6 +33,7 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
   /** The TensorFlow Ops */
   private final Ops tf;
 
+  /** The seed for random number generation */
   private final long seed;
 
   /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
@@ -148,8 +149,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return the result, possibly with control dependencies
+   * @param <S> the data type for the sampleWeights.
    */
-  public final Operand<T> callOnce(Operand<U> values, Operand<T> sampleWeights) {
+  public final <S extends TNumber> Operand<T> callOnce(
+      Operand<U> values, Operand<S> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     Ops ltf = tf.withSubScope("callOnce").withControlDependencies(controlOps);
     return ltf.identity(result());
