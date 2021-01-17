@@ -75,7 +75,8 @@ public class MetricsHelper {
     // if (weightsRankStatic != Shape.UNKNOWN_SIZE && valuesRankStatic != Shape.UNKNOWN_SIZE) {
     if (!weightsShapeStatic.isUnknown()
         && !valuesShapeStatic.isUnknown()
-        && !weightsShapeStatic.hasUnknownDimension() & !valuesShapeStatic.hasUnknownDimension()) {
+        && !weightsShapeStatic.hasUnknownDimension()
+        && !valuesShapeStatic.hasUnknownDimension()) {
       if (weightsRankStatic == 0) {
         return tf.withSubScope("staticScalarCheckSuccess")
             .withControlDependencies(Collections.EMPTY_LIST)
@@ -174,6 +175,34 @@ public class MetricsHelper {
     Operand<T> invalidDims = invalidDimsDiff.out();
     Operand<TInt32> numInvalidDims = tf.size(invalidDims);
     return tf.math.equal(tf.constant(0), numInvalidDims);
+  }
+
+  /**
+   * Broadcast `weights` to the same shape as `values`.
+   *
+   * @param tf the TensorFlow ops
+   * @param weights `Tensor` whose shape is broadcastable to `values`
+   * @param values Tensor` of any shape
+   * @param <T> the type of Operands
+   * @return <code>weights</code> broadcast to <code>values</code> shape
+   */
+  public static <T extends TNumber> Operand<T> broadcastWeights(
+      Ops tf, Operand<T> weights, Operand<T> values) {
+
+    Shape weightsShape = weights.shape();
+    Shape valuesShape = values.shape();
+
+    if (!weightsShape.hasUnknownDimension()
+        && !valuesShape.hasUnknownDimension()
+        && weightsShape.isCompatibleWith(valuesShape)) {
+      return weights;
+    }
+
+    Ops ctf =
+        tf.withSubScope("broadcastWeights")
+            .withControlDependencies(
+                Collections.singletonList(assertBroadcastable(tf, weights, tf.onesLike(values))));
+    return ctf.math.mul(weights, tf.onesLike(values));
   }
 
   // alias for mean

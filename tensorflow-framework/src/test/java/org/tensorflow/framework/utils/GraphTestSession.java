@@ -1025,7 +1025,7 @@ public class GraphTestSession extends TestSession {
           (TFloat64)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %f\n", index.getAndIncrement(), ((Output<TFloat64>) input).asTensor().getDouble());
+              "%d). %f\n", index.getAndIncrement(), result.getDouble());
         } else {
           result
               .scalars()
@@ -1040,7 +1040,7 @@ public class GraphTestSession extends TestSession {
           (TInt32)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %d\n", index.getAndIncrement(), ((Output<TInt32>) input).asTensor().getInt());
+              "%d). %d\n", index.getAndIncrement(),result.getInt());
         } else {
           result
               .scalars()
@@ -1055,7 +1055,7 @@ public class GraphTestSession extends TestSession {
           (TInt64)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %d\n", index.getAndIncrement(), ((Output<TInt64>) input).asTensor().getLong());
+              "%d). %d\n", index.getAndIncrement(), result.getLong());
         } else {
           result
               .scalars()
@@ -1070,7 +1070,7 @@ public class GraphTestSession extends TestSession {
           (TUint8)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %x\n", index.getAndIncrement(), ((Output<TUint8>) input).asTensor().getByte());
+              "%d). %x\n", index.getAndIncrement(), result.getByte());
         } else {
           result
               .scalars()
@@ -1085,7 +1085,7 @@ public class GraphTestSession extends TestSession {
           (TBool)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %b\n", index.getAndIncrement(), ((Output<TBool>) input).asTensor().getBoolean());
+              "%d). %b\n", index.getAndIncrement(), result.getBoolean());
         } else {
           result
               .scalars()
@@ -1100,7 +1100,7 @@ public class GraphTestSession extends TestSession {
           (TString)this.getGraphSession().runner().fetch(input).run().get(0)) {
         if (isScalar) {
           writer.printf(
-              "%d). %s\n", index.getAndIncrement(), ((Output<TString>) input).asTensor().getObject());
+              "%d). %s\n", index.getAndIncrement(), result.getObject());
         } else {
           result
               .scalars()
