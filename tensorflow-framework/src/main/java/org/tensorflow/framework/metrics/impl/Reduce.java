@@ -45,7 +45,8 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   private final Class<T> resultType;
   /** the variable that holds the total of the metric values */
   protected Variable<T> total;
-  /** the variable that holds the count of the metric values */
+  /** the variable that holds the count of the metric values.
+   * For {@link MetricReduction#WEIGHTED_MEAN}, this  count may be weighted */
   protected Variable<T> count;
 
   /**
