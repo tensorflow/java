@@ -64,19 +64,19 @@ public class Metrics {
    * @param tf the TensorFlow Ops
    * @param labels The ground truth values.
    * @param predictions The prediction values.
-   * @param axis The dimension along which the cosine similarity is computed.
+   * @param axes The dimensions along which the cosine similarity is computed.
    * @param <U> the data type for the labels
    * @param <T> the data type for the predictions and result
    * @return Cosine similarity value.
    */
   public static <T extends TNumber, U extends TNumber> Operand<T> cosineProximity(
-      Ops tf, Operand<U> labels, Operand<T> predictions, int[] axis) {
+      Ops tf, Operand<U> labels, Operand<T> predictions, int[] axes) {
     Operand<T> labelsNorm = CastHelper.cast(tf, labels, predictions.type());
-    labelsNorm = l2Normalize(tf, labelsNorm, axis);
+    labelsNorm = l2Normalize(tf, labelsNorm, axes);
 
-    Operand<T> predictionsNorm = l2Normalize(tf, predictions, axis);
+    Operand<T> predictionsNorm = l2Normalize(tf, predictions, axes);
     Operand<T> mathMul = tf.math.mul(labelsNorm, predictionsNorm);
-    return tf.reduceSum(mathMul, tf.constant(axis), ReduceSum.keepDims(Boolean.FALSE));
+    return tf.reduceSum(mathMul, tf.constant(axes), ReduceSum.keepDims(Boolean.FALSE));
   }
 
   /**
