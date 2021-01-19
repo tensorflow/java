@@ -86,22 +86,7 @@ public interface TType extends Tensor {
   }
 
   @Override
-  default void detach() {
-    asRawTensor().detach();
-  }
-
-  @Override
-  default void attachToParent(boolean requireParent) {
-    asRawTensor().attachToParent(requireParent);
-  }
-
-  @Override
   default boolean isAttached() {
     return asRawTensor().isAttached();
-  }
-
-  @Override
-  default void attachToCurrentScope() {
-    asRawTensor().attachToCurrentScope();
   }
 }

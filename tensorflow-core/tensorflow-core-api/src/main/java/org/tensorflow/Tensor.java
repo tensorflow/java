@@ -218,42 +218,15 @@ public interface Tensor extends Shaped, AutoCloseable {
 
   /**
    * Detach this tensor from any scopes managing it.  It must be manually closed or attached to another scope.
-   */
-  void detach();
-
-  /**
-   * Attach this tensor to the parent of it's current scope, removing it from its current scope.
    *
-   * @throws IllegalStateException if the tensor does not have a scope, or its scope does not have a parent.
+   * <p>Semantically, this makes the tensor everyone's responsibility: whoever uses it last needs to close it.
    */
-  default void attachToParent() {
-    attachToParent(true);
+  default void detach() {
+    TensorScope.detach(this);
   }
-
-  /**
-   * Attach this tensor to the parent of it's current scope, removing it from its current scope.
-   *
-   * <p>If {@code requireParent} is false, detaches the tensor if its scope does not have a parent.  Otherwise, if
-   * {@code requireParent} is true and the scope does not have a parent, throws {@link IllegalStateException}.
-   *
-   * <p><b>WARNING:</b> this method may release resources without assigning them to another scope if
-   * * {@code requireParent} is false.  {@link #attachToParent()} should be used instead wherever possible.
-   *
-   * @param requireParent Whether to require a parent scope to release resources to.
-   * @throws IllegalStateException if the tensor does not have a scope, or if this scope has no parent, but {@code
-   * requireParent} is true
-   */
-  void attachToParent(boolean requireParent);
 
   /**
    * Returns true if this tensor is attached to a {@link TensorScope}.
    */
   boolean isAttached();
-
-  /**
-   * Attach this tensor to the most recent scope.
-   *
-   * @throws IllegalStateException if there are no active scopes
-   */
-  void attachToCurrentScope();
 }

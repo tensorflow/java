@@ -77,38 +77,8 @@ public final class RawTensor implements Tensor {
   }
 
   @Override
-  public void detach() {
-    TensorScope.detach(this);
-  }
-
-  @Override
   public boolean isAttached() {
     return scope != null;
-  }
-
-  @Override
-  public synchronized void attachToParent(boolean requireParent) {
-    if (scope == null) {
-      throw new IllegalStateException("Can't attach to parent: no scope.");
-    }
-    if (scope.parent == null && requireParent) {
-      throw new IllegalStateException("Can't attach to parent: scope does not have a parent.");
-    }
-
-    if (scope.parent != null) {
-      scope.parent.attach(this);
-    } else {
-      this.detach();
-    }
-  }
-
-  @Override
-  public void attachToCurrentScope() {
-    TensorScope scope = TensorScope.currentScope();
-    if (scope == null) {
-      throw new IllegalStateException("Can't attach to current scope: no active tensor scopes.");
-    }
-    scope.attach(this);
   }
 
   /**
@@ -254,7 +224,7 @@ public final class RawTensor implements Tensor {
 
     TensorScope currentScope = TensorScope.currentScope();
     if (currentScope != null) {
-      this.scope = currentScope.attach(this);
+      this.scope = currentScope.withAttached(this);
     }
   }
 

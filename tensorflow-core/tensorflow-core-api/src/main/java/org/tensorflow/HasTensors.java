@@ -35,51 +35,6 @@ public interface HasTensors extends AutoCloseable {
     tensors().forEach(Tensor::detach);
   }
 
-  /**
-   * Attach all of these tensors to the most recent scope.
-   *
-   * @throws IllegalStateException if there is no active scope.
-   * @see Tensor#attachToCurrentScope()
-   */
-  default void attachToCurrentScope() {
-    TensorScope scope = TensorScope.currentScope();
-    if (scope == null) {
-      throw new IllegalStateException("Can't attach to current scope: no active tensor scopes.");
-    }
-
-    tensors().forEach(scope::attach);
-  }
-
-
-  /**
-   * Attach these tensors to the parents of their current scopes, removing them from their current scopes.
-   *
-   * <p>If {@code requireParent} is false, detaches each tensor if its scope does not have a parent.  Otherwise, if
-   * {@code requireParent} is true and the scope does not have a parent, throws {@link IllegalStateException}.
-   *
-   * <p><b>WARNING:</b> this method may release resources without assigning them to another scope if
-   * * {@code requireParent} is false.  {@link #attachToParent()} should be used instead wherever possible.
-   *
-   * @param requireParent Whether to require a parent scope to release resources to.
-   * @throws IllegalStateException if the tensor does not have a scope, or if this scope has no parent, but {@code
-   * requireParent} is true
-   */
-  default void attachToParent(boolean requireParent) {
-    tensors().forEach(x -> x.attachToParent(requireParent));
-  }
-
-  /**
-   * Attach these tensors to the parent of their current scope, removing it from its current scope.
-   *
-   * <p>Note that if tensors have different scopes, each tensor will be attached to its scope's parent.
-   * {@link TensorScope#attach(HasTensors)} or {@link #attachToCurrentScope()} can be used to ensure all tensors have
-   * the same scope.
-   *
-   * @throws IllegalStateException if any tensors do not have a scope, or their scope does not have a parent.
-   */
-  default void attachToParent() {
-    attachToParent(true);
-  }
 
   /**
    * Release resources associated with these tensors.

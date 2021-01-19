@@ -86,7 +86,7 @@ public class TensorScopeTest {
   public void testAttach() {
     TensorScope firstScope = new TensorScope();
     TFloat32 tensor = makeTensor(10);
-    TensorScope secondScope = new TensorScope().attach(tensor);
+    TensorScope secondScope = new TensorScope().withAttached(tensor);
 
     assertTrue(tensor.isAttached());
     assertFalse(tensor.isClosed());
@@ -129,7 +129,7 @@ public class TensorScopeTest {
     assertTrue(tensor.isAttached());
     assertFalse(tensor.isClosed());
 
-    tensor.attachToParent();
+    scope.release(tensor);
 
     scope.close();
 
