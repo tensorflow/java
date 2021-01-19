@@ -72,7 +72,6 @@ public class AssertBroadcastableTest {
         testSession.getGraphSession().runner().fetch(weights).fetch(values).run();
     try (Tensor weightsTensor = tensors.get(0);
         Tensor valuesTensor = tensors.get(1)) {
-
       Op dynamicOp = MetricsHelper.assertBroadcastable(tf, weightsPlaceholder, valuesPlaceholder);
 
       testSession
@@ -90,6 +89,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TFloat32> values = tf.constant(valueArrayF);
       Operand<TFloat32> weights = tf.constant(5f);
       testValid(testSession, tf, weights, values, TFloat32.class);
@@ -101,6 +101,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TFloat64> values = tf.constant(valueArrayD);
       Operand<TFloat64> weights = tf.constant(new double[][][] {{{5}}});
       testValid(testSession, tf, weights, values, TFloat64.class);
@@ -134,6 +135,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights = tf.constant(new int[][][] {{{5, 7, 11, 3}, {2, 13, 7, 5}}});
       testValid(testSession, tf, weights, values, TInt32.class);
@@ -145,6 +147,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights = tf.constant(new int[][][] {{{5}}, {{7}}, {{11}}});
       testValid(testSession, tf, weights, values, TInt32.class);
@@ -156,6 +159,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights =
           tf.constant(new int[][][] {{{5, 7, 11, 3}}, {{2, 12, 7, 5}}, {{2, 17, 11, 3}}});
@@ -168,6 +172,7 @@ public class AssertBroadcastableTest {
     // no exception should be thrown
     try (TestSession testSession = TestSession.createTestSession(tfMode)) {
       Ops tf = testSession.getTF();
+
       Operand<TInt32> values = tf.constant(valueArrayI);
       Operand<TInt32> weights =
           tf.constant(
