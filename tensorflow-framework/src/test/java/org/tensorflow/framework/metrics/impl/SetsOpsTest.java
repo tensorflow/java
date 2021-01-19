@@ -30,13 +30,13 @@ class SetsOpsTest {
         Ops tf = session.getTF();
         Operand<TInt32> a = tf.constant(new int[][] {{9, 1, 5}, {2, 4, 3}});
         Operand<TInt32> b = tf.constant(new int[][] {{1, 9}, {1, 5}});
-        int[][] expected = new int[][] {{1, 9}, {0, 0}};
-        Shape expectedShape = Shape.of(2, 2);
+        Integer[] expected = new Integer[] {1, 9};
+        Shape expectedShape = Shape.of(2);
         for (Class<? extends TType> type : types) {
           Operand aa = cast(tf, a, type);
           Operand bb = cast(tf, b, type);
-          Operand<? extends TType> intersection = SetsOps.intersection(tf, aa, bb);
-          session.evaluate(cast(tf, tf.constant(expected), type), intersection);
+          Operand intersection = SetsOps.intersection(tf, aa, bb);
+          session.evaluate(expected, intersection);
           session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
         }
       }
@@ -50,23 +50,19 @@ class SetsOpsTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Operand<TInt32> a = tf.constant(new int[][] {{1, 1, 3}});
-        Operand<TInt32> b = tf.constant(new int[][] {{1, 1}});
-        int[][] expected = {{1}};
-        Shape expectedShape = Shape.of(1, 1);
+        Operand<TInt32> b = tf.constant(new int[][] {{1}});
+        Integer[] expected = new Integer[] {1};
+        Shape expectedShape = Shape.of(1);
         for (Class<? extends TType> type : types) {
           Operand aa = cast(tf, a, type);
           Operand bb = cast(tf, b, type);
           Operand intersection = SetsOps.intersection(tf, aa, bb);
-
-          session.evaluate(cast(tf, tf.constant(expected), type), intersection);
-
+          session.evaluate(expected, intersection);
           session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
         }
       }
   }
 
-  @Test
-  @SuppressWarnings({"unchecked", "rawtypes"})
   public void testDenseSetDifferenceMultirow2d() {
 
     for (TestSession.Mode tfMode : tfModes)
@@ -74,30 +70,24 @@ class SetsOpsTest {
         Ops tf = session.getTF();
         Operand<TInt32> a = tf.constant(new int[][] {{1, 5, 9}, {4, 5, 3}});
         Operand<TInt32> b = tf.constant(new int[][] {{1, 2, 6}, {1, 2, 2}});
-
+        Integer[] expected = new Integer[] {5, 9, 3, 4, 5};
         for (Class<? extends TType> type : types) {
           Operand aa = cast(tf, a, type);
           Operand bb = cast(tf, b, type);
-          int[][] expected = {{5, 9, 0}, {3, 4, 5}};
           // a- b
-          Shape expectedShape = Shape.of(2, 3);
           Operand intersection = SetsOps.difference(tf, aa, bb);
-          session.evaluate(cast(tf, tf.constant(expected), type), intersection);
-          session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
+          session.evaluate(expected, intersection);
+          session.evaluate(tf.constant(5L), tf.shape(intersection, TInt64.class));
 
           // b - a
-          expected = new int[][] {{2, 6}, {1, 2}};
-          expectedShape = Shape.of(2, 2);
+          expected = new Integer[] {2, 6, 1, 2};
           intersection = SetsOps.difference(tf, aa, bb, false);
-
-          session.evaluate(cast(tf, tf.constant(expected), type), intersection);
-          session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
+          session.evaluate(expected, intersection);
+          session.evaluate(tf.constant(4L), tf.shape(intersection, TInt64.class));
         }
       }
   }
 
-  @Test
-  @SuppressWarnings({"unchecked", "rawtypes"})
   public void testDenseUnionMultirow2d() {
 
     for (TestSession.Mode tfMode : tfModes)
@@ -105,15 +95,15 @@ class SetsOpsTest {
         Ops tf = session.getTF();
         Operand<TInt32> a = tf.constant(new int[][] {{9, 1, 5}, {2, 4, 3}});
         Operand<TInt32> b = tf.constant(new int[][] {{1, 9}, {1, 2}});
-        int[][] expected = new int[][] {{5, 0}, {3, 4}};
+        Integer[] expected = new Integer[] {1, 5, 9, 1, 2, 3, 4};
         for (Class<? extends TType> type : types) {
           Operand aa = cast(tf, a, type);
           Operand bb = cast(tf, b, type);
-          Shape expectedShape = Shape.of(2, 2);
           // a- b
           Operand intersection = SetsOps.difference(tf, aa, bb);
-          session.evaluate(cast(tf, tf.constant(expected), type), intersection);
-          session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
+          session.evaluate(expected, intersection);
+          session.evaluate(tf.constant(7L), tf.shape(intersection, TInt64.class));
+
         }
       }
   }
