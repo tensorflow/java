@@ -85,7 +85,7 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
    *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
-   * @param <V> the datatype of the predictions
+   * @param <V> the datatype of the labels
    * @param <S> the data type for sampleWeights
    * @return a List of control operations that updates the Mean state variables.
    */
