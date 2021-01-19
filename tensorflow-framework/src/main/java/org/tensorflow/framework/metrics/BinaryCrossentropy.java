@@ -41,7 +41,7 @@ public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values or not.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
    * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
    *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing

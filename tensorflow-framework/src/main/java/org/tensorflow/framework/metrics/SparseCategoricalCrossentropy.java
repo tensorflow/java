@@ -32,30 +32,30 @@ public class SparseCategoricalCrossentropy<U extends TNumber, T extends TNumber>
     extends MeanMetricWrapper<U, T> implements LossMetric<T> {
 
   private final boolean fromLogits;
-  private final int axes;
+  private final int axis;
 
   /**
    * Creates a SparseCategoricalCrossentropy metric
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values or not.
-   * @param axes The dimension along which the entropy is computed.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
+   * @param axis The dimension along which the entropy is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
   public SparseCategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, int axes, long seed, Class<T> type) {
+      Ops tf, String name, boolean fromLogits, int axis, long seed, Class<T> type) {
     super(tf, name, seed, type);
     setLoss(this);
     this.fromLogits = fromLogits;
-    this.axes = axes;
+    this.axis = axis;
   }
 
   /** {@inheritDoc} */
   @Override
   public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
-    return Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axes);
+    return Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axis);
   }
 }
