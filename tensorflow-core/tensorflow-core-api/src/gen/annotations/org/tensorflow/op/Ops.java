@@ -1867,7 +1867,8 @@ public final class Ops {
   }
 
   /**
-   * Create a constant by making an immutable copy of {@code tensor}.
+   * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed afterwards without
+   *  issue.
    *
    *  <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
    *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
