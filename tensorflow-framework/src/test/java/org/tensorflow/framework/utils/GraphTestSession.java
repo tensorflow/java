@@ -213,10 +213,13 @@ public class GraphTestSession extends TestSession {
   @Override
   public <T extends TNumber> void evaluate(Number[] expected, Output<T> input) {
     int size = input.shape().size() == 0 ? 1 : (int) input.shape().size();
-    assertEquals(
-        expected.length,
-        size,
-        () -> String.format("expected length (%d) != to input length (%d)", expected.length, size));
+    if (size != Shape.UNKNOWN_SIZE) {
+      assertEquals(
+          expected.length,
+          size,
+          () ->
+              String.format("expected length (%d) != to input length (%d)", expected.length, size));
+    }
     Class<T> inputType = input.type();
     if (inputType == TFloat32.class) {
       AtomicInteger index = new AtomicInteger();
@@ -425,10 +428,13 @@ public class GraphTestSession extends TestSession {
   @Override
   public void evaluate(String[] expected, Output<TString> input) {
     int size = input.shape().size() == 0 ? 1 : (int) input.shape().size();
-    assertEquals(
-        expected.length,
-        size,
-        () -> String.format("expected length (%d) != to input length (%d)", expected.length, size));
+    if (size != Shape.UNKNOWN_SIZE) {
+      assertEquals(
+          expected.length,
+          size,
+          () ->
+              String.format("expected length (%d) != to input length (%d)", expected.length, size));
+    }
     AtomicInteger index = new AtomicInteger();
     if (debug) {
       try (TString result =
