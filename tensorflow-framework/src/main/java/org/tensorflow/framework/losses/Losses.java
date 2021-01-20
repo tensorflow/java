@@ -242,7 +242,7 @@ public class Losses {
       tLabels = smoothCategoricalLabels(tf, tLabels, labelSmoothing);
     }
     if (fromLogits) {
-      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
+      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
     }
     /* TODO
     if (!(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
