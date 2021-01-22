@@ -74,13 +74,14 @@ class ArgumentSpec {
   const string& op_def_name() const { return op_def_name_; }
   const Variable& var() const { return var_; }
   const Type& type() const { return type_; }
+  void toUpperBound();
   const string& description() const { return description_; }
   bool iterable() const { return iterable_; }
 
  private:
   const string op_def_name_;
-  const Variable var_;
-  const Type type_;
+  Variable var_;
+  Type type_;
   const string description_;
   const bool iterable_;
 };
@@ -151,6 +152,7 @@ class OpSpec {
   const std::vector<AttributeSpec>& optional_attributes() const {
     return optional_attributes_;
   }
+  void remove_extra_generics();
 
  private:
   // A specification for an operation
