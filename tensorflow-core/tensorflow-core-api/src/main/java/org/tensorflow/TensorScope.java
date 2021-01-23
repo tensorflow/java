@@ -29,8 +29,8 @@ import java.util.function.Supplier;
  * scope (even if they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
  * <p>
  * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
- * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrent()}.  A tensor may only have one scope: if it
- * currently has a scope when {@code attach} is called, it is removed from its original scope.
+ * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrent()}.  A tensor may only have one scope: if it currently
+ * has a scope when {@code attach} is called, it is removed from its original scope.
  * <p>
  * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
  * another scope.
@@ -61,8 +61,8 @@ public class TensorScope implements AutoCloseable {
    * Runs {@code block}, then closes any tensors created during its execution.
    * <p>To release tensors, use {@link #withCleanup(Consumer)} or one of the {@code produceWithCleanup} methods.
    */
-  public static void withCleanup(Runnable block){
-    try(TensorScope scope = new TensorScope()){
+  public static void withCleanup(Runnable block) {
+    try (TensorScope scope = new TensorScope()) {
       block.run();
     }
   }
@@ -71,8 +71,8 @@ public class TensorScope implements AutoCloseable {
    * Runs {@code block}, then closes any tensors created during its execution (or attached to the scope).
    * <p>Tensors can be released using the passed scope.
    */
-  public static void withCleanup(Consumer<TensorScope> block){
-    try(TensorScope scope = new TensorScope()){
+  public static void withCleanup(Consumer<TensorScope> block) {
+    try (TensorScope scope = new TensorScope()) {
       block.accept(scope);
     }
   }
@@ -81,92 +81,99 @@ public class TensorScope implements AutoCloseable {
    * Runs {@code block} and returns the result, then closes any tensors created during its execution.
    * <p>To release tensors, use {@link #withCleanup(Function)} or one of the {@code produceWithCleanup} methods.
    */
-  public static <T> T withCleanup(Supplier<T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T> T withCleanup(Supplier<T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return block.get();
     }
   }
 
   /**
-   * Runs {@code block} and returns the result, then closes any tensors created during its execution (or attached to the scope).
+   * Runs {@code block} and returns the result, then closes any tensors created during its execution (or attached to the
+   * scope).
    * <p>Tensors can be released using the passed scope.
    */
-  public static <T> T withCleanup(Function<TensorScope, T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T> T withCleanup(Function<TensorScope, T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return block.apply(scope);
     }
   }
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution.
    * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends Tensor> T produceTensorWithCleanup(Supplier<T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends Tensor> T produceTensorWithCleanup(Supplier<T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.get());
     }
   }
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution (or attached to the scope).
    * <p>Tensors can be released using the passed scope.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends Tensor> T produceTensorWithCleanup(Function<TensorScope, T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends Tensor> T produceTensorWithCleanup(Function<TensorScope, T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.apply(scope));
     }
   }
 
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution.
    * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Supplier<T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Supplier<T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.get());
     }
   }
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution (or attached to the scope).
    * <p>Tensors can be released using the passed scope.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Function<TensorScope, T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Function<TensorScope, T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.apply(scope));
     }
   }
 
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution.
    * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Supplier<T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Supplier<T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.get());
     }
   }
 
   /**
-   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its
+   * execution (or attached to the scope).
    * <p>Tensors can be released using the passed scope.
    *
    * @return the released result of {@code block}
    */
-  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Function<TensorScope, T> block){
-    try(TensorScope scope = new TensorScope()){
+  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Function<TensorScope, T> block) {
+    try (TensorScope scope = new TensorScope()) {
       return scope.release(block.apply(scope));
     }
   }
@@ -218,8 +225,8 @@ public class TensorScope implements AutoCloseable {
    * <p>
    * This will close this scope, but does not close any of it's resources.
    *
-   * @throws IllegalStateException if this scope has no parent. If this happens,
-   *    * the scope is not closed and no resources are released.
+   * @throws IllegalStateException if this scope has no parent. If this happens, * the scope is not closed and no
+   * resources are released.
    */
   public synchronized void releaseToParent() {
     release(true);
@@ -245,8 +252,8 @@ public class TensorScope implements AutoCloseable {
    * {@code requireParent} is false.  {@link #releaseToParent()} should be used instead wherever possible.
    *
    * @param requireParent Whether to require a parent scope to release resources to.
-   * @throws IllegalStateException if this scope has no parent, but {@code requireParent} is true. If this happens,
-   * the scope is not closed and no resources are released.
+   * @throws IllegalStateException if this scope has no parent, but {@code requireParent} is true. If this happens, the
+   * scope is not closed and no resources are released.
    */
   public synchronized void release(boolean requireParent) {
     if (closed) {
@@ -288,8 +295,8 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static void detach(Tensor... tensors){
-    for(Tensor t : tensors){
+  public static void detach(Tensor... tensors) {
+    for (Tensor t : tensors) {
       detach(t);
     }
   }
@@ -297,7 +304,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static <T extends HasTensors> T detach(T tensors){
+  public static <T extends HasTensors> T detach(T tensors) {
     detach(tensors.tensors());
     return tensors;
   }
@@ -305,8 +312,8 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static void detach(HasTensors... tensors){
-    for(HasTensors ht : tensors){
+  public static void detach(HasTensors... tensors) {
+    for (HasTensors ht : tensors) {
       detach(ht);
     }
   }
@@ -314,7 +321,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static <T extends Iterable<? extends Tensor>> T detach(T tensors){
+  public static <T extends Iterable<? extends Tensor>> T detach(T tensors) {
     tensors.forEach(TensorScope::detach);
     return tensors;
   }
@@ -323,8 +330,8 @@ public class TensorScope implements AutoCloseable {
    * @see #detach(Tensor)
    */
   @SafeVarargs
-  public static void detach(Iterable<? extends Tensor>... tensors){
-    for(Iterable<? extends Tensor> iterable : tensors){
+  public static void detach(Iterable<? extends Tensor>... tensors) {
+    for (Iterable<? extends Tensor> iterable : tensors) {
       detach(iterable);
     }
   }
@@ -404,7 +411,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(Tensor... tensors){
+  public TensorScope withAttached(Tensor... tensors) {
     attach(tensors);
     return this;
   }
@@ -412,7 +419,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(HasTensors... tensors){
+  public TensorScope withAttached(HasTensors... tensors) {
     attach(tensors);
     return this;
   }
@@ -420,14 +427,14 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(Iterable<? extends Tensor>... tensors){
+  public TensorScope withAttached(Iterable<? extends Tensor>... tensors) {
     attach(tensors);
     return this;
   }
 
   /**
-   * Attach this tensor to the parent of this scope, removing it from its current scope, or detach it if there is
-   * no current scope or the current scope does not have a parent.
+   * Attach this tensor to the parent of this scope, removing it from its current scope, or detach it if there is no
+   * current scope or the current scope does not have a parent.
    *
    * <p>Semantically, this makes the tensor's resources this scope's parent's responsibility.
    *
@@ -435,7 +442,7 @@ public class TensorScope implements AutoCloseable {
    * @throws IllegalStateException if there is no current scope or the current scope does not have a parent, but {@code
    * requireParent} is true.  If this happens, the tensor's scope is not changed.
    */
-  public <T extends Tensor> T release(T tensor, boolean requireParent){
+  public <T extends Tensor> T release(T tensor, boolean requireParent) {
     if (parent == null && requireParent) {
       throw new IllegalStateException(
           "Can't release to parent: not in a current scope, or the current scope does not have a parent.");
@@ -450,20 +457,20 @@ public class TensorScope implements AutoCloseable {
 
 
   /**
-   * Attach this tensor to the parent of this scope, removing it from its current scope, or detach it if there is
-   * no current scope or the current scope does not have a parent.
+   * Attach this tensor to the parent of this scope, removing it from its current scope, or detach it if there is no
+   * current scope or the current scope does not have a parent.
    *
    * <p>Semantically, this makes the tensor's resources this scope's parent's responsibility.
    */
-  public <T extends Tensor> T release(T tensor){
+  public <T extends Tensor> T release(T tensor) {
     return release(tensor, false);
   }
 
   /**
    * @see #release(Tensor)
    */
-  public void release(Tensor... tensors){
-    for(Tensor t : tensors){
+  public void release(Tensor... tensors) {
+    for (Tensor t : tensors) {
       release(t);
     }
   }
@@ -471,7 +478,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #release(Tensor)
    */
-  public <T extends HasTensors> T release(T tensors){
+  public <T extends HasTensors> T release(T tensors) {
     release(tensors.tensors());
     return tensors;
   }
@@ -479,8 +486,8 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #release(Tensor)
    */
-  public void release(HasTensors... tensors){
-    for(HasTensors ht : tensors){
+  public void release(HasTensors... tensors) {
+    for (HasTensors ht : tensors) {
       release(ht);
     }
   }
@@ -488,7 +495,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #release(Tensor)
    */
-  public <T extends Iterable<? extends Tensor>> T release(T tensors){
+  public <T extends Iterable<? extends Tensor>> T release(T tensors) {
     tensors.forEach(this::release);
     return tensors;
   }
@@ -497,8 +504,8 @@ public class TensorScope implements AutoCloseable {
    * @see #release(Tensor)
    */
   @SafeVarargs
-  public final void release(Iterable<? extends Tensor>... tensors){
-    for(Iterable<? extends Tensor> iterable : tensors){
+  public final void release(Iterable<? extends Tensor>... tensors) {
+    for (Iterable<? extends Tensor> iterable : tensors) {
       release(iterable);
     }
   }
@@ -511,7 +518,7 @@ public class TensorScope implements AutoCloseable {
    * @throws IllegalStateException if there is no current scope or the current scope does not have a parent, but {@code
    * requireParent} is true.  If this happens, the tensor's scope is not changed.
    */
-  public <T extends Tensor> T releaseToParent(T tensor){
+  public <T extends Tensor> T releaseToParent(T tensor) {
     return release(tensor, true);
   }
 
