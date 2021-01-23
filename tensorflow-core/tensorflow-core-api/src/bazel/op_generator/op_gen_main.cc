@@ -34,6 +34,9 @@ const char kUsageHeader[] =
     "provided list of libraries. A wrapper exposes an intuitive and\n"
 	"strongly-typed interface for building its underlying operation and linking "
 	"it into a graph.\n\n"
+    "The first argument is the location of the tensorflow binary built for TF-"
+    "Java.\nFor example, `bazel-out/k8-opt/bin/external/org_tensorflow/tensorfl"
+    "ow/libtensorflow_cc.so`.\n\n"
     "Operation wrappers are generated under the path specified by the "
     "'--output_dir' argument. This path can be absolute or relative to the\n"
     "current working directory and will be created if it does not exist.\n\n"
@@ -45,7 +48,9 @@ const char kUsageHeader[] =
     "Finally, the `--api_dirs` argument takes a list of comma-separated "
     "directories of API definitions can be provided to override default\n"
     "values found in the ops definitions. Directories are ordered by priority "
-    "(the last having precedence over the first).\n\n";
+    "(the last having precedence over the first).\nFor example, `bazel-tensorf"
+    "low-core-api/external/org_tensorflow/tensorflow/core/api_def/base_api,src"
+    "/bazel/api_def`\n\n";
 
 }  // namespace java
 }  // namespace tensorflow
