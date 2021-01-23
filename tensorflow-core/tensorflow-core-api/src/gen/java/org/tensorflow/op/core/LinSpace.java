@@ -54,7 +54,7 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
    * @return a new instance of LinSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<U> num) {
+  public static <T extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start, Operand<T> stop, Operand<? extends TNumber> num) {
     OperationBuilder opBuilder = scope.env().opBuilder("LinSpace", scope.makeOpName("LinSpace"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());

@@ -70,7 +70,7 @@ public final class SegmentMean<T extends TType> extends RawOp implements Operand
    * @return a new instance of SegmentMean
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TType> SegmentMean<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

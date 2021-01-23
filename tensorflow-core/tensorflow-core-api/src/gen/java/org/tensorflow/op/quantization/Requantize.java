@@ -58,7 +58,7 @@ public final class Requantize<U extends TType> extends RawOp {
    * @return a new instance of Requantize
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Requantize<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
+  public static <U extends TType> Requantize<U> create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Requantize", scope.makeOpName("Requantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

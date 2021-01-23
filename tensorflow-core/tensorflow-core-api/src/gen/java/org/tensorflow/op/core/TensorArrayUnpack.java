@@ -44,7 +44,7 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
    * @return a new instance of TensorArrayUnpack
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<T> value, Operand<TFloat32> flowIn) {
+  public static TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());

@@ -216,7 +216,7 @@ public final class SignalOps {
    * @param fftLength An int32 tensor of shape [1]. The FFT length.
    * @return a new instance of Irfft
    */
-  public <T extends TType> Irfft<TFloat32> irfft(Operand<T> input, Operand<TInt32> fftLength) {
+  public Irfft<TFloat32> irfft(Operand<? extends TType> input, Operand<TInt32> fftLength) {
     return Irfft.create(scope, input, fftLength);
   }
 
@@ -243,7 +243,7 @@ public final class SignalOps {
    * @param Treal
    * @return a new instance of Irfft
    */
-  public <U extends TNumber, T extends TType> Irfft<U> irfft(Operand<T> input,
+  public <U extends TNumber> Irfft<U> irfft(Operand<? extends TType> input,
       Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft.create(scope, input, fftLength, Treal);
   }
@@ -271,7 +271,7 @@ public final class SignalOps {
    * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
    * @return a new instance of Irfft2d
    */
-  public <T extends TType> Irfft2d<TFloat32> irfft2d(Operand<T> input, Operand<TInt32> fftLength) {
+  public Irfft2d<TFloat32> irfft2d(Operand<? extends TType> input, Operand<TInt32> fftLength) {
     return Irfft2d.create(scope, input, fftLength);
   }
 
@@ -299,7 +299,7 @@ public final class SignalOps {
    * @param Treal
    * @return a new instance of Irfft2d
    */
-  public <U extends TNumber, T extends TType> Irfft2d<U> irfft2d(Operand<T> input,
+  public <U extends TNumber> Irfft2d<U> irfft2d(Operand<? extends TType> input,
       Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft2d.create(scope, input, fftLength, Treal);
   }
@@ -327,7 +327,7 @@ public final class SignalOps {
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
    * @return a new instance of Irfft3d
    */
-  public <T extends TType> Irfft3d<TFloat32> irfft3d(Operand<T> input, Operand<TInt32> fftLength) {
+  public Irfft3d<TFloat32> irfft3d(Operand<? extends TType> input, Operand<TInt32> fftLength) {
     return Irfft3d.create(scope, input, fftLength);
   }
 
@@ -355,7 +355,7 @@ public final class SignalOps {
    * @param Treal
    * @return a new instance of Irfft3d
    */
-  public <U extends TNumber, T extends TType> Irfft3d<U> irfft3d(Operand<T> input,
+  public <U extends TNumber> Irfft3d<U> irfft3d(Operand<? extends TType> input,
       Operand<TInt32> fftLength, Class<U> Treal) {
     return Irfft3d.create(scope, input, fftLength, Treal);
   }
@@ -380,8 +380,8 @@ public final class SignalOps {
    * @param Tcomplex
    * @return a new instance of Rfft
    */
-  public <U extends TType, T extends TNumber> Rfft<U> rfft(Operand<T> input,
-      Operand<TInt32> fftLength, Class<U> Tcomplex) {
+  public <U extends TType> Rfft<U> rfft(Operand<? extends TNumber> input, Operand<TInt32> fftLength,
+      Class<U> Tcomplex) {
     return Rfft.create(scope, input, fftLength, Tcomplex);
   }
 
@@ -406,7 +406,7 @@ public final class SignalOps {
    * @param Tcomplex
    * @return a new instance of Rfft2d
    */
-  public <U extends TType, T extends TNumber> Rfft2d<U> rfft2d(Operand<T> input,
+  public <U extends TType> Rfft2d<U> rfft2d(Operand<? extends TNumber> input,
       Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft2d.create(scope, input, fftLength, Tcomplex);
   }
@@ -432,7 +432,7 @@ public final class SignalOps {
    * @param Tcomplex
    * @return a new instance of Rfft3d
    */
-  public <U extends TType, T extends TNumber> Rfft3d<U> rfft3d(Operand<T> input,
+  public <U extends TType> Rfft3d<U> rfft3d(Operand<? extends TNumber> input,
       Operand<TInt32> fftLength, Class<U> Tcomplex) {
     return Rfft3d.create(scope, input, fftLength, Tcomplex);
   }

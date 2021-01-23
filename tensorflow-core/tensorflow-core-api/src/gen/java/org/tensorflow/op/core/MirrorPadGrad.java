@@ -65,7 +65,7 @@ public final class MirrorPadGrad<T extends TType> extends RawOp implements Opera
    * @return a new instance of MirrorPadGrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T extends TType> MirrorPadGrad<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPadGrad", scope.makeOpName("MirrorPadGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

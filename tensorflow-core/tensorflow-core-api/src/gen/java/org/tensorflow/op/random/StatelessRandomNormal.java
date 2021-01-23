@@ -51,7 +51,7 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
    * @return a new instance of StatelessRandomNormal
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
+  public static <V extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
@@ -69,7 +69,7 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
    * @return a new instance of StatelessRandomNormal
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatelessRandomNormal<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+  public static StatelessRandomNormal<TFloat32> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
     return create(scope, shape, seed, TFloat32.class);
   }
   

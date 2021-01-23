@@ -86,7 +86,7 @@ public final class ResourceSparseApplyMomentum extends RawOp {
    * @return a new instance of ResourceSparseApplyMomentum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
+  public static <T extends TType> ResourceSparseApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyMomentum", scope.makeOpName("ResourceSparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

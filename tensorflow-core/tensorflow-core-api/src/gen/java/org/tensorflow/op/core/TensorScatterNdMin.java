@@ -44,7 +44,7 @@ public final class TensorScatterNdMin<T extends TType> extends RawOp implements 
    * @return a new instance of TensorScatterNdMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> TensorScatterNdMin<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType> TensorScatterNdMin<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterMin", scope.makeOpName("TensorScatterNdMin"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

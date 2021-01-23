@@ -77,7 +77,7 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
    * @return a new instance of SparseApplyProximalAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SparseApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> SparseApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyProximalAdagrad", scope.makeOpName("SparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

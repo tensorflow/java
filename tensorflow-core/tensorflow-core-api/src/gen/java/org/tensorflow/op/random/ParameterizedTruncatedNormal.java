@@ -82,7 +82,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
    * @return a new instance of ParameterizedTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> ParameterizedTruncatedNormal<U> create(Scope scope, Operand<T> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals, Options... options) {
+  public static <U extends TNumber> ParameterizedTruncatedNormal<U> create(Scope scope, Operand<? extends TNumber> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals, Operand<U> maxvals, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParameterizedTruncatedNormal", scope.makeOpName("ParameterizedTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(means.asOutput());

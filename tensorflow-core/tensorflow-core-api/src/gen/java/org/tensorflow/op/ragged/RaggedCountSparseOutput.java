@@ -78,7 +78,7 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
    * @return a new instance of RaggedCountSparseOutput
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RaggedCountSparseOutput<U> create(Scope scope, Operand<TInt64> splits, Operand<T> values, Operand<U> weights, Boolean binaryOutput, Options... options) {
+  public static <U extends TNumber> RaggedCountSparseOutput<U> create(Scope scope, Operand<TInt64> splits, Operand<? extends TNumber> values, Operand<U> weights, Boolean binaryOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedCountSparseOutput", scope.makeOpName("RaggedCountSparseOutput"));
     opBuilder.addInput(splits.asOutput());
     opBuilder.addInput(values.asOutput());

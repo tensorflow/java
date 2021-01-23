@@ -77,7 +77,7 @@ public final class ResizeBilinear extends RawOp implements Operand<TFloat32> {
    * @return a new instance of ResizeBilinear
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResizeBilinear create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
+  public static ResizeBilinear create(Scope scope, Operand<? extends TNumber> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinear", scope.makeOpName("ResizeBilinear"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());

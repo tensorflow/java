@@ -90,7 +90,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    * @return a new instance of Unique
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, Class<V> outIdx) {
+  public static <T extends TType, V extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis, Class<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -109,7 +109,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
    * @return a new instance of Unique
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
+  public static <T extends TType> Unique<T, TInt32> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis) {
     return create(scope, x, axis, TInt32.class);
   }
   

@@ -74,7 +74,7 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
    * @return a new instance of ScaleAndTranslate
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ScaleAndTranslate create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
+  public static ScaleAndTranslate create(Scope scope, Operand<? extends TNumber> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslate", scope.makeOpName("ScaleAndTranslate"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());

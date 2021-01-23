@@ -63,7 +63,7 @@ public final class ResourceScatterSub extends RawOp {
    * @return a new instance of ResourceScatterSub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> ResourceScatterSub create(Scope scope, Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public static ResourceScatterSub create(Scope scope, Operand<?> resource, Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterSub", scope.makeOpName("ResourceScatterSub"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());

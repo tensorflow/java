@@ -56,7 +56,7 @@ public final class Shape<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Shape
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Shape<U> create(Scope scope, Operand<T> input, Class<U> outType) {
+  public static <U extends TNumber> Shape<U> create(Scope scope, Operand<? extends TType> input, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Shape", scope.makeOpName("Shape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -72,7 +72,7 @@ public final class Shape<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Shape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Shape<TInt32> create(Scope scope, Operand<T> input) {
+  public static Shape<TInt32> create(Scope scope, Operand<? extends TType> input) {
     return create(scope, input, TInt32.class);
   }
   

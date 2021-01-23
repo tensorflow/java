@@ -55,7 +55,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
    * @return a new instance of SparseSegmentSqrtNWithNumSegments
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber, W extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds, Operand<W> numSegments) {
+  public static <T extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());

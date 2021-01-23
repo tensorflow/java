@@ -71,7 +71,7 @@ public final class EuclideanNorm<T extends TType> extends RawOp implements Opera
    * @return a new instance of EuclideanNorm
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> EuclideanNorm<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType> EuclideanNorm<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EuclideanNorm", scope.makeOpName("EuclideanNorm"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

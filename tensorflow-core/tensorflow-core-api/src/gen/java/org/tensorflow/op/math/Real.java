@@ -59,7 +59,7 @@ public final class Real<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Real
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Real<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
+  public static <U extends TNumber> Real<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Real", scope.makeOpName("Real"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -75,7 +75,7 @@ public final class Real<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Real
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Real<TFloat32> create(Scope scope, Operand<T> input) {
+  public static Real<TFloat32> create(Scope scope, Operand<? extends TType> input) {
     return create(scope, input, TFloat32.class);
   }
   

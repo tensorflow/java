@@ -69,7 +69,7 @@ public final class SegmentProd<T extends TType> extends RawOp implements Operand
    * @return a new instance of SegmentProd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SegmentProd<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TType> SegmentProd<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentProd", scope.makeOpName("SegmentProd"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

@@ -82,7 +82,7 @@ public final class ResourceSparseApplyRmsProp extends RawOp {
    * @return a new instance of ResourceSparseApplyRmsProp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyRmsProp create(Scope scope, Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> ResourceSparseApplyRmsProp create(Scope scope, Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyRMSProp", scope.makeOpName("ResourceSparseApplyRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());

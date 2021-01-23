@@ -213,7 +213,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResize
    */
-  public <T extends TNumber> CropAndResize cropAndResize(Operand<T> image, Operand<TFloat32> boxes,
+  public CropAndResize cropAndResize(Operand<? extends TNumber> image, Operand<TFloat32> boxes,
       Operand<TInt32> boxInd, Operand<TInt32> cropSize, CropAndResize.Options... options) {
     return CropAndResize.create(scope, image, boxes, boxInd, cropSize, options);
   }
@@ -239,8 +239,8 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of CropAndResizeGradBoxes
    */
-  public <T extends TNumber> CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat32> grads,
-      Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
+  public CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat32> grads,
+      Operand<? extends TNumber> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
       CropAndResizeGradBoxes.Options... options) {
     return CropAndResizeGradBoxes.create(scope, grads, image, boxes, boxInd, options);
   }
@@ -573,7 +573,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of EncodePng
    */
-  public <T extends TNumber> EncodePng encodePng(Operand<T> image, EncodePng.Options... options) {
+  public EncodePng encodePng(Operand<? extends TNumber> image, EncodePng.Options... options) {
     return EncodePng.create(scope, image, options);
   }
 
@@ -791,7 +791,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeArea
    */
-  public <T extends TNumber> ResizeArea resizeArea(Operand<T> images, Operand<TInt32> size,
+  public ResizeArea resizeArea(Operand<? extends TNumber> images, Operand<TInt32> size,
       ResizeArea.Options... options) {
     return ResizeArea.create(scope, images, size, options);
   }
@@ -807,7 +807,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeBicubic
    */
-  public <T extends TNumber> ResizeBicubic resizeBicubic(Operand<T> images, Operand<TInt32> size,
+  public ResizeBicubic resizeBicubic(Operand<? extends TNumber> images, Operand<TInt32> size,
       ResizeBicubic.Options... options) {
     return ResizeBicubic.create(scope, images, size, options);
   }
@@ -823,7 +823,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ResizeBilinear
    */
-  public <T extends TNumber> ResizeBilinear resizeBilinear(Operand<T> images, Operand<TInt32> size,
+  public ResizeBilinear resizeBilinear(Operand<? extends TNumber> images, Operand<TInt32> size,
       ResizeBilinear.Options... options) {
     return ResizeBilinear.create(scope, images, size, options);
   }
@@ -939,7 +939,7 @@ public final class ImageOps {
    * @param options carries optional attributes values
    * @return a new instance of ScaleAndTranslate
    */
-  public <T extends TNumber> ScaleAndTranslate scaleAndTranslate(Operand<T> images,
+  public ScaleAndTranslate scaleAndTranslate(Operand<? extends TNumber> images,
       Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
     return ScaleAndTranslate.create(scope, images, size, scale, translation, options);

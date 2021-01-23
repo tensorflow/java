@@ -63,7 +63,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Angle
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Angle<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
+  public static <U extends TNumber> Angle<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -79,7 +79,7 @@ public final class Angle<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Angle
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Angle<TFloat32> create(Scope scope, Operand<T> input) {
+  public static Angle<TFloat32> create(Scope scope, Operand<? extends TType> input) {
     return create(scope, input, TFloat32.class);
   }
   

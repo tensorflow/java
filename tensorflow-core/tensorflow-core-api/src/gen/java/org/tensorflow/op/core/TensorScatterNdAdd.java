@@ -106,7 +106,7 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
    * @return a new instance of TensorScatterNdAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> TensorScatterNdAdd<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType> TensorScatterNdAdd<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterAdd", scope.makeOpName("TensorScatterNdAdd"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -114,8 +114,8 @@ public final class TrainOps {
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of AccumulatorApplyGradient
    */
-  public <T extends TType> AccumulatorApplyGradient accumulatorApplyGradient(
-      Operand<TString> handle, Operand<TInt64> localStep, Operand<T> gradient) {
+  public AccumulatorApplyGradient accumulatorApplyGradient(Operand<TString> handle,
+      Operand<TInt64> localStep, Operand<? extends TType> gradient) {
     return AccumulatorApplyGradient.create(scope, handle, localStep, gradient);
   }
 
@@ -1019,9 +1019,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdadelta
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyAdadelta resourceSparseApplyAdadelta(
-      Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho,
-      Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> ResourceSparseApplyAdadelta resourceSparseApplyAdadelta(Operand<?> var,
+      Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
+      Operand<T> grad, Operand<? extends TNumber> indices,
       ResourceSparseApplyAdadelta.Options... options) {
     return ResourceSparseApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, indices, options);
   }
@@ -1041,8 +1041,8 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdagrad
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyAdagrad resourceSparseApplyAdagrad(
-      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> ResourceSparseApplyAdagrad resourceSparseApplyAdagrad(Operand<?> var,
+      Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices,
       ResourceSparseApplyAdagrad.Options... options) {
     return ResourceSparseApplyAdagrad.create(scope, var, accum, lr, grad, indices, options);
   }
@@ -1062,9 +1062,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyAdagradDa
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyAdagradDa resourceSparseApplyAdagradDa(
-      Operand<?> var, Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator,
-      Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
+  public <T extends TType> ResourceSparseApplyAdagradDa resourceSparseApplyAdagradDa(Operand<?> var,
+      Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
       Operand<TInt64> globalStep, ResourceSparseApplyAdagradDa.Options... options) {
     return ResourceSparseApplyAdagradDa.create(scope, var, gradientAccumulator, gradientSquaredAccumulator, grad, indices, lr, l1, l2, globalStep, options);
   }
@@ -1102,9 +1102,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyCenteredRmsProp
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyCenteredRmsProp resourceSparseApplyCenteredRmsProp(
+  public <T extends TType> ResourceSparseApplyCenteredRmsProp resourceSparseApplyCenteredRmsProp(
       Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho,
-      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
+      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices,
       ResourceSparseApplyCenteredRmsProp.Options... options) {
     return ResourceSparseApplyCenteredRmsProp.create(scope, var, mg, ms, mom, lr, rho, momentum, epsilon, grad, indices, options);
   }
@@ -1134,8 +1134,8 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyFtrl
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyFtrl resourceSparseApplyFtrl(
-      Operand<?> var, Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> ResourceSparseApplyFtrl resourceSparseApplyFtrl(Operand<?> var,
+      Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<? extends TNumber> indices,
       Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
       ResourceSparseApplyFtrl.Options... options) {
     return ResourceSparseApplyFtrl.create(scope, var, accum, linear, grad, indices, lr, l1, l2, l2Shrinkage, lrPower, options);
@@ -1160,9 +1160,10 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyKerasMomentum
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyKerasMomentum resourceSparseApplyKerasMomentum(
-      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
-      Operand<T> momentum, ResourceSparseApplyKerasMomentum.Options... options) {
+  public <T extends TType> ResourceSparseApplyKerasMomentum resourceSparseApplyKerasMomentum(
+      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> momentum,
+      ResourceSparseApplyKerasMomentum.Options... options) {
     return ResourceSparseApplyKerasMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
   }
 
@@ -1185,8 +1186,8 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyMomentum
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyMomentum resourceSparseApplyMomentum(
-      Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> ResourceSparseApplyMomentum resourceSparseApplyMomentum(Operand<?> var,
+      Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices,
       Operand<T> momentum, ResourceSparseApplyMomentum.Options... options) {
     return ResourceSparseApplyMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
   }
@@ -1210,9 +1211,10 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyProximalAdagrad resourceSparseApplyProximalAdagrad(
+  public <T extends TType> ResourceSparseApplyProximalAdagrad resourceSparseApplyProximalAdagrad(
       Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2,
-      Operand<T> grad, Operand<U> indices, ResourceSparseApplyProximalAdagrad.Options... options) {
+      Operand<T> grad, Operand<? extends TNumber> indices,
+      ResourceSparseApplyProximalAdagrad.Options... options) {
     return ResourceSparseApplyProximalAdagrad.create(scope, var, accum, lr, l1, l2, grad, indices, options);
   }
 
@@ -1232,9 +1234,10 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyProximalGradientDescent
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyProximalGradientDescent resourceSparseApplyProximalGradientDescent(
+  public <T extends TType> ResourceSparseApplyProximalGradientDescent resourceSparseApplyProximalGradientDescent(
       Operand<?> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad,
-      Operand<U> indices, ResourceSparseApplyProximalGradientDescent.Options... options) {
+      Operand<? extends TNumber> indices,
+      ResourceSparseApplyProximalGradientDescent.Options... options) {
     return ResourceSparseApplyProximalGradientDescent.create(scope, var, alpha, l1, l2, grad, indices, options);
   }
 
@@ -1264,9 +1267,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of ResourceSparseApplyRmsProp
    */
-  public <T extends TType, U extends TNumber> ResourceSparseApplyRmsProp resourceSparseApplyRmsProp(
-      Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho,
-      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> ResourceSparseApplyRmsProp resourceSparseApplyRmsProp(Operand<?> var,
+      Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum,
+      Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices,
       ResourceSparseApplyRmsProp.Options... options) {
     return ResourceSparseApplyRmsProp.create(scope, var, ms, mom, lr, rho, momentum, epsilon, grad, indices, options);
   }
@@ -1432,10 +1435,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyAdadelta
    */
-  public <T extends TType, U extends TNumber> SparseApplyAdadelta<T> sparseApplyAdadelta(
-      Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho,
-      Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
-      SparseApplyAdadelta.Options... options) {
+  public <T extends TType> SparseApplyAdadelta<T> sparseApplyAdadelta(Operand<T> var,
+      Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
+      Operand<T> grad, Operand<? extends TNumber> indices, SparseApplyAdadelta.Options... options) {
     return SparseApplyAdadelta.create(scope, var, accum, accumUpdate, lr, rho, epsilon, grad, indices, options);
   }
 
@@ -1455,9 +1457,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyAdagradDa
    */
-  public <T extends TType, U extends TNumber> SparseApplyAdagradDa<T> sparseApplyAdagradDa(
-      Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator,
-      Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
+  public <T extends TType> SparseApplyAdagradDa<T> sparseApplyAdagradDa(Operand<T> var,
+      Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
       Operand<TInt64> globalStep, SparseApplyAdagradDa.Options... options) {
     return SparseApplyAdagradDa.create(scope, var, gradientAccumulator, gradientSquaredAccumulator, grad, indices, lr, l1, l2, globalStep, options);
   }
@@ -1496,9 +1498,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyCenteredRmsProp
    */
-  public <T extends TType, U extends TNumber> SparseApplyCenteredRmsProp<T> sparseApplyCenteredRmsProp(
-      Operand<T> var, Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho,
-      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> SparseApplyCenteredRmsProp<T> sparseApplyCenteredRmsProp(Operand<T> var,
+      Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho,
+      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices,
       SparseApplyCenteredRmsProp.Options... options) {
     return SparseApplyCenteredRmsProp.create(scope, var, mg, ms, mom, lr, rho, momentum, epsilon, grad, indices, options);
   }
@@ -1529,8 +1531,8 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyFtrl
    */
-  public <T extends TType, U extends TNumber> SparseApplyFtrl<T> sparseApplyFtrl(Operand<T> var,
-      Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<U> indices, Operand<T> lr,
+  public <T extends TType> SparseApplyFtrl<T> sparseApplyFtrl(Operand<T> var, Operand<T> accum,
+      Operand<T> linear, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr,
       Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
       SparseApplyFtrl.Options... options) {
     return SparseApplyFtrl.create(scope, var, accum, linear, grad, indices, lr, l1, l2, l2Shrinkage, lrPower, options);
@@ -1556,8 +1558,8 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyMomentum
    */
-  public <T extends TType, U extends TNumber> SparseApplyMomentum<T> sparseApplyMomentum(
-      Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices,
+  public <T extends TType> SparseApplyMomentum<T> sparseApplyMomentum(Operand<T> var,
+      Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices,
       Operand<T> momentum, SparseApplyMomentum.Options... options) {
     return SparseApplyMomentum.create(scope, var, accum, lr, grad, indices, momentum, options);
   }
@@ -1582,9 +1584,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyProximalAdagrad
    */
-  public <T extends TType, U extends TNumber> SparseApplyProximalAdagrad<T> sparseApplyProximalAdagrad(
-      Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2,
-      Operand<T> grad, Operand<U> indices, SparseApplyProximalAdagrad.Options... options) {
+  public <T extends TType> SparseApplyProximalAdagrad<T> sparseApplyProximalAdagrad(Operand<T> var,
+      Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad,
+      Operand<? extends TNumber> indices, SparseApplyProximalAdagrad.Options... options) {
     return SparseApplyProximalAdagrad.create(scope, var, accum, lr, l1, l2, grad, indices, options);
   }
 
@@ -1605,9 +1607,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyProximalGradientDescent
    */
-  public <T extends TType, U extends TNumber> SparseApplyProximalGradientDescent<T> sparseApplyProximalGradientDescent(
+  public <T extends TType> SparseApplyProximalGradientDescent<T> sparseApplyProximalGradientDescent(
       Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad,
-      Operand<U> indices, SparseApplyProximalGradientDescent.Options... options) {
+      Operand<? extends TNumber> indices, SparseApplyProximalGradientDescent.Options... options) {
     return SparseApplyProximalGradientDescent.create(scope, var, alpha, l1, l2, grad, indices, options);
   }
 
@@ -1638,10 +1640,9 @@ public final class TrainOps {
    * @param options carries optional attributes values
    * @return a new instance of SparseApplyRmsProp
    */
-  public <T extends TType, U extends TNumber> SparseApplyRmsProp<T> sparseApplyRmsProp(
-      Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho,
-      Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices,
-      SparseApplyRmsProp.Options... options) {
+  public <T extends TType> SparseApplyRmsProp<T> sparseApplyRmsProp(Operand<T> var, Operand<T> ms,
+      Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon,
+      Operand<T> grad, Operand<? extends TNumber> indices, SparseApplyRmsProp.Options... options) {
     return SparseApplyRmsProp.create(scope, var, ms, mom, lr, rho, momentum, epsilon, grad, indices, options);
   }
 

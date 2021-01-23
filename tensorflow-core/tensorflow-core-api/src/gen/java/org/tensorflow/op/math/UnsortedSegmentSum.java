@@ -73,7 +73,7 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
    * @return a new instance of UnsortedSegmentSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public static <T extends TType> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentSum", scope.makeOpName("UnsortedSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

@@ -104,7 +104,7 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
    * @return a new instance of ScatterNdUpdate
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ScatterNdUpdate<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TType> ScatterNdUpdate<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdUpdate", scope.makeOpName("ScatterNdUpdate"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

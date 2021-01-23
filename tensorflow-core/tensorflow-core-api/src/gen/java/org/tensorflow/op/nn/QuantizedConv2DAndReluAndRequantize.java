@@ -82,7 +82,7 @@ public final class QuantizedConv2DAndReluAndRequantize<V extends TType> extends 
    * @return a new instance of QuantizedConv2DAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DAndReluAndRequantize<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType> QuantizedConv2DAndReluAndRequantize<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DAndReluAndRequantize", scope.makeOpName("QuantizedConv2DAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

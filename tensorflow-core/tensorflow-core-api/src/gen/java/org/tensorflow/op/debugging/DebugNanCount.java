@@ -97,7 +97,7 @@ public final class DebugNanCount extends RawOp implements Operand<TInt64> {
    * @return a new instance of DebugNanCount
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugNanCount create(Scope scope, Operand<T> input, Options... options) {
+  public static DebugNanCount create(Scope scope, Operand<? extends TType> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNanCount", scope.makeOpName("DebugNanCount"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

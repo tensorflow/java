@@ -66,7 +66,7 @@ public final class SparseAdd<T extends TType> extends RawOp {
    * @return a new instance of SparseAdd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<U> thresh) {
+  public static <T extends TType> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape, Operand<? extends TNumber> thresh) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAdd", scope.makeOpName("SparseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

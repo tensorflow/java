@@ -58,7 +58,7 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
    * @return a new instance of SerializeManySparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Class<U> outType) {
+  public static <U extends TType> SerializeManySparse<U> create(Scope scope, Operand<TInt64> sparseIndices, Operand<? extends TType> sparseValues, Operand<TInt64> sparseShape, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeManySparse", scope.makeOpName("SerializeManySparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
@@ -78,7 +78,7 @@ public final class SerializeManySparse<U extends TType> extends RawOp implements
    * @return a new instance of SerializeManySparse
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape) {
+  public static SerializeManySparse<TString> create(Scope scope, Operand<TInt64> sparseIndices, Operand<? extends TType> sparseValues, Operand<TInt64> sparseShape) {
     return create(scope, sparseIndices, sparseValues, sparseShape, TString.class);
   }
   

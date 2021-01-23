@@ -342,8 +342,8 @@ public final class LinalgOps {
    * @param perm
    * @return a new instance of ConjugateTranspose
    */
-  public <T extends TType, U extends TNumber> ConjugateTranspose<T> conjugateTranspose(Operand<T> x,
-      Operand<U> perm) {
+  public <T extends TType> ConjugateTranspose<T> conjugateTranspose(Operand<T> x,
+      Operand<? extends TNumber> perm) {
     return ConjugateTranspose.create(scope, x, perm);
   }
 
@@ -398,7 +398,7 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of Eig
    */
-  public <U extends TType, T extends TType> Eig<U> eig(Operand<T> input, Class<U> Tout,
+  public <U extends TType> Eig<U> eig(Operand<? extends TType> input, Class<U> Tout,
       Eig.Options... options) {
     return Eig.create(scope, input, Tout, options);
   }
@@ -505,8 +505,8 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of EuclideanNorm
    */
-  public <T extends TType, U extends TNumber> EuclideanNorm<T> euclideanNorm(Operand<T> input,
-      Operand<U> axis, EuclideanNorm.Options... options) {
+  public <T extends TType> EuclideanNorm<T> euclideanNorm(Operand<T> input,
+      Operand<? extends TNumber> axis, EuclideanNorm.Options... options) {
     return EuclideanNorm.create(scope, input, axis, options);
   }
 
@@ -1373,10 +1373,10 @@ public final class LinalgOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedMatMul
    */
-  public <V extends TType, T extends TType, U extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
-      Operand<T> a, Operand<U> b, Operand<TFloat32> minA, Operand<TFloat32> maxA,
-      Operand<TFloat32> minB, Operand<TFloat32> maxB, Class<V> Toutput, Class<W> Tactivation,
-      QuantizedMatMul.Options... options) {
+  public <V extends TType, W extends TType> QuantizedMatMul<V> quantizedMatMul(
+      Operand<? extends TType> a, Operand<? extends TType> b, Operand<TFloat32> minA,
+      Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Class<V> Toutput,
+      Class<W> Tactivation, QuantizedMatMul.Options... options) {
     return QuantizedMatMul.create(scope, a, b, minA, maxA, minB, maxB, Toutput, Tactivation, options);
   }
 
@@ -1544,8 +1544,7 @@ public final class LinalgOps {
    * @param perm
    * @return a new instance of Transpose
    */
-  public <T extends TType, U extends TNumber> Transpose<T> transpose(Operand<T> x,
-      Operand<U> perm) {
+  public <T extends TType> Transpose<T> transpose(Operand<T> x, Operand<? extends TNumber> perm) {
     return Transpose.create(scope, x, perm);
   }
 

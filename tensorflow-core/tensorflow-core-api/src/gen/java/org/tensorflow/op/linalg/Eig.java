@@ -78,7 +78,7 @@ public final class Eig<U extends TType> extends RawOp {
    * @return a new instance of Eig
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Eig<U> create(Scope scope, Operand<T> input, Class<U> Tout, Options... options) {
+  public static <U extends TType> Eig<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Eig", scope.makeOpName("Eig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

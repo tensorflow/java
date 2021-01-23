@@ -65,7 +65,7 @@ public final class WriteImageSummary extends RawOp {
    * @return a new instance of WriteImageSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<T> tensor, Operand<TUint8> badColor, Options... options) {
+  public static WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> tensor, Operand<TUint8> badColor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteImageSummary", scope.makeOpName("WriteImageSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());

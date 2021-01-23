@@ -89,7 +89,7 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
    * @return a new instance of SparseTensorDenseMatMul
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> SparseTensorDenseMatMul<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
+  public static <U extends TType> SparseTensorDenseMatMul<U> create(Scope scope, Operand<? extends TNumber> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseMatMul", scope.makeOpName("SparseTensorDenseMatMul"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());

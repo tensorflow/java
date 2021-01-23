@@ -69,7 +69,7 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
    * @return a new instance of ResourceSparseApplyAdadelta
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdadelta", scope.makeOpName("ResourceSparseApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
