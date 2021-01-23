@@ -437,7 +437,7 @@ void OpSpec::remove_extra_generics() {
 void ArgumentSpec::toUpperBound() {
   if(this->type().kind() == Type::GENERIC && this->var().type().name() == "Operand" &&
      this->type().supertypes().size() == 1){
-    Type newType = this->type().supertypes().front();
+    Type newType = Type::Wildcard().add_supertype(this->type().supertypes().front());
     Type varType = Type::Interface("Operand", "org.tensorflow").add_parameter(newType);
 
     if(this->var().variadic()){
