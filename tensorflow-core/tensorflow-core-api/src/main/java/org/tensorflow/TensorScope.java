@@ -18,6 +18,9 @@ package org.tensorflow;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 
 /**
@@ -55,11 +58,125 @@ public class TensorScope implements AutoCloseable {
   }
 
   /**
+   * Runs {@code block}, then closes any tensors created during its execution.
+   * <p>To release tensors, use {@link #withCleanup(Consumer)} or one of the {@code produceWithCleanup} methods.
+   */
+  public static void withCleanup(Runnable block){
+    try(TensorScope scope = new TensorScope()){
+      block.run();
+    }
+  }
+
+  /**
+   * Runs {@code block}, then closes any tensors created during its execution (or attached to the scope).
+   * <p>Tensors can be released using the passed scope.
+   */
+  public static void withCleanup(Consumer<TensorScope> block){
+    try(TensorScope scope = new TensorScope()){
+      block.accept(scope);
+    }
+  }
+
+  /**
+   * Runs {@code block} and returns the result, then closes any tensors created during its execution.
+   * <p>To release tensors, use {@link #withCleanup(Function)} or one of the {@code produceWithCleanup} methods.
+   */
+  public static <T> T withCleanup(Supplier<T> block){
+    try(TensorScope scope = new TensorScope()){
+      return block.get();
+    }
+  }
+
+  /**
+   * Runs {@code block} and returns the result, then closes any tensors created during its execution (or attached to the scope).
+   * <p>Tensors can be released using the passed scope.
+   */
+  public static <T> T withCleanup(Function<TensorScope, T> block){
+    try(TensorScope scope = new TensorScope()){
+      return block.apply(scope);
+    }
+  }
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends Tensor> T produceTensorWithCleanup(Supplier<T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.get());
+    }
+  }
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * <p>Tensors can be released using the passed scope.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends Tensor> T produceTensorWithCleanup(Function<TensorScope, T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.apply(scope));
+    }
+  }
+
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Supplier<T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.get());
+    }
+  }
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * <p>Tensors can be released using the passed scope.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Function<TensorScope, T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.apply(scope));
+    }
+  }
+
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution.
+   * <p>To release other tensors, use {@link #produceTensorWithCleanup(Function)}.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Supplier<T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.get());
+    }
+  }
+
+  /**
+   * Runs {@code block} and releases and returns the result, then closes any <b>other</b> tensors created during its execution (or attached to the scope).
+   * <p>Tensors can be released using the passed scope.
+   *
+   * @return the released result of {@code block}
+   */
+  public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Function<TensorScope, T> block){
+    try(TensorScope scope = new TensorScope()){
+      return scope.release(block.apply(scope));
+    }
+  }
+
+  /**
    * Create a new tensor scope.  If {@code autoAttach} is false, will not automatically manage tensors.
    *
    * @see TensorScope
    */
-  public TensorScope() {
+  TensorScope() {
     this.parent = currentScope();
     currentScope.set(this);
 
