@@ -20,6 +20,12 @@ import org.tensorflow.ndarray.Shape
 import org.tensorflow.ndarray.Shaped
 
 /**
+ * The (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+ * @see Operand.shape
+ */
+public val Operand<*>.shape: Shape get() = this.shape()
+
+/**
  * Require the [Shaped] object have a certain shape.
  *
  * Throws [IllegalStateException] on failure.
