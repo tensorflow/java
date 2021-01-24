@@ -19,7 +19,7 @@ package org.tensorflow;
 /**
  * An interface representing a collection or group of tensors.  Provides methods for resource management.
  */
-public interface HasTensors extends AutoCloseable {
+public interface TensorContainer extends AutoCloseable {
 
   /**
    * Get the tensors held by this object.

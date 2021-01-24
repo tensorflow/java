@@ -132,7 +132,7 @@ public class TensorScope implements AutoCloseable {
    *
    * @return the released result of {@code block}
    */
-  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Supplier<T> block) {
+  public static <T extends TensorContainer> T produceHasTensorsWithCleanup(Supplier<T> block) {
     try (TensorScope scope = new TensorScope()) {
       return scope.release(block.get());
     }
@@ -145,7 +145,7 @@ public class TensorScope implements AutoCloseable {
    *
    * @return the released result of {@code block}
    */
-  public static <T extends HasTensors> T produceHasTensorsWithCleanup(Function<TensorScope, T> block) {
+  public static <T extends TensorContainer> T produceHasTensorsWithCleanup(Function<TensorScope, T> block) {
     try (TensorScope scope = new TensorScope()) {
       return scope.release(block.apply(scope));
     }
@@ -228,7 +228,7 @@ public class TensorScope implements AutoCloseable {
    * @throws IllegalStateException if this scope has no parent. If this happens, * the scope is not closed and no
    * resources are released.
    */
-  public synchronized void releaseToParent() {
+  public synchronized void releaseAllToParent() {
     release(true);
   }
 
@@ -241,7 +241,7 @@ public class TensorScope implements AutoCloseable {
    * <p>
    * This will close this scope, but does not close any of it's resources.
    */
-  public synchronized void release() {
+  public synchronized void releaseAll() {
     release(false);
   }
 
@@ -249,13 +249,13 @@ public class TensorScope implements AutoCloseable {
    * Release the tensors and child scopes of this scope <b>without closing them</b>, to it's parent if it has one.
    *
    * <p><b>WARNING:</b> this method may release resources without assigning them to another scope if
-   * {@code requireParent} is false.  {@link #releaseToParent()} should be used instead wherever possible.
+   * {@code requireParent} is false.  {@link #releaseAllToParent()} should be used instead wherever possible.
    *
    * @param requireParent Whether to require a parent scope to release resources to.
    * @throws IllegalStateException if this scope has no parent, but {@code requireParent} is true. If this happens, the
    * scope is not closed and no resources are released.
    */
-  public synchronized void release(boolean requireParent) {
+  private synchronized void release(boolean requireParent) {
     if (closed) {
       return;
     }
@@ -284,9 +284,9 @@ public class TensorScope implements AutoCloseable {
     // ensure that I'm not attaching or detaching at the same time in different threads
     RawTensor rt = tensor.asRawTensor();
     synchronized (rt) {
-      if (rt.scope != null) {
-        rt.scope.tensors.remove(rt);
-        rt.scope = null;
+      if (rt.tensorScope != null) {
+        rt.tensorScope.tensors.remove(rt);
+        rt.tensorScope = null;
       }
     }
     return tensor;
@@ -304,7 +304,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static <T extends HasTensors> T detach(T tensors) {
+  public static <T extends TensorContainer> T detach(T tensors) {
     detach(tensors.tensors());
     return tensors;
   }
@@ -312,8 +312,8 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #detach(Tensor)
    */
-  public static void detach(HasTensors... tensors) {
-    for (HasTensors ht : tensors) {
+  public static void detach(TensorContainer... tensors) {
+    for (TensorContainer ht : tensors) {
       detach(ht);
     }
   }
@@ -350,7 +350,7 @@ public class TensorScope implements AutoCloseable {
     // ensure that I'm not attaching or detaching at the same time in different threads
     synchronized (rt) {
       detach(tensor);
-      rt.scope = this;
+      rt.tensorScope = this;
       tensors.add(rt);
     }
 
@@ -371,7 +371,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public <T extends HasTensors> T attach(T tensors) {
+  public <T extends TensorContainer> T attach(T tensors) {
     attach(tensors.tensors());
     return tensors;
   }
@@ -379,9 +379,9 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public void attach(HasTensors... tensors) {
+  public void attach(TensorContainer... tensors) {
     if (tensors != null) {
-      for (HasTensors ht : tensors) {
+      for (TensorContainer ht : tensors) {
         attach(ht);
       }
     }
@@ -411,7 +411,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(Tensor... tensors) {
+  public TensorScope withTensors(Tensor... tensors) {
     attach(tensors);
     return this;
   }
@@ -419,7 +419,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(HasTensors... tensors) {
+  public TensorScope withTensors(TensorContainer... tensors) {
     attach(tensors);
     return this;
   }
@@ -427,7 +427,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #attach(Tensor)
    */
-  public TensorScope withAttached(Iterable<? extends Tensor>... tensors) {
+  public TensorScope withTensors(Iterable<? extends Tensor>... tensors) {
     attach(tensors);
     return this;
   }
@@ -442,7 +442,7 @@ public class TensorScope implements AutoCloseable {
    * @throws IllegalStateException if there is no current scope or the current scope does not have a parent, but {@code
    * requireParent} is true.  If this happens, the tensor's scope is not changed.
    */
-  public <T extends Tensor> T release(T tensor, boolean requireParent) {
+  private <T extends Tensor> T release(T tensor, boolean requireParent) {
     if (parent == null && requireParent) {
       throw new IllegalStateException(
           "Can't release to parent: not in a current scope, or the current scope does not have a parent.");
@@ -478,7 +478,7 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #release(Tensor)
    */
-  public <T extends HasTensors> T release(T tensors) {
+  public <T extends TensorContainer> T release(T tensors) {
     release(tensors.tensors());
     return tensors;
   }
@@ -486,8 +486,8 @@ public class TensorScope implements AutoCloseable {
   /**
    * @see #release(Tensor)
    */
-  public void release(HasTensors... tensors) {
-    for (HasTensors ht : tensors) {
+  public void release(TensorContainer... tensors) {
+    for (TensorContainer ht : tensors) {
       release(ht);
     }
   }
@@ -531,6 +531,6 @@ public class TensorScope implements AutoCloseable {
 
   private boolean closed = false;
   private final Set<RawTensor> tensors = ConcurrentHashMap.newKeySet();
-  TensorScope parent;
+  private TensorScope parent;
   private final Set<TensorScope> children = ConcurrentHashMap.newKeySet();
 }

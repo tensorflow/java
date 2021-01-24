@@ -66,7 +66,7 @@ public final class RawTensor implements Tensor {
   @Override
   public void close() {
     if (!closed) {
-      tensorScope.close();
+      pointerScope.close();
       closed = true;
     }
   }
@@ -78,7 +78,7 @@ public final class RawTensor implements Tensor {
 
   @Override
   public boolean isAttached() {
-    return scope != null;
+    return tensorScope != null;
   }
 
   /**
@@ -146,7 +146,7 @@ public final class RawTensor implements Tensor {
       scope.attach(nativeHandle);
       RawTensor t = new RawTensor(typeInfo, shape);
       t.tensorHandle = nativeHandle;
-      t.tensorScope = scope.extend();
+      t.pointerScope = scope.extend();
       return t;
     }
   }
@@ -162,7 +162,7 @@ public final class RawTensor implements Tensor {
     try (PointerScope scope = new PointerScope()) {
       scope.attach(handle);
       t.tensorHandle = handle;
-      t.tensorScope = scope.extend();
+      t.pointerScope = scope.extend();
     }
     return t;
   }
@@ -224,13 +224,13 @@ public final class RawTensor implements Tensor {
 
     TensorScope currentScope = TensorScope.currentScope();
     if (currentScope != null) {
-      this.scope = currentScope.withAttached(this);
+      this.tensorScope = currentScope.withTensors(this);
     }
   }
 
-  private PointerScope tensorScope;
+  private PointerScope pointerScope;
   private boolean closed;
-  TensorScope scope;
+  TensorScope tensorScope;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
   private final Shape shape;
