@@ -295,19 +295,9 @@ public final class Indices {
    * An index that expands to fill all available source dimensions. Works the same as Python's {@code ...}.
    *
    * @return index
-   * @see #expand()
    */
   public static Index ellipsis() {
     return Ellipsis.INSTANCE;
-  }
-
-  /**
-   * An index that expands to fill all available source dimensions. Works the same as Python's {@code ...}.
-   *
-   * @return index
-   */
-  public static Index expand() {
-    return ellipsis();
   }
 
   /**
