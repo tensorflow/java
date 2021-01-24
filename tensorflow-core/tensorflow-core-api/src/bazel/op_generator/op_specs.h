@@ -152,7 +152,6 @@ class OpSpec {
   const std::vector<AttributeSpec>& optional_attributes() const {
     return optional_attributes_;
   }
-  void remove_extra_generics();
 
  private:
   // A specification for an operation
@@ -165,6 +164,8 @@ class OpSpec {
       : graph_op_name_(graph_op_name),
         hidden_(hidden),
         deprecation_explanation_(deprecation_explanation) {}
+
+  void RemoveExtraGenerics();
 
   const string graph_op_name_;
   const bool hidden_;

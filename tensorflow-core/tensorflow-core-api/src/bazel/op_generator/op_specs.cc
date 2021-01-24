@@ -391,16 +391,16 @@ OpSpec OpSpec::Create(const OpDef& op_def, const ApiDef& api_def) {
   for (const auto& endpoint_def : api_def.endpoint()) {
     op.endpoints_.push_back(CreateEndpoint(op_def, api_def, endpoint_def));
   }
-  op.remove_extra_generics();
+  op.RemoveExtraGenerics();
   return op;
 }
 
-void OpSpec::remove_extra_generics() {
+void OpSpec::RemoveExtraGenerics() {
   std::map<string, int> generics;
 
   for (const ArgumentSpec& output : this->outputs()) {
     if (output.type().kind() == Type::GENERIC && !output.type().wildcard()) {
-      if(generics.find(output.type().name()) == generics.end()) {
+      if (generics.find(output.type().name()) == generics.end()) {
         generics[output.type().name()] = 1;
       } else {
         generics[output.type().name()] = generics.find(output.type().name())->second + 1;
@@ -410,7 +410,7 @@ void OpSpec::remove_extra_generics() {
 
   for (const ArgumentSpec& input : this->inputs()) {
     if (input.type().kind() == Type::GENERIC && !input.type().wildcard()) {
-      if(generics.find(input.type().name()) == generics.end()) {
+      if (generics.find(input.type().name()) == generics.end()) {
         generics[input.type().name()] = 1;
       } else {
         generics[input.type().name()] = generics.find(input.type().name())->second + 1;
@@ -418,17 +418,16 @@ void OpSpec::remove_extra_generics() {
     }
   }
 
-
   for (ArgumentSpec& output : this->outputs_) {
     if (output.type().kind() == Type::GENERIC && !output.type().wildcard()) {
-      if(generics.find(output.type().name()) == generics.end() || generics[output.type().name()] <= 1) {
+      if (generics[output.type().name()] <= 1) {
         output.toUpperBound();
       }
     }
   }
 
   for (ArgumentSpec& input : this->inputs_) {
-    if(generics.find(input.type().name()) == generics.end() || generics[input.type().name()] <= 1) {
+    if (generics[input.type().name()] <= 1) {
       input.toUpperBound();
     }
   }
