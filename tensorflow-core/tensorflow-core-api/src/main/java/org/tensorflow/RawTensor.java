@@ -65,15 +65,14 @@ public final class RawTensor implements Tensor {
 
   @Override
   public void close() {
-    if (!closed) {
+    if (!isClosed()) {
       pointerScope.close();
-      closed = true;
     }
   }
 
   @Override
   public boolean isClosed() {
-    return closed;
+    return tensorHandle.isNull();
   }
 
   @Override
@@ -229,7 +228,6 @@ public final class RawTensor implements Tensor {
   }
 
   private PointerScope pointerScope;
-  private boolean closed;
   TensorScope tensorScope;
   private TF_Tensor tensorHandle;
   private final TensorTypeInfo<? extends TType> typeInfo;
