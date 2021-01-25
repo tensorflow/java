@@ -48,6 +48,15 @@ flags.DEFINE_bool(
 TOOLS_DIR = pathlib.Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_DIR.parent
 
+def overlay(from_root, to_root):
+  for from_path in pathlib.Path(from_root).rglob('*'):
+    relpath = from_path.relative_to(from_root)
+    to_path = to_root/relpath
+    if from_path.is_file():
+      assert not to_path.exists()
+      shutil.copyfile(from_path, to_path)
+    else:
+      to_path.mkdir(exist_ok=True)
 
 def main(unused_argv):
   merged_source = pathlib.Path(tempfile.mkdtemp())
@@ -55,6 +64,8 @@ def main(unused_argv):
 
   shutil.copytree(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/main/java/org/tensorflow/',
                   merged_source/'java/org/tensorflow')
+  overlay(REPO_ROOT/'tensorflow-core/tensorflow-core-api/src/gen/java/org/tensorflow',
+            merged_source/'java/org/tensorflow')
   shutil.copytree(REPO_ROOT/'tensorflow-framework/src/main/java/org/tensorflow/framework',
                   merged_source/'java/org/tensorflow/framework')
   shutil.copytree(REPO_ROOT/'ndarray/src/main/java/org/tensorflow/ndarray',
