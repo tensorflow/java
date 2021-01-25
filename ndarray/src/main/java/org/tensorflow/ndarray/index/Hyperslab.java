@@ -84,7 +84,7 @@ final class Hyperslab implements Index {
   }
 
   @Override
-  public boolean tensorSupport() {
+  public boolean isStridedSlicingCompliant() {
     return false;
   }
 }

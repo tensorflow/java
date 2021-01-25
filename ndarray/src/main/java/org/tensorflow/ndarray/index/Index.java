@@ -87,42 +87,43 @@ public interface Index {
   }
 
   /**
-   * Get whether the Index supports Tensor conversion.
+   * Get whether the Index supports strided slice style indexing (using start, end, stride, and flags, i.e. <a
+   * href="https://www.tensorflow.org/api_docs/python/tf/strided_slice">TensorFlow's</a>).
    */
-  default boolean tensorSupport() {
+  default boolean isStridedSlicingCompliant() {
     return true;
   }
 
   /**
-   * Get the start of the index, for Tensor conversion.
+   * Get the start of the index, for strided slice style indexing.
    */
   default long begin() {
     return 0;
   }
 
   /**
-   * Get the end of the index, for Tensor conversion.
+   * Get the end of the index, strided slice style indexing.
    */
   default long end() {
     return 0;
   }
 
   /**
-   * Get the stride of the index, for Tensor conversion.
+   * Get the stride of the index, for strided slice style indexing.
    */
   default long stride() {
     return 1;
   }
 
   /**
-   * Get whether the Index should start at the beginning of the dimension, for Tensor conversion.
+   * Get whether the Index should start at the beginning of the dimension, for strided slice style indexing.
    */
   default boolean beginMask() {
     return false;
   }
 
   /**
-   * Get whether the Index should end at the beginning of the dimension, for Tensor conversion.
+   * Get whether the Index should end at the beginning of the dimension, for strided slice style indexing.
    */
   default boolean endMask() {
     return false;

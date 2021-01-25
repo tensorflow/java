@@ -46,7 +46,7 @@ final class Sequence implements Index {
   }
 
   @Override
-  public boolean tensorSupport() {
+  public boolean isStridedSlicingCompliant() {
     return false;
   }
 }

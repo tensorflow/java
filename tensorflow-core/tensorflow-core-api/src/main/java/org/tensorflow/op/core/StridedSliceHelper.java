@@ -71,7 +71,7 @@ public abstract class StridedSliceHelper {
         idx = Indices.all();
       }
 
-      if (!idx.tensorSupport()) {
+      if (!idx.isStridedSlicingCompliant()) {
         throw new UnsupportedOperationException("Index " + idx + " is not supported for Tensors");
       }
 
