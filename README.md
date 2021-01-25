@@ -34,26 +34,17 @@ The following describes the layout of the repository and its different artifacts
   * Intended audience: any developer who needs a Java n-dimensional array implementation, whether or not they
     use it with TensorFlow
   
+
+## Communication
+
+This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
+by subscribing to the [jvm@tensorflow.org](https://groups.google.com/a/tensorflow.org/forum/#!forum/jvm)
+mailing list, or you can simply send pull requests and raise issues to this repository.
+There is also a [sig-jvm Gitter channel](https://gitter.im/tensorflow/sig-jvm).
+
 ## Building Sources
 
-To build all the artifacts, simply invoke the command `mvn install` at the root of this repository (or 
-the Maven command of your choice). It is also possible to build artifacts with support for MKL enabled with
-`mvn install -Djavacpp.platform.extension=-mkl` or CUDA with `mvn install -Djavacpp.platform.extension=-gpu`
-or both with `mvn install -Djavacpp.platform.extension=-mkl-gpu`.
-
-When building this project for the first time in a given workspace, the script will attempt to download
-the [TensorFlow runtime library sources](https://github.com/tensorflow/tensorflow) and build of all the native code
-for your platform. This requires a valid environment for building TensorFlow, including the [bazel](https://bazel.build/)
-build tool and a few Python dependencies (please read [TensorFlow documentation](https://www.tensorflow.org/install/source)
-for more details).
-
-This step can take multiple hours on a regular laptop. It is possible though to skip completely the native build if you are
-working on a version that already has pre-compiled native artifacts for your platform [available on Sonatype OSS Nexus repository](#Snapshots).
-You just need to activate the `dev` profile in your Maven command to use those artifacts instead of building them from scratch
-(e.g. `mvn install -Pdev`).
-
-Note that modifying any source files under `tensorflow-core` may impact the low-level TensorFlow bindings, in which case a
-complete build could be required to reflect the changes.
+See [CONTRIBUTING.md](CONTRIBUTING.md#building).
 
 ## Using Maven Artifacts
 
@@ -162,6 +153,4 @@ This table shows the mapping between different version of TensorFlow for Java an
 
 ## How to Contribute?
 
-This repository is maintained by TensorFlow JVM Special Interest Group (SIG). You can easily join the group
-by subscribing to the [jvm@tensorflow.org](https://groups.google.com/a/tensorflow.org/forum/#!forum/jvm)
-mailing list, or you can simply send pull requests and raise issues to this repository.
+Contributions are welcome, guidelines are located in [CONTRIBUTING.md](CONTRIBUTING.md).
