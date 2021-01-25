@@ -24,7 +24,7 @@ public interface TensorContainer extends AutoCloseable {
   /**
    * Get the tensors held by this object.
    */
-  Iterable<Tensor> tensors();
+  Iterable<? extends Tensor> tensors();
 
   /**
    * Detach these tensors from any scopes managing them.  They must be manually closed or attached to another scope.

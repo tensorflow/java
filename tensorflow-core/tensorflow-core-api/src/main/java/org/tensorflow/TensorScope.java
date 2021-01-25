@@ -62,9 +62,7 @@ public class TensorScope implements AutoCloseable {
    * <p>To release tensors, use {@link #withCleanup(Consumer)} or one of the {@code produceWithCleanup} methods.
    */
   public static void withCleanup(Runnable block) {
-    try (TensorScope scope = new TensorScope()) {
-      block.run();
-    }
+    TensorScope.withCleanup((scope) -> block.run());
   }
 
   /**
@@ -79,20 +77,20 @@ public class TensorScope implements AutoCloseable {
 
   /**
    * Runs {@code block} and returns the result, then closes any tensors created during its execution.
-   * <p>To release tensors, use {@link #withCleanup(Function)} or one of the {@code produceWithCleanup} methods.
+   * <p>To release tensors, use {@link #getWithCleanup(Function)} or one of the {@code produceWithCleanup} methods.
+   * <p><b>Does not release or detach the result.  If you return a tensor, it will be closed unless otherwise released.</b>
    */
-  public static <T> T withCleanup(Supplier<T> block) {
-    try (TensorScope scope = new TensorScope()) {
-      return block.get();
-    }
+  public static <T> T getWithCleanup(Supplier<T> block) {
+    return TensorScope.getWithCleanup((scope) -> block.get());
   }
 
   /**
    * Runs {@code block} and returns the result, then closes any tensors created during its execution (or attached to the
    * scope).
    * <p>Tensors can be released using the passed scope.
+   * <p><b>Does not release or detach the result.  If you return a tensor, it will be closed unless otherwise released.</b>
    */
-  public static <T> T withCleanup(Function<TensorScope, T> block) {
+  public static <T> T getWithCleanup(Function<TensorScope, T> block) {
     try (TensorScope scope = new TensorScope()) {
       return block.apply(scope);
     }
@@ -106,9 +104,7 @@ public class TensorScope implements AutoCloseable {
    * @return the released result of {@code block}
    */
   public static <T extends Tensor> T produceTensorWithCleanup(Supplier<T> block) {
-    try (TensorScope scope = new TensorScope()) {
-      return scope.release(block.get());
-    }
+    return produceTensorWithCleanup((scope) -> block.get());
   }
 
   /**
@@ -132,10 +128,8 @@ public class TensorScope implements AutoCloseable {
    *
    * @return the released result of {@code block}
    */
-  public static <T extends TensorContainer> T produceHasTensorsWithCleanup(Supplier<T> block) {
-    try (TensorScope scope = new TensorScope()) {
-      return scope.release(block.get());
-    }
+  public static <T extends TensorContainer> T produceTensorContainerWithCleanup(Supplier<T> block) {
+    return produceTensorContainerWithCleanup((scope) -> block.get());
   }
 
   /**
@@ -145,7 +139,7 @@ public class TensorScope implements AutoCloseable {
    *
    * @return the released result of {@code block}
    */
-  public static <T extends TensorContainer> T produceHasTensorsWithCleanup(Function<TensorScope, T> block) {
+  public static <T extends TensorContainer> T produceTensorContainerWithCleanup(Function<TensorScope, T> block) {
     try (TensorScope scope = new TensorScope()) {
       return scope.release(block.apply(scope));
     }
@@ -160,9 +154,7 @@ public class TensorScope implements AutoCloseable {
    * @return the released result of {@code block}
    */
   public static <T extends Iterable<? extends Tensor>> T produceTensorsWithCleanup(Supplier<T> block) {
-    try (TensorScope scope = new TensorScope()) {
-      return scope.release(block.get());
-    }
+    return TensorScope.produceTensorsWithCleanup((scope) -> block.get());
   }
 
   /**
