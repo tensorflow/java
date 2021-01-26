@@ -58,7 +58,7 @@ public abstract class Constraint<T extends TNumber> {
   }
 
   /**
-   * Get the element-wise square root.
+   * Gets the element-wise square root.
    *
    * @param x the input Operand.
    * @return the element-wise square root.
@@ -66,13 +66,12 @@ public abstract class Constraint<T extends TNumber> {
   protected Operand<T> sqrt(Operand<T> x) {
     Class<T> type = x.type();
     Operand<T> zero = cast(tf, tf.constant(0), type);
-    Operand<T> inf = cast(tf, tf.constant(Float.POSITIVE_INFINITY), type);
-    x = tf.clipByValue(x, zero, inf);
-    return tf.math.sqrt(x);
+    Operand<T> inf = cast(tf, tf.constant(Double.POSITIVE_INFINITY), type);
+    return tf.math.sqrt(tf.clipByValue(x, zero, inf));
   }
 
   /**
-   * Element-wise value clipping.
+   * Gets the element-wise value clipping.
    *
    * @param x the Operand to clip
    * @param minValue the minimum value
@@ -83,13 +82,12 @@ public abstract class Constraint<T extends TNumber> {
     if (x == null) throw new IllegalArgumentException("Operand x must not be null");
     Ops tf = getTF();
     Class<T> type = x.type();
-    if (maxValue < minValue) {
-      double tmp = maxValue;
-      maxValue = minValue;
-      minValue = tmp;
-    }
-    Operand<T> minValueConstant = cast(tf, tf.constant(minValue), type);
-    Operand<T> maxValueConstant = cast(tf, tf.constant(maxValue), type);
+
+    double min = Math.min(minValue, maxValue);
+    double max = Math.max(minValue, maxValue);
+
+    Operand<T> minValueConstant = cast(tf, tf.constant(min), type);
+    Operand<T> maxValueConstant = cast(tf, tf.constant(max), type);
     return tf.clipByValue(x, minValueConstant, maxValueConstant);
   }
 }

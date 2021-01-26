@@ -27,15 +27,15 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * @param <T> the data type for the weights
  */
 public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
-  public static final float MIN_VALUE_DEFAULT = 0.0F;
-  public static final float MAX_VALUE_DEFAULT = 1.0F;
-  public static final float RATE_DEFAULT = 1.0F;
+  public static final double MIN_VALUE_DEFAULT = 0.0;
+  public static final double MAX_VALUE_DEFAULT = 1.0;
+  public static final double RATE_DEFAULT = 1.0;
   public static final int AXIS_DEFAULT = 0;
 
   /** the minimum norm for the incoming weights. */
-  private final float minValue;
+  private final double minValue;
   /** the maximum norm for the incoming weights. */
-  private final float maxValue;
+  private final double maxValue;
 
   /**
    * rate for enforcing the constraint: weights will be rescaled to yield (1 - rate) * norm + rate *
@@ -43,7 +43,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    * enforcement of the constraint, while rate<1.0 means that weights will be rescaled at each step
    * to slowly move towards a value inside the desired interval.
    */
-  private final float rate;
+  private final double rate;
 
   /** axis along which to calculate weight norms. */
   private final int[] axes;
@@ -67,7 +67,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    * @param minValue the minimum norm for the incoming weights.
    * @param maxValue the maximum norm for the incoming weights.
    */
-  public MinMaxNorm(Ops tf, float minValue, float maxValue) {
+  public MinMaxNorm(Ops tf, double minValue, double maxValue) {
     this(tf, minValue, maxValue, RATE_DEFAULT, AXIS_DEFAULT);
   }
 
@@ -80,7 +80,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    * @param rate the rate for enforcing the constraint.
    * @param axis integer, axis along which to calculate weight norms.
    */
-  public MinMaxNorm(Ops tf, float minValue, float maxValue, float rate, int axis) {
+  public MinMaxNorm(Ops tf, double minValue, double maxValue, double rate, int axis) {
     this(tf, minValue, maxValue, rate, new int[] {axis});
   }
   /**
@@ -92,7 +92,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    * @param rate the rate for enforcing the constraint.
    * @param axes integer, axis along which to calculate weight norms.
    */
-  public MinMaxNorm(Ops tf, float minValue, float maxValue, float rate, int[] axes) {
+  public MinMaxNorm(Ops tf, double minValue, double maxValue, double rate, int[] axes) {
     super(tf);
     this.minValue = minValue;
     this.maxValue = maxValue;
@@ -129,7 +129,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    *
    * @return the minValue
    */
-  public float getMinValue() {
+  public double getMinValue() {
     return minValue;
   }
 
@@ -138,7 +138,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    *
    * @return the maxValue
    */
-  public float getMaxValue() {
+  public double getMaxValue() {
     return maxValue;
   }
 
@@ -147,7 +147,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
    *
    * @return the rate
    */
-  public float getRate() {
+  public double getRate() {
     return rate;
   }
 
