@@ -434,9 +434,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of Conv3dBackpropInput
    */
-  public <U extends TNumber, T extends TNumber> Conv3dBackpropInput<U> conv3dBackpropInput(
-      Operand<T> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides,
-      String padding, Conv3dBackpropInput.Options... options) {
+  public <U extends TNumber> Conv3dBackpropInput<U> conv3dBackpropInput(
+      Operand<? extends TNumber> inputSizes, Operand<U> filter, Operand<U> outBackprop,
+      List<Long> strides, String padding, Conv3dBackpropInput.Options... options) {
     return Conv3dBackpropInput.create(scope, inputSizes, filter, outBackprop, strides, padding, options);
   }
 
@@ -1444,9 +1444,9 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of MaxPoolGradGradWithArgmax
    */
-  public <T extends TNumber, U extends TNumber> MaxPoolGradGradWithArgmax<T> maxPoolGradGradWithArgmax(
-      Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides,
-      String padding, MaxPoolGradGradWithArgmax.Options... options) {
+  public <T extends TNumber> MaxPoolGradGradWithArgmax<T> maxPoolGradGradWithArgmax(
+      Operand<T> input, Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize,
+      List<Long> strides, String padding, MaxPoolGradGradWithArgmax.Options... options) {
     return MaxPoolGradGradWithArgmax.create(scope, input, grad, argmax, ksize, strides, padding, options);
   }
 
@@ -1610,8 +1610,8 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedBiasAdd
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedBiasAdd<V> quantizedBiasAdd(
-      Operand<T> input, Operand<U> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+  public <V extends TType> QuantizedBiasAdd<V> quantizedBiasAdd(Operand<? extends TType> input,
+      Operand<? extends TType> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
       Operand<TFloat32> minBias, Operand<TFloat32> maxBias, Class<V> outType) {
     return QuantizedBiasAdd.create(scope, input, bias, minInput, maxInput, minBias, maxBias, outType);
   }
@@ -1638,8 +1638,8 @@ public final class NnOps {
    * @param options carries optional attributes values
    * @return a new instance of QuantizedConv2d
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedConv2d<V> quantizedConv2d(
-      Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
+  public <V extends TType> QuantizedConv2d<V> quantizedConv2d(Operand<? extends TType> input,
+      Operand<? extends TType> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput,
       Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType,
       List<Long> strides, String padding, QuantizedConv2d.Options... options) {
     return QuantizedConv2d.create(scope, input, filter, minInput, maxInput, minFilter, maxFilter, outType, strides, padding, options);
@@ -1690,7 +1690,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedRelu
    */
-  public <U extends TType, T extends TType> QuantizedRelu<U> quantizedRelu(Operand<T> features,
+  public <U extends TType> QuantizedRelu<U> quantizedRelu(Operand<? extends TType> features,
       Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     return QuantizedRelu.create(scope, features, minFeatures, maxFeatures, outType);
   }
@@ -1705,7 +1705,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedRelu6
    */
-  public <U extends TType, T extends TType> QuantizedRelu6<U> quantizedRelu6(Operand<T> features,
+  public <U extends TType> QuantizedRelu6<U> quantizedRelu6(Operand<? extends TType> features,
       Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     return QuantizedRelu6.create(scope, features, minFeatures, maxFeatures, outType);
   }
@@ -1721,7 +1721,7 @@ public final class NnOps {
    * @param outType
    * @return a new instance of QuantizedReluX
    */
-  public <U extends TType, T extends TType> QuantizedReluX<U> quantizedReluX(Operand<T> features,
+  public <U extends TType> QuantizedReluX<U> quantizedReluX(Operand<? extends TType> features,
       Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures,
       Class<U> outType) {
     return QuantizedReluX.create(scope, features, maxValue, minFeatures, maxFeatures, outType);
@@ -1985,8 +1985,8 @@ public final class NnOps {
    * @param blockSize
    * @return a new instance of SpaceToBatch
    */
-  public <T extends TType, U extends TNumber> SpaceToBatch<T> spaceToBatch(Operand<T> input,
-      Operand<U> paddings, Long blockSize) {
+  public <T extends TType> SpaceToBatch<T> spaceToBatch(Operand<T> input,
+      Operand<? extends TNumber> paddings, Long blockSize) {
     return SpaceToBatch.create(scope, input, paddings, blockSize);
   }
 

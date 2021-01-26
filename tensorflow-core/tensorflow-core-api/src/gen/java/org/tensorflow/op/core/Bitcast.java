@@ -96,7 +96,7 @@ public final class Bitcast<U extends TType> extends RawOp implements Operand<U> 
    * @return a new instance of Bitcast
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> Bitcast<U> create(Scope scope, Operand<T> input, Class<U> type) {
+  public static <U extends TType> Bitcast<U> create(Scope scope, Operand<? extends TType> input, Class<U> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

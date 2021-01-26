@@ -74,13 +74,14 @@ class ArgumentSpec {
   const string& op_def_name() const { return op_def_name_; }
   const Variable& var() const { return var_; }
   const Type& type() const { return type_; }
+  void toUpperBound();
   const string& description() const { return description_; }
   bool iterable() const { return iterable_; }
 
  private:
   const string op_def_name_;
-  const Variable var_;
-  const Type type_;
+  Variable var_;
+  Type type_;
   const string description_;
   const bool iterable_;
 };
@@ -163,6 +164,8 @@ class OpSpec {
       : graph_op_name_(graph_op_name),
         hidden_(hidden),
         deprecation_explanation_(deprecation_explanation) {}
+
+  void RemoveExtraGenerics();
 
   const string graph_op_name_;
   const bool hidden_;

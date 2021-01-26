@@ -59,7 +59,7 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Imag
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Imag<U> create(Scope scope, Operand<T> input, Class<U> Tout) {
+  public static <U extends TNumber> Imag<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Imag", scope.makeOpName("Imag"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -75,7 +75,7 @@ public final class Imag<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Imag
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Imag<TFloat32> create(Scope scope, Operand<T> input) {
+  public static Imag<TFloat32> create(Scope scope, Operand<? extends TType> input) {
     return create(scope, input, TFloat32.class);
   }
   

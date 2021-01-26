@@ -86,7 +86,7 @@ public final class ScatterMul<T extends TType> extends RawOp implements Operand<
    * @return a new instance of ScatterMul
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ScatterMul<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TType> ScatterMul<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMul", scope.makeOpName("ScatterMul"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

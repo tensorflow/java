@@ -72,7 +72,7 @@ public final class Tile<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Tile
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Tile<T> create(Scope scope, Operand<T> input, Operand<U> multiples) {
+  public static <T extends TType> Tile<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> multiples) {
     OperationBuilder opBuilder = scope.env().opBuilder("Tile", scope.makeOpName("Tile"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(multiples.asOutput());

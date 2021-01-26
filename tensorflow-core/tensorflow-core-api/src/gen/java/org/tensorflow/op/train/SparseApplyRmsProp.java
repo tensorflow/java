@@ -85,7 +85,7 @@ public final class SparseApplyRmsProp<T extends TType> extends RawOp implements 
    * @return a new instance of SparseApplyRmsProp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SparseApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> SparseApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyRMSProp", scope.makeOpName("SparseApplyRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());

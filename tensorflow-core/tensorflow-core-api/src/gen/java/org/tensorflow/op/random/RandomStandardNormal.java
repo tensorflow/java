@@ -78,7 +78,7 @@ public final class RandomStandardNormal<U extends TNumber> extends RawOp impleme
    * @return a new instance of RandomStandardNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RandomStandardNormal<U> create(Scope scope, Operand<T> shape, Class<U> dtype, Options... options) {
+  public static <U extends TNumber> RandomStandardNormal<U> create(Scope scope, Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomStandardNormal", scope.makeOpName("RandomStandardNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);

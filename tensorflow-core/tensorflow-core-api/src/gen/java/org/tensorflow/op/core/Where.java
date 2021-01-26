@@ -102,7 +102,7 @@ public final class Where extends RawOp implements Operand<TInt64> {
    * @return a new instance of Where
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Where create(Scope scope, Operand<T> condition) {
+  public static Where create(Scope scope, Operand<? extends TType> condition) {
     OperationBuilder opBuilder = scope.env().opBuilder("Where", scope.makeOpName("Where"));
     opBuilder.addInput(condition.asOutput());
     opBuilder = scope.apply(opBuilder);

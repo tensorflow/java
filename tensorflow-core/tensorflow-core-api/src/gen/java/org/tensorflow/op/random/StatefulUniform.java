@@ -51,7 +51,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
    * @return a new instance of StatefulUniform
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Class<U> dtype) {
+  public static <U extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -71,7 +71,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
    * @return a new instance of StatefulUniform
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> StatefulUniform<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+  public static StatefulUniform<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.class);
   }
   

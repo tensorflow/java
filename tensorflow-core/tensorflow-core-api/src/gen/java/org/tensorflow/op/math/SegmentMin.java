@@ -68,7 +68,7 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of SegmentMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SegmentMin<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TNumber> SegmentMin<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMin", scope.makeOpName("SegmentMin"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

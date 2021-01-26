@@ -116,7 +116,7 @@ public final class AsString extends RawOp implements Operand<TString> {
    * @return a new instance of AsString
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AsString create(Scope scope, Operand<T> input, Options... options) {
+  public static AsString create(Scope scope, Operand<? extends TType> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AsString", scope.makeOpName("AsString"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

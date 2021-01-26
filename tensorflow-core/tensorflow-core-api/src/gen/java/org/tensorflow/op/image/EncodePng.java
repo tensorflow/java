@@ -82,7 +82,7 @@ public final class EncodePng extends RawOp implements Operand<TString> {
    * @return a new instance of EncodePng
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> EncodePng create(Scope scope, Operand<T> image, Options... options) {
+  public static EncodePng create(Scope scope, Operand<? extends TNumber> image, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
     opBuilder.addInput(image.asOutput());
     opBuilder = scope.apply(opBuilder);

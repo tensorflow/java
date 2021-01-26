@@ -47,7 +47,7 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
    * @return a new instance of NonDeterministicInts
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> NonDeterministicInts<U> create(Scope scope, Operand<T> shape, Class<U> dtype) {
+  public static <U extends TType> NonDeterministicInts<U> create(Scope scope, Operand<? extends TType> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonDeterministicInts", scope.makeOpName("NonDeterministicInts"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -63,7 +63,7 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
    * @return a new instance of NonDeterministicInts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> NonDeterministicInts<TInt64> create(Scope scope, Operand<T> shape) {
+  public static NonDeterministicInts<TInt64> create(Scope scope, Operand<? extends TType> shape) {
     return create(scope, shape, TInt64.class);
   }
   

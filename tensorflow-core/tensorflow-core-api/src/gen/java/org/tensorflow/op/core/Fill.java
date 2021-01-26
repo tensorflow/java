@@ -72,7 +72,7 @@ public final class Fill<U extends TType> extends RawOp implements Operand<U> {
    * @return a new instance of Fill
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> Fill<U> create(Scope scope, Operand<T> dims, Operand<U> value) {
+  public static <U extends TType> Fill<U> create(Scope scope, Operand<? extends TNumber> dims, Operand<U> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fill", scope.makeOpName("Fill"));
     opBuilder.addInput(dims.asOutput());
     opBuilder.addInput(value.asOutput());

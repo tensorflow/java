@@ -79,7 +79,7 @@ public final class RandomUniform<U extends TNumber> extends RawOp implements Ope
    * @return a new instance of RandomUniform
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RandomUniform<U> create(Scope scope, Operand<T> shape, Class<U> dtype, Options... options) {
+  public static <U extends TNumber> RandomUniform<U> create(Scope scope, Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomUniform", scope.makeOpName("RandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);

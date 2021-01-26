@@ -50,7 +50,7 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
    * @return a new instance of QuantizedReshape
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+  public static <T extends TType> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());

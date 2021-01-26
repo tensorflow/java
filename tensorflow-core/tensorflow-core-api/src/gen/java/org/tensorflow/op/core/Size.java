@@ -57,7 +57,7 @@ public final class Size<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Size
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Size<U> create(Scope scope, Operand<T> input, Class<U> outType) {
+  public static <U extends TNumber> Size<U> create(Scope scope, Operand<? extends TType> input, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -73,7 +73,7 @@ public final class Size<U extends TNumber> extends RawOp implements Operand<U> {
    * @return a new instance of Size
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Size<TInt32> create(Scope scope, Operand<T> input) {
+  public static Size<TInt32> create(Scope scope, Operand<? extends TType> input) {
     return create(scope, input, TInt32.class);
   }
   

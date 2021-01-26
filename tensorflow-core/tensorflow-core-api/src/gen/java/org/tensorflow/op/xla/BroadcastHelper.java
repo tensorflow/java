@@ -50,7 +50,7 @@ public final class BroadcastHelper<T extends TType> extends RawOp {
    * @return a new instance of BroadcastHelper
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> BroadcastHelper<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> broadcastDims) {
+  public static <T extends TType> BroadcastHelper<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<? extends TNumber> broadcastDims) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaBroadcastHelper", scope.makeOpName("BroadcastHelper"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());

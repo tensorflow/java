@@ -89,7 +89,7 @@ public final class ScatterMin<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of ScatterMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> ScatterMin<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TNumber> ScatterMin<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterMin", scope.makeOpName("ScatterMin"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

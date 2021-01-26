@@ -43,7 +43,7 @@ public final class LookupTableRemove extends RawOp {
    * @return a new instance of LookupTableRemove
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<T> keys) {
+  public static LookupTableRemove create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

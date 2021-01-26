@@ -44,7 +44,7 @@ public final class Send extends RawOp {
    * @return a new instance of Send
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName) {
+  public static Send create(Scope scope, Operand<? extends TType> tensor, String tensorName) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSend", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);

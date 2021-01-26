@@ -73,7 +73,7 @@ public final class QuantizedDepthwiseConv2D<V extends TType> extends RawOp {
    * @return a new instance of QuantizedDepthwiseConv2D
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedDepthwiseConv2D<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType> QuantizedDepthwiseConv2D<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2D", scope.makeOpName("QuantizedDepthwiseConv2D"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

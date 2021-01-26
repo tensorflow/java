@@ -63,7 +63,7 @@ public final class Irfft<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Irfft
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> Irfft<U> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength, Class<U> Treal) {
+  public static <U extends TNumber> Irfft<U> create(Scope scope, Operand<? extends TType> input, Operand<TInt32> fftLength, Class<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT", scope.makeOpName("Irfft"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
@@ -81,7 +81,7 @@ public final class Irfft<U extends TNumber> extends RawOp implements Operand<U> 
    * @return a new instance of Irfft
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Irfft<TFloat32> create(Scope scope, Operand<T> input, Operand<TInt32> fftLength) {
+  public static Irfft<TFloat32> create(Scope scope, Operand<? extends TType> input, Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.class);
   }
   

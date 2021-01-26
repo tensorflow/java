@@ -264,7 +264,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Angle
    */
-  public <T extends TType> Angle<TFloat32> angle(Operand<T> input) {
+  public Angle<TFloat32> angle(Operand<? extends TType> input) {
     return Angle.create(scope, input);
   }
 
@@ -291,7 +291,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Angle
    */
-  public <U extends TNumber, T extends TType> Angle<U> angle(Operand<T> input, Class<U> Tout) {
+  public <U extends TNumber> Angle<U> angle(Operand<? extends TType> input, Class<U> Tout) {
     return Angle.create(scope, input, Tout);
   }
 
@@ -330,8 +330,8 @@ public final class MathOps {
    *  use dimension = 0.
    * @return a new instance of ArgMax
    */
-  public <T extends TType, U extends TNumber> ArgMax<TInt64> argMax(Operand<T> input,
-      Operand<U> dimension) {
+  public ArgMax<TInt64> argMax(Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension) {
     return ArgMax.create(scope, input, dimension);
   }
 
@@ -358,8 +358,8 @@ public final class MathOps {
    * @param outputType
    * @return a new instance of ArgMax
    */
-  public <V extends TNumber, T extends TType, U extends TNumber> ArgMax<V> argMax(Operand<T> input,
-      Operand<U> dimension, Class<V> outputType) {
+  public <V extends TNumber> ArgMax<V> argMax(Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension, Class<V> outputType) {
     return ArgMax.create(scope, input, dimension, outputType);
   }
 
@@ -385,8 +385,8 @@ public final class MathOps {
    *  use dimension = 0.
    * @return a new instance of ArgMin
    */
-  public <T extends TType, U extends TNumber> ArgMin<TInt64> argMin(Operand<T> input,
-      Operand<U> dimension) {
+  public ArgMin<TInt64> argMin(Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension) {
     return ArgMin.create(scope, input, dimension);
   }
 
@@ -413,8 +413,8 @@ public final class MathOps {
    * @param outputType
    * @return a new instance of ArgMin
    */
-  public <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> argMin(Operand<T> input,
-      Operand<U> dimension, Class<V> outputType) {
+  public <V extends TNumber> ArgMin<V> argMin(Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension, Class<V> outputType) {
     return ArgMin.create(scope, input, dimension, outputType);
   }
 
@@ -635,7 +635,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of ComplexAbs
    */
-  public <T extends TType> ComplexAbs<TFloat32> complexAbs(Operand<T> x) {
+  public ComplexAbs<TFloat32> complexAbs(Operand<? extends TType> x) {
     return ComplexAbs.create(scope, x);
   }
 
@@ -652,8 +652,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of ComplexAbs
    */
-  public <U extends TNumber, T extends TType> ComplexAbs<U> complexAbs(Operand<T> x,
-      Class<U> Tout) {
+  public <U extends TNumber> ComplexAbs<U> complexAbs(Operand<? extends TType> x, Class<U> Tout) {
     return ComplexAbs.create(scope, x, Tout);
   }
 
@@ -756,7 +755,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Cumprod
    */
-  public <T extends TType, U extends TNumber> Cumprod<T> cumprod(Operand<T> x, Operand<U> axis,
+  public <T extends TType> Cumprod<T> cumprod(Operand<T> x, Operand<? extends TNumber> axis,
       Cumprod.Options... options) {
     return Cumprod.create(scope, x, axis, options);
   }
@@ -795,7 +794,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Cumsum
    */
-  public <T extends TType, U extends TNumber> Cumsum<T> cumsum(Operand<T> x, Operand<U> axis,
+  public <T extends TType> Cumsum<T> cumsum(Operand<T> x, Operand<? extends TNumber> axis,
       Cumsum.Options... options) {
     return Cumsum.create(scope, x, axis, options);
   }
@@ -1157,7 +1156,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Imag
    */
-  public <T extends TType> Imag<TFloat32> imag(Operand<T> input) {
+  public Imag<TFloat32> imag(Operand<? extends TType> input) {
     return Imag.create(scope, input);
   }
 
@@ -1180,7 +1179,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Imag
    */
-  public <U extends TNumber, T extends TType> Imag<U> imag(Operand<T> input, Class<U> Tout) {
+  public <U extends TNumber> Imag<U> imag(Operand<? extends TType> input, Class<U> Tout) {
     return Imag.create(scope, input, Tout);
   }
 
@@ -1224,7 +1223,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsFinite
    */
-  public <T extends TNumber> IsFinite isFinite(Operand<T> x) {
+  public IsFinite isFinite(Operand<? extends TNumber> x) {
     return IsFinite.create(scope, x);
   }
 
@@ -1242,7 +1241,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsInf
    */
-  public <T extends TNumber> IsInf isInf(Operand<T> x) {
+  public IsInf isInf(Operand<? extends TNumber> x) {
     return IsInf.create(scope, x);
   }
 
@@ -1260,7 +1259,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of IsNan
    */
-  public <T extends TNumber> IsNan isNan(Operand<T> x) {
+  public IsNan isNan(Operand<? extends TNumber> x) {
     return IsNan.create(scope, x);
   }
 
@@ -1440,7 +1439,7 @@ public final class MathOps {
    * @param options carries optional attributes values
    * @return a new instance of Mean
    */
-  public <T extends TType, U extends TNumber> Mean<T> mean(Operand<T> input, Operand<U> axis,
+  public <T extends TType> Mean<T> mean(Operand<T> input, Operand<? extends TNumber> axis,
       Mean.Options... options) {
     return Mean.create(scope, input, axis, options);
   }
@@ -1598,7 +1597,7 @@ public final class MathOps {
    * @param x
    * @return a new instance of PopulationCount
    */
-  public <T extends TNumber> PopulationCount populationCount(Operand<T> x) {
+  public PopulationCount populationCount(Operand<? extends TNumber> x) {
     return PopulationCount.create(scope, x);
   }
 
@@ -1635,8 +1634,8 @@ public final class MathOps {
    * @param Toutput
    * @return a new instance of QuantizedAdd
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> quantizedAdd(
-      Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
+  public <V extends TType> QuantizedAdd<V> quantizedAdd(Operand<? extends TType> x,
+      Operand<? extends TType> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
       Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     return QuantizedAdd.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
@@ -1654,8 +1653,8 @@ public final class MathOps {
    * @param Toutput
    * @return a new instance of QuantizedMul
    */
-  public <V extends TType, T extends TType, U extends TType> QuantizedMul<V> quantizedMul(
-      Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
+  public <V extends TType> QuantizedMul<V> quantizedMul(Operand<? extends TType> x,
+      Operand<? extends TType> y, Operand<TFloat32> minX, Operand<TFloat32> maxX,
       Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     return QuantizedMul.create(scope, x, y, minX, maxX, minY, maxY, Toutput);
   }
@@ -1678,7 +1677,7 @@ public final class MathOps {
    * @param input
    * @return a new instance of Real
    */
-  public <T extends TType> Real<TFloat32> real(Operand<T> input) {
+  public Real<TFloat32> real(Operand<? extends TType> input) {
     return Real.create(scope, input);
   }
 
@@ -1701,7 +1700,7 @@ public final class MathOps {
    * @param Tout
    * @return a new instance of Real
    */
-  public <U extends TNumber, T extends TType> Real<U> real(Operand<T> input, Class<U> Tout) {
+  public <U extends TNumber> Real<U> real(Operand<? extends TType> input, Class<U> Tout) {
     return Real.create(scope, input, Tout);
   }
 
@@ -1813,8 +1812,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMax
    */
-  public <T extends TNumber, U extends TNumber> SegmentMax<T> segmentMax(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends TNumber> SegmentMax<T> segmentMax(Operand<T> data,
+      Operand<? extends TNumber> segmentIds) {
     return SegmentMax.create(scope, data, segmentIds);
   }
 
@@ -1850,8 +1849,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMean
    */
-  public <T extends TType, U extends TNumber> SegmentMean<T> segmentMean(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends TType> SegmentMean<T> segmentMean(Operand<T> data,
+      Operand<? extends TNumber> segmentIds) {
     return SegmentMean.create(scope, data, segmentIds);
   }
 
@@ -1886,8 +1885,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentMin
    */
-  public <T extends TNumber, U extends TNumber> SegmentMin<T> segmentMin(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends TNumber> SegmentMin<T> segmentMin(Operand<T> data,
+      Operand<? extends TNumber> segmentIds) {
     return SegmentMin.create(scope, data, segmentIds);
   }
 
@@ -1922,8 +1921,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentProd
    */
-  public <T extends TType, U extends TNumber> SegmentProd<T> segmentProd(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends TType> SegmentProd<T> segmentProd(Operand<T> data,
+      Operand<? extends TNumber> segmentIds) {
     return SegmentProd.create(scope, data, segmentIds);
   }
 
@@ -1958,8 +1957,8 @@ public final class MathOps {
    *  first dimension.  Values should be sorted and can be repeated.
    * @return a new instance of SegmentSum
    */
-  public <T extends TType, U extends TNumber> SegmentSum<T> segmentSum(Operand<T> data,
-      Operand<U> segmentIds) {
+  public <T extends TType> SegmentSum<T> segmentSum(Operand<T> data,
+      Operand<? extends TNumber> segmentIds) {
     return SegmentSum.create(scope, data, segmentIds);
   }
 
@@ -2220,8 +2219,8 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentMax
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMax<T> unsortedSegmentMax(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber> UnsortedSegmentMax<T> unsortedSegmentMax(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     return UnsortedSegmentMax.create(scope, data, segmentIds, numSegments);
   }
 
@@ -2259,8 +2258,8 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentMin
    */
-  public <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMin<T> unsortedSegmentMin(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public <T extends TNumber> UnsortedSegmentMin<T> unsortedSegmentMin(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     return UnsortedSegmentMin.create(scope, data, segmentIds, numSegments);
   }
 
@@ -2297,8 +2296,8 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentProd
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> unsortedSegmentProd(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public <T extends TType> UnsortedSegmentProd<T> unsortedSegmentProd(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     return UnsortedSegmentProd.create(scope, data, segmentIds, numSegments);
   }
 
@@ -2337,8 +2336,8 @@ public final class MathOps {
    * @param numSegments
    * @return a new instance of UnsortedSegmentSum
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentSum<T> unsortedSegmentSum(
-      Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public <T extends TType> UnsortedSegmentSum<T> unsortedSegmentSum(Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     return UnsortedSegmentSum.create(scope, data, segmentIds, numSegments);
   }
 

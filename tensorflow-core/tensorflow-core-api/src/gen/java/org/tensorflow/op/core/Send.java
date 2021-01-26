@@ -66,7 +66,7 @@ public final class Send extends RawOp {
    * @return a new instance of Send
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Send create(Scope scope, Operand<T> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
+  public static Send create(Scope scope, Operand<? extends TType> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Send", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);

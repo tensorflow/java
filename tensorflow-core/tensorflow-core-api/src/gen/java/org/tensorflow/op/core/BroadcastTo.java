@@ -73,7 +73,7 @@ public final class BroadcastTo<T extends TType> extends RawOp implements Operand
    * @return a new instance of BroadcastTo
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> BroadcastTo<T> create(Scope scope, Operand<T> input, Operand<U> shape) {
+  public static <T extends TType> BroadcastTo<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> shape) {
     OperationBuilder opBuilder = scope.env().opBuilder("BroadcastTo", scope.makeOpName("BroadcastTo"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shape.asOutput());

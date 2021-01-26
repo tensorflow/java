@@ -44,7 +44,7 @@ public final class TensorScatterNdMax<T extends TType> extends RawOp implements 
    * @return a new instance of TensorScatterNdMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> TensorScatterNdMax<T> create(Scope scope, Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public static <T extends TType> TensorScatterNdMax<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterMax", scope.makeOpName("TensorScatterNdMax"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());

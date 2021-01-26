@@ -52,7 +52,7 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of ComplexAbs
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> ComplexAbs<U> create(Scope scope, Operand<T> x, Class<U> Tout) {
+  public static <U extends TNumber> ComplexAbs<U> create(Scope scope, Operand<? extends TType> x, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -68,7 +68,7 @@ public final class ComplexAbs<U extends TNumber> extends RawOp implements Operan
    * @return a new instance of ComplexAbs
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ComplexAbs<TFloat32> create(Scope scope, Operand<T> x) {
+  public static ComplexAbs<TFloat32> create(Scope scope, Operand<? extends TType> x) {
     return create(scope, x, TFloat32.class);
   }
   

@@ -79,7 +79,7 @@ public final class SparseCountSparseOutput<U extends TNumber> extends RawOp {
    * @return a new instance of SparseCountSparseOutput
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> SparseCountSparseOutput<U> create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<U> weights, Boolean binaryOutput, Options... options) {
+  public static <U extends TNumber> SparseCountSparseOutput<U> create(Scope scope, Operand<TInt64> indices, Operand<? extends TNumber> values, Operand<TInt64> denseShape, Operand<U> weights, Boolean binaryOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseCountSparseOutput", scope.makeOpName("SparseCountSparseOutput"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());

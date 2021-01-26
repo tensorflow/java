@@ -51,7 +51,7 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
    * @return a new instance of LookupTableFind
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
+  public static <U extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<U> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

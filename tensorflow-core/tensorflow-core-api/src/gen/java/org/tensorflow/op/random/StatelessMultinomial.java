@@ -50,7 +50,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * @return a new instance of StatelessMultinomial
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed, Class<V> outputDtype) {
+  public static <V extends TNumber> StatelessMultinomial<V> create(Scope scope, Operand<? extends TNumber> logits, Operand<TInt32> numSamples, Operand<? extends TNumber> seed, Class<V> outputDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessMultinomial", scope.makeOpName("StatelessMultinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
@@ -71,7 +71,7 @@ public final class StatelessMultinomial<V extends TNumber> extends RawOp impleme
    * @return a new instance of StatelessMultinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatelessMultinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Operand<U> seed) {
+  public static StatelessMultinomial<TInt64> create(Scope scope, Operand<? extends TNumber> logits, Operand<TInt32> numSamples, Operand<? extends TNumber> seed) {
     return create(scope, logits, numSamples, seed, TInt64.class);
   }
   

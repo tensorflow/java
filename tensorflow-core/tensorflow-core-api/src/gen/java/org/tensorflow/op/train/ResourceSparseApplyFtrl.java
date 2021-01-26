@@ -90,7 +90,7 @@ public final class ResourceSparseApplyFtrl extends RawOp {
    * @return a new instance of ResourceSparseApplyFtrl
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyFtrl create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
+  public static <T extends TType> ResourceSparseApplyFtrl create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyFtrlV2", scope.makeOpName("ResourceSparseApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

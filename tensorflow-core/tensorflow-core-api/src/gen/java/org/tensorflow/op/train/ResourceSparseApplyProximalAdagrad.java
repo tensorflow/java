@@ -74,7 +74,7 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalAdagrad", scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

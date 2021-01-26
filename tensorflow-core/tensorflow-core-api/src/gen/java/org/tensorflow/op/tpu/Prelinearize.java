@@ -73,7 +73,7 @@ public final class Prelinearize extends RawOp implements Operand<TType> {
    * @return a new instance of Prelinearize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Prelinearize create(Scope scope, Operand<T> input, Options... options) {
+  public static Prelinearize create(Scope scope, Operand<? extends TType> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prelinearize", scope.makeOpName("Prelinearize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

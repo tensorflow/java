@@ -42,7 +42,7 @@ public final class InitializeTable extends RawOp {
    * @return a new instance of InitializeTable
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
+  public static InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<? extends TType> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableV2", scope.makeOpName("InitializeTable"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
