@@ -31,9 +31,8 @@ class L1Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallNO() {
+  public void testCallL10() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -41,13 +40,12 @@ class L1Test extends CommonTest {
         float[][] w = {{1.0f, 0.9f, 0.8f}, {1.2f, 0.7f, 1.1f}};
         Operand<TFloat32> weights = tf.constant(w);
         Operand<TFloat32> result = instance.call(weights);
-        session.evaluate(0, result);
+        session.evaluate(0f, result);
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1() {
+  public void testCallL1TFloat32() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -60,9 +58,8 @@ class L1Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1_2() {
+  public void testCallL1TFloat64() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();

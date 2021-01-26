@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
 public class L1_L2<R extends TNumber> extends L1L2<R> {
 
   /**
-   * Create a regularizer that applies an L1 and l2 regularization penalty of {@link
+   * Creates a regularizer that applies an L1 and l2 regularization penalty of {@link
    * #DEFAULT_REGULARIZATION_PENALTY}
    *
    * @param tf the TensorFlow Ops
@@ -46,10 +46,12 @@ public class L1_L2<R extends TNumber> extends L1L2<R> {
   }
 
   /**
-   * Create a regularizer that applies an L1 and l2 regularization penalty
+   * Creates a regularizer that applies an L1 and l2 regularization penalty
    *
    * @param tf the TensorFlow Ops
    * @param l1 the L1 regularization penalty
+   * @param l2 the L2 regularization penalty
+   * @throws IllegalArgumentException if the l1 or l2 regularization factor is NaN or is infinite.
    */
   public L1_L2(Ops tf, Float l1, Float l2, Class<R> type) {
     super(

@@ -20,12 +20,12 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Regularizer base class.
+ * Base class for Regularizers
  *
  * <p>Regularizers allow you to apply penalties on layer parameters or layer activity during
  * optimization. These penalties are summed into the loss function that the network optimizes.
  *
- * @param <R> the data type of the result
+ * @param <R> the data type of the operands and result
  */
 public abstract class Regularizer<R extends TNumber> {
 
@@ -36,7 +36,7 @@ public abstract class Regularizer<R extends TNumber> {
   protected Class<R> type;
 
   /**
-   * Create a Regularizer
+   * Creates a Regularizer
    *
    * @param tf the TensorFlow ops.
    */
@@ -44,7 +44,7 @@ public abstract class Regularizer<R extends TNumber> {
     this(tf, null, type);
   }
   /**
-   * Create a Regularizer
+   * Creates a Regularizer
    *
    * @param tf the TensorFlow ops.
    */
@@ -55,19 +55,19 @@ public abstract class Regularizer<R extends TNumber> {
   }
 
   /**
-   * Returns this Regularizer as a Loss This is a convenience tp regularize a loss. Only
+   * Returns this Regularizer as a Loss This is a convenience to use regularize a loss. Only
    * sampleWeights are applied to the regularizer.
    *
    * @return this Regularizer as a Loss
    */
   public Loss asLoss() {
-    return new RegularizerLoss<R>(this.tf, this);
+    return new RegularizerLoss<>(this.tf, this);
   }
 
   /**
    * Computes a regularization penalty from an input.
    *
-   * @param input teh weighted input
+   * @param input the weighted input
    * @return the result of computing the regularization penalty
    */
   public abstract Operand<R> call(Operand<R> input);

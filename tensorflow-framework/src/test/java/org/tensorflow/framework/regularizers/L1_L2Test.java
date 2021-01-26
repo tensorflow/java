@@ -35,7 +35,6 @@ class L1_L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1_L2<>. */
   @Test
   public void testCallZero() {
     for (TestSession.Mode tfMode : tfModes)
@@ -47,9 +46,8 @@ class L1_L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1_L2<>. */
   @Test
-  public void testCallNO() {
+  public void testCallDefaultTFloat32() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -67,7 +65,25 @@ class L1_L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1_L2<>. */
+  @Test
+  public void testCallDefaultTFloat64() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        L1_L2<TFloat64> instance = new L1_L2<>(tf, TFloat64.class);
+        double[][] w = {{1.0f, 0.9f, 0.8f}, {1.2f, 0.7f, 1.1f}};
+        Operand<TFloat64> weights = tf.constant(w);
+        Operand<TFloat64> result = instance.call(weights);
+        double expected =
+            regularizeL1L2(
+                w,
+                Regularizer.DEFAULT_REGULARIZATION_PENALTY,
+                Regularizer.DEFAULT_REGULARIZATION_PENALTY);
+        session.setEpsilon(.01f);
+        session.evaluate(expected, result);
+      }
+  }
+
   @Test
   public void testCallL1L2() {
     for (TestSession.Mode tfMode : tfModes)
@@ -83,9 +99,8 @@ class L1_L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1_L2<>. */
   @Test
-  public void testCallL1() {
+  public void testCallL20() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -98,9 +113,8 @@ class L1_L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1_L2<>. */
   @Test
-  public void testCallL2() {
+  public void testCallL10() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();

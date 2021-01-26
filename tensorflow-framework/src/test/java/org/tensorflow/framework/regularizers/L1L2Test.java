@@ -35,21 +35,19 @@ class L1L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCall() {
+  public void testCallDefaultsConstant() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         L1L2<TFloat32> instance = new L1L2<>(tf, TFloat32.class);
         Operand<TFloat32> result = instance.call(tf.constant(555f));
-        session.evaluate(0, result);
+        session.evaluate(0f, result);
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallNO() {
+  public void testCallL1L20() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -61,9 +59,8 @@ class L1L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1L2() {
+  public void testCallL1L2TFloat32() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -77,9 +74,23 @@ class L1L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1() {
+  public void testCallL1L2TFloat64() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        L1L2<TFloat64> instance = new L1L2<>(tf, 0.01f, 0.02f, TFloat64.class);
+        double[][] w = {{1.0, 0.9, 0.8}, {1.2, 0.7, 1.1}};
+        Operand<TFloat64> weights = tf.constant(w);
+        Operand<TFloat64> result = instance.call(weights);
+        double expected = regularizeL1L2(w, 0.01f, 0.02f);
+        session.setEpsilon(.09f);
+        session.evaluate(expected, result);
+      }
+  }
+
+  @Test
+  public void testCallL2Null() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -92,9 +103,8 @@ class L1L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL2() {
+  public void testCallL1Null() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
