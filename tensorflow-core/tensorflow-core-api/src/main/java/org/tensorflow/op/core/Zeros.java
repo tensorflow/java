@@ -50,7 +50,7 @@ public final class Zeros<T extends TType> implements Op, Operand<T> {
    */
   @Endpoint
   @SuppressWarnings("unchecked")
-  public static <T extends TType, U extends TNumber> Zeros<T> create(Scope scope, Operand<U> dims, Class<T> type) {
+  public static <T extends TType> Zeros<T> create(Scope scope, Operand<? extends TNumber> dims, Class<T> type) {
     Scope zerosScope = scope.withSubScope("Zeros");
     Operand<T> zero;
     if (type == TString.class) {
