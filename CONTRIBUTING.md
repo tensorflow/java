@@ -37,13 +37,21 @@ It can be included in [IntelliJ](https://github.com/google/styleguide/blob/gh-pa
 [Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).
 [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html) should also be used for C++ code.
 
+### Code generation
+
+Code generation for `Ops` and related classes is done during `tensorflow-core-api`'s `install`, using the annotation processor in 
+`tensorflow-core-generator`. If you change or add any operator classes (annotated with `org.tensorflow.op.annotation.Operator`), 
+endpoint methods (annotated with `org.tensorflow.op.annotation.Endpoint`), or change the annotation processor, be sure to re-run a 
+full `mvn install` in `tensorflow-core-api`.
+
 ### Working with Bazel generation
 
-`tensorflow-core-api` uses C++ code generation that is built with Bazel.  To get it to build, you will likely need to clone the
-`tensorflow` project, run its configuration script (`./configure`), and copy the resulting `.tf_configure.bazelrc` to `tensorflow-core-api`.
+`tensorflow-core-api` uses Bazel-built C++ code generation to generate most of the `@Operator` classes.  To get it to build, you will likely need to 
+clone the [tensorflow](https://github.com/tensorflow/tensorflow) project, run its configuration script (`./configure`), and copy the resulting 
+`.tf_configure.bazelrc` to `tensorflow-core-api`.
 
 To run the code generation, use the `//:java_op_generator` target.  The resulting binary has good help text (viewable in 
 [op_gen_main.cc](tensorflow-core/tensorflow-core-api/src/bazel/op_generator/op_gen_main.cc#L31-L48)).
-Generally, it should be called with arguments that are something like `bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so 
+Genrally, it should be called with arguments that are something like `bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so 
 --output_dir=src/gen/java --api_dirs=bazel-tensorflow-core-api/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def` 
 (from `tensorflow-core-api`).
