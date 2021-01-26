@@ -89,7 +89,7 @@ public final class ScatterSub<T extends TType> extends RawOp implements Operand<
    * @return a new instance of ScatterSub
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ScatterSub<T> create(Scope scope, Operand<T> ref, Operand<U> indices, Operand<T> updates, Options... options) {
+  public static <T extends TType> ScatterSub<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterSub", scope.makeOpName("ScatterSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

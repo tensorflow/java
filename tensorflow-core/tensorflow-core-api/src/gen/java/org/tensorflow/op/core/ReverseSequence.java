@@ -120,7 +120,7 @@ public final class ReverseSequence<T extends TType> extends RawOp implements Ope
    * @return a new instance of ReverseSequence
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ReverseSequence<T> create(Scope scope, Operand<T> input, Operand<U> seqLengths, Long seqDim, Options... options) {
+  public static <T extends TType> ReverseSequence<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> seqLengths, Long seqDim, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReverseSequence", scope.makeOpName("ReverseSequence"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(seqLengths.asOutput());

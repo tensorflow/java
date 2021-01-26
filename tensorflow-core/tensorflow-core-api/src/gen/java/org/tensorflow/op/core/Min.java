@@ -71,7 +71,7 @@ public final class Min<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Min
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Min<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType> Min<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Min", scope.makeOpName("Min"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

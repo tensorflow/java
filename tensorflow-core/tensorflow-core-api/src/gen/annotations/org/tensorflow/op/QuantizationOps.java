@@ -109,8 +109,8 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public <T extends TType> Dequantize<TFloat32> dequantize(Operand<T> input,
-      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Dequantize.Options... options) {
+  public Dequantize<TFloat32> dequantize(Operand<? extends TType> input, Operand<TFloat32> minRange,
+      Operand<TFloat32> maxRange, Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, options);
   }
 
@@ -174,7 +174,7 @@ public final class QuantizationOps {
    * @param options carries optional attributes values
    * @return a new instance of Dequantize
    */
-  public <U extends TNumber, T extends TType> Dequantize<U> dequantize(Operand<T> input,
+  public <U extends TNumber> Dequantize<U> dequantize(Operand<? extends TType> input,
       Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<U> dtype,
       Dequantize.Options... options) {
     return Dequantize.create(scope, input, minRange, maxRange, dtype, options);
@@ -563,8 +563,9 @@ public final class QuantizationOps {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of QuantizeDownAndShrinkRange
    */
-  public <U extends TType, T extends TType> QuantizeDownAndShrinkRange<U> quantizeDownAndShrinkRange(
-      Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Class<U> outType) {
+  public <U extends TType> QuantizeDownAndShrinkRange<U> quantizeDownAndShrinkRange(
+      Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
+      Class<U> outType) {
     return QuantizeDownAndShrinkRange.create(scope, input, inputMin, inputMax, outType);
   }
 
@@ -599,7 +600,7 @@ public final class QuantizationOps {
    * @param inputMax The float value that the maximum quantized input value represents.
    * @return a new instance of RequantizationRange
    */
-  public <T extends TType> RequantizationRange requantizationRange(Operand<T> input,
+  public RequantizationRange requantizationRange(Operand<? extends TType> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return RequantizationRange.create(scope, input, inputMin, inputMax);
   }
@@ -624,7 +625,7 @@ public final class QuantizationOps {
    * @param outType The type of the output. Should be a lower bit depth than Tinput.
    * @return a new instance of Requantize
    */
-  public <U extends TType, T extends TType> Requantize<U> requantize(Operand<T> input,
+  public <U extends TType> Requantize<U> requantize(Operand<? extends TType> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin,
       Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     return Requantize.create(scope, input, inputMin, inputMax, requestedOutputMin, requestedOutputMax, outType);

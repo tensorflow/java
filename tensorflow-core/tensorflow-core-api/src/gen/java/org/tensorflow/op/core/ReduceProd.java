@@ -71,7 +71,7 @@ public final class ReduceProd<T extends TType> extends RawOp implements Operand<
    * @return a new instance of ReduceProd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ReduceProd<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType> ReduceProd<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prod", scope.makeOpName("ReduceProd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

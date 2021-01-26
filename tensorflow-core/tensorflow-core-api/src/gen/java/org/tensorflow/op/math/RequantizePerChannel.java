@@ -49,7 +49,7 @@ public final class RequantizePerChannel<U extends TType> extends RawOp {
    * @return a new instance of RequantizePerChannel
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> RequantizePerChannel<U> create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
+  public static <U extends TType> RequantizePerChannel<U> create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizePerChannel", scope.makeOpName("RequantizePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

@@ -73,7 +73,7 @@ public final class Roll<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Roll
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber, V extends TNumber> Roll<T> create(Scope scope, Operand<T> input, Operand<U> shift, Operand<V> axis) {
+  public static <T extends TType> Roll<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> shift, Operand<? extends TNumber> axis) {
     OperationBuilder opBuilder = scope.env().opBuilder("Roll", scope.makeOpName("Roll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shift.asOutput());

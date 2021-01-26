@@ -53,7 +53,7 @@ public final class IsNan extends RawOp implements Operand<TBool> {
    * @return a new instance of IsNan
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> IsNan create(Scope scope, Operand<T> x) {
+  public static IsNan create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsNan", scope.makeOpName("IsNan"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

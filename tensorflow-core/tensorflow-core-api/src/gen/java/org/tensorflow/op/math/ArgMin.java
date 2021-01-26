@@ -63,7 +63,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMin
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TType, U extends TNumber> ArgMin<V> create(Scope scope, Operand<T> input, Operand<U> dimension, Class<V> outputType) {
+  public static <V extends TNumber> ArgMin<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TNumber> dimension, Class<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMin", scope.makeOpName("ArgMin"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
@@ -83,7 +83,7 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
    * @return a new instance of ArgMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ArgMin<TInt64> create(Scope scope, Operand<T> input, Operand<U> dimension) {
+  public static ArgMin<TInt64> create(Scope scope, Operand<? extends TType> input, Operand<? extends TNumber> dimension) {
     return create(scope, input, dimension, TInt64.class);
   }
   

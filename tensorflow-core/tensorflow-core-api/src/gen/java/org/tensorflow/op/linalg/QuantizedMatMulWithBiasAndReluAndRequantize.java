@@ -101,7 +101,7 @@ public final class QuantizedMatMulWithBiasAndReluAndRequantize<W extends TType> 
    * @return a new instance of QuantizedMatMulWithBiasAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> a, Operand<U> b, Operand<V> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
+  public static <W extends TType> QuantizedMatMulWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<? extends TType> a, Operand<? extends TType> b, Operand<? extends TType> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndReluAndRequantize"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());

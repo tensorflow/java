@@ -90,7 +90,7 @@ public final class Conv3dBackpropInput<U extends TNumber> extends RawOp implemen
    * @return a new instance of Conv3dBackpropInput
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> Conv3dBackpropInput<U> create(Scope scope, Operand<T> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides, String padding, Options... options) {
+  public static <U extends TNumber> Conv3dBackpropInput<U> create(Scope scope, Operand<? extends TNumber> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3DBackpropInputV2", scope.makeOpName("Conv3dBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());

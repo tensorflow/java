@@ -72,7 +72,7 @@ public final class SparseApplyAdadelta<T extends TType> extends RawOp implements
    * @return a new instance of SparseApplyAdadelta
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SparseApplyAdadelta<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> SparseApplyAdadelta<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdadelta", scope.makeOpName("SparseApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

@@ -100,7 +100,7 @@ public final class Cumsum<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Cumsum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Cumsum<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
+  public static <T extends TType> Cumsum<T> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumsum", scope.makeOpName("Cumsum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());

@@ -83,7 +83,7 @@ public final class InfeedEnqueue extends RawOp {
    * @return a new instance of InfeedEnqueue
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> InfeedEnqueue create(Scope scope, Operand<T> input, Options... options) {
+  public static InfeedEnqueue create(Scope scope, Operand<? extends TType> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueue", scope.makeOpName("InfeedEnqueue"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

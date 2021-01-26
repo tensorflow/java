@@ -75,7 +75,7 @@ public final class SparseSegmentSum<T extends TNumber> extends RawOp implements 
    * @return a new instance of SparseSegmentSum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
+  public static <T extends TNumber> SparseSegmentSum<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSum", scope.makeOpName("SparseSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());

@@ -71,7 +71,7 @@ public final class Max<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Max
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Max<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType> Max<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Max", scope.makeOpName("Max"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

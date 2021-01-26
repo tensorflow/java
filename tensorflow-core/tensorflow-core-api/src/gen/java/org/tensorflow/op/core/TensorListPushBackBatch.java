@@ -41,7 +41,7 @@ public final class TensorListPushBackBatch extends RawOp implements Operand<TTyp
    * @return a new instance of TensorListPushBackBatch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<T> tensor) {
+  public static TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<? extends TType> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
     opBuilder.addInput(inputHandles.asOutput());
     opBuilder.addInput(tensor.asOutput());

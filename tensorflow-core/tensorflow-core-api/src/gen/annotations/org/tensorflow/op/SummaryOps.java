@@ -86,8 +86,8 @@ public final class SummaryOps {
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
-  public <T extends TNumber> HistogramSummary histogramSummary(Operand<TString> tag,
-      Operand<T> values) {
+  public HistogramSummary histogramSummary(Operand<TString> tag,
+      Operand<? extends TNumber> values) {
     return HistogramSummary.create(scope, tag, values);
   }
 
@@ -147,7 +147,7 @@ public final class SummaryOps {
    * @param options carries optional attributes values
    * @return a new instance of ImageSummary
    */
-  public <T extends TNumber> ImageSummary imageSummary(Operand<TString> tag, Operand<T> tensor,
+  public ImageSummary imageSummary(Operand<TString> tag, Operand<? extends TNumber> tensor,
       ImageSummary.Options... options) {
     return ImageSummary.create(scope, tag, tensor, options);
   }
@@ -181,7 +181,7 @@ public final class SummaryOps {
    * @param values Same shape as `tags.  Values for the summary.
    * @return a new instance of ScalarSummary
    */
-  public <T extends TNumber> ScalarSummary scalarSummary(Operand<TString> tags, Operand<T> values) {
+  public ScalarSummary scalarSummary(Operand<TString> tags, Operand<? extends TNumber> values) {
     return ScalarSummary.create(scope, tags, values);
   }
 
@@ -194,7 +194,7 @@ public final class SummaryOps {
    *  data.
    * @return a new instance of TensorSummary
    */
-  public <T extends TType> TensorSummary tensorSummary(Operand<TString> tag, Operand<T> tensor,
+  public TensorSummary tensorSummary(Operand<TString> tag, Operand<? extends TType> tensor,
       Operand<TString> serializedSummaryMetadata) {
     return TensorSummary.create(scope, tag, tensor, serializedSummaryMetadata);
   }

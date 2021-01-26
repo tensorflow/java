@@ -79,7 +79,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
    * @return a new instance of Multinomial
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> Multinomial<U> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Class<U> outputDtype, Options... options) {
+  public static <U extends TNumber> Multinomial<U> create(Scope scope, Operand<? extends TNumber> logits, Operand<TInt32> numSamples, Class<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
@@ -109,7 +109,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
    * @return a new instance of Multinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Multinomial<TInt64> create(Scope scope, Operand<T> logits, Operand<TInt32> numSamples, Options... options) {
+  public static Multinomial<TInt64> create(Scope scope, Operand<? extends TNumber> logits, Operand<TInt32> numSamples, Options... options) {
     return create(scope, logits, numSamples, TInt64.class, options);
   }
   

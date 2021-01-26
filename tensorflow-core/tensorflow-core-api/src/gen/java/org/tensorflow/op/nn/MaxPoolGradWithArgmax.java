@@ -70,7 +70,7 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implem
    * @return a new instance of MaxPoolGradWithArgmax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<U> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  public static <T extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradWithArgmax", scope.makeOpName("MaxPoolGradWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());

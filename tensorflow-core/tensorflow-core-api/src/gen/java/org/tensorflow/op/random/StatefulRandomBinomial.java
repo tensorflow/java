@@ -48,7 +48,7 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
    * @return a new instance of StatefulRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatefulRandomBinomial<V> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs, Class<V> dtype) {
+  public static <V extends TNumber, U extends TNumber> StatefulRandomBinomial<V> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TNumber> shape, Operand<U> counts, Operand<U> probs, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulRandomBinomial", scope.makeOpName("StatefulRandomBinomial"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -72,7 +72,7 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
    * @return a new instance of StatefulRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatefulRandomBinomial<TInt64> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> counts, Operand<U> probs) {
+  public static <U extends TNumber> StatefulRandomBinomial<TInt64> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TNumber> shape, Operand<U> counts, Operand<U> probs) {
     return create(scope, resource, algorithm, shape, counts, probs, TInt64.class);
   }
   

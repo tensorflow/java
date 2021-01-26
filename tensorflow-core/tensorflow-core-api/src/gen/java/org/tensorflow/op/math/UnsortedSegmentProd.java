@@ -70,7 +70,7 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
    * @return a new instance of UnsortedSegmentProd
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber, V extends TNumber> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public static <T extends TType> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentProd", scope.makeOpName("UnsortedSegmentProd"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

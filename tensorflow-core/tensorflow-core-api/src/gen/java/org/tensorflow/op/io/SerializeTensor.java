@@ -42,7 +42,7 @@ public final class SerializeTensor extends RawOp implements Operand<TString> {
    * @return a new instance of SerializeTensor
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SerializeTensor create(Scope scope, Operand<T> tensor) {
+  public static SerializeTensor create(Scope scope, Operand<? extends TType> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeTensor", scope.makeOpName("SerializeTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);

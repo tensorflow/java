@@ -68,7 +68,7 @@ public final class SegmentMax<T extends TNumber> extends RawOp implements Operan
    * @return a new instance of SegmentMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> SegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds) {
+  public static <T extends TNumber> SegmentMax<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SegmentMax", scope.makeOpName("SegmentMax"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

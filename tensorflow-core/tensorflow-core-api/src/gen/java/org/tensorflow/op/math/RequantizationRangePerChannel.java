@@ -45,7 +45,7 @@ public final class RequantizationRangePerChannel extends RawOp {
    * @return a new instance of RequantizationRangePerChannel
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RequantizationRangePerChannel create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
+  public static RequantizationRangePerChannel create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRangePerChannel", scope.makeOpName("RequantizationRangePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

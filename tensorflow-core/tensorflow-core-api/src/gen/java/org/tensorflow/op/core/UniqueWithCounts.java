@@ -94,7 +94,7 @@ public final class UniqueWithCounts<T extends TType, V extends TNumber> extends 
    * @return a new instance of UniqueWithCounts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, V extends TNumber, U extends TNumber> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<U> axis, Class<V> outIdx) {
+  public static <T extends TType, V extends TNumber> UniqueWithCounts<T, V> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis, Class<V> outIdx) {
     OperationBuilder opBuilder = scope.env().opBuilder("UniqueWithCountsV2", scope.makeOpName("UniqueWithCounts"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -113,7 +113,7 @@ public final class UniqueWithCounts<T extends TType, V extends TNumber> extends 
    * @return a new instance of UniqueWithCounts
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> UniqueWithCounts<T, TInt32> create(Scope scope, Operand<T> x, Operand<U> axis) {
+  public static <T extends TType> UniqueWithCounts<T, TInt32> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis) {
     return create(scope, x, axis, TInt32.class);
   }
   

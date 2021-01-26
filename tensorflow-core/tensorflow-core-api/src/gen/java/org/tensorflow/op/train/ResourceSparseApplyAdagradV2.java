@@ -80,7 +80,7 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
    * @return a new instance of ResourceSparseApplyAdagradV2
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyAdagradV2 create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<U> indices, Options... options) {
+  public static <T extends TType> ResourceSparseApplyAdagradV2 create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdagradV2", scope.makeOpName("ResourceSparseApplyAdagradV2"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());

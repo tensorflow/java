@@ -70,8 +70,8 @@ public final class NnRawOps {
    *  This is the label for the given minibatch entry.
    * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
-  public <T extends TNumber, U extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
-      Operand<T> features, Operand<U> labels) {
+  public <T extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> sparseSoftmaxCrossEntropyWithLogits(
+      Operand<T> features, Operand<? extends TNumber> labels) {
     return SparseSoftmaxCrossEntropyWithLogits.create(scope, features, labels);
   }
 

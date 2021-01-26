@@ -52,7 +52,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends RawOp imple
    * @return a new instance of StatelessRandomUniform
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Class<V> dtype) {
+  public static <V extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
@@ -70,7 +70,7 @@ public final class StatelessRandomUniform<V extends TNumber> extends RawOp imple
    * @return a new instance of StatelessRandomUniform
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> StatelessRandomUniform<TFloat32> create(Scope scope, Operand<T> shape, Operand<U> seed) {
+  public static StatelessRandomUniform<TFloat32> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
     return create(scope, shape, seed, TFloat32.class);
   }
   

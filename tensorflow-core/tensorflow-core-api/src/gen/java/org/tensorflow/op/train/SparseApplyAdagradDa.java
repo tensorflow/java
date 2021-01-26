@@ -74,7 +74,7 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
    * @return a new instance of SparseApplyAdagradDa
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<U> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  public static <T extends TType> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradDA", scope.makeOpName("SparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());

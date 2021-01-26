@@ -49,7 +49,7 @@ public final class StatelessRandomUniformInt<V extends TNumber> extends RawOp im
    * @return a new instance of StatelessRandomUniformInt
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> minval, Operand<V> maxval) {
+  public static <V extends TNumber> StatelessRandomUniformInt<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> minval, Operand<V> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformInt", scope.makeOpName("StatelessRandomUniformInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());

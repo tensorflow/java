@@ -54,7 +54,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    * @return a new instance of StatelessRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs, Class<W> dtype) {
+  public static <W extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> counts, Operand<V> probs, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomBinomial", scope.makeOpName("StatelessRandomBinomial"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
@@ -78,7 +78,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
    * @return a new instance of StatelessRandomBinomial
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomBinomial<TInt64> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> counts, Operand<V> probs) {
+  public static <V extends TNumber> StatelessRandomBinomial<TInt64> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> counts, Operand<V> probs) {
     return create(scope, shape, seed, counts, probs, TInt64.class);
   }
   

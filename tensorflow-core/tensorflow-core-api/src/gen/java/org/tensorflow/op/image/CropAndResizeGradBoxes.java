@@ -78,7 +78,7 @@ public final class CropAndResizeGradBoxes extends RawOp implements Operand<TFloa
    * @return a new instance of CropAndResizeGradBoxes
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CropAndResizeGradBoxes create(Scope scope, Operand<TFloat32> grads, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Options... options) {
+  public static CropAndResizeGradBoxes create(Scope scope, Operand<TFloat32> grads, Operand<? extends TNumber> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradBoxes", scope.makeOpName("CropAndResizeGradBoxes"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(image.asOutput());

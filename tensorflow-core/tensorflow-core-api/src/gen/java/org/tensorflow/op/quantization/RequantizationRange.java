@@ -49,7 +49,7 @@ public final class RequantizationRange extends RawOp {
    * @return a new instance of RequantizationRange
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> RequantizationRange create(Scope scope, Operand<T> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+  public static RequantizationRange create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRange", scope.makeOpName("RequantizationRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());

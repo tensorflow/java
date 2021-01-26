@@ -106,7 +106,7 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
    * @return a new instance of RaggedTensorToTensor
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber, V extends TNumber> RaggedTensorToTensor<U> create(Scope scope, Operand<T> shape, Operand<U> values, Operand<U> defaultValue, Iterable<Operand<V>> rowPartitionTensors, List<String> rowPartitionTypes) {
+  public static <U extends TType, V extends TNumber> RaggedTensorToTensor<U> create(Scope scope, Operand<? extends TNumber> shape, Operand<U> values, Operand<U> defaultValue, Iterable<Operand<V>> rowPartitionTensors, List<String> rowPartitionTypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToTensor", scope.makeOpName("RaggedTensorToTensor"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(values.asOutput());

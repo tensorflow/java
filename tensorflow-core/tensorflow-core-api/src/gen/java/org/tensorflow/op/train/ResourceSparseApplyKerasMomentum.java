@@ -86,7 +86,7 @@ public final class ResourceSparseApplyKerasMomentum extends RawOp {
    * @return a new instance of ResourceSparseApplyKerasMomentum
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ResourceSparseApplyKerasMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<U> indices, Operand<T> momentum, Options... options) {
+  public static <T extends TType> ResourceSparseApplyKerasMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyKerasMomentum", scope.makeOpName("ResourceSparseApplyKerasMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
