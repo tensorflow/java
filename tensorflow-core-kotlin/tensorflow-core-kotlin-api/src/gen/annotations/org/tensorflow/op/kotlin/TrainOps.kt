@@ -119,11 +119,11 @@ public class TrainOps(
      * @return a new instance of AccumulatorApplyGradient
      * @see org.tensorflow.op.TrainOps.accumulatorApplyGradient
      */
-    public fun <T : TType> accumulatorApplyGradient(
+    public fun accumulatorApplyGradient(
         handle: Operand<TString>,
         localStep: Operand<TInt64>,
-        gradient: Operand<T>
-    ): AccumulatorApplyGradient = java.accumulatorApplyGradient<T>(    
+        gradient: Operand<out TType>
+    ): AccumulatorApplyGradient = java.accumulatorApplyGradient(    
         handle,
         localStep,
         gradient
@@ -1671,7 +1671,7 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyAdadelta(
+    public fun <T : TType> resourceSparseApplyAdadelta(
         `var`: Operand<*>,
         accum: Operand<*>,
         accumUpdate: Operand<*>,
@@ -1679,9 +1679,9 @@ public class TrainOps(
         rho: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyAdadelta = java.resourceSparseApplyAdadelta<T, U>(    
+    ): ResourceSparseApplyAdadelta = java.resourceSparseApplyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -1715,15 +1715,15 @@ public class TrainOps(
      *  contention.
      * @param updateSlots @param updateSlots
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyAdagrad(
+    public fun <T : TType> resourceSparseApplyAdagrad(
         `var`: Operand<*>,
         accum: Operand<*>,
         lr: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null,
         updateSlots: Boolean? = null
-    ): ResourceSparseApplyAdagrad = java.resourceSparseApplyAdagrad<T, U>(    
+    ): ResourceSparseApplyAdagrad = java.resourceSparseApplyAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -1753,18 +1753,18 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyAdagradDa(
+    public fun <T : TType> resourceSparseApplyAdagradDa(
         `var`: Operand<*>,
         gradientAccumulator: Operand<*>,
         gradientSquaredAccumulator: Operand<*>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyAdagradDa = java.resourceSparseApplyAdagradDa<T, U>(    
+    ): ResourceSparseApplyAdagradDa = java.resourceSparseApplyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -1816,7 +1816,7 @@ public class TrainOps(
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyCenteredRmsProp(
+    public fun <T : TType> resourceSparseApplyCenteredRmsProp(
         `var`: Operand<*>,
         mg: Operand<*>,
         ms: Operand<*>,
@@ -1826,9 +1826,9 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyCenteredRmsProp = java.resourceSparseApplyCenteredRmsProp<T, U>(    
+    ): ResourceSparseApplyCenteredRmsProp = java.resourceSparseApplyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -1874,12 +1874,12 @@ public class TrainOps(
      *  contention.
      * @param multiplyLinearByLr @param multiplyLinearByLr
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyFtrl(
+    public fun <T : TType> resourceSparseApplyFtrl(
         `var`: Operand<*>,
         accum: Operand<*>,
         linear: Operand<*>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
@@ -1887,7 +1887,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): ResourceSparseApplyFtrl = java.resourceSparseApplyFtrl<T, U>(    
+    ): ResourceSparseApplyFtrl = java.resourceSparseApplyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -1931,16 +1931,16 @@ public class TrainOps(
      *  var + momentum * accum, so in the end, the var you get is actually
      *  var + momentum * accum.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyKerasMomentum(
+    public fun <T : TType> resourceSparseApplyKerasMomentum(
         `var`: Operand<*>,
         accum: Operand<*>,
         lr: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceSparseApplyKerasMomentum = java.resourceSparseApplyKerasMomentum<T, U>(    
+    ): ResourceSparseApplyKerasMomentum = java.resourceSparseApplyKerasMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -1979,16 +1979,16 @@ public class TrainOps(
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyMomentum(
+    public fun <T : TType> resourceSparseApplyMomentum(
         `var`: Operand<*>,
         accum: Operand<*>,
         lr: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceSparseApplyMomentum = java.resourceSparseApplyMomentum<T, U>(    
+    ): ResourceSparseApplyMomentum = java.resourceSparseApplyMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -2023,16 +2023,16 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyProximalAdagrad(
+    public fun <T : TType> resourceSparseApplyProximalAdagrad(
         `var`: Operand<*>,
         accum: Operand<*>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyProximalAdagrad = java.resourceSparseApplyProximalAdagrad<T, U>(    
+    ): ResourceSparseApplyProximalAdagrad = java.resourceSparseApplyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -2064,16 +2064,16 @@ public class TrainOps(
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyProximalGradientDescent(
+    public fun <T : TType> resourceSparseApplyProximalGradientDescent(
         `var`: Operand<*>,
         alpha: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
     ): ResourceSparseApplyProximalGradientDescent =
-            java.resourceSparseApplyProximalGradientDescent<T, U>(    
+            java.resourceSparseApplyProximalGradientDescent<T>(    
         `var`,
         alpha,
         l1,
@@ -2116,7 +2116,7 @@ public class TrainOps(
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
      */
-    public fun <T : TType, U : TNumber> resourceSparseApplyRmsProp(
+    public fun <T : TType> resourceSparseApplyRmsProp(
         `var`: Operand<*>,
         ms: Operand<*>,
         mom: Operand<*>,
@@ -2125,9 +2125,9 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyRmsProp = java.resourceSparseApplyRmsProp<T, U>(    
+    ): ResourceSparseApplyRmsProp = java.resourceSparseApplyRmsProp<T>(    
         `var`,
         ms,
         mom,
@@ -2351,7 +2351,7 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyAdadelta(
+    public fun <T : TType> sparseApplyAdadelta(
         `var`: Operand<T>,
         accum: Operand<T>,
         accumUpdate: Operand<T>,
@@ -2359,9 +2359,9 @@ public class TrainOps(
         rho: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyAdadelta<T> = java.sparseApplyAdadelta<T, U>(    
+    ): SparseApplyAdadelta<T> = java.sparseApplyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -2394,18 +2394,18 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyAdagradDa(
+    public fun <T : TType> sparseApplyAdagradDa(
         `var`: Operand<T>,
         gradientAccumulator: Operand<T>,
         gradientSquaredAccumulator: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): SparseApplyAdagradDa<T> = java.sparseApplyAdagradDa<T, U>(    
+    ): SparseApplyAdagradDa<T> = java.sparseApplyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -2458,7 +2458,7 @@ public class TrainOps(
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyCenteredRmsProp(
+    public fun <T : TType> sparseApplyCenteredRmsProp(
         `var`: Operand<T>,
         mg: Operand<T>,
         ms: Operand<T>,
@@ -2468,9 +2468,9 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyCenteredRmsProp<T> = java.sparseApplyCenteredRmsProp<T, U>(    
+    ): SparseApplyCenteredRmsProp<T> = java.sparseApplyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -2517,12 +2517,12 @@ public class TrainOps(
      *  contention.
      * @param multiplyLinearByLr @param multiplyLinearByLr
      */
-    public fun <T : TType, U : TNumber> sparseApplyFtrl(
+    public fun <T : TType> sparseApplyFtrl(
         `var`: Operand<T>,
         accum: Operand<T>,
         linear: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
@@ -2530,7 +2530,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): SparseApplyFtrl<T> = java.sparseApplyFtrl<T, U>(    
+    ): SparseApplyFtrl<T> = java.sparseApplyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -2574,16 +2574,16 @@ public class TrainOps(
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
      */
-    public fun <T : TType, U : TNumber> sparseApplyMomentum(
+    public fun <T : TType> sparseApplyMomentum(
         `var`: Operand<T>,
         accum: Operand<T>,
         lr: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): SparseApplyMomentum<T> = java.sparseApplyMomentum<T, U>(    
+    ): SparseApplyMomentum<T> = java.sparseApplyMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -2619,16 +2619,16 @@ public class TrainOps(
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyProximalAdagrad(
+    public fun <T : TType> sparseApplyProximalAdagrad(
         `var`: Operand<T>,
         accum: Operand<T>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyProximalAdagrad<T> = java.sparseApplyProximalAdagrad<T, U>(    
+    ): SparseApplyProximalAdagrad<T> = java.sparseApplyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -2661,15 +2661,15 @@ public class TrainOps(
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyProximalGradientDescent(
+    public fun <T : TType> sparseApplyProximalGradientDescent(
         `var`: Operand<T>,
         alpha: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyProximalGradientDescent<T> = java.sparseApplyProximalGradientDescent<T, U>(    
+    ): SparseApplyProximalGradientDescent<T> = java.sparseApplyProximalGradientDescent<T>(    
         `var`,
         alpha,
         l1,
@@ -2712,7 +2712,7 @@ public class TrainOps(
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
      */
-    public fun <T : TType, U : TNumber> sparseApplyRmsProp(
+    public fun <T : TType> sparseApplyRmsProp(
         `var`: Operand<T>,
         ms: Operand<T>,
         mom: Operand<T>,
@@ -2721,9 +2721,9 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyRmsProp<T> = java.sparseApplyRmsProp<T, U>(    
+    ): SparseApplyRmsProp<T> = java.sparseApplyRmsProp<T>(    
         `var`,
         ms,
         mom,

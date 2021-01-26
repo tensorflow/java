@@ -256,14 +256,14 @@ public class ImageOps(
      *  methods are supported: Bilinear and Nearest Neighbor.
      * @param extrapolationValue Value used for extrapolation, when applicable.
      */
-    public fun <T : TNumber> cropAndResize(
-        image: Operand<T>,
+    public fun cropAndResize(
+        image: Operand<out TNumber>,
         boxes: Operand<TFloat32>,
         boxInd: Operand<TInt32>,
         cropSize: Operand<TInt32>,
         method: String? = null,
         extrapolationValue: Float? = null
-    ): CropAndResize = java.cropAndResize<T>(    
+    ): CropAndResize = java.cropAndResize(    
         image,
         boxes,
         boxInd,
@@ -298,13 +298,13 @@ public class ImageOps(
      * @param method A string specifying the interpolation method. Only 'bilinear' is
      *  supported for now.
      */
-    public fun <T : TNumber> cropAndResizeGradBoxes(
+    public fun cropAndResizeGradBoxes(
         grads: Operand<TFloat32>,
-        image: Operand<T>,
+        image: Operand<out TNumber>,
         boxes: Operand<TFloat32>,
         boxInd: Operand<TInt32>,
         method: String? = null
-    ): CropAndResizeGradBoxes = java.cropAndResizeGradBoxes<T>(    
+    ): CropAndResizeGradBoxes = java.cropAndResizeGradBoxes(    
         grads,
         image,
         boxes,
@@ -783,8 +783,8 @@ public class ImageOps(
      * @see org.tensorflow.op.ImageOps.encodePng
      * @param compression Compression level.
      */
-    public fun <T : TNumber> encodePng(image: Operand<T>, compression: Long? = null): EncodePng =
-            java.encodePng<T>(    
+    public fun encodePng(image: Operand<out TNumber>, compression: Long? = null): EncodePng =
+            java.encodePng(    
         image,
         *listOfNotNull(
             compression?.let{ org.tensorflow.op.image.EncodePng.compression(it) }
@@ -1084,11 +1084,11 @@ public class ImageOps(
      * tensors are
      *  aligned, preserving the values at the corner pixels. Defaults to false.
      */
-    public fun <T : TNumber> resizeArea(
-        images: Operand<T>,
+    public fun resizeArea(
+        images: Operand<out TNumber>,
         size: Operand<TInt32>,
         alignCorners: Boolean? = null
-    ): ResizeArea = java.resizeArea<T>(    
+    ): ResizeArea = java.resizeArea(    
         images,
         size,
         *listOfNotNull(
@@ -1112,12 +1112,12 @@ public class ImageOps(
      *  aligned, preserving the values at the corner pixels. Defaults to false.
      * @param halfPixelCenters @param halfPixelCenters
      */
-    public fun <T : TNumber> resizeBicubic(
-        images: Operand<T>,
+    public fun resizeBicubic(
+        images: Operand<out TNumber>,
         size: Operand<TInt32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): ResizeBicubic = java.resizeBicubic<T>(    
+    ): ResizeBicubic = java.resizeBicubic(    
         images,
         size,
         *listOfNotNull(
@@ -1142,12 +1142,12 @@ public class ImageOps(
      *  aligned, preserving the values at the corner pixels. Defaults to false.
      * @param halfPixelCenters @param halfPixelCenters
      */
-    public fun <T : TNumber> resizeBilinear(
-        images: Operand<T>,
+    public fun resizeBilinear(
+        images: Operand<out TNumber>,
         size: Operand<TInt32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): ResizeBilinear = java.resizeBilinear<T>(    
+    ): ResizeBilinear = java.resizeBilinear(    
         images,
         size,
         *listOfNotNull(
@@ -1321,14 +1321,14 @@ public class ImageOps(
      * @param kernelType @param kernelType
      * @param antialias @param antialias
      */
-    public fun <T : TNumber> scaleAndTranslate(
-        images: Operand<T>,
+    public fun scaleAndTranslate(
+        images: Operand<out TNumber>,
         size: Operand<TInt32>,
         scale: Operand<TFloat32>,
         translation: Operand<TFloat32>,
         kernelType: String? = null,
         antialias: Boolean? = null
-    ): ScaleAndTranslate = java.scaleAndTranslate<T>(    
+    ): ScaleAndTranslate = java.scaleAndTranslate(    
         images,
         size,
         scale,

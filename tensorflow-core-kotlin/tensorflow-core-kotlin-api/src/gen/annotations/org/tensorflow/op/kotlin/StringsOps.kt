@@ -771,12 +771,12 @@ public class StringsOps(
      * @see org.tensorflow.op.StringsOps.unsortedSegmentJoin
      * @param separator The separator to use when joining.
      */
-    public fun <T : TNumber, U : TNumber> unsortedSegmentJoin(
+    public fun unsortedSegmentJoin(
         inputs: Operand<TString>,
-        segmentIds: Operand<T>,
-        numSegments: Operand<U>,
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>,
         separator: String? = null
-    ): UnsortedSegmentJoin = java.unsortedSegmentJoin<T, U>(    
+    ): UnsortedSegmentJoin = java.unsortedSegmentJoin(    
         inputs,
         segmentIds,
         numSegments,

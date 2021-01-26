@@ -129,13 +129,13 @@ public class SparseOps(
      * @param sharedName The shared name for the `SparseTensorsMap` created by this op.
      *  If blank, the new Operation's unique name is used.
      */
-    public fun <T : TType> addManySparseToTensorsMap(
+    public fun addManySparseToTensorsMap(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): AddManySparseToTensorsMap = java.addManySparseToTensorsMap<T>(    
+    ): AddManySparseToTensorsMap = java.addManySparseToTensorsMap(    
         sparseIndices,
         sparseValues,
         sparseShape,
@@ -173,13 +173,13 @@ public class SparseOps(
      * @param sharedName The shared name for the `SparseTensorsMap` created by this op.
      *  If blank, the new Operation's unique name is used.
      */
-    public fun <T : TType> addSparseToTensorsMap(
+    public fun addSparseToTensorsMap(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): AddSparseToTensorsMap = java.addSparseToTensorsMap<T>(    
+    ): AddSparseToTensorsMap = java.addSparseToTensorsMap(    
         sparseIndices,
         sparseValues,
         sparseShape,
@@ -330,8 +330,8 @@ public class SparseOps(
      * @return a new instance of DeserializeSparse
      * @see org.tensorflow.op.SparseOps.deserializeSparse
      */
-    public fun <U : TType, T : TType> deserializeSparse(serializedSparse: Operand<T>,
-            dtype: Class<U>): DeserializeSparse<U> = java.deserializeSparse<U, T>(    
+    public fun <U : TType> deserializeSparse(serializedSparse: Operand<out TType>, dtype: Class<U>):
+            DeserializeSparse<U> = java.deserializeSparse<U>(    
         serializedSparse,
         dtype
         )
@@ -355,14 +355,14 @@ public class SparseOps(
      * @return a new instance of SparseAccumulatorApplyGradient
      * @see org.tensorflow.op.SparseOps.sparseAccumulatorApplyGradient
      */
-    public fun <T : TType> sparseAccumulatorApplyGradient(
+    public fun sparseAccumulatorApplyGradient(
         handle: Operand<TString>,
         localStep: Operand<TInt64>,
         gradientIndices: Operand<TInt64>,
-        gradientValues: Operand<T>,
+        gradientValues: Operand<out TType>,
         gradientShape: Operand<TInt64>,
         hasKnownShape: Boolean
-    ): SparseAccumulatorApplyGradient = java.sparseAccumulatorApplyGradient<T>(    
+    ): SparseAccumulatorApplyGradient = java.sparseAccumulatorApplyGradient(    
         handle,
         localStep,
         gradientIndices,
@@ -430,15 +430,15 @@ public class SparseOps(
      * @return a new instance of SparseAdd
      * @see org.tensorflow.op.SparseOps.sparseAdd
      */
-    public fun <T : TType, U : TNumber> sparseAdd(
+    public fun <T : TType> sparseAdd(
         aIndices: Operand<TInt64>,
         aValues: Operand<T>,
         aShape: Operand<TInt64>,
         bIndices: Operand<TInt64>,
         bValues: Operand<T>,
         bShape: Operand<TInt64>,
-        thresh: Operand<U>
-    ): SparseAdd<T> = java.sparseAdd<T, U>(    
+        thresh: Operand<out TNumber>
+    ): SparseAdd<T> = java.sparseAdd<T>(    
         aIndices,
         aValues,
         aShape,
@@ -955,14 +955,14 @@ public class SparseOps(
      * @param aIsSparse @param aIsSparse
      * @param bIsSparse @param bIsSparse
      */
-    public fun <T : TNumber, U : TNumber> sparseMatMul(
-        a: Operand<T>,
-        b: Operand<U>,
+    public fun sparseMatMul(
+        a: Operand<out TNumber>,
+        b: Operand<out TNumber>,
         transposeA: Boolean? = null,
         transposeB: Boolean? = null,
         aIsSparse: Boolean? = null,
         bIsSparse: Boolean? = null
-    ): SparseMatMul = java.sparseMatMul<T, U>(    
+    ): SparseMatMul = java.sparseMatMul(    
         a,
         b,
         *listOfNotNull(
@@ -1226,11 +1226,11 @@ public class SparseOps(
      * @return a new instance of SparseSegmentMean
      * @see org.tensorflow.op.SparseOps.sparseSegmentMean
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> sparseSegmentMean(
+    public fun <T : TNumber> sparseSegmentMean(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>
-    ): SparseSegmentMean<T> = java.sparseSegmentMean<T, U, V>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>
+    ): SparseSegmentMean<T> = java.sparseSegmentMean<T>(    
         data,
         indices,
         segmentIds
@@ -1250,12 +1250,12 @@ public class SparseOps(
      * @return a new instance of SparseSegmentMeanGrad
      * @see org.tensorflow.op.SparseOps.sparseSegmentMeanGrad
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> sparseSegmentMeanGrad(
+    public fun <T : TNumber> sparseSegmentMeanGrad(
         grad: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>,
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>,
         outputDim0: Operand<TInt32>
-    ): SparseSegmentMeanGrad<T> = java.sparseSegmentMeanGrad<T, U, V>(    
+    ): SparseSegmentMeanGrad<T> = java.sparseSegmentMeanGrad<T>(    
         grad,
         indices,
         segmentIds,
@@ -1281,13 +1281,12 @@ public class SparseOps(
      * @return a new instance of SparseSegmentMeanWithNumSegments
      * @see org.tensorflow.op.SparseOps.sparseSegmentMeanWithNumSegments
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber, W : TNumber>
-            sparseSegmentMeanWithNumSegments(
+    public fun <T : TNumber> sparseSegmentMeanWithNumSegments(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>,
-        numSegments: Operand<W>
-    ): SparseSegmentMeanWithNumSegments<T> = java.sparseSegmentMeanWithNumSegments<T, U, V, W>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): SparseSegmentMeanWithNumSegments<T> = java.sparseSegmentMeanWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
@@ -1308,11 +1307,11 @@ public class SparseOps(
      * @return a new instance of SparseSegmentSqrtN
      * @see org.tensorflow.op.SparseOps.sparseSegmentSqrtN
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> sparseSegmentSqrtN(
+    public fun <T : TNumber> sparseSegmentSqrtN(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>
-    ): SparseSegmentSqrtN<T> = java.sparseSegmentSqrtN<T, U, V>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>
+    ): SparseSegmentSqrtN<T> = java.sparseSegmentSqrtN<T>(    
         data,
         indices,
         segmentIds
@@ -1332,12 +1331,12 @@ public class SparseOps(
      * @return a new instance of SparseSegmentSqrtNGrad
      * @see org.tensorflow.op.SparseOps.sparseSegmentSqrtNGrad
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> sparseSegmentSqrtNGrad(
+    public fun <T : TNumber> sparseSegmentSqrtNGrad(
         grad: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>,
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>,
         outputDim0: Operand<TInt32>
-    ): SparseSegmentSqrtNGrad<T> = java.sparseSegmentSqrtNGrad<T, U, V>(    
+    ): SparseSegmentSqrtNGrad<T> = java.sparseSegmentSqrtNGrad<T>(    
         grad,
         indices,
         segmentIds,
@@ -1365,13 +1364,12 @@ public class SparseOps(
      * @return a new instance of SparseSegmentSqrtNWithNumSegments
      * @see org.tensorflow.op.SparseOps.sparseSegmentSqrtNWithNumSegments
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber, W : TNumber>
-            sparseSegmentSqrtNWithNumSegments(
+    public fun <T : TNumber> sparseSegmentSqrtNWithNumSegments(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>,
-        numSegments: Operand<W>
-    ): SparseSegmentSqrtNWithNumSegments<T> = java.sparseSegmentSqrtNWithNumSegments<T, U, V, W>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): SparseSegmentSqrtNWithNumSegments<T> = java.sparseSegmentSqrtNWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
@@ -1419,11 +1417,11 @@ public class SparseOps(
      * @return a new instance of SparseSegmentSum
      * @see org.tensorflow.op.SparseOps.sparseSegmentSum
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> sparseSegmentSum(
+    public fun <T : TNumber> sparseSegmentSum(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>
-    ): SparseSegmentSum<T> = java.sparseSegmentSum<T, U, V>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>
+    ): SparseSegmentSum<T> = java.sparseSegmentSum<T>(    
         data,
         indices,
         segmentIds
@@ -1469,12 +1467,12 @@ public class SparseOps(
      * @return a new instance of SparseSegmentSumWithNumSegments
      * @see org.tensorflow.op.SparseOps.sparseSegmentSumWithNumSegments
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber, W : TNumber> sparseSegmentSumWithNumSegments(
+    public fun <T : TNumber> sparseSegmentSumWithNumSegments(
         `data`: Operand<T>,
-        indices: Operand<U>,
-        segmentIds: Operand<V>,
-        numSegments: Operand<W>
-    ): SparseSegmentSumWithNumSegments<T> = java.sparseSegmentSumWithNumSegments<T, U, V, W>(    
+        indices: Operand<out TNumber>,
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): SparseSegmentSumWithNumSegments<T> = java.sparseSegmentSumWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
@@ -1752,14 +1750,14 @@ public class SparseOps(
      * @param adjointB Use the adjoint of B in the matrix multiply.  If B is complex, this
      *  is transpose(conj(B)).  Otherwise it's transpose(B).
      */
-    public fun <U : TType, T : TNumber> sparseTensorDenseMatMul(
-        aIndices: Operand<T>,
+    public fun <U : TType> sparseTensorDenseMatMul(
+        aIndices: Operand<out TNumber>,
         aValues: Operand<U>,
         aShape: Operand<TInt64>,
         b: Operand<U>,
         adjointA: Boolean? = null,
         adjointB: Boolean? = null
-    ): SparseTensorDenseMatMul<U> = java.sparseTensorDenseMatMul<U, T>(    
+    ): SparseTensorDenseMatMul<U> = java.sparseTensorDenseMatMul<U>(    
         aIndices,
         aValues,
         aShape,
@@ -2023,9 +2021,8 @@ public class SparseOps(
      * @see org.tensorflow.op.SparseOps.deserializeSparse
      */
     @JvmName("deserializeSparseReified")
-    public inline fun <reified U : TType, T : TType>
-            deserializeSparse(serializedSparse: Operand<T>): DeserializeSparse<U> =
-            deserializeSparse<U, T>(serializedSparse, U::class.java)
+    public inline fun <reified U : TType> deserializeSparse(serializedSparse: Operand<out TType>):
+            DeserializeSparse<U> = deserializeSparse<U>(serializedSparse, U::class.java)
 
     /**
      * Extracts the average sparse gradient in a SparseConditionalAccumulator.

@@ -76,14 +76,14 @@ public class DtypesOps(
      * @param fill The value to pad if width > -1.  If empty, pads with spaces.
      *  Another typical value is '0'.  String cannot be longer than 1 character.
      */
-    public fun <T : TType> asString(
-        input: Operand<T>,
+    public fun asString(
+        input: Operand<out TType>,
         precision: Long? = null,
         scientific: Boolean? = null,
         shortest: Boolean? = null,
         width: Long? = null,
         fill: String? = null
-    ): AsString = java.asString<T>(    
+    ): AsString = java.asString(    
         input,
         *listOfNotNull(
             precision?.let{ org.tensorflow.op.dtypes.AsString.precision(it) },
@@ -105,11 +105,11 @@ public class DtypesOps(
      * @see org.tensorflow.op.DtypesOps.cast
      * @param Truncate @param Truncate
      */
-    public fun <U : TType, T : TType> cast(
-        x: Operand<T>,
+    public fun <U : TType> cast(
+        x: Operand<out TType>,
         DstT: Class<U>,
         Truncate: Boolean? = null
-    ): Cast<U> = java.cast<U, T>(    
+    ): Cast<U> = java.cast<U>(    
         x,
         DstT,
         *listOfNotNull(
@@ -164,8 +164,8 @@ public class DtypesOps(
      * @param Truncate @param Truncate
      */
     @JvmName("castReified")
-    public inline fun <reified U : TType, T : TType> cast(x: Operand<T>, Truncate: Boolean? = null):
-            Cast<U> = cast<U, T>(x, U::class.java, Truncate)
+    public inline fun <reified U : TType> cast(x: Operand<out TType>, Truncate: Boolean? = null):
+            Cast<U> = cast<U>(x, U::class.java, Truncate)
 
     /**
      * Converts two real numbers to a complex number.

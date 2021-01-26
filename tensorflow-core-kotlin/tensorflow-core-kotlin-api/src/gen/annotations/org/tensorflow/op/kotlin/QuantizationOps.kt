@@ -121,14 +121,14 @@ public class QuantizationOps(
      * @param narrowRange @param narrowRange
      * @param axis @param axis
      */
-    public fun <T : TType> dequantize(
-        input: Operand<T>,
+    public fun dequantize(
+        input: Operand<out TType>,
         minRange: Operand<TFloat32>,
         maxRange: Operand<TFloat32>,
         mode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): Dequantize<TFloat32> = java.dequantize<T>(    
+    ): Dequantize<TFloat32> = java.dequantize(    
         input,
         minRange,
         maxRange,
@@ -206,15 +206,15 @@ public class QuantizationOps(
      * @param narrowRange @param narrowRange
      * @param axis @param axis
      */
-    public fun <U : TNumber, T : TType> dequantize(
-        input: Operand<T>,
+    public fun <U : TNumber> dequantize(
+        input: Operand<out TType>,
         minRange: Operand<TFloat32>,
         maxRange: Operand<TFloat32>,
         dtype: Class<U>,
         mode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): Dequantize<U> = java.dequantize<U, T>(    
+    ): Dequantize<U> = java.dequantize<U>(    
         input,
         minRange,
         maxRange,
@@ -759,12 +759,12 @@ public class QuantizationOps(
      * @return a new instance of QuantizeDownAndShrinkRange
      * @see org.tensorflow.op.QuantizationOps.quantizeDownAndShrinkRange
      */
-    public fun <U : TType, T : TType> quantizeDownAndShrinkRange(
-        input: Operand<T>,
+    public fun <U : TType> quantizeDownAndShrinkRange(
+        input: Operand<out TType>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizeDownAndShrinkRange<U> = java.quantizeDownAndShrinkRange<U, T>(    
+    ): QuantizeDownAndShrinkRange<U> = java.quantizeDownAndShrinkRange<U>(    
         input,
         inputMin,
         inputMax,
@@ -810,11 +810,11 @@ public class QuantizationOps(
      * @return a new instance of RequantizationRange
      * @see org.tensorflow.op.QuantizationOps.requantizationRange
      */
-    public fun <T : TType> requantizationRange(
-        input: Operand<T>,
+    public fun requantizationRange(
+        input: Operand<out TType>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): RequantizationRange = java.requantizationRange<T>(    
+    ): RequantizationRange = java.requantizationRange(    
         input,
         inputMin,
         inputMax
@@ -843,14 +843,14 @@ public class QuantizationOps(
      * @return a new instance of Requantize
      * @see org.tensorflow.op.QuantizationOps.requantize
      */
-    public fun <U : TType, T : TType> requantize(
-        input: Operand<T>,
+    public fun <U : TType> requantize(
+        input: Operand<out TType>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>,
         requestedOutputMin: Operand<TFloat32>,
         requestedOutputMax: Operand<TFloat32>,
         outType: Class<U>
-    ): Requantize<U> = java.requantize<U, T>(    
+    ): Requantize<U> = java.requantize<U>(    
         input,
         inputMin,
         inputMax,
@@ -927,14 +927,14 @@ public class QuantizationOps(
      * @param axis @param axis
      */
     @JvmName("dequantizeReified")
-    public inline fun <reified U : TNumber, T : TType> dequantizeTyped(
-        input: Operand<T>,
+    public inline fun <reified U : TNumber> dequantizeTyped(
+        input: Operand<out TType>,
         minRange: Operand<TFloat32>,
         maxRange: Operand<TFloat32>,
         mode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): Dequantize<U> = dequantize<U, T>(input, minRange, maxRange, U::class.java, mode, narrowRange,
+    ): Dequantize<U> = dequantize<U>(input, minRange, maxRange, U::class.java, mode, narrowRange,
             axis)
 
     /**
@@ -1124,11 +1124,11 @@ public class QuantizationOps(
      * @see org.tensorflow.op.QuantizationOps.quantizeDownAndShrinkRange
      */
     @JvmName("quantizeDownAndShrinkRangeReified")
-    public inline fun <reified U : TType, T : TType> quantizeDownAndShrinkRange(
-        input: Operand<T>,
+    public inline fun <reified U : TType> quantizeDownAndShrinkRange(
+        input: Operand<out TType>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): QuantizeDownAndShrinkRange<U> = quantizeDownAndShrinkRange<U, T>(input, inputMin, inputMax,
+    ): QuantizeDownAndShrinkRange<U> = quantizeDownAndShrinkRange<U>(input, inputMin, inputMax,
             U::class.java)
 
     /**
@@ -1155,12 +1155,12 @@ public class QuantizationOps(
      * @see org.tensorflow.op.QuantizationOps.requantize
      */
     @JvmName("requantizeReified")
-    public inline fun <reified U : TType, T : TType> requantize(
-        input: Operand<T>,
+    public inline fun <reified U : TType> requantize(
+        input: Operand<out TType>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>,
         requestedOutputMin: Operand<TFloat32>,
         requestedOutputMax: Operand<TFloat32>
-    ): Requantize<U> = requantize<U, T>(input, inputMin, inputMax, requestedOutputMin,
+    ): Requantize<U> = requantize<U>(input, inputMin, inputMax, requestedOutputMin,
             requestedOutputMax, U::class.java)
 }

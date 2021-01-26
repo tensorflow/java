@@ -103,8 +103,8 @@ public class SummaryOps(
      * @return a new instance of HistogramSummary
      * @see org.tensorflow.op.SummaryOps.histogramSummary
      */
-    public fun <T : TNumber> histogramSummary(tag: Operand<TString>, values: Operand<T>):
-            HistogramSummary = java.histogramSummary<T>(    
+    public fun histogramSummary(tag: Operand<TString>, values: Operand<out TNumber>):
+            HistogramSummary = java.histogramSummary(    
         tag,
         values
         )
@@ -168,12 +168,12 @@ public class SummaryOps(
      * @param maxImages Max number of batch elements to generate images for.
      * @param badColor Color to use for pixels with non-finite values.
      */
-    public fun <T : TNumber> imageSummary(
+    public fun imageSummary(
         tag: Operand<TString>,
-        tensor: Operand<T>,
+        tensor: Operand<out TNumber>,
         maxImages: Long? = null,
         badColor: Tensor? = null
-    ): ImageSummary = java.imageSummary<T>(    
+    ): ImageSummary = java.imageSummary(    
         tag,
         tensor,
         *listOfNotNull(
@@ -213,8 +213,8 @@ public class SummaryOps(
      * @return a new instance of ScalarSummary
      * @see org.tensorflow.op.SummaryOps.scalarSummary
      */
-    public fun <T : TNumber> scalarSummary(tags: Operand<TString>, values: Operand<T>):
-            ScalarSummary = java.scalarSummary<T>(    
+    public fun scalarSummary(tags: Operand<TString>, values: Operand<out TNumber>): ScalarSummary =
+            java.scalarSummary(    
         tags,
         values
         )
@@ -229,11 +229,11 @@ public class SummaryOps(
      * @return a new instance of TensorSummary
      * @see org.tensorflow.op.SummaryOps.tensorSummary
      */
-    public fun <T : TType> tensorSummary(
+    public fun tensorSummary(
         tag: Operand<TString>,
-        tensor: Operand<T>,
+        tensor: Operand<out TType>,
         serializedSummaryMetadata: Operand<TString>
-    ): TensorSummary = java.tensorSummary<T>(    
+    ): TensorSummary = java.tensorSummary(    
         tag,
         tensor,
         serializedSummaryMetadata

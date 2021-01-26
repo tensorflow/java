@@ -78,9 +78,9 @@ public class NnRawOps(
      * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnRawOps.sparseSoftmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
-            labels: Operand<U>): SparseSoftmaxCrossEntropyWithLogits<T> =
-            java.sparseSoftmaxCrossEntropyWithLogits<T, U>(    
+    public fun <T : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
+            labels: Operand<out TNumber>): SparseSoftmaxCrossEntropyWithLogits<T> =
+            java.sparseSoftmaxCrossEntropyWithLogits<T>(    
         features,
         labels
         )

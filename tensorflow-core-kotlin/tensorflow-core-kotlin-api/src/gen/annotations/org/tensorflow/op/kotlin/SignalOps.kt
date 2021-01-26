@@ -234,8 +234,8 @@ public class SignalOps(
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
      */
-    public fun <T : TType> irfft(input: Operand<T>, fftLength: Operand<TInt32>): Irfft<TFloat32> =
-            java.irfft<T>(    
+    public fun irfft(input: Operand<out TType>, fftLength: Operand<TInt32>): Irfft<TFloat32> =
+            java.irfft(    
         input,
         fftLength
         )
@@ -264,11 +264,11 @@ public class SignalOps(
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
      */
-    public fun <U : TNumber, T : TType> irfft(
-        input: Operand<T>,
+    public fun <U : TNumber> irfft(
+        input: Operand<out TType>,
         fftLength: Operand<TInt32>,
         Treal: Class<U>
-    ): Irfft<U> = java.irfft<U, T>(    
+    ): Irfft<U> = java.irfft<U>(    
         input,
         fftLength,
         Treal
@@ -298,8 +298,8 @@ public class SignalOps(
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
-    public fun <T : TType> irfft2d(input: Operand<T>, fftLength: Operand<TInt32>): Irfft2d<TFloat32>
-            = java.irfft2d<T>(    
+    public fun irfft2d(input: Operand<out TType>, fftLength: Operand<TInt32>): Irfft2d<TFloat32> =
+            java.irfft2d(    
         input,
         fftLength
         )
@@ -329,11 +329,11 @@ public class SignalOps(
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
-    public fun <U : TNumber, T : TType> irfft2d(
-        input: Operand<T>,
+    public fun <U : TNumber> irfft2d(
+        input: Operand<out TType>,
         fftLength: Operand<TInt32>,
         Treal: Class<U>
-    ): Irfft2d<U> = java.irfft2d<U, T>(    
+    ): Irfft2d<U> = java.irfft2d<U>(    
         input,
         fftLength,
         Treal
@@ -363,8 +363,8 @@ public class SignalOps(
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
-    public fun <T : TType> irfft3d(input: Operand<T>, fftLength: Operand<TInt32>): Irfft3d<TFloat32>
-            = java.irfft3d<T>(    
+    public fun irfft3d(input: Operand<out TType>, fftLength: Operand<TInt32>): Irfft3d<TFloat32> =
+            java.irfft3d(    
         input,
         fftLength
         )
@@ -394,11 +394,11 @@ public class SignalOps(
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
-    public fun <U : TNumber, T : TType> irfft3d(
-        input: Operand<T>,
+    public fun <U : TNumber> irfft3d(
+        input: Operand<out TType>,
         fftLength: Operand<TInt32>,
         Treal: Class<U>
-    ): Irfft3d<U> = java.irfft3d<U, T>(    
+    ): Irfft3d<U> = java.irfft3d<U>(    
         input,
         fftLength,
         Treal
@@ -425,11 +425,11 @@ public class SignalOps(
      * @return a new instance of Rfft
      * @see org.tensorflow.op.SignalOps.rfft
      */
-    public fun <U : TType, T : TNumber> rfft(
-        input: Operand<T>,
+    public fun <U : TType> rfft(
+        input: Operand<out TNumber>,
         fftLength: Operand<TInt32>,
         Tcomplex: Class<U>
-    ): Rfft<U> = java.rfft<U, T>(    
+    ): Rfft<U> = java.rfft<U>(    
         input,
         fftLength,
         Tcomplex
@@ -457,11 +457,11 @@ public class SignalOps(
      * @return a new instance of Rfft2d
      * @see org.tensorflow.op.SignalOps.rfft2d
      */
-    public fun <U : TType, T : TNumber> rfft2d(
-        input: Operand<T>,
+    public fun <U : TType> rfft2d(
+        input: Operand<out TNumber>,
         fftLength: Operand<TInt32>,
         Tcomplex: Class<U>
-    ): Rfft2d<U> = java.rfft2d<U, T>(    
+    ): Rfft2d<U> = java.rfft2d<U>(    
         input,
         fftLength,
         Tcomplex
@@ -489,11 +489,11 @@ public class SignalOps(
      * @return a new instance of Rfft3d
      * @see org.tensorflow.op.SignalOps.rfft3d
      */
-    public fun <U : TType, T : TNumber> rfft3d(
-        input: Operand<T>,
+    public fun <U : TType> rfft3d(
+        input: Operand<out TNumber>,
         fftLength: Operand<TInt32>,
         Tcomplex: Class<U>
-    ): Rfft3d<U> = java.rfft3d<U, T>(    
+    ): Rfft3d<U> = java.rfft3d<U>(    
         input,
         fftLength,
         Tcomplex
@@ -524,8 +524,8 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.irfft
      */
     @JvmName("irfftReified")
-    public inline fun <reified U : TNumber, T : TType> irfftTyped(input: Operand<T>,
-            fftLength: Operand<TInt32>): Irfft<U> = irfft<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TNumber> irfftTyped(input: Operand<out TType>,
+            fftLength: Operand<TInt32>): Irfft<U> = irfft<U>(input, fftLength, U::class.java)
 
     /**
      * Inverse 2D real-valued fast Fourier transform.
@@ -553,8 +553,8 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
     @JvmName("irfft2dReified")
-    public inline fun <reified U : TNumber, T : TType> irfft2dTyped(input: Operand<T>,
-            fftLength: Operand<TInt32>): Irfft2d<U> = irfft2d<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TNumber> irfft2dTyped(input: Operand<out TType>,
+            fftLength: Operand<TInt32>): Irfft2d<U> = irfft2d<U>(input, fftLength, U::class.java)
 
     /**
      * Inverse 3D real-valued fast Fourier transform.
@@ -582,8 +582,8 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
     @JvmName("irfft3dReified")
-    public inline fun <reified U : TNumber, T : TType> irfft3dTyped(input: Operand<T>,
-            fftLength: Operand<TInt32>): Irfft3d<U> = irfft3d<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TNumber> irfft3dTyped(input: Operand<out TType>,
+            fftLength: Operand<TInt32>): Irfft3d<U> = irfft3d<U>(input, fftLength, U::class.java)
 
     /**
      * Real-valued fast Fourier transform.
@@ -607,8 +607,8 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.rfft
      */
     @JvmName("rfftReified")
-    public inline fun <reified U : TType, T : TNumber> rfft(input: Operand<T>,
-            fftLength: Operand<TInt32>): Rfft<U> = rfft<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TType> rfft(input: Operand<out TNumber>,
+            fftLength: Operand<TInt32>): Rfft<U> = rfft<U>(input, fftLength, U::class.java)
 
     /**
      * 2D real-valued fast Fourier transform.
@@ -633,8 +633,8 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.rfft2d
      */
     @JvmName("rfft2dReified")
-    public inline fun <reified U : TType, T : TNumber> rfft2d(input: Operand<T>,
-            fftLength: Operand<TInt32>): Rfft2d<U> = rfft2d<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TType> rfft2d(input: Operand<out TNumber>,
+            fftLength: Operand<TInt32>): Rfft2d<U> = rfft2d<U>(input, fftLength, U::class.java)
 
     /**
      * 3D real-valued fast Fourier transform.
@@ -659,6 +659,6 @@ public class SignalOps(
      * @see org.tensorflow.op.SignalOps.rfft3d
      */
     @JvmName("rfft3dReified")
-    public inline fun <reified U : TType, T : TNumber> rfft3d(input: Operand<T>,
-            fftLength: Operand<TInt32>): Rfft3d<U> = rfft3d<U, T>(input, fftLength, U::class.java)
+    public inline fun <reified U : TType> rfft3d(input: Operand<out TNumber>,
+            fftLength: Operand<TInt32>): Rfft3d<U> = rfft3d<U>(input, fftLength, U::class.java)
 }

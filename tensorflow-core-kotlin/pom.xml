@@ -47,5 +47,14 @@
     <kotlin.version>1.4.21</kotlin.version>
     <kotlin.jvmTarget>1.8</kotlin.jvmTarget>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>jdk11</id>
+      <properties>
+        <kotlin.jvmTarget>11</kotlin.jvmTarget>
+      </properties>
+    </profile>
+  </profiles>
 </project>
 

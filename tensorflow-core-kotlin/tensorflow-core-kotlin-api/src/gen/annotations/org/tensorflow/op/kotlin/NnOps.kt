@@ -719,15 +719,15 @@ public class NnOps(
      *  value of `data_format`, see above for details. Dilations in the batch and
      *  depth dimensions must be 1.
      */
-    public fun <U : TNumber, T : TNumber> conv3dBackpropInput(
-        inputSizes: Operand<T>,
+    public fun <U : TNumber> conv3dBackpropInput(
+        inputSizes: Operand<out TNumber>,
         filter: Operand<U>,
         outBackprop: Operand<U>,
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv3dBackpropInput<U> = java.conv3dBackpropInput<U, T>(    
+    ): Conv3dBackpropInput<U> = java.conv3dBackpropInput<U>(    
         inputSizes,
         filter,
         outBackprop,
@@ -2411,15 +2411,15 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.maxPoolGradGradWithArgmax
      * @param includeBatchInIndex Whether to include batch dimension in flattened index of `argmax`.
      */
-    public fun <T : TNumber, U : TNumber> maxPoolGradGradWithArgmax(
+    public fun <T : TNumber> maxPoolGradGradWithArgmax(
         input: Operand<T>,
         grad: Operand<T>,
-        argmax: Operand<U>,
+        argmax: Operand<out TNumber>,
         ksize: List<Long>,
         strides: List<Long>,
         padding: String,
         includeBatchInIndex: Boolean? = null
-    ): MaxPoolGradGradWithArgmax<T> = java.maxPoolGradGradWithArgmax<T, U>(    
+    ): MaxPoolGradGradWithArgmax<T> = java.maxPoolGradGradWithArgmax<T>(    
         input,
         grad,
         argmax,
@@ -2674,15 +2674,15 @@ public class NnOps(
      * @return a new instance of QuantizedBiasAdd
      * @see org.tensorflow.op.NnOps.quantizedBiasAdd
      */
-    public fun <V : TType, T : TType, U : TType> quantizedBiasAdd(
-        input: Operand<T>,
-        bias: Operand<U>,
+    public fun <V : TType> quantizedBiasAdd(
+        input: Operand<out TType>,
+        bias: Operand<out TType>,
         minInput: Operand<TFloat32>,
         maxInput: Operand<TFloat32>,
         minBias: Operand<TFloat32>,
         maxBias: Operand<TFloat32>,
         outType: Class<V>
-    ): QuantizedBiasAdd<V> = java.quantizedBiasAdd<V, T, U>(    
+    ): QuantizedBiasAdd<V> = java.quantizedBiasAdd<V>(    
         input,
         bias,
         minInput,
@@ -2720,9 +2720,9 @@ public class NnOps(
      *  value of `data_format`, see above for details. Dilations in the batch and
      *  depth dimensions must be 1.
      */
-    public fun <V : TType, T : TType, U : TType> quantizedConv2d(
-        input: Operand<T>,
-        filter: Operand<U>,
+    public fun <V : TType> quantizedConv2d(
+        input: Operand<out TType>,
+        filter: Operand<out TType>,
         minInput: Operand<TFloat32>,
         maxInput: Operand<TFloat32>,
         minFilter: Operand<TFloat32>,
@@ -2731,7 +2731,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dilations: List<Long>? = null
-    ): QuantizedConv2d<V> = java.quantizedConv2d<V, T, U>(    
+    ): QuantizedConv2d<V> = java.quantizedConv2d<V>(    
         input,
         filter,
         minInput,
@@ -2828,12 +2828,12 @@ public class NnOps(
      * @return a new instance of QuantizedRelu
      * @see org.tensorflow.op.NnOps.quantizedRelu
      */
-    public fun <U : TType, T : TType> quantizedRelu(
-        features: Operand<T>,
+    public fun <U : TType> quantizedRelu(
+        features: Operand<out TType>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedRelu<U> = java.quantizedRelu<U, T>(    
+    ): QuantizedRelu<U> = java.quantizedRelu<U>(    
         features,
         minFeatures,
         maxFeatures,
@@ -2851,12 +2851,12 @@ public class NnOps(
      * @return a new instance of QuantizedRelu6
      * @see org.tensorflow.op.NnOps.quantizedRelu6
      */
-    public fun <U : TType, T : TType> quantizedRelu6(
-        features: Operand<T>,
+    public fun <U : TType> quantizedRelu6(
+        features: Operand<out TType>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedRelu6<U> = java.quantizedRelu6<U, T>(    
+    ): QuantizedRelu6<U> = java.quantizedRelu6<U>(    
         features,
         minFeatures,
         maxFeatures,
@@ -2875,13 +2875,13 @@ public class NnOps(
      * @return a new instance of QuantizedReluX
      * @see org.tensorflow.op.NnOps.quantizedReluX
      */
-    public fun <U : TType, T : TType> quantizedReluX(
-        features: Operand<T>,
+    public fun <U : TType> quantizedReluX(
+        features: Operand<out TType>,
         maxValue: Operand<TFloat32>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedReluX<U> = java.quantizedReluX<U, T>(    
+    ): QuantizedReluX<U> = java.quantizedReluX<U>(    
         features,
         maxValue,
         minFeatures,
@@ -3175,11 +3175,11 @@ public class NnOps(
      * @return a new instance of SpaceToBatch
      * @see org.tensorflow.op.NnOps.spaceToBatch
      */
-    public fun <T : TType, U : TNumber> spaceToBatch(
+    public fun <T : TType> spaceToBatch(
         input: Operand<T>,
-        paddings: Operand<U>,
+        paddings: Operand<out TNumber>,
         blockSize: Long
-    ): SpaceToBatch<T> = java.spaceToBatch<T, U>(    
+    ): SpaceToBatch<T> = java.spaceToBatch<T>(    
         input,
         paddings,
         blockSize
@@ -3558,15 +3558,15 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.quantizedBiasAdd
      */
     @JvmName("quantizedBiasAddReified")
-    public inline fun <reified V : TType, T : TType, U : TType> quantizedBiasAdd(
-        input: Operand<T>,
-        bias: Operand<U>,
+    public inline fun <reified V : TType> quantizedBiasAdd(
+        input: Operand<out TType>,
+        bias: Operand<out TType>,
         minInput: Operand<TFloat32>,
         maxInput: Operand<TFloat32>,
         minBias: Operand<TFloat32>,
         maxBias: Operand<TFloat32>
-    ): QuantizedBiasAdd<V> = quantizedBiasAdd<V, T, U>(input, bias, minInput, maxInput, minBias,
-            maxBias, V::class.java)
+    ): QuantizedBiasAdd<V> = quantizedBiasAdd<V>(input, bias, minInput, maxInput, minBias, maxBias,
+            V::class.java)
 
     /**
      * Computes a 2D convolution given quantized 4D input and filter tensors.
@@ -3597,9 +3597,9 @@ public class NnOps(
      *  depth dimensions must be 1.
      */
     @JvmName("quantizedConv2dReified")
-    public inline fun <reified V : TType, T : TType, U : TType> quantizedConv2d(
-        input: Operand<T>,
-        filter: Operand<U>,
+    public inline fun <reified V : TType> quantizedConv2d(
+        input: Operand<out TType>,
+        filter: Operand<out TType>,
         minInput: Operand<TFloat32>,
         maxInput: Operand<TFloat32>,
         minFilter: Operand<TFloat32>,
@@ -3607,7 +3607,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dilations: List<Long>? = null
-    ): QuantizedConv2d<V> = quantizedConv2d<V, T, U>(input, filter, minInput, maxInput, minFilter,
+    ): QuantizedConv2d<V> = quantizedConv2d<V>(input, filter, minInput, maxInput, minFilter,
             maxFilter, V::class.java, strides, padding, dilations)
 
     /**
@@ -3622,11 +3622,11 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.quantizedRelu
      */
     @JvmName("quantizedReluReified")
-    public inline fun <reified U : TType, T : TType> quantizedRelu(
-        features: Operand<T>,
+    public inline fun <reified U : TType> quantizedRelu(
+        features: Operand<out TType>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>
-    ): QuantizedRelu<U> = quantizedRelu<U, T>(features, minFeatures, maxFeatures, U::class.java)
+    ): QuantizedRelu<U> = quantizedRelu<U>(features, minFeatures, maxFeatures, U::class.java)
 
     /**
      * Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
@@ -3640,11 +3640,11 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.quantizedRelu6
      */
     @JvmName("quantizedRelu6Reified")
-    public inline fun <reified U : TType, T : TType> quantizedRelu6(
-        features: Operand<T>,
+    public inline fun <reified U : TType> quantizedRelu6(
+        features: Operand<out TType>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>
-    ): QuantizedRelu6<U> = quantizedRelu6<U, T>(features, minFeatures, maxFeatures, U::class.java)
+    ): QuantizedRelu6<U> = quantizedRelu6<U>(features, minFeatures, maxFeatures, U::class.java)
 
     /**
      * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
@@ -3659,11 +3659,11 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.quantizedReluX
      */
     @JvmName("quantizedReluXReified")
-    public inline fun <reified U : TType, T : TType> quantizedReluX(
-        features: Operand<T>,
+    public inline fun <reified U : TType> quantizedReluX(
+        features: Operand<out TType>,
         maxValue: Operand<TFloat32>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>
-    ): QuantizedReluX<U> = quantizedReluX<U, T>(features, maxValue, minFeatures, maxFeatures,
+    ): QuantizedReluX<U> = quantizedReluX<U>(features, maxValue, minFeatures, maxFeatures,
             U::class.java)
 }

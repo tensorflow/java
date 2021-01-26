@@ -173,12 +173,12 @@ public class RandomOps(
      *  generator is seeded by the given seed.  Otherwise, a random seed is used.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <T : TNumber> multinomial(
-        logits: Operand<T>,
+    public fun multinomial(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
         seed: Long? = null,
         seed2: Long? = null
-    ): Multinomial<TInt64> = java.multinomial<T>(    
+    ): Multinomial<TInt64> = java.multinomial(    
         logits,
         numSamples,
         *listOfNotNull(
@@ -203,13 +203,13 @@ public class RandomOps(
      *  generator is seeded by the given seed.  Otherwise, a random seed is used.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> multinomial(
-        logits: Operand<T>,
+    public fun <U : TNumber> multinomial(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
         outputDtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): Multinomial<U> = java.multinomial<U, T>(    
+    ): Multinomial<U> = java.multinomial<U>(    
         logits,
         numSamples,
         outputDtype,
@@ -240,15 +240,15 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> parameterizedTruncatedNormal(
-        shape: Operand<T>,
+    public fun <U : TNumber> parameterizedTruncatedNormal(
+        shape: Operand<out TNumber>,
         means: Operand<U>,
         stdevs: Operand<U>,
         minvals: Operand<U>,
         maxvals: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): ParameterizedTruncatedNormal<U> = java.parameterizedTruncatedNormal<U, T>(    
+    ): ParameterizedTruncatedNormal<U> = java.parameterizedTruncatedNormal<U>(    
         shape,
         means,
         stdevs,
@@ -280,12 +280,12 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> randomGamma(
-        shape: Operand<T>,
+    public fun <U : TNumber> randomGamma(
+        shape: Operand<out TNumber>,
         alpha: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomGamma<U> = java.randomGamma<U, T>(    
+    ): RandomGamma<U> = java.randomGamma<U>(    
         shape,
         alpha,
         *listOfNotNull(
@@ -320,12 +320,12 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <T : TNumber, U : TNumber> randomPoisson(
-        shape: Operand<T>,
-        rate: Operand<U>,
+    public fun randomPoisson(
+        shape: Operand<out TNumber>,
+        rate: Operand<out TNumber>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomPoisson<TInt64> = java.randomPoisson<T, U>(    
+    ): RandomPoisson<TInt64> = java.randomPoisson(    
         shape,
         rate,
         *listOfNotNull(
@@ -361,13 +361,13 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> randomPoisson(
-        shape: Operand<T>,
-        rate: Operand<U>,
+    public fun <V : TNumber> randomPoisson(
+        shape: Operand<out TNumber>,
+        rate: Operand<out TNumber>,
         dtype: Class<V>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomPoisson<V> = java.randomPoisson<V, T, U>(    
+    ): RandomPoisson<V> = java.randomPoisson<V>(    
         shape,
         rate,
         dtype,
@@ -428,12 +428,12 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> randomStandardNormal(
-        shape: Operand<T>,
+    public fun <U : TNumber> randomStandardNormal(
+        shape: Operand<out TNumber>,
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomStandardNormal<U> = java.randomStandardNormal<U, T>(    
+    ): RandomStandardNormal<U> = java.randomStandardNormal<U>(    
         shape,
         dtype,
         *listOfNotNull(
@@ -459,12 +459,12 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> randomUniform(
-        shape: Operand<T>,
+    public fun <U : TNumber> randomUniform(
+        shape: Operand<out TNumber>,
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomUniform<U> = java.randomUniform<U, T>(    
+    ): RandomUniform<U> = java.randomUniform<U>(    
         shape,
         dtype,
         *listOfNotNull(
@@ -496,13 +496,13 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> randomUniformInt(
-        shape: Operand<T>,
+    public fun <U : TNumber> randomUniformInt(
+        shape: Operand<out TNumber>,
         minval: Operand<U>,
         maxval: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomUniformInt<U> = java.randomUniformInt<U, T>(    
+    ): RandomUniformInt<U> = java.randomUniformInt<U>(    
         shape,
         minval,
         maxval,
@@ -559,13 +559,13 @@ public class RandomOps(
      * @return a new instance of StatefulRandomBinomial
      * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
      */
-    public fun <T : TNumber, U : TNumber> statefulRandomBinomial(
+    public fun <U : TNumber> statefulRandomBinomial(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>,
+        shape: Operand<out TNumber>,
         counts: Operand<U>,
         probs: Operand<U>
-    ): StatefulRandomBinomial<TInt64> = java.statefulRandomBinomial<T, U>(    
+    ): StatefulRandomBinomial<TInt64> = java.statefulRandomBinomial<U>(    
         resource,
         algorithm,
         shape,
@@ -585,14 +585,14 @@ public class RandomOps(
      * @return a new instance of StatefulRandomBinomial
      * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> statefulRandomBinomial(
+    public fun <V : TNumber, U : TNumber> statefulRandomBinomial(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>,
+        shape: Operand<out TNumber>,
         counts: Operand<U>,
         probs: Operand<U>,
         dtype: Class<V>
-    ): StatefulRandomBinomial<V> = java.statefulRandomBinomial<V, T, U>(    
+    ): StatefulRandomBinomial<V> = java.statefulRandomBinomial<V, U>(    
         resource,
         algorithm,
         shape,
@@ -613,11 +613,11 @@ public class RandomOps(
      * @return a new instance of StatefulStandardNormal
      * @see org.tensorflow.op.RandomOps.statefulStandardNormal
      */
-    public fun <T : TType> statefulStandardNormal(
+    public fun statefulStandardNormal(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>
-    ): StatefulStandardNormal<TFloat32> = java.statefulStandardNormal<T>(    
+        shape: Operand<out TType>
+    ): StatefulStandardNormal<TFloat32> = java.statefulStandardNormal(    
         resource,
         algorithm,
         shape
@@ -636,12 +636,12 @@ public class RandomOps(
      * @return a new instance of StatefulStandardNormal
      * @see org.tensorflow.op.RandomOps.statefulStandardNormal
      */
-    public fun <U : TType, T : TType> statefulStandardNormal(
+    public fun <U : TType> statefulStandardNormal(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>,
+        shape: Operand<out TType>,
         dtype: Class<U>
-    ): StatefulStandardNormal<U> = java.statefulStandardNormal<U, T>(    
+    ): StatefulStandardNormal<U> = java.statefulStandardNormal<U>(    
         resource,
         algorithm,
         shape,
@@ -660,11 +660,11 @@ public class RandomOps(
      * @return a new instance of StatelessMultinomial
      * @see org.tensorflow.op.RandomOps.statelessMultinomial
      */
-    public fun <T : TNumber, U : TNumber> statelessMultinomial(
-        logits: Operand<T>,
+    public fun statelessMultinomial(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
-        seed: Operand<U>
-    ): StatelessMultinomial<TInt64> = java.statelessMultinomial<T, U>(    
+        seed: Operand<out TNumber>
+    ): StatelessMultinomial<TInt64> = java.statelessMultinomial(    
         logits,
         numSamples,
         seed
@@ -683,12 +683,12 @@ public class RandomOps(
      * @return a new instance of StatelessMultinomial
      * @see org.tensorflow.op.RandomOps.statelessMultinomial
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> statelessMultinomial(
-        logits: Operand<T>,
+    public fun <V : TNumber> statelessMultinomial(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
-        seed: Operand<U>,
+        seed: Operand<out TNumber>,
         outputDtype: Class<V>
-    ): StatelessMultinomial<V> = java.statelessMultinomial<V, T, U>(    
+    ): StatelessMultinomial<V> = java.statelessMultinomial<V>(    
         logits,
         numSamples,
         seed,
@@ -708,8 +708,8 @@ public class RandomOps(
      * @return a new instance of StatelessRandomNormal
      * @see org.tensorflow.op.RandomOps.statelessRandomNormal
      */
-    public fun <T : TNumber, U : TNumber> statelessRandomNormal(shape: Operand<T>,
-            seed: Operand<U>): StatelessRandomNormal<TFloat32> = java.statelessRandomNormal<T, U>(    
+    public fun statelessRandomNormal(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
+            StatelessRandomNormal<TFloat32> = java.statelessRandomNormal(    
         shape,
         seed
         )
@@ -728,11 +728,11 @@ public class RandomOps(
      * @return a new instance of StatelessRandomNormal
      * @see org.tensorflow.op.RandomOps.statelessRandomNormal
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> statelessRandomNormal(
-        shape: Operand<T>,
-        seed: Operand<U>,
+    public fun <V : TNumber> statelessRandomNormal(
+        shape: Operand<out TNumber>,
+        seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessRandomNormal<V> = java.statelessRandomNormal<V, T, U>(    
+    ): StatelessRandomNormal<V> = java.statelessRandomNormal<V>(    
         shape,
         seed,
         dtype
@@ -752,9 +752,8 @@ public class RandomOps(
      * @return a new instance of StatelessRandomUniform
      * @see org.tensorflow.op.RandomOps.statelessRandomUniform
      */
-    public fun <T : TNumber, U : TNumber> statelessRandomUniform(shape: Operand<T>,
-            seed: Operand<U>): StatelessRandomUniform<TFloat32> = java.statelessRandomUniform<T,
-            U>(    
+    public fun statelessRandomUniform(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
+            StatelessRandomUniform<TFloat32> = java.statelessRandomUniform(    
         shape,
         seed
         )
@@ -774,11 +773,11 @@ public class RandomOps(
      * @return a new instance of StatelessRandomUniform
      * @see org.tensorflow.op.RandomOps.statelessRandomUniform
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> statelessRandomUniform(
-        shape: Operand<T>,
-        seed: Operand<U>,
+    public fun <V : TNumber> statelessRandomUniform(
+        shape: Operand<out TNumber>,
+        seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessRandomUniform<V> = java.statelessRandomUniform<V, T, U>(    
+    ): StatelessRandomUniform<V> = java.statelessRandomUniform<V>(    
         shape,
         seed,
         dtype
@@ -799,9 +798,8 @@ public class RandomOps(
      * @return a new instance of StatelessTruncatedNormal
      * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
      */
-    public fun <T : TNumber, U : TNumber> statelessTruncatedNormal(shape: Operand<T>,
-            seed: Operand<U>): StatelessTruncatedNormal<TFloat32> = java.statelessTruncatedNormal<T,
-            U>(    
+    public fun statelessTruncatedNormal(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
+            StatelessTruncatedNormal<TFloat32> = java.statelessTruncatedNormal(    
         shape,
         seed
         )
@@ -822,11 +820,11 @@ public class RandomOps(
      * @return a new instance of StatelessTruncatedNormal
      * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
      */
-    public fun <V : TNumber, T : TNumber, U : TNumber> statelessTruncatedNormal(
-        shape: Operand<T>,
-        seed: Operand<U>,
+    public fun <V : TNumber> statelessTruncatedNormal(
+        shape: Operand<out TNumber>,
+        seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessTruncatedNormal<V> = java.statelessTruncatedNormal<V, T, U>(    
+    ): StatelessTruncatedNormal<V> = java.statelessTruncatedNormal<V>(    
         shape,
         seed,
         dtype
@@ -850,12 +848,12 @@ public class RandomOps(
      *  random seed.
      * @param seed2 A second seed to avoid seed collision.
      */
-    public fun <U : TNumber, T : TNumber> truncatedNormal(
-        shape: Operand<T>,
+    public fun <U : TNumber> truncatedNormal(
+        shape: Operand<out TNumber>,
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): TruncatedNormal<U> = java.truncatedNormal<U, T>(    
+    ): TruncatedNormal<U> = java.truncatedNormal<U>(    
         shape,
         dtype,
         *listOfNotNull(
@@ -930,12 +928,12 @@ public class RandomOps(
      * @param seed2 A second seed to avoid seed collision.
      */
     @JvmName("multinomialReified")
-    public inline fun <reified U : TNumber, T : TNumber> multinomialTyped(
-        logits: Operand<T>,
+    public inline fun <reified U : TNumber> multinomialTyped(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
         seed: Long? = null,
         seed2: Long? = null
-    ): Multinomial<U> = multinomial<U, T>(logits, numSamples, U::class.java, seed, seed2)
+    ): Multinomial<U> = multinomial<U>(logits, numSamples, U::class.java, seed, seed2)
 
     /**
      * Outputs random values from the Poisson distribution(s) described by rate.
@@ -965,12 +963,12 @@ public class RandomOps(
      * @param seed2 A second seed to avoid seed collision.
      */
     @JvmName("randomPoissonReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber> randomPoissonTyped(
-        shape: Operand<T>,
-        rate: Operand<U>,
+    public inline fun <reified V : TNumber> randomPoissonTyped(
+        shape: Operand<out TNumber>,
+        rate: Operand<out TNumber>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomPoisson<V> = randomPoisson<V, T, U>(shape, rate, V::class.java, seed, seed2)
+    ): RandomPoisson<V> = randomPoisson<V>(shape, rate, V::class.java, seed, seed2)
 
     /**
      * Outputs random values from a normal distribution.
@@ -989,11 +987,11 @@ public class RandomOps(
      * @param seed2 A second seed to avoid seed collision.
      */
     @JvmName("randomStandardNormalReified")
-    public inline fun <reified U : TNumber, T : TNumber> randomStandardNormal(
-        shape: Operand<T>,
+    public inline fun <reified U : TNumber> randomStandardNormal(
+        shape: Operand<out TNumber>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomStandardNormal<U> = randomStandardNormal<U, T>(shape, U::class.java, seed, seed2)
+    ): RandomStandardNormal<U> = randomStandardNormal<U>(shape, U::class.java, seed, seed2)
 
     /**
      * Outputs random values from a uniform distribution.
@@ -1013,11 +1011,11 @@ public class RandomOps(
      * @param seed2 A second seed to avoid seed collision.
      */
     @JvmName("randomUniformReified")
-    public inline fun <reified U : TNumber, T : TNumber> randomUniform(
-        shape: Operand<T>,
+    public inline fun <reified U : TNumber> randomUniform(
+        shape: Operand<out TNumber>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomUniform<U> = randomUniform<U, T>(shape, U::class.java, seed, seed2)
+    ): RandomUniform<U> = randomUniform<U>(shape, U::class.java, seed, seed2)
 
     /**
      * 
@@ -1032,14 +1030,14 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statefulRandomBinomial
      */
     @JvmName("statefulRandomBinomialReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber> statefulRandomBinomialTyped(
+    public inline fun <reified V : TNumber, U : TNumber> statefulRandomBinomialTyped(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>,
+        shape: Operand<out TNumber>,
         counts: Operand<U>,
         probs: Operand<U>
-    ): StatefulRandomBinomial<V> = statefulRandomBinomial<V, T, U>(resource, algorithm, shape,
-            counts, probs, V::class.java)
+    ): StatefulRandomBinomial<V> = statefulRandomBinomial<V, U>(resource, algorithm, shape, counts,
+            probs, V::class.java)
 
     /**
      * Outputs random values from a normal distribution.
@@ -1055,11 +1053,11 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statefulStandardNormal
      */
     @JvmName("statefulStandardNormalReified")
-    public inline fun <reified U : TType, T : TType> statefulStandardNormalTyped(
+    public inline fun <reified U : TType> statefulStandardNormalTyped(
         resource: Operand<*>,
         algorithm: Operand<TInt64>,
-        shape: Operand<T>
-    ): StatefulStandardNormal<U> = statefulStandardNormal<U, T>(resource, algorithm, shape,
+        shape: Operand<out TType>
+    ): StatefulStandardNormal<U> = statefulStandardNormal<U>(resource, algorithm, shape,
             U::class.java)
 
     /**
@@ -1076,12 +1074,11 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessMultinomial
      */
     @JvmName("statelessMultinomialReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber> statelessMultinomialTyped(
-        logits: Operand<T>,
+    public inline fun <reified V : TNumber> statelessMultinomialTyped(
+        logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
-        seed: Operand<U>
-    ): StatelessMultinomial<V> = statelessMultinomial<V, T, U>(logits, numSamples, seed,
-            V::class.java)
+        seed: Operand<out TNumber>
+    ): StatelessMultinomial<V> = statelessMultinomial<V>(logits, numSamples, seed, V::class.java)
 
     /**
      * Outputs deterministic pseudorandom values from a normal distribution.
@@ -1098,9 +1095,9 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomNormal
      */
     @JvmName("statelessRandomNormalReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber>
-            statelessRandomNormalTyped(shape: Operand<T>, seed: Operand<U>):
-            StatelessRandomNormal<V> = statelessRandomNormal<V, T, U>(shape, seed, V::class.java)
+    public inline fun <reified V : TNumber> statelessRandomNormalTyped(shape: Operand<out TNumber>,
+            seed: Operand<out TNumber>): StatelessRandomNormal<V> = statelessRandomNormal<V>(shape,
+            seed, V::class.java)
 
     /**
      * Outputs deterministic pseudorandom random values from a uniform distribution.
@@ -1118,9 +1115,9 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomUniform
      */
     @JvmName("statelessRandomUniformReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber>
-            statelessRandomUniformTyped(shape: Operand<T>, seed: Operand<U>):
-            StatelessRandomUniform<V> = statelessRandomUniform<V, T, U>(shape, seed, V::class.java)
+    public inline fun <reified V : TNumber> statelessRandomUniformTyped(shape: Operand<out TNumber>,
+            seed: Operand<out TNumber>): StatelessRandomUniform<V> =
+            statelessRandomUniform<V>(shape, seed, V::class.java)
 
     /**
      * Outputs deterministic pseudorandom values from a truncated normal distribution.
@@ -1139,10 +1136,9 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
      */
     @JvmName("statelessTruncatedNormalReified")
-    public inline fun <reified V : TNumber, T : TNumber, U : TNumber>
-            statelessTruncatedNormalTyped(shape: Operand<T>, seed: Operand<U>):
-            StatelessTruncatedNormal<V> = statelessTruncatedNormal<V, T, U>(shape, seed,
-            V::class.java)
+    public inline fun <reified V : TNumber> statelessTruncatedNormalTyped(shape: Operand<out
+            TNumber>, seed: Operand<out TNumber>): StatelessTruncatedNormal<V> =
+            statelessTruncatedNormal<V>(shape, seed, V::class.java)
 
     /**
      * Outputs random values from a truncated normal distribution.
@@ -1163,9 +1159,9 @@ public class RandomOps(
      * @param seed2 A second seed to avoid seed collision.
      */
     @JvmName("truncatedNormalReified")
-    public inline fun <reified U : TNumber, T : TNumber> truncatedNormal(
-        shape: Operand<T>,
+    public inline fun <reified U : TNumber> truncatedNormal(
+        shape: Operand<out TNumber>,
         seed: Long? = null,
         seed2: Long? = null
-    ): TruncatedNormal<U> = truncatedNormal<U, T>(shape, U::class.java, seed, seed2)
+    ): TruncatedNormal<U> = truncatedNormal<U>(shape, U::class.java, seed, seed2)
 }

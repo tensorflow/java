@@ -255,8 +255,6 @@ import org.tensorflow.op.core.TensorListScatterIntoExistingList
 import org.tensorflow.op.core.TensorListSetItem
 import org.tensorflow.op.core.TensorListSplit
 import org.tensorflow.op.core.TensorListStack
-import org.tensorflow.op.core.TensorScatterMax
-import org.tensorflow.op.core.TensorScatterMin
 import org.tensorflow.op.core.TensorScatterNdAdd
 import org.tensorflow.op.core.TensorScatterNdMax
 import org.tensorflow.op.core.TensorScatterNdMin
@@ -395,11 +393,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.all
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TNumber> all(
+    public fun all(
         input: Operand<TBool>,
-        axis: Operand<T>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): All = java.all<T>(    
+    ): All = java.all(    
         input,
         axis,
         *listOfNotNull(
@@ -423,11 +421,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.any
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TNumber> any(
+    public fun any(
         input: Operand<TBool>,
-        axis: Operand<T>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Any = java.any<T>(    
+    ): Any = java.any(    
         input,
         axis,
         *listOfNotNull(
@@ -629,8 +627,8 @@ public class KotlinOps(
      * @return a new instance of AssignAddVariableOp
      * @see org.tensorflow.op.Ops.assignAddVariableOp
      */
-    public fun <T : TType> assignAddVariableOp(resource: Operand<*>, value: Operand<T>):
-            AssignAddVariableOp = java.assignAddVariableOp<T>(    
+    public fun assignAddVariableOp(resource: Operand<*>, value: Operand<out TType>):
+            AssignAddVariableOp = java.assignAddVariableOp(    
         resource,
         value
         )
@@ -673,8 +671,8 @@ public class KotlinOps(
      * @return a new instance of AssignSubVariableOp
      * @see org.tensorflow.op.Ops.assignSubVariableOp
      */
-    public fun <T : TType> assignSubVariableOp(resource: Operand<*>, value: Operand<T>):
-            AssignSubVariableOp = java.assignSubVariableOp<T>(    
+    public fun assignSubVariableOp(resource: Operand<*>, value: Operand<out TType>):
+            AssignSubVariableOp = java.assignSubVariableOp(    
         resource,
         value
         )
@@ -690,8 +688,8 @@ public class KotlinOps(
      * @return a new instance of AssignVariableOp
      * @see org.tensorflow.op.Ops.assignVariableOp
      */
-    public fun <T : TType> assignVariableOp(resource: Operand<*>, value: Operand<T>):
-            AssignVariableOp = java.assignVariableOp<T>(    
+    public fun assignVariableOp(resource: Operand<*>, value: Operand<out TType>): AssignVariableOp =
+            java.assignVariableOp(    
         resource,
         value
         )
@@ -792,12 +790,12 @@ public class KotlinOps(
      * @return a new instance of BarrierInsertMany
      * @see org.tensorflow.op.Ops.barrierInsertMany
      */
-    public fun <T : TType> barrierInsertMany(
+    public fun barrierInsertMany(
         handle: Operand<TString>,
         keys: Operand<TString>,
-        values: Operand<T>,
+        values: Operand<out TType>,
         componentIndex: Long
-    ): BarrierInsertMany = java.barrierInsertMany<T>(    
+    ): BarrierInsertMany = java.barrierInsertMany(    
         handle,
         keys,
         values,
@@ -964,11 +962,11 @@ public class KotlinOps(
      * @return a new instance of BatchToSpace
      * @see org.tensorflow.op.Ops.batchToSpace
      */
-    public fun <T : TType, U : TNumber> batchToSpace(
+    public fun <T : TType> batchToSpace(
         input: Operand<T>,
-        crops: Operand<U>,
+        crops: Operand<out TNumber>,
         blockSize: Long
-    ): BatchToSpace<T> = java.batchToSpace<T, U>(    
+    ): BatchToSpace<T> = java.batchToSpace<T>(    
         input,
         crops,
         blockSize
@@ -1093,11 +1091,11 @@ public class KotlinOps(
      * @return a new instance of BatchToSpaceNd
      * @see org.tensorflow.op.Ops.batchToSpaceNd
      */
-    public fun <T : TType, U : TNumber, V : TNumber> batchToSpaceNd(
+    public fun <T : TType> batchToSpaceNd(
         input: Operand<T>,
-        blockShape: Operand<U>,
-        crops: Operand<V>
-    ): BatchToSpaceNd<T> = java.batchToSpaceNd<T, U, V>(    
+        blockShape: Operand<out TNumber>,
+        crops: Operand<out TNumber>
+    ): BatchToSpaceNd<T> = java.batchToSpaceNd<T>(    
         input,
         blockShape,
         crops
@@ -1163,8 +1161,8 @@ public class KotlinOps(
      * @return a new instance of Bitcast
      * @see org.tensorflow.op.Ops.bitcast
      */
-    public fun <U : TType, T : TType> bitcast(input: Operand<T>, type: Class<U>): Bitcast<U> =
-            java.bitcast<U, T>(    
+    public fun <U : TType> bitcast(input: Operand<out TType>, type: Class<U>): Bitcast<U> =
+            java.bitcast<U>(    
         input,
         type
         )
@@ -1224,8 +1222,8 @@ public class KotlinOps(
      * @return a new instance of BroadcastTo
      * @see org.tensorflow.op.Ops.broadcastTo
      */
-    public fun <T : TType, U : TNumber> broadcastTo(input: Operand<T>, shape: Operand<U>):
-            BroadcastTo<T> = java.broadcastTo<T, U>(    
+    public fun <T : TType> broadcastTo(input: Operand<T>, shape: Operand<out TNumber>):
+            BroadcastTo<T> = java.broadcastTo<T>(    
         input,
         shape
         )
@@ -1249,8 +1247,8 @@ public class KotlinOps(
      * @return a new instance of Bucketize
      * @see org.tensorflow.op.Ops.bucketize
      */
-    public fun <T : TNumber> bucketize(input: Operand<T>, boundaries: List<Float>):
-            Bucketize = java.bucketize<T>(    
+    public fun bucketize(input: Operand<out TNumber>, boundaries: List<Float>): Bucketize
+            = java.bucketize(    
         input,
         boundaries
         )
@@ -1293,8 +1291,8 @@ public class KotlinOps(
      * @return a new instance of Concat
      * @see org.tensorflow.op.Ops.concat
      */
-    public fun <T : TType, U : TNumber> concat(values: Iterable<Operand<T>>, axis: Operand<U>):
-            Concat<T> = java.concat<T, U>(    
+    public fun <T : TType> concat(values: Iterable<Operand<T>>, axis: Operand<out TNumber>):
+            Concat<T> = java.concat<T>(    
         values,
         axis
         )
@@ -2200,7 +2198,9 @@ public class KotlinOps(
         )
 
     /**
-     * Create a constant by making an immutable copy of ``` tensor```.
+     * Create a constant by making an immutable copy of ``` tensor```. ``` tensor``` may be closed
+     * afterwards without
+     *  issue.
      * 
      *  Note: this endpoint cannot be simply called ``` constant} since it will conflict with
      *  other endpoints accepting an NdArray in parameter {e.g. [ #tensorOf(Scope, FloatNdArray)```
@@ -2553,11 +2553,11 @@ public class KotlinOps(
      * @return a new instance of EmptyTensorList
      * @see org.tensorflow.op.Ops.emptyTensorList
      */
-    public fun <T : TNumber, U : TType> emptyTensorList(
-        elementShape: Operand<T>,
+    public fun <U : TType> emptyTensorList(
+        elementShape: Operand<out TNumber>,
         maxNumElements: Operand<TInt32>,
         elementDtype: Class<U>
-    ): EmptyTensorList = java.emptyTensorList<T, U>(    
+    ): EmptyTensorList = java.emptyTensorList<U>(    
         elementShape,
         maxNumElements,
         elementDtype
@@ -2622,8 +2622,8 @@ public class KotlinOps(
      * @return a new instance of ExpandDims
      * @see org.tensorflow.op.Ops.expandDims
      */
-    public fun <T : TType, U : TNumber> expandDims(input: Operand<T>, axis: Operand<U>):
-            ExpandDims<T> = java.expandDims<T, U>(    
+    public fun <T : TType> expandDims(input: Operand<T>, axis: Operand<out TNumber>): ExpandDims<T>
+            = java.expandDims<T>(    
         input,
         axis
         )
@@ -2696,8 +2696,8 @@ public class KotlinOps(
      * @return a new instance of Fill
      * @see org.tensorflow.op.Ops.fill
      */
-    public fun <U : TType, T : TNumber> fill(dims: Operand<T>, value: Operand<U>): Fill<U> =
-            java.fill<U, T>(    
+    public fun <U : TType> fill(dims: Operand<out TNumber>, value: Operand<U>): Fill<U> =
+            java.fill<U>(    
         dims,
         value
         )
@@ -2741,8 +2741,8 @@ public class KotlinOps(
      * @return a new instance of Fingerprint
      * @see org.tensorflow.op.Ops.fingerprint
      */
-    public fun <T : TType> fingerprint(`data`: Operand<T>, method: Operand<TString>): Fingerprint =
-            java.fingerprint<T>(    
+    public fun fingerprint(`data`: Operand<out TType>, method: Operand<TString>): Fingerprint =
+            java.fingerprint(    
         data,
         method
         )
@@ -2788,12 +2788,12 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.gather
      * @param batchDims @param batchDims
      */
-    public fun <T : TType, U : TNumber, V : TNumber> gather(
+    public fun <T : TType> gather(
         params: Operand<T>,
-        indices: Operand<U>,
-        axis: Operand<V>,
+        indices: Operand<out TNumber>,
+        axis: Operand<out TNumber>,
         batchDims: Long? = null
-    ): Gather<T> = java.gather<T, U, V>(    
+    ): Gather<T> = java.gather<T>(    
         params,
         indices,
         axis,
@@ -2910,8 +2910,8 @@ public class KotlinOps(
      * @return a new instance of GatherNd
      * @see org.tensorflow.op.Ops.gatherNd
      */
-    public fun <T : TType, U : TNumber> gatherNd(params: Operand<T>, indices: Operand<U>):
-            GatherNd<T> = java.gatherNd<T, U>(    
+    public fun <T : TType> gatherNd(params: Operand<T>, indices: Operand<out TNumber>): GatherNd<T>
+            = java.gatherNd<T>(    
         params,
         indices
         )
@@ -2923,8 +2923,8 @@ public class KotlinOps(
      * @return a new instance of GetSessionHandle
      * @see org.tensorflow.op.Ops.getSessionHandle
      */
-    public fun <T : TType> getSessionHandle(value: Operand<T>): GetSessionHandle =
-            java.getSessionHandle<T>(    
+    public fun getSessionHandle(value: Operand<out TType>): GetSessionHandle =
+            java.getSessionHandle(    
         value
         )
 
@@ -3296,11 +3296,11 @@ public class KotlinOps(
      * @return a new instance of InitializeTable
      * @see org.tensorflow.op.Ops.initializeTable
      */
-    public fun <T : TType, U : TType> initializeTable(
+    public fun initializeTable(
         tableHandle: Operand<*>,
-        keys: Operand<T>,
-        values: Operand<U>
-    ): InitializeTable = java.initializeTable<T, U>(    
+        keys: Operand<out TType>,
+        values: Operand<out TType>
+    ): InitializeTable = java.initializeTable(    
         tableHandle,
         keys,
         values
@@ -3430,8 +3430,8 @@ public class KotlinOps(
      * @return a new instance of IsVariableInitialized
      * @see org.tensorflow.op.Ops.isVariableInitialized
      */
-    public fun <T : TType> isVariableInitialized(ref: Operand<T>): IsVariableInitialized =
-            java.isVariableInitialized<T>(    
+    public fun isVariableInitialized(ref: Operand<out TType>): IsVariableInitialized =
+            java.isVariableInitialized(    
         ref
         )
 
@@ -3472,11 +3472,11 @@ public class KotlinOps(
      * @return a new instance of LookupTableFind
      * @see org.tensorflow.op.Ops.lookupTableFind
      */
-    public fun <U : TType, T : TType> lookupTableFind(
+    public fun <U : TType> lookupTableFind(
         tableHandle: Operand<*>,
-        keys: Operand<T>,
+        keys: Operand<out TType>,
         defaultValue: Operand<U>
-    ): LookupTableFind<U> = java.lookupTableFind<U, T>(    
+    ): LookupTableFind<U> = java.lookupTableFind<U>(    
         tableHandle,
         keys,
         defaultValue
@@ -3494,11 +3494,11 @@ public class KotlinOps(
      * @return a new instance of LookupTableImport
      * @see org.tensorflow.op.Ops.lookupTableImport
      */
-    public fun <T : TType, U : TType> lookupTableImport(
+    public fun lookupTableImport(
         tableHandle: Operand<*>,
-        keys: Operand<T>,
-        values: Operand<U>
-    ): LookupTableImport = java.lookupTableImport<T, U>(    
+        keys: Operand<out TType>,
+        values: Operand<out TType>
+    ): LookupTableImport = java.lookupTableImport(    
         tableHandle,
         keys,
         values
@@ -3516,11 +3516,11 @@ public class KotlinOps(
      * @return a new instance of LookupTableInsert
      * @see org.tensorflow.op.Ops.lookupTableInsert
      */
-    public fun <T : TType, U : TType> lookupTableInsert(
+    public fun lookupTableInsert(
         tableHandle: Operand<*>,
-        keys: Operand<T>,
-        values: Operand<U>
-    ): LookupTableInsert = java.lookupTableInsert<T, U>(    
+        keys: Operand<out TType>,
+        values: Operand<out TType>
+    ): LookupTableInsert = java.lookupTableInsert(    
         tableHandle,
         keys,
         values
@@ -3800,11 +3800,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.max
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> max(
+    public fun <T : TType> max(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Max<T> = java.max<T, U>(    
+    ): Max<T> = java.max<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -3847,11 +3847,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.min
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> min(
+    public fun <T : TType> min(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Min<T> = java.min<T, U>(    
+    ): Min<T> = java.min<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -3900,11 +3900,11 @@ public class KotlinOps(
      * @return a new instance of MirrorPad
      * @see org.tensorflow.op.Ops.mirrorPad
      */
-    public fun <T : TType, U : TNumber> mirrorPad(
+    public fun <T : TType> mirrorPad(
         input: Operand<T>,
-        paddings: Operand<U>,
+        paddings: Operand<out TNumber>,
         mode: String
-    ): MirrorPad<T> = java.mirrorPad<T, U>(    
+    ): MirrorPad<T> = java.mirrorPad<T>(    
         input,
         paddings,
         mode
@@ -4274,13 +4274,13 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.oneHot
      * @param axis The axis to fill (default: -1, a new inner-most axis).
      */
-    public fun <U : TType, T : TNumber> oneHot(
-        indices: Operand<T>,
+    public fun <U : TType> oneHot(
+        indices: Operand<out TNumber>,
         depth: Operand<TInt32>,
         onValue: Operand<U>,
         offValue: Operand<U>,
         axis: Long? = null
-    ): OneHot<U> = java.oneHot<U, T>(    
+    ): OneHot<U> = java.oneHot<U>(    
         indices,
         depth,
         onValue,
@@ -4589,11 +4589,11 @@ public class KotlinOps(
      * @return a new instance of Pad
      * @see org.tensorflow.op.Ops.pad
      */
-    public fun <T : TType, U : TNumber> pad(
+    public fun <T : TType> pad(
         input: Operand<T>,
-        paddings: Operand<U>,
+        paddings: Operand<out TNumber>,
         constantValues: Operand<T>
-    ): Pad<T> = java.pad<T, U>(    
+    ): Pad<T> = java.pad<T>(    
         input,
         paddings,
         constantValues
@@ -4785,11 +4785,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.prod
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> prod(
+    public fun <T : TType> prod(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Prod<T> = java.prod<T, U>(    
+    ): Prod<T> = java.prod<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -4810,12 +4810,12 @@ public class KotlinOps(
      * @return a new instance of QuantizedReshape
      * @see org.tensorflow.op.Ops.quantizedReshape
      */
-    public fun <T : TType, U : TNumber> quantizedReshape(
+    public fun <T : TType> quantizedReshape(
         tensor: Operand<T>,
-        shape: Operand<U>,
+        shape: Operand<out TNumber>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): QuantizedReshape<T> = java.quantizedReshape<T, U>(    
+    ): QuantizedReshape<T> = java.quantizedReshape<T>(    
         tensor,
         shape,
         inputMin,
@@ -4874,7 +4874,7 @@ public class KotlinOps(
      * @return a new instance of Rank
      * @see org.tensorflow.op.Ops.rank
      */
-    public fun <T : TType> rank(input: Operand<T>): Rank = java.rank<T>(    
+    public fun rank(input: Operand<out TType>): Rank = java.rank(    
         input
         )
 
@@ -4916,11 +4916,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceAll
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TNumber> reduceAll(
+    public fun reduceAll(
         input: Operand<TBool>,
-        axis: Operand<T>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceAll = java.reduceAll<T>(    
+    ): ReduceAll = java.reduceAll(    
         input,
         axis,
         *listOfNotNull(
@@ -4944,11 +4944,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceAny
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TNumber> reduceAny(
+    public fun reduceAny(
         input: Operand<TBool>,
-        axis: Operand<T>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceAny = java.reduceAny<T>(    
+    ): ReduceAny = java.reduceAny(    
         input,
         axis,
         *listOfNotNull(
@@ -4973,11 +4973,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceMax
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> reduceMax(
+    public fun <T : TType> reduceMax(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceMax<T> = java.reduceMax<T, U>(    
+    ): ReduceMax<T> = java.reduceMax<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -5002,11 +5002,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceMin
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> reduceMin(
+    public fun <T : TType> reduceMin(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceMin<T> = java.reduceMin<T, U>(    
+    ): ReduceMin<T> = java.reduceMin<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -5031,11 +5031,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceProd
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> reduceProd(
+    public fun <T : TType> reduceProd(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceProd<T> = java.reduceProd<T, U>(    
+    ): ReduceProd<T> = java.reduceProd<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -5060,11 +5060,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reduceSum
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> reduceSum(
+    public fun <T : TType> reduceSum(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceSum<T> = java.reduceSum<T, U>(    
+    ): ReduceSum<T> = java.reduceSum<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -5217,8 +5217,8 @@ public class KotlinOps(
      * @return a new instance of Reshape
      * @see org.tensorflow.op.Ops.reshape
      */
-    public fun <T : TType, U : TNumber> reshape(tensor: Operand<T>, shape: Operand<U>): Reshape<T> =
-            java.reshape<T, U>(    
+    public fun <T : TType> reshape(tensor: Operand<T>, shape: Operand<out TNumber>): Reshape<T> =
+            java.reshape<T>(    
         tensor,
         shape
         )
@@ -5271,13 +5271,13 @@ public class KotlinOps(
      * @param batchDims @param batchDims
      * @param validateIndices @param validateIndices
      */
-    public fun <U : TType, T : TNumber> resourceGather(
+    public fun <U : TType> resourceGather(
         resource: Operand<*>,
-        indices: Operand<T>,
+        indices: Operand<out TNumber>,
         dtype: Class<U>,
         batchDims: Long? = null,
         validateIndices: Boolean? = null
-    ): ResourceGather<U> = java.resourceGather<U, T>(    
+    ): ResourceGather<U> = java.resourceGather<U>(    
         resource,
         indices,
         dtype,
@@ -5296,11 +5296,11 @@ public class KotlinOps(
      * @return a new instance of ResourceGatherNd
      * @see org.tensorflow.op.Ops.resourceGatherNd
      */
-    public fun <U : TType, T : TNumber> resourceGatherNd(
+    public fun <U : TType> resourceGatherNd(
         resource: Operand<*>,
-        indices: Operand<T>,
+        indices: Operand<out TNumber>,
         dtype: Class<U>
-    ): ResourceGatherNd<U> = java.resourceGatherNd<U, T>(    
+    ): ResourceGatherNd<U> = java.resourceGatherNd<U>(    
         resource,
         indices,
         dtype
@@ -5335,11 +5335,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterAdd
      * @see org.tensorflow.op.Ops.resourceScatterAdd
      */
-    public fun <T : TNumber, U : TType> resourceScatterAdd(
+    public fun resourceScatterAdd(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterAdd = java.resourceScatterAdd<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterAdd = java.resourceScatterAdd(    
         resource,
         indices,
         updates
@@ -5374,11 +5374,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterDiv
      * @see org.tensorflow.op.Ops.resourceScatterDiv
      */
-    public fun <T : TNumber, U : TType> resourceScatterDiv(
+    public fun resourceScatterDiv(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterDiv = java.resourceScatterDiv<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterDiv = java.resourceScatterDiv(    
         resource,
         indices,
         updates
@@ -5414,11 +5414,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterMax
      * @see org.tensorflow.op.Ops.resourceScatterMax
      */
-    public fun <T : TNumber, U : TType> resourceScatterMax(
+    public fun resourceScatterMax(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterMax = java.resourceScatterMax<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterMax = java.resourceScatterMax(    
         resource,
         indices,
         updates
@@ -5454,11 +5454,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterMin
      * @see org.tensorflow.op.Ops.resourceScatterMin
      */
-    public fun <T : TNumber, U : TType> resourceScatterMin(
+    public fun resourceScatterMin(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterMin = java.resourceScatterMin<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterMin = java.resourceScatterMin(    
         resource,
         indices,
         updates
@@ -5493,11 +5493,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterMul
      * @see org.tensorflow.op.Ops.resourceScatterMul
      */
-    public fun <T : TNumber, U : TType> resourceScatterMul(
+    public fun resourceScatterMul(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterMul = java.resourceScatterMul<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterMul = java.resourceScatterMul(    
         resource,
         indices,
         updates
@@ -5550,12 +5550,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TType> resourceScatterNdAdd(
+    public fun resourceScatterNdAdd(
         ref: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>,
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdAdd = java.resourceScatterNdAdd<T, U>(    
+    ): ResourceScatterNdAdd = java.resourceScatterNdAdd(    
         ref,
         indices,
         updates,
@@ -5578,12 +5578,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TType> resourceScatterNdMax(
+    public fun resourceScatterNdMax(
         ref: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>,
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdMax = java.resourceScatterNdMax<T, U>(    
+    ): ResourceScatterNdMax = java.resourceScatterNdMax(    
         ref,
         indices,
         updates,
@@ -5606,12 +5606,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TType> resourceScatterNdMin(
+    public fun resourceScatterNdMin(
         ref: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>,
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdMin = java.resourceScatterNdMin<T, U>(    
+    ): ResourceScatterNdMin = java.resourceScatterNdMin(    
         ref,
         indices,
         updates,
@@ -5667,12 +5667,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TType> resourceScatterNdSub(
+    public fun resourceScatterNdSub(
         ref: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>,
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdSub = java.resourceScatterNdSub<T, U>(    
+    ): ResourceScatterNdSub = java.resourceScatterNdSub(    
         ref,
         indices,
         updates,
@@ -5730,12 +5730,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TType> resourceScatterNdUpdate(
+    public fun resourceScatterNdUpdate(
         ref: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>,
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdUpdate = java.resourceScatterNdUpdate<T, U>(    
+    ): ResourceScatterNdUpdate = java.resourceScatterNdUpdate(    
         ref,
         indices,
         updates,
@@ -5773,11 +5773,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterSub
      * @see org.tensorflow.op.Ops.resourceScatterSub
      */
-    public fun <T : TNumber, U : TType> resourceScatterSub(
+    public fun resourceScatterSub(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterSub = java.resourceScatterSub<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterSub = java.resourceScatterSub(    
         resource,
         indices,
         updates
@@ -5803,11 +5803,11 @@ public class KotlinOps(
      * @return a new instance of ResourceScatterUpdate
      * @see org.tensorflow.op.Ops.resourceScatterUpdate
      */
-    public fun <T : TNumber, U : TType> resourceScatterUpdate(
+    public fun resourceScatterUpdate(
         resource: Operand<*>,
-        indices: Operand<T>,
-        updates: Operand<U>
-    ): ResourceScatterUpdate = java.resourceScatterUpdate<T, U>(    
+        indices: Operand<out TNumber>,
+        updates: Operand<out TType>
+    ): ResourceScatterUpdate = java.resourceScatterUpdate(    
         resource,
         indices,
         updates
@@ -5837,18 +5837,18 @@ public class KotlinOps(
      * @param newAxisMask @param newAxisMask
      * @param shrinkAxisMask @param shrinkAxisMask
      */
-    public fun <T : TNumber, U : TType> resourceStridedSliceAssign(
+    public fun <T : TNumber> resourceStridedSliceAssign(
         ref: Operand<*>,
         begin: Operand<T>,
         end: Operand<T>,
         strides: Operand<T>,
-        value: Operand<U>,
+        value: Operand<out TType>,
         beginMask: Long? = null,
         endMask: Long? = null,
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): ResourceStridedSliceAssign = java.resourceStridedSliceAssign<T, U>(    
+    ): ResourceStridedSliceAssign = java.resourceStridedSliceAssign<T>(    
         ref,
         begin,
         end,
@@ -5920,8 +5920,8 @@ public class KotlinOps(
      * @return a new instance of Reverse
      * @see org.tensorflow.op.Ops.reverse
      */
-    public fun <T : TType, U : TNumber> reverse(tensor: Operand<T>, axis: Operand<U>): Reverse<T> =
-            java.reverse<T, U>(    
+    public fun <T : TType> reverse(tensor: Operand<T>, axis: Operand<out TNumber>): Reverse<T> =
+            java.reverse<T>(    
         tensor,
         axis
         )
@@ -5993,12 +5993,12 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reverseSequence
      * @param batchDim The dimension along which reversal is performed.
      */
-    public fun <T : TType, U : TNumber> reverseSequence(
+    public fun <T : TType> reverseSequence(
         input: Operand<T>,
-        seqLengths: Operand<U>,
+        seqLengths: Operand<out TNumber>,
         seqDim: Long,
         batchDim: Long? = null
-    ): ReverseSequence<T> = java.reverseSequence<T, U>(    
+    ): ReverseSequence<T> = java.reverseSequence<T>(    
         input,
         seqLengths,
         seqDim,
@@ -6046,11 +6046,11 @@ public class KotlinOps(
      * @return a new instance of Roll
      * @see org.tensorflow.op.Ops.roll
      */
-    public fun <T : TType, U : TNumber, V : TNumber> roll(
+    public fun <T : TType> roll(
         input: Operand<T>,
-        shift: Operand<U>,
-        axis: Operand<V>
-    ): Roll<T> = java.roll<T, U, V>(    
+        shift: Operand<out TNumber>,
+        axis: Operand<out TNumber>
+    ): Roll<T> = java.roll<T>(    
         input,
         shift,
         axis
@@ -6180,12 +6180,12 @@ public class KotlinOps(
      * @param useLocking If True, the addition will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterAdd(
+    public fun <T : TType> scatterAdd(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterAdd<T> = java.scatterAdd<T, U>(    
+    ): ScatterAdd<T> = java.scatterAdd<T>(    
         ref,
         indices,
         updates,
@@ -6227,12 +6227,12 @@ public class KotlinOps(
      * @param useLocking If True, the operation will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterDiv(
+    public fun <T : TType> scatterDiv(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterDiv<T> = java.scatterDiv<T, U>(    
+    ): ScatterDiv<T> = java.scatterDiv<T>(    
         ref,
         indices,
         updates,
@@ -6278,12 +6278,12 @@ public class KotlinOps(
      * @param useLocking If True, the update will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TNumber> scatterMax(
+    public fun <T : TNumber> scatterMax(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMax<T> = java.scatterMax<T, U>(    
+    ): ScatterMax<T> = java.scatterMax<T>(    
         ref,
         indices,
         updates,
@@ -6329,12 +6329,12 @@ public class KotlinOps(
      * @param useLocking If True, the update will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TNumber, U : TNumber> scatterMin(
+    public fun <T : TNumber> scatterMin(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMin<T> = java.scatterMin<T, U>(    
+    ): ScatterMin<T> = java.scatterMin<T>(    
         ref,
         indices,
         updates,
@@ -6376,12 +6376,12 @@ public class KotlinOps(
      * @param useLocking If True, the operation will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterMul(
+    public fun <T : TType> scatterMul(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMul<T> = java.scatterMul<T, U>(    
+    ): ScatterMul<T> = java.scatterMul<T>(    
         ref,
         indices,
         updates,
@@ -6537,12 +6537,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterNdAdd(
+    public fun <T : TType> scatterNdAdd(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdAdd<T> = java.scatterNdAdd<T, U>(    
+    ): ScatterNdAdd<T> = java.scatterNdAdd<T>(    
         ref,
         indices,
         updates,
@@ -6597,11 +6597,11 @@ public class KotlinOps(
      * @return a new instance of ScatterNdNonAliasingAdd
      * @see org.tensorflow.op.Ops.scatterNdNonAliasingAdd
      */
-    public fun <T : TType, U : TNumber> scatterNdNonAliasingAdd(
+    public fun <T : TType> scatterNdNonAliasingAdd(
         input: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): ScatterNdNonAliasingAdd<T> = java.scatterNdNonAliasingAdd<T, U>(    
+    ): ScatterNdNonAliasingAdd<T> = java.scatterNdNonAliasingAdd<T>(    
         input,
         indices,
         updates
@@ -6657,12 +6657,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterNdSub(
+    public fun <T : TType> scatterNdSub(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdSub<T> = java.scatterNdSub<T, U>(    
+    ): ScatterNdSub<T> = java.scatterNdSub<T>(    
         ref,
         indices,
         updates,
@@ -6722,12 +6722,12 @@ public class KotlinOps(
      *  be protected by a lock; otherwise the behavior is undefined,
      *  but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterNdUpdate(
+    public fun <T : TType> scatterNdUpdate(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdUpdate<T> = java.scatterNdUpdate<T, U>(    
+    ): ScatterNdUpdate<T> = java.scatterNdUpdate<T>(    
         ref,
         indices,
         updates,
@@ -6772,12 +6772,12 @@ public class KotlinOps(
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterSub(
+    public fun <T : TType> scatterSub(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterSub<T> = java.scatterSub<T, U>(    
+    ): ScatterSub<T> = java.scatterSub<T>(    
         ref,
         indices,
         updates,
@@ -6826,12 +6826,12 @@ public class KotlinOps(
      * @param useLocking If True, the assignment will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
      */
-    public fun <T : TType, U : TNumber> scatterUpdate(
+    public fun <T : TType> scatterUpdate(
         ref: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterUpdate<T> = java.scatterUpdate<T, U>(    
+    ): ScatterUpdate<T> = java.scatterUpdate<T>(    
         ref,
         indices,
         updates,
@@ -6956,12 +6956,12 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.setSize
      * @param validateIndices @param validateIndices
      */
-    public fun <T : TType> setSize(
+    public fun setSize(
         setIndices: Operand<TInt64>,
-        setValues: Operand<T>,
+        setValues: Operand<out TType>,
         setShape: Operand<TInt64>,
         validateIndices: Boolean? = null
-    ): SetSize = java.setSize<T>(    
+    ): SetSize = java.setSize(    
         setIndices,
         setValues,
         setShape,
@@ -6987,8 +6987,7 @@ public class KotlinOps(
      * @return a new instance of Shape
      * @see org.tensorflow.op.Ops.shape
      */
-    public fun <T : TType> shape(input: Operand<T>): org.tensorflow.op.core.Shape<TInt32> =
-            java.shape<T>(    
+    public fun shape(input: Operand<out TType>): org.tensorflow.op.core.Shape<TInt32> = java.shape(    
         input
         )
 
@@ -7010,8 +7009,8 @@ public class KotlinOps(
      * @return a new instance of Shape
      * @see org.tensorflow.op.Ops.shape
      */
-    public fun <U : TNumber, T : TType> shape(input: Operand<T>, outType: Class<U>):
-            org.tensorflow.op.core.Shape<U> = java.shape<U, T>(    
+    public fun <U : TNumber> shape(input: Operand<out TType>, outType: Class<U>):
+            org.tensorflow.op.core.Shape<U> = java.shape<U>(    
         input,
         outType
         )
@@ -7065,7 +7064,7 @@ public class KotlinOps(
      * @return a new instance of Size
      * @see org.tensorflow.op.Ops.size
      */
-    public fun <T : TType> size(input: Operand<T>): Size<TInt32> = java.size<T>(    
+    public fun size(input: Operand<out TType>): Size<TInt32> = java.size(    
         input
         )
 
@@ -7088,8 +7087,8 @@ public class KotlinOps(
      * @return a new instance of Size
      * @see org.tensorflow.op.Ops.size
      */
-    public fun <U : TNumber, T : TType> size(input: Operand<T>, outType: Class<U>): Size<U> =
-            java.size<U, T>(    
+    public fun <U : TNumber> size(input: Operand<out TType>, outType: Class<U>): Size<U> =
+            java.size<U>(    
         input,
         outType
         )
@@ -7286,11 +7285,11 @@ public class KotlinOps(
      * @return a new instance of SpaceToBatchNd
      * @see org.tensorflow.op.Ops.spaceToBatchNd
      */
-    public fun <T : TType, U : TNumber, V : TNumber> spaceToBatchNd(
+    public fun <T : TType> spaceToBatchNd(
         input: Operand<T>,
-        blockShape: Operand<U>,
-        paddings: Operand<V>
-    ): SpaceToBatchNd<T> = java.spaceToBatchNd<T, U, V>(    
+        blockShape: Operand<out TNumber>,
+        paddings: Operand<out TNumber>
+    ): SpaceToBatchNd<T> = java.spaceToBatchNd<T>(    
         input,
         blockShape,
         paddings
@@ -7332,12 +7331,12 @@ public class KotlinOps(
      * @return a new instance of SplitV
      * @see org.tensorflow.op.Ops.splitV
      */
-    public fun <T : TType, U : TNumber> splitV(
+    public fun <T : TType> splitV(
         value: Operand<T>,
-        sizeSplits: Operand<U>,
+        sizeSplits: Operand<out TNumber>,
         axis: Operand<TInt32>,
         numSplit: Long
-    ): SplitV<T> = java.splitV<T, U>(    
+    ): SplitV<T> = java.splitV<T>(    
         value,
         sizeSplits,
         axis,
@@ -7858,11 +7857,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.sum
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> sum(
+    public fun <T : TType> sum(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Sum<T> = java.sum<T, U>(    
+    ): Sum<T> = java.sum<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -8214,12 +8213,12 @@ public class KotlinOps(
      * @return a new instance of TensorArrayScatter
      * @see org.tensorflow.op.Ops.tensorArrayScatter
      */
-    public fun <T : TType> tensorArrayScatter(
+    public fun tensorArrayScatter(
         handle: Operand<*>,
         indices: Operand<TInt32>,
-        value: Operand<T>,
+        value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayScatter = java.tensorArrayScatter<T>(    
+    ): TensorArrayScatter = java.tensorArrayScatter(    
         handle,
         indices,
         value,
@@ -8276,12 +8275,12 @@ public class KotlinOps(
      * @return a new instance of TensorArraySplit
      * @see org.tensorflow.op.Ops.tensorArraySplit
      */
-    public fun <T : TType> tensorArraySplit(
+    public fun tensorArraySplit(
         handle: Operand<*>,
-        value: Operand<T>,
+        value: Operand<out TType>,
         lengths: Operand<TInt64>,
         flowIn: Operand<TFloat32>
-    ): TensorArraySplit = java.tensorArraySplit<T>(    
+    ): TensorArraySplit = java.tensorArraySplit(    
         handle,
         value,
         lengths,
@@ -8296,11 +8295,11 @@ public class KotlinOps(
      * @return a new instance of TensorArrayUnpack
      * @see org.tensorflow.op.Ops.tensorArrayUnpack
      */
-    public fun <T : TType> tensorArrayUnpack(
+    public fun tensorArrayUnpack(
         handle: Operand<TString>,
-        value: Operand<T>,
+        value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayUnpack = java.tensorArrayUnpack<T>(    
+    ): TensorArrayUnpack = java.tensorArrayUnpack(    
         handle,
         value,
         flowIn
@@ -8316,12 +8315,12 @@ public class KotlinOps(
      * @return a new instance of TensorArrayWrite
      * @see org.tensorflow.op.Ops.tensorArrayWrite
      */
-    public fun <T : TType> tensorArrayWrite(
+    public fun tensorArrayWrite(
         handle: Operand<*>,
         index: Operand<TInt32>,
-        value: Operand<T>,
+        value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayWrite = java.tensorArrayWrite<T>(    
+    ): TensorArrayWrite = java.tensorArrayWrite(    
         handle,
         index,
         value,
@@ -8352,12 +8351,12 @@ public class KotlinOps(
      * @return a new instance of TensorListConcat
      * @see org.tensorflow.op.Ops.tensorListConcat
      */
-    public fun <U : TType, T : TNumber> tensorListConcat(
+    public fun <U : TType> tensorListConcat(
         inputHandle: Operand<*>,
-        elementShape: Operand<T>,
+        elementShape: Operand<out TNumber>,
         leadingDims: Operand<TInt64>,
         elementDtype: Class<U>
-    ): TensorListConcat<U> = java.tensorListConcat<U, T>(    
+    ): TensorListConcat<U> = java.tensorListConcat<U>(    
         inputHandle,
         elementShape,
         leadingDims,
@@ -8413,8 +8412,8 @@ public class KotlinOps(
      * @return a new instance of TensorListFromTensor
      * @see org.tensorflow.op.Ops.tensorListFromTensor
      */
-    public fun <T : TType, U : TNumber> tensorListFromTensor(tensor: Operand<T>,
-            elementShape: Operand<U>): TensorListFromTensor = java.tensorListFromTensor<T, U>(    
+    public fun tensorListFromTensor(tensor: Operand<out TType>, elementShape: Operand<out TNumber>):
+            TensorListFromTensor = java.tensorListFromTensor(    
         tensor,
         elementShape
         )
@@ -8527,8 +8526,8 @@ public class KotlinOps(
      * @return a new instance of TensorListPushBack
      * @see org.tensorflow.op.Ops.tensorListPushBack
      */
-    public fun <T : TType> tensorListPushBack(inputHandle: Operand<*>, tensor: Operand<T>):
-            TensorListPushBack = java.tensorListPushBack<T>(    
+    public fun tensorListPushBack(inputHandle: Operand<*>, tensor: Operand<out TType>):
+            TensorListPushBack = java.tensorListPushBack(    
         inputHandle,
         tensor
         )
@@ -8540,8 +8539,8 @@ public class KotlinOps(
      * @return a new instance of TensorListPushBackBatch
      * @see org.tensorflow.op.Ops.tensorListPushBackBatch
      */
-    public fun <T : TType> tensorListPushBackBatch(inputHandles: Operand<*>, tensor: Operand<T>):
-            TensorListPushBackBatch = java.tensorListPushBackBatch<T>(    
+    public fun tensorListPushBackBatch(inputHandles: Operand<*>, tensor: Operand<out TType>):
+            TensorListPushBackBatch = java.tensorListPushBackBatch(    
         inputHandles,
         tensor
         )
@@ -8560,11 +8559,11 @@ public class KotlinOps(
      * @return a new instance of TensorListReserve
      * @see org.tensorflow.op.Ops.tensorListReserve
      */
-    public fun <T : TNumber, U : TType> tensorListReserve(
-        elementShape: Operand<T>,
+    public fun <U : TType> tensorListReserve(
+        elementShape: Operand<out TNumber>,
         numElements: Operand<TInt32>,
         elementDtype: Class<U>
-    ): TensorListReserve = java.tensorListReserve<T, U>(    
+    ): TensorListReserve = java.tensorListReserve<U>(    
         elementShape,
         numElements,
         elementDtype
@@ -8610,12 +8609,12 @@ public class KotlinOps(
      * @return a new instance of TensorListScatter
      * @see org.tensorflow.op.Ops.tensorListScatter
      */
-    public fun <T : TType, U : TNumber> tensorListScatter(
-        tensor: Operand<T>,
+    public fun tensorListScatter(
+        tensor: Operand<out TType>,
         indices: Operand<TInt32>,
-        elementShape: Operand<U>,
+        elementShape: Operand<out TNumber>,
         numElements: Operand<TInt32>
-    ): TensorListScatter = java.tensorListScatter<T, U>(    
+    ): TensorListScatter = java.tensorListScatter(    
         tensor,
         indices,
         elementShape,
@@ -8639,11 +8638,11 @@ public class KotlinOps(
      * @return a new instance of TensorListScatterIntoExistingList
      * @see org.tensorflow.op.Ops.tensorListScatterIntoExistingList
      */
-    public fun <T : TType> tensorListScatterIntoExistingList(
+    public fun tensorListScatterIntoExistingList(
         inputHandle: Operand<*>,
-        tensor: Operand<T>,
+        tensor: Operand<out TType>,
         indices: Operand<TInt32>
-    ): TensorListScatterIntoExistingList = java.tensorListScatterIntoExistingList<T>(    
+    ): TensorListScatterIntoExistingList = java.tensorListScatterIntoExistingList(    
         inputHandle,
         tensor,
         indices
@@ -8657,11 +8656,11 @@ public class KotlinOps(
      * @return a new instance of TensorListSetItem
      * @see org.tensorflow.op.Ops.tensorListSetItem
      */
-    public fun <T : TType> tensorListSetItem(
+    public fun tensorListSetItem(
         inputHandle: Operand<*>,
         index: Operand<TInt32>,
-        item: Operand<T>
-    ): TensorListSetItem = java.tensorListSetItem<T>(    
+        item: Operand<out TType>
+    ): TensorListSetItem = java.tensorListSetItem(    
         inputHandle,
         index,
         item
@@ -8684,11 +8683,11 @@ public class KotlinOps(
      * @return a new instance of TensorListSplit
      * @see org.tensorflow.op.Ops.tensorListSplit
      */
-    public fun <T : TType, U : TNumber> tensorListSplit(
-        tensor: Operand<T>,
-        elementShape: Operand<U>,
+    public fun tensorListSplit(
+        tensor: Operand<out TType>,
+        elementShape: Operand<out TNumber>,
         lengths: Operand<TInt64>
-    ): TensorListSplit = java.tensorListSplit<T, U>(    
+    ): TensorListSplit = java.tensorListSplit(    
         tensor,
         elementShape,
         lengths
@@ -8724,44 +8723,6 @@ public class KotlinOps(
         *listOfNotNull(
             numElements?.let{ org.tensorflow.op.core.TensorListStack.numElements(it) }
         ).toTypedArray()
-        )
-
-    /**
-     * 
-     * @param T data type for ` output()` output
-     * @param tensor Tensor to update.
-     * @param indices Index tensor.
-     * @param updates Updates to scatter into output.
-     * @return a new instance of TensorScatterMax
-     * @see org.tensorflow.op.Ops.tensorScatterMax
-     */
-    public fun <T : TType, U : TNumber> tensorScatterMax(
-        tensor: Operand<T>,
-        indices: Operand<U>,
-        updates: Operand<T>
-    ): TensorScatterMax<T> = java.tensorScatterMax<T, U>(    
-        tensor,
-        indices,
-        updates
-        )
-
-    /**
-     * 
-     * @param T data type for ` output()` output
-     * @param tensor Tensor to update.
-     * @param indices Index tensor.
-     * @param updates Updates to scatter into output.
-     * @return a new instance of TensorScatterMin
-     * @see org.tensorflow.op.Ops.tensorScatterMin
-     */
-    public fun <T : TType, U : TNumber> tensorScatterMin(
-        tensor: Operand<T>,
-        indices: Operand<U>,
-        updates: Operand<T>
-    ): TensorScatterMin<T> = java.tensorScatterMin<T, U>(    
-        tensor,
-        indices,
-        updates
         )
 
     /**
@@ -8836,11 +8797,11 @@ public class KotlinOps(
      * @return a new instance of TensorScatterNdAdd
      * @see org.tensorflow.op.Ops.tensorScatterNdAdd
      */
-    public fun <T : TType, U : TNumber> tensorScatterNdAdd(
+    public fun <T : TType> tensorScatterNdAdd(
         tensor: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdAdd<T> = java.tensorScatterNdAdd<T, U>(    
+    ): TensorScatterNdAdd<T> = java.tensorScatterNdAdd<T>(    
         tensor,
         indices,
         updates
@@ -8855,11 +8816,11 @@ public class KotlinOps(
      * @return a new instance of TensorScatterNdMax
      * @see org.tensorflow.op.Ops.tensorScatterNdMax
      */
-    public fun <T : TType, U : TNumber> tensorScatterNdMax(
+    public fun <T : TType> tensorScatterNdMax(
         tensor: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdMax<T> = java.tensorScatterNdMax<T, U>(    
+    ): TensorScatterNdMax<T> = java.tensorScatterNdMax<T>(    
         tensor,
         indices,
         updates
@@ -8874,11 +8835,11 @@ public class KotlinOps(
      * @return a new instance of TensorScatterNdMin
      * @see org.tensorflow.op.Ops.tensorScatterNdMin
      */
-    public fun <T : TType, U : TNumber> tensorScatterNdMin(
+    public fun <T : TType> tensorScatterNdMin(
         tensor: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdMin<T> = java.tensorScatterNdMin<T, U>(    
+    ): TensorScatterNdMin<T> = java.tensorScatterNdMin<T>(    
         tensor,
         indices,
         updates
@@ -8957,11 +8918,11 @@ public class KotlinOps(
      * @return a new instance of TensorScatterNdSub
      * @see org.tensorflow.op.Ops.tensorScatterNdSub
      */
-    public fun <T : TType, U : TNumber> tensorScatterNdSub(
+    public fun <T : TType> tensorScatterNdSub(
         tensor: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdSub<T> = java.tensorScatterNdSub<T, U>(    
+    ): TensorScatterNdSub<T> = java.tensorScatterNdSub<T>(    
         tensor,
         indices,
         updates
@@ -9051,11 +9012,11 @@ public class KotlinOps(
      * @return a new instance of TensorScatterNdUpdate
      * @see org.tensorflow.op.Ops.tensorScatterNdUpdate
      */
-    public fun <T : TType, U : TNumber> tensorScatterNdUpdate(
+    public fun <T : TType> tensorScatterNdUpdate(
         tensor: Operand<T>,
-        indices: Operand<U>,
+        indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdUpdate<T> = java.tensorScatterNdUpdate<T, U>(    
+    ): TensorScatterNdUpdate<T> = java.tensorScatterNdUpdate<T>(    
         tensor,
         indices,
         updates
@@ -9148,8 +9109,8 @@ public class KotlinOps(
      * @return a new instance of Tile
      * @see org.tensorflow.op.Ops.tile
      */
-    public fun <T : TType, U : TNumber> tile(input: Operand<T>, multiples: Operand<U>): Tile<T> =
-            java.tile<T, U>(    
+    public fun <T : TType> tile(input: Operand<T>, multiples: Operand<out TNumber>): Tile<T> =
+            java.tile<T>(    
         input,
         multiples
         )
@@ -9410,8 +9371,8 @@ public class KotlinOps(
      * @return a new instance of Unique
      * @see org.tensorflow.op.Ops.unique
      */
-    public fun <T : TType, U : TNumber> unique(x: Operand<T>, axis: Operand<U>): Unique<T, TInt32> =
-            java.unique<T, U>(    
+    public fun <T : TType> unique(x: Operand<T>, axis: Operand<out TNumber>): Unique<T, TInt32> =
+            java.unique<T>(    
         x,
         axis
         )
@@ -9470,11 +9431,11 @@ public class KotlinOps(
      * @return a new instance of Unique
      * @see org.tensorflow.op.Ops.unique
      */
-    public fun <T : TType, V : TNumber, U : TNumber> unique(
+    public fun <T : TType, V : TNumber> unique(
         x: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         outIdx: Class<V>
-    ): Unique<T, V> = java.unique<T, V, U>(    
+    ): Unique<T, V> = java.unique<T, V>(    
         x,
         axis,
         outIdx
@@ -9537,8 +9498,8 @@ public class KotlinOps(
      * @return a new instance of UniqueWithCounts
      * @see org.tensorflow.op.Ops.uniqueWithCounts
      */
-    public fun <T : TType, U : TNumber> uniqueWithCounts(x: Operand<T>, axis: Operand<U>):
-            UniqueWithCounts<T, TInt32> = java.uniqueWithCounts<T, U>(    
+    public fun <T : TType> uniqueWithCounts(x: Operand<T>, axis: Operand<out TNumber>):
+            UniqueWithCounts<T, TInt32> = java.uniqueWithCounts<T>(    
         x,
         axis
         )
@@ -9601,11 +9562,11 @@ public class KotlinOps(
      * @return a new instance of UniqueWithCounts
      * @see org.tensorflow.op.Ops.uniqueWithCounts
      */
-    public fun <T : TType, V : TNumber, U : TNumber> uniqueWithCounts(
+    public fun <T : TType, V : TNumber> uniqueWithCounts(
         x: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         outIdx: Class<V>
-    ): UniqueWithCounts<T, V> = java.uniqueWithCounts<T, V, U>(    
+    ): UniqueWithCounts<T, V> = java.uniqueWithCounts<T, V>(    
         x,
         axis,
         outIdx
@@ -9930,7 +9891,7 @@ public class KotlinOps(
      * @return a new instance of Where
      * @see org.tensorflow.op.Ops.where
      */
-    public fun <T : TType> `where`(condition: Operand<T>): Where = java.where<T>(    
+    public fun `where`(condition: Operand<out TType>): Where = java.where(    
         condition
         )
 
@@ -10068,8 +10029,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.bitcast
      */
     @JvmName("bitcastReified")
-    public inline fun <reified U : TType, T : TType> bitcast(input: Operand<T>): Bitcast<U> =
-            bitcast<U, T>(input, U::class.java)
+    public inline fun <reified U : TType> bitcast(input: Operand<out TType>): Bitcast<U> =
+            bitcast<U>(input, U::class.java)
 
     /**
      * Create a constant with data from the given buffer.
@@ -10123,8 +10084,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.emptyTensorList
      */
     @JvmName("emptyTensorListReified")
-    public inline fun <T : TNumber, reified U : TType> emptyTensorList(elementShape: Operand<T>,
-            maxNumElements: Operand<TInt32>): EmptyTensorList = emptyTensorList<T, U>(elementShape,
+    public inline fun <reified U : TType> emptyTensorList(elementShape: Operand<out TNumber>,
+            maxNumElements: Operand<TInt32>): EmptyTensorList = emptyTensorList<U>(elementShape,
             maxNumElements, U::class.java)
 
     /**
@@ -10434,12 +10395,12 @@ public class KotlinOps(
      * @param validateIndices @param validateIndices
      */
     @JvmName("resourceGatherReified")
-    public inline fun <reified U : TType, T : TNumber> resourceGather(
+    public inline fun <reified U : TType> resourceGather(
         resource: Operand<*>,
-        indices: Operand<T>,
+        indices: Operand<out TNumber>,
         batchDims: Long? = null,
         validateIndices: Boolean? = null
-    ): ResourceGather<U> = resourceGather<U, T>(resource, indices, U::class.java, batchDims,
+    ): ResourceGather<U> = resourceGather<U>(resource, indices, U::class.java, batchDims,
             validateIndices)
 
     /**
@@ -10452,9 +10413,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.resourceGatherNd
      */
     @JvmName("resourceGatherNdReified")
-    public inline fun <reified U : TType, T : TNumber> resourceGatherNd(resource: Operand<*>,
-            indices: Operand<T>): ResourceGatherNd<U> = resourceGatherNd<U, T>(resource, indices,
-            U::class.java)
+    public inline fun <reified U : TType> resourceGatherNd(resource: Operand<*>,
+            indices: Operand<out TNumber>): ResourceGatherNd<U> = resourceGatherNd<U>(resource,
+            indices, U::class.java)
 
     /**
      * Computes the difference between two lists of numbers or strings.
@@ -10511,8 +10472,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.shape
      */
     @JvmName("shapeReified")
-    public inline fun <reified U : TNumber, T : TType> shapeTyped(input: Operand<T>):
-            org.tensorflow.op.core.Shape<U> = shape<U, T>(input, U::class.java)
+    public inline fun <reified U : TNumber> shapeTyped(input: Operand<out TType>):
+            org.tensorflow.op.core.Shape<U> = shape<U>(input, U::class.java)
 
     /**
      * Returns shape of tensors.
@@ -10549,8 +10510,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.size
      */
     @JvmName("sizeReified")
-    public inline fun <reified U : TNumber, T : TType> sizeTyped(input: Operand<T>): Size<U> =
-            size<U, T>(input, U::class.java)
+    public inline fun <reified U : TNumber> sizeTyped(input: Operand<out TType>): Size<U> =
+            size<U>(input, U::class.java)
 
     /**
      * Returns a tensor that may be mutated, but only persists within a single step.
@@ -10745,11 +10706,11 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListConcat
      */
     @JvmName("tensorListConcatReified")
-    public inline fun <reified U : TType, T : TNumber> tensorListConcat(
+    public inline fun <reified U : TType> tensorListConcat(
         inputHandle: Operand<*>,
-        elementShape: Operand<T>,
+        elementShape: Operand<out TNumber>,
         leadingDims: Operand<TInt64>
-    ): TensorListConcat<U> = tensorListConcat<U, T>(inputHandle, elementShape, leadingDims,
+    ): TensorListConcat<U> = tensorListConcat<U>(inputHandle, elementShape, leadingDims,
             U::class.java)
 
     /**
@@ -10860,8 +10821,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListReserve
      */
     @JvmName("tensorListReserveReified")
-    public inline fun <T : TNumber, reified U : TType> tensorListReserve(elementShape: Operand<T>,
-            numElements: Operand<TInt32>): TensorListReserve = tensorListReserve<T, U>(elementShape,
+    public inline fun <reified U : TType> tensorListReserve(elementShape: Operand<out TNumber>,
+            numElements: Operand<TInt32>): TensorListReserve = tensorListReserve<U>(elementShape,
             numElements, U::class.java)
 
     /**
@@ -10945,8 +10906,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.unique
      */
     @JvmName("uniqueReified")
-    public inline fun <T : TType, reified V : TNumber, U : TNumber> uniqueTyped(x: Operand<T>,
-            axis: Operand<U>): Unique<T, V> = unique<T, V, U>(x, axis, V::class.java)
+    public inline fun <T : TType, reified V : TNumber> uniqueTyped(x: Operand<T>, axis: Operand<out
+            TNumber>): Unique<T, V> = unique<T, V>(x, axis, V::class.java)
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -11007,9 +10968,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.uniqueWithCounts
      */
     @JvmName("uniqueWithCountsReified")
-    public inline fun <T : TType, reified V : TNumber, U : TNumber>
-            uniqueWithCountsTyped(x: Operand<T>, axis: Operand<U>): UniqueWithCounts<T, V> =
-            uniqueWithCounts<T, V, U>(x, axis, V::class.java)
+    public inline fun <T : TType, reified V : TNumber> uniqueWithCountsTyped(x: Operand<T>,
+            axis: Operand<out TNumber>): UniqueWithCounts<T, V> = uniqueWithCounts<T, V>(x, axis,
+            V::class.java)
 
     /**
      * Creates a handle to a Variable resource.

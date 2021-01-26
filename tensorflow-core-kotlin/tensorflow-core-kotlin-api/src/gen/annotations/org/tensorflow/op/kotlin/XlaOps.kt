@@ -74,11 +74,11 @@ public class XlaOps(
      * @return a new instance of BroadcastHelper
      * @see org.tensorflow.op.XlaOps.broadcastHelper
      */
-    public fun <T : TType, U : TNumber> broadcastHelper(
+    public fun <T : TType> broadcastHelper(
         lhs: Operand<T>,
         rhs: Operand<T>,
-        broadcastDims: Operand<U>
-    ): BroadcastHelper<T> = java.broadcastHelper<T, U>(    
+        broadcastDims: Operand<out TNumber>
+    ): BroadcastHelper<T> = java.broadcastHelper<T>(    
         lhs,
         rhs,
         broadcastDims
@@ -246,11 +246,11 @@ public class XlaOps(
      * @return a new instance of DynamicUpdateSlice
      * @see org.tensorflow.op.XlaOps.dynamicUpdateSlice
      */
-    public fun <T : TType, U : TNumber> dynamicUpdateSlice(
+    public fun <T : TType> dynamicUpdateSlice(
         input: Operand<T>,
         update: Operand<T>,
-        indices: Operand<U>
-    ): DynamicUpdateSlice<T> = java.dynamicUpdateSlice<T, U>(    
+        indices: Operand<out TNumber>
+    ): DynamicUpdateSlice<T> = java.dynamicUpdateSlice<T>(    
         input,
         update,
         indices
@@ -435,7 +435,7 @@ public class XlaOps(
      * @return a new instance of Send
      * @see org.tensorflow.op.XlaOps.send
      */
-    public fun <T : TType> send(tensor: Operand<T>, tensorName: String): Send = java.send<T>(    
+    public fun send(tensor: Operand<out TType>, tensorName: String): Send = java.send(    
         tensor,
         tensorName
         )

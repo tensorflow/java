@@ -282,7 +282,7 @@ public class MathOps(
      * @return a new instance of Angle
      * @see org.tensorflow.op.MathOps.angle
      */
-    public fun <T : TType> angle(input: Operand<T>): Angle<TFloat32> = java.angle<T>(    
+    public fun angle(input: Operand<out TType>): Angle<TFloat32> = java.angle(    
         input
         )
 
@@ -311,8 +311,8 @@ public class MathOps(
      * @return a new instance of Angle
      * @see org.tensorflow.op.MathOps.angle
      */
-    public fun <U : TNumber, T : TType> angle(input: Operand<T>, Tout: Class<U>): Angle<U> =
-            java.angle<U, T>(    
+    public fun <U : TNumber> angle(input: Operand<out TType>, Tout: Class<U>): Angle<U> =
+            java.angle<U>(    
         input,
         Tout
         )
@@ -363,8 +363,8 @@ public class MathOps(
      * @return a new instance of ArgMax
      * @see org.tensorflow.op.MathOps.argMax
      */
-    public fun <T : TType, U : TNumber> argMax(input: Operand<T>, dimension: Operand<U>):
-            ArgMax<TInt64> = java.argMax<T, U>(    
+    public fun argMax(input: Operand<out TType>, dimension: Operand<out TNumber>): ArgMax<TInt64> =
+            java.argMax(    
         input,
         dimension
         )
@@ -394,11 +394,11 @@ public class MathOps(
      * @return a new instance of ArgMax
      * @see org.tensorflow.op.MathOps.argMax
      */
-    public fun <V : TNumber, T : TType, U : TNumber> argMax(
-        input: Operand<T>,
-        dimension: Operand<U>,
+    public fun <V : TNumber> argMax(
+        input: Operand<out TType>,
+        dimension: Operand<out TNumber>,
         outputType: Class<V>
-    ): ArgMax<V> = java.argMax<V, T, U>(    
+    ): ArgMax<V> = java.argMax<V>(    
         input,
         dimension,
         outputType
@@ -428,8 +428,8 @@ public class MathOps(
      * @return a new instance of ArgMin
      * @see org.tensorflow.op.MathOps.argMin
      */
-    public fun <T : TType, U : TNumber> argMin(input: Operand<T>, dimension: Operand<U>):
-            ArgMin<TInt64> = java.argMin<T, U>(    
+    public fun argMin(input: Operand<out TType>, dimension: Operand<out TNumber>): ArgMin<TInt64> =
+            java.argMin(    
         input,
         dimension
         )
@@ -459,11 +459,11 @@ public class MathOps(
      * @return a new instance of ArgMin
      * @see org.tensorflow.op.MathOps.argMin
      */
-    public fun <V : TNumber, T : TType, U : TNumber> argMin(
-        input: Operand<T>,
-        dimension: Operand<U>,
+    public fun <V : TNumber> argMin(
+        input: Operand<out TType>,
+        dimension: Operand<out TNumber>,
         outputType: Class<V>
-    ): ArgMin<V> = java.argMin<V, T, U>(    
+    ): ArgMin<V> = java.argMin<V>(    
         input,
         dimension,
         outputType
@@ -715,7 +715,7 @@ public class MathOps(
      * @return a new instance of ComplexAbs
      * @see org.tensorflow.op.MathOps.complexAbs
      */
-    public fun <T : TType> complexAbs(x: Operand<T>): ComplexAbs<TFloat32> = java.complexAbs<T>(    
+    public fun complexAbs(x: Operand<out TType>): ComplexAbs<TFloat32> = java.complexAbs(    
         x
         )
 
@@ -733,8 +733,8 @@ public class MathOps(
      * @return a new instance of ComplexAbs
      * @see org.tensorflow.op.MathOps.complexAbs
      */
-    public fun <U : TNumber, T : TType> complexAbs(x: Operand<T>, Tout: Class<U>): ComplexAbs<U> =
-            java.complexAbs<U, T>(    
+    public fun <U : TNumber> complexAbs(x: Operand<out TType>, Tout: Class<U>): ComplexAbs<U> =
+            java.complexAbs<U>(    
         x,
         Tout
         )
@@ -853,12 +853,12 @@ public class MathOps(
      * @param exclusive If `True`, perform exclusive cumprod.
      * @param reverse A `bool` (default: False).
      */
-    public fun <T : TType, U : TNumber> cumprod(
+    public fun <T : TType> cumprod(
         x: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         exclusive: Boolean? = null,
         reverse: Boolean? = null
-    ): Cumprod<T> = java.cumprod<T, U>(    
+    ): Cumprod<T> = java.cumprod<T>(    
         x,
         axis,
         *listOfNotNull(
@@ -908,12 +908,12 @@ public class MathOps(
      * @param exclusive If `True`, perform exclusive cumsum.
      * @param reverse A `bool` (default: False).
      */
-    public fun <T : TType, U : TNumber> cumsum(
+    public fun <T : TType> cumsum(
         x: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         exclusive: Boolean? = null,
         reverse: Boolean? = null
-    ): Cumsum<T> = java.cumsum<T, U>(    
+    ): Cumsum<T> = java.cumsum<T>(    
         x,
         axis,
         *listOfNotNull(
@@ -1336,7 +1336,7 @@ public class MathOps(
      * @return a new instance of Imag
      * @see org.tensorflow.op.MathOps.imag
      */
-    public fun <T : TType> imag(input: Operand<T>): Imag<TFloat32> = java.imag<T>(    
+    public fun imag(input: Operand<out TType>): Imag<TFloat32> = java.imag(    
         input
         )
 
@@ -1361,8 +1361,8 @@ public class MathOps(
      * @return a new instance of Imag
      * @see org.tensorflow.op.MathOps.imag
      */
-    public fun <U : TNumber, T : TType> imag(input: Operand<T>, Tout: Class<U>): Imag<U> =
-            java.imag<U, T>(    
+    public fun <U : TNumber> imag(input: Operand<out TType>, Tout: Class<U>): Imag<U> =
+            java.imag<U>(    
         input,
         Tout
         )
@@ -1412,7 +1412,7 @@ public class MathOps(
      * @return a new instance of IsFinite
      * @see org.tensorflow.op.MathOps.isFinite
      */
-    public fun <T : TNumber> isFinite(x: Operand<T>): IsFinite = java.isFinite<T>(    
+    public fun isFinite(x: Operand<out TNumber>): IsFinite = java.isFinite(    
         x
         )
 
@@ -1432,7 +1432,7 @@ public class MathOps(
      * @return a new instance of IsInf
      * @see org.tensorflow.op.MathOps.isInf
      */
-    public fun <T : TNumber> isInf(x: Operand<T>): IsInf = java.isInf<T>(    
+    public fun isInf(x: Operand<out TNumber>): IsInf = java.isInf(    
         x
         )
 
@@ -1452,7 +1452,7 @@ public class MathOps(
      * @return a new instance of IsNan
      * @see org.tensorflow.op.MathOps.isNan
      */
-    public fun <T : TNumber> isNan(x: Operand<T>): IsNan = java.isNan<T>(    
+    public fun isNan(x: Operand<out TNumber>): IsNan = java.isNan(    
         x
         )
 
@@ -1655,11 +1655,11 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.mean
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> mean(
+    public fun <T : TType> mean(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Mean<T> = java.mean<T, U>(    
+    ): Mean<T> = java.mean<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -1846,8 +1846,7 @@ public class MathOps(
      * @return a new instance of PopulationCount
      * @see org.tensorflow.op.MathOps.populationCount
      */
-    public fun <T : TNumber> populationCount(x: Operand<T>): PopulationCount =
-            java.populationCount<T>(    
+    public fun populationCount(x: Operand<out TNumber>): PopulationCount = java.populationCount(    
         x
         )
 
@@ -1888,15 +1887,15 @@ public class MathOps(
      * @return a new instance of QuantizedAdd
      * @see org.tensorflow.op.MathOps.quantizedAdd
      */
-    public fun <V : TType, T : TType, U : TType> quantizedAdd(
-        x: Operand<T>,
-        y: Operand<U>,
+    public fun <V : TType> quantizedAdd(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
         minX: Operand<TFloat32>,
         maxX: Operand<TFloat32>,
         minY: Operand<TFloat32>,
         maxY: Operand<TFloat32>,
         Toutput: Class<V>
-    ): QuantizedAdd<V> = java.quantizedAdd<V, T, U>(    
+    ): QuantizedAdd<V> = java.quantizedAdd<V>(    
         x,
         y,
         minX,
@@ -1920,15 +1919,15 @@ public class MathOps(
      * @return a new instance of QuantizedMul
      * @see org.tensorflow.op.MathOps.quantizedMul
      */
-    public fun <V : TType, T : TType, U : TType> quantizedMul(
-        x: Operand<T>,
-        y: Operand<U>,
+    public fun <V : TType> quantizedMul(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
         minX: Operand<TFloat32>,
         maxX: Operand<TFloat32>,
         minY: Operand<TFloat32>,
         maxY: Operand<TFloat32>,
         Toutput: Class<V>
-    ): QuantizedMul<V> = java.quantizedMul<V, T, U>(    
+    ): QuantizedMul<V> = java.quantizedMul<V>(    
         x,
         y,
         minX,
@@ -1958,7 +1957,7 @@ public class MathOps(
      * @return a new instance of Real
      * @see org.tensorflow.op.MathOps.real
      */
-    public fun <T : TType> real(input: Operand<T>): Real<TFloat32> = java.real<T>(    
+    public fun real(input: Operand<out TType>): Real<TFloat32> = java.real(    
         input
         )
 
@@ -1983,8 +1982,8 @@ public class MathOps(
      * @return a new instance of Real
      * @see org.tensorflow.op.MathOps.real
      */
-    public fun <U : TNumber, T : TType> real(input: Operand<T>, Tout: Class<U>): Real<U> =
-            java.real<U, T>(    
+    public fun <U : TNumber> real(input: Operand<out TType>, Tout: Class<U>): Real<U> =
+            java.real<U>(    
         input,
         Tout
         )
@@ -2107,8 +2106,8 @@ public class MathOps(
      * @return a new instance of SegmentMax
      * @see org.tensorflow.op.MathOps.segmentMax
      */
-    public fun <T : TNumber, U : TNumber> segmentMax(`data`: Operand<T>, segmentIds: Operand<U>):
-            SegmentMax<T> = java.segmentMax<T, U>(    
+    public fun <T : TNumber> segmentMax(`data`: Operand<T>, segmentIds: Operand<out TNumber>):
+            SegmentMax<T> = java.segmentMax<T>(    
         data,
         segmentIds
         )
@@ -2148,8 +2147,8 @@ public class MathOps(
      * @return a new instance of SegmentMean
      * @see org.tensorflow.op.MathOps.segmentMean
      */
-    public fun <T : TType, U : TNumber> segmentMean(`data`: Operand<T>, segmentIds: Operand<U>):
-            SegmentMean<T> = java.segmentMean<T, U>(    
+    public fun <T : TType> segmentMean(`data`: Operand<T>, segmentIds: Operand<out TNumber>):
+            SegmentMean<T> = java.segmentMean<T>(    
         data,
         segmentIds
         )
@@ -2188,8 +2187,8 @@ public class MathOps(
      * @return a new instance of SegmentMin
      * @see org.tensorflow.op.MathOps.segmentMin
      */
-    public fun <T : TNumber, U : TNumber> segmentMin(`data`: Operand<T>, segmentIds: Operand<U>):
-            SegmentMin<T> = java.segmentMin<T, U>(    
+    public fun <T : TNumber> segmentMin(`data`: Operand<T>, segmentIds: Operand<out TNumber>):
+            SegmentMin<T> = java.segmentMin<T>(    
         data,
         segmentIds
         )
@@ -2228,8 +2227,8 @@ public class MathOps(
      * @return a new instance of SegmentProd
      * @see org.tensorflow.op.MathOps.segmentProd
      */
-    public fun <T : TType, U : TNumber> segmentProd(`data`: Operand<T>, segmentIds: Operand<U>):
-            SegmentProd<T> = java.segmentProd<T, U>(    
+    public fun <T : TType> segmentProd(`data`: Operand<T>, segmentIds: Operand<out TNumber>):
+            SegmentProd<T> = java.segmentProd<T>(    
         data,
         segmentIds
         )
@@ -2268,8 +2267,8 @@ public class MathOps(
      * @return a new instance of SegmentSum
      * @see org.tensorflow.op.MathOps.segmentSum
      */
-    public fun <T : TType, U : TNumber> segmentSum(`data`: Operand<T>, segmentIds: Operand<U>):
-            SegmentSum<T> = java.segmentSum<T, U>(    
+    public fun <T : TType> segmentSum(`data`: Operand<T>, segmentIds: Operand<out TNumber>):
+            SegmentSum<T> = java.segmentSum<T>(    
         data,
         segmentIds
         )
@@ -2562,11 +2561,11 @@ public class MathOps(
      * @return a new instance of UnsortedSegmentMax
      * @see org.tensorflow.op.MathOps.unsortedSegmentMax
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> unsortedSegmentMax(
+    public fun <T : TNumber> unsortedSegmentMax(
         `data`: Operand<T>,
-        segmentIds: Operand<U>,
-        numSegments: Operand<V>
-    ): UnsortedSegmentMax<T> = java.unsortedSegmentMax<T, U, V>(    
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): UnsortedSegmentMax<T> = java.unsortedSegmentMax<T>(    
         data,
         segmentIds,
         numSegments
@@ -2609,11 +2608,11 @@ public class MathOps(
      * @return a new instance of UnsortedSegmentMin
      * @see org.tensorflow.op.MathOps.unsortedSegmentMin
      */
-    public fun <T : TNumber, U : TNumber, V : TNumber> unsortedSegmentMin(
+    public fun <T : TNumber> unsortedSegmentMin(
         `data`: Operand<T>,
-        segmentIds: Operand<U>,
-        numSegments: Operand<V>
-    ): UnsortedSegmentMin<T> = java.unsortedSegmentMin<T, U, V>(    
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): UnsortedSegmentMin<T> = java.unsortedSegmentMin<T>(    
         data,
         segmentIds,
         numSegments
@@ -2655,11 +2654,11 @@ public class MathOps(
      * @return a new instance of UnsortedSegmentProd
      * @see org.tensorflow.op.MathOps.unsortedSegmentProd
      */
-    public fun <T : TType, U : TNumber, V : TNumber> unsortedSegmentProd(
+    public fun <T : TType> unsortedSegmentProd(
         `data`: Operand<T>,
-        segmentIds: Operand<U>,
-        numSegments: Operand<V>
-    ): UnsortedSegmentProd<T> = java.unsortedSegmentProd<T, U, V>(    
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): UnsortedSegmentProd<T> = java.unsortedSegmentProd<T>(    
         data,
         segmentIds,
         numSegments
@@ -2703,11 +2702,11 @@ public class MathOps(
      * @return a new instance of UnsortedSegmentSum
      * @see org.tensorflow.op.MathOps.unsortedSegmentSum
      */
-    public fun <T : TType, U : TNumber, V : TNumber> unsortedSegmentSum(
+    public fun <T : TType> unsortedSegmentSum(
         `data`: Operand<T>,
-        segmentIds: Operand<U>,
-        numSegments: Operand<V>
-    ): UnsortedSegmentSum<T> = java.unsortedSegmentSum<T, U, V>(    
+        segmentIds: Operand<out TNumber>,
+        numSegments: Operand<out TNumber>
+    ): UnsortedSegmentSum<T> = java.unsortedSegmentSum<T>(    
         data,
         segmentIds,
         numSegments
@@ -2799,8 +2798,8 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.angle
      */
     @JvmName("angleReified")
-    public inline fun <reified U : TNumber, T : TType> angleTyped(input: Operand<T>): Angle<U> =
-            angle<U, T>(input, U::class.java)
+    public inline fun <reified U : TNumber> angleTyped(input: Operand<out TType>): Angle<U> =
+            angle<U>(input, U::class.java)
 
     /**
      * Returns the index with the largest value across dimensions of a tensor.
@@ -2828,8 +2827,8 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.argMax
      */
     @JvmName("argMaxReified")
-    public inline fun <reified V : TNumber, T : TType, U : TNumber> argMaxTyped(input: Operand<T>,
-            dimension: Operand<U>): ArgMax<V> = argMax<V, T, U>(input, dimension, V::class.java)
+    public inline fun <reified V : TNumber> argMaxTyped(input: Operand<out TType>,
+            dimension: Operand<out TNumber>): ArgMax<V> = argMax<V>(input, dimension, V::class.java)
 
     /**
      * Returns the index with the smallest value across dimensions of a tensor.
@@ -2857,8 +2856,8 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.argMin
      */
     @JvmName("argMinReified")
-    public inline fun <reified V : TNumber, T : TType, U : TNumber> argMinTyped(input: Operand<T>,
-            dimension: Operand<U>): ArgMin<V> = argMin<V, T, U>(input, dimension, V::class.java)
+    public inline fun <reified V : TNumber> argMinTyped(input: Operand<out TType>,
+            dimension: Operand<out TNumber>): ArgMin<V> = argMin<V>(input, dimension, V::class.java)
 
     /**
      * Computes the complex absolute value of a tensor.
@@ -2875,8 +2874,8 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.complexAbs
      */
     @JvmName("complexAbsReified")
-    public inline fun <reified U : TNumber, T : TType> complexAbsTyped(x: Operand<T>): ComplexAbs<U>
-            = complexAbs<U, T>(x, U::class.java)
+    public inline fun <reified U : TNumber> complexAbsTyped(x: Operand<out TType>): ComplexAbs<U> =
+            complexAbs<U>(x, U::class.java)
 
     /**
      * Returns the imaginary part of a complex number.
@@ -2900,8 +2899,8 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.imag
      */
     @JvmName("imagReified")
-    public inline fun <reified U : TNumber, T : TType> imagTyped(input: Operand<T>): Imag<U> =
-            imag<U, T>(input, U::class.java)
+    public inline fun <reified U : TNumber> imagTyped(input: Operand<out TType>): Imag<U> =
+            imag<U>(input, U::class.java)
 
     /**
      * Returns x + y element-wise, working on quantized buffers.
@@ -2918,14 +2917,14 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.quantizedAdd
      */
     @JvmName("quantizedAddReified")
-    public inline fun <reified V : TType, T : TType, U : TType> quantizedAdd(
-        x: Operand<T>,
-        y: Operand<U>,
+    public inline fun <reified V : TType> quantizedAdd(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
         minX: Operand<TFloat32>,
         maxX: Operand<TFloat32>,
         minY: Operand<TFloat32>,
         maxY: Operand<TFloat32>
-    ): QuantizedAdd<V> = quantizedAdd<V, T, U>(x, y, minX, maxX, minY, maxY, V::class.java)
+    ): QuantizedAdd<V> = quantizedAdd<V>(x, y, minX, maxX, minY, maxY, V::class.java)
 
     /**
      * Returns x * y element-wise, working on quantized buffers.
@@ -2942,14 +2941,14 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.quantizedMul
      */
     @JvmName("quantizedMulReified")
-    public inline fun <reified V : TType, T : TType, U : TType> quantizedMul(
-        x: Operand<T>,
-        y: Operand<U>,
+    public inline fun <reified V : TType> quantizedMul(
+        x: Operand<out TType>,
+        y: Operand<out TType>,
         minX: Operand<TFloat32>,
         maxX: Operand<TFloat32>,
         minY: Operand<TFloat32>,
         maxY: Operand<TFloat32>
-    ): QuantizedMul<V> = quantizedMul<V, T, U>(x, y, minX, maxX, minY, maxY, V::class.java)
+    ): QuantizedMul<V> = quantizedMul<V>(x, y, minX, maxX, minY, maxY, V::class.java)
 
     /**
      * Returns the real part of a complex number.
@@ -2973,6 +2972,6 @@ public class MathOps(
      * @see org.tensorflow.op.MathOps.real
      */
     @JvmName("realReified")
-    public inline fun <reified U : TNumber, T : TType> realTyped(input: Operand<T>): Real<U> =
-            real<U, T>(input, U::class.java)
+    public inline fun <reified U : TNumber> realTyped(input: Operand<out TType>): Real<U> =
+            real<U>(input, U::class.java)
 }

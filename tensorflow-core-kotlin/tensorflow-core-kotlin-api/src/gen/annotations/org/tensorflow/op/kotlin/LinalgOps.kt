@@ -433,8 +433,8 @@ public class LinalgOps(
      * @return a new instance of ConjugateTranspose
      * @see org.tensorflow.op.LinalgOps.conjugateTranspose
      */
-    public fun <T : TType, U : TNumber> conjugateTranspose(x: Operand<T>, perm: Operand<U>):
-            ConjugateTranspose<T> = java.conjugateTranspose<T, U>(    
+    public fun <T : TType> conjugateTranspose(x: Operand<T>, perm: Operand<out TNumber>):
+            ConjugateTranspose<T> = java.conjugateTranspose<T>(    
         x,
         perm
         )
@@ -498,11 +498,11 @@ public class LinalgOps(
      * @param computeV If `True` then eigenvectors will be computed and returned in `v`.
      *  Otherwise, only the eigenvalues will be computed.
      */
-    public fun <U : TType, T : TType> eig(
-        input: Operand<T>,
+    public fun <U : TType> eig(
+        input: Operand<out TType>,
         Tout: Class<U>,
         computeV: Boolean? = null
-    ): Eig<U> = java.eig<U, T>(    
+    ): Eig<U> = java.eig<U>(    
         input,
         Tout,
         *listOfNotNull(
@@ -619,11 +619,11 @@ public class LinalgOps(
      * @see org.tensorflow.op.LinalgOps.euclideanNorm
      * @param keepDims If true, retain reduced dimensions with length 1.
      */
-    public fun <T : TType, U : TNumber> euclideanNorm(
+    public fun <T : TType> euclideanNorm(
         input: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): EuclideanNorm<T> = java.euclideanNorm<T, U>(    
+    ): EuclideanNorm<T> = java.euclideanNorm<T>(    
         input,
         axis,
         *listOfNotNull(
@@ -1655,9 +1655,9 @@ public class LinalgOps(
      * @param transposeA If true, `a` is transposed before multiplication.
      * @param transposeB If true, `b` is transposed before multiplication.
      */
-    public fun <V : TType, T : TType, U : TType, W : TType> quantizedMatMul(
-        a: Operand<T>,
-        b: Operand<U>,
+    public fun <V : TType, W : TType> quantizedMatMul(
+        a: Operand<out TType>,
+        b: Operand<out TType>,
         minA: Operand<TFloat32>,
         maxA: Operand<TFloat32>,
         minB: Operand<TFloat32>,
@@ -1666,7 +1666,7 @@ public class LinalgOps(
         Tactivation: Class<W>,
         transposeA: Boolean? = null,
         transposeB: Boolean? = null
-    ): QuantizedMatMul<V> = java.quantizedMatMul<V, T, U, W>(    
+    ): QuantizedMatMul<V> = java.quantizedMatMul<V, W>(    
         a,
         b,
         minA,
@@ -1887,8 +1887,8 @@ public class LinalgOps(
      * @return a new instance of Transpose
      * @see org.tensorflow.op.LinalgOps.transpose
      */
-    public fun <T : TType, U : TNumber> transpose(x: Operand<T>, perm: Operand<U>): Transpose<T> =
-            java.transpose<T, U>(    
+    public fun <T : TType> transpose(x: Operand<T>, perm: Operand<out TNumber>): Transpose<T> =
+            java.transpose<T>(    
         x,
         perm
         )
@@ -1997,8 +1997,8 @@ public class LinalgOps(
      *  Otherwise, only the eigenvalues will be computed.
      */
     @JvmName("eigReified")
-    public inline fun <reified U : TType, T : TType> eig(input: Operand<T>, computeV: Boolean? =
-            null): Eig<U> = eig<U, T>(input, U::class.java, computeV)
+    public inline fun <reified U : TType> eig(input: Operand<out TType>, computeV: Boolean? = null):
+            Eig<U> = eig<U>(input, U::class.java, computeV)
 
     /**
      * Computes the LU decomposition of one or more square matrices.
@@ -2059,15 +2059,15 @@ public class LinalgOps(
      * @param transposeB If true, `b` is transposed before multiplication.
      */
     @JvmName("quantizedMatMulReified")
-    public inline fun <reified V : TType, T : TType, U : TType, reified W : TType> quantizedMatMul(
-        a: Operand<T>,
-        b: Operand<U>,
+    public inline fun <reified V : TType, reified W : TType> quantizedMatMul(
+        a: Operand<out TType>,
+        b: Operand<out TType>,
         minA: Operand<TFloat32>,
         maxA: Operand<TFloat32>,
         minB: Operand<TFloat32>,
         maxB: Operand<TFloat32>,
         transposeA: Boolean? = null,
         transposeB: Boolean? = null
-    ): QuantizedMatMul<V> = quantizedMatMul<V, T, U, W>(a, b, minA, maxA, minB, maxB, V::class.java,
+    ): QuantizedMatMul<V> = quantizedMatMul<V, W>(a, b, minA, maxA, minB, maxB, V::class.java,
             W::class.java, transposeA, transposeB)
 }

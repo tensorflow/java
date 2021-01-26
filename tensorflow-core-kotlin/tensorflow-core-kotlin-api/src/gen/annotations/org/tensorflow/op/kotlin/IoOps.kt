@@ -1324,11 +1324,11 @@ public class IoOps(
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
-    public fun <T : TType> serializeManySparse(
+    public fun serializeManySparse(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeManySparse<TString> = java.serializeManySparse<T>(    
+    ): SerializeManySparse<TString> = java.serializeManySparse(    
         sparseIndices,
         sparseValues,
         sparseShape
@@ -1354,12 +1354,12 @@ public class IoOps(
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
-    public fun <U : TType, T : TType> serializeManySparse(
+    public fun <U : TType> serializeManySparse(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         outType: Class<U>
-    ): SerializeManySparse<U> = java.serializeManySparse<U, T>(    
+    ): SerializeManySparse<U> = java.serializeManySparse<U>(    
         sparseIndices,
         sparseValues,
         sparseShape,
@@ -1376,11 +1376,11 @@ public class IoOps(
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
-    public fun <T : TType> serializeSparse(
+    public fun serializeSparse(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeSparse<TString> = java.serializeSparse<T>(    
+    ): SerializeSparse<TString> = java.serializeSparse(    
         sparseIndices,
         sparseValues,
         sparseShape
@@ -1398,12 +1398,12 @@ public class IoOps(
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
-    public fun <U : TType, T : TType> serializeSparse(
+    public fun <U : TType> serializeSparse(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         outType: Class<U>
-    ): SerializeSparse<U> = java.serializeSparse<U, T>(    
+    ): SerializeSparse<U> = java.serializeSparse<U>(    
         sparseIndices,
         sparseValues,
         sparseShape,
@@ -1417,8 +1417,7 @@ public class IoOps(
      * @return a new instance of SerializeTensor
      * @see org.tensorflow.op.IoOps.serializeTensor
      */
-    public fun <T : TType> serializeTensor(tensor: Operand<T>): SerializeTensor =
-            java.serializeTensor<T>(    
+    public fun serializeTensor(tensor: Operand<out TType>): SerializeTensor = java.serializeTensor(    
         tensor
         )
 
@@ -1676,11 +1675,11 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
     @JvmName("serializeManySparseReified")
-    public inline fun <reified U : TType, T : TType> serializeManySparseTyped(
+    public inline fun <reified U : TType> serializeManySparseTyped(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeManySparse<U> = serializeManySparse<U, T>(sparseIndices, sparseValues, sparseShape,
+    ): SerializeManySparse<U> = serializeManySparse<U>(sparseIndices, sparseValues, sparseShape,
             U::class.java)
 
     /**
@@ -1696,10 +1695,10 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
     @JvmName("serializeSparseReified")
-    public inline fun <reified U : TType, T : TType> serializeSparseTyped(
+    public inline fun <reified U : TType> serializeSparseTyped(
         sparseIndices: Operand<TInt64>,
-        sparseValues: Operand<T>,
+        sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeSparse<U> = serializeSparse<U, T>(sparseIndices, sparseValues, sparseShape,
+    ): SerializeSparse<U> = serializeSparse<U>(sparseIndices, sparseValues, sparseShape,
             U::class.java)
 }
