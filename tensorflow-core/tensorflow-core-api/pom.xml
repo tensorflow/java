@@ -21,6 +21,7 @@
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
+    <java.module.name>org.tensorflow.core.api</java.module.name>
   </properties>
 
   <dependencies>
@@ -330,6 +331,13 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.1.0</version>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
         <executions>
           <execution>
             <!--
