@@ -26,7 +26,7 @@ class MaxNormTest {
   /** Test of call method, of class MaxNorm. */
   @Test
   public void testCall() {
-    float[] testValues = {0.1f, 0.5f, 3f, 8f, 1e-7f};
+    double[] testValues = {0.1, 0.5, 3, 8, 1e-7};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -37,7 +37,7 @@ class MaxNormTest {
             i.getAndIncrement()) {
           MaxNorm<TFloat32> instance = new MaxNorm<>(tf, testValues[i.get()]);
           Operand<TFloat32> result = instance.call(weights);
-          session.evaluate(result, (Number v) -> v.floatValue() <= testValues[i.get()]);
+          session.evaluate(result, v -> v.floatValue() <= testValues[i.get()]);
         }
       }
   }
@@ -47,7 +47,7 @@ class MaxNormTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        MaxNorm<TFloat32> instance = new MaxNorm<>(tf, 2.0f);
+        MaxNorm<TFloat32> instance = new MaxNorm<>(tf, 2.0);
         Operand<TFloat32> weights =
             tf.constant(
                 new float[][] {

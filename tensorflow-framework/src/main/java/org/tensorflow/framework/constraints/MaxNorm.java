@@ -28,11 +28,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * @param <T> the data type for the weights
  */
 public class MaxNorm<T extends TNumber> extends Constraint<T> {
-  public static final float MAX_VALUE_DEFAULT = 2.0f;
+  public static final double MAX_VALUE_DEFAULT = 2.0;
   public static final int AXIS_DEFAULT = 0;
 
   /** the maximum norm for the incoming weights. */
-  private final float maxValue;
+  private final double maxValue;
   /** integer, axis along which to calculate weight norms. */
   private final int[] axes;
 
@@ -52,7 +52,7 @@ public class MaxNorm<T extends TNumber> extends Constraint<T> {
    * @param tf the TensorFlow Ops
    * @param maxValue the maximum norm for the incoming weights.
    */
-  public MaxNorm(Ops tf, float maxValue) {
+  public MaxNorm(Ops tf, double maxValue) {
     this(tf, maxValue, AXIS_DEFAULT);
   }
 
@@ -63,7 +63,7 @@ public class MaxNorm<T extends TNumber> extends Constraint<T> {
    * @param maxValue the maximum norm for the incoming weights.
    * @param axis axis along which to calculate weight norms.
    */
-  public MaxNorm(Ops tf, float maxValue, int axis) {
+  public MaxNorm(Ops tf, double maxValue, int axis) {
     this(tf, maxValue, new int[] {axis});
   }
 
@@ -74,7 +74,7 @@ public class MaxNorm<T extends TNumber> extends Constraint<T> {
    * @param maxValue the maximum norm for the incoming weights.
    * @param axes axes along which to calculate weight norms.
    */
-  public MaxNorm(Ops tf, float maxValue, int[] axes) {
+  public MaxNorm(Ops tf, double maxValue, int[] axes) {
     super(tf);
     this.maxValue = maxValue;
     this.axes = axes;
@@ -100,7 +100,7 @@ public class MaxNorm<T extends TNumber> extends Constraint<T> {
    *
    * @return the maxValue
    */
-  public float getMaxValue() {
+  public double getMaxValue() {
     return maxValue;
   }
 
