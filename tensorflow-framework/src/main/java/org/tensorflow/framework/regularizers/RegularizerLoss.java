@@ -24,7 +24,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * A Regularizer call wrapped as a Loss instance
  *
- * <p>This class facilitates using a regularizing as a loss, only <code>sampleWeights</code> are
+ * <p>This class facilitates using a regularizer as a loss, only <code>sampleWeights</code> are
  * regularized.
  *
  * @param <R> the datatype for the weights type

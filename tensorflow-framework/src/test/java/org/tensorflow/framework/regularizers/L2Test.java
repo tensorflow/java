@@ -25,15 +25,14 @@ class L2Test extends CommonTest {
         assertEquals(0.f, instance.getL2());
         assertEquals(0.f, instance.getL1());
 
-        instance = new L2<>(tf, TFloat32.class);
-        assertEquals(Regularizer.DEFAULT_REGULARIZATION_PENALTY, instance.getL2());
-        assertEquals(0.f, instance.getL1());
+        L2<TFloat64> instance64 = new L2<>(tf, TFloat64.class);
+        assertEquals(Regularizer.DEFAULT_REGULARIZATION_PENALTY, instance64.getL2());
+        assertEquals(0.f, instance64.getL1());
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallNO() {
+  public void testCallL20() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -45,9 +44,8 @@ class L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1() {
+  public void testCallL2TFloat32() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
@@ -61,9 +59,8 @@ class L2Test extends CommonTest {
       }
   }
 
-  /** Test of call method, of class L1L2. */
   @Test
-  public void testCallL1_2() {
+  public void testCallL2TFloat64() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();

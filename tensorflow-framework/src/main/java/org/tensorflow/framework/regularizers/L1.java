@@ -18,7 +18,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * A regularizer that applies a L1 regularization penalty.
+ * A regularizer that applies an L1 or Lasso(least absolute shrinkage and selection operator) Regression,
+ * regularization penalty.
  *
  * <p>The L1 regularization penalty is computed as: <code>loss = l1 * reduceSum(abs(x))</code>
  *
@@ -41,6 +42,7 @@ public class L1<R extends TNumber> extends L1L2<R> {
    *
    * @param tf the TensorFlow Ops
    * @param l1 the L1 regularization penalty
+   * @throws IllegalArgumentException if the l1 regularization factor is NaN or is infinite.
    */
   public L1(Ops tf, float l1, Class<R> type) {
     super(tf, l1, null, type);

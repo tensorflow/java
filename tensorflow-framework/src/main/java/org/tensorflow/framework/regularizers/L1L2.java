@@ -30,6 +30,9 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>loss = l2 * reduceSum(square(x))</pre>
  *
+ * <p>The difference between this class and the {@link L1_L2} is use of the default regularization
+ * penalty {@link #DEFAULT_REGULARIZATION_PENALTY}, whereas {@link L1L2} defaults to 0.
+ *
  * @param <R> the data type for the weights
  */
 public class L1L2<R extends TNumber> extends Regularizer<R> {
@@ -54,8 +57,8 @@ public class L1L2<R extends TNumber> extends Regularizer<R> {
    * @param l1 L1 regularization factor, if null it is set to 0.
    * @param l2 L2 regularization factor, if null it is set to 0.
    * @param type the data type for the weights
-   * @throws IllegalArgumentException if the l1 or l2 regularization factor is {@link }NaN or is
-   *     infinite.
+   * @throws IllegalArgumentException if the l1 or l2 regularization factor is {@link Float#isNaN}
+   *     of {@link Float#isInfinite}
    */
   public L1L2(Ops tf, Float l1, Float l2, Class<R> type) {
     super(tf, type);
