@@ -49,7 +49,7 @@ public final class Ones<T extends TType> implements Op, Operand<T> {
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
   @Endpoint
-  public static <T extends TType, U extends TNumber> Ones<T> create(Scope scope, Operand<U> dims, Class<T> type) {
+  public static <T extends TType> Ones<T> create(Scope scope, Operand<? extends TNumber> dims, Class<T> type) {
     Scope onesScope = scope.withSubScope("Ones");
     if (type == TString.class) {
       throw new IllegalArgumentException("Can't create Ones of String DataType");

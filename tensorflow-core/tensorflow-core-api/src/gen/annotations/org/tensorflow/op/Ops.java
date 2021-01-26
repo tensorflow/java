@@ -3433,7 +3433,7 @@ public final class Ops {
    * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
-  public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, Class<T> type) {
+  public <T extends TType> Ones<T> ones(Operand<? extends TNumber> dims, Class<T> type) {
     return Ones.create(scope, dims, type);
   }
 
@@ -7674,7 +7674,7 @@ public final class Ops {
    * @return a constant tensor initialized with zeros
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with zeros.
    */
-  public <T extends TType, U extends TNumber> Zeros<T> zeros(Operand<U> dims, Class<T> type) {
+  public <T extends TType> Zeros<T> zeros(Operand<? extends TNumber> dims, Class<T> type) {
     return Zeros.create(scope, dims, type);
   }
 
