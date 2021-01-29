@@ -305,10 +305,9 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Execute the graph fragments necessary to compute all requested fetches.
+     * Execute the graph fragments necessary to compute all requested fetches and complete all targets.
      *
-     * <p><b>WARNING:</b> The caller assumes ownership of all returned {@link Tensor Tensors}, i.e.,
-     * the caller must call {@link Tensor#close} on all elements of the returned list to free up resources.
+     * <p>The returned tensors will be part of the passed scope.
      *
      * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
      * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in SessionTest.java), and
@@ -322,6 +321,17 @@ public final class Session implements AutoCloseable {
      */
     public List<Tensor> run(TensorScope scope) {
       return runHelper(scope, false).outputs;
+    }
+
+    /**
+     * Execute the graph fragments necessary to compute all requested fetches and complete all targets.
+     *
+     * @see #run(TensorScope)
+     */
+    public void runWithoutOutputs() {
+      try (TensorScope scope = new TensorScope()) {
+        run(scope);
+      }
     }
 
     /**
