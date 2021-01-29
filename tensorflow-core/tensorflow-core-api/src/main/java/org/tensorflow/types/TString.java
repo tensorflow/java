@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.internal.types.TStringInitializer;
 import org.tensorflow.internal.types.TStringMapper;
 import org.tensorflow.ndarray.NdArray;
@@ -37,8 +38,8 @@ import org.tensorflow.types.family.TType;
  * <p>This type can be used to store any arbitrary byte sequence of variable length.
  *
  * <p>Since the size of a tensor is fixed, creating a tensor of this type requires to provide all of
- * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the
- * data in the tensor is initialized once and cannot be modified afterwards.
+ * its values initially, so TensorFlow can compute and allocate the right amount of memory. Then the data in the tensor
+ * is initialized once and cannot be modified afterwards.
  */
 @TensorType(dataType = DataType.DT_STRING, byteSize = -1, mapperClass = TStringMapper.class)
 public interface TString extends NdArray<String>, TType {
@@ -48,11 +49,12 @@ public interface TString extends NdArray<String>, TType {
    *
    * <p>The string is encoded into bytes using the UTF-8 charset.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param value scalar value to store in the new tensor
    * @return the new tensor
    */
-  static TString scalarOf(String value) {
-    return tensorOf(NdArrays.scalarOfObject(value));
+  static TString scalarOf(TensorScope scope, String value) {
+    return tensorOf(scope, NdArrays.scalarOfObject(value));
   }
 
   /**
@@ -60,14 +62,15 @@ public interface TString extends NdArray<String>, TType {
    *
    * <p>The strings are encoded into bytes using the UTF-8 charset.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param values values to store in the new tensor
    * @return the new tensor
    */
-  static TString vectorOf(String... values) {
+  static TString vectorOf(TensorScope scope, String... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return tensorOf(NdArrays.vectorOfObjects(values));
+    return tensorOf(scope, NdArrays.vectorOfObjects(values));
   }
 
   /**
@@ -76,11 +79,12 @@ public interface TString extends NdArray<String>, TType {
    * <p>The tensor will have the same shape as the source array and its data will be copied. The
    * strings are encoded into bytes using the UTF-8 charset.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TString tensorOf(NdArray<String> src) {
-    return tensorOf(StandardCharsets.UTF_8, src);
+  static TString tensorOf(TensorScope scope, NdArray<String> src) {
+    return tensorOf(scope, StandardCharsets.UTF_8, src);
   }
 
   /**
@@ -100,13 +104,14 @@ public interface TString extends NdArray<String>, TType {
    * assertEquals(originalStrings.getObject(0), tensorStrings.getObject(0));
    * }</pre>
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param charset charset to use for encoding the strings into bytes
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TString tensorOf(Charset charset, NdArray<String> src) {
+  static TString tensorOf(TensorScope scope, Charset charset, NdArray<String> src) {
     TStringInitializer<String> initializer = new TStringInitializer<>(src, s -> s.getBytes(charset));
-    return Tensor.of(TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
+    return Tensor.of(scope, TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**
@@ -115,12 +120,13 @@ public interface TString extends NdArray<String>, TType {
    * <p>The data will be copied from the provided buffer to the tensor after it is allocated. The
    * strings are encoded into bytes using the UTF-8 charset.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor
    * @param data buffer of strings to initialize the tensor with
    * @return the new tensor
    */
-  static TString tensorOf(Shape shape, DataBuffer<String> data) {
-    return tensorOf(NdArrays.wrap(shape, data));
+  static TString tensorOf(TensorScope scope, Shape shape, DataBuffer<String> data) {
+    return tensorOf(scope, NdArrays.wrap(shape, data));
   }
 
   /**
@@ -141,13 +147,14 @@ public interface TString extends NdArray<String>, TType {
    * assertEquals(originalStrings.getObject(0), tensorStrings.getObject(0));
    * }</pre>
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param charset charset to use for encoding the strings into bytes
    * @param shape shape of the tensor
    * @param data buffer of strings to initialize the tensor with
    * @return the new tensor
    */
-  static TString tensorOf(Charset charset, Shape shape, DataBuffer<String> data) {
-    return tensorOf(charset, NdArrays.wrap(shape, data));
+  static TString tensorOf(TensorScope scope, Charset charset, Shape shape, DataBuffer<String> data) {
+    return tensorOf(scope, charset, NdArrays.wrap(shape, data));
   }
 
   /**
@@ -162,12 +169,13 @@ public interface TString extends NdArray<String>, TType {
    * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
    * }</pre>
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TString tensorOfBytes(NdArray<byte[]> src) {
+  static TString tensorOfBytes(TensorScope scope, NdArray<byte[]> src) {
     TStringInitializer<byte[]> initializer = new TStringInitializer<>(src, Function.identity());
-    return Tensor.of(TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
+    return Tensor.of(scope, TString.class, src.shape(), initializer.computeRequiredSize(), initializer);
   }
 
   /**
@@ -182,12 +190,13 @@ public interface TString extends NdArray<String>, TType {
    * byte[] bytes = tensor.data().asBytes().getObject(0);  // returns first sequence of bytes in the tensor
    * }</pre>
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to create
    * @param data the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TString tensorOfBytes(Shape shape, DataBuffer<byte[]> data) {
-    return tensorOfBytes(NdArrays.wrap(shape, data));
+  static TString tensorOfBytes(TensorScope scope, Shape shape, DataBuffer<byte[]> data) {
+    return tensorOfBytes(scope, NdArrays.wrap(shape, data));
   }
 
   /**
@@ -208,6 +217,8 @@ public interface TString extends NdArray<String>, TType {
    */
   TString using(Charset charset);
 
-  /** @return the tensor data as a n-dimensional array of raw byte sequences. */
+  /**
+   * @return the tensor data as a n-dimensional array of raw byte sequences.
+   */
   NdArray<byte[]> asBytes();
 }

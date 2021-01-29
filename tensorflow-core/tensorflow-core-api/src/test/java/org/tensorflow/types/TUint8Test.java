@@ -17,6 +17,7 @@
 
 package org.tensorflow.types;
 
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -24,8 +25,8 @@ import org.tensorflow.ndarray.Shape;
 public class TUint8Test extends NumericTypesTestBase<TUint8, Byte> {
 
   @Override
-  TUint8 allocateTensor(Shape shape) {
-    return TUint8.tensorOf(shape);
+  TUint8 allocateTensor(TensorScope scope, Shape shape) {
+    return TUint8.tensorOf(scope, shape);
   }
 
   @Override

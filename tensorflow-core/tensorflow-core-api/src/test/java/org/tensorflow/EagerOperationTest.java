@@ -50,7 +50,8 @@ public class EagerOperationTest {
   @Test
   public void outputDataTypeAndShape() {
     try (EagerSession session = EagerSession.create();
-         TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
+        TensorScope scope = new TensorScope()) {
+      TInt32 t = TInt32.tensorOf(scope, Shape.of(2, 3));
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
               .setAttr("dtype", t.dataType())
@@ -64,14 +65,15 @@ public class EagerOperationTest {
 
   @Test
   public void outputTensor() {
-    try (EagerSession session = EagerSession.create()) {
+    try (EagerSession session = EagerSession.create();
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "CompareResult")
               .addInput(tf.constant(2).asOutput())
               .addInput(tf.constant(4).asOutput())
               .build();
-      assertEquals(6, ((TInt32)add.tensor(0)).getInt());
+      assertEquals(6, ((TInt32) add.tensor(scope, 0)).getInt());
 
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved
@@ -154,7 +156,8 @@ public class EagerOperationTest {
 
   @Test
   public void outputIndexOutOfBounds() {
-    try (EagerSession session = EagerSession.create()) {
+    try (EagerSession session = EagerSession.create();
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(session);
       EagerOperation add =
           opBuilder(session, "Add", "OutOfRange")
@@ -180,7 +183,7 @@ public class EagerOperationTest {
         // expected
       }
       try {
-        add.tensor(1);
+        add.tensor(scope, 1);
         fail();
       } catch (IndexOutOfBoundsException e) {
         // expected

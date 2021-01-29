@@ -58,11 +58,12 @@ public interface Operand<T extends TType> extends Op, Shaped {
    *
    * <i>Only works when running in an eager execution</i>
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @return the tensor
    * @throws IllegalStateException if this is an operand of a graph
    */
-  default T asTensor() {
-    return asOutput().asTensor();
+  default T asTensor(TensorScope scope) {
+    return asOutput().asTensor(scope);
   }
 
   /**

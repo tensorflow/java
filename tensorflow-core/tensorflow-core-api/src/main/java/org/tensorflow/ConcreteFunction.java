@@ -16,9 +16,9 @@
 package org.tensorflow;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import org.tensorflow.op.Ops;
@@ -43,12 +43,12 @@ public class ConcreteFunction implements AutoCloseable {
    * Creates a function by building a new graph.
    *
    * <p>The {@code functionBuilder} must initialize the function graph from the provided
-   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors
-   * and fetch the output tensors on execution.
+   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors and fetch the output
+   * tensors on execution.
    *
    * <p>The function will be the owner of the new graph and its resulting session. Therefore,
-   * the function must be enclosed properly with a try-with-resources block to guarantee that
-   * all native resources will be freed once the function is discarded. For example:
+   * the function must be enclosed properly with a try-with-resources block to guarantee that all native resources will
+   * be freed once the function is discarded. For example:
    *
    * <pre>{@code
    * public class MyModel {
@@ -87,8 +87,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Create a function from a signature and an existing graph.
    *
    * <p>The function will keep the ownership of the session used to run the graph but not
-   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope
-   * of the function. For example:
+   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope of the function. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -116,8 +116,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Create a function from a signature and a valid graph session.
    *
    * <p>The function will not own the session nor its graph, meaning that their lifetime
-   * can extend beyond the scope of the function. Therefore the function does not need to be
-   * closed after its usage. For example:
+   * can extend beyond the scope of the function. Therefore the function does not need to be closed after its usage. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -158,12 +158,11 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <p>Caller is responsible for closing all Tensors.
    *
-   * @param arguments list of tensors to pass in input to the function,
-   *                  mapped by their signature name
-   * @return output tensors resulting from the execution of the function,
-   *         mapped by their signature name
+   * @param scope the {@link TensorScope} to create the outputs in
+   * @param arguments list of tensors to pass in input to the function, mapped by their signature name
+   * @return output tensors resulting from the execution of the function, mapped by their signature name
    */
-  public Map<String, Tensor> call(Map<String, Tensor> arguments)
+  public Map<String, Tensor> call(TensorScope scope, Map<String, Tensor> arguments)
       throws IllegalArgumentException {
 
     final SignatureDef signatureDef = signature.asSignatureDef();
@@ -180,13 +179,13 @@ public class ConcreteFunction implements AutoCloseable {
     Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
     outputToNode.values().forEach(t -> runner.fetch(t.getName()));
 
-    List<Tensor> resultTensors = runner.run();
+    List<Tensor> resultTensors = runner.run(scope);
     try {
       ListIterator<Tensor> resultTensorIter = resultTensors.listIterator();
       Map<String, Tensor> returnMap = new HashMap<String, Tensor>();
 
       // Use the output names as present in the signature definition
-      for (String nodeName: outputToNode.keySet()) {
+      for (String nodeName : outputToNode.keySet()) {
         returnMap.put(nodeName, resultTensorIter.next());
       }
       return returnMap;
@@ -205,27 +204,27 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * <p>Caller is responsible for closing all Tensors.
    *
+   * @param scope the {@link TensorScope} to create the output in
    * @param tensor input tensor
    * @return output tensor
-   * @throws IllegalArgumentException if there are multiple input or output parameters defined
-   *                                  in the function
+   * @throws IllegalArgumentException if there are multiple input or output parameters defined in the function
    */
-  public Tensor call(Tensor tensor) throws IllegalArgumentException {
+  public Tensor call(TensorScope scope, Tensor tensor) throws IllegalArgumentException {
     final SignatureDef signatureDef = signature.asSignatureDef();
 
     if (signatureDef.getInputsCount() != 1) {
       throw new IllegalArgumentException(
-        String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
+          String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
     }
     String inputNodeName = signatureDef.getInputsMap().values().iterator().next().getName();
 
     if (signatureDef.getOutputsCount() != 1) {
       throw new IllegalArgumentException(
-        String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
+          String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
     }
     String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
 
-    return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
+    return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run(scope).get(0);
   }
 
   /**
@@ -245,8 +244,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Returns the session used to execute the graph when calling this function
    *
    * <p>In general, a user does not need to handle directly the session of a function and rely
-   * on {@link #call(Map)} to execute the graph instead. But in some cases, direct access to
-   * the session might be necessary, as it allows more running options.
+   * on {@link #call(Map)} to execute the graph instead. But in some cases, direct access to the session might be
+   * necessary, as it allows more running options.
    *
    * @return the function session
    */

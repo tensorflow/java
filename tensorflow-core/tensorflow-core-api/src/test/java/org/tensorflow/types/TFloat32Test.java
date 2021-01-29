@@ -17,6 +17,7 @@
 
 package org.tensorflow.types;
 
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -24,8 +25,8 @@ import org.tensorflow.ndarray.Shape;
 public class TFloat32Test extends NumericTypesTestBase<TFloat32, Float> {
 
   @Override
-  TFloat32 allocateTensor(Shape shape) {
-    return TFloat32.tensorOf(shape);
+  TFloat32 allocateTensor(TensorScope scope, Shape shape) {
+    return TFloat32.tensorOf(scope, shape);
   }
 
   @Override

@@ -26,9 +26,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
-
+import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
@@ -38,120 +42,114 @@ import org.tensorflow.op.math.Add;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.framework.RunOptions;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.NdArrays;
-import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.Session}. */
+/**
+ * Unit tests for {@link org.tensorflow.Session}.
+ */
 public class SessionTest {
 
   @Test
   public void runUsingOperationNames() {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
-        assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
-      }
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
+      TInt32 x = TInt32.tensorOf(scope, StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
+      List<Tensor> outputs = s.runner().feed("X", x).fetch("Y").run(scope);
+      assertEquals(1, outputs.size());
+      assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
     }
   }
 
   @Test
   public void runUsingOperationHandles() {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
-        assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
-      }
+      TInt32 x = TInt32.tensorOf(scope, StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
+      List<Tensor> outputs = s.runner().feed(feed, x).fetch(fetch).run(scope);
+      assertEquals(1, outputs.size());
+      assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
     }
   }
 
   @Test
   public void runUsingColonSeparatedNames() {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
       Split<TInt32> split = tf.split(tf.constant(0), tf.array(1, 2, 3, 4), 2L);
       tf.math.add(split.output().get(0), split.output().get(1));
 
       // Fetch using colon separated names.
-      try (TInt32 fetched = (TInt32)s.runner().fetch("Split:1").run().get(0)) {
-        assertEquals(3, fetched.getInt(0));
-        assertEquals(4, fetched.getInt(1));
-      }
+      TInt32 fetched = (TInt32) s.runner().fetch("Split:1").run(scope).get(0);
+      assertEquals(3, fetched.getInt(0));
+      assertEquals(4, fetched.getInt(1));
       // Feed using colon separated names.
-      try (TInt32 fed = TInt32.vectorOf(4, 3, 2, 1);
-          TInt32 fetched = (TInt32) s.runner()
-                  .feed("Split:0", fed)
-                  .feed("Split:1", fed)
-                  .fetch("Add")
-                  .run()
-                  .get(0)) {
-        assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched);
-      }
+      TInt32 fed = TInt32.vectorOf(scope, 4, 3, 2, 1);
+      TInt32 fetched2 = (TInt32) s.runner()
+          .feed("Split:0", fed)
+          .feed("Split:1", fed)
+          .fetch("Add")
+          .run(scope)
+          .get(0);
+      assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched2);
     }
   }
 
   @Test
   public void runWithMetadata() {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
-        Session.Run result = s.runner()
-                .feed("X", x)
-                .fetch("Y")
-                .setOptions(fullTraceRunOptions())
-                .runAndFetchMetadata();
-        // Sanity check on outputs.
-        AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(result.outputs);
-        assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
-        // Sanity check on metadata
-        assertNotNull(result.metadata);
-        assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
-        outputs.close();
-      }
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
+      TInt32 x = TInt32.tensorOf(scope, StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
+      Session.Run result = s.runner()
+          .feed("X", x)
+          .fetch("Y")
+          .setOptions(fullTraceRunOptions())
+          .runAndFetchMetadata(scope);
+      // Sanity check on outputs.
+      assertEquals(1, result.outputs.size());
+      assertEquals(31, ((TInt32) result.outputs.get(0)).getInt(0, 0));
+      // Sanity check on metadata
+      assertNotNull(result.metadata);
+      assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
     }
   }
 
   @Test
   public void runMultipleOutputs() {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
       tf.withName("c1").constant(2718);
       tf.withName("c2").constant(31415);
-      AutoCloseableList<Tensor> outputs =
-          new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
+      List<Tensor> outputs = s.runner().fetch("c2").fetch("c1").run(scope);
       assertEquals(2, outputs.size());
-      assertEquals(31415, ((TInt32)outputs.get(0)).getInt());
-      assertEquals(2718, ((TInt32)outputs.get(1)).getInt());
-      outputs.close();
+      assertEquals(31415, ((TInt32) outputs.get(0)).getInt());
+      assertEquals(2718, ((TInt32) outputs.get(1)).getInt());
     }
   }
 
   @Test
   public void failOnUseAfterClose() {
-    try (Graph g = new Graph()) {
+    try (Graph g = new Graph();
+        TensorScope scope = new TensorScope()) {
       Session s = new Session(g);
       s.close();
       try {
-        s.runner().run();
+        s.runner().run(scope);
         fail("methods on a session should fail after close() is called");
       } catch (IllegalStateException e) {
         // expected exception
@@ -162,7 +160,8 @@ public class SessionTest {
   @Test
   public void createWithConfigProto() {
     try (Graph g = new Graph();
-        Session s = new Session(g, singleThreadConfigProto())) {}
+        Session s = new Session(g, singleThreadConfigProto())) {
+    }
   }
 
   @Test
@@ -175,12 +174,12 @@ public class SessionTest {
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
 
-      try (Session s = new Session(g)) {
+      try (Session s = new Session(g);
+          TensorScope scope = new TensorScope()) {
         s.run(tf.init());
 
-        try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
-          assertEquals(30, t.getInt());
-        }
+        TInt32 t = (TInt32) s.runner().fetch(add).run(scope).get(0);
+        assertEquals(30, t.getInt());
       }
     }
   }
@@ -196,12 +195,12 @@ public class SessionTest {
       Add<TInt32> add = tf.math.add(var1, var2);
       tf.withName("init_test").init();
 
-      try (Session s = new Session(g)) {
+      try (Session s = new Session(g);
+          TensorScope scope = new TensorScope()) {
         s.run("init_test");
 
-        try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
-          assertEquals(30, t.getInt());
-        }
+        TInt32 t = (TInt32) s.runner().fetch(add).run(scope).get(0);
+        assertEquals(30, t.getInt());
         try {
           s.run("wrong_name");
           fail();
@@ -213,9 +212,10 @@ public class SessionTest {
   }
 
   @Test
-  public void saveAndRestore() throws IOException  {
+  public void saveAndRestore() throws IOException {
     Path testFolder = Files.createTempDirectory("tf-session-save-restore-test");
-    try (Graph g = new Graph()) {
+    try (Graph g = new Graph();
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
       Variable<TFloat32> x = tf.withName("x").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Variable<TFloat32> y = tf.withName("y").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
@@ -230,11 +230,10 @@ public class SessionTest {
           restoredGraph.importGraphDef(graphDef);
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
-            try (AutoCloseableList<Tensor> oldList = new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
-                 AutoCloseableList<Tensor> newList = new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())){
-              assertEquals(oldList.get(0),newList.get(0));
-              assertEquals(oldList.get(1),newList.get(1));
-            }
+            List<Tensor> oldList = s.runner().fetch("x").fetch("y").run(scope);
+            List<Tensor> newList = restoredSession.runner().fetch("x").fetch("y").run(scope);
+            assertEquals(oldList.get(0),newList.get(0));
+            assertEquals(oldList.get(1),newList.get(1));
           }
         }
       }

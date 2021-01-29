@@ -51,6 +51,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * and is left uninitialized.
    *
    * @param <T> the tensor type
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param type the tensor type class
    * @param shape shape of the tensor
    * @return an allocated but uninitialized tensor
@@ -59,18 +60,19 @@ public interface Tensor extends Shaped, AutoCloseable {
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType> T of(Class<T> type, Shape shape) {
-    return of(type, shape, -1);
+  static <T extends TType> T of(TensorScope scope, Class<T> type, Shape shape) {
+    return of(scope, type, shape, -1);
   }
 
   /**
    * Allocates a tensor of a given datatype, shape and size.
    *
-   * <p>This method is identical to {@link #of(Class, Shape)}, except that the final size of the
+   * <p>This method is identical to {@link #of(TensorScope, Class, Shape)}, except that the final size of the
    * tensor can be explicitly set instead of computing it from the datatype and shape, which could be larger than the
    * actual space required to store the data but not smaller.
    *
    * @param <T> the tensor type
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param type the tensor type class
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor or -1 to compute the size from the shape
@@ -82,10 +84,10 @@ public interface Tensor extends Shaped, AutoCloseable {
    * @throws IllegalArgumentException if {@code shape} is totally or partially {@link Shape#hasUnknownDimension()
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
-   * @see #of(Class, Shape)
+   * @see #of(TensorScope, Class, Shape)
    */
-  static <T extends TType> T of(Class<T> type, Shape shape, long size) {
-    RawTensor tensor = RawTensor.allocate(type, shape, size);
+  static <T extends TType> T of(TensorScope scope, Class<T> type, Shape shape, long size) {
+    RawTensor tensor = RawTensor.allocate(scope, type, shape, size);
     try {
       return (T) tensor.asTypedTensor();
     } catch (Exception e) {
@@ -112,6 +114,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * automatically released before rethrowing the same exception.
    *
    * @param <T> the tensor type
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param type the tensor type class
    * @param shape shape of the tensor
    * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
@@ -121,20 +124,21 @@ public interface Tensor extends Shaped, AutoCloseable {
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static <T extends TType> T of(Class<T> type, Shape shape, Consumer<T> dataInitializer) {
-    return of(type, shape, -1, dataInitializer);
+  static <T extends TType> T of(TensorScope scope, Class<T> type, Shape shape, Consumer<T> dataInitializer) {
+    return of(scope, type, shape, -1, dataInitializer);
   }
 
   /**
    * Allocates a tensor of a given datatype, shape and size.
    *
-   * <p>This method is identical to {@link #of(Class, Shape, Consumer)}, except that the final
+   * <p>This method is identical to {@link #of(TensorScope, Class, Shape, Consumer)}, except that the final
    * size for the tensor can be explicitly set instead of being computed from the datatype and shape.
    *
    * <p>This could be useful for tensor types that stores data but also metadata in the tensor memory,
    * such as the lookup table in a tensor of strings.
    *
    * @param <T> the tensor type
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param type the tensor type class
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor or -1 to compute the size from the shape
@@ -147,10 +151,10 @@ public interface Tensor extends Shaped, AutoCloseable {
    * @throws IllegalArgumentException if {@code shape} is totally or partially {@link Shape#hasUnknownDimension()
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
-   * @see #of(Class, Shape, long, Consumer)
+   * @see #of(TensorScope, Class, Shape, long, Consumer)
    */
-  static <T extends TType> T of(Class<T> type, Shape shape, long size, Consumer<T> dataInitializer) {
-    T tensor = of(type, shape, size);
+  static <T extends TType> T of(TensorScope scope, Class<T> type, Shape shape, long size, Consumer<T> dataInitializer) {
+    T tensor = of(scope, type, shape, size);
     try {
       dataInitializer.accept(tensor);
       return tensor;
@@ -167,6 +171,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * href="https://www.tensorflow.org/code/tensorflow/c/c_api.h">C API</a>.
    *
    * @param <T> the tensor type
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param type the tensor type class
    * @param shape the tensor shape.
    * @param rawData a buffer containing the tensor raw data.
@@ -175,8 +180,8 @@ public interface Tensor extends Shaped, AutoCloseable {
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated with the given parameters
    */
-  static <T extends TType> T of(Class<T> type, Shape shape, ByteDataBuffer rawData) {
-    return of(type, shape, rawData.size(), t -> rawData.copyTo(t.asRawTensor().data(), rawData.size()));
+  static <T extends TType> T of(TensorScope scope, Class<T> type, Shape shape, ByteDataBuffer rawData) {
+    return of(scope, type, shape, rawData.size(), t -> rawData.copyTo(t.asRawTensor().data(), rawData.size()));
   }
 
   /**
@@ -218,8 +223,6 @@ public interface Tensor extends Shaped, AutoCloseable {
 
   /**
    * Detach this tensor from any scopes managing it.  It must be manually closed or attached to another scope.
-   *
-   * <p>Semantically, this makes the tensor everyone's responsibility: whoever uses it last needs to close it.
    */
   default void detach() {
     TensorScope.detach(this);

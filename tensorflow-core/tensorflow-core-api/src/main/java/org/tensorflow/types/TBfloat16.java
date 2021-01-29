@@ -19,6 +19,7 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TBfloat16Mapper;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -34,14 +35,13 @@ import org.tensorflow.types.family.TFloating;
  * Brain 16-bit float tensor type.
  *
  * <p>This type differs from {@link TFloat16} as it truncates the mantissa of a 32-bit float and
- * preserve all exponent bits for faster conversion, while the latter shrink the exponent and have a
- * longer mantissa for more precision.
+ * preserve all exponent bits for faster conversion, while the latter shrink the exponent and have a longer mantissa for
+ * more precision.
  *
  * <p>Since there is no floating-point type that fits in 16 bits in Java, a conversion (with
- * potentially a precision loss) is required for each 32 bits value written or read on a tensor of
- * this type from the JVM. Therefore, if a lot of I/O operations are to be expected on a tensor,
- * performances will be improved by working with {@link TFloat32} or {@link TFloat64} data types
- * whenever possible.
+ * potentially a precision loss) is required for each 32 bits value written or read on a tensor of this type from the
+ * JVM. Therefore, if a lot of I/O operations are to be expected on a tensor, performances will be improved by working
+ * with {@link TFloat32} or {@link TFloat64} data types whenever possible.
  *
  * <p>Note that some CPUs support the bfloat16 format natively, which can result in faster
  * computation compared to {@link TFloat16} when GPUs are not used.
@@ -52,24 +52,26 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
   /**
    * Allocates a new tensor for storing a single float value.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param value float to store in the new tensor
    * @return the new tensor
    */
-  static TBfloat16 scalarOf(float value) {
-    return Tensor.of(TBfloat16.class, Shape.scalar(), data -> data.setFloat(value));
+  static TBfloat16 scalarOf(TensorScope scope, float value) {
+    return Tensor.of(scope, TBfloat16.class, Shape.scalar(), data -> data.setFloat(value));
   }
 
   /**
    * Allocates a new tensor for storing a vector of floats.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param values floats to store in the new tensor
    * @return the new tensor
    */
-  static TBfloat16 vectorOf(float... values) {
+  static TBfloat16 vectorOf(TensorScope scope, float... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TBfloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(scope, TBfloat16.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -77,44 +79,48 @@ public interface TBfloat16 extends FloatNdArray, TFloating {
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TBfloat16 tensorOf(NdArray<Float> src) {
-    return Tensor.of(TBfloat16.class, src.shape(), src::copyTo);
+  static TBfloat16 tensorOf(TensorScope scope, NdArray<Float> src) {
+    return Tensor.of(scope, TBfloat16.class, src.shape(), src::copyTo);
   }
 
   /**
    * Allocates a new tensor of the given shape.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static TBfloat16 tensorOf(Shape shape) {
-    return Tensor.of(TBfloat16.class, shape);
+  static TBfloat16 tensorOf(TensorScope scope, Shape shape) {
+    return Tensor.of(scope, TBfloat16.class, shape);
   }
 
   /**
    * Allocates a new tensor of the given shape, initialized with the provided data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param data buffer of floats to initialize the tensor with
    * @return the new tensor
    */
-  static TBfloat16 tensorOf(Shape shape, FloatDataBuffer data) {
-    return Tensor.of(TBfloat16.class, shape, d -> d.write(data));
+  static TBfloat16 tensorOf(TensorScope scope, Shape shape, FloatDataBuffer data) {
+    return Tensor.of(scope, TBfloat16.class, shape, d -> d.write(data));
   }
 
   /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static TBfloat16 tensorOf(Shape shape, Consumer<TBfloat16> dataInit) {
-    return Tensor.of(TBfloat16.class, shape, dataInit);
+  static TBfloat16 tensorOf(TensorScope scope, Shape shape, Consumer<TBfloat16> dataInit) {
+    return Tensor.of(scope, TBfloat16.class, shape, dataInit);
   }
 }
 

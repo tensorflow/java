@@ -27,13 +27,16 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
+/**
+ * Unit tests for {@link org.tensorflow.GraphOperationBuilder}.
+ */
 public class GraphOperationBuilderTest {
 
   @Test
   public void failOnUseAfterBuild() {
     try (Graph g = new Graph();
-        TInt32 t = TInt32.scalarOf(1)) {
+        TensorScope scope = new TensorScope()) {
+      TInt32 t = TInt32.scalarOf(scope, 1);
       OperationBuilder b =
           g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
       b.build();
@@ -49,7 +52,8 @@ public class GraphOperationBuilderTest {
   public void failOnUseAfterGraphClose() {
     OperationBuilder b = null;
     try (Graph g = new Graph();
-        TInt32 t = TInt32.scalarOf(1)) {
+        TensorScope scope = new TensorScope()) {
+      TInt32 t = TInt32.scalarOf(scope, 1);
       b = g.opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
     }
     try {
@@ -68,17 +72,17 @@ public class GraphOperationBuilderTest {
     //
     // This is a bit of an awkward test since it has to find operations with attributes of specific
     // types that aren't inferred from the input arguments.
-    try (Graph g = new Graph()) {
+    try (Graph g = new Graph();
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
       // dtype, tensor attributes.
-      try (TInt32 t = TInt32.scalarOf(1)) {
-        g.opBuilder("Const", "DataTypeAndTensor")
-            .setAttr("dtype", t.dataType())
-            .setAttr("value", t)
-            .build()
-            .output(0);
-        assertTrue(hasNode(g, "DataTypeAndTensor"));
-      }
+      TInt32 t = TInt32.scalarOf(scope, 1);
+      g.opBuilder("Const", "DataTypeAndTensor")
+          .setAttr("dtype", t.dataType())
+          .setAttr("value", t)
+          .build()
+          .output(0);
+      assertTrue(hasNode(g, "DataTypeAndTensor"));
       // string, bool attributes.
       g.opBuilder("Abort", "StringAndBool")
           .setAttr("error_msg", "SomeErrorMessage")
@@ -95,15 +99,15 @@ public class GraphOperationBuilderTest {
       // list(int)
       g.opBuilder("MaxPool", "IntList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
-          .setAttr("ksize", new long[] {1, 1, 1, 1})
-          .setAttr("strides", new long[] {1, 1, 1, 1})
+          .setAttr("ksize", new long[]{1, 1, 1, 1})
+          .setAttr("strides", new long[]{1, 1, 1, 1})
           .setAttr("padding", "SAME")
           .build();
       assertTrue(hasNode(g, "IntList"));
       // list(float)
       g.opBuilder("FractionalMaxPool", "FloatList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
-          .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
+          .setAttr("pooling_ratio", new float[]{1.0f, 1.44f, 1.73f, 1.0f})
           .build();
       assertTrue(hasNode(g, "FloatList"));
       // Missing tests: float, list(dtype), list(tensor), list(string), list(bool)
@@ -138,10 +142,10 @@ public class GraphOperationBuilderTest {
   @Test
   public void setAttrShapeList() {
     // Those shapes match tensors ones, so no exception is thrown
-    testSetAttrShapeList(new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2)});
+    testSetAttrShapeList(new Shape[]{Shape.of(2, 2), Shape.of(2, 2, 2)});
     try {
       // Those shapes do not match tensors ones, exception is thrown
-      testSetAttrShapeList(new Shape[] {Shape.of(2, 2), Shape.of(2, 2, 2, 2)});
+      testSetAttrShapeList(new Shape[]{Shape.of(2, 2), Shape.of(2, 2, 2, 2)});
       fail("Shapes are incompatible and an exception was expected");
     } catch (TFInvalidArgumentException e) {
       // expected
@@ -152,23 +156,24 @@ public class GraphOperationBuilderTest {
   public void addControlInput() {
     try (Graph g = new Graph();
         Session s = new Session(g);
-        TBool yes = TBool.scalarOf(true);
-        TBool no = TBool.scalarOf(false)) {
+        TensorScope scope = new TensorScope()) {
+      TBool yes = TBool.scalarOf(scope, true);
+      TBool no = TBool.scalarOf(scope, false);
       Ops tf = Ops.create(g);
       Output<TBool> placeholder = tf.placeholder(TBool.class).asOutput();
       GraphOperation check =
           g.opBuilder("Assert", "assert")
               .addInput(placeholder)
-              .addInputList(new Output<?>[] {placeholder})
+              .addInputList(new Output<?>[]{placeholder})
               .build();
       Operation noop = g.opBuilder("NoOp", "noop").addControlInput(check).build();
 
       // No problems when the Assert check succeeds
-      s.runner().feed(placeholder, yes).addTarget(noop).run();
+      s.runner().feed(placeholder, yes).addTarget(noop).run(scope);
 
       // Exception thrown by the execution of the Assert node
       try {
-        s.runner().feed(placeholder, no).addTarget(noop).run();
+        s.runner().feed(placeholder, no).addTarget(noop).run(scope);
         fail("Did not run control operation.");
       } catch (TFInvalidArgumentException e) {
         // expected
@@ -178,26 +183,27 @@ public class GraphOperationBuilderTest {
 
   private static void testSetAttrShapeList(Shape[] shapes) {
     try (Graph g = new Graph();
-        Session s = new Session(g)) {
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
-      int[][] matrix = new int[][] {{0, 0}, {0, 0}};
+      int[][] matrix = new int[][]{{0, 0}, {0, 0}};
       Output<?> queue =
           g.opBuilder("FIFOQueue", "queue")
-              .setAttr("component_types", new DataType[] {DataType.DT_INT32, DataType.DT_INT32})
+              .setAttr("component_types", new DataType[]{DataType.DT_INT32, DataType.DT_INT32})
               .setAttr("shapes", shapes)
               .build()
               .output(0);
       assertTrue(hasNode(g, "queue"));
       Output<TInt32> c1 = tf.constant(matrix).asOutput();
-      Output<TInt32> c2 = tf.constant(new int[][][] {matrix, matrix}).asOutput();
+      Output<TInt32> c2 = tf.constant(new int[][][]{matrix, matrix}).asOutput();
       Operation enqueue =
           g.opBuilder("QueueEnqueue", "enqueue")
               .addInput(queue)
-              .addInputList(new Output<?>[] {c1, c2})
+              .addInputList(new Output<?>[]{c1, c2})
               .build();
       assertTrue(hasNode(g, "enqueue"));
 
-      s.runner().addTarget(enqueue).run();
+      s.runner().addTarget(enqueue).run(scope);
     }
   }
 

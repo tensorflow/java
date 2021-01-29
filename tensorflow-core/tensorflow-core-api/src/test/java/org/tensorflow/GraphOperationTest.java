@@ -29,7 +29,9 @@ import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.GraphOperation}. */
+/**
+ * Unit tests for {@link org.tensorflow.GraphOperation}.
+ */
 public class GraphOperationTest {
 
   @Test
@@ -53,8 +55,8 @@ public class GraphOperationTest {
     GraphOperation op1;
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      op1 = (GraphOperation)tf.withName("op1").constant(1).op();
-      GraphOperation op2 = (GraphOperation)tf.withName("op2").constant(2).op();
+      op1 = (GraphOperation) tf.withName("op1").constant(1).op();
+      GraphOperation op2 = (GraphOperation) tf.withName("op2").constant(2).op();
       GraphOperation op3 = new GraphOperation(g, op1.getUnsafeNativeHandle());
       GraphOperation op4 = g.operation("op1");
       assertEquals(op1, op1);
@@ -78,8 +80,8 @@ public class GraphOperationTest {
   public void operationCollection() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      GraphOperation op1 = (GraphOperation)tf.withName("op1").constant(1).op();
-      GraphOperation op2 = (GraphOperation)tf.withName("op2").constant(2).op();
+      GraphOperation op1 = (GraphOperation) tf.withName("op1").constant(1).op();
+      GraphOperation op2 = (GraphOperation) tf.withName("op2").constant(2).op();
       GraphOperation op3 = new GraphOperation(g, op1.getUnsafeNativeHandle());
       GraphOperation op4 = g.operation("op1");
       Set<Operation> ops = new HashSet<>();
@@ -179,11 +181,12 @@ public class GraphOperationTest {
 
   @Test
   public void outputTensorNotSupported() {
-    try (Graph g = new Graph()) {
+    try (Graph g = new Graph();
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
       Operation split = tf.split(tf.constant(0), tf.array(0, 1, 2), 3L).op();
       try {
-        split.output(0).asTensor();
+        split.output(0).asTensor(scope);
         fail();
       } catch (IllegalStateException e) {
       }

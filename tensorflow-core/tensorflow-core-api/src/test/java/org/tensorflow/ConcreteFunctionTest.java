@@ -43,32 +43,30 @@ public class ConcreteFunctionTest {
   @Test
   public void createFunction() {
     try (ConcreteFunction f = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
-        TFloat32 x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
+        TensorScope scope = new TensorScope()) {
+      TFloat32 x = TFloat32.scalarOf(scope, 3.0f);
+      assertEquals(8.0f, ((TFloat32) f.call(scope, x)).getFloat());
     }
   }
 
   @Test
   public void createFunctionFromGraph() {
-    try (Graph g = new Graph()) {
-      Signature signature = plusFive(Ops.create(g));
-      try (ConcreteFunction f = ConcreteFunction.create(signature, g);
-          TFloat32 x = TFloat32.scalarOf(3.0f)) {
-        assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
-      }
+    try (Graph g = new Graph();
+        TensorScope scope = new TensorScope();
+        ConcreteFunction f = ConcreteFunction.create(plusFive(Ops.create(g)), g)) {
+      TFloat32 x = TFloat32.scalarOf(scope, 3.0f);
+      assertEquals(8.0f, ((TFloat32) f.call(scope, x)).getFloat());
     }
   }
 
   @Test
   public void createFunctionFromSession() {
-    try (Graph g = new Graph()) {
-      Signature signature = plusFive(Ops.create(g));
-      try (Session s = new Session(g)) {
-        try (ConcreteFunction f = ConcreteFunction.create(signature, s);
-            TFloat32 x = TFloat32.scalarOf(3.0f)) {
-          assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
-        }
-      }
+    try (Graph g = new Graph();
+        Session s = new Session(g);
+        TensorScope scope = new TensorScope();
+        ConcreteFunction f = ConcreteFunction.create(plusFive(Ops.create(g)), s)) {
+      TFloat32 x = TFloat32.scalarOf(scope, 3.0f);
+      assertEquals(8.0f, ((TFloat32) f.call(scope, x)).getFloat());
     }
   }
 
@@ -76,8 +74,9 @@ public class ConcreteFunctionTest {
   public void chainFunctions() {
     try (ConcreteFunction f1 = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
         ConcreteFunction f2 = ConcreteFunction.create(ConcreteFunctionTest::minusTwo);
-        TFloat32 x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(6.0f, ((TFloat32)f2.call(f1.call(x))).getFloat());
+        TensorScope scope = new TensorScope()) {
+      TFloat32 x = TFloat32.scalarOf(scope, 3.0f);
+      assertEquals(6.0f, ((TFloat32) f2.call(scope, f1.call(scope, x))).getFloat());
     }
   }
 

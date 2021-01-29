@@ -20,12 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.tensorflow.AutoCloseableList;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 
@@ -34,7 +35,8 @@ public class GradientsTest {
   @Test
   public void createGradients() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
 
       Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
@@ -47,21 +49,19 @@ public class GradientsTest {
       assertNotNull(grads.dy());
       assertEquals(2, grads.dy().size());
 
-      try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(
-                  sess.runner().feed(x, c).fetch(grads.dy(0)).fetch(grads.dy(1)).run())) {
+      TFloat32 c = TFloat32.scalarOf(scope, 3.0f);
+      List<Tensor> outputs = sess.runner().feed(x, c).fetch(grads.dy(0)).fetch(grads.dy(1)).run(scope);
 
-        assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
-        assertEquals(18.0f, ((TFloat32)outputs.get(1)).getFloat(), 0.0f);
-      }
+      assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
+      assertEquals(18.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);
     }
   }
 
   @Test
   public void createGradientsWithSum() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
 
       Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
@@ -74,19 +74,18 @@ public class GradientsTest {
       assertNotNull(grads.dy());
       assertEquals(1, grads.dy().size());
 
-      try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(sess.runner().feed(x, c).fetch(grads.dy(0)).run())) {
+      TFloat32 c = TFloat32.scalarOf(scope, 3.0f);
+      List<Tensor> outputs = sess.runner().feed(x, c).fetch(grads.dy(0)).run(scope);
 
-        assertEquals(114.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
-      }
+      assertEquals(114.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
     }
   }
 
   @Test
   public void createGradientsWithInitialValues() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Ops tf = Ops.create(g);
 
       Output<TFloat32> x = tf.placeholder(TFloat32.class).output();
@@ -100,13 +99,10 @@ public class GradientsTest {
       assertNotNull(grads1.dy());
       assertEquals(1, grads1.dy().size());
 
-      try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(
-                  sess.runner().feed(x, c).fetch(grads1.dy(0)).run())) {
+      TFloat32 c = TFloat32.scalarOf(scope, 3.0f);
+      List<Tensor> outputs = sess.runner().feed(x, c).fetch(grads1.dy(0)).run(scope);
 
-        assertEquals(108.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
-      }
+      assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
     }
   }
 

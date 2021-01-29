@@ -108,6 +108,7 @@ public final class RawTensor implements Tensor {
    * given type and shape. More memory can also be allocated to store also metadata within the tensor itself, e.g. a
    * lookup table in a string tensor.
    *
+   * @param tensorScope the {@link TensorScope} to create the tensor in
    * @param type tensor type class
    * @param shape shape of the tensor
    * @param size size in bytes of the tensor, or -1 to compute the size from the shape
@@ -120,7 +121,7 @@ public final class RawTensor implements Tensor {
    * unknown}
    * @throws IllegalStateException if tensor failed to be allocated
    */
-  static RawTensor allocate(Class<? extends TType> type, Shape shape, long size) {
+  static RawTensor allocate(TensorScope tensorScope, Class<? extends TType> type, Shape shape, long size) {
     if (shape.hasUnknownDimension()) {
       throw new IllegalArgumentException(
           "Cannot allocate a tensor from a totally or partially unknown shape");
@@ -143,7 +144,7 @@ public final class RawTensor implements Tensor {
     TF_Tensor nativeHandle = allocate(typeInfo.dataType().getNumber(), shape.asArray(), allocatedSize);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(nativeHandle);
-      RawTensor t = new RawTensor(typeInfo, shape);
+      RawTensor t = new RawTensor(typeInfo, shape, tensorScope);
       t.tensorHandle = nativeHandle;
       t.pointerScope = scope.extend();
       return t;
@@ -155,9 +156,9 @@ public final class RawTensor implements Tensor {
    *
    * <p>Takes ownership of the handle.
    */
-  static RawTensor fromHandle(TF_Tensor handle) {
+  static RawTensor fromHandle(TensorScope tensorScope, TF_Tensor handle) {
     TensorTypeInfo<?> typeInfo = TensorTypeRegistry.find(DataType.forNumber(dtype(handle)));
-    RawTensor t = new RawTensor(typeInfo, Shape.of(shape(handle)));
+    RawTensor t = new RawTensor(typeInfo, Shape.of(shape(handle)), tensorScope);
     try (PointerScope scope = new PointerScope()) {
       scope.attach(handle);
       t.tensorHandle = handle;
@@ -217,14 +218,15 @@ public final class RawTensor implements Tensor {
     return dims;
   }
 
-  RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape) {
+  RawTensor(TensorTypeInfo<? extends TType> typeInfo, Shape shape, TensorScope tensorScope) {
     this.typeInfo = typeInfo;
     this.shape = shape;
-
-    TensorScope currentScope = TensorScope.currentScope();
-    if (currentScope != null) {
-      this.tensorScope = currentScope.withTensors(this);
+    if (tensorScope == null) {
+      throw new NullPointerException("Can't create a tensor with a null TensorScope");
     }
+
+    tensorScope.attach(this);
+    this.tensorScope = tensorScope;
   }
 
   private PointerScope pointerScope;

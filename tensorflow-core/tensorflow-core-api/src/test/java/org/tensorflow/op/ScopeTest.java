@@ -23,10 +23,13 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Output;
 import org.tensorflow.Session;
+import org.tensorflow.TensorScope;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
-/** Unit tests for {@link org.tensorflow.op.Scope}. */
+/**
+ * Unit tests for {@link org.tensorflow.op.Scope}.
+ */
 public class ScopeTest {
 
   @Test
@@ -85,9 +88,9 @@ public class ScopeTest {
       Scope root = new Scope(g);
 
       final String[] invalid_names = {
-        "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
-        null, "", "a$", // Invalid characters
-        "a/b", // slashes not allowed
+          "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
+          null, "", "a$", // Invalid characters
+          "a/b", // slashes not allowed
       };
 
       for (String name : invalid_names) {
@@ -144,10 +147,11 @@ public class ScopeTest {
   @Test
   public void composite() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope scope = new TensorScope()) {
       Scope s = new Scope(g);
       Output<TInt32> data =
-          Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
+          Const.create(s.withName("data"), new int[]{600, 470, 170, 430, 300}).output();
 
       // Create a composite op with a customized name
       Variance<TInt32> var1 = Variance.create(s.withName("example"), data);
@@ -168,23 +172,28 @@ public class ScopeTest {
       // assertNotNull(g.operation("variance/zero"));
 
       // Verify correct results as well.
-      TInt32 result = (TInt32)sess.runner().fetch(var1.output()).run().get(0);
+      TInt32 result = (TInt32) sess.runner().fetch(var1.output()).run(scope).get(0);
       assertEquals(21704, result.getInt());
-      result = (TInt32)sess.runner().fetch(var2.output()).run().get(0);
+      result = (TInt32) sess.runner().fetch(var2.output()).run(scope).get(0);
       assertEquals(21704, result.getInt());
     }
   }
 
   // "handwritten" sample operator classes
   private static final class Const<T extends TType> {
+
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
-      return create(s, TInt32.scalarOf(v));
+      try (TensorScope scope = new TensorScope()) {
+        return create(s, TInt32.scalarOf(scope, v));
+      }
     }
 
     static Const<TInt32> create(Scope s, int[] v) {
-      return create(s, TInt32.vectorOf(v));
+      try (TensorScope scope = new TensorScope()) {
+        return create(s, TInt32.vectorOf(scope, v));
+      }
     }
 
     static <T extends TType> Const<T> create(Scope s, T value) {
@@ -207,6 +216,7 @@ public class ScopeTest {
   }
 
   private static final class Mean<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
@@ -229,6 +239,7 @@ public class ScopeTest {
   }
 
   private static final class SquaredDifference<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
@@ -251,17 +262,20 @@ public class ScopeTest {
   }
 
   private static final class Variance<T extends TType> {
+
     private final Output<T> output;
 
     static Variance<TInt32> create(Scope base, Output<TInt32> x) {
-      Scope s = base.withSubScope("variance");
-      Output<TInt32> zero = Const.create(base, TInt32.scalarOf(0)).output();
-      Output<TInt32> sqdiff =
-          SquaredDifference.create(
-                  s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
-              .output();
+      try (TensorScope scope = new TensorScope()) {
+        Scope s = base.withSubScope("variance");
+        Output<TInt32> zero = Const.create(base, TInt32.scalarOf(scope, 0)).output();
+        Output<TInt32> sqdiff =
+            SquaredDifference.create(
+                s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
+                .output();
 
-      return new Variance<>(Mean.create(s.withName("variance"), sqdiff, zero).output());
+        return new Variance<>(Mean.create(s.withName("variance"), sqdiff, zero).output());
+      }
     }
 
     Variance(Output<T> o) {

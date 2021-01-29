@@ -30,14 +30,13 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
-import org.tensorflow.types.family.TType;
 
 /**
  * Implementation of an {@link Operation} executed eagerly.
  *
  * <p>EagerOperation instances are valid only as long as the {@link EagerSession} they are a part of
- * is valid. Thus, if {@link EagerSession#close()} has been invoked, then methods on the
- * EagerOperation instance may fail with an {@code IllegalStateException}.
+ * is valid. Thus, if {@link EagerSession#close()} has been invoked, then methods on the EagerOperation instance may
+ * fail with an {@code IllegalStateException}.
  *
  * <p>EagerOperation instances are thread-safe.
  */
@@ -121,10 +120,10 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
-  Tensor tensor(int outputIndex) {
+  Tensor tensor(TensorScope scope, int outputIndex) {
     Tensor tensor = outputTensors.get(outputIndex);
     if (tensor == null) {
-      tensor = resolveTensor(outputIndex);
+      tensor = resolveTensor(scope, outputIndex);
     }
     return tensor;
   }
@@ -134,11 +133,11 @@ class EagerOperation extends AbstractOperation {
   private final String name;
   private final AtomicReferenceArray<Tensor> outputTensors;
 
-  private Tensor resolveTensor(int outputIndex) {
+  private Tensor resolveTensor(TensorScope scope, int outputIndex) {
     // Take an optimistic approach, where we attempt to resolve the output tensor without locking.
     // If another thread has resolved it meanwhile, release our copy and reuse the existing one
     // instead.
-    Tensor tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), session);
+    Tensor tensor = resolveTensorHandle(getUnsafeNativeHandle(outputIndex), scope);
     if (!outputTensors.compareAndSet(outputIndex, null, tensor)) {
       session.detach(tensor.asRawTensor().nativeHandle());
       tensor = outputTensors.get(outputIndex);
@@ -161,13 +160,13 @@ class EagerOperation extends AbstractOperation {
     }
   }
 
-  private static Tensor resolveTensorHandle(TFE_TensorHandle handle, EagerSession session) {
+  private static Tensor resolveTensorHandle(TFE_TensorHandle handle, TensorScope tensorScope) {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
       status.throwExceptionIfNotOK();
-      return RawTensor.fromHandle(tensor).asTypedTensor();
+      return RawTensor.fromHandle(tensorScope, tensor).asTypedTensor();
     }
   }
 

@@ -20,6 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -37,13 +38,13 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TBfloat16;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -80,7 +81,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> scalarOf(Scope scope, int data) {
-    try (TInt32 value = TInt32.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -89,13 +91,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> vectorOf(Scope scope, int[] data) {
-    try (TInt32 value = TInt32.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -119,14 +122,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][] data) {
-    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -135,14 +139,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][] data) {
-    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -151,14 +156,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][] data) {
-    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -167,14 +173,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][][] data) {
-    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -183,14 +190,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code int} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return an integer constant
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, int[][][][][][] data) {
-    try (TInt32 value = TInt32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -207,7 +215,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TInt32) {
       return create(scope, (TInt32) data);
     }
-    try (TInt32 value = TInt32.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -223,7 +232,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt32> tensorOf(Scope scope, Shape shape, IntDataBuffer data) {
-    try (TInt32 value = TInt32.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt32 value = TInt32.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -237,7 +247,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> scalarOf(Scope scope, float data) {
-    try (TFloat32 value = TFloat32.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -246,13 +257,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> vectorOf(Scope scope, float[] data) {
-    try (TFloat32 value = TFloat32.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -276,14 +288,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][] data) {
-    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -292,14 +305,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][] data) {
-    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -308,14 +322,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][] data) {
-    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -324,14 +339,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][] data) {
-    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -340,14 +356,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code float} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a float constant
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, float[][][][][][] data) {
-    try (TFloat32 value = TFloat32.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -364,7 +381,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TFloat32) {
       return create(scope, (TFloat32) data);
     }
-    try (TFloat32 value = TFloat32.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -380,7 +398,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat32> tensorOf(Scope scope, Shape shape, FloatDataBuffer data) {
-    try (TFloat32 value = TFloat32.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat32 value = TFloat32.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -394,7 +413,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> scalarOf(Scope scope, double data) {
-    try (TFloat64 value = TFloat64.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -403,13 +423,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> vectorOf(Scope scope, double[] data) {
-    try (TFloat64 value = TFloat64.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -433,14 +454,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][] data) {
-    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -449,14 +471,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][] data) {
-    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -465,14 +488,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][] data) {
-    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -481,14 +505,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][] data) {
-    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -497,14 +522,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code double} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a double constant
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, double[][][][][][] data) {
-    try (TFloat64 value = TFloat64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(
-        data, t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(
+            data, t))) {
       return create(scope, value);
     }
   }
@@ -521,7 +547,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TFloat64) {
       return create(scope, (TFloat64) data);
     }
-    try (TFloat64 value = TFloat64.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -537,7 +564,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TFloat64> tensorOf(Scope scope, Shape shape, DoubleDataBuffer data) {
-    try (TFloat64 value = TFloat64.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 value = TFloat64.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -551,7 +579,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> scalarOf(Scope scope, long data) {
-    try (TInt64 value = TInt64.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -560,13 +589,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> vectorOf(Scope scope, long[] data) {
-    try (TInt64 value = TInt64.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -575,14 +605,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][] data) {
-    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -606,14 +637,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][] data) {
-    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -622,14 +654,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][] data) {
-    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -638,14 +671,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][][] data) {
-    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -654,14 +688,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code long} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a long constant
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, long[][][][][][] data) {
-    try (TInt64 value = TInt64.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -678,7 +713,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TInt64) {
       return create(scope, (TInt64) data);
     }
-    try (TInt64 value = TInt64.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -694,7 +730,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, Shape shape, LongDataBuffer data) {
-    try (TInt64 value = TInt64.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TInt64 value = TInt64.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -708,7 +745,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> scalarOf(Scope scope, boolean data) {
-    try (TBool value = TBool.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -717,13 +755,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> vectorOf(Scope scope, boolean[] data) {
-    try (TBool value = TBool.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -747,14 +786,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][] data) {
-    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -763,14 +803,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][] data) {
-    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -779,14 +820,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][] data) {
-    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -795,14 +837,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][] data) {
-    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -811,14 +854,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code boolean} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a boolean constant
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, boolean[][][][][][] data) {
-    try (TBool value = TBool.tensorOf(StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
-        t))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, StdArrays.shapeOf(data), t -> StdArrays.copyTo(data,
+            t))) {
       return create(scope, value);
     }
   }
@@ -835,7 +879,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TBool) {
       return create(scope, (TBool) data);
     }
-    try (TBool value = TBool.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -851,7 +896,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TBool> tensorOf(Scope scope, Shape shape, BooleanDataBuffer data) {
-    try (TBool value = TBool.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TBool value = TBool.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -865,7 +911,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> scalarOf(Scope scope, byte data) {
-    try (TUint8 value = TUint8.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -874,13 +921,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-1 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> vectorOf(Scope scope, byte[] data) {
-    try (TUint8 value = TUint8.vectorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.vectorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -904,14 +952,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-2 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][] data) {
-    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
-        d))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+            d))) {
       return create(scope, value);
     }
   }
@@ -920,14 +969,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-3 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][] data) {
-    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
-        d))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+            d))) {
       return create(scope, value);
     }
   }
@@ -936,14 +986,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-4 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][] data) {
-    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
-        d))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+            d))) {
       return create(scope, value);
     }
   }
@@ -952,14 +1003,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-5 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][] data) {
-    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
-        d))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+            d))) {
       return create(scope, value);
     }
   }
@@ -968,14 +1020,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * Creates a rank-6 constant of {@code byte} elements.
    *
    * @param scope is a scope used to add the underlying operation.
-   * @param data An array containing the values to put into the new constant. The dimensions of the
-   *     new constant will match those of the array.
+   * @param data An array containing the values to put into the new constant. The dimensions of the new constant will
+   * match those of the array.
    * @return a byte constant
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, byte[][][][][][] data) {
-    try (TUint8 value = TUint8.tensorOf(StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
-        d))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, StdArrays.shapeOf(data), d -> StdArrays.copyTo(data,
+            d))) {
       return create(scope, value);
     }
   }
@@ -992,7 +1045,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TUint8) {
       return create(scope, (TUint8) data);
     }
-    try (TUint8 value = TUint8.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -1008,7 +1062,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TUint8> tensorOf(Scope scope, Shape shape, ByteDataBuffer data) {
-    try (TUint8 value = TUint8.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TUint8 value = TUint8.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1022,13 +1077,13 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    * @param shape the tensor shape.
    * @param data a buffer containing the tensor data.
    * @return a constant of type `type`
-   * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the
-   *     buffer
+   * @throws IllegalArgumentException If the tensor datatype or shape is not compatible with the buffer
    */
   @Endpoint
   public static <T extends TType> Constant<T> tensorOf(Scope scope, Class<T> type, Shape shape,
       ByteDataBuffer data) {
-    try (T value = Tensor.of(type, shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        T value = Tensor.of(tensorScope, type, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1042,7 +1097,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> scalarOf(Scope scope, String data) {
-    try (TString value = TString.scalarOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.scalarOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
@@ -1057,7 +1113,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> scalarOf(Scope scope, Charset charset, String data) {
-    try (TString value = TString.tensorOf(charset, NdArrays.scalarOfObject(data))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, charset, NdArrays.scalarOfObject(data))) {
       return create(scope, value);
     }
   }
@@ -1071,7 +1128,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   public static Constant<TString> vectorOf(Scope scope, String[] data) {
     NdArray<String> src = NdArrays.vectorOfObjects(data);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
@@ -1081,13 +1139,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *
    * @param scope is a scope used to add the underlying operation.
    * @param charset charset for encoding/decoding strings bytes.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
+   * @param data An array containing the values to put into the new constant. String elements are sequences of bytes
+   * from the last array dimension.
    * @return the {@code String} constant
    */
   @Endpoint
   public static Constant<TString> vectorOf(Scope scope, Charset charset, String[] data) {
-    try (TString value = TString.tensorOf(charset, NdArrays.vectorOfObjects(data))) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, charset, NdArrays.vectorOfObjects(data))) {
       return Constant.create(scope, value);
     }
   }
@@ -1112,8 +1171,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    *
    * @param scope is a scope used to add the underlying operation.
    * @param charset charset for encoding/decoding strings bytes.
-   * @param data An array containing the values to put into the new constant. String elements are
-   *     sequences of bytes from the last array dimension.
+   * @param data An array containing the values to put into the new constant. String elements are sequences of bytes
+   * from the last array dimension.
    * @return the {@code String} constant
    */
   @Endpoint(name = "array")
@@ -1134,7 +1193,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
@@ -1149,7 +1209,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
@@ -1164,7 +1225,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
@@ -1179,7 +1241,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
@@ -1194,14 +1257,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   public static Constant<TString> tensorOf(Scope scope, String[][][][][][] data) {
     NdArray<String> src = NdArrays.ofObjects(String.class, StdArrays.shapeOf(data));
     StdArrays.copyTo(data, src);
-    try (TString value = TString.tensorOf(src)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, src)) {
       return create(scope, value);
     }
   }
 
   /**
-   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
-   * using the default UTF-8 encoding.
+   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array, using the default
+   * UTF-8 encoding.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param data an n-dimensional array of {@code String} elements.
@@ -1212,14 +1276,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
     if (data instanceof TString) {
       return create(scope, (TString) data);
     }
-    try (TString value = TString.tensorOf(data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, data)) {
       return create(scope, value);
     }
   }
 
   /**
-   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array,
-   * using the given encoding.
+   * Creates a constant of {@code String} elements that is a copy of a given n-dimensional array, using the given
+   * encoding.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param charset charset used to encode/decode string bytes.
@@ -1228,14 +1293,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Charset charset, NdArray<String> data) {
-    try (TString value = TString.tensorOf(charset, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, charset, data)) {
       return create(scope, value);
     }
   }
 
   /**
-   * Create a {@link TString} constant with data from the given buffer, using the default UTF-8
-   * encoding.
+   * Create a {@link TString} constant with data from the given buffer, using the default UTF-8 encoding.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param shape the tensor shape.
@@ -1245,7 +1310,8 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Shape shape, DataBuffer<String> data) {
-    try (TString value = TString.tensorOf(shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, shape, data)) {
       return create(scope, value);
     }
   }
@@ -1263,14 +1329,14 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   @Endpoint
   public static Constant<TString> tensorOf(Scope scope, Charset charset, Shape shape,
       DataBuffer<String> data) {
-    try (TString value = TString.tensorOf(charset, shape, data)) {
+    try (TensorScope tensorScope = new TensorScope();
+        TString value = TString.tensorOf(tensorScope, charset, shape, data)) {
       return create(scope, value);
     }
   }
 
   /**
-   * Creates a rank-1 constant of {@code long} elements representing the size of each dimensions of
-   * the given shape.
+   * Creates a rank-1 constant of {@code long} elements representing the size of each dimensions of the given shape.
    *
    * @param scope is a scope used to add the underlying operation.
    * @param shape a shape

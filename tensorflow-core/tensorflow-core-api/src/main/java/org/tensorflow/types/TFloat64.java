@@ -19,6 +19,7 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TFloat64Mapper;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -31,31 +32,35 @@ import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TFloating;
 
 
-/** IEEE-754 double-precision 64-bit float tensor type. */
+/**
+ * IEEE-754 double-precision 64-bit float tensor type.
+ */
 @TensorType(dataType = DataType.DT_DOUBLE, byteSize = 8, mapperClass = TFloat64Mapper.class)
 public interface TFloat64 extends DoubleNdArray, TFloating {
 
   /**
    * Allocates a new tensor for storing a single double value.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param value double to store in the new tensor
    * @return the new tensor
    */
-  static TFloat64 scalarOf(double value) {
-    return Tensor.of(TFloat64.class, Shape.scalar(), data -> data.setDouble(value));
+  static TFloat64 scalarOf(TensorScope scope, double value) {
+    return Tensor.of(scope, TFloat64.class, Shape.scalar(), data -> data.setDouble(value));
   }
 
   /**
    * Allocates a new tensor for storing a vector of doubles.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param values doubles to store in the new tensor
    * @return the new tensor
    */
-  static TFloat64 vectorOf(double... values) {
+  static TFloat64 vectorOf(TensorScope scope, double... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TFloat64.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(scope, TFloat64.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -63,43 +68,47 @@ public interface TFloat64 extends DoubleNdArray, TFloating {
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TFloat64 tensorOf(NdArray<Double> src) {
-    return Tensor.of(TFloat64.class, src.shape(), src::copyTo);
+  static TFloat64 tensorOf(TensorScope scope, NdArray<Double> src) {
+    return Tensor.of(scope, TFloat64.class, src.shape(), src::copyTo);
   }
 
   /**
    * Allocates a new tensor of the given shape.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static TFloat64 tensorOf(Shape shape) {
-    return Tensor.of(TFloat64.class, shape);
+  static TFloat64 tensorOf(TensorScope scope, Shape shape) {
+    return Tensor.of(scope, TFloat64.class, shape);
   }
 
   /**
    * Allocates a new tensor of the given shape, initialized with the provided data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param data buffer of doubles to initialize the tensor with
    * @return the new tensor
    */
-  static TFloat64 tensorOf(Shape shape, DoubleDataBuffer data) {
-    return Tensor.of(TFloat64.class, shape, d -> d.write(data));
+  static TFloat64 tensorOf(TensorScope scope, Shape shape, DoubleDataBuffer data) {
+    return Tensor.of(scope, TFloat64.class, shape, d -> d.write(data));
   }
 
   /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static TFloat64 tensorOf(Shape shape, Consumer<TFloat64> dataInit) {
-    return Tensor.of(TFloat64.class, shape, dataInit);
+  static TFloat64 tensorOf(TensorScope scope, Shape shape, Consumer<TFloat64> dataInit) {
+    return Tensor.of(scope, TFloat64.class, shape, dataInit);
   }
 }

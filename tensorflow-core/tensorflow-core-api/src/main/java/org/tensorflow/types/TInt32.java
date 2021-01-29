@@ -19,6 +19,7 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.internal.types.TInt32Mapper;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.NdArray;
@@ -29,32 +30,36 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TIntegral;
 
-/** 32-bit signed integer tensor type. */
+/**
+ * 32-bit signed integer tensor type.
+ */
 @TensorType(dataType = DataType.DT_INT32, byteSize = 4, mapperClass = TInt32Mapper.class)
 public interface TInt32 extends IntNdArray, TIntegral {
 
   /**
    * Allocates a new tensor for storing a single int value.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param value int to store in the new tensor
    * @return the new tensor
    */
-  static TInt32 scalarOf(int value) {
-    return Tensor.of(TInt32.class, Shape.scalar(), data -> data.setInt(value));
+  static TInt32 scalarOf(TensorScope scope, int value) {
+    return Tensor.of(scope, TInt32.class, Shape.scalar(), data -> data.setInt(value));
   }
 
   /**
    * Allocates a new tensor for storing a vector of ints.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param values ints to store in the new tensor
    * @return the new tensor
    * @throws IllegalArgumentException if no values are provided
    */
-  static TInt32 vectorOf(int... values) {
+  static TInt32 vectorOf(TensorScope scope, int... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TInt32.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(scope, TInt32.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -62,43 +67,47 @@ public interface TInt32 extends IntNdArray, TIntegral {
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TInt32 tensorOf(NdArray<Integer> src) {
-    return Tensor.of(TInt32.class, src.shape(), src::copyTo);
+  static TInt32 tensorOf(TensorScope scope, NdArray<Integer> src) {
+    return Tensor.of(scope, TInt32.class, src.shape(), src::copyTo);
   }
 
   /**
    * Allocates a new tensor of the given shape.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static TInt32 tensorOf(Shape shape) {
-    return Tensor.of(TInt32.class, shape);
+  static TInt32 tensorOf(TensorScope scope, Shape shape) {
+    return Tensor.of(scope, TInt32.class, shape);
   }
 
   /**
    * Allocates a new tensor of the given shape, initialized with the provided data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param data buffer of ints to initialize the tensor with
    * @return the new tensor
    */
-  static TInt32 tensorOf(Shape shape, IntDataBuffer data) {
-    return Tensor.of(TInt32.class, shape, d -> d.write(data));
+  static TInt32 tensorOf(TensorScope scope, Shape shape, IntDataBuffer data) {
+    return Tensor.of(scope, TInt32.class, shape, d -> d.write(data));
   }
 
   /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
    */
-  static TInt32 tensorOf(Shape shape, Consumer<TInt32> dataInit) {
-    return Tensor.of(TInt32.class, shape, dataInit);
+  static TInt32 tensorOf(TensorScope scope, Shape shape, Consumer<TInt32> dataInit) {
+    return Tensor.of(scope, TInt32.class, shape, dataInit);
   }
 }
 

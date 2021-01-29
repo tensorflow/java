@@ -15,7 +15,16 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -33,14 +42,8 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
-
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /**
  * Driver for {@link Graph} execution.
@@ -84,11 +87,9 @@ public final class Session implements AutoCloseable {
    * Construct a new session with the associated {@link Graph} and configuration options.
    *
    * @param g The {@link Graph} the created Session will operate on.
-   * @param config Configuration parameters for the session specified as a <a
-   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
-   *     protocol buffer.
-   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
-   *     protocol buffer.
+   * @param config Configuration parameters for the session specified as a <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
+   * protocol buffer.
+   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto protocol buffer.
    */
   public Session(Graph g, ConfigProto config) {
     graph = g;
@@ -101,7 +102,9 @@ public final class Session implements AutoCloseable {
     }
   }
 
-  /** Wrap an existing session with the associated {@link Graph}. */
+  /**
+   * Wrap an existing session with the associated {@link Graph}.
+   */
   Session(Graph g, TF_Session nativeHandle) {
     graph = g;
     this.nativeHandle = nativeHandle;
@@ -111,7 +114,7 @@ public final class Session implements AutoCloseable {
   /**
    * Release resources associated with the Session.
    *
-   * <p>Blocks until there are no active executions ({@link Session.Runner#run()} calls). A Session
+   * <p>Blocks until there are no active executions ({@link Session.Runner#run(TensorScope)} calls). A Session
    * is not usable after close returns.
    */
   @Override
@@ -139,22 +142,20 @@ public final class Session implements AutoCloseable {
    * Run {@link Operation}s and evaluate {@link Tensor Tensors}.
    *
    * <p>A Runner runs the necessary graph fragments to execute every {@link Operation} required to
-   * evaluate the {@link Tensor Tensors} to fetch. The {@link #feed(String,int,Tensor)} call allows
-   * callers to override the value of {@link Tensor Tensors} in the graph by substituting the
-   * provided {@link Tensor Tensors} for the outputs of the operations provided to {@link
-   * #feed(String,int,Tensor)}.
+   * evaluate the {@link Tensor Tensors} to fetch. The {@link #feed(String, int, Tensor)} call allows callers to override
+   * the value of {@link Tensor Tensors} in the graph by substituting the provided {@link Tensor Tensors} for the
+   * outputs of the operations provided to {@link #feed(String, int, Tensor)}.
    */
   public final class Runner {
 
     /**
      * Avoid evaluating {@code operation} and substitute {@code t} for the value it produces.
      *
-     * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code feed(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
-     *     feed(operation_name, output_index)}. These colon-separated names are commonly used in the
-     *     {@code SignatureDef} protocol buffer messages that are included in {@link
-     *     SavedModelBundle#metaGraphDef()}.
+     * @param operation Is either the string name of the operation, in which case this method is a shorthand for {@code
+     * feed(operation, 0)}, or it is a string of the form
+     * <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     * feed(operation_name, output_index)}. These colon-separated names are commonly used in the {@code SignatureDef}
+     * protocol buffer messages that are included in {@link SavedModelBundle#metaGraphDef()}.
      * @param t the tensor substituting the operation
      * @return this session runner
      */
@@ -163,8 +164,8 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Avoid evaluating the {@code index}-th output of {@code operation} by substituting {@code t}
-     * for the value it produces.
+     * Avoid evaluating the {@code index}-th output of {@code operation} by substituting {@code t} for the value it
+     * produces.
      *
      * <p>Operations in a {@link Graph} can have multiple outputs, {@code index} identifies which
      * one {@code t} is being provided for.
@@ -183,8 +184,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Use {@code t} instead of the Tensor referred to by executing the operation referred to by
-     * {@code operand}.
+     * Use {@code t} instead of the Tensor referred to by executing the operation referred to by {@code operand}.
      *
      * @param operand the node in the graph representing the operation to substitute
      * @param t the tensor substituting the operation
@@ -197,14 +197,13 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run()} return the output of {@code operation}.
+     * Make {@link #run(TensorScope)} return the output of {@code operation}.
      *
-     * @param operation Is either the string name of the operation, in which case this method is a
-     *     shorthand for {@code fetch(operation, 0)}, or it is a string of the form
-     *     <tt>operation_name:output_index</tt> , in which case this method acts like {@code
-     *     fetch(operation_name, output_index)}. These colon-separated names are commonly used in
-     *     the {@code SignatureDef} protocol buffer messages that are included in {@link
-     *     SavedModelBundle#metaGraphDef()}.
+     * @param operation Is either the string name of the operation, in which case this method is a shorthand for {@code
+     * fetch(operation, 0)}, or it is a string of the form
+     * <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     * fetch(operation_name, output_index)}. These colon-separated names are commonly used in the {@code SignatureDef}
+     * protocol buffer messages that are included in {@link SavedModelBundle#metaGraphDef()}.
      * @return this session runner
      */
     public Runner fetch(String operation) {
@@ -212,7 +211,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run()} return the {@code index}-th output of {@code operation}.
+     * Make {@link #run(TensorScope)} return the {@code index}-th output of {@code operation}.
      *
      * <p>Operations in a {@link Graph} can have multiple outputs, {@code index} identifies which
      * one to return.
@@ -229,7 +228,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Makes {@link #run()} return the Tensor referred to by {@code output}.
+     * Makes {@link #run(TensorScope)} return the Tensor referred to by {@code output}.
      *
      * @param output the node to fetch the tensor from
      * @return this session runner
@@ -240,7 +239,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Makes {@link #run()} return the Tensor referred to by the output of {@code operand}.
+     * Makes {@link #run(TensorScope)} return the Tensor referred to by the output of {@code operand}.
      *
      * @param operand the node to fetch the tensor from, as an operand
      * @return this session runner
@@ -250,8 +249,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run()} execute {@code operation}, but not return any evaluated {@link Tensor
-     * Tensors}.
+     * Make {@link #run(TensorScope)} execute {@code operation}, but not return any evaluated {@link Tensor Tensors}.
      *
      * @param operation the string name of the operation to execute
      * @return this session runner
@@ -265,8 +263,7 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run()} execute {@code operation}, but not return any evaluated {@link Tensor
-     * Tensors}.
+     * Make {@link #run(TensorScope)} execute {@code operation}, but not return any evaluated {@link Tensor Tensors}.
      *
      * @param operation the operation to execute
      * @return this session runner
@@ -297,8 +294,7 @@ public final class Session implements AutoCloseable {
      * Set options (typically for debugging) for this run.
      *
      * <p>The options are presented as a <a
-     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
-     * protocol buffer</a>.
+     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions protocol buffer</a>.
      *
      * @param options a {@code RunOptions} proto
      * @return this session runner
@@ -312,44 +308,47 @@ public final class Session implements AutoCloseable {
      * Execute the graph fragments necessary to compute all requested fetches.
      *
      * <p><b>WARNING:</b> The caller assumes ownership of all returned {@link Tensor Tensors}, i.e.,
-     * the caller must call {@link Tensor#close} on all elements of the returned list to free up
-     * resources.
+     * the caller must call {@link Tensor#close} on all elements of the returned list to free up resources.
      *
      * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
-     * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in
-     * SessionTest.java), and (b) Evaluate whether the return value should be a list, or maybe a
-     * {@code Map<Output, Tensor>}?
+     * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in SessionTest.java), and
+     * (b) Evaluate whether the return value should be a list, or maybe a {@code Map<Output, Tensor>}?
      *
      * <p>TODO(andrewmyers): It would also be good if whatever is returned here made it easier to
      * extract output tensors in a type-safe way.
      *
+     * @param scope the {@link TensorScope} to create outputs in.  May be null if there are no outputs.
      * @return list of resulting tensors fetched by this session runner
      */
-    public List<Tensor> run() {
-      return runHelper(false).outputs;
+    public List<Tensor> run(TensorScope scope) {
+      return runHelper(scope, false).outputs;
     }
 
     /**
      * Execute graph fragments to compute requested fetches and return metadata about the run.
      *
-     * <p>This is exactly like {@link #run()}, but in addition to the requested Tensors, also
-     * returns metadata about the graph execution in the form of a <a
-     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
+     * <p>This is exactly like {@link #run(TensorScope)}, but in addition to the requested Tensors, also
+     * returns metadata about the graph execution in the form of a <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
      * protocol buffer</a>.
      *
+     * @param scope the {@link TensorScope} to create outputs in.  May be null if there are no outputs.
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
-    public Run runAndFetchMetadata() {
-      return runHelper(true);
+    public Run runAndFetchMetadata(TensorScope scope) {
+      return runHelper(scope, true);
     }
 
-    private Run runHelper(boolean wantMetadata) {
+    private Run runHelper(TensorScope tensorScope, boolean wantMetadata) {
       TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
       TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
       TF_Operation[] outputOpHandles = new TF_Operation[outputs.size()];
       int[] outputOpIndices = new int[outputs.size()];
       TF_Operation[] targetOpHandles = new TF_Operation[targets.size()];
+
+      if (outputs.size() > 0 && tensorScope == null) {
+        throw new NullPointerException("tensorScope must not be null when outputs are requested");
+      }
 
       // It's okay to use Operation.getUnsafeNativeHandle() here since the safety depends on the
       // validity of the Graph and graphRef ensures that.
@@ -388,7 +387,8 @@ public final class Session implements AutoCloseable {
                 outputOpIndices,
                 targetOpHandles,
                 wantMetadata,
-                outputs);
+                outputs,
+                tensorScope);
       } catch (Exception e) {
         for (Tensor t : outputs) {
           t.close();
@@ -405,6 +405,7 @@ public final class Session implements AutoCloseable {
     }
 
     private class Reference implements AutoCloseable {
+
       public Reference() {
         synchronized (nativeHandleLock) {
           if (nativeHandle == null || nativeHandle.isNull()) {
@@ -457,7 +458,9 @@ public final class Session implements AutoCloseable {
     private RunOptions runOptions = null;
   }
 
-  /** Create a Runner to execute graph operations and evaluate Tensors. */
+  /**
+   * Create a Runner to execute graph operations and evaluate Tensors.
+   */
   public Runner runner() {
     return new Runner();
   }
@@ -476,7 +479,7 @@ public final class Session implements AutoCloseable {
       throw new IllegalArgumentException(
           "Operation named '" + opName + "' cannot be found in the graph");
     }
-    runner().addTarget(operation).run();
+    runner().addTarget(operation).run(null);
   }
 
   /**
@@ -487,7 +490,7 @@ public final class Session implements AutoCloseable {
    * @param op the operation to run.
    */
   public void run(Op op) {
-    runner().addTarget(op.op()).run();
+    runner().addTarget(op.op()).run(null);
   }
 
 
@@ -495,12 +498,11 @@ public final class Session implements AutoCloseable {
    * Execute the graph's initializers.
    *
    * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
-   *
    */
-  public void runInit(){
+  public void runInit() {
     Runner runner = runner();
     graph.initializers().forEach(runner::addTarget);
-    runner.run();
+    runner.run(null);
   }
 
   /**
@@ -518,14 +520,16 @@ public final class Session implements AutoCloseable {
    */
   public void save(String prefix) {
     SaverDef saverDef = graph.saverDef();
-    runner().addTarget(saverDef.getSaveTensorName())
-            .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
-            .run();
+    try (TensorScope scope = new TensorScope()) {
+      runner().addTarget(saverDef.getSaveTensorName())
+          .feed(saverDef.getFilenameTensorName(), TString.scalarOf(scope, prefix))
+          .run(scope);
+    }
   }
 
   /**
    * Restore the actual state of the variables of this session's graph.
-   *
+          *
    * <p>{@code prefix} is the path where the files containing the variables state live,
    * followed by the filename prefix. For example, if {@code prefix} is set to
    * <i>mymodel/myvariables/variables</i>, then the files are loaded from
@@ -538,26 +542,30 @@ public final class Session implements AutoCloseable {
    */
   public void restore(String prefix) {
     SaverDef saverDef = graph.saverDef();
-    runner().addTarget(saverDef.getRestoreOpName())
-            .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
-            .run();
+    try (TensorScope scope = new TensorScope()) {
+      runner().addTarget(saverDef.getRestoreOpName())
+          .feed(saverDef.getFilenameTensorName(), TString.scalarOf(scope, prefix))
+          .run(null);
+    }
   }
 
   /**
    * Output tensors and metadata obtained when executing a session.
    *
-   * <p>See {@link Runner#runAndFetchMetadata()}
+   * <p>See {@link Runner#runAndFetchMetadata(TensorScope)}
    */
   public static final class Run {
-    /** Tensors from requested fetches. */
+
+    /**
+     * Tensors from requested fetches.
+     */
     public List<Tensor> outputs;
 
     /**
      * Metadata about the run.
      *
      * <p>A <a
-     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
-     * protocol buffer</a>.
+     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata protocol buffer</a>.
      */
     public RunMetadata metadata;
   }
@@ -633,20 +641,20 @@ public final class Session implements AutoCloseable {
    * @param runOptions A RunOptions protocol buffer, or null
    * @param inputOpHandles (see inputOpIndices)
    * @param inputOpIndices (see inputTensorHandles)
-   * @param inputTensorHandles together with inputOpHandles and inputOpIndices specifies the values
-   *     that are being "fed" (do not need to be computed) during graph execution.
-   *     inputTensorHandles[i] (which corresponds to a Tensor.nativeHandle) is considered to be the
-   *     inputOpIndices[i]-th output of the Operation inputOpHandles[i]. Thus, it is required that
-   *     inputOpHandles.length == inputOpIndices.length == inputTensorHandles.length.
+   * @param inputTensorHandles together with inputOpHandles and inputOpIndices specifies the values that are being "fed"
+   * (do not need to be computed) during graph execution. inputTensorHandles[i] (which corresponds to a
+   * Tensor.nativeHandle) is considered to be the inputOpIndices[i]-th output of the Operation inputOpHandles[i]. Thus,
+   * it is required that inputOpHandles.length == inputOpIndices.length == inputTensorHandles.length.
    * @param outputOpHandles (see outputOpIndices)
-   * @param outputOpIndices together with outputOpHandles identifies the set of values that should
-   *     be computed. The outputOpIndices[i]-th output of the Operation outputOpHandles[i], It is
-   *     required that outputOpHandles.length == outputOpIndices.length.
-   * @param targetOpHandles is the set of Operations in the graph that are to be executed but whose
-   *     output will not be returned
+   * @param outputOpIndices together with outputOpHandles identifies the set of values that should be computed. The
+   * outputOpIndices[i]-th output of the Operation outputOpHandles[i], It is required that outputOpHandles.length ==
+   * outputOpIndices.length.
+   * @param targetOpHandles is the set of Operations in the graph that are to be executed but whose output will not be
+   * returned
    * @param wantRunMetadata indicates whether metadata about this execution should be returned.
-   * @param outputTensors will be filled in with tensors to the outputs requested. It is required
-   *     that outputs.length == outputOpHandles.length.
+   * @param outputTensors will be filled in with tensors to the outputs requested. It is required that outputs.length ==
+   * outputOpHandles.length.
+   * @param tensorScope the {@link TensorScope} to create tensors in
    * @return if wantRunMetadata is true, a RunMetadata protocol buffer, false otherwise.
    */
   private static RunMetadata run(
@@ -659,7 +667,8 @@ public final class Session implements AutoCloseable {
       int[] outputOpIndices,
       TF_Operation[] targetOpHandles,
       boolean wantRunMetadata,
-      List<Tensor> outputTensors) {
+      List<Tensor> outputTensors,
+      TensorScope tensorScope) {
     requireHandle(handle);
 
     int ninputs = inputTensorHandles.length;
@@ -698,8 +707,8 @@ public final class Session implements AutoCloseable {
       status.throwExceptionIfNotOK();
 
       for (int i = 0; i < noutputs; ++i) {
-        TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputTensors.add(RawTensor.fromHandle(h).asTypedTensor());
+        TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator(false);
+        outputTensors.add(RawTensor.fromHandle(tensorScope, h).asTypedTensor());
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

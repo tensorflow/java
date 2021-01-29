@@ -30,61 +30,66 @@ public class RawTensorTest {
 
   @Test
   public void rawToTypedTensor() {
-    RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), -1);
-    TFloat32 floatTensor = (TFloat32)rawTensor.asTypedTensor();
-    assertSame(floatTensor.asRawTensor(), rawTensor);
-    try {
-      TInt32 intTensor = (TInt32)rawTensor.asTypedTensor();
-      fail();
-    } catch (ClassCastException e) {
-      // ok
+    try (TensorScope scope = new TensorScope()) {
+      RawTensor rawTensor = RawTensor.allocate(scope, TFloat32.class, Shape.of(2, 2), -1);
+      TFloat32 floatTensor = (TFloat32) rawTensor.asTypedTensor();
+      assertSame(floatTensor.asRawTensor(), rawTensor);
+      try {
+        TInt32 intTensor = (TInt32) rawTensor.asTypedTensor();
+        fail();
+      } catch (ClassCastException e) {
+        // ok
+      }
     }
   }
 
   @Test
   public void allocateTensorWithSize() {
-    try (RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), 16)) {
+    try (TensorScope scope = new TensorScope()) {
+      RawTensor rawTensor = RawTensor.allocate(scope, TFloat32.class, Shape.of(2, 2), 16);
       assertEquals(16, rawTensor.numBytes());
-    }
-    try (RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), 100)) {
+      rawTensor = RawTensor.allocate(scope, TFloat32.class, Shape.of(2, 2), 100);
       assertEquals(100, rawTensor.numBytes());
-    }
-    try (RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), 10)) {
-      fail();
-    } catch (IllegalArgumentException e) {
-      // ok
-    }
-    try (RawTensor rawTensor = RawTensor.allocate(TString.class, Shape.of(2, 2), 100)) {
+      try (RawTensor rawTensor2 = RawTensor.allocate(scope, TFloat32.class, Shape.of(2, 2), 10)) {
+        fail();
+      } catch (IllegalArgumentException e) {
+        // ok
+      }
+      rawTensor = RawTensor.allocate(scope, TString.class, Shape.of(2, 2), 100);
       assertEquals(100, rawTensor.numBytes());
     }
   }
 
   @Test
   public void allocateTensorWithoutSize() {
-    try (RawTensor rawTensor = RawTensor.allocate(TFloat32.class, Shape.of(2, 2), -1)) {
-      assertEquals(16, rawTensor.numBytes());
-      // ok
-    }
-    try (RawTensor rawTensor = RawTensor.allocate(TString.class, Shape.of(2, 2), -1)) {
-      fail();
-    } catch (IllegalArgumentException e) {
-      // ok
+    try (TensorScope scope = new TensorScope()) {
+      try (RawTensor rawTensor = RawTensor.allocate(scope, TFloat32.class, Shape.of(2, 2), -1)) {
+        assertEquals(16, rawTensor.numBytes());
+        // ok
+      }
+      try (RawTensor rawTensor = RawTensor.allocate(scope, TString.class, Shape.of(2, 2), -1)) {
+        fail();
+      } catch (IllegalArgumentException e) {
+        // ok
+      }
     }
   }
 
   @Test
   public void failToAllocateTensorFromUnknownShape() {
-    try {
-      RawTensor.allocate(TFloat32.class, Shape.of(3, -1, 3), -1);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // ok
-    }
-    try {
-      RawTensor.allocate(TString.class, Shape.unknown(), 100);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // ok
+    try (TensorScope scope = new TensorScope()) {
+      try {
+        RawTensor.allocate(scope, TFloat32.class, Shape.of(3, -1, 3), -1);
+        fail();
+      } catch (IllegalArgumentException e) {
+        // ok
+      }
+      try {
+        RawTensor.allocate(scope, TString.class, Shape.unknown(), 100);
+        fail();
+      } catch (IllegalArgumentException e) {
+        // ok
+      }
     }
   }
 }

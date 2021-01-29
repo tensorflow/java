@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -31,77 +32,94 @@ public class TStringTest {
 
   @Test
   public void createScalar() {
-    TString tensor = TString.scalarOf("Pretty vacant");
-    assertNotNull(tensor);
-    assertEquals(Shape.scalar(), tensor.shape());
-    assertEquals("Pretty vacant", tensor.getObject());
+    try (TensorScope scope = new TensorScope()) {
+      TString tensor = TString.scalarOf(scope, "Pretty vacant");
+      assertNotNull(tensor);
+      assertEquals(Shape.scalar(), tensor.shape());
+      assertEquals("Pretty vacant", tensor.getObject());
+    }
   }
 
-    @Test
-    public void createrScalarLongerThan127() {
-        TString tensor = TString.scalarOf("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
-        assertNotNull(tensor);
-        assertEquals(Shape.scalar(), tensor.shape());
-        assertEquals("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !", tensor.getObject());
+  @Test
+  public void createrScalarLongerThan127() {
+    try (TensorScope scope = new TensorScope()) {
+      TString tensor = TString.scalarOf(scope,
+          "Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
+      assertNotNull(tensor);
+      assertEquals(Shape.scalar(), tensor.shape());
+      assertEquals(
+          "Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !",
+          tensor.getObject());
     }
+  }
 
 
-    @Test
+  @Test
   public void createVector() {
-    TString tensor = TString.vectorOf("Pretty", "vacant");
-    assertNotNull(tensor);
-    assertEquals(Shape.of(2), tensor.shape());
-    assertEquals("Pretty", tensor.getObject(0));
-    assertEquals("vacant", tensor.getObject(1));
+    try (TensorScope scope = new TensorScope()) {
+      TString tensor = TString.vectorOf(scope, "Pretty", "vacant");
+      assertNotNull(tensor);
+      assertEquals(Shape.of(2), tensor.shape());
+      assertEquals("Pretty", tensor.getObject(0));
+      assertEquals("vacant", tensor.getObject(1));
+    }
   }
 
   @Test
   public void createCopy() {
-    NdArray<String> strings = NdArrays.ofObjects(String.class, Shape.of(2, 2))
-        .setObject("Pretty", 0, 0)
-        .setObject("vacant", 0, 1)
-        .setObject("New", 1, 0)
-        .setObject("York", 1, 1);
+    try (TensorScope scope = new TensorScope()) {
+      NdArray<String> strings = NdArrays.ofObjects(String.class, Shape.of(2, 2))
+          .setObject("Pretty", 0, 0)
+          .setObject("vacant", 0, 1)
+          .setObject("New", 1, 0)
+          .setObject("York", 1, 1);
 
-    TString tensor = TString.tensorOf(strings);
-    assertNotNull(tensor);
-    strings.scalars().forEachIndexed((idx, s) ->
-        assertEquals(s.getObject(), tensor.getObject(idx))
-    );
+      TString tensor = TString.tensorOf(scope, strings);
+      assertNotNull(tensor);
+      strings.scalars().forEachIndexed((idx, s) ->
+          assertEquals(s.getObject(), tensor.getObject(idx))
+      );
+    }
   }
 
   @Test
   public void defaultCharsetIsUtf8() {
-    TString tensor = TString.tensorOf(NdArrays.scalarOfObject(BABY_CHICK));
-    byte[] bytes = tensor.asBytes().getObject();
-    assertArrayEquals(new byte[] { (byte)0xF0, (byte)0x9F, (byte)0x90, (byte)0xA5 }, bytes);
-    assertEquals(BABY_CHICK, tensor.getObject());
+    try (TensorScope scope = new TensorScope()) {
+      TString tensor = TString.tensorOf(scope, NdArrays.scalarOfObject(BABY_CHICK));
+      byte[] bytes = tensor.asBytes().getObject();
+      assertArrayEquals(new byte[]{(byte) 0xF0, (byte) 0x9F, (byte) 0x90, (byte) 0xA5}, bytes);
+      assertEquals(BABY_CHICK, tensor.getObject());
+    }
   }
 
   @Test
   public void usingDifferentCharset() {
-    TString tensor = TString.tensorOf(StandardCharsets.UTF_16LE, NdArrays.scalarOfObject(BABY_CHICK));
-    byte[] bytes = tensor.asBytes().getObject();
-    assertArrayEquals(new byte[] { (byte)0x3D, (byte)0xD8, (byte)0x25, (byte)0xDC }, bytes);
-    assertEquals(BABY_CHICK, tensor.using(StandardCharsets.UTF_16LE).getObject());
+    try (TensorScope scope = new TensorScope()) {
+      TString tensor = TString.tensorOf(scope, StandardCharsets.UTF_16LE, NdArrays.scalarOfObject(BABY_CHICK));
+      byte[] bytes = tensor.asBytes().getObject();
+      assertArrayEquals(new byte[]{(byte) 0x3D, (byte) 0xD8, (byte) 0x25, (byte) 0xDC}, bytes);
+      assertEquals(BABY_CHICK, tensor.using(StandardCharsets.UTF_16LE).getObject());
+    }
   }
 
   @Test
   public void initializingTensorWithRawBytes() {
-    String[] strings = new String[] { "TensorFlow", "For", "Java", "Rocks", "!" };
-    NdArray<byte[]> bytes = NdArrays.ofObjects(byte[].class, Shape.of(strings.length));
-    for (int i = 0; i < strings.length; ++i) {
-      bytes.setObject(strings[i].getBytes(), i);
-    }
-    TString tensor = TString.tensorOfBytes(bytes);
-    assertNotNull(tensor);
-    assertEquals(bytes.shape(), tensor.shape());
+    try (TensorScope scope = new TensorScope()) {
+      String[] strings = new String[]{"TensorFlow", "For", "Java", "Rocks", "!"};
+      NdArray<byte[]> bytes = NdArrays.ofObjects(byte[].class, Shape.of(strings.length));
+      for (int i = 0; i < strings.length; ++i) {
+        bytes.setObject(strings[i].getBytes(), i);
+      }
+      TString tensor = TString.tensorOfBytes(scope, bytes);
+      assertNotNull(tensor);
+      assertEquals(bytes.shape(), tensor.shape());
 
-    NdArray<byte[]> tensorBytes = tensor.asBytes();
-    for (int i = 0; i < strings.length; ++i) {
-      assertArrayEquals(bytes.getObject(i), tensorBytes.getObject(i));
+      NdArray<byte[]> tensorBytes = tensor.asBytes();
+      for (int i = 0; i < strings.length; ++i) {
+        assertArrayEquals(bytes.getObject(i), tensorBytes.getObject(i));
+      }
     }
   }
 
-  private static final String BABY_CHICK = "\uD83D\uDC25";	  
+  private static final String BABY_CHICK = "\uD83D\uDC25";
 }

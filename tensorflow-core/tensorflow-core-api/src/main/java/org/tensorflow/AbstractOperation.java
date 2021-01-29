@@ -84,8 +84,9 @@ abstract class AbstractOperation implements Operation {
    *
    * <p>This is only supported in an eager execution environment.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param outputIdx index of the output of this operation
    * @return output tensor
    */
-  abstract Tensor tensor(int outputIdx);
+  abstract Tensor tensor(TensorScope scope, int outputIdx);
 }

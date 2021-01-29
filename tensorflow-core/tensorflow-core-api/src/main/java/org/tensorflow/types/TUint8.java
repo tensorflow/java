@@ -19,6 +19,7 @@ package org.tensorflow.types;
 
 import java.util.function.Consumer;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.types.TUint8Mapper;
 import org.tensorflow.ndarray.ByteNdArray;
@@ -30,31 +31,35 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.annotation.TensorType;
 import org.tensorflow.types.family.TIntegral;
 
-/** 8-bit unsigned integer tensor type. */
+/**
+ * 8-bit unsigned integer tensor type.
+ */
 @TensorType(dataType = DataType.DT_UINT8, byteSize = 1, mapperClass = TUint8Mapper.class)
 public interface TUint8 extends ByteNdArray, TIntegral {
 
   /**
    * Allocates a new tensor for storing a single byte value.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param value byte to store in the new tensor
    * @return the new tensor
    */
-  static TUint8 scalarOf(byte value) {
-    return Tensor.of(TUint8.class, Shape.scalar(), data -> data.setByte(value));
+  static TUint8 scalarOf(TensorScope scope, byte value) {
+    return Tensor.of(scope, TUint8.class, Shape.scalar(), data -> data.setByte(value));
   }
 
   /**
    * Allocates a new tensor for storing a vector of bytes.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param values bytes to store in the new tensor
    * @return the new tensor
    */
-  static TUint8 vectorOf(byte... values) {
+  static TUint8 vectorOf(TensorScope scope, byte... values) {
     if (values == null) {
       throw new IllegalArgumentException();
     }
-    return Tensor.of(TUint8.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
+    return Tensor.of(scope, TUint8.class, Shape.of(values.length), data -> StdArrays.copyTo(values, data));
   }
 
   /**
@@ -62,43 +67,47 @@ public interface TUint8 extends ByteNdArray, TIntegral {
    *
    * <p>The tensor will have the same shape as the source array and its data will be copied.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param src the source array giving the shape and data to the new tensor
    * @return the new tensor
    */
-  static TUint8 tensorOf(NdArray<Byte> src) {
-    return Tensor.of(TUint8.class, src.shape(), src::copyTo);
+  static TUint8 tensorOf(TensorScope scope, NdArray<Byte> src) {
+    return Tensor.of(scope, TUint8.class, src.shape(), src::copyTo);
   }
 
   /**
    * Allocates a new tensor of the given shape.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @return the new tensor
    */
-  static TUint8 tensorOf(Shape shape) {
-    return Tensor.of(TUint8.class, shape);
+  static TUint8 tensorOf(TensorScope scope, Shape shape) {
+    return Tensor.of(scope, TUint8.class, shape);
   }
 
   /**
    * Allocates a new tensor of the given shape, initialized with the provided data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param data buffer of bytes to initialize the tensor with
    * @return the new tensor
    */
-  static TUint8 tensorOf(Shape shape, ByteDataBuffer data) {
-    return Tensor.of(TUint8.class, shape, d -> d.write(data));
+  static TUint8 tensorOf(TensorScope scope, Shape shape, ByteDataBuffer data) {
+    return Tensor.of(scope, TUint8.class, shape, d -> d.write(data));
   }
 
   /**
    * Allocates a new tensor of the given shape and initialize its data.
    *
+   * @param scope the {@link TensorScope} to create the tensor in
    * @param shape shape of the tensor to allocate
    * @param dataInit tensor data initializer
    * @return the new tensor
    * @throws TensorFlowException if the tensor cannot be allocated or initialized
    */
-  static TUint8 tensorOf(Shape shape, Consumer<TUint8> dataInit) {
-    return Tensor.of(TUint8.class, shape, dataInit);
+  static TUint8 tensorOf(TensorScope scope, Shape shape, Consumer<TUint8> dataInit) {
+    return Tensor.of(scope, TUint8.class, shape, dataInit);
   }
 }

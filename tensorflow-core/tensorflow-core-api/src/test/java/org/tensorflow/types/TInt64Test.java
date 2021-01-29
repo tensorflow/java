@@ -17,6 +17,7 @@
 
 package org.tensorflow.types;
 
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -24,8 +25,8 @@ import org.tensorflow.ndarray.Shape;
 public class TInt64Test extends NumericTypesTestBase<TInt64, Long> {
 
   @Override
-  TInt64 allocateTensor(Shape shape) {
-    return TInt64.tensorOf(shape);
+  TInt64 allocateTensor(TensorScope scope, Shape shape) {
+    return TInt64.tensorOf(scope, shape);
   }
 
   @Override

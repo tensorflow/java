@@ -37,8 +37,8 @@ import org.tensorflow.proto.framework.DataType;
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.
  *
  * <p>GraphOperation instances are valid only as long as the {@link Graph} they are a part of is
- * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation
- * instance may fail with an {@code IllegalStateException}.
+ * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation instance may fail with an
+ * {@code IllegalStateException}.
  *
  * <p>GraphOperation instances are immutable and thread-safe.
  */
@@ -166,7 +166,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   @Override
-  Tensor tensor(int outputIdx) {
+  Tensor tensor(TensorScope scope, int outputIdx) {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
   }
 
@@ -236,7 +236,9 @@ public final class GraphOperation extends AbstractOperation {
       TF_Status status = TF_Status.newStatus();
       int numDims = TF_GraphGetTensorNumDims(graphHandle, output, status);
       status.throwExceptionIfNotOK();
-      if (numDims < 0) return null;
+      if (numDims < 0) {
+        return null;
+      }
       long[] dims = new long[numDims];
       TF_GraphGetTensorShape(graphHandle, output, dims, numDims, status);
       status.throwExceptionIfNotOK();
@@ -250,8 +252,8 @@ public final class GraphOperation extends AbstractOperation {
 
     int numOutputs = TF_OperationNumOutputs(opHandle);
     if (outputIndex < 0 || outputIndex >= numOutputs) {
-        throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
-            + ") for an operation that has " + numOutputs + " outputs");
+      throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
+          + ") for an operation that has " + numOutputs + " outputs");
     }
 
     try (PointerScope scope = new PointerScope()) {
