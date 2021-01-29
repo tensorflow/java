@@ -65,11 +65,10 @@ public final class TensorScope implements AutoCloseable {
   /**
    * Closes this scope and its tensors.
    * <p>All tensors should be closed using this method or {@link Tensor#close()}.
-   * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is
-   * not efficient.
+   * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is not efficient.
    */
   @Override
-  public synchronized void close() {
+  public void close() {
     if (closed) {
       return;
     }
@@ -85,7 +84,7 @@ public final class TensorScope implements AutoCloseable {
    *
    * @return All of this scope's now-detached tensors
    */
-  public synchronized Set<Tensor> detachAll() {
+  public Set<Tensor> detachAll() {
     Set<Tensor> detachedTensors = new HashSet<>(this.tensors);
     detachedTensors.forEach(TensorScope::detach);
     closed = true;
@@ -96,11 +95,9 @@ public final class TensorScope implements AutoCloseable {
   public static <T extends Tensor> T detach(T tensor) {
     // ensure that I'm not attaching or detaching at the same time in different threads
     RawTensor rt = tensor.asRawTensor();
-    synchronized (rt) {
-      if (rt.tensorScope != null) {
-        rt.tensorScope.tensors.remove(rt);
-        rt.tensorScope = null;
-      }
+    if (rt.tensorScope != null) {
+      rt.tensorScope.tensors.remove(rt);
+      rt.tensorScope = null;
     }
     return tensor;
   }
@@ -154,18 +151,15 @@ public final class TensorScope implements AutoCloseable {
    *
    * @return this
    */
-  public synchronized <T extends Tensor> T attach(T tensor) {
+  public <T extends Tensor> T attach(T tensor) {
     if (this.closed) {
       throw new IllegalStateException("Scope has been closed, can not attach new tensor.");
     }
 
     RawTensor rt = tensor.asRawTensor();
-    // ensure that I'm not attaching or detaching at the same time in different threads
-    synchronized (rt) {
-      detach(tensor);
-      rt.tensorScope = this;
-      tensors.add(rt);
-    }
+    detach(tensor);
+    rt.tensorScope = this;
+    tensors.add(rt);
 
     return tensor;
   }
@@ -249,7 +243,7 @@ public final class TensorScope implements AutoCloseable {
   /**
    * Gets whether the scope is closed.
    */
-  public synchronized boolean isClosed() {
+  public boolean isClosed() {
     return closed;
   }
 
