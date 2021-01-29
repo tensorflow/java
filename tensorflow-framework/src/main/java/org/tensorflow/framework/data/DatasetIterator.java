@@ -15,15 +15,15 @@
  */
 package org.tensorflow.framework.data;
 
-import org.tensorflow.Graph;
-import org.tensorflow.Operand;
-import org.tensorflow.op.Op;
-import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.tensorflow.Graph;
+import org.tensorflow.Operand;
+import org.tensorflow.TensorScope;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -272,7 +272,9 @@ public class DatasetIterator implements Iterable<List<Operand<?>>> {
 
       @Override
       public boolean hasNext() {
-        return nextOptional.hasValue().asTensor().getBoolean();
+        try (TensorScope scope = new TensorScope()) {
+          return nextOptional.hasValue().asTensor(scope).getBoolean();
+        }
       }
 
       @Override

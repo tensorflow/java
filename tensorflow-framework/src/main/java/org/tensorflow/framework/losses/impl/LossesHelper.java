@@ -14,7 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Arrays;
+import java.util.Collections;
 import org.tensorflow.Operand;
+import org.tensorflow.TensorScope;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
@@ -25,11 +30,6 @@ import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * These are helper methods for Losses and Metrics and will be module private when Java modularity
@@ -52,12 +52,11 @@ public class LossesHelper {
    * @param tf the TensorFlow Ops
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
-   *     </code>.
+   * </code>.
    * @param <T> the data type for the labels, predictions and result
-   * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will
-   *     be null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
-   *     could be extended by one dimension. If <code>sampleWeight</code> is null, (prediction,
-   *     label) is returned.
+   * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will be null. Each of h
+   * of them possibly has the last dimension squeezed, <code>sampleWeight</code> could be extended by one dimension. If
+   * <code>sampleWeight</code> is null, (prediction, label) is returned.
    */
   public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions) {
@@ -141,8 +140,7 @@ public class LossesHelper {
    * Squeeze or expand the sampleWeight based on the rank difference
    *
    * <p>If the rank difference is +1, squeeze the last dimension of sampleWeight, If the rank
-   * difference is -1, expand the last dimension of sampleWeight. Otherwise, leave the shape of
-   * sampleWeight as is.
+   * difference is -1, expand the last dimension of sampleWeight. Otherwise, leave the shape of sampleWeight as is.
    *
    * @param tf the TensorFlow Ops
    * @param sampleWeight the sample weights
@@ -180,7 +178,7 @@ public class LossesHelper {
    *
    * @param tf the TensorFlowOps
    * @param labels Label values, a <code>Tensor</code> whose dimensions match <code>predictions
-   *     </code>.
+   * </code>.
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @param <T> the data type for the labels, predictions and result
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
@@ -195,7 +193,7 @@ public class LossesHelper {
    *
    * @param tf the TensorFlowOps
    * @param labels Label values, a <code>Operand</code> whose dimensions match <code>predictions
-   *     </code>.
+   * </code>.
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
    * @param <T> the data type for the labels, predictions and result
@@ -299,8 +297,8 @@ public class LossesHelper {
    * @param losses <code>Operand</code> whose elements contain individual loss measurements.
    * @param numElements The number of measurable elements in <code>losses</code>.
    * @param <T> the data type of the losses
-   * @return A scalar representing the mean of <code>losses</code>. If <code>numElements</code> is
-   *     zero, then zero is returned.
+   * @return A scalar representing the mean of <code>losses</code>. If <code>numElements</code> is zero, then zero is
+   * returned.
    */
   public static <T extends TNumber> Operand<T> safeMean(
       Ops tf, Operand<T> losses, long numElements) {
@@ -338,8 +336,7 @@ public class LossesHelper {
    * @param minValue the minimum value
    * @param maxValue the maximum value
    * @param <T> the datatype for the values
-   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph
-   *     Session
+   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph Session
    * @throws IllegalArgumentException if the TensorFlow Ops represents an Eager Session
    */
   public static <T extends TNumber> Operand<T> rangeCheck(
@@ -351,41 +348,44 @@ public class LossesHelper {
             tf.reduceAll(tf.math.lessEqual(values, maxValue), allDims));
     // Graph and Eager mode need to be handled differently, control dependencies are not allowed in
     // Eager mode
-    if (tf.scope().env().isGraph()) {
-      AssertThat assertThat =
-          tf.assertThat(
-              cond,
-              Arrays.asList(
-                  tf.constant(prefix),
-                  tf.constant(": values out of range, "),
-                  tf.constant("minimum = "),
-                  minValue,
-                  tf.constant(", maximum = "),
-                  maxValue));
-      Ops ltf =
-          tf.withSubScope("rangeCheck")
-              .withControlDependencies(Collections.singletonList(assertThat));
-      return ltf.identity(values);
-    } else if (!cond.asTensor().getBoolean())
-      throw new IllegalArgumentException(String.format("%s : values out of range", prefix));
-    else return values;
+    try (TensorScope scope = new TensorScope()) {
+      if (tf.scope().env().isGraph()) {
+        AssertThat assertThat =
+            tf.assertThat(
+                cond,
+                Arrays.asList(
+                    tf.constant(prefix),
+                    tf.constant(": values out of range, "),
+                    tf.constant("minimum = "),
+                    minValue,
+                    tf.constant(", maximum = "),
+                    maxValue));
+        Ops ltf =
+            tf.withSubScope("rangeCheck")
+                .withControlDependencies(Collections.singletonList(assertThat));
+        return ltf.identity(values);
+      } else if (!cond.asTensor(scope).getBoolean()) {
+        throw new IllegalArgumentException(String.format("%s : values out of range", prefix));
+      } else {
+        return values;
+      }
+    }
   }
 
   /**
-   * Checks to see if all the values are in the allowed values set. Running the operand in Graph
-   * mode will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}, if at least one
-   * value is not in the allowed values set. In Eager mode, this method will throw an {@link
-   * IllegalArgumentException} if at least one value is not in the allowed values set.
+   * Checks to see if all the values are in the allowed values set. Running the operand in Graph mode will throw {@link
+   * org.tensorflow.exceptions.TFInvalidArgumentException}, if at least one value is not in the allowed values set. In
+   * Eager mode, this method will throw an {@link IllegalArgumentException} if at least one value is not in the allowed
+   * values set.
    *
    * @param tf The TensorFlow Ops
    * @param prefix A String prefix to include in the error message
    * @param values the values to check
    * @param allowedValues the allowed values
    * @param <T> the data type for values and allowed values
-   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph
-   *     Session
-   * @throws IllegalArgumentException if the Session is in Eager mode and at least one value is not
-   *     in the allowed values set
+   * @return the values possibly with control dependencies if the TensorFlow Ops represents a Graph Session
+   * @throws IllegalArgumentException if the Session is in Eager mode and at least one value is not in the allowed
+   * values set
    */
   public static <T extends TNumber> Operand<T> valueCheck(
       Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
@@ -396,26 +396,32 @@ public class LossesHelper {
     if (diffSize != Shape.UNKNOWN_SIZE) {
       if (diffSize != 0) { // at least 1 value in the diff did not match the allowed values.
         throw new IllegalArgumentException(String.format("%s : values not in value set,", prefix));
-      } else return values;
+      } else {
+        return values;
+      }
     } else { // use dynamic shape
-      Operand<TBool> cond = tf.math.equal(tf.shape.size(tf.shape(diff.out())), tf.constant(0));
-      // Graph and Eager mode need to be handled differently, control dependencies are not allowed
-      // in Eager mode
-      if (tf.scope().env().isGraph()) {
-        AssertThat assertThat =
-            tf.assertThat(
-                cond,
-                Arrays.asList(
-                    tf.constant(prefix),
-                    tf.constant(": values not in value set, values = "),
-                    values));
-        Ops ltf =
-            tf.withSubScope("valueCheck")
-                .withControlDependencies(Collections.singletonList(assertThat));
-        return ltf.identity(values);
-      } else if (!cond.asTensor().getBoolean())
-        throw new IllegalArgumentException(String.format("%s : values not in value set", prefix));
-      else return values;
+      try (TensorScope scope = new TensorScope()) {
+        Operand<TBool> cond = tf.math.equal(tf.shape.size(tf.shape(diff.out())), tf.constant(0));
+        // Graph and Eager mode need to be handled differently, control dependencies are not allowed
+        // in Eager mode
+        if (tf.scope().env().isGraph()) {
+          AssertThat assertThat =
+              tf.assertThat(
+                  cond,
+                  Arrays.asList(
+                      tf.constant(prefix),
+                      tf.constant(": values not in value set, values = "),
+                      values));
+          Ops ltf =
+              tf.withSubScope("valueCheck")
+                  .withControlDependencies(Collections.singletonList(assertThat));
+          return ltf.identity(values);
+        } else if (!cond.asTensor(scope).getBoolean()) {
+          throw new IllegalArgumentException(String.format("%s : values not in value set", prefix));
+        } else {
+          return values;
+        }
+      }
     }
   }
 }

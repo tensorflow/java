@@ -15,17 +15,17 @@
  */
 package org.tensorflow.framework.data;
 
-import org.junit.jupiter.api.Test;
-import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.TInt32;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.tensorflow.ndarray.index.Indices.range;
+
+import java.util.Arrays;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.tensorflow.Operand;
+import org.tensorflow.TensorScope;
+import org.tensorflow.op.Ops;
+import org.tensorflow.types.TInt32;
 
 public class BatchDatasetTest extends DatasetTestBase {
 
@@ -44,9 +44,9 @@ public class BatchDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
-      try (TInt32 batch1 =
-               (TInt32)components.get(0).asTensor();
-           TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
+      try (TensorScope scope = new TensorScope()) {
+        TInt32 batch1 = (TInt32) components.get(0).asTensor(scope);
+        TInt32 batch2 = (TInt32) components.get(1).asTensor(scope);
         assertEquals(testMatrix1.slice(range(count, count + 2)), batch1);
         assertEquals(testMatrix2.slice(range(count, count + 2)), batch2);
 
@@ -68,15 +68,16 @@ public class BatchDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> components : dataset) {
+      try (TensorScope scope = new TensorScope()) {
 
-      try (TInt32 batch1 =
-               (TInt32)components.get(0).asTensor();
-          TInt32 batch2 = (TInt32)components.get(1).asTensor()) {
+        TInt32 batch1 = (TInt32) components.get(0).asTensor(scope);
+        TInt32 batch2 = (TInt32) components.get(1).asTensor(scope);
         assertEquals(testMatrix1.slice(range(count, count + 3)), batch1);
         assertEquals(testMatrix2.slice(range(count, count + 3)), batch2);
 
         count += 3;
       }
+
     }
   }
 
@@ -95,10 +96,9 @@ public class BatchDatasetTest extends DatasetTestBase {
     boolean foundLastBatch = false;
 
     for (List<Operand<?>> components : dataset) {
-      try (TInt32 batch1 =
-               (TInt32)components.get(0).asTensor();
-           TInt32 batch2 =
-               (TInt32)components.get(1).asTensor();) {
+      try (TensorScope scope = new TensorScope()) {
+        TInt32 batch1 = (TInt32) components.get(0).asTensor(scope);
+        TInt32 batch2 = (TInt32) components.get(1).asTensor(scope);
         if (count == 0) {
           assertEquals(testMatrix1.slice(range(count, count + 3)),
               batch1);

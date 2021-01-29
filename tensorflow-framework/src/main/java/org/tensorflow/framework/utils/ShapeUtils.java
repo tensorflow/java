@@ -24,11 +24,9 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TIntegral;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-/** Various methods for processing with Shapes and Operands */
+/**
+ * Various methods for processing with Shapes and Operands
+ */
 public class ShapeUtils {
 
   /**
@@ -66,12 +64,14 @@ public class ShapeUtils {
    * @throws java.lang.IllegalArgumentException if the dims type is not an integer
    */
   public static <T extends TIntegral> long[] getLongArray(Scope scope, Operand<T> dims) {
-    if (scope.env().isEager()) {
-      return getLongArray(dims.asTensor());
-    }
-    try (Session session = new Session((Graph) scope.env());
-        TIntegral tensor = (TIntegral) session.runner().fetch(dims).run().get(0)) {
-      return getLongArray(tensor);
+    try (TensorScope tensorScope = new TensorScope()) {
+      if (scope.env().isEager()) {
+        return getLongArray(dims.asTensor(tensorScope));
+      }
+      try (Session session = new Session((Graph) scope.env())) {
+        TIntegral tensor = (TIntegral) session.runner().fetch(dims).run(tensorScope).get(0);
+        return getLongArray(tensor);
+      }
     }
   }
 
@@ -112,12 +112,16 @@ public class ShapeUtils {
       axis = shape.numDimensions() + axis;
     }
     long[] array = shape.asArray();
-    if (array == null) return Shape.unknown();
+    if (array == null) {
+      return Shape.unknown();
+    }
     long[] newArray = new long[axis];
     System.arraycopy(array, 0, newArray, 0, axis - 1);
     long prod = array[axis - 1];
     for (int i = axis; i < array.length; i++) {
-      if (array[i] != Shape.UNKNOWN_SIZE) prod *= array[i];
+      if (array[i] != Shape.UNKNOWN_SIZE) {
+        prod *= array[i];
+      }
     }
     newArray[axis - 1] = prod;
     return Shape.of(newArray);

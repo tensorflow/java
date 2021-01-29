@@ -14,8 +14,17 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.TensorScope;
 import org.tensorflow.framework.utils.ND;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -29,13 +38,11 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-/** Test cases for Nadam Optimizer */
+/**
+ * Test cases for Nadam Optimizer
+ */
 public class NadamTest {
+
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
   private static final int VAR = 0;
@@ -44,21 +51,28 @@ public class NadamTest {
 
   float momentum = 1;
 
-  public NadamTest() {}
+  public NadamTest() {
+  }
 
   @BeforeAll
-  public static void setUpClass() {}
+  public static void setUpClass() {
+  }
 
   @AfterAll
-  public static void tearDownClass() {}
+  public static void tearDownClass() {
+  }
 
   @BeforeEach
-  public void setUp() {}
+  public void setUp() {
+  }
 
   @AfterEach
-  public void tearDown() {}
+  public void tearDown() {
+  }
 
-  /** Test of getOptimizerName method, of class Nadam. */
+  /**
+   * Test of getOptimizerName method, of class Nadam.
+   */
   @Test
   public void testGetOptimizerName() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -70,7 +84,9 @@ public class NadamTest {
     }
   }
 
-  /** Test of applyDense method, of class Nadam. */
+  /**
+   * Test of applyDense method, of class Nadam.
+   */
   @Test
   public void testBasic() {
 
@@ -146,13 +162,15 @@ public class NadamTest {
       session.evaluate(var0Init, var0);
       session.evaluate(var1Init, var1);
 
-      try (TFloat32 result =
-          (TFloat32)session
-              .getGraphSession()
-              .runner()
-              .fetch("momentum")
-              .run()
-              .get(0)) {
+      try (TensorScope scope = new TensorScope()) {
+
+        TFloat32 result =
+            (TFloat32) session
+                .getGraphSession()
+                .runner()
+                .fetch("momentum")
+                .run(scope)
+                .get(0);
         result.scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
@@ -165,13 +183,14 @@ public class NadamTest {
             Nadam.BETA_ONE_DEFAULT * (1F - 0.5F * (float) Math.pow(0.96F, (0.004F * (step + 1))));
         momentum = momentum * mut;
 
-        try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("momentum")
-                .run()
-                .get(0)) {
+        try (TensorScope scope = new TensorScope()) {
+          TFloat32 result =
+              (TFloat32) session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("momentum")
+                  .run(scope)
+                  .get(0);
           result.scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);
@@ -198,6 +217,7 @@ public class NadamTest {
         session.evaluate(var1Np, var1);
       }
     }
+
   }
 
   private FloatNdArray[] nadamUpdateNdArray(

@@ -15,24 +15,25 @@
  */
 package org.tensorflow.framework.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.TensorScope;
 import org.tensorflow.exceptions.TFOutOfRangeException;
-import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.tensorflow.types.family.TType;
 
 public class MapDatasetTest extends DatasetTestBase {
+
   IntNdArray mapped1;
   IntNdArray mapped2;
 
@@ -41,14 +42,14 @@ public class MapDatasetTest extends DatasetTestBase {
     super.setUp();
     mapped1 =
         StdArrays.ndCopyOf(
-            new int[][] {
-              {2, 4, 6, 8, 10},
-              {4, 8, 12, 16, 20},
-              {6, 12, 18, 24, 30},
-              {8, 16, 24, 32, 40}
+            new int[][]{
+                {2, 4, 6, 8, 10},
+                {4, 8, 12, 16, 20},
+                {6, 12, 18, 24, 30},
+                {8, 16, 24, 32, 40}
             });
 
-    mapped2 = StdArrays.ndCopyOf(new int[][] {{2}, {0}, {2}, {2}});
+    mapped2 = StdArrays.ndCopyOf(new int[][]{{2}, {0}, {2}, {2}});
   }
 
   @Test
@@ -77,17 +78,16 @@ public class MapDatasetTest extends DatasetTestBase {
 
         int batches = 0;
         while (true) {
-          try {
-            List<?> outputs = session.runner().fetch(X).fetch(y).run();
+          try (TensorScope scope = new TensorScope()) {
+            List<?> outputs = session.runner().fetch(X).fetch(y).run(scope);
 
-            try (TInt32 XBatch = (TInt32)outputs.get(0);
-                TInt32 yBatch = (TInt32)outputs.get(1)) {
+            TInt32 XBatch = (TInt32) outputs.get(0);
+            TInt32 yBatch = (TInt32) outputs.get(1);
 
-              assertEquals(mapped1.get(batches), XBatch);
-              assertEquals(mapped2.get(batches), yBatch);
+            assertEquals(mapped1.get(batches), XBatch);
+            assertEquals(mapped2.get(batches), yBatch);
 
-              batches++;
-            }
+            batches++;
           } catch (TFOutOfRangeException e) {
             break;
           }
@@ -113,8 +113,9 @@ public class MapDatasetTest extends DatasetTestBase {
 
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (TInt32 XBatch = (TInt32)outputs.get(0).asTensor();
-          TInt32 yBatch = (TInt32)outputs.get(1).asTensor()) {
+      try (TensorScope scope = new TensorScope()) {
+        TInt32 XBatch = (TInt32) outputs.get(0).asTensor(scope);
+        TInt32 yBatch = (TInt32) outputs.get(1).asTensor(scope);
         assertEquals(mapped1.get(count), XBatch);
         assertEquals(mapped2.get(count), yBatch);
 

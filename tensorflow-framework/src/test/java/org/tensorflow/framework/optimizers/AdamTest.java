@@ -14,8 +14,19 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.Adam.FIRST_MOMENT;
+import static org.tensorflow.framework.optimizers.Adam.SECOND_MOMENT;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.TensorScope;
 import org.tensorflow.framework.utils.ND;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -28,13 +39,6 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.framework.optimizers.Adam.FIRST_MOMENT;
-import static org.tensorflow.framework.optimizers.Adam.SECOND_MOMENT;
 
 /** Test cases for Adam Optimizer */
 public class AdamTest {
@@ -138,24 +142,26 @@ public class AdamTest {
         final float[] powers = {
           (float) Math.pow(beta1, step + 1), (float) Math.pow(beta2, step + 1)
         };
+        try (TensorScope scope = new TensorScope()) {
 
-        try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("beta1_power")
-                .run()
-                .get(0)) {
-          result.scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
-        }
-        try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("beta2_power")
-                .run()
-                .get(0)) {
-          result.scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
+          try (TFloat32 result =
+              (TFloat32) session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("beta1_power")
+                  .run(scope)
+                  .get(0)) {
+            result.scalars().forEach(f -> assertEquals(powers[0], f.getFloat(), epsilon1));
+          }
+          try (TFloat32 result =
+              (TFloat32) session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("beta2_power")
+                  .run(scope)
+                  .get(0)) {
+            result.scalars().forEach(f -> assertEquals(powers[1], f.getFloat(), epsilon1));
+          }
         }
         session.run(update);
 

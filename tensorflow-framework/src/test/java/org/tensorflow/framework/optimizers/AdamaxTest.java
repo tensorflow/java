@@ -14,8 +14,22 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
-import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.Adamax.BETA_ONE_DEFAULT;
+import static org.tensorflow.framework.optimizers.Adamax.BETA_TWO_DEFAULT;
+import static org.tensorflow.framework.optimizers.Adamax.FIRST_MOMENT;
+import static org.tensorflow.framework.optimizers.Adamax.GradAndVar;
+import static org.tensorflow.framework.optimizers.Adamax.SECOND_MOMENT;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
+import org.tensorflow.TensorScope;
 import org.tensorflow.framework.utils.ND;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -29,35 +43,39 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.framework.optimizers.Adamax.*;
-
-/** Test cases for Adamax Optimizer */
+/**
+ * Test cases for Adamax Optimizer
+ */
 public class AdamaxTest {
+
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
   private static final int VAR = 0;
   private static final int M = 1;
   private static final int V = 2;
 
-  public AdamaxTest() {}
+  public AdamaxTest() {
+  }
 
   @BeforeAll
-  public static void setUpClass() {}
+  public static void setUpClass() {
+  }
 
   @AfterAll
-  public static void tearDownClass() {}
+  public static void tearDownClass() {
+  }
 
   @BeforeEach
-  public void setUp() {}
+  public void setUp() {
+  }
 
   @AfterEach
-  public void tearDown() {}
+  public void tearDown() {
+  }
 
-  /** Test of getOptimizerName method, of class Adamax. */
+  /**
+   * Test of getOptimizerName method, of class Adamax.
+   */
   @Test
   public void testGetOptimizerName() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
@@ -69,7 +87,9 @@ public class AdamaxTest {
     }
   }
 
-  /** Test of applyDense method, of class Adamax. */
+  /**
+   * Test of applyDense method, of class Adamax.
+   */
   @Test
   public void testBasic() {
 
@@ -148,13 +168,14 @@ public class AdamaxTest {
         // Test powers
         final float beta1Power = (float) Math.pow(BETA_ONE_DEFAULT, step + 1);
 
-        try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("beta1_power")
-                .run()
-                .get(0)) {
+        try (TensorScope scope = new TensorScope()) {
+          TFloat32 result =
+              (TFloat32) session
+                  .getGraphSession()
+                  .runner()
+                  .fetch("beta1_power")
+                  .run(scope)
+                  .get(0);
           result.scalars().forEach(f -> assertEquals(beta1Power, f.getFloat(), epsilon1));
         }
         session.run(update);
