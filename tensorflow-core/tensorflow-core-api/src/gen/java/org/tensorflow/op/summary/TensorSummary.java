@@ -45,7 +45,7 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
    * @return a new instance of TensorSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorSummary create(Scope scope, Operand<TString> tag, Operand<T> tensor, Operand<TString> serializedSummaryMetadata) {
+  public static TensorSummary create(Scope scope, Operand<TString> tag, Operand<? extends TType> tensor, Operand<TString> serializedSummaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSummaryV2", scope.makeOpName("TensorSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());

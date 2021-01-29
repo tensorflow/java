@@ -100,7 +100,7 @@ public final class Cumprod<T extends TType> extends RawOp implements Operand<T> 
    * @return a new instance of Cumprod
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Cumprod<T> create(Scope scope, Operand<T> x, Operand<U> axis, Options... options) {
+  public static <T extends TType> Cumprod<T> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cumprod", scope.makeOpName("Cumprod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());

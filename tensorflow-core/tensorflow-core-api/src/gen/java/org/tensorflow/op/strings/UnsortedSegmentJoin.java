@@ -92,7 +92,7 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
    * @return a new instance of UnsortedSegmentJoin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments, Options... options) {
+  public static UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

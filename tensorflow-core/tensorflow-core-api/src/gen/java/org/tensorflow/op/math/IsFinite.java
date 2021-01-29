@@ -53,7 +53,7 @@ public final class IsFinite extends RawOp implements Operand<TBool> {
    * @return a new instance of IsFinite
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> IsFinite create(Scope scope, Operand<T> x) {
+  public static IsFinite create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsFinite", scope.makeOpName("IsFinite"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

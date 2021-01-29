@@ -54,7 +54,7 @@ public final class ToBool extends RawOp implements Operand<TBool> {
    * @return a new instance of ToBool
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ToBool create(Scope scope, Operand<T> input) {
+  public static ToBool create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("ToBool", scope.makeOpName("ToBool"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

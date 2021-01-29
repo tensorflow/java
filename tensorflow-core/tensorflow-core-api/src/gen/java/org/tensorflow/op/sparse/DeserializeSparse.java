@@ -89,7 +89,7 @@ public final class DeserializeSparse<U extends TType> extends RawOp {
    * @return a new instance of DeserializeSparse
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> DeserializeSparse<U> create(Scope scope, Operand<T> serializedSparse, Class<U> dtype) {
+  public static <U extends TType> DeserializeSparse<U> create(Scope scope, Operand<? extends TType> serializedSparse, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
     opBuilder.addInput(serializedSparse.asOutput());
     opBuilder = scope.apply(opBuilder);

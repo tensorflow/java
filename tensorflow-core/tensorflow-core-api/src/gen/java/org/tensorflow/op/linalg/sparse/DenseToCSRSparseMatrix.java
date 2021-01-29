@@ -42,7 +42,7 @@ public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType
    * @return a new instance of DenseToCSRSparseMatrix
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DenseToCSRSparseMatrix create(Scope scope, Operand<T> denseInput, Operand<TInt64> indices) {
+  public static DenseToCSRSparseMatrix create(Scope scope, Operand<? extends TType> denseInput, Operand<TInt64> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToCSRSparseMatrix", scope.makeOpName("DenseToCSRSparseMatrix"));
     opBuilder.addInput(denseInput.asOutput());
     opBuilder.addInput(indices.asOutput());

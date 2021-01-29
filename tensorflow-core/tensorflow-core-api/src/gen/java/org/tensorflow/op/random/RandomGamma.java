@@ -81,7 +81,7 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
    * @return a new instance of RandomGamma
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RandomGamma<U> create(Scope scope, Operand<T> shape, Operand<U> alpha, Options... options) {
+  public static <U extends TNumber> RandomGamma<U> create(Scope scope, Operand<? extends TNumber> shape, Operand<U> alpha, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(alpha.asOutput());

@@ -78,7 +78,7 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
    * @return a new instance of ResizeArea
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResizeArea create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
+  public static ResizeArea create(Scope scope, Operand<? extends TNumber> images, Operand<TInt32> size, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeArea", scope.makeOpName("ResizeArea"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(size.asOutput());

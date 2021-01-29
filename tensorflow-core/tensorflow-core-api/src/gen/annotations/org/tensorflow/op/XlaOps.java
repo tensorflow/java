@@ -68,8 +68,8 @@ public final class XlaOps {
    * @param broadcastDims an XLA-style broadcast dimension specification
    * @return a new instance of BroadcastHelper
    */
-  public <T extends TType, U extends TNumber> BroadcastHelper<T> broadcastHelper(Operand<T> lhs,
-      Operand<T> rhs, Operand<U> broadcastDims) {
+  public <T extends TType> BroadcastHelper<T> broadcastHelper(Operand<T> lhs, Operand<T> rhs,
+      Operand<? extends TNumber> broadcastDims) {
     return BroadcastHelper.create(scope, lhs, rhs, broadcastDims);
   }
 
@@ -190,8 +190,8 @@ public final class XlaOps {
    *  `input`.
    * @return a new instance of DynamicUpdateSlice
    */
-  public <T extends TType, U extends TNumber> DynamicUpdateSlice<T> dynamicUpdateSlice(
-      Operand<T> input, Operand<T> update, Operand<U> indices) {
+  public <T extends TType> DynamicUpdateSlice<T> dynamicUpdateSlice(Operand<T> input,
+      Operand<T> update, Operand<? extends TNumber> indices) {
     return DynamicUpdateSlice.create(scope, input, update, indices);
   }
 
@@ -328,7 +328,7 @@ public final class XlaOps {
    * @param tensorName A string key that identifies the channel.
    * @return a new instance of Send
    */
-  public <T extends TType> Send send(Operand<T> tensor, String tensorName) {
+  public Send send(Operand<? extends TType> tensor, String tensorName) {
     return Send.create(scope, tensor, tensorName);
   }
 

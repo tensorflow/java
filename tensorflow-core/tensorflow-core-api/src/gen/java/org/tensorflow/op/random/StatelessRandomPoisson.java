@@ -51,7 +51,7 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
    * @return a new instance of StatelessRandomPoisson
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TNumber, T extends TNumber, U extends TNumber, V extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> lam, Class<W> dtype) {
+  public static <W extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<? extends TNumber> lam, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomPoisson", scope.makeOpName("StatelessRandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());

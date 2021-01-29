@@ -89,7 +89,7 @@ public final class AddSparseToTensorsMap extends RawOp implements Operand<TInt64
    * @return a new instance of AddSparseToTensorsMap
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<T> sparseValues, Operand<TInt64> sparseShape, Options... options) {
+  public static AddSparseToTensorsMap create(Scope scope, Operand<TInt64> sparseIndices, Operand<? extends TType> sparseValues, Operand<TInt64> sparseShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AddSparseToTensorsMap", scope.makeOpName("AddSparseToTensorsMap"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());

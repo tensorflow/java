@@ -48,7 +48,7 @@ public final class QuantizedRelu6<U extends TType> extends RawOp {
    * @return a new instance of QuantizedRelu6
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedRelu6<U> create(Scope scope, Operand<T> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
+  public static <U extends TType> QuantizedRelu6<U> create(Scope scope, Operand<? extends TType> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu6", scope.makeOpName("QuantizedRelu6"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());

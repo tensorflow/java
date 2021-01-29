@@ -83,7 +83,7 @@ public final class QuantizedConv2DWithBiasAndReluAndRequantize<W extends TType> 
    * @return a new instance of QuantizedConv2DWithBiasAndReluAndRequantize
    */
   @Endpoint(describeByClass = true)
-  public static <W extends TType, T extends TType, U extends TType, V extends TType> QuantizedConv2DWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<V> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding, Options... options) {
+  public static <W extends TType> QuantizedConv2DWithBiasAndReluAndRequantize<W> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<? extends TType> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasAndReluAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasAndReluAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

@@ -45,7 +45,7 @@ public final class LookupTableImport extends RawOp {
    * @return a new instance of LookupTableImport
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TType> LookupTableImport create(Scope scope, Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
+  public static LookupTableImport create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<? extends TType> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableImportV2", scope.makeOpName("LookupTableImport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());

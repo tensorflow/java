@@ -55,7 +55,7 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
    * @return a new instance of Bucketize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Bucketize create(Scope scope, Operand<T> input, List<Float> boundaries) {
+  public static Bucketize create(Scope scope, Operand<? extends TNumber> input, List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

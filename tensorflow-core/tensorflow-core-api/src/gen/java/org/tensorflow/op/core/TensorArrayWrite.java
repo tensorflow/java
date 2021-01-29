@@ -46,7 +46,7 @@ public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
    * @return a new instance of TensorArrayWrite
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<T> value, Operand<TFloat32> flowIn) {
+  public static TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayWriteV3", scope.makeOpName("TensorArrayWrite"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());

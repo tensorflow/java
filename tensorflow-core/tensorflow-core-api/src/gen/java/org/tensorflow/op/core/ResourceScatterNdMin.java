@@ -66,7 +66,7 @@ public final class ResourceScatterNdMin extends RawOp {
    * @return a new instance of ResourceScatterNdMin
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> ResourceScatterNdMin create(Scope scope, Operand<?> ref, Operand<T> indices, Operand<U> updates, Options... options) {
+  public static ResourceScatterNdMin create(Scope scope, Operand<?> ref, Operand<? extends TNumber> indices, Operand<? extends TType> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdMin", scope.makeOpName("ResourceScatterNdMin"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());

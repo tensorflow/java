@@ -77,7 +77,7 @@ public final class MirrorPad<T extends TType> extends RawOp implements Operand<T
    * @return a new instance of MirrorPad
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<U> paddings, String mode) {
+  public static <T extends TType> MirrorPad<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> paddings, String mode) {
     OperationBuilder opBuilder = scope.env().opBuilder("MirrorPad", scope.makeOpName("MirrorPad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

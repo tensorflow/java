@@ -71,7 +71,7 @@ public final class Prod<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Prod
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Prod<T> create(Scope scope, Operand<T> input, Operand<U> axis, Options... options) {
+  public static <T extends TType> Prod<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Prod", scope.makeOpName("Prod"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

@@ -49,7 +49,7 @@ public final class PopulationCount extends RawOp implements Operand<TUint8> {
    * @return a new instance of PopulationCount
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> PopulationCount create(Scope scope, Operand<T> x) {
+  public static PopulationCount create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

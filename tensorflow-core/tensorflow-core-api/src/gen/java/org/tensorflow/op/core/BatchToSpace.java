@@ -61,7 +61,7 @@ public final class BatchToSpace<T extends TType> extends RawOp implements Operan
    * @return a new instance of BatchToSpace
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<U> crops, Long blockSize) {
+  public static <T extends TType> BatchToSpace<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> crops, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpace", scope.makeOpName("BatchToSpace"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(crops.asOutput());

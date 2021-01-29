@@ -58,7 +58,7 @@ public final class RaggedTensorToVariant extends RawOp implements Operand<TType>
    * @return a new instance of RaggedTensorToVariant
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues, Boolean batchedInput) {
+  public static <T extends TNumber> RaggedTensorToVariant create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<? extends TType> rtDenseValues, Boolean batchedInput) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToVariant", scope.makeOpName("RaggedTensorToVariant"));
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());

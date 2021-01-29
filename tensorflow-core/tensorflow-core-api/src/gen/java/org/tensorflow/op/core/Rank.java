@@ -54,7 +54,7 @@ public final class Rank extends RawOp implements Operand<TInt32> {
    * @return a new instance of Rank
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> Rank create(Scope scope, Operand<T> input) {
+  public static Rank create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rank", scope.makeOpName("Rank"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);

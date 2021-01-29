@@ -51,7 +51,7 @@ public final class QuantizedAdd<V extends TType> extends RawOp {
    * @return a new instance of QuantizedAdd
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedAdd<V> create(Scope scope, Operand<T> x, Operand<U> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
+  public static <V extends TType> QuantizedAdd<V> create(Scope scope, Operand<? extends TType> x, Operand<? extends TType> y, Operand<TFloat32> minX, Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAdd", scope.makeOpName("QuantizedAdd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());

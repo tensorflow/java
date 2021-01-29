@@ -132,7 +132,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    * @return a new instance of DebugNumericsSummary
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> DebugNumericsSummary<U> create(Scope scope, Operand<T> input, Class<U> outputDtype, Options... options) {
+  public static <U extends TNumber> DebugNumericsSummary<U> create(Scope scope, Operand<? extends TType> input, Class<U> outputDtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DebugNumericSummaryV2", scope.makeOpName("DebugNumericsSummary"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -159,7 +159,7 @@ public final class DebugNumericsSummary<U extends TNumber> extends RawOp impleme
    * @return a new instance of DebugNumericsSummary
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugNumericsSummary<TFloat32> create(Scope scope, Operand<T> input, Options... options) {
+  public static DebugNumericsSummary<TFloat32> create(Scope scope, Operand<? extends TType> input, Options... options) {
     return create(scope, input, TFloat32.class, options);
   }
   

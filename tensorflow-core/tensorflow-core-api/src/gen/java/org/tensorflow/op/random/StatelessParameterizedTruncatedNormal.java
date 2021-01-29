@@ -46,7 +46,7 @@ public final class StatelessParameterizedTruncatedNormal<V extends TNumber> exte
    * @return a new instance of StatelessParameterizedTruncatedNormal
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TNumber, T extends TNumber, U extends TNumber> StatelessParameterizedTruncatedNormal<V> create(Scope scope, Operand<T> shape, Operand<U> seed, Operand<V> means, Operand<V> stddevs, Operand<V> minvals, Operand<V> maxvals) {
+  public static <V extends TNumber> StatelessParameterizedTruncatedNormal<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> means, Operand<V> stddevs, Operand<V> minvals, Operand<V> maxvals) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessParameterizedTruncatedNormal", scope.makeOpName("StatelessParameterizedTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());

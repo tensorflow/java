@@ -107,7 +107,7 @@ public final class CropAndResize extends RawOp implements Operand<TFloat32> {
    * @return a new instance of CropAndResize
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CropAndResize create(Scope scope, Operand<T> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
+  public static CropAndResize create(Scope scope, Operand<? extends TNumber> image, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> cropSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResize", scope.makeOpName("CropAndResize"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(boxes.asOutput());

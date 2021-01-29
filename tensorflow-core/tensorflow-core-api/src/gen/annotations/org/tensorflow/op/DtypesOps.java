@@ -59,7 +59,7 @@ public final class DtypesOps {
    * @param options carries optional attributes values
    * @return a new instance of AsString
    */
-  public <T extends TType> AsString asString(Operand<T> input, AsString.Options... options) {
+  public AsString asString(Operand<? extends TType> input, AsString.Options... options) {
     return AsString.create(scope, input, options);
   }
 
@@ -72,7 +72,7 @@ public final class DtypesOps {
    * @param options carries optional attributes values
    * @return a new instance of Cast
    */
-  public <U extends TType, T extends TType> Cast<U> cast(Operand<T> x, Class<U> DstT,
+  public <U extends TType> Cast<U> cast(Operand<? extends TType> x, Class<U> DstT,
       Cast.Options... options) {
     return Cast.create(scope, x, DstT, options);
   }

@@ -50,7 +50,7 @@ public final class SparseSegmentMean<T extends TNumber> extends RawOp implements
    * @return a new instance of SparseSegmentMean
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> SparseSegmentMean<T> create(Scope scope, Operand<T> data, Operand<U> indices, Operand<V> segmentIds) {
+  public static <T extends TNumber> SparseSegmentMean<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMean", scope.makeOpName("SparseSegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());

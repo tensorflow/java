@@ -55,7 +55,7 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
    * @return a new instance of StatefulUniformInt
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulUniformInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Operand<U> minval, Operand<U> maxval) {
+  public static <U extends TType> StatefulUniformInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Operand<U> minval, Operand<U> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformInt", scope.makeOpName("StatefulUniformInt"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());

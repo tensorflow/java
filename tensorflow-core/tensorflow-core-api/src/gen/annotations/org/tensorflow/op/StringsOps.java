@@ -597,8 +597,8 @@ public final class StringsOps {
    * @param options carries optional attributes values
    * @return a new instance of UnsortedSegmentJoin
    */
-  public <T extends TNumber, U extends TNumber> UnsortedSegmentJoin unsortedSegmentJoin(
-      Operand<TString> inputs, Operand<T> segmentIds, Operand<U> numSegments,
+  public UnsortedSegmentJoin unsortedSegmentJoin(Operand<TString> inputs,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments,
       UnsortedSegmentJoin.Options... options) {
     return UnsortedSegmentJoin.create(scope, inputs, segmentIds, numSegments, options);
   }

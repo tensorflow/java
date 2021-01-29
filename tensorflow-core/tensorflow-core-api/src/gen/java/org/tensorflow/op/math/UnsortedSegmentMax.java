@@ -76,7 +76,7 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
    * @return a new instance of UnsortedSegmentMax
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber, V extends TNumber> UnsortedSegmentMax<T> create(Scope scope, Operand<T> data, Operand<U> segmentIds, Operand<V> numSegments) {
+  public static <T extends TNumber> UnsortedSegmentMax<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentMax", scope.makeOpName("UnsortedSegmentMax"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

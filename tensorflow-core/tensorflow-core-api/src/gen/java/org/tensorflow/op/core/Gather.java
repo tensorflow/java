@@ -94,7 +94,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
    * @return a new instance of Gather
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber, V extends TNumber> Gather<T> create(Scope scope, Operand<T> params, Operand<U> indices, Operand<V> axis, Options... options) {
+  public static <T extends TType> Gather<T> create(Scope scope, Operand<T> params, Operand<? extends TNumber> indices, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("GatherV2", scope.makeOpName("Gather"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());

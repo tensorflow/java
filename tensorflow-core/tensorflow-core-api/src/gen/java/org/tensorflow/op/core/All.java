@@ -69,7 +69,7 @@ public final class All extends RawOp implements Operand<TBool> {
    * @return a new instance of All
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> All create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
+  public static All create(Scope scope, Operand<TBool> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("All"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

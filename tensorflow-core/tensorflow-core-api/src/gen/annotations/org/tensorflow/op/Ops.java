@@ -243,8 +243,6 @@ import org.tensorflow.op.core.TensorListScatterIntoExistingList;
 import org.tensorflow.op.core.TensorListSetItem;
 import org.tensorflow.op.core.TensorListSplit;
 import org.tensorflow.op.core.TensorListStack;
-import org.tensorflow.op.core.TensorScatterMax;
-import org.tensorflow.op.core.TensorScatterMin;
 import org.tensorflow.op.core.TensorScatterNdAdd;
 import org.tensorflow.op.core.TensorScatterNdMax;
 import org.tensorflow.op.core.TensorScatterNdMin;
@@ -347,9 +345,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -372,8 +370,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -405,8 +403,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of All
    */
-  public <T extends TNumber> All all(Operand<TBool> input, Operand<T> axis,
-      All.Options... options) {
+  public All all(Operand<TBool> input, Operand<? extends TNumber> axis, All.Options... options) {
     return All.create(scope, input, axis, options);
   }
 
@@ -424,8 +421,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Any
    */
-  public <T extends TNumber> Any any(Operand<TBool> input, Operand<T> axis,
-      Any.Options... options) {
+  public Any any(Operand<TBool> input, Operand<? extends TNumber> axis, Any.Options... options) {
     return Any.create(scope, input, axis, options);
   }
 
@@ -579,8 +575,8 @@ public final class Ops {
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignAddVariableOp
    */
-  public <T extends TType> AssignAddVariableOp assignAddVariableOp(Operand<?> resource,
-      Operand<T> value) {
+  public AssignAddVariableOp assignAddVariableOp(Operand<?> resource,
+      Operand<? extends TType> value) {
     return AssignAddVariableOp.create(scope, resource, value);
   }
 
@@ -611,8 +607,8 @@ public final class Ops {
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignSubVariableOp
    */
-  public <T extends TType> AssignSubVariableOp assignSubVariableOp(Operand<?> resource,
-      Operand<T> value) {
+  public AssignSubVariableOp assignSubVariableOp(Operand<?> resource,
+      Operand<? extends TType> value) {
     return AssignSubVariableOp.create(scope, resource, value);
   }
 
@@ -626,8 +622,7 @@ public final class Ops {
    * @param value the value to set the new tensor to use.
    * @return a new instance of AssignVariableOp
    */
-  public <T extends TType> AssignVariableOp assignVariableOp(Operand<?> resource,
-      Operand<T> value) {
+  public AssignVariableOp assignVariableOp(Operand<?> resource, Operand<? extends TType> value) {
     return AssignVariableOp.create(scope, resource, value);
   }
 
@@ -694,8 +689,8 @@ public final class Ops {
    * @param componentIndex The component of the barrier elements that is being assigned.
    * @return a new instance of BarrierInsertMany
    */
-  public <T extends TType> BarrierInsertMany barrierInsertMany(Operand<TString> handle,
-      Operand<TString> keys, Operand<T> values, Long componentIndex) {
+  public BarrierInsertMany barrierInsertMany(Operand<TString> handle, Operand<TString> keys,
+      Operand<? extends TType> values, Long componentIndex) {
     return BarrierInsertMany.create(scope, handle, keys, values, componentIndex);
   }
 
@@ -809,8 +804,8 @@ public final class Ops {
    * @param blockSize
    * @return a new instance of BatchToSpace
    */
-  public <T extends TType, U extends TNumber> BatchToSpace<T> batchToSpace(Operand<T> input,
-      Operand<U> crops, Long blockSize) {
+  public <T extends TType> BatchToSpace<T> batchToSpace(Operand<T> input,
+      Operand<? extends TNumber> crops, Long blockSize) {
     return BatchToSpace.create(scope, input, crops, blockSize);
   }
 
@@ -924,8 +919,8 @@ public final class Ops {
    *  }</pre>
    * @return a new instance of BatchToSpaceNd
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> BatchToSpaceNd<T> batchToSpaceNd(
-      Operand<T> input, Operand<U> blockShape, Operand<V> crops) {
+  public <T extends TType> BatchToSpaceNd<T> batchToSpaceNd(Operand<T> input,
+      Operand<? extends TNumber> blockShape, Operand<? extends TNumber> crops) {
     return BatchToSpaceNd.create(scope, input, blockShape, crops);
   }
 
@@ -988,7 +983,7 @@ public final class Ops {
    * @param type
    * @return a new instance of Bitcast
    */
-  public <U extends TType, T extends TType> Bitcast<U> bitcast(Operand<T> input, Class<U> type) {
+  public <U extends TType> Bitcast<U> bitcast(Operand<? extends TType> input, Class<U> type) {
     return Bitcast.create(scope, input, type);
   }
 
@@ -1044,8 +1039,8 @@ public final class Ops {
    * @param shape An 1-D `int` Tensor. The shape of the desired output.
    * @return a new instance of BroadcastTo
    */
-  public <T extends TType, U extends TNumber> BroadcastTo<T> broadcastTo(Operand<T> input,
-      Operand<U> shape) {
+  public <T extends TType> BroadcastTo<T> broadcastTo(Operand<T> input,
+      Operand<? extends TNumber> shape) {
     return BroadcastTo.create(scope, input, shape);
   }
 
@@ -1067,7 +1062,7 @@ public final class Ops {
    * @param boundaries A sorted list of floats gives the boundary of the buckets.
    * @return a new instance of Bucketize
    */
-  public <T extends TNumber> Bucketize bucketize(Operand<T> input, List<Float> boundaries) {
+  public Bucketize bucketize(Operand<? extends TNumber> input, List<Float> boundaries) {
     return Bucketize.create(scope, input, boundaries);
   }
 
@@ -1102,8 +1097,8 @@ public final class Ops {
    *  range [-rank(values), rank(values)).
    * @return a new instance of Concat
    */
-  public <T extends TType, U extends TNumber> Concat<T> concat(Iterable<Operand<T>> values,
-      Operand<U> axis) {
+  public <T extends TType> Concat<T> concat(Iterable<Operand<T>> values,
+      Operand<? extends TNumber> axis) {
     return Concat.create(scope, values, axis);
   }
 
@@ -1867,7 +1862,8 @@ public final class Ops {
   }
 
   /**
-   * Create a constant by making an immutable copy of {@code tensor}.
+   * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed afterwards without
+   *  issue.
    *
    *  <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
    *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
@@ -2157,8 +2153,8 @@ public final class Ops {
    * @param elementDtype
    * @return a new instance of EmptyTensorList
    */
-  public <T extends TNumber, U extends TType> EmptyTensorList emptyTensorList(
-      Operand<T> elementShape, Operand<TInt32> maxNumElements, Class<U> elementDtype) {
+  public <U extends TType> EmptyTensorList emptyTensorList(Operand<? extends TNumber> elementShape,
+      Operand<TInt32> maxNumElements, Class<U> elementDtype) {
     return EmptyTensorList.create(scope, elementShape, maxNumElements, elementDtype);
   }
 
@@ -2216,8 +2212,8 @@ public final class Ops {
    *  `[-rank(input) - 1, rank(input)]`.
    * @return a new instance of ExpandDims
    */
-  public <T extends TType, U extends TNumber> ExpandDims<T> expandDims(Operand<T> input,
-      Operand<U> axis) {
+  public <T extends TType> ExpandDims<T> expandDims(Operand<T> input,
+      Operand<? extends TNumber> axis) {
     return ExpandDims.create(scope, input, axis);
   }
 
@@ -2277,7 +2273,7 @@ public final class Ops {
    * @end_compatibility
    * @return a new instance of Fill
    */
-  public <U extends TType, T extends TNumber> Fill<U> fill(Operand<T> dims, Operand<U> value) {
+  public <U extends TType> Fill<U> fill(Operand<? extends TNumber> dims, Operand<U> value) {
     return Fill.create(scope, dims, value);
   }
 
@@ -2318,7 +2314,7 @@ public final class Ops {
    *  `farmhash::fingerprint64`.
    * @return a new instance of Fingerprint
    */
-  public <T extends TType> Fingerprint fingerprint(Operand<T> data, Operand<TString> method) {
+  public Fingerprint fingerprint(Operand<? extends TType> data, Operand<TString> method) {
     return Fingerprint.create(scope, data, method);
   }
 
@@ -2360,8 +2356,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Gather
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> Gather<T> gather(Operand<T> params,
-      Operand<U> indices, Operand<V> axis, Gather.Options... options) {
+  public <T extends TType> Gather<T> gather(Operand<T> params, Operand<? extends TNumber> indices,
+      Operand<? extends TNumber> axis, Gather.Options... options) {
     return Gather.create(scope, params, indices, axis, options);
   }
 
@@ -2466,8 +2462,8 @@ public final class Ops {
    * @param indices Index tensor.
    * @return a new instance of GatherNd
    */
-  public <T extends TType, U extends TNumber> GatherNd<T> gatherNd(Operand<T> params,
-      Operand<U> indices) {
+  public <T extends TType> GatherNd<T> gatherNd(Operand<T> params,
+      Operand<? extends TNumber> indices) {
     return GatherNd.create(scope, params, indices);
   }
 
@@ -2477,7 +2473,7 @@ public final class Ops {
    * @param value The tensor to be stored.
    * @return a new instance of GetSessionHandle
    */
-  public <T extends TType> GetSessionHandle getSessionHandle(Operand<T> value) {
+  public GetSessionHandle getSessionHandle(Operand<? extends TType> value) {
     return GetSessionHandle.create(scope, value);
   }
 
@@ -2755,11 +2751,10 @@ public final class Ops {
    *
    *  <p>Registered initializers are then grouped as a single unit of computation by adding
    *  and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   *  session.
+   *  session.  This is a no-op if executed in an eager session.
    *
    * @param scope
    * @param initializer
-   * @throws IllegalArgumentException if the execution environment in scope is not a graph
    * @see org.tensorflow.op.core.Init#create(Scope) init
    */
   public void initAdd(Op initializer) {
@@ -2774,8 +2769,8 @@ public final class Ops {
    * @param values Values of type Tval.
    * @return a new instance of InitializeTable
    */
-  public <T extends TType, U extends TType> InitializeTable initializeTable(Operand<?> tableHandle,
-      Operand<T> keys, Operand<U> values) {
+  public InitializeTable initializeTable(Operand<?> tableHandle, Operand<? extends TType> keys,
+      Operand<? extends TType> values) {
     return InitializeTable.create(scope, tableHandle, keys, values);
   }
 
@@ -2864,7 +2859,7 @@ public final class Ops {
    * @param ref Should be from a `Variable` node. May be uninitialized.
    * @return a new instance of IsVariableInitialized
    */
-  public <T extends TType> IsVariableInitialized isVariableInitialized(Operand<T> ref) {
+  public IsVariableInitialized isVariableInitialized(Operand<? extends TType> ref) {
     return IsVariableInitialized.create(scope, ref);
   }
 
@@ -2898,8 +2893,8 @@ public final class Ops {
    * @param defaultValue
    * @return a new instance of LookupTableFind
    */
-  public <U extends TType, T extends TType> LookupTableFind<U> lookupTableFind(
-      Operand<?> tableHandle, Operand<T> keys, Operand<U> defaultValue) {
+  public <U extends TType> LookupTableFind<U> lookupTableFind(Operand<?> tableHandle,
+      Operand<? extends TType> keys, Operand<U> defaultValue) {
     return LookupTableFind.create(scope, tableHandle, keys, defaultValue);
   }
 
@@ -2914,8 +2909,8 @@ public final class Ops {
    * @param values Values to associate with keys.
    * @return a new instance of LookupTableImport
    */
-  public <T extends TType, U extends TType> LookupTableImport lookupTableImport(
-      Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
+  public LookupTableImport lookupTableImport(Operand<?> tableHandle, Operand<? extends TType> keys,
+      Operand<? extends TType> values) {
     return LookupTableImport.create(scope, tableHandle, keys, values);
   }
 
@@ -2930,8 +2925,8 @@ public final class Ops {
    * @param values Values to associate with keys.
    * @return a new instance of LookupTableInsert
    */
-  public <T extends TType, U extends TType> LookupTableInsert lookupTableInsert(
-      Operand<?> tableHandle, Operand<T> keys, Operand<U> values) {
+  public LookupTableInsert lookupTableInsert(Operand<?> tableHandle, Operand<? extends TType> keys,
+      Operand<? extends TType> values) {
     return LookupTableInsert.create(scope, tableHandle, keys, values);
   }
 
@@ -3074,7 +3069,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Max
    */
-  public <T extends TType, U extends TNumber> Max<T> max(Operand<T> input, Operand<U> axis,
+  public <T extends TType> Max<T> max(Operand<T> input, Operand<? extends TNumber> axis,
       Max.Options... options) {
     return Max.create(scope, input, axis, options);
   }
@@ -3111,7 +3106,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Min
    */
-  public <T extends TType, U extends TNumber> Min<T> min(Operand<T> input, Operand<U> axis,
+  public <T extends TType> Min<T> min(Operand<T> input, Operand<? extends TNumber> axis,
       Min.Options... options) {
     return Min.create(scope, input, axis, options);
   }
@@ -3155,8 +3150,8 @@ public final class Ops {
    *  it is `[1, 2, 3, 3, 2]` in symmetric mode.
    * @return a new instance of MirrorPad
    */
-  public <T extends TType, U extends TNumber> MirrorPad<T> mirrorPad(Operand<T> input,
-      Operand<U> paddings, String mode) {
+  public <T extends TType> MirrorPad<T> mirrorPad(Operand<T> input,
+      Operand<? extends TNumber> paddings, String mode) {
     return MirrorPad.create(scope, input, paddings, mode);
   }
 
@@ -3424,7 +3419,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of OneHot
    */
-  public <U extends TType, T extends TNumber> OneHot<U> oneHot(Operand<T> indices,
+  public <U extends TType> OneHot<U> oneHot(Operand<? extends TNumber> indices,
       Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, OneHot.Options... options) {
     return OneHot.create(scope, indices, depth, onValue, offValue, options);
   }
@@ -3438,7 +3433,7 @@ public final class Ops {
    * @return a constant tensor initialized with ones
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with ones.
    */
-  public <T extends TType, U extends TNumber> Ones<T> ones(Operand<U> dims, Class<T> type) {
+  public <T extends TType> Ones<T> ones(Operand<? extends TNumber> dims, Class<T> type) {
     return Ones.create(scope, dims, type);
   }
 
@@ -3592,7 +3587,7 @@ public final class Ops {
    * @param constantValues
    * @return a new instance of Pad
    */
-  public <T extends TType, U extends TNumber> Pad<T> pad(Operand<T> input, Operand<U> paddings,
+  public <T extends TType> Pad<T> pad(Operand<T> input, Operand<? extends TNumber> paddings,
       Operand<T> constantValues) {
     return Pad.create(scope, input, paddings, constantValues);
   }
@@ -3752,7 +3747,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Prod
    */
-  public <T extends TType, U extends TNumber> Prod<T> prod(Operand<T> input, Operand<U> axis,
+  public <T extends TType> Prod<T> prod(Operand<T> input, Operand<? extends TNumber> axis,
       Prod.Options... options) {
     return Prod.create(scope, input, axis, options);
   }
@@ -3769,8 +3764,8 @@ public final class Ops {
    * @param inputMax The maximum value of the input.
    * @return a new instance of QuantizedReshape
    */
-  public <T extends TType, U extends TNumber> QuantizedReshape<T> quantizedReshape(
-      Operand<T> tensor, Operand<U> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+  public <T extends TType> QuantizedReshape<T> quantizedReshape(Operand<T> tensor,
+      Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
     return QuantizedReshape.create(scope, tensor, shape, inputMin, inputMax);
   }
 
@@ -3816,7 +3811,7 @@ public final class Ops {
    * @param input
    * @return a new instance of Rank
    */
-  public <T extends TType> Rank rank(Operand<T> input) {
+  public Rank rank(Operand<? extends TType> input) {
     return Rank.create(scope, input);
   }
 
@@ -3853,7 +3848,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceAll
    */
-  public <T extends TNumber> ReduceAll reduceAll(Operand<TBool> input, Operand<T> axis,
+  public ReduceAll reduceAll(Operand<TBool> input, Operand<? extends TNumber> axis,
       ReduceAll.Options... options) {
     return ReduceAll.create(scope, input, axis, options);
   }
@@ -3872,7 +3867,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceAny
    */
-  public <T extends TNumber> ReduceAny reduceAny(Operand<TBool> input, Operand<T> axis,
+  public ReduceAny reduceAny(Operand<TBool> input, Operand<? extends TNumber> axis,
       ReduceAny.Options... options) {
     return ReduceAny.create(scope, input, axis, options);
   }
@@ -3892,8 +3887,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceMax
    */
-  public <T extends TType, U extends TNumber> ReduceMax<T> reduceMax(Operand<T> input,
-      Operand<U> axis, ReduceMax.Options... options) {
+  public <T extends TType> ReduceMax<T> reduceMax(Operand<T> input, Operand<? extends TNumber> axis,
+      ReduceMax.Options... options) {
     return ReduceMax.create(scope, input, axis, options);
   }
 
@@ -3912,8 +3907,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceMin
    */
-  public <T extends TType, U extends TNumber> ReduceMin<T> reduceMin(Operand<T> input,
-      Operand<U> axis, ReduceMin.Options... options) {
+  public <T extends TType> ReduceMin<T> reduceMin(Operand<T> input, Operand<? extends TNumber> axis,
+      ReduceMin.Options... options) {
     return ReduceMin.create(scope, input, axis, options);
   }
 
@@ -3932,8 +3927,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceProd
    */
-  public <T extends TType, U extends TNumber> ReduceProd<T> reduceProd(Operand<T> input,
-      Operand<U> axis, ReduceProd.Options... options) {
+  public <T extends TType> ReduceProd<T> reduceProd(Operand<T> input,
+      Operand<? extends TNumber> axis, ReduceProd.Options... options) {
     return ReduceProd.create(scope, input, axis, options);
   }
 
@@ -3952,8 +3947,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReduceSum
    */
-  public <T extends TType, U extends TNumber> ReduceSum<T> reduceSum(Operand<T> input,
-      Operand<U> axis, ReduceSum.Options... options) {
+  public <T extends TType> ReduceSum<T> reduceSum(Operand<T> input, Operand<? extends TNumber> axis,
+      ReduceSum.Options... options) {
     return ReduceSum.create(scope, input, axis, options);
   }
 
@@ -4087,8 +4082,7 @@ public final class Ops {
    * @param shape Defines the shape of the output tensor.
    * @return a new instance of Reshape
    */
-  public <T extends TType, U extends TNumber> Reshape<T> reshape(Operand<T> tensor,
-      Operand<U> shape) {
+  public <T extends TType> Reshape<T> reshape(Operand<T> tensor, Operand<? extends TNumber> shape) {
     return Reshape.create(scope, tensor, shape);
   }
 
@@ -4130,8 +4124,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceGather
    */
-  public <U extends TType, T extends TNumber> ResourceGather<U> resourceGather(Operand<?> resource,
-      Operand<T> indices, Class<U> dtype, ResourceGather.Options... options) {
+  public <U extends TType> ResourceGather<U> resourceGather(Operand<?> resource,
+      Operand<? extends TNumber> indices, Class<U> dtype, ResourceGather.Options... options) {
     return ResourceGather.create(scope, resource, indices, dtype, options);
   }
 
@@ -4143,8 +4137,8 @@ public final class Ops {
    * @param dtype
    * @return a new instance of ResourceGatherNd
    */
-  public <U extends TType, T extends TNumber> ResourceGatherNd<U> resourceGatherNd(
-      Operand<?> resource, Operand<T> indices, Class<U> dtype) {
+  public <U extends TType> ResourceGatherNd<U> resourceGatherNd(Operand<?> resource,
+      Operand<? extends TNumber> indices, Class<U> dtype) {
     return ResourceGatherNd.create(scope, resource, indices, dtype);
   }
 
@@ -4176,8 +4170,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterAdd
    */
-  public <T extends TNumber, U extends TType> ResourceScatterAdd resourceScatterAdd(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterAdd resourceScatterAdd(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterAdd.create(scope, resource, indices, updates);
   }
 
@@ -4209,8 +4203,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterDiv
    */
-  public <T extends TNumber, U extends TType> ResourceScatterDiv resourceScatterDiv(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterDiv resourceScatterDiv(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterDiv.create(scope, resource, indices, updates);
   }
 
@@ -4242,8 +4236,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterMax
    */
-  public <T extends TNumber, U extends TType> ResourceScatterMax resourceScatterMax(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterMax resourceScatterMax(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterMax.create(scope, resource, indices, updates);
   }
 
@@ -4275,8 +4269,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterMin
    */
-  public <T extends TNumber, U extends TType> ResourceScatterMin resourceScatterMin(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterMin resourceScatterMin(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterMin.create(scope, resource, indices, updates);
   }
 
@@ -4308,8 +4302,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterMul
    */
-  public <T extends TNumber, U extends TType> ResourceScatterMul resourceScatterMul(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterMul resourceScatterMul(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterMul.create(scope, resource, indices, updates);
   }
 
@@ -4354,8 +4348,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdAdd
    */
-  public <T extends TNumber, U extends TType> ResourceScatterNdAdd resourceScatterNdAdd(
-      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+  public ResourceScatterNdAdd resourceScatterNdAdd(Operand<?> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates,
       ResourceScatterNdAdd.Options... options) {
     return ResourceScatterNdAdd.create(scope, ref, indices, updates, options);
   }
@@ -4370,8 +4364,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdMax
    */
-  public <T extends TNumber, U extends TType> ResourceScatterNdMax resourceScatterNdMax(
-      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+  public ResourceScatterNdMax resourceScatterNdMax(Operand<?> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates,
       ResourceScatterNdMax.Options... options) {
     return ResourceScatterNdMax.create(scope, ref, indices, updates, options);
   }
@@ -4386,8 +4380,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdMin
    */
-  public <T extends TNumber, U extends TType> ResourceScatterNdMin resourceScatterNdMin(
-      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+  public ResourceScatterNdMin resourceScatterNdMin(Operand<?> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates,
       ResourceScatterNdMin.Options... options) {
     return ResourceScatterNdMin.create(scope, ref, indices, updates, options);
   }
@@ -4433,8 +4427,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdSub
    */
-  public <T extends TNumber, U extends TType> ResourceScatterNdSub resourceScatterNdSub(
-      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+  public ResourceScatterNdSub resourceScatterNdSub(Operand<?> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates,
       ResourceScatterNdSub.Options... options) {
     return ResourceScatterNdSub.create(scope, ref, indices, updates, options);
   }
@@ -4482,8 +4476,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceScatterNdUpdate
    */
-  public <T extends TNumber, U extends TType> ResourceScatterNdUpdate resourceScatterNdUpdate(
-      Operand<?> ref, Operand<T> indices, Operand<U> updates,
+  public ResourceScatterNdUpdate resourceScatterNdUpdate(Operand<?> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates,
       ResourceScatterNdUpdate.Options... options) {
     return ResourceScatterNdUpdate.create(scope, ref, indices, updates, options);
   }
@@ -4516,8 +4510,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterSub
    */
-  public <T extends TNumber, U extends TType> ResourceScatterSub resourceScatterSub(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterSub resourceScatterSub(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterSub.create(scope, resource, indices, updates);
   }
 
@@ -4540,8 +4534,8 @@ public final class Ops {
    * @param updates A tensor of updated values to add to `ref`.
    * @return a new instance of ResourceScatterUpdate
    */
-  public <T extends TNumber, U extends TType> ResourceScatterUpdate resourceScatterUpdate(
-      Operand<?> resource, Operand<T> indices, Operand<U> updates) {
+  public ResourceScatterUpdate resourceScatterUpdate(Operand<?> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     return ResourceScatterUpdate.create(scope, resource, indices, updates);
   }
 
@@ -4563,8 +4557,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ResourceStridedSliceAssign
    */
-  public <T extends TNumber, U extends TType> ResourceStridedSliceAssign resourceStridedSliceAssign(
-      Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> value,
+  public <T extends TNumber> ResourceStridedSliceAssign resourceStridedSliceAssign(Operand<?> ref,
+      Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<? extends TType> value,
       ResourceStridedSliceAssign.Options... options) {
     return ResourceStridedSliceAssign.create(scope, ref, begin, end, strides, value, options);
   }
@@ -4624,8 +4618,7 @@ public final class Ops {
    *  `[-rank(tensor), rank(tensor))`.
    * @return a new instance of Reverse
    */
-  public <T extends TType, U extends TNumber> Reverse<T> reverse(Operand<T> tensor,
-      Operand<U> axis) {
+  public <T extends TType> Reverse<T> reverse(Operand<T> tensor, Operand<? extends TNumber> axis) {
     return Reverse.create(scope, tensor, axis);
   }
 
@@ -4692,8 +4685,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ReverseSequence
    */
-  public <T extends TType, U extends TNumber> ReverseSequence<T> reverseSequence(Operand<T> input,
-      Operand<U> seqLengths, Long seqDim, ReverseSequence.Options... options) {
+  public <T extends TType> ReverseSequence<T> reverseSequence(Operand<T> input,
+      Operand<? extends TNumber> seqLengths, Long seqDim, ReverseSequence.Options... options) {
     return ReverseSequence.create(scope, input, seqLengths, seqDim, options);
   }
 
@@ -4732,8 +4725,8 @@ public final class Ops {
    *  axis.
    * @return a new instance of Roll
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> Roll<T> roll(Operand<T> input,
-      Operand<U> shift, Operand<V> axis) {
+  public <T extends TType> Roll<T> roll(Operand<T> input, Operand<? extends TNumber> shift,
+      Operand<? extends TNumber> axis) {
     return Roll.create(scope, input, shift, axis);
   }
 
@@ -4834,8 +4827,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterAdd
    */
-  public <T extends TType, U extends TNumber> ScatterAdd<T> scatterAdd(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterAdd.Options... options) {
+  public <T extends TType> ScatterAdd<T> scatterAdd(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterAdd.Options... options) {
     return ScatterAdd.create(scope, ref, indices, updates, options);
   }
 
@@ -4868,8 +4861,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterDiv
    */
-  public <T extends TType, U extends TNumber> ScatterDiv<T> scatterDiv(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterDiv.Options... options) {
+  public <T extends TType> ScatterDiv<T> scatterDiv(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterDiv.Options... options) {
     return ScatterDiv.create(scope, ref, indices, updates, options);
   }
 
@@ -4906,8 +4899,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterMax
    */
-  public <T extends TNumber, U extends TNumber> ScatterMax<T> scatterMax(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterMax.Options... options) {
+  public <T extends TNumber> ScatterMax<T> scatterMax(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterMax.Options... options) {
     return ScatterMax.create(scope, ref, indices, updates, options);
   }
 
@@ -4944,8 +4937,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterMin
    */
-  public <T extends TNumber, U extends TNumber> ScatterMin<T> scatterMin(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterMin.Options... options) {
+  public <T extends TNumber> ScatterMin<T> scatterMin(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterMin.Options... options) {
     return ScatterMin.create(scope, ref, indices, updates, options);
   }
 
@@ -4978,8 +4971,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterMul
    */
-  public <T extends TType, U extends TNumber> ScatterMul<T> scatterMul(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterMul.Options... options) {
+  public <T extends TType> ScatterMul<T> scatterMul(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterMul.Options... options) {
     return ScatterMul.create(scope, ref, indices, updates, options);
   }
 
@@ -5116,8 +5109,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdAdd
    */
-  public <T extends TType, U extends TNumber> ScatterNdAdd<T> scatterNdAdd(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterNdAdd.Options... options) {
+  public <T extends TType> ScatterNdAdd<T> scatterNdAdd(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterNdAdd.Options... options) {
     return ScatterNdAdd.create(scope, ref, indices, updates, options);
   }
 
@@ -5166,8 +5159,8 @@ public final class Ops {
    *  to add to `input`.
    * @return a new instance of ScatterNdNonAliasingAdd
    */
-  public <T extends TType, U extends TNumber> ScatterNdNonAliasingAdd<T> scatterNdNonAliasingAdd(
-      Operand<T> input, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> ScatterNdNonAliasingAdd<T> scatterNdNonAliasingAdd(Operand<T> input,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return ScatterNdNonAliasingAdd.create(scope, input, indices, updates);
   }
 
@@ -5215,8 +5208,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdSub
    */
-  public <T extends TType, U extends TNumber> ScatterNdSub<T> scatterNdSub(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterNdSub.Options... options) {
+  public <T extends TType> ScatterNdSub<T> scatterNdSub(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterNdSub.Options... options) {
     return ScatterNdSub.create(scope, ref, indices, updates, options);
   }
 
@@ -5266,8 +5259,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterNdUpdate
    */
-  public <T extends TType, U extends TNumber> ScatterNdUpdate<T> scatterNdUpdate(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterNdUpdate.Options... options) {
+  public <T extends TType> ScatterNdUpdate<T> scatterNdUpdate(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterNdUpdate.Options... options) {
     return ScatterNdUpdate.create(scope, ref, indices, updates, options);
   }
 
@@ -5303,8 +5296,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterSub
    */
-  public <T extends TType, U extends TNumber> ScatterSub<T> scatterSub(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterSub.Options... options) {
+  public <T extends TType> ScatterSub<T> scatterSub(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterSub.Options... options) {
     return ScatterSub.create(scope, ref, indices, updates, options);
   }
 
@@ -5344,8 +5337,8 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of ScatterUpdate
    */
-  public <T extends TType, U extends TNumber> ScatterUpdate<T> scatterUpdate(Operand<T> ref,
-      Operand<U> indices, Operand<T> updates, ScatterUpdate.Options... options) {
+  public <T extends TType> ScatterUpdate<T> scatterUpdate(Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, ScatterUpdate.Options... options) {
     return ScatterUpdate.create(scope, ref, indices, updates, options);
   }
 
@@ -5443,7 +5436,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of SetSize
    */
-  public <T extends TType> SetSize setSize(Operand<TInt64> setIndices, Operand<T> setValues,
+  public SetSize setSize(Operand<TInt64> setIndices, Operand<? extends TType> setValues,
       Operand<TInt64> setShape, SetSize.Options... options) {
     return SetSize.create(scope, setIndices, setValues, setShape, options);
   }
@@ -5463,7 +5456,7 @@ public final class Ops {
    * @param input
    * @return a new instance of Shape
    */
-  public <T extends TType> org.tensorflow.op.core.Shape<TInt32> shape(Operand<T> input) {
+  public org.tensorflow.op.core.Shape<TInt32> shape(Operand<? extends TType> input) {
     return org.tensorflow.op.core.Shape.create(scope, input);
   }
 
@@ -5483,8 +5476,8 @@ public final class Ops {
    * @param outType
    * @return a new instance of Shape
    */
-  public <U extends TNumber, T extends TType> org.tensorflow.op.core.Shape<U> shape(
-      Operand<T> input, Class<U> outType) {
+  public <U extends TNumber> org.tensorflow.op.core.Shape<U> shape(Operand<? extends TType> input,
+      Class<U> outType) {
     return org.tensorflow.op.core.Shape.create(scope, input, outType);
   }
 
@@ -5532,7 +5525,7 @@ public final class Ops {
    * @param input
    * @return a new instance of Size
    */
-  public <T extends TType> Size<TInt32> size(Operand<T> input) {
+  public Size<TInt32> size(Operand<? extends TType> input) {
     return Size.create(scope, input);
   }
 
@@ -5553,7 +5546,7 @@ public final class Ops {
    * @param outType
    * @return a new instance of Size
    */
-  public <U extends TNumber, T extends TType> Size<U> size(Operand<T> input, Class<U> outType) {
+  public <U extends TNumber> Size<U> size(Operand<? extends TType> input, Class<U> outType) {
     return Size.create(scope, input, outType);
   }
 
@@ -5715,8 +5708,8 @@ public final class Ops {
    *  regular convolution.
    * @return a new instance of SpaceToBatchNd
    */
-  public <T extends TType, U extends TNumber, V extends TNumber> SpaceToBatchNd<T> spaceToBatchNd(
-      Operand<T> input, Operand<U> blockShape, Operand<V> paddings) {
+  public <T extends TType> SpaceToBatchNd<T> spaceToBatchNd(Operand<T> input,
+      Operand<? extends TNumber> blockShape, Operand<? extends TNumber> paddings) {
     return SpaceToBatchNd.create(scope, input, blockShape, paddings);
   }
 
@@ -5748,8 +5741,8 @@ public final class Ops {
    * @param numSplit
    * @return a new instance of SplitV
    */
-  public <T extends TType, U extends TNumber> SplitV<T> splitV(Operand<T> value,
-      Operand<U> sizeSplits, Operand<TInt32> axis, Long numSplit) {
+  public <T extends TType> SplitV<T> splitV(Operand<T> value, Operand<? extends TNumber> sizeSplits,
+      Operand<TInt32> axis, Long numSplit) {
     return SplitV.create(scope, value, sizeSplits, axis, numSplit);
   }
 
@@ -6080,7 +6073,7 @@ public final class Ops {
    * @param options carries optional attributes values
    * @return a new instance of Sum
    */
-  public <T extends TType, U extends TNumber> Sum<T> sum(Operand<T> input, Operand<U> axis,
+  public <T extends TType> Sum<T> sum(Operand<T> input, Operand<? extends TNumber> axis,
       Sum.Options... options) {
     return Sum.create(scope, input, axis, options);
   }
@@ -6317,8 +6310,8 @@ public final class Ops {
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayScatter
    */
-  public <T extends TType> TensorArrayScatter tensorArrayScatter(Operand<?> handle,
-      Operand<TInt32> indices, Operand<T> value, Operand<TFloat32> flowIn) {
+  public TensorArrayScatter tensorArrayScatter(Operand<?> handle, Operand<TInt32> indices,
+      Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     return TensorArrayScatter.create(scope, handle, indices, value, flowIn);
   }
 
@@ -6364,7 +6357,7 @@ public final class Ops {
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  public <T extends TType> TensorArraySplit tensorArraySplit(Operand<?> handle, Operand<T> value,
+  public TensorArraySplit tensorArraySplit(Operand<?> handle, Operand<? extends TType> value,
       Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
     return TensorArraySplit.create(scope, handle, value, lengths, flowIn);
   }
@@ -6376,8 +6369,8 @@ public final class Ops {
    * @param flowIn
    * @return a new instance of TensorArrayUnpack
    */
-  public <T extends TType> TensorArrayUnpack tensorArrayUnpack(Operand<TString> handle,
-      Operand<T> value, Operand<TFloat32> flowIn) {
+  public TensorArrayUnpack tensorArrayUnpack(Operand<TString> handle,
+      Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     return TensorArrayUnpack.create(scope, handle, value, flowIn);
   }
 
@@ -6390,8 +6383,8 @@ public final class Ops {
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayWrite
    */
-  public <T extends TType> TensorArrayWrite tensorArrayWrite(Operand<?> handle,
-      Operand<TInt32> index, Operand<T> value, Operand<TFloat32> flowIn) {
+  public TensorArrayWrite tensorArrayWrite(Operand<?> handle, Operand<TInt32> index,
+      Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     return TensorArrayWrite.create(scope, handle, index, value, flowIn);
   }
 
@@ -6417,9 +6410,8 @@ public final class Ops {
    * @param elementDtype
    * @return a new instance of TensorListConcat
    */
-  public <U extends TType, T extends TNumber> TensorListConcat<U> tensorListConcat(
-      Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims,
-      Class<U> elementDtype) {
+  public <U extends TType> TensorListConcat<U> tensorListConcat(Operand<?> inputHandle,
+      Operand<? extends TNumber> elementShape, Operand<TInt64> leadingDims, Class<U> elementDtype) {
     return TensorListConcat.create(scope, inputHandle, elementShape, leadingDims, elementDtype);
   }
 
@@ -6463,8 +6455,8 @@ public final class Ops {
    * @param elementShape
    * @return a new instance of TensorListFromTensor
    */
-  public <T extends TType, U extends TNumber> TensorListFromTensor tensorListFromTensor(
-      Operand<T> tensor, Operand<U> elementShape) {
+  public TensorListFromTensor tensorListFromTensor(Operand<? extends TType> tensor,
+      Operand<? extends TNumber> elementShape) {
     return TensorListFromTensor.create(scope, tensor, elementShape);
   }
 
@@ -6551,8 +6543,8 @@ public final class Ops {
    * @param tensor
    * @return a new instance of TensorListPushBack
    */
-  public <T extends TType> TensorListPushBack tensorListPushBack(Operand<?> inputHandle,
-      Operand<T> tensor) {
+  public TensorListPushBack tensorListPushBack(Operand<?> inputHandle,
+      Operand<? extends TType> tensor) {
     return TensorListPushBack.create(scope, inputHandle, tensor);
   }
 
@@ -6562,8 +6554,8 @@ public final class Ops {
    * @param tensor
    * @return a new instance of TensorListPushBackBatch
    */
-  public <T extends TType> TensorListPushBackBatch tensorListPushBackBatch(Operand<?> inputHandles,
-      Operand<T> tensor) {
+  public TensorListPushBackBatch tensorListPushBackBatch(Operand<?> inputHandles,
+      Operand<? extends TType> tensor) {
     return TensorListPushBackBatch.create(scope, inputHandles, tensor);
   }
 
@@ -6580,8 +6572,8 @@ public final class Ops {
    * @param elementDtype
    * @return a new instance of TensorListReserve
    */
-  public <T extends TNumber, U extends TType> TensorListReserve tensorListReserve(
-      Operand<T> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
+  public <U extends TType> TensorListReserve tensorListReserve(
+      Operand<? extends TNumber> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
     return TensorListReserve.create(scope, elementShape, numElements, elementDtype);
   }
 
@@ -6621,8 +6613,9 @@ public final class Ops {
    * @param numElements
    * @return a new instance of TensorListScatter
    */
-  public <T extends TType, U extends TNumber> TensorListScatter tensorListScatter(Operand<T> tensor,
-      Operand<TInt32> indices, Operand<U> elementShape, Operand<TInt32> numElements) {
+  public TensorListScatter tensorListScatter(Operand<? extends TType> tensor,
+      Operand<TInt32> indices, Operand<? extends TNumber> elementShape,
+      Operand<TInt32> numElements) {
     return TensorListScatter.create(scope, tensor, indices, elementShape, numElements);
   }
 
@@ -6642,8 +6635,8 @@ public final class Ops {
    * @param indices
    * @return a new instance of TensorListScatterIntoExistingList
    */
-  public <T extends TType> TensorListScatterIntoExistingList tensorListScatterIntoExistingList(
-      Operand<?> inputHandle, Operand<T> tensor, Operand<TInt32> indices) {
+  public TensorListScatterIntoExistingList tensorListScatterIntoExistingList(Operand<?> inputHandle,
+      Operand<? extends TType> tensor, Operand<TInt32> indices) {
     return TensorListScatterIntoExistingList.create(scope, inputHandle, tensor, indices);
   }
 
@@ -6654,8 +6647,8 @@ public final class Ops {
    * @param item
    * @return a new instance of TensorListSetItem
    */
-  public <T extends TType> TensorListSetItem tensorListSetItem(Operand<?> inputHandle,
-      Operand<TInt32> index, Operand<T> item) {
+  public TensorListSetItem tensorListSetItem(Operand<?> inputHandle, Operand<TInt32> index,
+      Operand<? extends TType> item) {
     return TensorListSetItem.create(scope, inputHandle, index, item);
   }
 
@@ -6675,8 +6668,8 @@ public final class Ops {
    * @param lengths
    * @return a new instance of TensorListSplit
    */
-  public <T extends TType, U extends TNumber> TensorListSplit tensorListSplit(Operand<T> tensor,
-      Operand<U> elementShape, Operand<TInt64> lengths) {
+  public TensorListSplit tensorListSplit(Operand<? extends TType> tensor,
+      Operand<? extends TNumber> elementShape, Operand<TInt64> lengths) {
     return TensorListSplit.create(scope, tensor, elementShape, lengths);
   }
 
@@ -6699,32 +6692,6 @@ public final class Ops {
   public <T extends TType> TensorListStack<T> tensorListStack(Operand<?> inputHandle,
       Operand<TInt32> elementShape, Class<T> elementDtype, TensorListStack.Options... options) {
     return TensorListStack.create(scope, inputHandle, elementShape, elementDtype, options);
-  }
-
-  /**
-   *
-   * @param <T> data type for {@code output()} output
-   * @param tensor Tensor to update.
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @return a new instance of TensorScatterMax
-   */
-  public <T extends TType, U extends TNumber> TensorScatterMax<T> tensorScatterMax(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
-    return TensorScatterMax.create(scope, tensor, indices, updates);
-  }
-
-  /**
-   *
-   * @param <T> data type for {@code output()} output
-   * @param tensor Tensor to update.
-   * @param indices Index tensor.
-   * @param updates Updates to scatter into output.
-   * @return a new instance of TensorScatterMin
-   */
-  public <T extends TType, U extends TNumber> TensorScatterMin<T> tensorScatterMin(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
-    return TensorScatterMin.create(scope, tensor, indices, updates);
   }
 
   /**
@@ -6796,8 +6763,8 @@ public final class Ops {
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdAdd
    */
-  public <T extends TType, U extends TNumber> TensorScatterNdAdd<T> tensorScatterNdAdd(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> TensorScatterNdAdd<T> tensorScatterNdAdd(Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return TensorScatterNdAdd.create(scope, tensor, indices, updates);
   }
 
@@ -6809,8 +6776,8 @@ public final class Ops {
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdMax
    */
-  public <T extends TType, U extends TNumber> TensorScatterNdMax<T> tensorScatterNdMax(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> TensorScatterNdMax<T> tensorScatterNdMax(Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return TensorScatterNdMax.create(scope, tensor, indices, updates);
   }
 
@@ -6822,8 +6789,8 @@ public final class Ops {
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdMin
    */
-  public <T extends TType, U extends TNumber> TensorScatterNdMin<T> tensorScatterNdMin(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> TensorScatterNdMin<T> tensorScatterNdMin(Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return TensorScatterNdMin.create(scope, tensor, indices, updates);
   }
 
@@ -6895,8 +6862,8 @@ public final class Ops {
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdSub
    */
-  public <T extends TType, U extends TNumber> TensorScatterNdSub<T> tensorScatterNdSub(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> TensorScatterNdSub<T> tensorScatterNdSub(Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return TensorScatterNdSub.create(scope, tensor, indices, updates);
   }
 
@@ -6983,8 +6950,8 @@ public final class Ops {
    * @param updates Updates to scatter into output.
    * @return a new instance of TensorScatterNdUpdate
    */
-  public <T extends TType, U extends TNumber> TensorScatterNdUpdate<T> tensorScatterNdUpdate(
-      Operand<T> tensor, Operand<U> indices, Operand<T> updates) {
+  public <T extends TType> TensorScatterNdUpdate<T> tensorScatterNdUpdate(Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     return TensorScatterNdUpdate.create(scope, tensor, indices, updates);
   }
 
@@ -7048,7 +7015,7 @@ public final class Ops {
    * @param multiples 1-D. Length must be the same as the number of dimensions in `input`
    * @return a new instance of Tile
    */
-  public <T extends TType, U extends TNumber> Tile<T> tile(Operand<T> input, Operand<U> multiples) {
+  public <T extends TType> Tile<T> tile(Operand<T> input, Operand<? extends TNumber> multiples) {
     return Tile.create(scope, input, multiples);
   }
 
@@ -7248,8 +7215,7 @@ public final class Ops {
    *  find the unique elements.
    * @return a new instance of Unique
    */
-  public <T extends TType, U extends TNumber> Unique<T, TInt32> unique(Operand<T> x,
-      Operand<U> axis) {
+  public <T extends TType> Unique<T, TInt32> unique(Operand<T> x, Operand<? extends TNumber> axis) {
     return Unique.create(scope, x, axis);
   }
 
@@ -7303,8 +7269,8 @@ public final class Ops {
    * @param outIdx
    * @return a new instance of Unique
    */
-  public <T extends TType, V extends TNumber, U extends TNumber> Unique<T, V> unique(Operand<T> x,
-      Operand<U> axis, Class<V> outIdx) {
+  public <T extends TType, V extends TNumber> Unique<T, V> unique(Operand<T> x,
+      Operand<? extends TNumber> axis, Class<V> outIdx) {
     return Unique.create(scope, x, axis, outIdx);
   }
 
@@ -7361,8 +7327,8 @@ public final class Ops {
    *  find the unique elements.
    * @return a new instance of UniqueWithCounts
    */
-  public <T extends TType, U extends TNumber> UniqueWithCounts<T, TInt32> uniqueWithCounts(
-      Operand<T> x, Operand<U> axis) {
+  public <T extends TType> UniqueWithCounts<T, TInt32> uniqueWithCounts(Operand<T> x,
+      Operand<? extends TNumber> axis) {
     return UniqueWithCounts.create(scope, x, axis);
   }
 
@@ -7420,8 +7386,8 @@ public final class Ops {
    * @param outIdx
    * @return a new instance of UniqueWithCounts
    */
-  public <T extends TType, V extends TNumber, U extends TNumber> UniqueWithCounts<T, V> uniqueWithCounts(
-      Operand<T> x, Operand<U> axis, Class<V> outIdx) {
+  public <T extends TType, V extends TNumber> UniqueWithCounts<T, V> uniqueWithCounts(Operand<T> x,
+      Operand<? extends TNumber> axis, Class<V> outIdx) {
     return UniqueWithCounts.create(scope, x, axis, outIdx);
   }
 
@@ -7659,7 +7625,7 @@ public final class Ops {
    * @param condition
    * @return a new instance of Where
    */
-  public <T extends TType> Where where(Operand<T> condition) {
+  public Where where(Operand<? extends TType> condition) {
     return Where.create(scope, condition);
   }
 
@@ -7708,7 +7674,7 @@ public final class Ops {
    * @return a constant tensor initialized with zeros
    * @throws IllegalArgumentException if the tensor type or shape cannot be initialized with zeros.
    */
-  public <T extends TType, U extends TNumber> Zeros<T> zeros(Operand<U> dims, Class<T> type) {
+  public <T extends TType> Zeros<T> zeros(Operand<? extends TNumber> dims, Class<T> type) {
     return Zeros.create(scope, dims, type);
   }
 

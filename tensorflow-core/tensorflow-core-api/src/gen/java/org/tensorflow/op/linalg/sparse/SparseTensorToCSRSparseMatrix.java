@@ -43,7 +43,7 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
    * @return a new instance of SparseTensorToCSRSparseMatrix
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape) {
+  public static SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices, Operand<? extends TType> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorToCSRSparseMatrix", scope.makeOpName("SparseTensorToCSRSparseMatrix"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());

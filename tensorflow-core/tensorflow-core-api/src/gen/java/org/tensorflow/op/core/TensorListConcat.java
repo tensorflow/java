@@ -62,7 +62,7 @@ public final class TensorListConcat<U extends TType> extends RawOp {
    * @return a new instance of TensorListConcat
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<T> elementShape, Operand<TInt64> leadingDims, Class<U> elementDtype) {
+  public static <U extends TType> TensorListConcat<U> create(Scope scope, Operand<?> inputHandle, Operand<? extends TNumber> elementShape, Operand<TInt64> leadingDims, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatV2", scope.makeOpName("TensorListConcat"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());

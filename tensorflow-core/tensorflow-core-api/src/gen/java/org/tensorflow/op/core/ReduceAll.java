@@ -69,7 +69,7 @@ public final class ReduceAll extends RawOp implements Operand<TBool> {
    * @return a new instance of ReduceAll
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ReduceAll create(Scope scope, Operand<TBool> input, Operand<T> axis, Options... options) {
+  public static ReduceAll create(Scope scope, Operand<TBool> input, Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("ReduceAll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());

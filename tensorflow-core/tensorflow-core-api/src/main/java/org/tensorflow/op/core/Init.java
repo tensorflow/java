@@ -89,21 +89,19 @@ public final class Init extends RawOp {
    *
    * <p>Registered initializers are then grouped as a single unit of computation by adding
    * and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   * session.
+   * session.  This is a no-op if executed in an eager session.
    *
    * @param scope
    * @param initializer
-   * @throws IllegalArgumentException if the execution environment in scope is not a graph
    * @see org.tensorflow.op.core.Init#create(Scope) init
    */
   @Endpoint(name = "initAdd")
   public static void add(Scope scope, Op initializer) {
     ExecutionEnvironment exEnv = scope.env();
-    if (!(exEnv instanceof Graph)) {
-      throw new IllegalArgumentException("initAdd is only supported on Graph sessions.");
+
+    if (exEnv.isGraph()) {
+      ((Graph) exEnv).addInitializer(initializer);
     }
-    Graph graph = (Graph) exEnv;
-    graph.addInitializer(initializer);
   }
 
   private Init(Operation operation) {

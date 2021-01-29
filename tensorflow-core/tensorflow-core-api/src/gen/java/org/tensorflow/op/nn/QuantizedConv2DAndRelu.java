@@ -80,7 +80,7 @@ public final class QuantizedConv2DAndRelu<V extends TType> extends RawOp {
    * @return a new instance of QuantizedConv2DAndRelu
    */
   @Endpoint(describeByClass = true)
-  public static <V extends TType, T extends TType, U extends TType> QuantizedConv2DAndRelu<V> create(Scope scope, Operand<T> input, Operand<U> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  public static <V extends TType> QuantizedConv2DAndRelu<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DAndRelu", scope.makeOpName("QuantizedConv2DAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());

@@ -44,7 +44,7 @@ public final class ResourceAccumulatorApplyGradient extends RawOp {
    * @return a new instance of ResourceAccumulatorApplyGradient
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceAccumulatorApplyGradient create(Scope scope, Operand<?> handle, Operand<TInt64> localStep, Operand<T> gradient) {
+  public static ResourceAccumulatorApplyGradient create(Scope scope, Operand<?> handle, Operand<TInt64> localStep, Operand<? extends TType> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorApplyGradient", scope.makeOpName("ResourceAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());

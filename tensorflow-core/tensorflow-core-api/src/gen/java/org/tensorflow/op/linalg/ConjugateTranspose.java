@@ -49,7 +49,7 @@ public final class ConjugateTranspose<T extends TType> extends RawOp implements 
    * @return a new instance of ConjugateTranspose
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<U> perm) {
+  public static <T extends TType> ConjugateTranspose<T> create(Scope scope, Operand<T> x, Operand<? extends TNumber> perm) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());

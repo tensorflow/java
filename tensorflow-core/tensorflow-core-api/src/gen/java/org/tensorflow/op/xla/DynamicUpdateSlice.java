@@ -57,7 +57,7 @@ public final class DynamicUpdateSlice<T extends TType> extends RawOp implements 
    * @return a new instance of DynamicUpdateSlice
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> DynamicUpdateSlice<T> create(Scope scope, Operand<T> input, Operand<T> update, Operand<U> indices) {
+  public static <T extends TType> DynamicUpdateSlice<T> create(Scope scope, Operand<T> input, Operand<T> update, Operand<? extends TNumber> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDynamicUpdateSlice", scope.makeOpName("DynamicUpdateSlice"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(update.asOutput());

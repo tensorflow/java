@@ -122,7 +122,7 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
    * @return a new instance of SpaceToBatch
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> SpaceToBatch<T> create(Scope scope, Operand<T> input, Operand<U> paddings, Long blockSize) {
+  public static <T extends TType> SpaceToBatch<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> paddings, Long blockSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("SpaceToBatch", scope.makeOpName("SpaceToBatch"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());

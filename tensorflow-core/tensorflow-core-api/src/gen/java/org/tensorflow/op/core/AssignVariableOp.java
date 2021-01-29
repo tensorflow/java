@@ -44,7 +44,7 @@ public final class AssignVariableOp extends RawOp {
    * @return a new instance of AssignVariableOp
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> AssignVariableOp create(Scope scope, Operand<?> resource, Operand<T> value) {
+  public static AssignVariableOp create(Scope scope, Operand<?> resource, Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignVariableOp", scope.makeOpName("AssignVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());

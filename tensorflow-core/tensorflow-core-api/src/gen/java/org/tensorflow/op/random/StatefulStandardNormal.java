@@ -51,7 +51,7 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
    * @return a new instance of StatefulStandardNormal
    */
   @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape, Class<U> dtype) {
+  public static <U extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -71,7 +71,7 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
    * @return a new instance of StatefulStandardNormal
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TType> StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<T> shape) {
+  public static StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.class);
   }
   
