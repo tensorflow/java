@@ -20,18 +20,34 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
+import org.bytedeco.javacpp.Pointer;
 
 
 /**
  * A scope used to manage tensor resources.  All tensor-creating methods take a scope as a parameter, and create their
  * tensors in that scope.  When a scope is closed, it closes all of it's attached tensors.  Tensors may be manually
- * closed earlier without issue, and being attached to a scope will not keep a tensor from being GC'd.
+ * closed earlier without issue, and being attached to a scope will not keep a tensor from being GC'd.  Using a {@code
+ * TensorScope} is recommended over manually closing every tensor. For example, using a try-with-resources block:
+ *
+ * <pre>{@code
+ * try (TensorScope scope = new TensorScope()) {
+ *   Tensor t = Tensor.of(scope, ...);
+ *   doSomethingWith(t);
+ *   Tensor t2 = Tensor.of(scope, ...);
+ *   doSomething2(t);
+ * }
+ * }</pre>
+ *
  * <p>While tensors will be closed when GC'd, relying on the garbage collector for cleanup is not efficient.  This
- * class
- * or manual management should be used.
+ * class or manual management should be used.
+ *
+ * <p>JavaCPP properties are used to manage garbage collection, see {@link Pointer}.  Specifically
+ * {@link Pointer#maxBytes} and {@link Pointer#maxPhysicalBytes}.
+ *
  * <p>
  * {@link TensorScope#detach(Tensor)} and {@link Tensor#detach()} detaches the tensor from it's scope, requiring the
  * user to close it manually or attach it to another scope.
+ *
  * <p>
  * <b>Like Tensors, TensorScope is not thread safe.</b>
  */

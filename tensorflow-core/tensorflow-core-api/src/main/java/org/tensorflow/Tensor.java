@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.function.Consumer;
+import org.bytedeco.javacpp.Pointer;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
@@ -30,16 +31,23 @@ import org.tensorflow.types.family.TType;
  * allowing direct I/O operations from the JVM, while the latter is only a reference to a native tensor allowing basic
  * operations and flat data access.</p>
  *
- * <p><b>WARNING:</b> Resources consumed by the Tensor object <b>must</b> be explicitly freed by
- * invoking the {@link #close()} method when the object is no longer needed. For example, using a try-with-resources
- * block:
+ * <p><b>WARNING:</b> Resources consumed by the Tensor object should be explicitly freed by
+ * invoking the {@link #close()} method on the tensor, or using {@link TensorScope}. For example, using a
+ * try-with-resources block:
  *
  * <pre>{@code
- * try (Tensor t = Tensor.of(...)) {
+ * try (TensorScope scope = new TensorScope()) {
+ *   Tensor t = Tensor.of(scope, ...);
  *   doSomethingWith(t);
  * }
  * }</pre>
- * <p>This can (and probably should) be done using {@link TensorScope}.
+ *
+ * Dropped tensors will be closed when GC'd, but relying on the garbage collector for cleanup is inefficient.
+ *
+ *
+ * <p>JavaCPP properties are used to manage garbage collection, see {@link Pointer}.  Specifically
+ * {@link Pointer#maxBytes} and {@link Pointer#maxPhysicalBytes}.
+ *
  * <p>Instances of a Tensor are <b>not</b> thread-safe.
  */
 public interface Tensor extends Shaped, AutoCloseable {
@@ -209,6 +217,9 @@ public interface Tensor extends Shaped, AutoCloseable {
    * Release resources associated with the Tensor.
    * <p>All tensors should be closed using this method or {@link TensorScope}.
    * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is not efficient.
+   *
+   * <p>JavaCPP properties are used to manage garbage collection, see {@link Pointer}.  Specifically
+   * {@link Pointer#maxBytes} and {@link Pointer#maxPhysicalBytes}.
    *
    * <p>The Tensor object is no longer usable after {@code close} returns.
    */
