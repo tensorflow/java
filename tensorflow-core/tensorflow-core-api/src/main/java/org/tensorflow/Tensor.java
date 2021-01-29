@@ -39,7 +39,7 @@ import org.tensorflow.types.family.TType;
  *   doSomethingWith(t);
  * }
  * }</pre>
- * <p>This can be done automatically using {@link TensorScope}.
+ * <p>This can (and probably should) be done using {@link TensorScope}.
  * <p>Instances of a Tensor are <b>not</b> thread-safe.
  */
 public interface Tensor extends Shaped, AutoCloseable {
@@ -207,9 +207,8 @@ public interface Tensor extends Shaped, AutoCloseable {
 
   /**
    * Release resources associated with the Tensor.
-   *
-   * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager
-   * operation or memory will be leaked.  May be done automatically via {@link TensorScope}.
+   * <p>All tensors should be closed using this method or {@link TensorScope}.
+   * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is not efficient.
    *
    * <p>The Tensor object is no longer usable after {@code close} returns.
    */

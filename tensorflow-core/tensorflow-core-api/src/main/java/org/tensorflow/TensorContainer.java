@@ -38,9 +38,8 @@ public interface TensorContainer extends AutoCloseable {
 
   /**
    * Release resources associated with these tensors.
-   *
-   * <p><b>WARNING:</b>This must be invoked for all tensors that were not been produced by an eager
-   * operation or memory will be leaked.  May be done automatically via {@link TensorScope}.
+   * <p>All tensors should be closed using this method or {@link TensorScope}.
+   * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is not efficient.
    *
    * <p>The Tensor objects are no longer usable after {@code close} returns.
    *

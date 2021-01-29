@@ -16,21 +16,22 @@
  */
 package org.tensorflow;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.WeakHashMap;
 
 
 /**
- * A scope that can be used to manage tensor resources.  Any tensors created between a scope's creation and calling
- * {@code close()} that haven't been detached or attached to a different scope are guaranteed to be closed with the
- * scope (even if they are created in a sub-scope).  Tensors may be manually closed earlier without issue.
+ * A scope used to manage tensor resources.  All tensor-creating methods take a scope as a parameter, and create their
+ * tensors in that scope.  When a scope is closed, it closes all of it's attached tensors.  Tensors may be manually
+ * closed earlier without issue, and being attached to a scope will not keep a tensor from being GC'd.
+ * <p>While tensors will be closed when GC'd, relying on the garbage collector for cleanup is not efficient.  This
+ * class
+ * or manual management should be used.
  * <p>
- * Tensors are automatically tracked on creation.  A tensor can me manually added to a scope with {@link
- * TensorScope#attach(Tensor)} or {@link Tensor#attachToCurrent()}.  A tensor may only have one scope: if it currently
- * has a scope when {@code attach} is called, it is removed from its original scope.
- * <p>
- * {@link Tensor#detach()} detaches the tensor from it's scope, requiring the user to close it manually or attach it to
- * another scope.
+ * {@link TensorScope#detach(Tensor)} and {@link Tensor#detach()} detaches the tensor from it's scope, requiring the
+ * user to close it manually or attach it to another scope.
  * <p>
  * <b>Like Tensors, TensorScope is not thread safe.</b>
  */
@@ -38,7 +39,7 @@ public final class TensorScope implements AutoCloseable {
 
 
   /**
-   * Create a new tensor scope.  If {@code autoAttach} is false, will not automatically manage tensors.
+   * Create a new tensor scope.
    *
    * @see TensorScope
    */
@@ -46,7 +47,10 @@ public final class TensorScope implements AutoCloseable {
   }
 
   /**
-   * Closes this scope and its tensors, and any inner scopes.
+   * Closes this scope and its tensors.
+   * <p>All tensors should be closed using this method or {@link Tensor#close()}.
+   * Memory will not leak if they aren't, but relying on the garbage collector for cleanup is
+   * not efficient.
    */
   @Override
   public synchronized void close() {
@@ -234,5 +238,5 @@ public final class TensorScope implements AutoCloseable {
   }
 
   private boolean closed = false;
-  private final Set<RawTensor> tensors = new HashSet<>();
+  private final Set<RawTensor> tensors = Collections.newSetFromMap(new WeakHashMap<>());
 }

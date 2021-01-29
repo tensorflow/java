@@ -156,8 +156,6 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Invokes a function.
    *
-   * <p>Caller is responsible for closing all Tensors.
-   *
    * @param scope the {@link TensorScope} to create the outputs in
    * @param arguments list of tensors to pass in input to the function, mapped by their signature name
    * @return output tensors resulting from the execution of the function, mapped by their signature name
@@ -202,8 +200,6 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Invokes a function with a single input and output.
    *
-   * <p>Caller is responsible for closing all Tensors.
-   *
    * @param scope the {@link TensorScope} to create the output in
    * @param tensor input tensor
    * @return output tensor
@@ -244,8 +240,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Returns the session used to execute the graph when calling this function
    *
    * <p>In general, a user does not need to handle directly the session of a function and rely
-   * on {@link #call(Map)} to execute the graph instead. But in some cases, direct access to the session might be
-   * necessary, as it allows more running options.
+   * on {@link #call(TensorScope, Map)} to execute the graph instead. But in some cases, direct access to the session
+   * might be necessary, as it allows more running options.
    *
    * @return the function session
    */
