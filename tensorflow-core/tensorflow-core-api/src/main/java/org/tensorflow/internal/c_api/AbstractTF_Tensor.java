@@ -30,11 +30,20 @@ public abstract class AbstractTF_Tensor extends Pointer {
 
     protected static class DeleteDeallocator extends TF_Tensor implements Pointer.Deallocator {
 
-        DeleteDeallocator(TF_Tensor s) {
+        DeleteDeallocator(TF_Tensor s, boolean registerMemory) {
             super(s);
-            // ideally this would be TF_TensorElementCount and sizeof would be the datatype size,
-            // but datatype isn't stored anywhere and may be variably sized
-            s.capacity = TF_TensorByteSize(s);
+            // some tensors, like those from eager operations, are just views
+            if (registerMemory) {
+                // ideally this would be TF_TensorElementCount and sizeof would be the datatype size,
+                // but datatype isn't stored anywhere and may be variably sized
+                s.capacity = TF_TensorByteSize(s);
+            } else {
+                s.capacity = 0;
+            }
+        }
+
+        DeleteDeallocator(TF_Tensor s) {
+            this(s, true);
         }
 
         @Override
@@ -95,9 +104,11 @@ public abstract class AbstractTF_Tensor extends Pointer {
         return t;
     }
 
-    /** Registers a deallocator and returns this. */
-    public TF_Tensor withDeallocator() {
-        return (TF_Tensor)this.deallocator(new DeleteDeallocator((TF_Tensor)this));
+    /**
+     * Registers a deallocator and returns this.
+     */
+    public TF_Tensor withDeallocator(boolean isView) {
+        return (TF_Tensor) this.deallocator(new DeleteDeallocator((TF_Tensor) this, isView));
     }
 
     /**

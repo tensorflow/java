@@ -164,7 +164,7 @@ class EagerOperation extends AbstractOperation {
     requireTensorHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator();
+      TF_Tensor tensor = TFE_TensorHandleResolve(handle, status).withDeallocator(true);
       status.throwExceptionIfNotOK();
       return RawTensor.fromHandle(tensorScope, tensor).asTypedTensor();
     }
