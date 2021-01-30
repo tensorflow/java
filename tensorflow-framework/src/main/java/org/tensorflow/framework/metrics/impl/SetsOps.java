@@ -54,7 +54,7 @@ public class SetsOps {
 
   /**
    * Computes set difference of elements in last dimension of <code>a</code> and <code>b</code> with
-   * <code>aMinusB</code> set to true/
+   * <code>aMinusB</code> set to true.
    *
    * <p>All but the last dimension of <code>a</code> and <code>b</code> must match
    *
@@ -136,6 +136,11 @@ public class SetsOps {
     DenseToDenseSetOperation<T> setOperationResult =
         tf.sparse.denseToDenseSetOperation(
             a, b, setOperation.getSetOperation(), DenseToDenseSetOperation.validateIndices(true));
-    return setOperationResult.resultValues();
+
+    return tf.sparse.sparseToDense(
+        setOperationResult.resultIndices(),
+        setOperationResult.resultShape(),
+        setOperationResult.resultValues(),
+        cast(tf, tf.constant(0), a.type()));
   }
 }
