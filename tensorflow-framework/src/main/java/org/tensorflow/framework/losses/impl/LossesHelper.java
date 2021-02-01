@@ -32,8 +32,9 @@ import java.util.Collections;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
- * These are helper methods for Losses and Metrics and will be module private when Java modularity is applied to
- * TensorFlow Java. These methods should not be used outside of the losses and metrics packages.
+ * These are helper methods for Losses and Metrics and will be module private when Java modularity
+ * is applied to TensorFlow Java. These methods should not be used outside of the losses and metrics
+ * packages.
  */
 public class LossesHelper {
 
@@ -42,10 +43,10 @@ public class LossesHelper {
    *
    * <ol type="1">
    *   <li>Squeezes last dim of <code>predictions</code> or <code>labels</code> if their rank
-   *       differs by 1 (using {@link #removeSqueezableDimensions}).</li>
+   *       differs by 1 (using {@link #removeSqueezableDimensions}).
    *   <li>Squeezes or expands last dim of <code>sampleWeight</code> if its rank differs by 1 from
    *       the new rank of <code>predictions</code>. If <code>sampleWeight</code> is scalar, it is
-   *       kept scalar.</li>
+   *       kept scalar.
    * </ol>
    *
    * @param tf the TensorFlow Ops
@@ -77,12 +78,13 @@ public class LossesHelper {
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
    *     </code>.
-   * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match<code>
+   * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match
+   *     <code>
    *     prediction</code>.
-   * @return LossTuple of <code>predictions</code>, <code>labels</code> and <code>sampleWeight</code>.
-   *     Each of them possibly has the last dimension squeezed, <code>sampleWeight</code> could be
-   *     extended by one dimension. If <code>sampleWeight</code> is null, only the possibly shape modified <code>predictions</code> and <code>labels</code> are
-   *     returned.
+   * @return LossTuple of <code>predictions</code>, <code>labels</code> and <code>sampleWeight
+   *     </code>. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
+   *     could be extended by one dimension. If <code>sampleWeight</code> is null, only the possibly
+   *     shape modified <code>predictions</code> and <code>labels</code> are returned.
    */
   public static <T extends TNumber> LossTuple<T> squeezeOrExpandDimensions(
       Ops tf, Operand<T> labels, Operand<T> predictions, Operand<T> sampleWeights) {
@@ -298,8 +300,7 @@ public class LossesHelper {
   public static <T extends TNumber> Operand<T> safeMean(
       Ops tf, Operand<T> losses, long numElements) {
     Operand<T> totalLoss = tf.reduceSum(losses, allAxes(tf, losses));
-    return tf.math.divNoNan(
-        totalLoss, cast(tf, tf.constant(numElements), losses.type()));
+    return tf.math.divNoNan(totalLoss, cast(tf, tf.constant(numElements), losses.type()));
   }
 
   /**
@@ -383,8 +384,7 @@ public class LossesHelper {
    */
   public static <T extends TNumber> Operand<T> valueCheck(
       Ops tf, String prefix, Operand<T> values, Operand<T> allowedValues) {
-    Operand<T> flatValues =
-        tf.reshape(values, tf.constant(Shape.of(values.shape().size())));
+    Operand<T> flatValues = tf.reshape(values, tf.constant(Shape.of(values.shape().size())));
     SetDiff1d<T, TInt32> diff = tf.setDiff1d(flatValues, allowedValues, TInt32.class);
     long diffSize = diff.out().shape().size();
 

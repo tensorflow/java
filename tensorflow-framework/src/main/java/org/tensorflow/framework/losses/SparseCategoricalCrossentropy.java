@@ -18,6 +18,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
@@ -79,7 +80,8 @@ public class SparseCategoricalCrossentropy extends Loss {
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and fromLogits={@link
+   * #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    */
@@ -88,8 +90,8 @@ public class SparseCategoricalCrossentropy extends Loss {
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT},
-   * and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * Creates a SparseCategoricalCrossentropy loss using a Loss Reduction of {@link
+   * Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this loss function
@@ -122,8 +124,8 @@ public class SparseCategoricalCrossentropy extends Loss {
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and
-   * fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * Creates a SparseCategoricalCrossentropy using a Loss Reduction of {@link
+   * Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this loss function
@@ -135,7 +137,8 @@ public class SparseCategoricalCrossentropy extends Loss {
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT} and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT} and fromLogits={@link
+   * #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
@@ -176,9 +179,10 @@ public class SparseCategoricalCrossentropy extends Loss {
   /**
    * Generates an Operand the calculates the loss.
    *
-   * If run in Graph mode, the computation will throw {@link org.tensorflow.exceptions.TFInvalidArgumentException}
-   * if the predictions values are outside the range o [0. to 1.]. In Eager Mode, this call
-   * will throw {@link IllegalArgumentException}, if the predictions values are outside the range o [0. to 1.]
+   * <p>If run in Graph mode, the computation will throw {@link
+   * org.tensorflow.exceptions.TFInvalidArgumentException} if the predictions values are outside the
+   * range o [0. to 1.]. In Eager Mode, this call will throw {@link IllegalArgumentException}, if
+   * the predictions values are outside the range o [0. to 1.]
    *
    * @param labels the truth values or labels
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
@@ -200,12 +204,12 @@ public class SparseCategoricalCrossentropy extends Loss {
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
-              LossesHelper.rangeCheck(
-                      getTF(),
-                      "predictions range check [0-1]",
-                      predictions,
-                      cast(getTF(), getTF().constant(0), predictions.type()),
-                      cast(getTF(), getTF().constant(1), predictions.type()));
+          LossesHelper.rangeCheck(
+              getTF(),
+              "predictions range check [0-1]",
+              predictions,
+              cast(getTF(), getTF().constant(0), predictions.type()),
+              cast(getTF(), getTF().constant(1), predictions.type()));
 
     } else {
       lPredictions = predictions;

@@ -23,12 +23,12 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * A metric that computes the sparse categorical cross-entropy loss between true labels and
- * predicted labels.
- *\
+ * predicted labels. \
+ *
  * @param <T> The data type for the metric result.
  */
-public class SparseCategoricalCrossentropy<T extends TNumber>
-    extends MeanMetricWrapper<T> implements LossMetric<T> {
+public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
+    implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final int axis;
@@ -38,7 +38,8 @@ public class SparseCategoricalCrossentropy<T extends TNumber>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
    * @param axis The dimension along which the entropy is computed.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -54,7 +55,7 @@ public class SparseCategoricalCrossentropy<T extends TNumber>
 
   /** {@inheritDoc} */
   @Override
-  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.sparseCategoricalCrossentropy(getTF(), labels, predictions, fromLogits, axis);
   }
 }

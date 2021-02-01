@@ -27,8 +27,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result.
  */
-public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   /**
    * Creates a KLDivergence metric
@@ -46,7 +45,7 @@ public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** {@inheritDoc} */
   @Override
-  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.kullbackLeiblerDivergence(getTF(), labels, predictions);
   }
 }

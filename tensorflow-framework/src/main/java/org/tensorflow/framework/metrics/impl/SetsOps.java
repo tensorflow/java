@@ -26,33 +26,6 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 public class SetsOps {
 
   /**
-   * Enumeration containing the string operation values to be passed to the TensorFlow Sparse Ops
-   * function {@link SparseOps#denseToDenseSetOperation}
-   */
-  public enum Operation {
-    A_MINUS_B("a-b"),
-    B_MINUS_A("b-a"),
-    INTERSECTION("intersection"),
-    UNION("union");
-
-    private final String setOperation;
-
-    Operation(String setOperation) {
-      this.setOperation = setOperation;
-    }
-
-    /**
-     * Gets the set operation String value used to pass as the stringOperation value to {@link
-     * SparseOps#denseToDenseSetOperation}
-     *
-     * @return the set operation String value
-     */
-    public String getSetOperation() {
-      return setOperation;
-    }
-  }
-
-  /**
    * Computes set difference of elements in last dimension of <code>a</code> and <code>b</code> with
    * <code>aMinusB</code> set to true.
    *
@@ -69,6 +42,7 @@ public class SetsOps {
   public static <T extends TNumber> Operand<T> difference(Ops tf, Operand<T> a, Operand<T> b) {
     return difference(tf, a, b, true);
   }
+
   /**
    * Computes set difference of elements in last dimension of <code>a</code> and <code>b</code>.
    *
@@ -142,5 +116,32 @@ public class SetsOps {
         setOperationResult.resultShape(),
         setOperationResult.resultValues(),
         cast(tf, tf.constant(0), a.type()));
+  }
+
+  /**
+   * Enumeration containing the string operation values to be passed to the TensorFlow Sparse Ops
+   * function {@link SparseOps#denseToDenseSetOperation}
+   */
+  public enum Operation {
+    A_MINUS_B("a-b"),
+    B_MINUS_A("b-a"),
+    INTERSECTION("intersection"),
+    UNION("union");
+
+    private final String setOperation;
+
+    Operation(String setOperation) {
+      this.setOperation = setOperation;
+    }
+
+    /**
+     * Gets the set operation String value used to pass as the stringOperation value to {@link
+     * SparseOps#denseToDenseSetOperation}
+     *
+     * @return the set operation String value
+     */
+    public String getSetOperation() {
+      return setOperation;
+    }
   }
 }

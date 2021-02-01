@@ -102,8 +102,10 @@ public class Losses {
         tf.math.abs(
             tf.math.div(
                 tf.math.sub(tLabels, predictions),
-                tf.math.maximum(tf.math.abs(tLabels), cast(tf, tf.constant(EPSILON), predictionType))));
-    return tf.math.mul(cast(tf, tf.constant(100), predictionType), tf.math.mean(diff, tf.constant(-1)));
+                tf.math.maximum(
+                    tf.math.abs(tLabels), cast(tf, tf.constant(EPSILON), predictionType))));
+    return tf.math.mul(
+        cast(tf, tf.constant(100), predictionType), tf.math.mean(diff, tf.constant(-1)));
   }
 
   /**
@@ -149,7 +151,11 @@ public class Losses {
    * @return the binary crossentropy loss.
    */
   public static <T extends TNumber> Operand<T> binaryCrossentropy(
-      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, boolean fromLogits, float labelSmoothing) {
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<T> predictions,
+      boolean fromLogits,
+      float labelSmoothing) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
@@ -214,9 +220,10 @@ public class Losses {
    * @param labels true targets
    * @param predictions the predictions
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *     confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
-   *     value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
+   *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2
+   *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
+   *     <code>0.9</code> for label <code>1</code>
    * @param axis the
    * @param <T> the data type of the predictions and labels
    * @return the categorical crossentropy loss.
@@ -503,7 +510,11 @@ public class Losses {
    * @return the sparse categorical crossentropy loss
    */
   public static <T extends TNumber> Operand<T> sparseCategoricalCrossentropy(
-      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, boolean fromLogits, int axis) {
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<T> predictions,
+      boolean fromLogits,
+      int axis) {
     Class<T> predictionType = predictions.type();
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
@@ -650,8 +661,7 @@ public class Losses {
     Operand<T> squareSum =
         tf.reduceSum(tf.math.square(x), tf.constant(axis), ReduceSum.keepDims(Boolean.TRUE));
     Operand<T> invNorm =
-        tf.math.rsqrt(
-            tf.math.maximum(squareSum, cast(tf, tf.constant(1e-12F), x.type())));
+        tf.math.rsqrt(tf.math.maximum(squareSum, cast(tf, tf.constant(1e-12F), x.type())));
     return tf.math.mul(x, invNorm);
   }
 

@@ -18,15 +18,16 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the hinge loss between labels and predictions.
  *
- * <p><code>loss = maximum(1 - labels * predictions, 0)</code></p>.
+ * <p><code>loss = maximum(1 - labels * predictions, 0)</code>.
  *
- * <p><code>labels</code> values are expected to be -1 or 1.
- * If binary (0 or 1) labels are provided, they will be converted to -1 or 1.</p>
+ * <p><code>labels</code> values are expected to be -1 or 1. If binary (0 or 1) labels are provided,
+ * they will be converted to -1 or 1.
  *
  * <p>Standalone usage:
  *
@@ -106,7 +107,7 @@ public class Hinge extends Loss {
    * label values are not in the set [-1., 0., 1.].
    *
    * @param labels the truth values or labels, must be either -1, 0, or 1. Values are expected to be
-   *     -1 or 1. If binary (0 or 1) labels are provided they will be converted  to -1 or 1.
+   *     -1 or 1. If binary (0 or 1) labels are provided they will be converted to -1 or 1.
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
    * @param sampleWeights Optional sampleWeights acts as a coefficient for the loss. If a scalar is
    *     provided, then the loss is simply scaled by the given value. If sampleWeights is a tensor
@@ -124,13 +125,16 @@ public class Hinge extends Loss {
   public <T extends TNumber> Operand<T> call(
       Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     @SuppressWarnings("unchecked")
-    Operand<T> tLabels = predictions.type() == labels.type() ?
-            (Operand<T>)labels : cast(tf,  labels, predictions.type());
-    tLabels = LossesHelper.valueCheck(
+    Operand<T> tLabels =
+        predictions.type() == labels.type()
+            ? (Operand<T>) labels
+            : cast(tf, labels, predictions.type());
+    tLabels =
+        LossesHelper.valueCheck(
             getTF(),
             "labels value check [-1, 0, 1]",
             tLabels,
-            cast(getTF(), getTF().constant(new int[] { -1, 0, 1}), predictions.type()));
+            cast(getTF(), getTF().constant(new int[] {-1, 0, 1}), predictions.type()));
     Operand<T> losses = Losses.hinge(getTF(), tLabels, predictions);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
