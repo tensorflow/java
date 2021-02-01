@@ -21,17 +21,18 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
  *
  * <p>This is the crossentropy metric class to be used when there are only two label classes (0 and
  * 1).
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
-public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
+public class BinaryCrossentropy<T extends TNumber>
+    extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -60,7 +61,7 @@ public class BinaryCrossentropy<U extends TNumber, T extends TNumber>
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.binaryCrossentropy(getTF(), labels, predictions, fromLogits, labelSmoothing);
   }
 }

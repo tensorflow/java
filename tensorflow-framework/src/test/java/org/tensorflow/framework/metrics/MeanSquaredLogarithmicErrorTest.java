@@ -32,7 +32,7 @@ class MeanSquaredLogarithmicErrorTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanSquaredLogarithmicError<TFloat32, TFloat32> instance =
+      MeanSquaredLogarithmicError<TFloat32> instance =
           new MeanSquaredLogarithmicError<>(tf, "MSLE_testUnweighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       session.evaluate(0.0f, instance.getTotal());
@@ -69,7 +69,7 @@ class MeanSquaredLogarithmicErrorTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanSquaredLogarithmicError<TFloat64, TFloat64> instance =
+      MeanSquaredLogarithmicError<TFloat64> instance =
           new MeanSquaredLogarithmicError<>(tf, "MSLE_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0, instance.getTotal());

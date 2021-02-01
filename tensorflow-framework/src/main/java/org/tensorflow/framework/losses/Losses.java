@@ -48,11 +48,10 @@ public class Losses {
    * @param labels the labels
    * @param predictions the predictions
    * @param <T> the data type of the predictions and result
-   * @param <U> the data type of the labels
    * @return the mean absolute error
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsoluteError(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> meanAbsoluteError(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
@@ -70,11 +69,10 @@ public class Losses {
    * @param labels the labels
    * @param predictions the predictions
    * @param <T> the data type of the predictions and result
-   * @param <U> the data type of the labels
    * @return the mean squared error
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredError(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> meanSquaredError(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
@@ -91,11 +89,10 @@ public class Losses {
    * @param labels the labels
    * @param predictions the predictions
    * @param <T> the data type of the predictions and result
-   * @param <U> the data type of the labels
    * @return the mean absolute percentage error
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> meanAbsolutePercentageError(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> meanAbsolutePercentageError(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -118,11 +115,10 @@ public class Losses {
    * @param labels the labels
    * @param predictions the predictions
    * @param <T> the data type of the predictions and result
-   * @param <U> the data type of the labels
    * @return the mean squared logarithmic percentage error
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> meanSquaredLogarithmicError(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> meanSquaredLogarithmicError(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -152,8 +148,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the binary crossentropy loss.
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> binaryCrossentropy(
-      Ops tf, Operand<U> labels, Operand<T> predictions, boolean fromLogits, float labelSmoothing) {
+  public static <T extends TNumber> Operand<T> binaryCrossentropy(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, boolean fromLogits, float labelSmoothing) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = ops.getTarget();
@@ -181,7 +177,7 @@ public class Losses {
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
     if (fromLogits) return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
 
-    /* TODO - skip this loggic for now. It requires walking back the inputs which is not yet possible
+    /* TODO - skip this logic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {
       // TODO - this does not work
       // TODO output = backtrackIdentity(output);
@@ -225,9 +221,9 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the categorical crossentropy loss.
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> categoricalCrossentropy(
+  public static <T extends TNumber> Operand<T> categoricalCrossentropy(
       Ops tf,
-      Operand<U> labels,
+      Operand<? extends TNumber> labels,
       Operand<T> predictions,
       boolean fromLogits,
       float labelSmoothing,
@@ -283,8 +279,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the categorical hinge loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> categoricalHinge(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> categoricalHinge(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -329,8 +325,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the cosine similarity loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> cosineSimilarity(
-      Ops tf, Operand<U> labels, Operand<T> predictions, int axis) {
+  public static <T extends TNumber> Operand<T> cosineSimilarity(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, int[] axis) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
@@ -339,8 +335,7 @@ public class Losses {
     tLabels = l2Normalize(tf, tLabels, axis);
     predictions = l2Normalize(tf, predictions, axis);
     Operand<T> mathMul = tf.math.mul(tLabels, predictions);
-    Operand<T> sum = tf.reduceSum(mathMul, tf.constant(axis), ReduceSum.keepDims(Boolean.FALSE));
-    return tf.math.neg(sum);
+    return tf.reduceSum(mathMul, tf.constant(axis), ReduceSum.keepDims(Boolean.FALSE));
   }
 
   /**
@@ -355,8 +350,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the hinge loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> hinge(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> hinge(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -391,8 +386,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the Huber loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> huber(
-      Ops tf, Operand<U> labels, Operand<T> predictions, float delta) {
+  public static <T extends TNumber> Operand<T> huber(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, float delta) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -422,8 +417,8 @@ public class Losses {
    * @see <a href="https://en.wikipedia.org/wiki/Kullback?Leibler_divergence">Kullback?Leibler
    *     divergence</a>
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> kullbackLeiblerDivergence(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> kullbackLeiblerDivergence(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -452,8 +447,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the hyperbolic cosine divergence loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> logCosh(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> logCosh(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -480,8 +475,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the Poisson loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> poisson(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> poisson(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -507,8 +502,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the sparse categorical crossentropy loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> sparseCategoricalCrossentropy(
-      Ops tf, Operand<U> labels, Operand<T> predictions, boolean fromLogits, int axis) {
+  public static <T extends TNumber> Operand<T> sparseCategoricalCrossentropy(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, boolean fromLogits, int axis) {
     Class<T> predictionType = predictions.type();
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
@@ -553,7 +548,7 @@ public class Losses {
     int labelsRank = labelsShape.numDimensions();
 
     boolean updateShape = labelsRank != predictionsRank - 1;
-    if (updateShape) { // TODO check to see if this is right
+    if (updateShape) {
       Shape newShape = labelsShape.take(labelsRank - 1);
       iLabels = tf.reshape(iLabels, tf.constant(newShape)); // flatten one dimension
       predictions =
@@ -584,8 +579,8 @@ public class Losses {
    * @param <T> the data type of the predictions and labels
    * @return the squared hinge loss
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> squaredHinge(
-      Ops tf, Operand<U> labels, Operand<T> predictions) {
+  public static <T extends TNumber> Operand<T> squaredHinge(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions) {
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -651,7 +646,7 @@ public class Losses {
    * @param axis Dimension along which to normalize.
    * @return the normalized values based on L2 norm
    */
-  public static <T extends TNumber> Operand<T> l2Normalize(Ops tf, Operand<T> x, int axis) {
+  public static <T extends TNumber> Operand<T> l2Normalize(Ops tf, Operand<T> x, int[] axis) {
     Operand<T> squareSum =
         tf.reduceSum(tf.math.square(x), tf.constant(axis), ReduceSum.keepDims(Boolean.TRUE));
     Operand<T> invNorm =

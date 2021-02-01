@@ -32,7 +32,7 @@ class SquaredHingeTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SquaredHinge<TFloat32, TFloat32> instance =
+      SquaredHinge<TFloat32> instance =
           new SquaredHinge<>(tf, "SCE_testUnweighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {
@@ -61,7 +61,7 @@ class SquaredHingeTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SquaredHinge<TFloat64, TFloat64> instance =
+      SquaredHinge<TFloat64> instance =
           new SquaredHinge<>(tf, "SCE_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {

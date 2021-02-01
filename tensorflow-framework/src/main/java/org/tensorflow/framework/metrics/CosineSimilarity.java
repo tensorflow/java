@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
@@ -23,10 +24,9 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A metric that computes the cosine similarity metric between labels and predictions.
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result.
  */
-public class CosineSimilarity<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
+public class CosineSimilarity< T extends TNumber> extends MeanMetricWrapper< T>
     implements LossMetric<T> {
   public static final int DEFAULT_AXIS = -1;
   private final int[] axis;
@@ -76,8 +76,8 @@ public class CosineSimilarity<U extends TNumber, T extends TNumber> extends Mean
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     // NOTE: cosineProximity is a different algorithm than Losses.cosineSimilarity
-    return Metrics.cosineProximity(getTF(), labels, predictions, axis);
+    return Losses.cosineSimilarity(getTF(), labels, predictions, axis);
   }
 }

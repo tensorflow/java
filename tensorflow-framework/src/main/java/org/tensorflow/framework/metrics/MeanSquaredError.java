@@ -24,10 +24,9 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A metric that computes the mean of absolute difference between labels and predictions.
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result.
  */
-public class MeanSquaredError<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
+public class MeanSquaredError< T extends TNumber> extends MeanMetricWrapper< T>
     implements LossMetric<T> {
 
   /**
@@ -46,7 +45,7 @@ public class MeanSquaredError<U extends TNumber, T extends TNumber> extends Mean
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.meanSquaredError(getTF(), labels, predictions);
   }
 }

@@ -17,12 +17,13 @@ package org.tensorflow.framework.metrics.impl;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.Mean;
 import org.tensorflow.framework.metrics.MetricReduction;
-import org.tensorflow.framework.utils.CastHelper;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.List;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of
@@ -32,10 +33,9 @@ import java.util.List;
  * </code> then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
  * loss over many iterations or epochs
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
-public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mean<U, T> {
+public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
 
   /** The loss function interface */
   protected LossMetric<T> loss;
@@ -85,22 +85,21 @@ public class MeanMetricWrapper<U extends TNumber, T extends TNumber> extends Mea
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
    *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
-   * @param <V> the datatype of the labels
-   * @param <S> the data type for sampleWeights
    * @return a List of control operations that updates the Mean state variables.
    */
-  public <V extends TNumber, S extends TNumber> List<Op> updateStateList(
-      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
     if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
 
-    Operand<T> tLabels = CastHelper.cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = CastHelper.cast(getTF(), predictions, getResultType());
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
 
     Operand<T> losses = loss.call(tLabels, tPredictions);
 
-    return super.updateStateList(
-        CastHelper.cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(cast(getTF(), losses, predictions.type()), sampleWeights);
   }
 }

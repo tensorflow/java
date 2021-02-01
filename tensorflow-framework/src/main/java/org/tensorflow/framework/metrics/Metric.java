@@ -25,10 +25,9 @@ import java.util.List;
 /**
  * Base class for Metrics
  *
- * @param <U> The data type for the metric values
  * @param <T> The data type for the metric result
  */
-public abstract class Metric<U extends TNumber, T extends TNumber> {
+public abstract class Metric<T extends TNumber> {
 
   /** The TensorFlow Ops */
   private final Ops tf;
@@ -75,10 +74,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return a List of Operations to update the metric state
-   * @param <S> the data type for sampleWeights
    */
   @SuppressWarnings({"unchecked", "unused"})
-  public <S extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<S> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -90,13 +89,13 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
-   * @param <V> the data type for the labels
-   * @param <S> the data type for the sampleWeights
    * @return a List of Operations to update the metric state
    */
   @SuppressWarnings({"unchecked", "unused"})
-  public <V extends TNumber, S extends TNumber> List<Op> updateStateList(
-      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
     return Collections.EMPTY_LIST;
   }
 
@@ -105,10 +104,10 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    *
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
-   * @param <S> the data type for sampleWeights
    * @return the Operation to update the metric state
    */
-  public final <S extends TNumber> Op updateState(Operand<U> values, Operand<S> sampleWeights) {
+  public final Op updateState(
+      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
@@ -119,12 +118,12 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
-   * @param <V> the data type for the labels
-   * @param <S> the data type for the sampleWeights
    * @return the Operation to update the metric state
    */
-  public final <V extends TNumber, S extends TNumber> Op updateState(
-      Operand<V> labels, Operand<U> predictions, Operand<S> sampleWeights) {
+  public final Op updateState(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
     List<Op> controlOps = updateStateList(labels, predictions, sampleWeights);
     return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
   }
@@ -149,10 +148,9 @@ public abstract class Metric<U extends TNumber, T extends TNumber> {
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
    * @return the result, possibly with control dependencies
-   * @param <S> the data type for the sampleWeights.
    */
-  public final <S extends TNumber> Operand<T> callOnce(
-      Operand<U> values, Operand<S> sampleWeights) {
+  public final Operand<T> callOnce(
+      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
     List<Op> controlOps = updateStateList(values, sampleWeights);
     Ops ltf = tf.withSubScope("callOnce").withControlDependencies(controlOps);
     return ltf.identity(result());
