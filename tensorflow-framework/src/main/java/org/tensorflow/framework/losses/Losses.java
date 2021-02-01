@@ -36,6 +36,9 @@ public class Losses {
   /** Default Fuzz factor. */
   public static final float EPSILON = 1e-7f;
 
+  public static final int CHANNELS_LAST = -1;
+  public static final int CHANNELS_FIRST = 1;
+
   /**
    * Calculates the mean absolute error between labels and predictions.
    *
@@ -239,7 +242,7 @@ public class Losses {
       tLabels = smoothCategoricalLabels(tf, tLabels, labelSmoothing);
     }
     if (fromLogits) {
-      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
+      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
     }
     /* TODO
     if (!(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
