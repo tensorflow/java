@@ -96,7 +96,7 @@ public class MeanAbsoluteError extends Loss {
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+          Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses = Losses.meanAbsoluteError(getTF(), labels, predictions);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }

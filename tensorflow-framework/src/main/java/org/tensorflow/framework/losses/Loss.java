@@ -25,7 +25,7 @@ public abstract class Loss {
   protected final Reduction reduction;
 
   /**
-   * Creates a Loss using {@link Class#getSimpleName()} as the name and a Loss Reduction of {@link
+   * Creates a Loss using {@link Class#getSimpleName()}  as the name and a Loss Reduction of {@link
    * Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
@@ -64,8 +64,7 @@ public abstract class Loss {
    * @param <T> The data type of the predictions and loss.
    * @return the loss
    */
-  public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions) {
+  public <T extends TNumber> Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return call(labels, predictions, null);
   }
 

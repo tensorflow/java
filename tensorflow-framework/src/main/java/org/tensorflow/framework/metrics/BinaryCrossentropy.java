@@ -31,8 +31,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * @param <T> The data type for the metric result
  */
-public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class BinaryCrossentropy<T extends TNumber>
+    extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -42,8 +42,7 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
-   *     probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
    * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
    *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
@@ -62,10 +61,7 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.binaryCrossentropy(getTF(), tLabels, tPredictions, fromLogits, labelSmoothing);
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+    return Losses.binaryCrossentropy(getTF(), labels, predictions, fromLogits, labelSmoothing);
   }
 }

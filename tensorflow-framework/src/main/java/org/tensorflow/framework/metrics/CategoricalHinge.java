@@ -21,14 +21,12 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * A Metric that computes the categorical hinge loss metric between labels and predictions.
  *
  * @param <T> The data type for the metric result
  */
-public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
+public class CategoricalHinge< T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
 
   /**
@@ -47,10 +45,7 @@ public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.categoricalHinge(getTF(), tLabels, tPredictions);
+  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+    return Losses.categoricalHinge(getTF(), labels, predictions);
   }
 }
