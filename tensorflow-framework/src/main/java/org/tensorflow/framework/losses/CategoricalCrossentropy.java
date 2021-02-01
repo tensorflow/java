@@ -69,7 +69,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 public class CategoricalCrossentropy extends Loss {
   public static final boolean FROM_LOGITS_DEFAULT = false;
   public static final float LABEL_SMOOTHING_DEFAULT = 0.0f;
-  public static final int DEFAULT_AXIS = -1;
+  public static final int DEFAULT_AXIS = Losses.CHANNELS_LAST;
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -203,8 +203,9 @@ public class CategoricalCrossentropy extends Loss {
    *    confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
    *    value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
    * @param reduction Type of Reduction to apply to loss.
-   * @param axis The channels axis. <code>axis=-1</code> corresponds to data format `Channels Last'
-   *     and <code>axis=1</code> corresponds to data format 'Channels First'.
+   * @param axis The channels axis. <code>axis=-1</code> corresponds to data format "Channels Last"
+   *     and <code>axis=1</code> corresponds to data format "Channels First".
+   *     {@link Losses#CHANNELS_LAST} and {@link Losses#CHANNELS_FIRST}
    * @throws IllegalArgumentException if labelSmoothing is not in the inclusive range of 0. - 1.
    */
   public CategoricalCrossentropy(
