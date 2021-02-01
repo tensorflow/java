@@ -79,7 +79,7 @@ class SparseCategoricalCrossentropyTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SparseCategoricalCrossentropy<TFloat64, TFloat32> instance =
+      SparseCategoricalCrossentropy<TFloat32> instance =
           new SparseCategoricalCrossentropy<>(
               tf, "SCE_testWeighted", false, -1, 1001L, TFloat32.class);
       session.run(instance.resetStates());

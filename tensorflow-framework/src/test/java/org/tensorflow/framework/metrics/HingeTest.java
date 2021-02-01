@@ -32,8 +32,7 @@ class HingeTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Hinge<TFloat64> instance =
-          new Hinge<>(tf, "Hinge_testUnweighted", 1001L, TFloat64.class);
+      Hinge<TFloat64> instance = new Hinge<>(tf, "Hinge_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
       double[] predArray = {-0.3, 0.2, -0.1, 1.6, -0.25, -1., 0.5, 0.6};
@@ -55,8 +54,7 @@ class HingeTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Hinge<TFloat64> instance =
-          new Hinge<>(tf, "Hinge_testWeighted", 1001L, TFloat64.class);
+      Hinge<TFloat64> instance = new Hinge<>(tf, "Hinge_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {
         -1, 1, -1, 1,

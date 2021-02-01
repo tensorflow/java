@@ -18,7 +18,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * A helper class for loss methods to return  labels, target, and sampleWeights
+ * A helper class for loss methods to return labels, target, and sampleWeights
  *
  * @param <T> the data type of the LossTuple entries.
  */

@@ -26,7 +26,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result.
  */
-public class CosineSimilarity< T extends TNumber> extends MeanMetricWrapper< T>
+public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
   public static final int DEFAULT_AXIS = -1;
   private final int[] axis;

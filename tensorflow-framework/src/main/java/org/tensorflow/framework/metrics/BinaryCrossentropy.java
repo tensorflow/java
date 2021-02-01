@@ -21,8 +21,6 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
  *
@@ -31,8 +29,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * @param <T> The data type for the metric result
  */
-public class BinaryCrossentropy<T extends TNumber>
-    extends MeanMetricWrapper<T> implements LossMetric<T> {
+public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
+    implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -42,7 +40,8 @@ public class BinaryCrossentropy<T extends TNumber>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
    * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
    *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
