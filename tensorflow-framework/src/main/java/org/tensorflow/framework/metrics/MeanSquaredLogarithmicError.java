@@ -26,8 +26,8 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result.
  */
-public class MeanSquaredLogarithmicError<T extends TNumber>
-    extends MeanMetricWrapper<T> implements LossMetric<T> {
+public class MeanSquaredLogarithmicError<T extends TNumber> extends MeanMetricWrapper<T>
+    implements LossMetric<T> {
 
   /**
    * Creates a Mean Absolute Error metric
@@ -45,7 +45,7 @@ public class MeanSquaredLogarithmicError<T extends TNumber>
 
   /** {@inheritDoc} */
   @Override
-  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.meanSquaredLogarithmicError(getTF(), labels, predictions);
   }
 }

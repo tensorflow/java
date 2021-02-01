@@ -26,8 +26,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result.
  */
-public class Hinge<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class Hinge<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   /**
    * Creates a Hinge metric

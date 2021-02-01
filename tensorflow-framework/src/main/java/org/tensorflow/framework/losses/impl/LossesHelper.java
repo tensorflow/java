@@ -53,7 +53,6 @@ public class LossesHelper {
    * @param predictions Predicted values, a <code>Operand</code> of arbitrary dimensions.
    * @param labels Optional label <code>Operand</code> whose dimensions match <code>prediction
    *     </code>.
-   * @param <T> the data type for the labels, predictions and result
    * @return LossTuple of <code>prediction</code>, <code>label</code>,<code>sampleWeight</code> will
    *     be null. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
    *     could be extended by one dimension. If <code>sampleWeight</code> is null, (prediction,
@@ -82,7 +81,6 @@ public class LossesHelper {
    * @param sampleWeights Optional sample weight(s) <code>Operand</code> whose dimensions match
    *     <code>
    *     prediction</code>.
-   * @param <T> the data type for the labels, predictions and result
    * @return LossTuple of <code>predictions</code>, <code>labels</code> and <code>sampleWeight
    *     </code>. Each of them possibly has the last dimension squeezed, <code>sampleWeight</code>
    *     could be extended by one dimension. If <code>sampleWeight</code> is null, only the possibly
@@ -182,7 +180,6 @@ public class LossesHelper {
    * @param labels Label values, a <code>Tensor</code> whose dimensions match <code>predictions
    *     </code>.
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
-   * @param <T> the data type for the labels, predictions and result
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
   public static <T extends TNumber> LossTuple<T> removeSqueezableDimensions(
@@ -198,7 +195,6 @@ public class LossesHelper {
    *     </code>.
    * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
    * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
-   * @param <T> the data type for the labels, predictions and result
    * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
    */
   public static <T extends TNumber> LossTuple<T> removeSqueezableDimensions(
@@ -222,8 +218,7 @@ public class LossesHelper {
     }
     // Use dynamic rank.
 
-    // TODO: hold for lazy select feature,
-    //  Operand<TInt32> rankDiff = tf.math.sub(tf.rank(predictions), tf.rank(labels));
+    // TODO Operand<TInt32> rankDiff = tf.math.sub(tf.rank(predictions), tf.rank(labels));
     if (predictionsRank == Shape.UNKNOWN_SIZE && Shape.isCompatible(predictionsShape.size(-1), 1)) {
       /*
        * TODO, if we ever get a select that does lazy evaluation, but for now do the tf.squeeze
