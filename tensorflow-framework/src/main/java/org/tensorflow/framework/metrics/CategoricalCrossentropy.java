@@ -30,11 +30,10 @@ import org.tensorflow.types.family.TNumber;
  * [2, 0, 1]</code>, the labels Operand contains = <code>[[0, 0, 1], [1, 0, 0], [0, 1, 0]]
  * </code>.
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
-public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
-    extends MeanMetricWrapper<U, T> implements LossMetric<T> {
+public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
+    implements LossMetric<T> {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
@@ -48,7 +47,8 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to a probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to
+   *     a probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
    *     meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code>
    *     means that we will use a value of <code>0.1</code> for label <code>0</code> and <code>0.9
@@ -68,7 +68,8 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a probability distribution.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
    *     meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code>
    *     means that we will use a value of <code>0.1</code> for label <code>0</code> and <code>0.9
@@ -98,7 +99,7 @@ public class CategoricalCrossentropy<U extends TNumber, T extends TNumber>
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.categoricalCrossentropy(
         getTF(), labels, predictions, fromLogits, labelSmoothing, axis);
   }

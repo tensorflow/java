@@ -24,10 +24,10 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A metric that computes the poisson loss metric between labels and predictions.
  *
- * @param <U> the data type for the predictions.
+
  * @param <T> The data type for the metric result.
  */
-public class Poisson<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
+public class Poisson< T extends TNumber> extends MeanMetricWrapper< T>
     implements LossMetric<T> {
 
   /**
@@ -46,7 +46,7 @@ public class Poisson<U extends TNumber, T extends TNumber> extends MeanMetricWra
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.poisson(getTF(), labels, predictions);
   }
 }

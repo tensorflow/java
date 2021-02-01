@@ -32,7 +32,7 @@ class MeanAbsoluteErrorTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanAbsoluteError<TFloat32, TFloat64> instance =
+      MeanAbsoluteError<TFloat64> instance =
           new MeanAbsoluteError<>(tf, "MAE_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0f, instance.getTotal());
@@ -74,7 +74,7 @@ class MeanAbsoluteErrorTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanAbsoluteError<TFloat64, TFloat64> instance =
+      MeanAbsoluteError<TFloat64> instance =
           new MeanAbsoluteError<>(tf, "MAE_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0, instance.getTotal());

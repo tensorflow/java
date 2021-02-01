@@ -17,7 +17,6 @@ package org.tensorflow.framework.metrics;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.CastHelper;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
@@ -46,89 +45,14 @@ public class Metrics {
    * @param predictions The prediction values.
    * @param k Number of top elements to look at for computing accuracy.
    * @param <T> the data type for the predictions and results
-   * @param <U> the data type ofr the labels.
    * @return the Operand for the Top K categorical accuracy value.
    */
-  public static <T extends TNumber, U extends TNumber> Operand<T> topKCategoricalAccuracy(
-      Ops tf, Operand<U> labels, Operand<T> predictions, long k) {
+  public static <T extends TNumber> Operand<T> topKCategoricalAccuracy(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, long k) {
     Operand<TFloat32> fPredictions = CastHelper.cast(tf, predictions, TFloat32.class);
     return CastHelper.cast(
         tf,
         tf.nn.inTopK(fPredictions, tf.math.argMax(labels, tf.constant(-1)), tf.constant(k)),
         predictions.type());
-  }
-
-  /**
-   * Computes the cosine similarity between labels and predictions.
-   *
-   * @param tf the TensorFlow Ops
-   * @param labels The ground truth values.
-   * @param predictions The prediction values.
-   * @param axes The dimensions along which the cosine similarity is computed.
-   * @param <U> the data type for the labels
-   * @param <T> the data type for the predictions and result
-   * @return Cosine similarity value.
-   */
-  public static <T extends TNumber, U extends TNumber> Operand<T> cosineProximity(
-      Ops tf, Operand<U> labels, Operand<T> predictions, int[] axes) {
-    Operand<T> labelsNorm = CastHelper.cast(tf, labels, predictions.type());
-    labelsNorm = l2Normalize(tf, labelsNorm, axes);
-
-    Operand<T> predictionsNorm = l2Normalize(tf, predictions, axes);
-    Operand<T> mathMul = tf.math.mul(labelsNorm, predictionsNorm);
-    return tf.reduceSum(mathMul, tf.constant(axes), ReduceSum.keepDims(Boolean.FALSE));
-  }
-
-  /**
-   * Normalizes along dimension <code>axis</code> using an L2 norm with an epsilon of {@link
-   * #L2_NORM_EPSILON}.
-   *
-   * <p>For a 1-D tensor with <code>axis = 0</code>, computes
-   *
-   * <pre>
-   *       output = x / sqrt(max(sum(x**2), epsilon))
-   * </pre>
-   *
-   * <p>For <code>x</code> with more dimensions, independently normalizes each 1-D slice along
-   * dimension <code>axis</code>.
-   *
-   * @param tf The TensorFlow ops
-   * @param x The operand to normalize
-   * @param axes Dimension(s) along which to normalize.
-   * @param <U> The data type for x.
-   * @return the normalized values of x.
-   */
-  public static <U extends TNumber> Operand<U> l2Normalize(Ops tf, Operand<U> x, int[] axes) {
-    return l2Normalize(tf, x, axes, L2_NORM_EPSILON);
-  }
-
-  /**
-   * Normalizes along dimension <code>axis</code> using an L2 norm.
-   *
-   * <p>For a 1-D tensor with <code>axis = 0</code>, computes
-   *
-   * <pre>
-   *       output = x / sqrt(max(sum(x**2), epsilon))
-   * </pre>
-   *
-   * <p>For <code>x</code> with more dimensions, independently normalizes each 1-D slice along
-   * dimension <code>axis</code>.
-   *
-   * @param tf The TensorFlow ops
-   * @param x The operand to normalize
-   * @param axes Dimension(s) along which to normalize.
-   * @param epsilon A lower bound value for the norm. Will use <code>sqrt(epsilon)</code> as the
-   *     divisor if <code>norm &lt; sqrt(epsilon)</code>.
-   * @param <U> The data type for the values.
-   * @return the normalized values of x.
-   */
-  public static <U extends TNumber> Operand<U> l2Normalize(
-      Ops tf, Operand<U> x, int[] axes, float epsilon) {
-    Operand<U> squareSum =
-        tf.reduceSum(tf.math.square(x), tf.constant(axes), ReduceSum.keepDims(Boolean.TRUE));
-    Operand<U> y =
-        tf.math.rsqrt(
-            tf.math.maximum(squareSum, CastHelper.cast(tf, tf.constant(epsilon), x.type())));
-    return tf.math.mul(x, y);
   }
 }

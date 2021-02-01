@@ -24,10 +24,9 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A Metric that computes the categorical hinge loss metric between labels and predictions.
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result
  */
-public class CategoricalHinge<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
+public class CategoricalHinge< T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
 
   /**
@@ -46,7 +45,7 @@ public class CategoricalHinge<U extends TNumber, T extends TNumber> extends Mean
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
+  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
     return Losses.categoricalHinge(getTF(), labels, predictions);
   }
 }

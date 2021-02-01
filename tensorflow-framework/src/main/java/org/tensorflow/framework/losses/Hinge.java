@@ -121,8 +121,8 @@ public class Hinge extends Loss {
    * @throws IllegalArgumentException if the predictions are outside the range [0.-1.].
    */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-      Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     @SuppressWarnings("unchecked")
     Operand<T> tLabels = predictions.type() == labels.type() ?
             (Operand<T>)labels : cast(tf,  labels, predictions.type());

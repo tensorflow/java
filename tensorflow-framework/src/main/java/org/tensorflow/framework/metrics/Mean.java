@@ -21,10 +21,9 @@ import org.tensorflow.types.family.TNumber;
 /**
  * A metric that that implements a weighted mean {@link MetricReduction#WEIGHTED_MEAN }
  *
- * @param <U> The data type for the metric values
  * @param <T> The data type for the metric result
  */
-public class Mean<U extends TNumber, T extends TNumber> extends Reduce<U, T> {
+public class Mean<T extends TNumber> extends Reduce<T> {
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}

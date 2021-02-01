@@ -32,7 +32,7 @@ class BinaryCrossentropyTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryCrossentropy<TFloat32, TFloat64> instance =
+      BinaryCrossentropy<TFloat64> instance =
           new BinaryCrossentropy<>(tf, "BCE_testUnweighted", false, 0, 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[] trueArray = {1, 0, 1, 0};
@@ -55,7 +55,7 @@ class BinaryCrossentropyTest {
   public void testUnweightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryCrossentropy<TFloat64, TFloat64> instance =
+      BinaryCrossentropy<TFloat64> instance =
           new BinaryCrossentropy<>(tf, "BCE_testUnweightedLogits", true, 0, 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[] trueArray = {1, 0, 1, 0, 1, 1};
@@ -77,7 +77,7 @@ class BinaryCrossentropyTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryCrossentropy<TFloat32, TFloat32> instance =
+      BinaryCrossentropy<TFloat32> instance =
           new BinaryCrossentropy<>(tf, "BCE_testWeighted", false, 0, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 0, 1, 0};
@@ -102,7 +102,7 @@ class BinaryCrossentropyTest {
   public void testWeightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryCrossentropy<TFloat64, TFloat64> instance =
+      BinaryCrossentropy<TFloat64> instance =
           new BinaryCrossentropy<>(tf, "BCE_testWeightedLogits", true, 0, 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[] trueArray = {1, 0, 1, 0, 1, 1};
@@ -128,7 +128,7 @@ class BinaryCrossentropyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       float labelSmoothing = 0.1F;
-      BinaryCrossentropy<TFloat64, TFloat64> instance =
+      BinaryCrossentropy<TFloat64> instance =
           new BinaryCrossentropy<>(
               tf, "BCE_testWeightedLabS", true, labelSmoothing, 1001L, TFloat64.class);
       session.run(instance.resetStates());

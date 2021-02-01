@@ -31,7 +31,7 @@ class CosineSimilarityTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CosineSimilarity<TFloat32, TFloat32> instance =
+      CosineSimilarity<TFloat32> instance =
           new CosineSimilarity<>(tf, "CS_testUnweighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 9, 2, -5, -2, 6};
@@ -54,7 +54,7 @@ class CosineSimilarityTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CosineSimilarity<TFloat32, TFloat32> instance =
+      CosineSimilarity<TFloat32> instance =
           new CosineSimilarity<>(tf, "CS_testWeighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 9, 2, -5, -2, 6};
@@ -80,7 +80,7 @@ class CosineSimilarityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       int axis = 1;
-      CosineSimilarity<TFloat32, TFloat32> instance =
+      CosineSimilarity<TFloat32> instance =
           new CosineSimilarity<>(tf, "CS_testWeighted", axis, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 9, 2, -5, -2, 6};
