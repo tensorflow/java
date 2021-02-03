@@ -62,8 +62,8 @@ public class SignatureTest {
 
     assertEquals(outputs.get("y").dataType, DataType.DT_FLOAT);
     assertEquals(outputs.get("z").dataType, DataType.DT_FLOAT);
-    assertArrayEquals(outputs.get("y").shape, new long [] {1,2});
-    assertArrayEquals(outputs.get("z").shape, new long [] {});
+    assertArrayEquals(outputs.get("y").shape.asArray(), new long [] {1,2});
+    assertArrayEquals(outputs.get("z").shape.asArray(), new long [] {});
 
     Signature emptySignature = Signature.builder().build();
     assertEquals(emptySignature.getInputs().size(), 0);

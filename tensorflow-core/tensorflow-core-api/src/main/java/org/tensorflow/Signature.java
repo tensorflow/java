@@ -36,9 +36,9 @@ public class Signature  {
 
   public static class TensorDescription {
     public final DataType dataType;
-    public final long[] shape;
+    public final Shape shape;
 
-    public TensorDescription(DataType dataType, long[] shape) {
+    public TensorDescription(DataType dataType, Shape shape) {
       this.dataType = dataType;
       this.shape = shape;
     }
@@ -189,7 +189,10 @@ public class Signature  {
   private Map<String, TensorDescription> buildTensorDescriptionMap(Map<String, TensorInfo> dataMapIn) {
     Map<String, TensorDescription> dataTypeMap = new HashMap<>();
     dataMapIn.forEach((a, b) -> {
-      dataTypeMap.put(a, new TensorDescription(b.getDtype(), b.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray()));
+      long[] tensorDims = b.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
+      Shape tensorShape = Shape.of(tensorDims);
+      dataTypeMap.put(a, new TensorDescription(b.getDtype(),
+                                               tensorShape));
     });
     return dataTypeMap;
   }
