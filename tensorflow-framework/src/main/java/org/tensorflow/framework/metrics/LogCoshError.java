@@ -21,6 +21,8 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A metric that computes the logarithm of the hyperbolic cosine of the prediction error metric
  * between labels and predictions.
@@ -45,7 +47,9 @@ public class LogCoshError<T extends TNumber> extends MeanMetricWrapper<T> implem
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
-    return Losses.logCosh(getTF(), labels, predictions);
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.logCosh(getTF(), tLabels, tPredictions);
   }
 }

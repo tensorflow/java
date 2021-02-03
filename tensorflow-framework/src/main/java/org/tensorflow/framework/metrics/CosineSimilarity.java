@@ -21,6 +21,8 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A metric that computes the cosine similarity metric between labels and predictions.
  *
@@ -76,8 +78,11 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
-    // NOTE: cosineProximity is a different algorithm than Losses.cosineSimilarity
-    return Losses.cosineSimilarity(getTF(), labels, predictions, axis);
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    // NOTE: metrics.CosineSimilarity is Losses.cosineSimilarity,
+    // while losses.CosineSimilarity is the negative of Losses.cosineSimilarity
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.cosineSimilarity(getTF(), tLabels, tPredictions, axis);
   }
 }
