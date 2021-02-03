@@ -15,20 +15,26 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.LossTuple;
+import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
+import org.tensorflow.framework.utils.SparseTensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Stack;
+import org.tensorflow.op.core.*;
 import org.tensorflow.op.math.Mean;
+import org.tensorflow.op.nn.TopK;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -212,7 +218,383 @@ public class MetricsHelper {
     return ctf.math.mul(weights, tf.onesLike(values));
   }
 
-  // aliases for mean
+  /**
+   * Checks that all the Symbolic Shapes are consistent.
+   *
+   * @param tf the TensorFlow Ops
+   * @param symbols the list of Symbolic Shapes
+   * @param message the error message if the shapes are not consistent.
+   * @return a list of Operands to check the consistency of the symbolic shapes ready to add to a
+   *     control dependency.
+   */
+  public static List<Op> assertShapes(
+      Ops tf, List<SymbolicShape<? extends TNumber>> symbols, String message) {
+    List<Op> updateOperations = new ArrayList<>();
+    // check that the symbolic shape rank matches the operands rank.
+    symbols.forEach(
+        symbol -> {
+          Operand<? extends TNumber> operand = symbol.getOperand();
+          int rank = symbol.rank();
+          Rank tfRank = tf.rank(operand);
+          Op assertion =
+              tf.withSubScope("assertShapes-1")
+                  .assertThat(
+                      tf.math.equal(tfRank, tf.constant(rank)),
+                      Collections.singletonList(tf.constant(message)));
+          updateOperations.add(assertion);
+        });
+
+    Map<String, Long> dict = new HashMap<>();
+
+    // check that each operand's dimension size equals the corresponding symbolic shape's dimensions
+    // size
+    symbols.forEach(
+        symbol -> {
+          AtomicLong ll = new AtomicLong();
+          symbol
+              .getSymbols()
+              .forEach(
+                  s -> {
+                    Long size = dict.get(s);
+                    if (size == null) {
+                      size = symbol.getOperand().asOutput().shape().size((int) ll.get());
+                      dict.put(s, size);
+                    }
+                    Op assertion =
+                        tf.withSubScope("assertShapes-2")
+                            .assertThat(
+                                tf.math.equal(
+                                    tf.shape.size(
+                                        symbol.getOperand(),
+                                        tf.constant(ll.getAndIncrement()),
+                                        TInt64.class),
+                                    tf.constant(size)),
+                                Collections.singletonList(tf.constant(message)));
+                    updateOperations.add(assertion);
+                  });
+        });
+
+    return updateOperations;
+  }
+
+  /**
+   * Returns an op to update the given confusion matrix variables.
+   *
+   * <p>For every pair of values in <code>labels</code> and <code>predictions</code>:
+   *
+   * <pre>
+   * TRUE_POSITIVES:  <code>labels</code> == true and <code>predictions</code> > thresholds
+   * FALSE_POSITIVES: <code>labels</code> == true and <code>predictions</code> <= thresholds
+   * TRUE_NEGATIVES:  <code>labels</code> == false and <code>predictions</code> <= thresholds
+   * FALSE_NEGATIVE:  <code>labels</code> == false and <code>predictions</code> > thresholds
+   * </pre>
+   *
+   * <p>The results will be weighted and added together. When multiple thresholds are provided, we
+   * will repeat the same for every threshold.
+   *
+   * <p>For estimation of these metrics over a stream of data, the function creates an `update_op`
+   * operation that updates the given variables.
+   *
+   * <p>If <code>sampleWeight</code> is <code>null</code>, weights default to 1. Use weights of 0 to
+   * mask values.
+   *
+   * @param tf the TensorFlow Ops
+   * @param variablesToUpdate Map with {@link ConfusionMatrixEnum} values as valid keys and
+   *     corresponding variables to update as values.
+   * @param varInitializers Map with {@link ConfusionMatrixEnum} values as valid keys and
+   *     corresponding initializer Operands to initializer the corresponding variables from
+   *     variablesToUpdate.
+   * @param labels the labels, will be cast to {@link TBool}
+   * @param predictions the predictions whose values are in the range <code>[0, 1]</code>.
+   * @param thresholds thresholds in `the range <code>[0, 1]</code>, or {@link #NEG_INF} (used when
+   *     topK is set)
+   * @param topK Optional, indicates that the positive labels should be limited to the top k
+   *     predictions, may be null.
+   * @param classId Optional, limits the prediction and labels to the specified class
+   * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
+   *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
+   *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
+   *     dimension).
+   * @param multiLabel indicates whether multidimensional prediction/labels should be treated as
+   *     multilabel responses, or flattened into a single label. When true, the values of <code>
+   *     variablesToUpdate</code> must have a second dimension equal to the number of labels and
+   *     predictions, and those tensors must not be RaggedTensors.
+   * @param labelWeights tensor of non-negative weights for multilabel data. The weights are applied
+   *     when calculating TRUE_POSITIVES, FALSE_POSITIVES, TRUE_NEGATIVES, and FALSE_NEGATIVES
+   *     without explicit multilabel handling (i.e. when the data is to be flattened). May be null.
+   * @param <T> the data type for the variables
+   * @throws IllegalArgumentException If <code>predictions</code> and <code>labels</code> have
+   *     mismatched shapes, or if <code>sampleWeight</code> is not <code>null</code>>and its shape
+   *     doesn't match <code>predictions</code>
+   * @return an op to update the given confusion matrix variables.
+   */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static <T extends TNumber> List<Op> updateConfusionMatrixVariables(
+      Ops tf,
+      Map<ConfusionMatrixEnum, Variable<T>> variablesToUpdate,
+      Map<ConfusionMatrixEnum, Assign<T>> varInitializers,
+      Operand<T> labels,
+      Operand<T> predictions,
+      float[] thresholds,
+      Integer topK,
+      Integer classId,
+      Operand<T> sampleWeight,
+      boolean multiLabel,
+      Operand<T> labelWeights) {
+    if (multiLabel && labelWeights != null)
+      throw new IllegalArgumentException(
+          "labelWeights for multilabel data should be handled outside of updateConfusionMatrixVariables when multiLabel is true.");
+
+    if (variablesToUpdate == null || variablesToUpdate.isEmpty()) {
+      return Collections.EMPTY_LIST;
+    }
+
+    Operand<T> lLabels = labels;
+    Operand<T> lPredictions = predictions;
+    Operand<T> lSampleWeight = sampleWeight;
+
+    Operand<TInt32> numThresholds;
+    Operand<TBool> oneThresh;
+    if (multiLabel) {
+      numThresholds = tf.shape.size(lLabels, tf.constant(0));
+      oneThresh = tf.math.equal(tf.constant(1), tf.constant(thresholds.length));
+    } else {
+      // TODO handle Ragged Tensors????
+      // [y_pred,
+      //    y_true], _ = ragged_assert_compatible_and_get_flat_values([y_pred, y_true],
+      //                                                   sampleWeights)
+      numThresholds = tf.constant(thresholds.length);
+      oneThresh = tf.constant(true);
+    }
+
+    List<Op> controlOps = new ArrayList<>();
+    Operand<TInt32> axes = allAxes(tf, lPredictions);
+    controlOps.add(
+        tf.withSubScope("updateConfusionMatrixVariables-1")
+            .assertThat(
+                tf.reduceAll(
+                    tf.math.greaterEqual(
+                        lPredictions, cast(tf, tf.constant(0), lPredictions.type())),
+                    axes),
+                Collections.singletonList(tf.constant("predictions must be >= 0"))));
+    controlOps.add(
+        tf.withSubScope("updateConfusionMatrixVariables-2")
+            .assertThat(
+                tf.reduceAll(
+                    tf.math.lessEqual(lPredictions, cast(tf, tf.constant(1), lPredictions.type())),
+                    axes),
+                Collections.singletonList(tf.constant("predictions must be <= 1"))));
+
+    LossTuple<T> result =
+        LossesHelper.squeezeOrExpandDimensions(tf, lLabels, lPredictions, lSampleWeight);
+    lPredictions = result.getTarget();
+    lLabels = result.getLabels();
+    lSampleWeight = result.getSampleWeights();
+
+    if (!lPredictions.shape().isCompatibleWith(lLabels.shape()))
+      throw new IllegalArgumentException(
+          String.format(
+              "Shapes %s and %s are incompatible)",
+              lPredictions.shape().toString(), lLabels.asOutput().shape().toString()));
+
+    if (topK != null) {
+      lPredictions = filterTopK(tf, lPredictions, topK);
+    }
+
+    if (classId != null) {
+      lLabels = tf.squeeze(tf.gather(lLabels, tf.constant(new int[] {classId}), tf.constant(1)));
+      lPredictions =
+          tf.squeeze(tf.gather(lPredictions, tf.constant(new int[] {classId}), tf.constant(1)));
+      lLabels = tf.expandDims(lLabels, tf.constant(0));
+      lPredictions = tf.expandDims(lPredictions, tf.constant(0));
+    }
+    org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(lPredictions);
+    Operand<TInt32> numPredictions =
+        tf.reshape(tf.shape.size(lPredictions, tf.constant(0)), tf.constant(Shape.scalar()));
+    Operand<TInt32> numLabels =
+        tf.select(
+            tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
+            tf.constant(1),
+            tf.reduceProd(
+                tf.shape.takeLast(
+                    predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
+                tf.constant(0)));
+    Operand<TInt32> threshLabelTile = tf.select(oneThresh, numLabels, tf.constant(1));
+
+    Operand<T> predictionsExtraDim;
+    Operand<TBool> labelsExtraDim;
+    if (multiLabel) {
+      predictionsExtraDim = tf.expandDims(lPredictions, tf.constant(0));
+      labelsExtraDim = tf.expandDims(cast(tf, lLabels, TBool.class), tf.constant(0));
+    } else {
+      predictionsExtraDim = tf.reshape(lPredictions, tf.constant(Shape.of(1, -1)));
+      labelsExtraDim = tf.reshape(cast(tf, lLabels, TBool.class), tf.constant(Shape.of(1, -1)));
+    }
+    List<Operand<TInt32>> threshPretileShape;
+    List<Operand<TInt32>> threshTiles;
+    List<Operand<TInt32>> dataTiles;
+    if (multiLabel) {
+      threshPretileShape = Arrays.asList(numThresholds, tf.constant(1), tf.constant(-1));
+
+      threshTiles = Arrays.asList(tf.constant(1), numPredictions, threshLabelTile);
+      dataTiles = Arrays.asList(numThresholds, tf.constant(1), tf.constant(1));
+    } else {
+      threshPretileShape = Arrays.asList(numThresholds, tf.constant(-1));
+      Operand<TInt32> mul = tf.math.mul(numPredictions, numLabels);
+      threshTiles = Arrays.asList(tf.constant(1), mul);
+      dataTiles = Arrays.asList(numThresholds, tf.constant(1));
+    }
+
+    Operand<T> thresholdsReshaped =
+        tf.reshape(
+            cast(tf, tf.constant(thresholds), predictions.type()), tf.stack(threshPretileShape));
+    Operand<TInt32> threshTilesShape = tf.stack(threshTiles);
+    Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
+    Operand<T> predsTiled = tf.tile(predictionsExtraDim, tf.stack(dataTiles));
+
+    // Compare predictions and threshold.
+    Operand<TBool> predIsPos = tf.math.greater(predsTiled, threshTiled);
+    // Tile labels by number of thresholds
+    Operand<TBool> labelIsPos = tf.tile(labelsExtraDim, tf.stack(dataTiles));
+    Operand<T> weightsTiled;
+    if (lSampleWeight != null) {
+      lSampleWeight =
+          tf.broadcastTo(cast(tf, lSampleWeight, predictions.type()), tf.shape(lPredictions));
+      weightsTiled = tf.tile(tf.reshape(lSampleWeight, tf.stack(threshTiles)), tf.stack(dataTiles));
+    } else {
+      weightsTiled = null;
+    }
+
+    if (labelWeights != null) {
+      Operand<T> lLabelWeights = tf.expandDims(tf.identity(labelWeights), tf.constant(0));
+      lLabelWeights = tf.broadcastTo(cast(tf, lLabelWeights, labelWeights.type()), lPredictions);
+      Operand<T> labelWeightsTiled =
+          tf.tile(tf.reshape(lLabelWeights, tf.stack(threshTiles)), tf.stack(dataTiles));
+      if (weightsTiled == null) {
+        weightsTiled = labelWeightsTiled;
+      } else {
+        weightsTiled = tf.math.mul(weightsTiled, labelWeightsTiled);
+      }
+    }
+
+    Map<ConfusionMatrixEnum, Operand[]> loopVars = new HashMap<>();
+    loopVars.put(ConfusionMatrixEnum.TRUE_POSITIVES, new Operand[] {labelIsPos, predIsPos});
+    Variable<T> update_tn = variablesToUpdate.get(ConfusionMatrixEnum.TRUE_NEGATIVES);
+    Variable<T> update_fp = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_POSITIVES);
+    Variable<T> update_fn = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_NEGATIVES);
+
+    Operand<TBool> predIsNeg = null;
+    Operand<TBool> labelIsNeg;
+    if (update_fn != null || update_tn != null) {
+      predIsNeg = tf.math.logicalNot(predIsPos);
+      loopVars.put(ConfusionMatrixEnum.FALSE_NEGATIVES, new Operand[] {labelIsPos, predIsNeg});
+    }
+
+    if (update_fp != null || update_tn != null) {
+      labelIsNeg = tf.math.logicalNot(labelIsPos);
+      loopVars.put(ConfusionMatrixEnum.FALSE_POSITIVES, new Operand[] {labelIsNeg, predIsPos});
+      if (update_tn != null) {
+        loopVars.put(ConfusionMatrixEnum.TRUE_NEGATIVES, new Operand[] {labelIsNeg, predIsNeg});
+      }
+    }
+
+    final Operand<T> weightsTiledF = weightsTiled;
+    loopVars
+        .keySet()
+        .forEach(
+            (c) -> {
+              if (variablesToUpdate.containsKey(c)) {
+                Operand[] op = loopVars.get(c);
+                // op[0] = label, op[1] == prediction
+                controlOps.add(
+                    weightedAssignAdd(
+                        tf,
+                        op[0],
+                        op[1],
+                        weightsTiledF,
+                        variablesToUpdate.get(c),
+                        varInitializers.get(c)));
+              }
+            });
+
+    return controlOps;
+  }
+
+  /**
+   * Creates an Operand that adds the values by taking the logical and of labels and predictions to
+   * the specified confusion matrix variable.
+   *
+   * @param tf The TensorFlow Ops
+   * @param labels the labels
+   * @param predictions the predictions
+   * @param weights the weights applied to the logical and result, may be null
+   * @param variable the variable to update
+   * @param initializer the variable initializer to be applied to the variable, may be null.
+   * @param <T> the data type for the variable.
+   * @return an Operand that updates the variable.
+   */
+  private static <T extends TNumber> Operand<T> weightedAssignAdd(
+      Ops tf,
+      Operand<TBool> labels,
+      Operand<TBool> predictions,
+      Operand<T> weights,
+      Variable<T> variable,
+      Assign<T> initializer) {
+    Class<T> type = variable.type();
+    Operand<T> labelAndPred = cast(tf, tf.math.logicalAnd(labels, predictions), type);
+
+    if (weights != null) {
+      Operand<T> lWeights = cast(tf, weights, type);
+      labelAndPred = tf.math.mul(labelAndPred, lWeights);
+    }
+    Operand<T> valueSum = tf.reduceSum(labelAndPred, tf.constant(1));
+    Operand<T> assignAdd;
+    if (initializer != null) {
+      Ops tfc =
+          tf.withSubScope("weightedAssignAdd")
+              .withControlDependencies(Collections.singletonList(initializer));
+      assignAdd = tfc.assignAdd(variable, valueSum);
+    } else {
+      assignAdd = tf.assignAdd(variable, valueSum);
+    }
+    return assignAdd;
+  }
+
+  /**
+   * Filters top-k values in the last dim of x and set the rest to NEG_INF.
+   *
+   * <p>Used for computing top-k prediction values in dense labels (which has the same shape as
+   * predictions) for recall and precision top-k metrics.
+   *
+   * @param tf The TensorFlow Ops
+   * @param x the tensor with any dimensions to filter
+   * @param topK the number of values to keep.
+   * @param <T> the data type for x and the return value.
+   * @return the topK prediction values.
+   */
+  private static <T extends TNumber> Operand<T> filterTopK(Ops tf, Operand<T> x, int topK) {
+    Class<T> type = x.type();
+    Shape xShape = x.shape();
+    TopK<T> top = tf.nn.topK(x, tf.constant(topK), TopK.sorted(false));
+    OneHot<TInt32> oneHot =
+        tf.oneHot(
+            top.indices(),
+            cast(tf, tf.constant(xShape.size(xShape.numDimensions() - 1)), TInt32.class),
+            tf.constant(1),
+            tf.constant(0),
+            OneHot.axis(-1L));
+    Operand<T> topKMask = cast(tf, tf.reduceSum(oneHot, tf.constant(-2)), type);
+
+    // x * top_k_mask + NEG_INF * (1 - top_k_mask)
+    Operand<T> add1 = tf.math.mul(x, topKMask);
+    Operand<T> add2 =
+        tf.math.mul(
+            cast(tf, tf.constant(NEG_INF), type),
+            tf.math.sub(cast(tf, tf.constant(1), type), topKMask));
+    return tf.math.add(add1, add2);
+  }
+
+  // alias for mean
 
   /**
    * Calculate the mean of the operand, along all axes and <code>keepDims</code> is <code>false
@@ -277,6 +659,103 @@ public class MetricsHelper {
       axes = allAxes(tf, x);
     }
     return tf.math.mean(x, axes, Mean.keepDims(keepDims));
+  }
+
+  public static <T extends TNumber, V extends TNumber>
+      LossTuple<T> raggedAssertCompatibleAndGetFlatValues(
+          Ops tf, Operand<V> labels, Operand<T> predictions) {
+    // TODO handle ragged Tensors
+    Operand<T> tLabels = cast(tf, labels, predictions.type());
+    return new LossTuple<>(tLabels, predictions);
+  }
+
+  /**
+   * Computes the confusion matrix from predictions and labels.
+   *
+   * @param tf the TensorFlow Ops
+   * @param labels 1-D `Tensor` of real labels for the classification task.
+   * @param predictions 1-D `Tensor` of predictions for a given classification.
+   * @param numClasses The possible number of labels the classification task can have.
+   * @param weights optional weights to be applied to the confusion matrix
+   * @param type Data type of the confusion matrix.
+   * @param <T> the type of Operands
+   * @return A <code>Operand</code> of type <code>type</code> with shape <code>[n, n]</code>
+   *     representing the confusion matrix, where <code>n</code> is the number of possible labels in
+   *     the classification task.
+   * @throws IllegalArgumentException If both <code>predictions</code> and <code>labels</code> do
+   *     not have compatible shapes, or if <code>weights</code> is not<code>null</code> and its
+   *     shape is not compatible with <code>predictions</code>.
+   */
+  public static <T extends TNumber> Operand<T> confusionMatrix(
+      Ops tf,
+      Operand<T> labels,
+      Operand<T> predictions,
+      Operand<TInt64> numClasses,
+      Operand<T> weights,
+      Class<T> type) {
+    if (!predictions.shape().isCompatibleWith(labels.shape()))
+      throw new IllegalArgumentException(
+          String.format(
+              "Prediction shape %s is not compatible with labels shape %s",
+              predictions.shape().toString(), labels.shape().toString()));
+    tf = tf.withSubScope("confusionMatrix");
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, predictions, labels, null);
+    Operand<TInt64> lPredictions = cast(tf, ops.getTarget(), TInt64.class);
+    Operand<TInt64> lLabels = cast(tf, ops.getLabels(), TInt64.class);
+
+    List<Op> labelControls = new ArrayList<>();
+    List<Op> predictionControls = new ArrayList<>();
+
+    labelControls.add(
+        tf.assertThat(
+            tf.reduceAny(tf.math.greaterEqual(lLabels, tf.constant(0L)), allAxes(tf, lLabels)),
+            Collections.singletonList(tf.constant("`labels` contains negative values"))));
+
+    predictionControls.add(
+        tf.assertThat(
+            tf.reduceAny(
+                tf.math.greaterEqual(lPredictions, tf.constant(0L)), allAxes(tf, lPredictions)),
+            Collections.singletonList(tf.constant("`predictions` contains negative values"))));
+    if (numClasses == null) {
+      numClasses =
+          tf.math.maximum(
+              tf.reduceMax(lPredictions, allAxes(tf, lPredictions)),
+              tf.reduceMax(lLabels, allAxes(tf, lLabels)));
+    } else {
+      labelControls.add(
+          tf.assertThat(
+              tf.reduceAny(tf.math.less(lLabels, numClasses), allAxes(tf, lLabels)),
+              Collections.singletonList(tf.constant("``labels` out of bounds"))));
+      predictionControls.add(
+          tf.assertThat(
+              tf.reduceAny(tf.math.less(lPredictions, numClasses), allAxes(tf, lPredictions)),
+              Collections.singletonList(tf.constant("``predictions` out of bounds"))));
+    }
+
+    if (weights != null) {
+      if (!lPredictions.shape().isCompatibleWith(weights.shape())) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Prediction shape %s is not compatible with weights shape %s",
+                lPredictions.shape().toString(), weights.shape().toString()));
+      }
+    }
+
+    Ops tfc = tf.withSubScope("confusionMatrixLabels").withControlDependencies(labelControls);
+    lLabels = tfc.identity(lLabels);
+
+    tfc = tf.withSubScope("confusionMatrixPredicitons").withControlDependencies(predictionControls);
+    lPredictions = tfc.identity(lPredictions);
+
+    Operand<TInt64> shape = tf.stack(Arrays.asList(numClasses, numClasses));
+    Operand<TInt64> indices = tf.stack(Arrays.asList(lLabels, lPredictions), Stack.axis(1L));
+    Operand<T> values =
+        weights == null ? cast(tf, tf.onesLike(lPredictions), type) : cast(tf, weights, type);
+    SparseTensor<T> cmSparse = new SparseTensor<>(indices, values, shape);
+    Operand<T> zeroMatrix = tf.zeros(shape, type);
+
+    return tf.sparse.sparseTensorDenseAdd(
+        cmSparse.getIndices(), cmSparse.getValues(), cmSparse.getDenseShape(), zeroMatrix);
   }
 
   /**
