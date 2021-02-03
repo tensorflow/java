@@ -21,6 +21,8 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A Metric that computes the categorical cross-entropy loss between true labels and predicted
  * labels.
@@ -99,8 +101,10 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.categoricalCrossentropy(
-        getTF(), labels, predictions, fromLogits, labelSmoothing, axis);
+        getTF(), tLabels, tPredictions, fromLogits, labelSmoothing, axis);
   }
 }

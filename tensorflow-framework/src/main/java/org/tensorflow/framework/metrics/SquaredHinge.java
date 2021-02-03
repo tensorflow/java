@@ -21,6 +21,8 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A metric that computes the squared hinge loss metric between labels and predictions.
  *
@@ -44,7 +46,9 @@ public class SquaredHinge<T extends TNumber> extends MeanMetricWrapper<T> implem
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<T> predictions) {
-    return Losses.squaredHinge(getTF(), labels, predictions);
+  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.squaredHinge(getTF(), tLabels, tPredictions);
   }
 }
