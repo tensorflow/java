@@ -21,6 +21,15 @@ the `dev` profile in your Maven command to use those artifacts instead of buildi
 Modifying the native op generation code (not the annotation processor) or the JavaCPP configuration (not the abstract Pointers) will require a
 complete build could be required to reflect the changes, otherwise `-Pdev` should be fine.
 
+### Native Builds
+
+In some cases, like when adding GPU support or re-generating op classes, you will need to re-build the native library. 99% of this is building
+TensorFlow, which by default is configured for the [CI](.github/workflows/ci.yml). The build configuration can be customized using the same methods as
+TensorFlow, so if you're building locally, you may need to clone the [tensorflow](https://github.com/tensorflow/tensorflow) project, run its
+configuration script (`./configure`), and copy the resulting
+`.tf_configure.bazelrc` to `tensorflow-core-api`. This overrides the default options, and you can add to it manually (i.e. adding `build --copt="-g"`
+to build with debugging info).
+
 ### GPU Support
 
 Currently, due to build time constraints, the GPU binaries only support compute capacities 3.5 and 7.0.  
@@ -29,9 +38,9 @@ setting the environment variable `TF_CUDA_COMPUTE_CAPABILITIES`, or configuring 
 i.e. `build --action_env TF_CUDA_COMPUTE_CAPABILITIES="6.1"`). While this is far from ideal, we are working on getting more build resources, and for
 now this is the best option.
 
-To build for GPU, pass `-Djavacpp.platform.extension=-gpu` to maven. By default, the CI options are used for the bazel build. You can override these
-options, see the [Working with Bazel generation](#working-with-bazel-generation) section for details. If you do this, make sure
-the `TF_CUDA_COMPUTE_CAPABILITIES` value in your `.tf_configure.bazelrc` matches the value set elsewhere, as it will take precedence if present.
+To build for GPU, pass `-Djavacpp.platform.extension=-gpu` to maven. By default, the CI options are used for the bazel build, see the above section
+for more info. If you add `bazelrc` files, make sure the `TF_CUDA_COMPUTE_CAPABILITIES` value in them matches the value set elsewhere, as it will take
+precedence if present.
 
 ## Running Tests
 
@@ -88,14 +97,14 @@ annotated with `org.tensorflow.op.annotation.Endpoint`), or change the annotatio
 
 ### Working with Bazel generation
 
-`tensorflow-core-api` uses Bazel-built C++ code generation to generate most of the `@Operator` classes.  
-By default, the bazel build is configured for the [CI](.github/workflows/ci.yml), so if you're building locally, you may need to clone
-the [tensorflow](https://github.com/tensorflow/tensorflow) project, run its configuration script (`./configure`), and copy the resulting
-`.tf_configure.bazelrc` to `tensorflow-core-api`. This overrides the default options, and you can add to it manually (i.e. adding `build --copt="-g"`
-to build with debugging info).
-
-To run the code generation, use the `//:java_op_generator` target. The resulting binary has good help text (viewable in
+`tensorflow-core-api` uses Bazel-built C++ code generation to generate most of the `@Operator` classes. See [Native Builds](#native-builds) for
+instructions on configuring the bazel build. To run the code generation, use the `//:java_op_generator` target. The resulting binary has good help
+text (viewable in
 [op_gen_main.cc](tensorflow-core/tensorflow-core-api/src/bazel/op_generator/op_gen_main.cc#L31-L48)). Generally, it should be called with arguments
-that are something
-like `bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so --output_dir=src/gen/java --api_dirs=bazel-tensorflow-core-api/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def`
-(from `tensorflow-core-api`).
+that are something like:
+
+```
+bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so --output_dir=src/gen/java --api_dirs=bazel-tensorflow-core-api/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def
+```
+
+(called in `tensorflow-core-api`).
