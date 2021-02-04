@@ -16,14 +16,12 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
-
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.OperationBuilder;
 
 /**
- * Manages groups of related properties when creating Tensorflow Operations, such as a common name
- * prefix.
+ * Manages groups of related properties when creating Tensorflow Operations, such as a common name prefix.
  *
  * <p>A {@code Scope} is a container for common properties applied to TensorFlow Ops. Normal user
  * code initializes a {@code Scope} and provides it to Operation building classes. For example:
@@ -88,7 +86,9 @@ public final class Scope {
     this(env, new NameScope(), new ArrayList<>(), DeviceSpec.newBuilder().build());
   }
 
-  /** Returns the execution environment used by this scope. */
+  /**
+   * Returns the execution environment used by this scope.
+   */
   public ExecutionEnvironment env() {
     return env;
   }
@@ -97,8 +97,7 @@ public final class Scope {
    * Returns a new scope where added operations will have the provided name prefix.
    *
    * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The actual
-   * name will be unique in the returned scope. All other properties are inherited from the current
-   * scope.
+   * name will be unique in the returned scope. All other properties are inherited from the current scope.
    *
    * <p>The child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
    *
@@ -129,7 +128,8 @@ public final class Scope {
   /**
    * Return a new scope that uses the provided device specification for an op.
    *
-   * <p>Operations created within this scope will place the created operations on the device(s) matching the provided spec.
+   * <p>Operations created within this scope will place the created operations on the device(s) matching the provided
+   * spec.
    *
    * @param deviceSpec device specification for an operator in the returned scope
    * @return a new Scope that uses opName for operations.
@@ -151,8 +151,8 @@ public final class Scope {
    * }</pre>
    *
    * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates a
-   * set of related operations by calling other operator building code), the provided name will act
-   * as a subscope to all underlying operators.
+   * set of related operations by calling other operator building code), the provided name will act as a subscope to all
+   * underlying operators.
    *
    * @param defaultName name for the underlying operator.
    * @return unique name for the operator.
@@ -180,11 +180,15 @@ public final class Scope {
    * @return a new scope with the provided control dependencies
    */
   public Scope withControlDependencies(Iterable<Op> controls) {
+    for (Op control : controls) {
+      env.checkInput(control);
+    }
     return new Scope(env, nameScope, controls, deviceSpec);
   }
 
   /**
-   * Applies device specification and adds each Operand in controlDependencies as a control input to the provided builder.
+   * Applies device specification and adds each Operand in controlDependencies as a control input to the provided
+   * builder.
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
@@ -210,7 +214,9 @@ public final class Scope {
   private final NameScope nameScope;
   private final DeviceSpec deviceSpec;
 
-  /** Returns device string from the scope. */
+  /**
+   * Returns device string from the scope.
+   */
   public String getDeviceString() {
     return deviceSpec.toString();
   }

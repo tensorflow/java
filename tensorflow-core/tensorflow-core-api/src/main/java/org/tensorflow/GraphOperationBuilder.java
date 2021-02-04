@@ -92,6 +92,11 @@ public final class GraphOperationBuilder implements OperationBuilder {
       throw new IllegalArgumentException(
           "Only GraphOperation instances can be used as control inputs");
     }
+
+    if (control.env() != graph) {
+      throw new IllegalArgumentException("Control input " + control + " was from a different graph, can't use.");
+    }
+
     Graph.Reference r = graph.ref();
     try {
       addControlInput(unsafeNativeHandle, ((GraphOperation) control).getUnsafeNativeHandle());
@@ -103,6 +108,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   @Override
   public GraphOperationBuilder addInput(Output<?> input) {
+    graph.checkInput(input);
     Graph.Reference r = graph.ref();
     try {
       addInput(unsafeNativeHandle, (TF_Operation) input.getUnsafeNativeHandle(), input.index());
@@ -114,6 +120,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   @Override
   public GraphOperationBuilder addInputList(Output<?>[] inputs) {
+    for (Output<?> input : inputs) {
+      graph.checkInput(input);
+    }
+
     Graph.Reference r = graph.ref();
     try {
       TF_Operation[] opHandles = new TF_Operation[inputs.length];

@@ -27,6 +27,7 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
@@ -294,6 +295,13 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
         return false;
       default:
         return true;
+    }
+  }
+
+  @Override
+  public void checkInput(Op input) {
+    if (!input.env().isEager()) {
+      throw new IllegalArgumentException("Can't use graph operation " + input + " in eager mode.");
     }
   }
 

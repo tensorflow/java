@@ -15,7 +15,11 @@ limitations under the License.
 
 package org.tensorflow;
 
-/** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
+import org.tensorflow.op.Op;
+
+/**
+ * Defines an environment for creating and executing TensorFlow {@link Operation}s.
+ */
 public interface ExecutionEnvironment {
 
   enum Types {
@@ -36,12 +40,22 @@ public interface ExecutionEnvironment {
 
   /**
    * Returns true if the given operation is valid in this execution environment.
+   *
    * @param opType The op to check.
    * @return Whether the given operation is valid in this execution environment.
    */
-  default boolean isOpEnabled(String opType){
+  default boolean isOpEnabled(String opType) {
     return true;
   }
+
+  /**
+   * Checks that {@code input} is valid to use as an input in this execution environment. Throws {@link
+   * IllegalArgumentException} if not.
+   *
+   * @param input The op to check
+   * @throws IllegalArgumentException if input can't be used as an input in this execution environment.
+   */
+  void checkInput(Op input);
 
   /**
    * Get the type of this environment (from the `Environments` enumeration.
