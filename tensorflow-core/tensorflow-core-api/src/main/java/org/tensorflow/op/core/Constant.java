@@ -20,18 +20,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.RawOp;
-import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
-import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
-import org.tensorflow.ndarray.buffer.FloatDataBuffer;
-import org.tensorflow.ndarray.buffer.IntDataBuffer;
-import org.tensorflow.ndarray.buffer.LongDataBuffer;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
 import org.tensorflow.ndarray.DoubleNdArray;
@@ -40,14 +28,30 @@ import org.tensorflow.ndarray.IntNdArray;
 import org.tensorflow.ndarray.LongNdArray;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.ndarray.buffer.BooleanDataBuffer;
+import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
+import org.tensorflow.ndarray.buffer.FloatDataBuffer;
+import org.tensorflow.ndarray.buffer.IntDataBuffer;
+import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.RawOp;
+import org.tensorflow.op.Scope;
+import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -1275,6 +1279,67 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   @Endpoint
   public static Constant<TInt64> tensorOf(Scope scope, Shape shape) {
     return vectorOf(scope, shape.asArray());
+  }
+
+  /**
+   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be truncated if it does not
+   * fit in the target type.
+   *
+   * @param type the type of tensor to create.  Must be concrete (i.e. not {@link org.tensorflow.types.family.TFloating})
+   * @param number the value of the tensor
+   * @return a constant of the passed type
+   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or
+   * unknown.
+   */
+  @SuppressWarnings("unchecked")
+  @Endpoint
+  public static <T extends TNumber> Constant<T> tensorOf(Scope scope, Class<T> type, Number number) {
+    if (type.equals(TBfloat16.class)) {
+      try (TBfloat16 tensor = TBfloat16.scalarOf(number.floatValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TFloat64.class)) {
+      try (TFloat64 tensor = TFloat64.scalarOf(number.doubleValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TFloat32.class)) {
+      try (TFloat32 tensor = TFloat32.scalarOf(number.floatValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TFloat16.class)) {
+      try (TFloat16 tensor = TFloat16.scalarOf(number.floatValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TInt64.class)) {
+      try (TInt64 tensor = TInt64.scalarOf(number.longValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TInt32.class)) {
+      try (TInt32 tensor = TInt32.scalarOf(number.intValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else if (type.equals(TUint8.class)) {
+      try (TUint8 tensor = TUint8.scalarOf(number.byteValue())) {
+        return (Constant<T>) create(scope, tensor);
+      }
+    } else {
+      throw new IllegalArgumentException("Tensor type " + type + " is an abstract or unknown numeric type.");
+    }
+  }
+
+  /**
+   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code number} may be
+   * truncated if it does not fit in the target type.
+   *
+   * @param toMatch the operand providing the target type
+   * @param number the value of the tensor
+   * @return a constant with the same type as {@code toMatch}
+   * @throws IllegalArgumentException if the type is unknown (which should be impossible).
+   * @see Ops#constant(Class, Number)
+   */
+  @Endpoint(name = "constantOfSameType")
+  public static <T extends TNumber> Constant<T> tensorOfSameType(Scope scope, Operand<T> toMatch, Number number) {
+    return tensorOf(scope, toMatch.type(), number);
   }
 
   /**
