@@ -17,21 +17,6 @@
 //
 package org.tensorflow.op.kotlin
 
-import java.nio.charset.Charset
-import kotlin.Array
-import kotlin.BooleanArray
-import kotlin.Byte
-import kotlin.ByteArray
-import kotlin.Double
-import kotlin.DoubleArray
-import kotlin.Float
-import kotlin.FloatArray
-import kotlin.Int
-import kotlin.IntArray
-import kotlin.Long
-import kotlin.LongArray
-import kotlin.Unit
-import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.BooleanNdArray
 import org.tensorflow.ndarray.ByteNdArray
@@ -289,6 +274,7 @@ import org.tensorflow.types.TString
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import java.nio.charset.Charset
 
 /**
  * An API for building operations as [Op][Op]s
@@ -300,7 +286,7 @@ public class KotlinOps(
      * Returns the java counterpart of this API
      */
     public val java: Ops
-) {
+) : OpsBase() {
     /**
      * Returns the current [scope][Scope] of this API
      */
@@ -314,7 +300,7 @@ public class KotlinOps(
     /**
      * Get the [ KotlinOps] object.
      */
-    public val tf: KotlinOps = this
+    public override val tf: KotlinOps = this
 
     public val nn: NnOps = NnOps(this)
 

@@ -17,9 +17,6 @@
 //
 package org.tensorflow.op.kotlin
 
-import kotlin.Int
-import kotlin.Long
-import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.core.Shape

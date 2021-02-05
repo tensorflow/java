@@ -18,6 +18,13 @@ import org.tensorflow.DeviceSpec
 import org.tensorflow.ExecutionEnvironment
 import org.tensorflow.op.JavaOps
 import org.tensorflow.op.Op
+import org.tensorflow.op.core.Constant
+import org.tensorflow.types.TBool
+import org.tensorflow.types.TFloat32
+import org.tensorflow.types.TFloat64
+import org.tensorflow.types.TInt32
+import org.tensorflow.types.TInt64
+import org.tensorflow.types.TUint8
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 
@@ -151,3 +158,55 @@ public val ExecutionEnvironment.tf: KotlinOps get() = JavaOps.create(this).kotli
 public fun ExecutionEnvironment.tf(device: DeviceSpec): KotlinOps = tf.withDevice(device)
 
 // TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be too error prone to be worth doing
+
+
+/**
+ * Creates a 1D constant from [array].
+ *
+ * @see KotlinOps.constant
+ */
+@JvmName("constantDoubles")
+public fun KotlinOps.constant(array: Collection<Double>): Constant<TFloat64> = constant(array.toDoubleArray())
+
+
+/**
+ * @see KotlinOps.constant
+ */
+@JvmName("constantFloats")
+public fun KotlinOps.constant(array: Collection<Float>): Constant<TFloat32> = constant(array.toFloatArray())
+
+
+/**
+ * Creates a 1D constant from [array].
+ *
+ * @see KotlinOps.constant
+ */
+@JvmName("constantInts")
+public fun KotlinOps.constant(array: Collection<Int>): Constant<TInt32> = constant(array.toIntArray())
+
+
+/**
+ * Creates a 1D constant from [array].
+ *
+ * @see KotlinOps.constant
+ */
+@JvmName("constantLongs")
+public fun KotlinOps.constant(array: Collection<Long>): Constant<TInt64> = constant(array.toLongArray())
+
+
+/**
+ * Creates a 1D constant from [array].
+ *
+ * @see KotlinOps.constant
+ */
+@JvmName("constantBytes")
+public fun KotlinOps.constant(array: Collection<Byte>): Constant<TUint8> = constant(array.toByteArray())
+
+
+/**
+ * Creates a 1D constant from [array].
+ *
+ * @see KotlinOps.constant
+ */
+@JvmName("constantBooleans")
+public fun KotlinOps.constant(array: Collection<Boolean>): Constant<TBool> = constant(array.toBooleanArray())

@@ -28,6 +28,7 @@ val JavaClassName.kotlin get() = ClassName(this.packageName(), this.simpleNames(
 
 class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
     private val T_KOTLIN_OPS = ClassName("org.tensorflow.op.kotlin", "KotlinOps")
+    private val T_KOTLIN_OPS_BASE = ClassName("org.tensorflow.op.kotlin", "OpsBase")
     private val PACKAGE = "org.tensorflow.op.kotlin"
     private val T_OPERAND = ClassName("org.tensorflow", "Operand")
     private val T_CLASS = ClassName("java.lang", "Class")
@@ -420,9 +421,12 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         builder.addProperty(
             PropertySpec.builder("tf", T_KOTLIN_OPS)
                 .initializer("this")
+                .addModifiers(KModifier.OVERRIDE)
                 .addKdoc("Get the [ " + T_KOTLIN_OPS.simpleName + "] object.")
                 .build()
         )
+
+        builder.superclass(T_KOTLIN_OPS_BASE)
 
         addGroupFields(builder, spec.subGroups, true)
 
