@@ -117,18 +117,13 @@ public class Hinge extends Loss {
    *     predictions is scaled by the corresponding value of SampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
    * @param <T> The data type of the predictions, sampleWeights and loss.
-   * @param <U> The data type of the labels.
    * @return the loss
    * @throws IllegalArgumentException if the predictions are outside the range [0.-1.].
    */
   @Override
   public <T extends TNumber> Operand<T> call(
       Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    @SuppressWarnings("unchecked")
-    Operand<T> tLabels =
-        predictions.type() == labels.type()
-            ? (Operand<T>) labels
-            : cast(tf, labels, predictions.type());
+    Operand<T> tLabels = cast(tf, labels, predictions.type());
     tLabels =
         LossesHelper.valueCheck(
             getTF(),

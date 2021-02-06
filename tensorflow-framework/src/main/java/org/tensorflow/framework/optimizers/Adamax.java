@@ -32,12 +32,10 @@ public class Adamax extends Optimizer {
   public static final float EPSILON_DEFAULT = 1e-07f;
   public static final float BETA_ONE_DEFAULT = 0.9f;
   public static final float BETA_TWO_DEFAULT = 0.999f;
-
-  private float learningRate;
   private final float betaOne;
   private final float betaTwo;
   private final float epsilon;
-
+  private final float learningRate;
   private Constant<TFloat32> learningRateConst;
   private Constant<TFloat32> epsilonConst;
   private Constant<TFloat32> betaOneConst;

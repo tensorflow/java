@@ -31,29 +31,29 @@ import java.util.List;
  * learning rate per dimension to address two drawbacks:
  *
  * <ul>
- * <li>the continual decay of learning rates throughout training
- * <li>the need for a manually selected global learning rate
+ *   <li>the continual decay of learning rates throughout training
+ *   <li>the need for a manually selected global learning rate
  * </ul>
  *
- *     <p>Adadelta is a more robust extension of Adagrad that adapts learning rates based on a
- *     moving window of gradient updates, instead of accumulating all past gradients. This way,
- *     Adadelta continues learning even when many updates have been done. Compared to Adagrad, in
- *     the original version of Adadelta you don't have to set an initial learning rate. In this
- *     version, initial learning rate can be set, as in most other optimizers.
+ * <p>Adadelta is a more robust extension of Adagrad that adapts learning rates based on a moving
+ * window of gradient updates, instead of accumulating all past gradients. This way, Adadelta
+ * continues learning even when many updates have been done. Compared to Adagrad, in the original
+ * version of Adadelta you don't have to set an initial learning rate. In this version, initial
+ * learning rate can be set, as in most other optimizers.
  *
- *     <p>According to section 4.3 ("Effective Learning rates"), near the end of training step sizes
- *     converge to 1 which is effectively a high learning rate which would cause divergence. This
- *     occurs only near the end of the training as gradients and step sizes are small, and the
- *     epsilon constant in the numerator and denominator dominate past gradients and parameter
- *     updates which converge the learning rate to 1.
+ * <p>According to section 4.3 ("Effective Learning rates"), near the end of training step sizes
+ * converge to 1 which is effectively a high learning rate which would cause divergence. This occurs
+ * only near the end of the training as gradients and step sizes are small, and the epsilon constant
+ * in the numerator and denominator dominate past gradients and parameter updates which converge the
+ * learning rate to 1.
  *
- *     <p>According to section 4.4("Speech Data"),where a large neural network with 4 hidden layers
- *     was trained on a corpus of US English data, ADADELTA was used with 100 network replicas.The
- *     epsilon used is 1e-6 with rho=0.95 which converged faster than ADAGRAD, by the following
- *     construction: <code> new AdaDelta(graph, 1.0f, 0.95f, 1e-6f); </code>
+ * <p>According to section 4.4("Speech Data"),where a large neural network with 4 hidden layers was
+ * trained on a corpus of US English data, ADADELTA was used with 100 network replicas.The epsilon
+ * used is 1e-6 with rho=0.95 which converged faster than ADAGRAD, by the following construction:
+ * <code> new AdaDelta(graph, 1.0f, 0.95f, 1e-6f); </code>
  *
  * @see <a href="http://arxiv.org/abs/1212.5701">Zeiler, M., 2012 ADADELTA: An Adaptive Learning
- *    Rate Method</a>.
+ *     Rate Method</a>
  */
 public class AdaDelta extends Optimizer {
 

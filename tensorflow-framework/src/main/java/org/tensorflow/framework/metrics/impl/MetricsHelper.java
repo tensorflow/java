@@ -308,6 +308,7 @@ public class MetricsHelper {
   /**
    * Calculates the mean of the boolean operand, alongside all axes.
    *
+   * @param tf the TensorFlow Ops
    * @param x the boolean Operand used to calculate the mean
    * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
    *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
@@ -322,6 +323,7 @@ public class MetricsHelper {
   /**
    * Calculates the mean of the boolean operand, alongside the specified axes.
    *
+   * @param tf the TensorFlow Ops
    * @param x the boolean Operand used to calculate the mean
    * @param axes Axes to compute the mean.
    * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is

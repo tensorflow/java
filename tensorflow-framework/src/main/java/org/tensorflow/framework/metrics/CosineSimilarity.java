@@ -78,7 +78,8 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+  public Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
     // NOTE: metrics.CosineSimilarity is Losses.cosineSimilarity,
     // while losses.CosineSimilarity is the negative of Losses.cosineSimilarity
     Operand<T> tLabels = cast(getTF(), labels, getResultType());

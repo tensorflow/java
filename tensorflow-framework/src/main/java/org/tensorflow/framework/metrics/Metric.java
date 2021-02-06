@@ -184,7 +184,11 @@ public abstract class Metric<T extends TNumber> {
     return name;
   }
 
-  /** The random number generator seed value */
+  /**
+   * Gets the random number generator seed value
+   *
+   * @return the random number generator seed value
+   */
   public long getSeed() {
     return seed;
   }

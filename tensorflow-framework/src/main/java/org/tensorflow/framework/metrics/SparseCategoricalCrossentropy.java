@@ -57,7 +57,8 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+  public Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.sparseCategoricalCrossentropy(getTF(), tLabels, tPredictions, fromLogits, axis);

@@ -46,7 +46,8 @@ public class SquaredHinge<T extends TNumber> extends MeanMetricWrapper<T> implem
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+  public Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.squaredHinge(getTF(), tLabels, tPredictions);
