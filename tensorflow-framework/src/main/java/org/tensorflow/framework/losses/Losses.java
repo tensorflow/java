@@ -655,6 +655,7 @@ public class Losses {
    * @param tf The TensorFlow Ops
    * @param x the input
    * @param axis Dimension along which to normalize.
+   * @param <T> the data type for the input and the result
    * @return the normalized values based on L2 norm
    */
   public static <T extends TNumber> Operand<T> l2Normalize(Ops tf, Operand<T> x, int[] axis) {
