@@ -19,9 +19,13 @@ package org.tensorflow.op;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.GraphFunction;
+import org.tensorflow.NamedGraphFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.BooleanNdArray;
 import org.tensorflow.ndarray.ByteNdArray;
@@ -82,6 +86,7 @@ import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
+import org.tensorflow.op.core.Function;
 import org.tensorflow.op.core.Gather;
 import org.tensorflow.op.core.GatherNd;
 import org.tensorflow.op.core.GetSessionHandle;
@@ -1066,6 +1071,68 @@ public final class Ops {
    */
   public Bucketize bucketize(Operand<? extends TNumber> input, List<Float> boundaries) {
     return Bucketize.create(scope, input, boundaries);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
+      List<Operand<?>> inputs) {
+    return Function.callConcreteFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
+      Map<String, Operand<?>> inputs) {
+    return Function.callConcreteFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
+      Operand<?>... inputs) {
+    return Function.callConcreteFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public List<Operand<?>> callFunction(GraphFunction function, List<Operand<?>> inputs) {
+    return Function.callFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public List<Operand<?>> callFunction(GraphFunction function, Operand<?>... inputs) {
+    return Function.callFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
+      List<Operand<?>> inputs) {
+    return Function.callNamedFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
+      Map<String, Operand<?>> inputs) {
+    return Function.callNamedFunction(scope, function, inputs);
+  }
+
+  /**
+   * empty
+   */
+  public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
+      Operand<?>... inputs) {
+    return Function.callNamedFunction(scope, function, inputs);
   }
 
   /**

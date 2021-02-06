@@ -18,6 +18,7 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
@@ -67,12 +68,16 @@ import org.tensorflow.types.family.TType;
  */
 public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
-  /** Create an empty Graph. */
+  /**
+   * Create an empty Graph.
+   */
   public Graph() {
     nativeHandle = allocate();
   }
 
-  /** Create a Graph from an existing handle (takes ownership). */
+  /**
+   * Create a Graph from an existing handle (takes ownership).
+   */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
   }
@@ -127,6 +132,77 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
+   * Returns the operation (node in the Graph) with the provided name, or throws {@link IllegalArgumentException} if
+   * there isn't one.
+   *
+   * @param name name of the operation to look for
+   * @return operation in the graph with this name
+   * @throws IllegalArgumentException if no such operation exists in the Graph
+   */
+  public GraphOperation operationOrError(String name) {
+    GraphOperation op = operation(name);
+    if (op == null) {
+      throw new IllegalArgumentException("No Operation named [" + name + "] in the Graph");
+    }
+    return op;
+  }
+
+  /**
+   * Returns the output with the provided name, or {@code null} if there is no such output.
+   * <p>Names should be of the
+   * format {@code /scope/op}, with an optional index: {@code /scope/op:1}. {@code 0} is used if the index is not
+   * specified.
+   *
+   * @param output the output to get
+   * @return the output with this name, or null if there isn't one
+   */
+  @SuppressWarnings("rawtypes")
+  public Output<?> output(String output) {
+    int colon = output.lastIndexOf(':');
+    if (colon == -1 || colon == output.length() - 1) {
+      GraphOperation op = operation(output);
+      if (op == null) {
+        return null;
+      }
+      return new Output(op, 0);
+    }
+    try {
+      String op = output.substring(0, colon);
+      int index = Integer.parseInt(output.substring(colon + 1));
+      GraphOperation operation = operation(op);
+      if (operation == null) {
+        return null;
+      }
+      return new Output(operation, index);
+    } catch (NumberFormatException e) {
+      GraphOperation op = operation(output);
+      if (op == null) {
+        return null;
+      }
+      return new Output(op, 0);
+    }
+  }
+
+  /**
+   * Returns the output with the provided name, or throws {@link IllegalArgumentException} if there isn't one.
+   * <p>Names should be of the
+   * format {@code /scope/op}, with an optional index: {@code /scope/op:1}. {@code 0} is used if the index is not
+   * specified.
+   *
+   * @param output the output to get
+   * @return the output with this name
+   * @throws IllegalArgumentException if no such output exists in the Graph
+   * @see #output(String)
+   */
+  public Output<?> outputOrError(String output) {
+    Output<?> op = output(output);
+    if (op == null) {
+      throw new IllegalArgumentException("No Operation named [" + output + "] in the Graph");
+    }
+    return op;
+  }
+
+  /**
    * Iterator over all the {@link Operation}s in the graph.
    *
    * <p>The order of iteration is unspecified. Consumers of the iterator will receive no
@@ -142,8 +218,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param type of the Operation (i.e., identifies the computation to be performed)
    * @param name to refer to the created Operation in the graph.
    * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
-   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then some resources may leak.
+   * OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked, then some resources may
+   * leak.
    */
   @Override
   public GraphOperationBuilder opBuilder(String type, String name) {
@@ -151,6 +227,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
     return new GraphOperationBuilder(this, type, name);
+  }
+
+  @Override
+  public void attachFunction(GraphFunction function) {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), function.gradNativeHandle(), status);
+      status.throwExceptionIfNotOK();
+    }
   }
 
   @Override
@@ -214,6 +300,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /**
    * Adds an initializer to the graph initializer list.
+   *
    * @param initializer An initializer to add to the list.
    */
   public synchronized void addInitializer(Op initializer) {
@@ -228,12 +315,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e.,
-   * {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
+   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e., {@code d(y_1 + y_2
+   * + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
    *
    * <p>{@code dx} are used as initial gradients (which represent the symbolic partial derivatives
-   * of some loss function {@code L} w.r.t. {@code y}). {@code dx} must be null or have size of
-   * {@code y}.
+   * of some loss function {@code L} w.r.t. {@code y}). {@code dx} must be null or have size of {@code y}.
    *
    * <p>If {@code dx} is null, the implementation will use dx of {@link
    * org.tensorflow.op.core.OnesLike OnesLike} for all shapes in {@code y}.
@@ -243,8 +329,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * <p>If {@code prefix} is null, then one will be chosen automatically.
    *
-   * @param prefix unique string prefix applied before the names of nodes added to the graph to
-   *     compute gradients. If null, a default one will be chosen.
+   * @param prefix unique string prefix applied before the names of nodes added to the graph to compute gradients. If
+   * null, a default one will be chosen.
    * @param y output of the function to derive
    * @param x inputs of the function for which partial derivatives are computed
    * @param dx if not null, the partial derivatives of some loss function {@code L} w.r.t. {@code y}
@@ -261,11 +347,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
     try (Reference ref = ref()) {
       for (int i = 0; i < y.length; ++i) {
-        yHandles[i] = (TF_Operation)y[i].getUnsafeNativeHandle();
+        yHandles[i] = (TF_Operation) y[i].getUnsafeNativeHandle();
         yIndices[i] = y[i].index();
       }
       for (int i = 0; i < x.length; ++i) {
-        xHandles[i] = (TF_Operation)x[i].getUnsafeNativeHandle();
+        xHandles[i] = (TF_Operation) x[i].getUnsafeNativeHandle();
         xIndices[i] = x[i].index();
       }
       if (dx != null && dx.length > 0) {
@@ -273,7 +359,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         dxIndices = new int[dx.length];
 
         for (int i = 0; i < dx.length; ++i) {
-          dxHandles[i] = (TF_Operation)dx[i].getUnsafeNativeHandle();
+          dxHandles[i] = (TF_Operation) dx[i].getUnsafeNativeHandle();
           dxIndices[i] = dx[i].index();
         }
       }
@@ -298,7 +384,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
             + " were expected");
       }
       for (int i = 0, j = ndy; i < ndy; ++i, ++j) {
-        GraphOperation op = new GraphOperation(this, (TF_Operation)dyHandlesAndIndices[i]);
+        GraphOperation op = new GraphOperation(this, (TF_Operation) dyHandlesAndIndices[i]);
         dy[i] = new Output<>(op, (int) dyHandlesAndIndices[j]);
       }
     }
@@ -306,24 +392,23 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s,
-   * i.e., {@code dy/dx_1, dy/dx_2...}
+   * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e., {@code dy/dx_1,
+   * dy/dx_2...}
    * <p>
-   * This is a simplified version of {@link #addGradients(String, Output[], Output[], Output[])}
-   * where {@code y} is a single output, {@code dx} is null and {@code prefix} is null.
+   * This is a simplified version of {@link #addGradients(String, Output[], Output[], Output[])} where {@code y} is a
+   * single output, {@code dx} is null and {@code prefix} is null.
    *
    * @param y output of the function to derive
    * @param x inputs of the function for which partial derivatives are computed
    * @return the partial derivatives {@code dy} with the size of {@code x}
    */
   public Output<?>[] addGradients(Output<?> y, Output<?>[] x) {
-    return addGradients(null, new Output<?>[] {y}, x, null);
+    return addGradients(null, new Output<?>[]{y}, x, null);
   }
 
   /**
-   * Used to instantiate an abstract class which overrides the buildSubgraph method to build a
-   * conditional or body subgraph for a while loop. After Java 8, this can alternatively be used to
-   * create a lambda for the same purpose.
+   * Used to instantiate an abstract class which overrides the buildSubgraph method to build a conditional or body
+   * subgraph for a while loop. After Java 8, this can alternatively be used to create a lambda for the same purpose.
    *
    * <p>To be used when calling {@link #whileLoop(Output[],
    * org.tensorflow.Graph.WhileSubgraphBuilder, org.tensorflow.Graph.WhileSubgraphBuilder, String)}
@@ -346,6 +431,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * </pre>
    */
   public interface WhileSubgraphBuilder {
+
     /**
      * To be overridden by user with code to build conditional or body subgraph for a while loop
      *
@@ -419,7 +505,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       try (Reference ref = ref()) {
 
         for (int i = 0; i < ninputs; i++) {
-          inputHandles[i] = (TF_Operation)inputs[i].getUnsafeNativeHandle();
+          inputHandles[i] = (TF_Operation) inputs[i].getUnsafeNativeHandle();
           inputIndices[i] = inputs[i].index();
         }
 
@@ -427,7 +513,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
             whileLoop(nativeHandle, inputHandles, inputIndices, name, cgBuilder, bgBuilder);
 
         for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
-          Operation op = new GraphOperation(this, (TF_Operation)outputHandlesAndIndices[i]);
+          Operation op = new GraphOperation(this, (TF_Operation) outputHandlesAndIndices[i]);
           outputs[i] = op.output((int) outputHandlesAndIndices[j]);
         }
       }
@@ -436,12 +522,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Return the {@link SaverDef} instance used to save the state of all variables present in
-   * this graph.
+   * Return the {@link SaverDef} instance used to save the state of all variables present in this graph.
    *
-   * <p/>On the first call of this method, all nodes necessary to save and restore the state of the
-   * variables are added to the graph. Consequently, any variables that are added to the graph after
-   * this call could not be saved nor restored using this {@link SaverDef}.
+   * <p/>On the first call of this method, all nodes necessary to save and restore the state of the variables are added
+   * to the graph. Consequently, any variables that are added to the graph after this call could not be saved nor
+   * restored using this {@link SaverDef}.
    *
    * @return a {@link SaverDef} instance
    */
@@ -466,6 +551,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   // Instances of the Reference class should be used to ensure the Graph has not been closed
   // while dependent handles are in use.
   class Reference implements AutoCloseable {
+
     private Reference() {
       synchronized (Graph.this.nativeHandleLock) {
         active = Graph.this.nativeHandle != null && !Graph.this.nativeHandle.isNull();
@@ -520,9 +606,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       try {
         Object[] nativeReturn = nextOperation(reference.nativeHandle(), this.position);
 
-        if (nativeReturn != null && nativeReturn[0] != null && !((TF_Operation)nativeReturn[0]).isNull()) {
-          this.operation = new GraphOperation(this.graph, (TF_Operation)nativeReturn[0]);
-          this.position = (Integer)nativeReturn[1];
+        if (nativeReturn != null && nativeReturn[0] != null && !((TF_Operation) nativeReturn[0]).isNull()) {
+          this.operation = new GraphOperation(this.graph, (TF_Operation) nativeReturn[0]);
+          this.position = (Integer) nativeReturn[1];
         }
       } finally {
         reference.close();
@@ -552,11 +638,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   private static TF_Graph allocate() {
-      return TF_NewGraph();
+    return TF_NewGraph();
   }
 
   private static void delete(TF_Graph handle) {
-    if (handle == null || handle.isNull()) return;
+    if (handle == null || handle.isNull()) {
+      return;
+    }
     TF_DeleteGraph(handle);
   }
 
@@ -579,11 +667,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     try (PointerScope scope = new PointerScope()) {
       SizeTPointer pos = new SizeTPointer(1).put(position);
       TF_Operation operation = TF_GraphNextOperation(handle, pos);
-      if (operation == null || operation.isNull()) return null;
+      if (operation == null || operation.isNull()) {
+        return null;
+      }
 
       Object[] handleAndPosition = new Object[2];
       handleAndPosition[0] = operation;
-      handleAndPosition[1] = (int)pos.get();
+      handleAndPosition[1] = (int) pos.get();
       return handleAndPosition;
     }
   }
@@ -623,12 +713,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   static void resolveOutputs(String type, TF_Operation[] srcOps,
-                             int[] srcIndices, TF_Output dst, int n) {
+      int[] srcIndices, TF_Output dst, int n) {
     if (srcOps.length != n) {
       throw new IllegalArgumentException("expected " + n + ", got " + srcOps.length + " " + type + " Operations");
     }
     if (srcIndices.length != n) {
-      throw new IllegalArgumentException("expected " + n + ", got " + srcIndices.length + " " + type + " Operation output indices");
+      throw new IllegalArgumentException(
+          "expected " + n + ", got " + srcIndices.length + " " + type + " Operation output indices");
     }
     for (int i = 0; i < n; ++i) {
       if (srcOps[i] == null || srcOps[i].isNull()) {
@@ -712,16 +803,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       TF_Operation[] condOutputHandles = new TF_Operation[1];
       int[] condOutputIndices = new int[1];
       for (int i = 0; i < ninputs; i++) {
-          condInputHandles[i] = condInputsOutput.position(i).oper();
-          condInputIndices[i] = condInputsOutput.position(i).index();
+        condInputHandles[i] = condInputsOutput.position(i).oper();
+        condInputIndices[i] = condInputsOutput.position(i).index();
       }
       condOutputHandles[0] = condOutputOutput.oper();
       condOutputIndices[0] = condOutputOutput.index();
 
       Object[] condOutputHandlesAndIndices =
           buildSubgraph(condGraphBuilder, params.cond_graph(),
-                        condInputHandles, condInputIndices,
-                        condOutputHandles, condOutputIndices);
+              condInputHandles, condInputIndices,
+              condOutputHandles, condOutputIndices);
 
       // build body subgraph
       TF_Output bodyInputsOutput = params.body_inputs();
@@ -731,29 +822,30 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       TF_Operation[] bodyOutputHandles = new TF_Operation[ninputs];
       int[] bodyOutputIndices = new int[ninputs];
       for (int i = 0; i < ninputs; i++) {
-          bodyInputHandles[i] = bodyInputsOutput.position(i).oper();
-          bodyInputIndices[i] = bodyInputsOutput.position(i).index();
-          bodyOutputHandles[i] = bodyOutputsOutput.position(i).oper();
-          bodyOutputIndices[i] = bodyOutputsOutput.position(i).index();
+        bodyInputHandles[i] = bodyInputsOutput.position(i).oper();
+        bodyInputIndices[i] = bodyInputsOutput.position(i).index();
+        bodyOutputHandles[i] = bodyOutputsOutput.position(i).oper();
+        bodyOutputIndices[i] = bodyOutputsOutput.position(i).index();
       }
 
       Object[] bodyOutputHandlesAndIndices =
           buildSubgraph(bodyGraphBuilder, params.body_graph(),
-                        bodyInputHandles, bodyInputIndices,
-                        bodyOutputHandles, bodyOutputIndices);
+              bodyInputHandles, bodyInputIndices,
+              bodyOutputHandles, bodyOutputIndices);
 
       if (condOutputHandlesAndIndices == null ||
-          bodyOutputHandlesAndIndices == null)
+          bodyOutputHandlesAndIndices == null) {
         return null;
+      }
 
       // set cond_output param to output of the conditional subgraph
-      condOutputOutput.oper((TF_Operation)condOutputHandlesAndIndices[0])
-                      .index((Integer)condOutputHandlesAndIndices[1]);
+      condOutputOutput.oper((TF_Operation) condOutputHandlesAndIndices[0])
+          .index((Integer) condOutputHandlesAndIndices[1]);
 
       // set body_outputs param to outputs of the body subgraph
       for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
-        bodyOutputsOutput.position(i).oper((TF_Operation)bodyOutputHandlesAndIndices[i])
-                                     .index((Integer)bodyOutputHandlesAndIndices[j]);
+        bodyOutputsOutput.position(i).oper((TF_Operation) bodyOutputHandlesAndIndices[i])
+            .index((Integer) bodyOutputHandlesAndIndices[j]);
       }
 
       // set loop name param
@@ -784,7 +876,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     List<Operand<?>> varOutputs = new ArrayList<>();
     List<Class<? extends TType>> varTypes = new ArrayList<>();
 
-    for (Iterator<Operation> iter = graph.operations(); iter.hasNext();) {
+    for (Iterator<Operation> iter = graph.operations(); iter.hasNext(); ) {
       Operation op = iter.next();
       if (op.type().equals("VariableV2")) {
         varNames.add(op.name());

@@ -16,10 +16,9 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
+import java.util.List;
 
-/**
- * Defines an environment for creating and executing TensorFlow {@link Operation}s.
- */
+/** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
 public interface ExecutionEnvironment {
 
   enum Types {
@@ -32,11 +31,18 @@ public interface ExecutionEnvironment {
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
    * @param name to refer to the created Operation in this environment scope.
-   * @return an {@link OperationBuilder} to create an Operation when {@link
-   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then some resources may leak.
+   * @return an {@link OperationBuilder} to create an Operation when {@link OperationBuilder#build()} is invoked. If
+   * {@link OperationBuilder#build()} is not invoked, then some resources may leak.
    */
   OperationBuilder opBuilder(String type, String name);
+
+  /**
+   * Attach the function to this execution environment, allowing it to be called by creating an op with the function
+   * name as it's {@code type}.
+   *
+   * Done automatically in the {@link org.tensorflow.op.Ops#callFunction(GraphFunction, List)} ops.
+   */
+  void attachFunction(GraphFunction function);
 
   /**
    * Returns true if the given operation is valid in this execution environment.

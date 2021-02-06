@@ -15,7 +15,16 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.List;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -33,14 +42,8 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
-
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
 /**
  * Driver for {@link Graph} execution.
@@ -159,7 +162,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, Tensor t) {
-      return feed(parseOutput(operation), t);
+      return feed(graph.outputOrError(operation), t);
     }
 
     /**
@@ -174,11 +177,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, int index, Tensor t) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        inputs.add(op.output(index));
-        inputTensors.add(t);
-      }
+      Operation op = graph.operationOrError(operation);
+      inputs.add(op.output(index));
+      inputTensors.add(t);
       return this;
     }
 
@@ -208,7 +209,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(String operation) {
-      return fetch(parseOutput(operation));
+      return fetch(graph.outputOrError(operation));
     }
 
     /**
@@ -221,10 +222,8 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(String operation, int index) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        outputs.add(op.output(index));
-      }
+      Operation op = graph.operationOrError(operation);
+      outputs.add(op.output(index));
       return this;
     }
 
@@ -257,10 +256,8 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner addTarget(String operation) {
-      GraphOperation op = operationByName(operation);
-      if (op != null) {
-        targets.add(op);
-      }
+      GraphOperation op = graph.operationOrError(operation);
+      targets.add(op);
       return this;
     }
 
@@ -424,29 +421,6 @@ public final class Session implements AutoCloseable {
             nativeHandleLock.notifyAll();
           }
         }
-      }
-    }
-
-    private GraphOperation operationByName(String opName) {
-      GraphOperation op = graph.operation(opName);
-      if (op == null) {
-        throw new IllegalArgumentException("No Operation named [" + opName + "] in the Graph");
-      }
-      return op;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Output<?> parseOutput(String opName) {
-      int colon = opName.lastIndexOf(':');
-      if (colon == -1 || colon == opName.length() - 1) {
-        return new Output(operationByName(opName), 0);
-      }
-      try {
-        String op = opName.substring(0, colon);
-        int index = Integer.parseInt(opName.substring(colon + 1));
-        return new Output(operationByName(op), index);
-      } catch (NumberFormatException e) {
-        return new Output(operationByName(opName), 0);
       }
     }
 

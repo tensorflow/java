@@ -16,9 +16,9 @@
 package org.tensorflow;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import org.tensorflow.op.Ops;
@@ -201,6 +201,18 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param tf the scope to call the function in
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   */
+  public Map<String, Operand<?>> call(Ops tf, Map<String, Operand<?>> arguments) {
+    return tf.callConcreteFunction(this, arguments);
+  }
+
+  /**
    * Invokes a function with a single input and output.
    *
    * <p>Caller is responsible for closing all Tensors.
@@ -221,11 +233,36 @@ public class ConcreteFunction implements AutoCloseable {
 
     if (signatureDef.getOutputsCount() != 1) {
       throw new IllegalArgumentException(
-        String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
+          String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
     }
     String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
 
     return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
+  }
+
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
+   *
+   * @param tf the scope to call the function in
+   * @param argument the argument to the call
+   * @return the output of the function
+   */
+  public Operand<?> call(Ops tf, Operand<?> argument) {
+    final SignatureDef signatureDef = signature.asSignatureDef();
+
+    if (signatureDef.getInputsCount() != 1) {
+      throw new IllegalArgumentException(
+          String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
+    }
+
+    if (signatureDef.getOutputsCount() != 1) {
+      throw new IllegalArgumentException(
+          String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
+    }
+    String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
+
+    return tf.callConcreteFunction(this, argument).get(outputNodeName);
   }
 
   /**
@@ -261,6 +298,16 @@ public class ConcreteFunction implements AutoCloseable {
     return graph;
   }
 
+  /**
+   * Get the graph as a function.  The graph function will be closed when this is.
+   */
+  public NamedGraphFunction function() {
+    if (function == null) {
+      function = GraphFunction.create(this, true);
+    }
+    return function;
+  }
+
   @Override
   public void close() {
     if (ownership != Ownership.NONE) {
@@ -268,6 +315,9 @@ public class ConcreteFunction implements AutoCloseable {
       if (ownership == Ownership.GRAPH_AND_SESSION) {
         graph.close();
       }
+    }
+    if (function != null) {
+      function.close();
     }
   }
 
@@ -282,6 +332,7 @@ public class ConcreteFunction implements AutoCloseable {
 
   private final Graph graph;
   private final Session session;
+  private NamedGraphFunction function = null;
   private final Signature signature;
   private final Ownership ownership;
 
