@@ -55,7 +55,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0.
+   * @throws IllegalArgumentException if numThresholds &lt;= 0.
    */
   protected SensitivitySpecificityBase(
       Ops tf, String name, float value, int numThresholds, long seed, Class<T> type) {
@@ -114,28 +114,29 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   public Op initializeVariables() {
     List<Op> varInitializers = new ArrayList<>();
 
-    if(truePositivesInitializer != null ) {
+    if (truePositivesInitializer != null) {
       varInitializers.add(truePositivesInitializer);
     }
-    if(falsePositivesInitializer != null ) {
+    if (falsePositivesInitializer != null) {
       varInitializers.add(falsePositivesInitializer);
     }
-    if(trueNegativesInitializer != null ) {
+    if (trueNegativesInitializer != null) {
       varInitializers.add(trueNegativesInitializer);
     }
-    if(falseNegativesInitializer != null ) {
+    if (falseNegativesInitializer != null) {
       varInitializers.add(falseNegativesInitializer);
     }
 
     return getTF().withControlDependencies(varInitializers).noOp();
-
   }
 
   /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
-  public  List<Op> updateStateList(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions, Operand<? extends TNumber> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
     Ops tf = getTF();
     Operand<T> tLabels = cast(tf, labels, type);
     Operand<T> tPredictions = cast(tf, predictions, type);
@@ -156,7 +157,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
         this.getThresholds(),
         null,
         null,
-            tSampleWeights,
+        tSampleWeights,
         false,
         null);
   }

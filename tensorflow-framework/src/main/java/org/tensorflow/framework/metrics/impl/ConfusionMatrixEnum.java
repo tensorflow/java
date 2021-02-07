@@ -27,7 +27,12 @@ public enum ConfusionMatrixEnum {
 
   private final String abbrev;
 
-  /** Creates a ConfusionMatrixEnum */
+  /**
+   * Creates a ConfusionMatrixEnum
+   *
+   * @param abbrev the abbreviation for the confusion condition as required by the underlying
+   *     TensorFlow api.
+   */
   ConfusionMatrixEnum(String abbrev) {
     this.abbrev = abbrev;
   }
@@ -50,7 +55,11 @@ public enum ConfusionMatrixEnum {
     return null;
   }
 
-  /** Gets the abbreviation for this enum value */
+  /**
+   * Gets the abbreviation for this enum value
+   *
+   * @return the abbreviation for this enum value as required by the underlying TensorFlow api.
+   */
   public String getAbbreviation() {
     return abbrev;
   }

@@ -26,13 +26,12 @@ import org.tensorflow.types.family.TNumber;
  * This metric creates one local variable, <code>accumulator</code> that is used to keep track of
  * the number of false negatives.
  *
- * <p>If <code>sampleWeights</code is <code>null</code, weights
- * default to 1. Use <code>
- * sampleWeights</code of 0 to mask values.
+ * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use <code>
+ * sampleWeights</code> of 0 to mask values.
+ *
  * @param <T> The data type for the metric result
  */
-public class FalseNegatives<T extends TNumber>
-    extends ConfusionMatrixConditionCount<T> {
+public class FalseNegatives<T extends TNumber> extends ConfusionMatrixConditionCount<T> {
 
   /**
    * Creates a FalseNegatives metric, using {@link Class#getSimpleName()} for the metric name and a

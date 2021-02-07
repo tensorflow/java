@@ -23,7 +23,7 @@ import org.tensorflow.types.family.TNumber;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
- * Computes best sensitivity where sensitivity is >= specified value.
+ * Computes best sensitivity where sensitivity is &gt;= specified value.
  *
  * <p><code>Sensitivity</code> measures the proportion of actual positives that are correctly
  * identified as such <code>(tp / (tp + fn))</code>.
@@ -36,15 +36,14 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * sensitivity at the given specificity. The threshold for the given specificity value is computed
  * and used to evaluate the corresponding sensitivity.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>>, weights default to 1. Use sample_weight
- * of 0 to mask values.
+ * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sample_weight of
+ * 0 to mask values.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Additional information
  *     about specificity and sensitivity</a>
  * @param <T> The data type for the metric result
  */
-public class SensitivityAtSpecificity<T extends TNumber>
-    extends SensitivitySpecificityBase<T> {
+public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpecificityBase<T> {
 
   private final float specificity;
 
@@ -57,7 +56,7 @@ public class SensitivityAtSpecificity<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if specificity is not in the range
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
   public SensitivityAtSpecificity(Ops tf, float specificity, long seed, Class<T> type) {
@@ -74,7 +73,7 @@ public class SensitivityAtSpecificity<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if specificity is not in the range
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
   public SensitivityAtSpecificity(
@@ -92,7 +91,7 @@ public class SensitivityAtSpecificity<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if specificity is not in the range
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
   public SensitivityAtSpecificity(
@@ -111,7 +110,7 @@ public class SensitivityAtSpecificity<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if specificity is not in the range
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
   public SensitivityAtSpecificity(
@@ -127,10 +126,8 @@ public class SensitivityAtSpecificity<T extends TNumber>
   public Operand<T> result() {
     Ops tf = getTF();
     Operand<T> specificities =
-        tf.math.divNoNan(
-            this.trueNegatives, tf.math.add(this.trueNegatives, this.falsePositives));
-    Operand<T> sub =
-        tf.math.sub(specificities, cast(tf, tf.constant(this.getValue()), getType()));
+        tf.math.divNoNan(this.trueNegatives, tf.math.add(this.trueNegatives, this.falsePositives));
+    Operand<T> sub = tf.math.sub(specificities, cast(tf, tf.constant(this.getValue()), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
     minIndex = tf.expandDims(minIndex, tf.constant(0));
 

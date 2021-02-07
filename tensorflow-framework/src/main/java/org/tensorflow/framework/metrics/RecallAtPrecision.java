@@ -24,8 +24,22 @@ import org.tensorflow.types.family.TNumber;
 import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-public class RecallAtPrecision<T extends TNumber>
-    extends SensitivitySpecificityBase<T> {
+/**
+ * Computes best recall where precision is &gt;= specified value.
+ *
+ * <p>For a given score-label-distribution the required precision might not be achievable, in this
+ * case 0.0 is returned as recall.
+ *
+ * <p>This metric creates four local variables, truePositives, trueNegatives, falsePositives and
+ * falseNegatives that are used to compute the recall at the given precision. The threshold for the
+ * given precision value is computed and used to evaluate the corresponding recall.
+ *
+ * <p>If <code>sampleWeights</code> is null, weights default to 1. Use <code>sampleWeights</code> of
+ * 0 to mask values.
+ *
+ * @param <T> The data type for the metric result
+ */
+public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificityBase<T> {
 
   private final float precision;
 
@@ -38,7 +52,8 @@ public class RecallAtPrecision<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public RecallAtPrecision(Ops tf, float precision, long seed, Class<T> type) {
     this(tf, null, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
@@ -54,7 +69,8 @@ public class RecallAtPrecision<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public RecallAtPrecision(Ops tf, String name, float precision, long seed, Class<T> type) {
     this(tf, name, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
@@ -70,7 +86,8 @@ public class RecallAtPrecision<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public RecallAtPrecision(Ops tf, float precision, int numThresholds, long seed, Class<T> type) {
     this(tf, null, precision, numThresholds, seed, type);
@@ -87,7 +104,8 @@ public class RecallAtPrecision<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public RecallAtPrecision(
       Ops tf, String name, float precision, int numThresholds, long seed, Class<T> type) {
@@ -103,18 +121,15 @@ public class RecallAtPrecision<T extends TNumber>
     Ops tf = getTF();
 
     Operand<T> precisions =
-        tf.math.divNoNan(
-            this.truePositives, tf.math.add(this.truePositives, this.falsePositives));
+        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falsePositives));
     Operand<T> recalls =
-        tf.math.divNoNan(
-            this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
+        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
     Operand<TBool> isFeasible =
         tf.math.greaterEqual(precisions, cast(tf, tf.constant(this.value), getType()));
     Where feasible = tf.where(isFeasible);
     Operand<TBool> feasibleExists = tf.math.greater(tf.size(feasible), tf.constant(0));
 
-    Operand<T> gather =
-        tf.expandDims(tf.gather(recalls, feasible, tf.constant(0)), tf.constant(0));
+    Operand<T> gather = tf.expandDims(tf.gather(recalls, feasible, tf.constant(0)), tf.constant(0));
     return tf.select(
         feasibleExists,
         tf.reduceMax(gather, allAxes(tf, gather)),

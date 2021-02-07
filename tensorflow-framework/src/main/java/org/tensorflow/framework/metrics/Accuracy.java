@@ -32,7 +32,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * ultimately returned as binary accuracy: an idempotent operation that simply divides total by
  * count.
  *
- * <p>If sampleWeights is <code>null</code>>, weights default to 1. Use sampleWeights of 0 to mask
+ * <p>If sampleWeights is <code>null</code>, weights default to 1. Use sampleWeights of 0 to mask
  * values.
  *
  * @param <T> The data type for the metric result

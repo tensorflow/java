@@ -42,17 +42,20 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   private Operand<T> normalizer;
 
   /**
-   * create a metric with name = class name and reduction = AUTO
+   * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
    *
    * @param tf the TensorFlow Ops
    * @param normalizer The normalizer values with same shape as predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
    */
   protected MeanRelativeError(Ops tf, float[] normalizer, long seed, Class<T> type) {
     this(tf, null, cast(tf, tf.constant(normalizer), type), seed, type);
   }
 
   /**
-   * create a metric with reduction = AUTO
+   * Creates a MeanRelativeError metric
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
@@ -66,7 +69,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   }
 
   /**
-   * Creates a MeanRelativeError metric with name = class name and reduction = AUTO
+   * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
    *
    * @param tf the TensorFlow Ops
    * @param normalizer The normalizer values with same shape as predictions.
@@ -79,7 +82,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   }
 
   /**
-   * create a metric with reduction = AUTO
+   * Creates a MeanRelativeError metric
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
@@ -93,7 +96,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   }
 
   /**
-   * create a metric with name = class name and reduction = AUTO
+   * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
    *
    * @param tf the TensorFlow Ops
    * @param normalizer The normalizer values with same shape as predictions.
@@ -106,7 +109,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   }
 
   /**
-   * create a metric
+   * Creates a MeanRelativeError metric
    *
    * @param tf the TensorFlow ops
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.

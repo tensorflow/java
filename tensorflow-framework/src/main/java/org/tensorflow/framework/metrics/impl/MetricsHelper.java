@@ -283,10 +283,10 @@ public class MetricsHelper {
    * <p>For every pair of values in <code>labels</code> and <code>predictions</code>:
    *
    * <pre>
-   * TRUE_POSITIVES:  <code>labels</code> == true and <code>predictions</code> > thresholds
-   * FALSE_POSITIVES: <code>labels</code> == true and <code>predictions</code> <= thresholds
-   * TRUE_NEGATIVES:  <code>labels</code> == false and <code>predictions</code> <= thresholds
-   * FALSE_NEGATIVE:  <code>labels</code> == false and <code>predictions</code> > thresholds
+   * TRUE_POSITIVES:  <code>labels</code> == true and <code>predictions</code> &gt; thresholds
+   * FALSE_POSITIVES: <code>labels</code> == true and <code>predictions</code> &lt;= thresholds
+   * TRUE_NEGATIVES:  <code>labels</code> == false and <code>predictions</code> &lt;= thresholds
+   * FALSE_NEGATIVE:  <code>labels</code> == false and <code>predictions</code> &gt; thresholds
    * </pre>
    *
    * <p>The results will be weighted and added together. When multiple thresholds are provided, we
@@ -324,7 +324,7 @@ public class MetricsHelper {
    *     without explicit multilabel handling (i.e. when the data is to be flattened). May be null.
    * @param <T> the data type for the variables
    * @throws IllegalArgumentException If <code>predictions</code> and <code>labels</code> have
-   *     mismatched shapes, or if <code>sampleWeight</code> is not <code>null</code>>and its shape
+   *     mismatched shapes, or if <code>sampleWeight</code> is not <code>null</code>and its shape
    *     doesn't match <code>predictions</code>
    * @return an op to update the given confusion matrix variables.
    */

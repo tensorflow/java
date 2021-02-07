@@ -103,7 +103,7 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
     }
   }
 
-  /** {@inheritDoc */
+  /** {@inheritDoc} */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {

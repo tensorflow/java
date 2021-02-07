@@ -24,10 +24,17 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes best precision where recall is &gt;= specified value.
+ *
+ * <p>This metric creates four local variables, truePositives, trueNegatives, falsePositives and
+ * falseNegatives that are used to compute the precision at the given recall. The threshold for the
+ * given recall value is computed and used to evaluate the corresponding precision.
+ *
+ * <p>If <code>sampleWeights</code> is null, weights default to 1. Use <code>sampleWeights</code> of
+ * 0 to mask values.
+ *
  * @param <T> The data type for the metric result
  */
-public class PrecisionAtRecall<T extends TNumber>
-    extends SensitivitySpecificityBase<T> {
+public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificityBase<T> {
 
   private final float recall;
 
@@ -40,7 +47,8 @@ public class PrecisionAtRecall<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public PrecisionAtRecall(Ops tf, float recall, long seed, Class<T> type) {
     this(tf, null, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
@@ -56,7 +64,8 @@ public class PrecisionAtRecall<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public PrecisionAtRecall(Ops tf, String name, float recall, long seed, Class<T> type) {
     this(tf, name, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
@@ -72,7 +81,8 @@ public class PrecisionAtRecall<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public PrecisionAtRecall(Ops tf, float recall, int numThresholds, long seed, Class<T> type) {
     this(tf, null, recall, numThresholds, seed, type);
@@ -89,7 +99,8 @@ public class PrecisionAtRecall<T extends TNumber>
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds <= 0 or if recall is not in the range [0-1].
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
    */
   public PrecisionAtRecall(
       Ops tf, String name, float recall, int numThresholds, long seed, Class<T> type) {
@@ -104,8 +115,7 @@ public class PrecisionAtRecall<T extends TNumber>
     Ops tf = getTF();
 
     Operand<T> recall =
-        tf.math.divNoNan(
-            this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
+        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
     Operand<T> sub = tf.math.sub(recall, cast(tf, tf.constant(value), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
     minIndex = tf.expandDims(minIndex, tf.constant(0));
@@ -115,7 +125,11 @@ public class PrecisionAtRecall<T extends TNumber>
     return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
   }
 
-  /** @return the recall */
+  /**
+   * Gets the recall value
+   *
+   * @return the recall value
+   */
   public float getRecall() {
     return recall;
   }
