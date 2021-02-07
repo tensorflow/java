@@ -180,7 +180,7 @@ public class ConcreteFunction implements AutoCloseable {
     Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
     outputToNode.values().forEach(t -> runner.fetch(t.getName()));
 
-    List<Tensor> resultTensors = runner.run();
+    List<Tensor> resultTensors = runner.run().getResults();
     try {
       ListIterator<Tensor> resultTensorIter = resultTensors.listIterator();
       Map<String, Tensor> returnMap = new HashMap<String, Tensor>();

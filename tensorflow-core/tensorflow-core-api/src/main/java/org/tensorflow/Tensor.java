@@ -212,4 +212,9 @@ public interface Tensor extends Shaped, AutoCloseable {
    */
   @Override
   void close();
+
+  /**
+   * @return {@code true} if this tensor has been closed.
+   */
+  boolean isClosed();
 }

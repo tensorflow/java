@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
-import org.tensorflow.AutoCloseableList;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
@@ -60,8 +59,7 @@ public class ConstantTest {
       Scope scope = new Scope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
-      try (AutoCloseableList<Tensor> t =
-          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -79,8 +77,7 @@ public class ConstantTest {
       Scope scope = new Scope(g);
       Constant<TFloat32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat32> op2 = Constant.tensorOf(scope, array);
-      try (AutoCloseableList<Tensor> t =
-          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -98,8 +95,7 @@ public class ConstantTest {
       Scope scope = new Scope(g);
       Constant<TFloat64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat64> op2 = Constant.tensorOf(scope, array);
-      try (AutoCloseableList<Tensor> t =
-          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -117,8 +113,7 @@ public class ConstantTest {
       Scope scope = new Scope(g);
       Constant<TInt64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt64> op2 = Constant.tensorOf(scope, array);
-      try (AutoCloseableList<Tensor> t =
-          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }
@@ -136,8 +131,7 @@ public class ConstantTest {
       Scope scope = new Scope(g);
       Constant<TString> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TString> op2 = Constant.tensorOf(scope, array);
-      try (AutoCloseableList<Tensor> t =
-          new AutoCloseableList<>(sess.runner().fetch(op1).fetch(op2).run())) {
+      try (Session.Result t = sess.runner().fetch(op1).fetch(op2).run()) {
         assertEquals(array, t.get(0));
         assertEquals(array, t.get(1));
       }

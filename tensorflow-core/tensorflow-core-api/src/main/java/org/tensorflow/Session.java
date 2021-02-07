@@ -15,7 +15,22 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static org.tensorflow.Graph.resolveOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
+
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -33,14 +48,9 @@ import org.tensorflow.op.Op;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
-
-import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.*;
+import org.tensorflow.types.family.TType;
 
 /**
  * Driver for {@link Graph} execution.
@@ -136,6 +146,202 @@ public final class Session implements AutoCloseable {
   }
 
   /**
+   * The result of a run in a session.  Contains the fetched tensors and the outputs that were fetched.
+   * <p>
+   * Closing a {@code Result} object will close all of the tensors contained by it.
+   */
+  public final class Result implements AutoCloseable, Iterable<Tensor>{
+    private final List<Tensor> results;
+    private final List<Output<?>> fetches;
+    private final LinkedHashMap<Output<?>, Tensor> outputMap;
+
+    /**
+     * Metadata about the run.
+     *
+     * <p>A <a
+     * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunMetadata
+     * protocol buffer</a>.
+     */
+    private final RunMetadata metadata;
+
+    private boolean closed = false;
+
+    private Result(List<Tensor> results, List<Output<?>> fetches, RunMetadata metadata) {
+
+      if(results.size() != fetches.size()){
+        throw new IllegalArgumentException("Expected the same number of fetches and values, got " + fetches.size()
+            + " fetches and " + results.size() + " values.");
+      }
+
+      this.metadata = metadata;
+      this.results = results;
+      this.fetches = fetches;
+      outputMap = new LinkedHashMap<>();
+      for(int i = 0 ; i < fetches.size() ; i++){
+        outputMap.put(fetches.get(i), results.get(i));
+      }
+    }
+
+    private void requireOpen(){
+      if(closed) {
+        throw new IllegalStateException("Result has been closed, can not access it.");
+      }
+    }
+
+    /**
+     * Get the result tensors.
+     */
+    public List<Tensor> getResults() {
+      requireOpen();
+      return Collections.unmodifiableList(results);
+    }
+
+    /**
+     * Get the outputs that were fetched.
+     */
+    public List<Output<?>> getFetches() {
+      return Collections.unmodifiableList(fetches);
+    }
+
+    /**
+     * Get a map of the fetched outputs to their results.
+     */
+    public Map<Output<?>, Tensor> getOutputMap(){
+      return Collections.unmodifiableMap(outputMap);
+    }
+
+    /**
+     * Get the run metadata.  May be null if not requested.
+     */
+    public RunMetadata getMetadata() {
+      return metadata;
+    }
+
+    /**
+     * @return Whether the result has been closed.
+     */
+    public boolean isClosed() {
+      return closed;
+    }
+
+    /**
+     * Get the result at {@code index}.
+     */
+    public Tensor get(int index){
+      requireOpen();
+      return results.get(index);
+    }
+
+    /**
+     * Get the result for {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends TType> T get(Output<T> output){
+      requireOpen();
+      if(!outputMap.containsKey(output))
+        throw new IllegalArgumentException("Did not fetch an output for " + output);
+      return (T) outputMap.get(output);
+    }
+
+    /**
+     * Get the result for {@code operand} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public <T extends TType> T get(Operand<T> operand){
+      requireOpen();
+      return get(operand.asOutput());
+    }
+
+    /**
+     * Get the result for the {@code index}-th output of {@code operation} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public Tensor get(String operation, int index){
+      requireOpen();
+      return get(graph.getOutput(operation, index));
+    }
+
+
+    /**
+     * Get the result for the output specified by {@code output} or throw an {@code IllegalArgumentException} if it wasn't fetched.
+     */
+    public Tensor get(String output){
+      requireOpen();
+      return get(graph.getOutput(output));
+    }
+
+    /**
+     * Returns {@code true} if {@code output} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(Output<?> output){
+      requireOpen();
+      return outputMap.containsKey(output);
+    }
+
+    /**
+     * Returns {@code true} if  {@code operand} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(Operand<?> operand){
+      requireOpen();
+      return contains(operand.asOutput());
+    }
+
+    /**
+     * Returns {@code true} if the {@code index}-th output of {@code operation} was fetched as part of this {@code Result}.
+     */
+    public boolean contains(String operation, int index){
+      requireOpen();
+      return contains(graph.getOutput(operation, index));
+    }
+
+
+    /**
+     * Returns {@code true} the output specified by {@code output} was fetched as part of this {@code Result}
+     */
+    public boolean contains(String output){
+      requireOpen();
+      return contains(graph.getOutput(output));
+    }
+
+    /**
+     * Close any open tensors contained by this {@code Result}.
+     */
+    @Override
+    public void close() {
+      requireOpen();
+      for(Tensor t : this){
+        if(!t.isClosed()) {
+          t.close();
+        }
+      }
+      closed = true;
+    }
+
+    @Override
+    public Iterator<Tensor> iterator() {
+      requireOpen();
+      return results.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super Tensor> action) {
+      requireOpen();
+      results.forEach(action);
+    }
+
+    @Override
+    public Spliterator<Tensor> spliterator() {
+      requireOpen();
+      return results.spliterator();
+    }
+
+    /**
+     * Return the number of tensors contained by this Result.
+     */
+    public int size() {
+      return getResults().size();
+    }
+  }
+
+  /**
    * Run {@link Operation}s and evaluate {@link Tensor Tensors}.
    *
    * <p>A Runner runs the necessary graph fragments to execute every {@link Operation} required to
@@ -159,7 +365,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, Tensor t) {
-      return feed(parseOutput(operation), t);
+      return feed(graph.getOutput(operation), t);
     }
 
     /**
@@ -174,11 +380,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(String operation, int index, Tensor t) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        inputs.add(op.output(index));
-        inputTensors.add(t);
-      }
+      Operation op = graph.operationOrError(operation);
+      inputs.add(op.output(index));
+      inputTensors.add(t);
       return this;
     }
 
@@ -206,9 +410,10 @@ public final class Session implements AutoCloseable {
      *     the {@code SignatureDef} protocol buffer messages that are included in {@link
      *     SavedModelBundle#metaGraphDef()}.
      * @return this session runner
+     * @see Graph#getOutput(String)
      */
     public Runner fetch(String operation) {
-      return fetch(parseOutput(operation));
+      return fetch(graph.getOutput(operation));
     }
 
     /**
@@ -219,12 +424,11 @@ public final class Session implements AutoCloseable {
      *
      * @param operation the string name of the operation
      * @return this session runner
+     * @see Graph#getOutput(String, int)
      */
     public Runner fetch(String operation, int index) {
-      Operation op = operationByName(operation);
-      if (op != null) {
-        outputs.add(op.output(index));
-      }
+      Operation op = graph.operationOrError(operation);
+      outputs.add(op.output(index));
       return this;
     }
 
@@ -255,12 +459,11 @@ public final class Session implements AutoCloseable {
      *
      * @param operation the string name of the operation to execute
      * @return this session runner
+     * @see Graph#operationOrError(String)
      */
     public Runner addTarget(String operation) {
-      GraphOperation op = operationByName(operation);
-      if (op != null) {
-        targets.add(op);
-      }
+      GraphOperation op = graph.operationOrError(operation);
+      targets.add(op);
       return this;
     }
 
@@ -312,21 +515,13 @@ public final class Session implements AutoCloseable {
      * Execute the graph fragments necessary to compute all requested fetches.
      *
      * <p><b>WARNING:</b> The caller assumes ownership of all returned {@link Tensor Tensors}, i.e.,
-     * the caller must call {@link Tensor#close} on all elements of the returned list to free up
+     * the caller must call {@link Tensor#close} on all returned tensors or {@link Result#close()} to free up
      * resources.
      *
-     * <p>TODO(ashankar): Reconsider the return type here. Two things in particular: (a) Make it
-     * easier for the caller to cleanup (perhaps returning something like AutoCloseableList in
-     * SessionTest.java), and (b) Evaluate whether the return value should be a list, or maybe a
-     * {@code Map<Output, Tensor>}?
-     *
-     * <p>TODO(andrewmyers): It would also be good if whatever is returned here made it easier to
-     * extract output tensors in a type-safe way.
-     *
-     * @return list of resulting tensors fetched by this session runner
+     * @return a {@link Result} containing tensors fetched by this session runner
      */
-    public List<Tensor> run() {
-      return runHelper(false).outputs;
+    public Result run() {
+      return runHelper(false);
     }
 
     /**
@@ -339,11 +534,11 @@ public final class Session implements AutoCloseable {
      *
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
-    public Run runAndFetchMetadata() {
+    public Result runAndFetchMetadata() {
       return runHelper(true);
     }
 
-    private Run runHelper(boolean wantMetadata) {
+    private Result runHelper(boolean wantMetadata) {
       TF_Tensor[] inputTensorHandles = new TF_Tensor[inputTensors.size()];
       TF_Operation[] inputOpHandles = new TF_Operation[inputs.size()];
       int[] inputOpIndices = new int[inputs.size()];
@@ -398,10 +593,7 @@ public final class Session implements AutoCloseable {
       } finally {
         runRef.close();
       }
-      Run ret = new Run();
-      ret.outputs = outputs;
-      ret.metadata = metadata;
-      return ret;
+      return new Result(outputs, new ArrayList<>(this.outputs), metadata);
     }
 
     private class Reference implements AutoCloseable {
@@ -427,33 +619,10 @@ public final class Session implements AutoCloseable {
       }
     }
 
-    private GraphOperation operationByName(String opName) {
-      GraphOperation op = graph.operation(opName);
-      if (op == null) {
-        throw new IllegalArgumentException("No Operation named [" + opName + "] in the Graph");
-      }
-      return op;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private Output<?> parseOutput(String opName) {
-      int colon = opName.lastIndexOf(':');
-      if (colon == -1 || colon == opName.length() - 1) {
-        return new Output(operationByName(opName), 0);
-      }
-      try {
-        String op = opName.substring(0, colon);
-        int index = Integer.parseInt(opName.substring(colon + 1));
-        return new Output(operationByName(op), index);
-      } catch (NumberFormatException e) {
-        return new Output(operationByName(opName), 0);
-      }
-    }
-
-    private final ArrayList<Output<?>> inputs = new ArrayList<>();
-    private final ArrayList<Tensor> inputTensors = new ArrayList<>();
-    private final ArrayList<Output<?>> outputs = new ArrayList<>();
-    private final ArrayList<GraphOperation> targets = new ArrayList<>();
+    private ArrayList<Output<?>> inputs = new ArrayList<>();
+    private ArrayList<Tensor> inputTensors = new ArrayList<>();
+    private ArrayList<Output<?>> outputs = new ArrayList<>();
+    private ArrayList<GraphOperation> targets = new ArrayList<>();
     private RunOptions runOptions = null;
   }
 

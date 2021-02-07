@@ -78,7 +78,7 @@ public class MapDatasetTest extends DatasetTestBase {
         int batches = 0;
         while (true) {
           try {
-            List<?> outputs = session.runner().fetch(X).fetch(y).run();
+            Session.Result outputs = session.runner().fetch(X).fetch(y).run();
 
             try (TInt32 XBatch = (TInt32)outputs.get(0);
                 TInt32 yBatch = (TInt32)outputs.get(1)) {
