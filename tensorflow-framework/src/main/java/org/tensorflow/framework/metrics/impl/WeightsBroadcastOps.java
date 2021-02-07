@@ -153,7 +153,7 @@ public class WeightsBroadcastOps {
    *
    * <p>This returns a version of <code>weights</code> following the same broadcast rules as <code>
    * mul(weights,
-   * values)</code>, but limited to the weights shapes allowed by </code>assertBroadcastable</code>
+   * values)</code>, but limited to the weights shapes allowed by <code>assertBroadcastable</code>
    * When computing a weighted average, use this function to broadcast <code>weights</code> before
    * summing them; e.g., <code>reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))</code>.
    *

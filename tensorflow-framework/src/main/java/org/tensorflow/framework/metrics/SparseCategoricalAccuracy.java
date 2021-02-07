@@ -31,24 +31,23 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Calculates how often predictions matches integer labels.
  *
- * <p>You can provide logits of classes as <code>predictions</code>, since argmax of logits and probabilities are
- * same.
+ * <p>You can provide logits of classes as <code>predictions</code>, since argmax of logits and
+ * probabilities are same.
  *
  * <p>This metric creates two local variables, `total` and `count` that are used to compute the
- * frequency with which <code>predictions</code> matches <code>labels</code>. This frequency is ultimately returned as `sparse
- * categorical accuracy`: an idempotent operation that simply divides `total` by `count`.
+ * frequency with which <code>predictions</code> matches <code>labels</code>. This frequency is
+ * ultimately returned as `sparse categorical accuracy`: an idempotent operation that simply divides
+ * `total` by `count`.
  *
  * <p>If `sample_weight` is `None`, weights default to 1. Use `sample_weight` of 0 to mask values.'
  *
  * <p>Usage:
  *
- * <p>
- *
  * <pre>
  * SparseCategoricalAccuracy m = new tf.keras.metrics.SparseCategoricalAccuracy();
  * m.update_state(tf.constant(new float[][] {{2}, {1}},
  *     tf.constant(new float[][] {{0.1f, 0.9f, 0.8f}, [{0.05f, 0.95f, 0f}});
- * Operand&ltTFloat32&gt> result = m.result();
+ * Operand&lt;TFloat32&gt; result = m.result();
  * System.out.println(result.data().getFloat());
  * 0.5
  * </pre>
@@ -87,7 +86,7 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
    *     will always produce the same random tensor for a given shape and data type.
    * @param type The data type for the metric result
    */
-  public SparseCategoricalAccuracy(Ops tf,  long seed,  Class<T> type) {
+  public SparseCategoricalAccuracy(Ops tf, long seed, Class<T> type) {
     this(tf, null, seed, type);
   }
 
@@ -100,7 +99,7 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type of the metric result.
    */
-  public SparseCategoricalAccuracy(Ops tf, String name,  long seed, Class<T> type) {
+  public SparseCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
     super(tf, name, seed, type);
     super.setLoss(this);
   }
@@ -108,8 +107,7 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
   /** {@inheritDoc} */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels,
-      Operand<? extends TNumber> predictions) {
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
 
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());

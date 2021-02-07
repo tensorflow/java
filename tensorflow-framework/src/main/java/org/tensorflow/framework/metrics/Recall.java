@@ -30,22 +30,25 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the recall of the predictions with respect to the labels.
- * <p>This metric creates two local
- * variables, <code>truePositives</code> and <code>falseNegatives</code>, that are used to compute the recall. This value is
- * ultimately returned as recall, an idempotent operation that simply divides <code>truePositives</code> by the sum of <code>truePositives</code> and <code>falseNegatives</code>.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of 0 to mask values.
+ * <p>This metric creates two local variables, <code>truePositives</code> and <code>falseNegatives
+ * </code>, that are used to compute the recall. This value is ultimately returned as recall, an
+ * idempotent operation that simply divides <code>truePositives</code> by the sum of <code>
+ * truePositives</code> and <code>falseNegatives</code>.
  *
- * <p>If <code><topK/code> is set, the metric calculates recall as how often on average a class among the labels of a
- * batch entry is in the top-k predictions.
+ * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of
+ * 0 to mask values.
  *
- * <p>If <code>classId</code> is specified, the metric calculates recall by considering only the entries in the batch
- * for which <code>classId</code> is in the label, and computing the fraction of them for which <code>classId</code> is above
- * the threshold and/or in the top-k predictions.
+ * <p>If <code>topK</code> is set, the metric calculates recall as how often on average a class
+ * among the labels of a batch entry is in the top-k predictions.
+ *
+ * <p>If <code>classId</code> is specified, the metric calculates recall by considering only the
+ * entries in the batch for which <code>classId</code> is in the label, and computing the fraction
+ * of them for which <code>classId</code> is above the threshold and/or in the top-k predictions.
  *
  * @param <T> The data type for the metric result
  */
-public class Recall< T extends TNumber> extends Metric< T> {
+public class Recall<T extends TNumber> extends Metric<T> {
   public static final float DEFAULT_THRESHOLD = 0.5f;
   public static final String TRUE_POSITIVES = "TRUE_POSITIVES";
   public static final String FALSE_NEGATIVES = "FALSE_NEGATIVES";
@@ -56,9 +59,9 @@ public class Recall< T extends TNumber> extends Metric< T> {
   private final String truePositivesName;
   private final String falseNegativesName;
   private final Class<T> type;
+  private final List<Op> initializers = new ArrayList<>();
   private Variable<T> truePositives;
   private Variable<T> falseNegatives;
-  private final List<Op> initializers = new ArrayList<>();
 
   /**
    * Creates a Recall metric with a name of {@link Class#getSimpleName()}, and topK and classId set
@@ -301,17 +304,13 @@ public class Recall< T extends TNumber> extends Metric< T> {
     Operand<T> zero = zeros.call(tf.constant(Shape.of(this.thresholds.length)), type);
     if (truePositives == null) {
 
-      truePositives =
-          tf.withName(truePositivesName)
-              .variable(zero);
+      truePositives = tf.withName(truePositivesName).variable(zero);
       initializers.add(tf.assign(truePositives, zero));
     }
-    
+
     if (this.falseNegatives == null) {
 
-      falseNegatives =
-          tf.withName(falseNegativesName)
-              .variable(zero);
+      falseNegatives = tf.withName(falseNegativesName).variable(zero);
       initializers.add(tf.assign(falseNegatives, zero));
     }
   }
@@ -326,7 +325,9 @@ public class Recall< T extends TNumber> extends Metric< T> {
   @Override
   @SuppressWarnings("unchecked")
   public List<Op> updateStateList(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions, Operand<? extends TNumber> sampleWeights) {
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, this.truePositives);
@@ -345,17 +346,16 @@ public class Recall< T extends TNumber> extends Metric< T> {
         this.thresholds,
         this.topK,
         this.classId,
-            tSampleWeights,
+        tSampleWeights,
         false,
         null);
   }
 
   @Override
   public Operand<T> result() {
-    Ops tf  = getTF();
+    Ops tf = getTF();
     Operand<T> result =
-        tf.math.divNoNan(
-            this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
+        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
     return this.thresholds.length == 1
         ? tf.slice(result, tf.constant(new int[] {0}), tf.constant(new int[1]))
         : result;

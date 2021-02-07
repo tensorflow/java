@@ -39,8 +39,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * / (true_positive + false_positive + false_negative)</code>. The predictions are accumulated in a
  * confusion matrix, weighted by sample_weight and the metric is then calculated from it.
  *
- * <p>If <code>sampleWeight</code> is <code>null</code>, weights default to 1. Use sample_weight of 0 to mask
- * values.
+ * <p>If <code>sampleWeight</code> is <code>null</code>, weights default to 1. Use sample_weight of
+ * 0 to mask values.
  *
  * @param <T> The data type for the metric result
  */
@@ -72,7 +72,7 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * create a metric with reduction = AUTO
+   * Creates a MeanIoU metric
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used

@@ -22,12 +22,13 @@ import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/** Computes the poisson loss metric between labels and predictions.
+/**
+ * Computes the poisson loss metric between labels and predictions.
  *
  * @param <T> The data type for the metric result
  */
-public class TopKCategoricalAccuracy<T extends TNumber>
-    extends MeanMetricWrapper<T> implements LossMetric<T> {
+public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
+    implements LossMetric<T> {
   public static final int DEFAULT_K = 5;
   /** Number of top elements to look at for computing accuracy. */
   private final int k;
@@ -40,6 +41,7 @@ public class TopKCategoricalAccuracy<T extends TNumber>
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
    */
   public TopKCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
     this(tf, name, DEFAULT_K, seed, type);
@@ -53,6 +55,7 @@ public class TopKCategoricalAccuracy<T extends TNumber>
    * @param k Number of top elements to look at for computing accuracy.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
    */
   public TopKCategoricalAccuracy(Ops tf, String name, int k, long seed, Class<T> type) {
     super(tf, name, seed, type);
@@ -62,7 +65,8 @@ public class TopKCategoricalAccuracy<T extends TNumber>
 
   /** {@inheritDoc} */
   @Override
-  public  Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+  public Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Metrics.topKCategoricalAccuracy(getTF(), tLabels, tPredictions, k);

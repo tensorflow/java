@@ -28,8 +28,6 @@ import org.tensorflow.types.family.TNumber;
  * values. This is ultimately returned as sum.
  *
  * <p>If sample_weight is None, weights default to 1. Use sample_weight of 0 to mask values.
- *
-
  */
 public class Sum<T extends TNumber> extends Reduce<T> {
 

@@ -31,19 +31,22 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Computes the precision of the predictions with respect to the labels.
  *
- * <p>The metric creates two local variables, <code>truePositives</code> and <code>falsePositives</code> that are used to
- * compute the precision. This value is ultimately returned as precision, an idempotent operation
- * that simply divides <code>truePositives</code> by the sum of <code>truePositives</code> and <code>falsePositives</code>.
+ * <p>The metric creates two local variables, <code>truePositives</code> and <code>falsePositives
+ * </code> that are used to compute the precision. This value is ultimately returned as precision,
+ * an idempotent operation that simply divides <code>truePositives</code> by the sum of <code>
+ * truePositives</code> and <code>falsePositives</code>.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of 0 to mask values.
+ * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of
+ * 0 to mask values.
  *
- * <p>If <code><topK/code> is set, the metric calculates precision as how often on average a class among the top-k
- * classes with the highest predicted values of a batch entry is correct and can be found in the
- * label for that entry.
+ * <p>If <code>topK</code> is set, the metric calculates precision as how often on average a class
+ * among the top-k classes with the highest predicted values of a batch entry is correct and can be
+ * found in the label for that entry.
  *
- * <p>If <code>classId</code> is specified, the metric calculates precision by considering only the entries in the batch
- * for which <code>classId</code> is above the <code>thresholds</code> and/or in the top-k highest predictions, and computing
- * the fraction of them for which <code>classId</code> is indeed a correct label.
+ * <p>If <code>classId</code> is specified, the metric calculates precision by considering only the
+ * entries in the batch for which <code>classId</code> is above the <code>thresholds</code> and/or
+ * in the top-k highest predictions, and computing the fraction of them for which <code>classId
+ * </code> is indeed a correct label.
  *
  * @param <T> The data type for the metric result
  */
@@ -58,13 +61,13 @@ public class Precision<T extends TNumber> extends Metric<T> {
   private final String truePositivesName;
   private final String falsePositivesName;
   private final Class<T> type;
+  private final List<Op> initializers = new ArrayList<>();
   private Variable<T> truePositives;
   private Variable<T> falsePositives;
-  private final List<Op> initializers = new ArrayList<>();
 
   /**
    * Creates a Precision Metric with a name of {@link Class#getSimpleName()} and no topK or classId
-   * values and with a threshold of {@link #DEFAULT_THRESHOLD).}
+   * values and with a threshold of {@link #DEFAULT_THRESHOLD}.
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -77,7 +80,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates a Precision Metric with no topK or classId values with a threshold of {@link
-   * #DEFAULT_THRESHOLD).}
+   * #DEFAULT_THRESHOLD}.
    *
    * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
@@ -276,11 +279,8 @@ public class Precision<T extends TNumber> extends Metric<T> {
     Operand<T> zero = zeros.call(tf.constant(Shape.of(thresholds.length)), type);
 
     if (this.truePositives == null) {
-      this.truePositives =
-          tf.withName(truePositivesName)
-              .variable(zero);
+      this.truePositives = tf.withName(truePositivesName).variable(zero);
       initializers.add(tf.assign(truePositives, zero));
-
     }
     if (this.falsePositives == null) {
       this.falsePositives =
@@ -293,8 +293,10 @@ public class Precision<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   @SuppressWarnings("unchecked")
-  public  List<Op> updateStateList(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions, Operand<? extends TNumber> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, truePositives);
@@ -314,7 +316,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
             thresholds,
             topK,
             classId,
-                tSampleWeights,
+            tSampleWeights,
             false,
             null));
   }
@@ -323,8 +325,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
   @Override
   public Operand<T> result() {
     Ops tf = getTF();
-    Operand<T> result =
-        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
+    Operand<T> result = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
     return thresholds.length == 1
         ? tf.slice(
             result,
@@ -351,7 +352,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
   /**
    * Gets the topK value, may be null
    *
-   * @return the topK
+   * @return the topK value or null
    */
   public Integer getTopK() {
     return topK;
@@ -360,7 +361,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
   /**
    * Gets the classId, may be null
    *
-   * @return the classId
+   * @return the classId or null
    */
   public Integer getClassId() {
     return classId;
@@ -375,7 +376,11 @@ public class Precision<T extends TNumber> extends Metric<T> {
     return truePositives;
   }
 
-  /** Gets the falsePositives variable return the falsePositives */
+  /**
+   * Gets the falsePositives variable
+   *
+   * @return the falsePositives
+   */
   public Variable<T> getFalsePositives() {
     return falsePositives;
   }

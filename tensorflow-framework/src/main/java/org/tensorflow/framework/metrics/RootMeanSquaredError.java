@@ -27,12 +27,12 @@ import java.util.List;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
- * Computes root mean squared error metric between <code>labels</code>> and <code>predictions</code>
+ * Computes root mean squared error metric between <code>labels</code> and <code>predictions</code>
  * .
  *
  * @param <T> The data type for the metric result
  */
-public class RootMeanSquaredError< T extends TNumber> extends Mean< T> {
+public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
 
   /**
    * Creates a RootMeanSquaredError metric with a name of {@link Class#getSimpleName()}
@@ -62,12 +62,15 @@ public class RootMeanSquaredError< T extends TNumber> extends Mean< T> {
 
   /** {@inheritDoc} */
   @Override
-  public  List<Op> updateStateList(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions, Operand<? extends TNumber> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights) {
 
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
+    Operand<T> tSampleWeights =
+        sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
 
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(getTF(), tLabels, tPredictions);
     tPredictions = ops.getTarget();

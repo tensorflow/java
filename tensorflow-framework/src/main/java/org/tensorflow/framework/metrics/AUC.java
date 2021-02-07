@@ -34,27 +34,29 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Metric that computes the approximate AUC (Area under the curve) via a Riemann sum.
  *
- * <p>This metric creates four local variables, <code>truePositives`, <code>trueNegatives`,
- * <code>falsePositives` and <code>falseNegatives` that are used to compute the AUC. To discretize the AUC
- * curve, a linearly spaced set of thresholds is used to compute pairs of recall and precision
- * values. The area under the ROC-curve is therefore computed using the height of the recall values
- * by the false positive rate, while the area under the PR-curve is the computed using the height of
- * the precision values by the recall.
+ * <p>This metric creates four local variables, <code>truePositives</code>, <code>trueNegatives
+ * </code>, <code>falsePositives</code> and <code>falseNegatives</code> that are used to compute the
+ * AUC. To discretize the AUC curve, a linearly spaced set of thresholds is used to compute pairs of
+ * recall and precision values. The area under the ROC-curve is therefore computed using the height
+ * of the recall values by the false positive rate, while the area under the PR-curve is the
+ * computed using the height of the precision values by the recall.
  *
- * <p>This value is ultimately returned as <code>auc</code>, an idempotent operation that computes the area
- * under a discretized curve of precision versus recall values (computed using the aforementioned
- * variables). The <code>numThresholds</code> variable controls the degree of discretization with larger
- * numbers of thresholds more closely approximating the true AUC. The quality of the approximation
- * may vary dramatically depending on <code>numThresholds`. The <code>thresholds</code> parameter can be used to
- * manually specify thresholds which split the predictions more evenly.
+ * <p>This value is ultimately returned as <code>auc</code>, an idempotent operation that computes
+ * the area under a discretized curve of precision versus recall values (computed using the
+ * aforementioned variables). The <code>numThresholds</code> variable controls the degree of
+ * discretization with larger numbers of thresholds more closely approximating the true AUC. The
+ * quality of the approximation may vary dramatically depending on <code>numThresholds</code>. The
+ * <code>thresholds</code> parameter can be used to manually specify thresholds which split the
+ * predictions more evenly.
  *
- * <p>For best results, <code>predictions</code> should be distributed approximately uniformly in the range [0,
- * 1] and not peaked around 0 or 1. The quality of the AUC approximation may be poor if this is not
- * the case. Setting <code>summationMethod</code> to <code>minoring</code> or <code>majoring</code> can help quantify the error in
- * the approximation by providing lower or upper bound estimate of the AUC.
- * <p>
- * <p>
- * Usage: <br>
+ * <p>For best results, <code>predictions</code> should be distributed approximately uniformly in
+ * the range [0, 1] and not peaked around 0 or 1. The quality of the AUC approximation may be poor
+ * if this is not the case. Setting <code>summationMethod</code> to <code>minoring</code> or <code>
+ * majoring</code> can help quantify the error in the approximation by providing lower or upper
+ * bound estimate of the AUC.
+ *
+ * <p>Usage: <br>
+ *
  * <pre>
  * AUC m = new  getTF().keras.metrics.AUC( getTF(), 3);
  * m.updateState( getTF().constant(new float[] {0, 0, 1,1}),
@@ -64,10 +66,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * // tp = [2, 1, 0], fp = [2, 0, 0], fn = [0, 1, 2], tn = [0, 2, 2]
  * // recall = [1, 0.5, 0], fpRate = [1, 0, 0]
  * // auc = ((((1+0.5)/2)*(1-0))+ (((0.5+0)/2)*(0-0))) = 0.75
- * Operand&ltTFloat32&gt result = m.result();
+ * Operand&lt;TFloat32&gt; result = m.result();
  * System.out.println(result.data().getFloat());
  * 0.75
  * </pre>
+ *
  * <pre>
  * m.resetStates()
  * m.updateState( getTF().constant(new float[] {0, 0, 1, 1}),
@@ -170,7 +173,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
@@ -224,7 +227,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if <code>null</code> defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
@@ -279,7 +282,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if <code>null</code> defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -336,7 +339,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -392,7 +395,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used
@@ -442,7 +445,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if <code>null</code> defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1.
+   *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used,
@@ -462,7 +465,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric. using <code>null</code>> for the numThresholds,
+   * Creates an AUC (Area under the curve) metric. using <code>null</code> for the numThresholds,
    * <code>false</code> for multiLabel, and <code>null</code> for labelWeights.
    *
    * @param tf The TensorFlow Ops
@@ -493,7 +496,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be > 1. if null, the default is {@link #DEFAULT_NUM_THRESHOLDS}
+   *     must be &gt; 1. if null, the default is {@link #DEFAULT_NUM_THRESHOLDS}
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used
@@ -577,7 +580,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
                       .greaterEqual(
                           labelWeights, cast(getTF(), getTF().constant(0), labelWeights.type())),
                   Collections.singletonList(
-                      getTF().constant("All values of `labelWeights` must be non-negative.")));
+                      getTF().constant("All values of labelWeights must be non-negative.")));
 
       Ops ltf =
           getTF()
