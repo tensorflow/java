@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
 
   Env* env = Env::Default();
   void* tf_lib_handle;
-  TF_CHECK_OK(env->LoadLibrary(tf_lib_path.c_str(), &tf_lib_handle));  // This registers all TF ops
+  TF_CHECK_OK(env->LoadDynamicLibrary(tf_lib_path.c_str(), &tf_lib_handle));  // This registers all TF ops
   OpList op_defs;
   OpRegistry::Global()->Export(false, &op_defs);
   ApiDefMap python_api_map(op_defs);

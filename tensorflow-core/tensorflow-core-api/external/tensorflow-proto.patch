@@ -1,19 +1,19 @@
-diff -ruN a/tensorflow/core/protobuf/bfc_memory_map.proto b/tensorflow/core/protobuf/bfc_memory_map.proto
---- a/tensorflow/core/protobuf/bfc_memory_map.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/bfc_memory_map.proto	2020-03-30 23:43:29.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/bfc_memory_map.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/bfc_memory_map.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/bfc_memory_map.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/bfc_memory_map.proto	2021-02-08 09:43:41.885495355 +0900
 @@ -3,6 +3,9 @@
  package tensorflow;
  
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
 +option java_outer_classname = "BfcMemoryMapProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.util";
  
  // Some of the data from AllocatorStats
  message MemAllocatorStats {
-diff -ruN a/tensorflow/core/protobuf/data/experimental/snapshot.proto b/tensorflow/core/protobuf/data/experimental/snapshot.proto
---- a/tensorflow/core/protobuf/data/experimental/snapshot.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/data/experimental/snapshot.proto	2020-03-30 23:56:11.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/data/experimental/snapshot.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/data/experimental/snapshot.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/data/experimental/snapshot.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/data/experimental/snapshot.proto	2021-02-08 09:40:24.584065472 +0900
 @@ -6,6 +6,10 @@
  import "tensorflow/core/framework/tensor_shape.proto";
  import "tensorflow/core/framework/types.proto";
@@ -25,114 +25,113 @@ diff -ruN a/tensorflow/core/protobuf/data/experimental/snapshot.proto b/tensorfl
  // Each SnapshotRecord represents one batch of pre-processed input data. A batch
  // consists of a list of tensors that we encode as TensorProtos. This message
  // doesn't store the structure of the batch.
-diff -ruN a/tensorflow/core/protobuf/device_properties.proto b/tensorflow/core/protobuf/device_properties.proto
---- a/tensorflow/core/protobuf/device_properties.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/device_properties.proto	2020-03-30 23:44:22.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/device_properties.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/device_properties.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/device_properties.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/device_properties.proto	2021-02-08 09:41:23.317918806 +0900
 @@ -19,6 +19,8 @@
  
  option cc_enable_arenas = true;
  option java_outer_classname = "DevicePropertiesProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.framework";
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
  
  message DeviceProperties {
-diff -ruN a/tensorflow/core/protobuf/saved_object_graph.proto b/tensorflow/core/protobuf/saved_object_graph.proto
---- a/tensorflow/core/protobuf/saved_object_graph.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/saved_object_graph.proto	2020-03-30 23:36:13.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/saved_object_graph.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/saved_object_graph.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/saved_object_graph.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/saved_object_graph.proto	2021-02-08 09:41:50.066852012 +0900
 @@ -11,6 +11,9 @@
  
  option cc_enable_arenas = true;
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
 +option java_outer_classname = "SavedObjectGraphProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.framework";
  
  // A SavedObjectGraph is part of object-based SavedModels in TF 2.0. It
  // describes the directed graph of Python objects (or equivalent in other
-diff -ruN a/tensorflow/core/protobuf/struct.proto b/tensorflow/core/protobuf/struct.proto
---- a/tensorflow/core/protobuf/struct.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/struct.proto	2020-03-30 23:45:26.000000000 -0400
-@@ -6,6 +6,9 @@
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/struct.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/struct.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/struct.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/struct.proto	2021-02-08 09:42:06.645810614 +0900
+@@ -7,6 +7,9 @@
  import "tensorflow/core/framework/types.proto";
  
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
 +option java_outer_classname = "StructProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.framework";
  
  // `StructuredValue` represents a dynamically typed value representing various
  // data structures that are inspired by Python data structures typically used in
-diff -ruN a/tensorflow/core/protobuf/trackable_object_graph.proto b/tensorflow/core/protobuf/trackable_object_graph.proto
---- a/tensorflow/core/protobuf/trackable_object_graph.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/trackable_object_graph.proto	2020-03-30 23:51:22.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/trackable_object_graph.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/trackable_object_graph.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/trackable_object_graph.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/trackable_object_graph.proto	2021-02-08 09:42:24.581760720 +0900
 @@ -4,6 +4,9 @@
  
  option cc_enable_arenas = true;
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
 +option java_outer_classname = "TrackableObjectGraphProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.framework";
  
  // A TensorBundle addition which saves extra information about the objects which
  // own variables, allowing for more robust checkpoint loading into modified
-diff -ruN a/tensorflow/core/protobuf/transport_options.proto b/tensorflow/core/protobuf/transport_options.proto
---- a/tensorflow/core/protobuf/transport_options.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/protobuf/transport_options.proto	2020-03-30 23:53:15.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/transport_options.proto tensorflow-2.4.1-proto/tensorflow/core/protobuf/transport_options.proto
+--- tensorflow-2.4.1/tensorflow/core/protobuf/transport_options.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/protobuf/transport_options.proto	2021-02-08 09:42:56.660650580 +0900
 @@ -3,6 +3,7 @@
  package tensorflow;
  
- option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/core_protos_go_proto";
+ option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
 +option java_package = "org.tensorflow.distruntime";
  
  // Extra data needed on a non-RDMA RecvBufResponse.
  message RecvBufRespExtra {
-diff -ruN a/tensorflow/core/lib/core/error_codes.proto b/tensorflow/core/lib/core/error_codes.proto
---- a/tensorflow/core/lib/core/error_codes.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/lib/core/error_codes.proto	2020-03-30 23:44:22.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/lib/core/error_codes.proto tensorflow-2.4.1-proto/tensorflow/core/lib/core/error_codes.proto
+--- tensorflow-2.4.1/tensorflow/core/lib/core/error_codes.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/lib/core/error_codes.proto	2021-02-08 09:40:24.590065457 +0900
 @@ -1,3 +1,5 @@
  syntax = "proto3";
-
+ 
 +option java_package = "org.tensorflow.framework";
 +
  import public "tensorflow/core/protobuf/error_codes.proto";
-diff -ruN a/tensorflow/core/profiler/protobuf/xplane.proto b/tensorflow/core/profiler/protobuf/xplane.proto
---- a/tensorflow/core/profiler/protobuf/xplane.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/profiler/protobuf/xplane.proto	2020-03-30 23:44:22.000000000 -0400
+diff -ruN tensorflow-2.4.1/tensorflow/core/profiler/protobuf/xplane.proto tensorflow-2.4.1-proto/tensorflow/core/profiler/protobuf/xplane.proto
+--- tensorflow-2.4.1/tensorflow/core/profiler/protobuf/xplane.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/profiler/protobuf/xplane.proto	2021-02-08 09:40:24.591065455 +0900
 @@ -3,6 +3,9 @@
  package tensorflow.profiler;
-
+ 
  option cc_enable_arenas = true;
 +option java_outer_classname = "XPlaneProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.profiler";
-
+ 
  // A container of parallel XPlanes, generated by one or more profiling sources.
- // Next ID: 2
-diff -ruN a/tensorflow/core/util/memmapped_file_system.proto b/tensorflow/core/util/memmapped_file_system.proto
---- a/tensorflow/core/util/memmapped_file_system.proto	2020-03-31 00:00:24.000000000 -0400
-+++ b/tensorflow/core/util/memmapped_file_system.proto	2020-03-30 23:44:22.000000000 -0400
+ // Next ID: 5
+diff -ruN tensorflow-2.4.1/tensorflow/core/util/memmapped_file_system.proto tensorflow-2.4.1-proto/tensorflow/core/util/memmapped_file_system.proto
+--- tensorflow-2.4.1/tensorflow/core/util/memmapped_file_system.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/util/memmapped_file_system.proto	2021-02-08 09:40:24.592065452 +0900
 @@ -17,6 +17,9 @@
  package tensorflow;
-
+ 
  option cc_enable_arenas = true;
 +option java_outer_classname = "MemmappedFileSystemProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.util";
-
+ 
  // A message that describes one region of memmapped file.
  message MemmappedFileSystemDirectoryElement {
-diff --git a/tensorflow/core/profiler/profiler_options.proto b/tensorflow/core/profiler/profiler_options.proto
-index 8b4fc3de6f..9a34ea5aaf 100644
---- a/tensorflow/core/profiler/profiler_options.proto
-+++ b/tensorflow/core/profiler/profiler_options.proto
+diff -ruN tensorflow-2.4.1/tensorflow/core/profiler/profiler_options.proto tensorflow-2.4.1-proto/tensorflow/core/profiler/profiler_options.proto
+--- tensorflow-2.4.1/tensorflow/core/profiler/profiler_options.proto	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-proto/tensorflow/core/profiler/profiler_options.proto	2021-02-08 09:40:24.593065450 +0900
 @@ -1,6 +1,9 @@
  syntax = "proto3";
-
+ 
  package tensorflow;
 +option java_outer_classname = "ProfilerOptionsProtos";
 +option java_multiple_files = true;
 +option java_package = "org.tensorflow.profiler";
-
+ 
+ // Next ID: 11
  message ProfileOptions {
-   // Some default value of option are not proto3 default value. Use this version

@@ -40,6 +40,7 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             include = {
                 "tensorflow/core/util/port.h",
                 "tensorflow/c/tf_attrtype.h",
+                "tensorflow/c/c_api_macros.h",
                 "tensorflow/c/tf_datatype.h",
                 "tensorflow/c/tf_status.h",
                 "tensorflow/c/tf_tensor.h",
@@ -157,20 +158,29 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         if (!Loader.isLoadLibraries() || extension == null || !extension.endsWith("-gpu")) {
             return;
         }
-        String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl", "nvinfer"};
+        String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl", "nvrtc", "myelin", "nvinfer",
+                         "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer", "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
         for (String lib : libs) {
-            switch (platform) {
-                case "linux-arm64":
-                case "linux-ppc64le":
-                case "linux-x86_64":
-                case "macosx-x86_64":
-                    lib += lib.equals("cudnn") ? "@.7" : lib.equals("nccl") ? "@.2" : lib.equals("nvinfer") ? "@.6" : lib.equals("cudart") ? "@.10.1" : "@.10";
-                    break;
-                case "windows-x86_64":
-                    lib += lib.equals("cudnn") ? "64_7" : lib.equals("cudart") ? "64_101" : "64_10";
-                    break;
-                default:
-                    continue; // no CUDA
+            if (platform.startsWith("linux")) {
+                lib += lib.startsWith("cudnn") ? "@.8"
+                     : lib.equals("nccl") ? "@.2"
+                     : lib.equals("myelin") ? "@.1"
+                     : lib.equals("nvinfer") ? "@.7"
+                     : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "@.10"
+                     : lib.equals("cudart") ? "@.11.0"
+                     : lib.equals("nvrtc") ? "@.11.0"
+                     : "@.11";
+            } else if (platform.startsWith("windows")) {
+                lib += lib.startsWith("cudnn") ? "64_8"
+                     : lib.equals("nccl") ? "64_2"
+                     : lib.equals("myelin") ? "64_1"
+                     : lib.equals("nvinfer") ? "64_7"
+                     : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "64_10"
+                     : lib.equals("cudart") ? "64_110"
+                     : lib.equals("nvrtc") ? "64_110_0"
+                     : "64_11";
+            } else {
+                continue; // no CUDA
             }
             if (!preloads.contains(lib)) {
                 preloads.add(i++, lib);
@@ -183,7 +193,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
     }
 
     public void map(InfoMap infoMap) {
-        infoMap.put(new Info("TF_CAPI_EXPORT").cppTypes().annotations())
+        infoMap.put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
                .put(new Info("TF_Buffer::data").javaText("public native @Const Pointer data(); public native TF_Buffer data(Pointer data);"))
                .put(new Info("TF_Status").pointerTypes("TF_Status").base("org.tensorflow.internal.c_api.AbstractTF_Status"))
                .put(new Info("TF_Buffer").pointerTypes("TF_Buffer").base("org.tensorflow.internal.c_api.AbstractTF_Buffer"))

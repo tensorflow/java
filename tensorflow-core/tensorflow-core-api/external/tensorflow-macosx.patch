@@ -1,0 +1,21 @@
+diff -ruN tensorflow-2.4.1/third_party/llvm_openmp/BUILD tensorflow-2.4.1-macosx/third_party/llvm_openmp/BUILD
+--- tensorflow-2.4.1/third_party/llvm_openmp/BUILD	2021-01-21 09:25:54.000000000 +0900
++++ tensorflow-2.4.1-macosx/third_party/llvm_openmp/BUILD	2021-02-07 21:13:40.971556568 +0900
+@@ -63,7 +63,7 @@
+ 
+ # Linux Cmake vars to expand.
+ omp_vars_linux = {
+-    "LIBOMP_USE_VERSION_SYMBOLS": 1,
++    "LIBOMP_USE_VERSION_SYMBOLS": 0,
+     "LIBOMP_HAVE_WEAK_ATTRIBUTE": 1,
+     "LIBOMP_USE_ADAPTIVE_LOCKS": 1,
+     "LIBOMP_ENABLE_ASSERTIONS": 1,
+@@ -199,7 +199,7 @@
+     ] + srcdeps,
+     copts = ["-Domp_EXPORTS -D_GNU_SOURCE -D_REENTRANT"],
+     includes = common_includes,
+-    linkopts = ["-lpthread -ldl -Wl,--version-script=$(location :ldscript)"],
++    linkopts = ["-lpthread -ldl"],
+     linkshared = True,
+     visibility = ["//visibility:public"],
+ )

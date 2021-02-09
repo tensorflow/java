@@ -59,7 +59,6 @@
     <javacpp.platform.windows-x86.extension>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
     <javacpp.platform.windows-x86_64.extension>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
     <javacpp.version>1.5.4</javacpp.version>
-    <mkl-dnn.version>0.21.5-${javacpp.version}</mkl-dnn.version>
   </properties>
 
   <profiles>

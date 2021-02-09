@@ -349,6 +349,10 @@ void RenderGettersAndSetters(const OpSpec& op, SourceWriter* writer) {
         .EndMethod();
   }
   for (const ArgumentSpec& output : op.outputs()) {
+    if ("size" == output.var().name()) {
+        // reserved name
+        continue;
+    }
     Method getter = Method::Create(output.var().name(), output.var().type());
     Javadoc getter_doc = Javadoc::Create(output.description());
     writer->BeginMethod(getter, PUBLIC, &getter_doc)

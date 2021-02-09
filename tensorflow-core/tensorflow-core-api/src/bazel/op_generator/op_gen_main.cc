@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
   tensorflow::Env* env = tensorflow::Env::Default();
   void* ops_libs_handles[50];
   for (int i = 1; i < argc; ++i) {
-	  TF_CHECK_OK(env->LoadLibrary(argv[1], &ops_libs_handles[i - 1]));
+	  TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[i - 1]));
   }
   tensorflow::java::OpGenerator generator(api_dirs);
   tensorflow::OpList ops;

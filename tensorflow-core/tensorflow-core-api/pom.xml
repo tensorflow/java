@@ -214,6 +214,7 @@
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
           </includePaths>
           <linkPaths>
+            <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
             <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>
           </linkPaths>
           <resourcePaths>
@@ -364,7 +365,6 @@
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.lib</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.obj</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*mklml*</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*iomp5*</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*msvcr120*</exclude>
               </excludes>
             </configuration>
