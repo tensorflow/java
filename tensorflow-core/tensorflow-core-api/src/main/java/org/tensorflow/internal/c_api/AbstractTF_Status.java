@@ -43,14 +43,18 @@ import org.tensorflow.exceptions.TensorFlowException;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Status extends Pointer {
+
   protected static class DeleteDeallocator extends TF_Status implements Pointer.Deallocator {
+
     DeleteDeallocator(TF_Status s) {
       super(s);
     }
 
     @Override
     public void deallocate() {
-      if (!isNull()) TF_DeleteStatus(this);
+      if (!isNull()) {
+        TF_DeleteStatus(this);
+      }
       setNull();
     }
   }
@@ -72,12 +76,16 @@ public abstract class AbstractTF_Status extends Pointer {
     return s;
   }
 
-  /** Calls the deallocator, if registered, otherwise has no effect. */
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
   public void delete() {
     deallocate();
   }
 
-  /** Map TF_Code to unchecked exception, and throw if not TF_OK. */
+  /**
+   * Map TF_Code to unchecked exception, and throw if not TF_OK.
+   */
   public void throwExceptionIfNotOK() {
     TF_Status s = (TF_Status) this;
     switch (TF_GetCode(s)) {

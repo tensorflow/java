@@ -25,15 +25,29 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Graph extends Pointer {
+
     protected static class DeleteDeallocator extends TF_Graph implements Pointer.Deallocator {
-        DeleteDeallocator(TF_Graph s) { super(s); }
-        @Override public void deallocate() { if (!isNull()) TF_DeleteGraph(this); setNull(); }
+
+        DeleteDeallocator(TF_Graph s) {
+            super(s);
+        }
+
+        @Override
+        public void deallocate() {
+            if (!isNull()) {
+                TF_DeleteGraph(this);
+            }
+            setNull();
+        }
     }
 
-    public AbstractTF_Graph(Pointer p) { super(p); }
+    public AbstractTF_Graph(Pointer p) {
+        super(p);
+    }
 
     /**
      * Calls TF_NewGraph(), and registers a deallocator.
+     *
      * @return TF_Graph created. Do not call TF_DeleteGraph() on it.
      */
     public static TF_Graph newGraph() {

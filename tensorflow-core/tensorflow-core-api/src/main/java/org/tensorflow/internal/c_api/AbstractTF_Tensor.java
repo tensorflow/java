@@ -26,55 +26,78 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Tensor extends Pointer {
-    protected static class DeleteDeallocator extends TF_Tensor implements Pointer.Deallocator {
-        DeleteDeallocator(TF_Tensor s) { super(s); }
-        @Override public void deallocate() { if (!isNull()) TF_DeleteTensor(this); setNull(); }
+
+  protected static class DeleteDeallocator extends TF_Tensor implements Pointer.Deallocator {
+
+    DeleteDeallocator(TF_Tensor s) {
+      super(s);
     }
 
-    /** TensorFlow crashes if we don't pass it a deallocator, so... */
-    protected static Deallocator_Pointer_long_Pointer dummyDeallocator = new Deallocator_Pointer_long_Pointer() {
-        @Override public void call(Pointer data, long len, Pointer arg) { }
-    }.retainReference();
-
-    /** A reference to prevent deallocation. */
-    protected Pointer pointer;
-
-    public AbstractTF_Tensor(Pointer p) { super(p); }
-
-    /**
-     * Calls TF_NewTensor(), and registers a deallocator.
-     * @return TF_Tensor created. Do not call TF_DeleteTensor() on it.
-     */
-    public static TF_Tensor newTensor(int dtype, long[] dims, Pointer data) {
-        TF_Tensor t = TF_NewTensor(dtype, dims, dims.length, data, data.limit(), dummyDeallocator, null);
-        if (t != null) {
-            t.pointer = data;
-            t.deallocator(new DeleteDeallocator(t));
-        }
-        return t;
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TF_DeleteTensor(this);
+      }
+      setNull();
     }
+  }
 
-    /**
-     * Calls TF_AllocateTensor(), and registers a deallocator.
-     * @return TF_Tensor created. Do not call TF_DeleteTensor() on it.
-     */
-    public static TF_Tensor allocateTensor(int dtype, long[] dims, long length) {
-        TF_Tensor t = TF_AllocateTensor(dtype, dims, dims.length, length);
-        if (t != null) {
-            t.deallocator(new DeleteDeallocator(t));
-        }
-        return t;
+  /**
+   * TensorFlow crashes if we don't pass it a deallocator, so...
+   */
+  protected static Deallocator_Pointer_long_Pointer dummyDeallocator = new Deallocator_Pointer_long_Pointer() {
+    @Override
+    public void call(Pointer data, long len, Pointer arg) {
     }
+  }.retainReference();
 
-    /** Registers a deallocator and returns this. */
-    public TF_Tensor withDeallocator() {
-        return (TF_Tensor)this.deallocator(new DeleteDeallocator((TF_Tensor)this));
-    }
+  /**
+   * A reference to prevent deallocation.
+   */
+  protected Pointer pointer;
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
+  public AbstractTF_Tensor(Pointer p) {
+    super(p);
+  }
+
+  /**
+   * Calls TF_NewTensor(), and registers a deallocator.
+   *
+   * @return TF_Tensor created. Do not call TF_DeleteTensor() on it.
+   */
+  public static TF_Tensor newTensor(int dtype, long[] dims, Pointer data) {
+    TF_Tensor t = TF_NewTensor(dtype, dims, dims.length, data, data.limit(), dummyDeallocator, null);
+    if (t != null) {
+      t.pointer = data;
+      t.deallocator(new DeleteDeallocator(t));
     }
+    return t;
+  }
+
+  /**
+   * Calls TF_AllocateTensor(), and registers a deallocator.
+   *
+   * @return TF_Tensor created. Do not call TF_DeleteTensor() on it.
+   */
+  public static TF_Tensor allocateTensor(int dtype, long[] dims, long length) {
+    TF_Tensor t = TF_AllocateTensor(dtype, dims, dims.length, length);
+    if (t != null) {
+      t.deallocator(new DeleteDeallocator(t));
+    }
+    return t;
+  }
+
+  /**
+   * Registers a deallocator and returns this.
+   */
+  public TF_Tensor withDeallocator() {
+    return (TF_Tensor) this.deallocator(new DeleteDeallocator((TF_Tensor) this));
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

@@ -25,33 +25,49 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTFE_Context extends Pointer {
-    protected static class DeleteDeallocator extends TFE_Context implements Pointer.Deallocator {
-        DeleteDeallocator(TFE_Context s) { super(s); }
-        @Override public void deallocate() { if(!isNull()) TFE_DeleteContext(this); setNull(); }
+
+  protected static class DeleteDeallocator extends TFE_Context implements Pointer.Deallocator {
+
+    DeleteDeallocator(TFE_Context s) {
+      super(s);
     }
 
-    /** References to prevent deallocation. */
-    protected TFE_ContextOptions opts;
-
-    public AbstractTFE_Context(Pointer p) { super(p); }
-
-    /**
-     * Calls TFE_NewContext(), and registers a deallocator.
-     * @return TFE_Context created. Do not call TFE_DeleteContext() on it.
-     */
-    public static TFE_Context newContext(TFE_ContextOptions opts, TF_Status status) {
-        TFE_Context c = TFE_NewContext(opts, status);
-        if (c != null) {
-            c.opts = opts;
-            c.deallocator(new DeleteDeallocator(c));
-        }
-        return c;
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TFE_DeleteContext(this);
+      }
+      setNull();
     }
+  }
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
+  /**
+   * References to prevent deallocation.
+   */
+  protected TFE_ContextOptions opts;
+
+  public AbstractTFE_Context(Pointer p) {
+    super(p);
+  }
+
+  /**
+   * Calls TFE_NewContext(), and registers a deallocator.
+   *
+   * @return TFE_Context created. Do not call TFE_DeleteContext() on it.
+   */
+  public static TFE_Context newContext(TFE_ContextOptions opts, TF_Status status) {
+    TFE_Context c = TFE_NewContext(opts, status);
+    if (c != null) {
+      c.opts = opts;
+      c.deallocator(new DeleteDeallocator(c));
     }
+    return c;
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

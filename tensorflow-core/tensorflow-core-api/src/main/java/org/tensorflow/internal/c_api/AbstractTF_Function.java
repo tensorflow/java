@@ -25,33 +25,33 @@ import org.bytedeco.javacpp.annotation.Properties;
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Function extends Pointer {
 
-    protected static class DeleteDeallocator extends TF_Function implements Deallocator {
+  protected static class DeleteDeallocator extends TF_Function implements Deallocator {
 
-        DeleteDeallocator(TF_Function s) {
-            super(s);
-        }
-
-        @Override
-        public void deallocate() {
-            if (!isNull()) {
-                TF_DeleteFunction(this);
-            }
-            setNull();
-        }
+    DeleteDeallocator(TF_Function s) {
+      super(s);
     }
 
-    public AbstractTF_Function(Pointer p) {
-        super(p);
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TF_DeleteFunction(this);
+      }
+      setNull();
     }
+  }
 
-    public TF_Function withDeallocator() {
-        return this.deallocator(new DeleteDeallocator((TF_Function) this));
-    }
+  public AbstractTF_Function(Pointer p) {
+    super(p);
+  }
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
-    }
+  public TF_Function withDeallocator() {
+    return this.deallocator(new DeleteDeallocator((TF_Function) this));
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

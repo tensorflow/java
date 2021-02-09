@@ -25,30 +25,44 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_SessionOptions extends Pointer {
-    protected static class DeleteDeallocator extends
-        TF_SessionOptions implements Pointer.Deallocator {
-        DeleteDeallocator(TF_SessionOptions s) { super(s); }
-        @Override public void deallocate() { if (!isNull()) TF_DeleteSessionOptions(this); setNull(); }
+
+  protected static class DeleteDeallocator extends
+      TF_SessionOptions implements Pointer.Deallocator {
+
+    DeleteDeallocator(TF_SessionOptions s) {
+      super(s);
     }
 
-    public AbstractTF_SessionOptions(Pointer p) { super(p); }
-
-    /**
-     * Calls TF_NewSessionOptions(), and registers a deallocator.
-     * @return TF_SessionOptions created. Do not call TF_DeleteSessionOptions() on it.
-     */
-    public static TF_SessionOptions newSessionOptions() {
-        TF_SessionOptions o = TF_NewSessionOptions();
-        if (o != null) {
-            o.deallocator(new DeleteDeallocator(o));
-        }
-        return o;
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TF_DeleteSessionOptions(this);
+      }
+      setNull();
     }
+  }
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
+  public AbstractTF_SessionOptions(Pointer p) {
+    super(p);
+  }
+
+  /**
+   * Calls TF_NewSessionOptions(), and registers a deallocator.
+   *
+   * @return TF_SessionOptions created. Do not call TF_DeleteSessionOptions() on it.
+   */
+  public static TF_SessionOptions newSessionOptions() {
+    TF_SessionOptions o = TF_NewSessionOptions();
+    if (o != null) {
+      o.deallocator(new DeleteDeallocator(o));
     }
+    return o;
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

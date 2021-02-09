@@ -1074,23 +1074,12 @@ public final class Ops {
   }
 
   /**
-   * empty
-   */
-  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
-      List<Operand<?>> inputs) {
-    return Function.callConcreteFunction(scope, function, inputs);
-  }
-
-  /**
-   * empty
-   */
-  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
-      Map<String, Operand<?>> inputs) {
-    return Function.callConcreteFunction(scope, function, inputs);
-  }
-
-  /**
-   * empty
+   * Call {@code function}, adding it to the execution environment if it isn't already present. The inputs and outputs
+   *  are keyed by the names set in the {@code ConcreteFunction}'s {@code Signature}.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
    */
   public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
       Operand<?>... inputs) {
@@ -1098,29 +1087,59 @@ public final class Ops {
   }
 
   /**
-   * empty
+   * Call {@code function}, adding it to the execution environment if it isn't already present. The inputs and outputs
+   *  are keyed by the names set in the {@code ConcreteFunction}'s {@code Signature}.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
+   */
+  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
+      List<Operand<?>> inputs) {
+    return Function.callConcreteFunction(scope, function, inputs);
+  }
+
+  /**
+   * Call {@code function}, adding it to the execution environment if it isn't already present. The inputs and outputs
+   *  are keyed by the names set in the {@code ConcreteFunction}'s {@code Signature}.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
+   */
+  public Map<String, Operand<?>> callConcreteFunction(ConcreteFunction function,
+      Map<String, Operand<?>> inputs) {
+    return Function.callConcreteFunction(scope, function, inputs);
+  }
+
+  /**
+   * Call {@code function}, adding it to the execution environment if it isn't already present.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
    */
   public List<Operand<?>> callFunction(GraphFunction function, List<Operand<?>> inputs) {
     return Function.callFunction(scope, function, inputs);
   }
 
   /**
-   * empty
+   * Call {@code function}, adding it to the execution environment if it isn't already present.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
    */
   public List<Operand<?>> callFunction(GraphFunction function, Operand<?>... inputs) {
     return Function.callFunction(scope, function, inputs);
   }
 
   /**
-   * empty
-   */
-  public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
-      List<Operand<?>> inputs) {
-    return Function.callNamedFunction(scope, function, inputs);
-  }
-
-  /**
-   * empty
+   * Call {@code function}, adding it to the execution environment if it isn't already present.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
    */
   public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
       Map<String, Operand<?>> inputs) {
@@ -1128,10 +1147,26 @@ public final class Ops {
   }
 
   /**
-   * empty
+   * Call {@code function}, adding it to the execution environment if it isn't already present.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
    */
   public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
       Operand<?>... inputs) {
+    return Function.callNamedFunction(scope, function, inputs);
+  }
+
+  /**
+   * Call {@code function}, adding it to the execution environment if it isn't already present.
+   *
+   * @param function the function to call
+   * @param inputs the inputs to the function
+   * @return the outputs of the function
+   */
+  public Map<String, Operand<?>> callNamedFunction(NamedGraphFunction function,
+      List<Operand<?>> inputs) {
     return Function.callNamedFunction(scope, function, inputs);
   }
 

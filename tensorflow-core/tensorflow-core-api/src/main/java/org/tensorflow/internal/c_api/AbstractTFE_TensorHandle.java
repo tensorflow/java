@@ -25,38 +25,56 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTFE_TensorHandle extends Pointer {
-    protected static class DeleteDeallocator extends TFE_TensorHandle implements Pointer.Deallocator {
-        DeleteDeallocator(TFE_TensorHandle s) { super(s); }
-        @Override public void deallocate() { if (!isNull()) TFE_DeleteTensorHandle(this); setNull(); }
+
+  protected static class DeleteDeallocator extends TFE_TensorHandle implements Pointer.Deallocator {
+
+    DeleteDeallocator(TFE_TensorHandle s) {
+      super(s);
     }
 
-    /** A reference to prevent deallocation. */
-    protected TF_Tensor tensor;
-
-    public AbstractTFE_TensorHandle(Pointer p) { super(p); }
-
-    /**
-     * Calls TFE_NewTensorHandle(), and registers a deallocator.
-     * @return TFE_TensorHandle created. Do not call TFE_DeleteTensorHandle() on it.
-     */
-    public static TFE_TensorHandle newTensor(TF_Tensor t, TF_Status status) {
-        TFE_TensorHandle th = TFE_NewTensorHandle(t, status);
-        if (th != null) {
-            th.tensor = t;
-            th.deallocator(new DeleteDeallocator(th));
-        }
-        return th;
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TFE_DeleteTensorHandle(this);
+      }
+      setNull();
     }
+  }
 
-    /** Registers a deallocator and returns this. */
-    public TFE_TensorHandle withDeallocator() {
-        return (TFE_TensorHandle)this.deallocator(new DeleteDeallocator((TFE_TensorHandle)this));
-    }
+  /**
+   * A reference to prevent deallocation.
+   */
+  protected TF_Tensor tensor;
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
+  public AbstractTFE_TensorHandle(Pointer p) {
+    super(p);
+  }
+
+  /**
+   * Calls TFE_NewTensorHandle(), and registers a deallocator.
+   *
+   * @return TFE_TensorHandle created. Do not call TFE_DeleteTensorHandle() on it.
+   */
+  public static TFE_TensorHandle newTensor(TF_Tensor t, TF_Status status) {
+    TFE_TensorHandle th = TFE_NewTensorHandle(t, status);
+    if (th != null) {
+      th.tensor = t;
+      th.deallocator(new DeleteDeallocator(th));
     }
+    return th;
+  }
+
+  /**
+   * Registers a deallocator and returns this.
+   */
+  public TFE_TensorHandle withDeallocator() {
+    return (TFE_TensorHandle) this.deallocator(new DeleteDeallocator((TFE_TensorHandle) this));
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

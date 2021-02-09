@@ -29,66 +29,78 @@ import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public abstract class AbstractTF_Session extends Pointer {
-    protected static class DeleteDeallocator extends TF_Session implements Pointer.Deallocator {
-        DeleteDeallocator(TF_Session s) { super(s); }
-        @Override public void deallocate() {
-            if (!isNull()) {
-                TF_Status status = TF_Status.newStatus();
-                TF_CloseSession(this, status);
-                // Result of close is ignored, delete anyway.
-                TF_DeleteSession(this, status);
-                setNull();
-            }
-        }
+
+  protected static class DeleteDeallocator extends TF_Session implements Pointer.Deallocator {
+
+    DeleteDeallocator(TF_Session s) {
+      super(s);
     }
 
-    /** References to prevent deallocation. */
-    protected TF_Graph graph;
-    protected TF_SessionOptions opts;
-    protected TF_Buffer run_options;
-    protected TF_Buffer meta_graph_def;
-    protected TF_Status status;
-
-    public AbstractTF_Session(Pointer p) { super(p); }
-
-    /**
-     * Calls TF_NewSession(), and registers a deallocator.
-     * @return TF_Session created. Do not call TF_DeleteSession() on it.
-     */
-    public static TF_Session newSession(TF_Graph graph, TF_SessionOptions opts, TF_Status status) {
-        TF_Session s = TF_NewSession(graph, opts, status);
-        if (s != null) {
-            s.graph = graph;
-            s.opts = opts;
-            s.status = status;
-            s.deallocator(new DeleteDeallocator(s));
-        }
-        return s;
+    @Override
+    public void deallocate() {
+      if (!isNull()) {
+        TF_Status status = TF_Status.newStatus();
+        TF_CloseSession(this, status);
+        // Result of close is ignored, delete anyway.
+        TF_DeleteSession(this, status);
+        setNull();
+      }
     }
+  }
 
-    /**
-     * Calls TF_LoadSessionFromSavedModel(), and registers a deallocator.
-     * @return TF_Session created. Do not call TF_DeleteSession() on it.
-     */
-    public static TF_Session loadSessionFromSavedModel(TF_SessionOptions session_options, TF_Buffer run_options,
-        String export_dir, String[] tags, TF_Graph graph, TF_Buffer meta_graph_def, TF_Status status) {
-        TF_Session s = TF_LoadSessionFromSavedModel(session_options, run_options,
-                new BytePointer(export_dir), new PointerPointer(tags), tags.length, graph, meta_graph_def, status);
-        if (s != null) {
-            s.graph = graph;
-            s.opts = session_options;
-            s.run_options = run_options;
-            s.meta_graph_def = meta_graph_def;
-            s.status = status;
-            s.deallocator(new DeleteDeallocator(s));
-        }
-        return s;
-    }
+  /**
+   * References to prevent deallocation.
+   */
+  protected TF_Graph graph;
+  protected TF_SessionOptions opts;
+  protected TF_Buffer run_options;
+  protected TF_Buffer meta_graph_def;
+  protected TF_Status status;
 
-    /**
-     * Calls the deallocator, if registered, otherwise has no effect.
-     */
-    public void delete() {
-        deallocate();
+  public AbstractTF_Session(Pointer p) {
+    super(p);
+  }
+
+  /**
+   * Calls TF_NewSession(), and registers a deallocator.
+   *
+   * @return TF_Session created. Do not call TF_DeleteSession() on it.
+   */
+  public static TF_Session newSession(TF_Graph graph, TF_SessionOptions opts, TF_Status status) {
+    TF_Session s = TF_NewSession(graph, opts, status);
+    if (s != null) {
+      s.graph = graph;
+      s.opts = opts;
+      s.status = status;
+      s.deallocator(new DeleteDeallocator(s));
     }
+    return s;
+  }
+
+  /**
+   * Calls TF_LoadSessionFromSavedModel(), and registers a deallocator.
+   *
+   * @return TF_Session created. Do not call TF_DeleteSession() on it.
+   */
+  public static TF_Session loadSessionFromSavedModel(TF_SessionOptions session_options, TF_Buffer run_options,
+      String export_dir, String[] tags, TF_Graph graph, TF_Buffer meta_graph_def, TF_Status status) {
+    TF_Session s = TF_LoadSessionFromSavedModel(session_options, run_options,
+        new BytePointer(export_dir), new PointerPointer(tags), tags.length, graph, meta_graph_def, status);
+    if (s != null) {
+      s.graph = graph;
+      s.opts = session_options;
+      s.run_options = run_options;
+      s.meta_graph_def = meta_graph_def;
+      s.status = status;
+      s.deallocator(new DeleteDeallocator(s));
+    }
+    return s;
+  }
+
+  /**
+   * Calls the deallocator, if registered, otherwise has no effect.
+   */
+  public void delete() {
+    deallocate();
+  }
 }

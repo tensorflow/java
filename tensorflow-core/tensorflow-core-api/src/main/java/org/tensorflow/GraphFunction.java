@@ -63,8 +63,8 @@ public class GraphFunction implements AutoCloseable {
   }
 
   /**
-   * This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA JIT is
-   * extremely non-obvious.
+   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
+   * JIT is extremely non-obvious.
    *
    * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
    * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
