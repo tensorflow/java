@@ -20,11 +20,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -35,11 +33,10 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Ops;
 import org.tensorflow.proto.framework.AttrValue;
-import org.tensorflow.proto.framework.TensorInfo;
 
 /**
  * A Function created from a TensorFlow {@link Graph}. Callable in Graph or Eager mode via the {@link
- * Ops#callFunction(GraphFunction, Operand[])} ops or the {@link #call(Ops, Operand[])} methods.
+ * Ops#callFunction(DefinedFunction, Operand[])} ops or the {@link #call(Ops, Operand[])} methods.
  *
  * <p>By default, resolves arguments and returns outputs by position.
  * Names can be specified for the inputs and outputs (and used when calling) using {@link NamedGraphFunction} and {@link
@@ -47,14 +44,14 @@ import org.tensorflow.proto.framework.TensorInfo;
  *
  * Functions can also be created from {@link ConcreteFunction}s using {@link #create(ConcreteFunction, boolean)}.
  */
-public class GraphFunction implements AutoCloseable {
+public class DefinedFunction implements AutoCloseable {
 
   private final TF_Function nativeHandle;
   private final PointerScope scope;
   private final int numInputs;
   private final int numOutputs;
 
-  GraphFunction(TF_Function nativeHandle, int numInputs, int numOutputs) {
+  DefinedFunction(TF_Function nativeHandle, int numInputs, int numOutputs) {
     this.numInputs = numInputs;
     this.numOutputs = numOutputs;
     scope = new PointerScope();
@@ -114,7 +111,7 @@ public class GraphFunction implements AutoCloseable {
   }
 
   /**
-   * Create a {@link GraphFunction} with positional argument and output resolution. Includes all ops in {@code body},
+   * Create a {@link DefinedFunction} with positional argument and output resolution. Includes all ops in {@code body},
    * {@code inputs} and {@code outputs} must be the inputs and outputs of {@code body}.
    *
    * @param body the graph to use as the function body
@@ -124,13 +121,14 @@ public class GraphFunction implements AutoCloseable {
    * @param outputs the outputs to the function
    * @param description a human-readable description of the function.  May be null.
    */
-  public static GraphFunction create(Graph body, String name, boolean appendHash, List<Operand<?>> inputs,
+  public static DefinedFunction create(Graph body, String name, boolean appendHash, List<Operand<?>> inputs,
       List<Operand<?>> outputs, String description) {
-    try (PointerScope scope = new PointerScope()) {
+    try (PointerScope scope = new PointerScope();
+        Reference ref = body.ref()) {
       TF_Status status = TF_Status.newStatus();
 
       TF_Function handle = TF_GraphToFunction(
-          body.ref().nativeHandle(),
+          ref.nativeHandle(),
           name,
           (byte) (appendHash ? 1 : 0),
           -1,
@@ -147,95 +145,8 @@ public class GraphFunction implements AutoCloseable {
 
       status.throwExceptionIfNotOK();
 
-      return new GraphFunction(handle.withDeallocator(), inputs.size(), outputs.size());
+      return new DefinedFunction(handle.withDeallocator(), inputs.size(), outputs.size());
     }
-  }
-
-
-  /**
-   * Create a {@link NamedGraphFunction} with name-based argument and output resolution. Includes all ops in {@code
-   * body}, {@code inputs} and {@code outputs} must be the inputs and outputs of {@code body}.
-   *
-   * @param body the graph to use as the function body
-   * @param name the name of the function
-   * @param appendHash whether to append the has of the signature to the name
-   * @param inputs the inputs to the function and their names
-   * @param outputs the outputs to the function and their names
-   * @param description a human-readable description of the function.  May be null.
-   */
-  public static NamedGraphFunction create(Graph body, String name, boolean appendHash, Map<String, Operand<?>> inputs,
-      Map<String, Operand<?>> outputs, String description) {
-    List<Operand<?>> inputList = new ArrayList<>();
-    List<String> inputNames = new ArrayList<>();
-    for (Entry<String, Operand<?>> input : inputs.entrySet()) {
-      inputNames.add(input.getKey());
-      inputList.add(input.getValue());
-    }
-
-    List<Operand<?>> outputList = new ArrayList<>();
-    List<String> outputNames = new ArrayList<>();
-    for (Entry<String, Operand<?>> output : outputs.entrySet()) {
-      outputNames.add(output.getKey());
-      outputList.add(output.getValue());
-    }
-
-    try (PointerScope scope = new PointerScope()) {
-      TF_Status status = TF_Status.newStatus();
-
-      //TODO can't get output names working, likely due to passing it wrong
-
-//      PointerPointer<CharPointer> outputNamesPointer = new PointerPointer<>(outputNames.size());
-//      outputNamesPointer.putString(outputNames.toArray(new String[0]));
-
-      try (Reference ref = body.ref()) {
-        TF_Function handle = TF_GraphToFunction(
-            ref.nativeHandle(),
-            name,
-            (byte) (appendHash ? 1 : 0),
-            -1,
-            null,
-            inputList.size(),
-            resolveToOutput(inputList),
-            outputList.size(),
-            resolveToOutput(outputList),
-            (byte[]) null,
-            null,
-            description,
-            status
-        );
-
-        status.throwExceptionIfNotOK();
-
-        return new NamedGraphFunction(handle.withDeallocator(), inputNames, outputNames);
-      }
-    }
-  }
-
-  /**
-   * Create a {@link NamedGraphFunction} from a {@link ConcreteFunction}.
-   *
-   * @param function the {@code ConcreteFunction} to create the function from
-   * @param appendHash whether to append a hash of the signature to the name
-   */
-  public static NamedGraphFunction create(ConcreteFunction function, boolean appendHash) {
-    Graph graph = function.graph();
-
-    Map<String, Operand<?>> inputs = new LinkedHashMap<>();
-    for (Entry<String, TensorInfo> input : function.signature().asSignatureDef().getInputsMap().entrySet()) {
-      inputs.put(input.getKey(), graph.output(input.getValue().getName()));
-    }
-
-    Map<String, Operand<?>> outputs = new LinkedHashMap<>();
-    for (Entry<String, TensorInfo> output : function.signature().asSignatureDef().getOutputsMap().entrySet()) {
-      outputs.put(output.getKey(), graph.output(output.getValue().getName()));
-    }
-
-    String description = function.signature().methodName();
-    if (description == null) {
-      description = function.signature().key();
-    }
-
-    return create(graph, function.signature().key(), appendHash, inputs, outputs, description);
   }
 
   TF_Function nativeHandle() {
@@ -289,13 +200,13 @@ public class GraphFunction implements AutoCloseable {
    * Call this function in the provided scope, with the given arguments.
    */
   public List<Operand<?>> call(Ops tf, List<Operand<?>> arguments) {
-    return tf.callFunction(this, arguments);
+    return tf.call(this, arguments);
   }
 
   /**
    * Call this function in the provided scope, with the given arguments.
    */
   public List<Operand<?>> call(Ops tf, Operand<?>... arguments) {
-    return tf.callFunction(this, arguments);
+    return call(tf, Arrays.asList(arguments));
   }
 }

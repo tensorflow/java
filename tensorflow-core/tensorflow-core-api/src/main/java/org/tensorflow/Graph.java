@@ -230,7 +230,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void attachFunction(GraphFunction function) {
+  public void attachFunction(DefinedFunction function) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();

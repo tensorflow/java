@@ -17,10 +17,12 @@ package org.tensorflow;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.tensorflow.op.Ops;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
@@ -209,7 +211,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @return the outputs of the function
    */
   public Map<String, Operand<?>> call(Ops tf, Map<String, Operand<?>> arguments) {
-    return tf.callConcreteFunction(this, arguments);
+    return tf.call(this, arguments);
   }
 
   /**
@@ -255,14 +257,18 @@ public class ConcreteFunction implements AutoCloseable {
       throw new IllegalArgumentException(
           String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
     }
+    String inputName = signatureDef.getInputsMap().keySet().iterator().next();
 
     if (signatureDef.getOutputsCount() != 1) {
       throw new IllegalArgumentException(
           String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
     }
-    String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
+    String outputName = signatureDef.getOutputsMap().keySet().iterator().next();
 
-    return tf.callConcreteFunction(this, argument).get(outputNodeName);
+    Map<String, Operand<?>> inputMap = new LinkedHashMap<>();
+    inputMap.put(inputName, argument);
+
+    return call(tf, inputMap).get(outputName);
   }
 
   /**
@@ -298,12 +304,29 @@ public class ConcreteFunction implements AutoCloseable {
     return graph;
   }
 
+  private DefinedFunction makeGraphFunction() {
+    String description = signature().methodName();
+    if (description == null) {
+      description = signature().key();
+    }
+
+    List<Operand<?>> inputList = signature.getInputs().values().stream()
+        .map((it) -> graph.outputOrError(it.name))
+        .collect(Collectors.toUnmodifiableList());
+
+    List<Operand<?>> outputList = signature.getOutputs().values().stream()
+        .map((it) -> graph.outputOrError(it.name))
+        .collect(Collectors.toUnmodifiableList());
+
+    return DefinedFunction.create(graph, signature.key(), true, inputList, outputList, description);
+  }
+
   /**
    * Get the graph as a function.  The graph function will be closed when this is.
    */
-  public NamedGraphFunction function() {
+  public DefinedFunction function() {
     if (function == null) {
-      function = GraphFunction.create(this, true);
+      function = makeGraphFunction();
     }
     return function;
   }
@@ -332,7 +355,7 @@ public class ConcreteFunction implements AutoCloseable {
 
   private final Graph graph;
   private final Session session;
-  private NamedGraphFunction function = null;
+  private DefinedFunction function = null;
   private final Signature signature;
   private final Ownership ownership;
 

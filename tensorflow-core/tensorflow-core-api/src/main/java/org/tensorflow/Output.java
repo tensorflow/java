@@ -138,16 +138,6 @@ public final class Output<T extends TType> implements Operand<T> {
    * Handle to the idx-th output of the Operation {@code op}.
    */
   Output(AbstractOperation op, int idx) {
-    int numOutputs = op.numOutputs();
-    if (idx >= numOutputs) {
-      throw new IndexOutOfBoundsException(
-          "Can't get output with index " + idx + ", this op only has " + numOutputs + " outputs.");
-    }
-
-    if (idx < 0) {
-      throw new IndexOutOfBoundsException("Can't get output with index < 0.");
-    }
-
     operation = op;
     index = idx;
   }

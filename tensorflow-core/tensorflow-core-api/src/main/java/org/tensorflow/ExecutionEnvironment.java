@@ -40,9 +40,9 @@ public interface ExecutionEnvironment {
    * Attach the function to this execution environment, allowing it to be called by creating an op with the function
    * name as it's {@code type}.
    *
-   * Done automatically in the {@link org.tensorflow.op.Ops#callFunction(GraphFunction, List)} ops.
+   * Done automatically in the {@link org.tensorflow.op.Ops#callFunction(DefinedFunction, List)} ops.
    */
-  void attachFunction(GraphFunction function);
+  void attachFunction(DefinedFunction function);
 
   /**
    * Returns true if the given operation is valid in this execution environment.

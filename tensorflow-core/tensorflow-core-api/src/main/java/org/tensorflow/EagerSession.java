@@ -283,7 +283,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void attachFunction(GraphFunction function) {
+  public void attachFunction(DefinedFunction function) {
     checkSession();
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();

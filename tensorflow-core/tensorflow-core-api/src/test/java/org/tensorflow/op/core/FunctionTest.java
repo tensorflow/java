@@ -47,7 +47,7 @@ public class FunctionTest {
         ConcreteFunction function = ConcreteFunction.create(FunctionTest::plusFive)) {
       Ops tf = Ops.create(sess);
       Operand<TFloat32> a = tf.constant(10f);
-      Operand<TFloat32> result = (Operand<TFloat32>) tf.callConcreteFunction(function, a).get("y");
+      Operand<TFloat32> result = (Operand<TFloat32>) function.call(tf, a);
       try (TFloat32 t = result.asTensor()) {
         assertEquals(15f, t.getFloat());
       }
@@ -60,7 +60,7 @@ public class FunctionTest {
         ConcreteFunction function = ConcreteFunction.create(FunctionTest::plusFive)) {
       Ops tf = Ops.create(graph);
       Operand<TFloat32> a = tf.constant(10f);
-      Operand<TFloat32> result = (Operand<TFloat32>) tf.callConcreteFunction(function, a).get("y");
+      Operand<TFloat32> result = (Operand<TFloat32>) function.call(tf, a);
       try (Session sess = new Session(graph);
           TFloat32 t = (TFloat32) sess.runner().fetch(result).run().get(0)) {
         assertEquals(15f, t.getFloat());
