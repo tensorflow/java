@@ -312,11 +312,11 @@ public class ConcreteFunction implements AutoCloseable {
 
     List<Operand<?>> inputList = signature.getInputs().values().stream()
         .map((it) -> graph.outputOrError(it.name))
-        .collect(Collectors.toUnmodifiableList());
+        .collect(Collectors.toList());
 
     List<Operand<?>> outputList = signature.getOutputs().values().stream()
         .map((it) -> graph.outputOrError(it.name))
-        .collect(Collectors.toUnmodifiableList());
+        .collect(Collectors.toList());
 
     return DefinedFunction.create(graph, signature.key(), true, inputList, outputList, description);
   }
