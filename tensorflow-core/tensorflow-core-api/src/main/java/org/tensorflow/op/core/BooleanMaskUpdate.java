@@ -17,7 +17,6 @@
 package org.tensorflow.op.core;
 
 import java.util.Arrays;
-import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
@@ -32,50 +31,24 @@ import org.tensorflow.types.family.TType;
 @Operator
 public abstract class BooleanMaskUpdate {
 
-  /*
-  Python:
-  def boolean_mask_update(tensor, mask, update, axis=0, name="boolean_mask_update"):
-  with tf.name_scope(name):
-    tensor = tf.convert_to_tensor(tensor, name="tensor")
-    mask = tf.convert_to_tensor(mask, name="mask")
-    update = tf.convert_to_tensor(update, name="value")
-
-    shape_mask = mask.get_shape()
-    ndims_mask = shape_mask.ndims
-    shape_tensor = tensor.get_shape()
-    if ndims_mask == 0:
-      raise ValueError("mask cannot be scalar.")
-    if ndims_mask is None:
-      raise ValueError(
-          "Number of mask dimensions must be specified, even if some dimensions"
-          " are None.  E.g. shape=[None] is ok, but shape=None is not.")
-    axis = 0 if axis is None else axis
-    axis_value = tf.constant(axis)
-    if axis_value is not None:
-      axis = axis_value
-      shape_tensor[axis:axis + ndims_mask].assert_is_compatible_with(shape_mask)
-
-    leading_size = tf.reduce_prod(tf.shape(tensor)[:axis + ndims_mask], [0])
-    innerShape = tf.shape(tensor)[axis + ndims_mask:]
-
-    tensor = tf.reshape(
-        tensor,
-        tf.concat([
-          [leading_size],
-          innerShape
-        ], 0))
-
-    indices = tf.where(mask)
-
-    updateShape = tf.concat([tf.shape(indices)[:-1], innerShape], 0)
-
-    update = tf.broadcast_to(update, updateShape)
-    result = tf.tensor_scatter_nd_update(tensor, indices, update)
-    return tf.reshape(result, shape_tensor)
-   */
-
   /**
-   * TODO
+   * Updates a tensor at the masked values, and returns the updated tensor.  Does not mutate the input tensors.  {@code
+   * updates} will be broadcasted by default
+   * <p>
+   * Numpy equivalent is `tensor[mask] = updates`.
+   * <p>
+   * In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match the first K dimensions of
+   * {@code tensor}'s shape.  We then have: {@code booleanMask(tensor, mask)[i, j1,...,jd] =
+   * tensor[i1,...,iK,j1,...,jd]} where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major
+   * order).
+   * <p>
+   * The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default). In that
+   * case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match the first {@code axis +
+   * dim(mask)} dimensions of {@code tensor}'s shape.
+   * <p>
+   * The shape of {@code updates} should be {@code [n, t_1, t_2, ...]} where {@code n} is the number of true values in
+   * {@code mask} and {@code t_i} is the {@code i}th dimension of {@code tensor} after {@code axis} and {@code mask}.
+   * {@code updates} will be broadcasted to this shape by default, which can be disabled using {@code options}.
    *
    * @param tensor The tensor to mask.
    * @param mask The mask to apply.
@@ -147,8 +120,9 @@ public abstract class BooleanMaskUpdate {
 
     Operand<TInt64> indices = Where.create(scope, mask);
 
-    if(broadcast) {
+    if (broadcast) {
       Operand<TInt32> indicesShape = org.tensorflow.op.core.Shape.create(scope, indices);
+      // this is the number of true values
       Operand<TInt32> batchShape = StridedSliceHelper.stridedSlice(scope, indicesShape, Indices.sliceTo(-1));
 
       Operand<TInt32> updateShape = Concat.create(
@@ -180,7 +154,7 @@ public abstract class BooleanMaskUpdate {
   /**
    * Whether to try broadcasting update.  True by default.
    */
-  public static Options broadcast(Boolean broadcast){
+  public static Options broadcast(Boolean broadcast) {
     return new Options().broadcast(broadcast);
   }
 

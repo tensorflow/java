@@ -21,7 +21,6 @@ import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.index.Indices;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,7 +35,7 @@ public abstract class BooleanMask {
   /**
    * Apply boolean mask to tensor.  Returns the flat array of each element corresponding to a {@code true} in the mask.
    * <p>
-   * Numpy equivalent is `tensor[mask]`.
+   * Numpy equivalent is {@code tensor[mask]}.
    * <p>
    * In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
    * the first K dimensions of {@code tensor}'s shape.  We then have:

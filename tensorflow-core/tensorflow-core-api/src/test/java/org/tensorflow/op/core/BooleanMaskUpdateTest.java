@@ -23,13 +23,10 @@ import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.Session.Run;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
-import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 public class BooleanMaskUpdateTest {
@@ -45,6 +42,43 @@ public class BooleanMaskUpdateTest {
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
       Operand<TInt32> value = Constant.tensorOf(scope, new int[][]{{-1, -1, -1}});
+
+      Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
+
+      Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
+
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
+      try (TInt32 result = (TInt32) results.get(0);
+          TInt32 bcastResult = (TInt32) results.get(1)) {
+
+        assertEquals(Shape.of(3, 3), result.shape());
+
+        assertEquals(-1, result.getInt(0, 0));
+        assertEquals(-1, result.getInt(0, 1));
+        assertEquals(-1, result.getInt(0, 2));
+        assertEquals(1, result.getInt(1, 0));
+        assertEquals(1, result.getInt(1, 1));
+        assertEquals(1, result.getInt(1, 2));
+        assertEquals(2, result.getInt(2, 0));
+        assertEquals(2, result.getInt(2, 1));
+        assertEquals(2, result.getInt(2, 2));
+
+        assertEquals(result, bcastResult);
+      }
+    }
+  }
+
+  @Test
+  public void testBooleanMaskUpdateSliceWithBroadcast() {
+    try (Graph g = new Graph();
+        Session sess = new Session(g)) {
+      Scope scope = new Scope(g);
+
+      Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+
+      Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
+
+      Operand<TInt32> value = Constant.vectorOf(scope, new int[]{-1, -1, -1});
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
