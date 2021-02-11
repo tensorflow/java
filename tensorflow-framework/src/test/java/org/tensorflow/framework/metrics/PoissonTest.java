@@ -32,7 +32,7 @@ class PoissonTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Poisson<TFloat32, TFloat64> instance =
+      Poisson<TFloat64> instance =
           new Poisson<>(tf, "Poisson_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {4, 8, 12, 8, 1, 3};
@@ -55,8 +55,7 @@ class PoissonTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Poisson<TFloat32, TFloat32> instance =
-          new Poisson<>(tf, "Poisson_testWeighted", 1001L, TFloat32.class);
+      Poisson<TFloat32> instance = new Poisson<>(tf, "Poisson_testWeighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {4, 8, 12, 8, 1, 3};
       float[] predArray = {1, 9, 2, 5, 2, 6};

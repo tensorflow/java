@@ -29,8 +29,7 @@ public interface LossMetric<T extends TNumber> {
    *
    * @param labels the truth values or labels
    * @param predictions the predictions
-   * @param <V> The data type of the labels.
    * @return the loss
    */
-  <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions);
+  Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions);
 }

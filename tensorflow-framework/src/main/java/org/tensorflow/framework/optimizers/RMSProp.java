@@ -27,17 +27,20 @@ import java.util.List;
 /**
  * Optimizer that implements the RMSProp algorithm.
  *
- * <p>The gist of RMSprop is to: <ul>
- * <li>Maintain a moving (discounted) average of the square of gradients
- * <li>Divide the gradient by the root of this average </ul>
+ * <p>The gist of RMSprop is to:
  *
- *     <p>This implementation of RMSprop uses plain momentum, not Nesterov momentum.
+ * <ul>
+ *   <li>Maintain a moving (discounted) average of the square of gradients
+ *   <li>Divide the gradient by the root of this average
+ * </ul>
  *
- *     <p>The centered version additionally maintains a moving average of the gradients, and uses
- *     that average to estimate the variance.
+ * <p>This implementation of RMSprop uses plain momentum, not Nesterov momentum.
+ *
+ * <p>The centered version additionally maintains a moving average of the gradients, and uses that
+ * average to estimate the variance.
  *
  * @see <a href="http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf">Hinton G,
- *    et al. 2012, lecture notes</a> that is inexplicably the canonical reference.
+ *     et al. 2012, lecture notes, that is inexplicably the canonical reference.</a>
  */
 public class RMSProp extends Optimizer {
 
@@ -165,24 +168,20 @@ public class RMSProp extends Optimizer {
     }
   }
 
-
   /**
-   * Creates the RMSProp Slots for Root Mean Squared (RMS),
-   * MOMENTUM, and Mean Gradient (MG)
+   * Creates the RMSProp Slots for Root Mean Squared (RMS), MOMENTUM, and Mean Gradient (MG)
    *
    * @param v the variable to install in the slot
    * @param <T> the datatype of the variable.
    */
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.type()));
+    Operand<T> rmsInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.type()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
     Operand<T> momentumInitializer =
         tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer =
-          tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+      Operand<T> mgInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }

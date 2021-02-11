@@ -32,7 +32,7 @@ class SparseCategoricalCrossentropyTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SparseCategoricalCrossentropy<TFloat64, TFloat64> instance =
+      SparseCategoricalCrossentropy<TFloat64> instance =
           new SparseCategoricalCrossentropy<>(
               tf, "SCE_testUnweighted", false, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
@@ -56,7 +56,7 @@ class SparseCategoricalCrossentropyTest {
   public void testUnweightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SparseCategoricalCrossentropy<TFloat64, TFloat64> instance =
+      SparseCategoricalCrossentropy<TFloat64> instance =
           new SparseCategoricalCrossentropy<>(
               tf, "SCE_testWeighted", true, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
@@ -79,7 +79,7 @@ class SparseCategoricalCrossentropyTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SparseCategoricalCrossentropy<TFloat64, TFloat32> instance =
+      SparseCategoricalCrossentropy<TFloat32> instance =
           new SparseCategoricalCrossentropy<>(
               tf, "SCE_testWeighted", false, -1, 1001L, TFloat32.class);
       session.run(instance.resetStates());
@@ -105,7 +105,7 @@ class SparseCategoricalCrossentropyTest {
   public void testWeightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      SparseCategoricalCrossentropy<TFloat64, TFloat64> instance =
+      SparseCategoricalCrossentropy<TFloat64> instance =
           new SparseCategoricalCrossentropy<>(
               tf, "SCE_testWeighted", true, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());

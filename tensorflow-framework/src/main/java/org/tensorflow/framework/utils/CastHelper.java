@@ -34,7 +34,7 @@ public class CastHelper {
    */
   @SuppressWarnings("unchecked")
   public static <T extends TType, U extends TType> Operand<T> cast(
-          Ops tf, Operand<U> value, Class<T> requiredType) {
+      Ops tf, Operand<U> value, Class<T> requiredType) {
     return (value.type() == requiredType)
         ? (Operand<T>) value
         : tf.dtypes.cast(value, requiredType);

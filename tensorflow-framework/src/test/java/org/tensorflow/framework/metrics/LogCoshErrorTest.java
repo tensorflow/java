@@ -32,7 +32,7 @@ class LogCoshErrorTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      LogCoshError<TFloat32, TFloat64> instance =
+      LogCoshError<TFloat64> instance =
           new LogCoshError<>(tf, "LogCosh_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[] trueArray = {1, 9, 2, -5, -2, 6};
@@ -56,7 +56,7 @@ class LogCoshErrorTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      LogCoshError<TFloat32, TFloat64> instance =
+      LogCoshError<TFloat64> instance =
           new LogCoshError<>(tf, "LogCosh_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 9, 2, -5, -2, 6};

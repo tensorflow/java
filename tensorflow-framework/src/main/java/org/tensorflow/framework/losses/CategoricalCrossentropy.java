@@ -154,24 +154,26 @@ public class CategoricalCrossentropy extends Loss {
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *    confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
-   *    value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
+   *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2
+   *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
+   *     <code>0.9</code> for label <code>1</code>
    */
   public CategoricalCrossentropy(Ops tf, boolean fromLogits, float labelSmoothing) {
     this(tf, null, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT},
-   * and a channel axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy Loss using a Loss Reduction of {@link
+   * Loss#REDUCTION_DEFAULT}, and a channel axis of {@link #DEFAULT_AXIS}
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *    confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
-   *    value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
+   *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2
+   *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
+   *     <code>0.9</code> for label <code>1</code>
    */
   public CategoricalCrossentropy(Ops tf, String name, boolean fromLogits, float labelSmoothing) {
     this(tf, name, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
@@ -183,9 +185,10 @@ public class CategoricalCrossentropy extends Loss {
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *    confidence on label values are relaxed. e.g. <code>x=0.2</code> means that we will use a
-   *    value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
+   *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>x=0.2</code> means
+   *     that we will use a value of <code>0.1</code> for label <code>0</code> and <code>0.9</code>
+   *     for label <code>1</code>
    * @param reduction Type of Reduction to apply to loss.
    */
   public CategoricalCrossentropy(
@@ -199,13 +202,14 @@ public class CategoricalCrossentropy extends Loss {
    * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
-   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are smoothed, meaning the
-   *    confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code> means that we will use a
-   *    value of <code>0.1</code> for label <code>0</code> and <code>0.9</code> for label <code>1</code>
+   * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
+   *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2
+   *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
+   *     <code>0.9</code> for label <code>1</code>
    * @param reduction Type of Reduction to apply to loss.
    * @param axis The channels axis. <code>axis=-1</code> corresponds to data format "Channels Last"
-   *     and <code>axis=1</code> corresponds to data format "Channels First".
-   *     {@link Losses#CHANNELS_LAST} and {@link Losses#CHANNELS_FIRST}
+   *     and <code>axis=1</code> corresponds to data format "Channels First". {@link
+   *     Losses#CHANNELS_LAST} and {@link Losses#CHANNELS_FIRST}
    * @throws IllegalArgumentException if labelSmoothing is not in the inclusive range of 0. - 1.
    */
   public CategoricalCrossentropy(
@@ -242,13 +246,12 @@ public class CategoricalCrossentropy extends Loss {
    *     predictions is scaled by the corresponding value of SampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
    * @param <T> The data type of the predictions, sampleWeights and loss.
-   * @param <U> The data type of the labels.
    * @return the loss
    * @throws IllegalArgumentException if the predictions are outside the range [0.-1.].
    */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-      Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> lPredictions;
     if (!fromLogits) {
       // add predictions range check for 0 - 1

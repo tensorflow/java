@@ -33,7 +33,7 @@ class MeanSquaredErrorTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanSquaredError<TFloat32, TFloat64> instance =
+      MeanSquaredError<TFloat64> instance =
           new MeanSquaredError<>(tf, "MSE_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0, instance.getTotal());
@@ -70,7 +70,7 @@ class MeanSquaredErrorTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      MeanSquaredError<TFloat32, TFloat64> instance =
+      MeanSquaredError<TFloat64> instance =
           new MeanSquaredError<>(tf, "MSE_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0, instance.getTotal());

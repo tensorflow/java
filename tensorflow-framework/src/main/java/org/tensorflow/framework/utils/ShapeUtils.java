@@ -14,8 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.*;
-import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.Graph;
+import org.tensorflow.Operand;
+import org.tensorflow.Session;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;
@@ -33,7 +34,9 @@ public class ShapeUtils {
   /**
    * Converts a shape operand to a Shape object
    *
+   * @param scope the TensorFlow scope
    * @param dims the Operand containing the shape values
+   * @param <T> the date type for the shape dimensions.
    * @return a new Shape based on an Operand that contains dimensions
    */
   public static <T extends TIntegral> Shape toShape(Scope scope, Operand<T> dims) {
@@ -45,8 +48,8 @@ public class ShapeUtils {
    * Converts a TInt32 type Operand to a Java int array
    *
    * @param scope the TensorFlow scope
-   * @param dims the TInt32 Operand
-   * @return the int array
+   * @param dims the shape dimensions operand
+   * @return the int array of the dimensions
    */
   public static int[] getIntArray(Scope scope, Operand<TInt32> dims) {
     long[] longDims = getLongArray(scope, dims);
@@ -66,8 +69,8 @@ public class ShapeUtils {
     if (scope.env().isEager()) {
       return getLongArray(dims.asTensor());
     }
-    try (Session session = new Session((Graph)scope.env());
-        TIntegral tensor = (TIntegral)session.runner().fetch(dims).run().get(0)) {
+    try (Session session = new Session((Graph) scope.env());
+        TIntegral tensor = (TIntegral) session.runner().fetch(dims).run().get(0)) {
       return getLongArray(tensor);
     }
   }
@@ -76,20 +79,21 @@ public class ShapeUtils {
    * Converts a TInt32 or TInt64 to a java long array
    *
    * @param dims the dimension tensor
+   * @param <T> the type of the dimensions, must either be TInt32 or TInt64 type
    * @return the long array
    * @throws java.lang.IllegalArgumentException if the dims type is not an integer
    */
   public static <T extends TIntegral> long[] getLongArray(T dims) {
     List<Long> result = new ArrayList<>();
     if (dims instanceof TInt32) {
-      ((TInt32)dims).scalars().forEach(s -> result.add((long) s.getInt()));
+      ((TInt32) dims).scalars().forEach(s -> result.add((long) s.getInt()));
     } else if (dims instanceof TInt64) {
-      ((TInt64)dims).scalars().forEach(s -> result.add(s.getLong()));
+      ((TInt64) dims).scalars().forEach(s -> result.add(s.getLong()));
     } else if (dims instanceof TUint8) {
-      ((TUint8)dims).scalars().forEach(s -> result.add(s.getObject().longValue()));
-      } else { // shouldn't happen
-        throw new IllegalArgumentException("the data type must be an integer type");
-      }
+      ((TUint8) dims).scalars().forEach(s -> result.add(s.getObject().longValue()));
+    } else { // shouldn't happen
+      throw new IllegalArgumentException("the data type must be an integer type");
+    }
     return result.stream().mapToLong(i -> i).toArray();
   }
 
