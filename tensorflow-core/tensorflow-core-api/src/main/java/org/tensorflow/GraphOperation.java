@@ -74,6 +74,13 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   @Override
+  public Graph env() {
+    try (Graph.Reference r = graph.ref()) {
+      return graph;
+    }
+  }
+
+  @Override
   public int numOutputs() {
     Graph.Reference r = graph.ref();
     try {
