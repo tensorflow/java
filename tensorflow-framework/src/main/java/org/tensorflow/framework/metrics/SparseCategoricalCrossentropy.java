@@ -25,7 +25,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the sparse categorical cross-entropy loss between true labels and
- * predicted labels. \
+ * predicted labels.
  *
  * @param <T> The data type for the metric result.
  */
