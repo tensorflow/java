@@ -18,15 +18,19 @@ package org.tensorflow.op.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.AutoCloseableList;
 import org.tensorflow.EagerSession;
 import org.tensorflow.Graph;
+import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
-import org.tensorflow.op.Ops;
-import org.tensorflow.op.Scope;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.FloatNdArray;
+import org.tensorflow.ndarray.IntNdArray;
+import org.tensorflow.ndarray.LongNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.ndarray.buffer.DataBuffers;
@@ -34,19 +38,20 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
-import org.tensorflow.ndarray.DoubleNdArray;
-import org.tensorflow.ndarray.FloatNdArray;
-import org.tensorflow.ndarray.IntNdArray;
-import org.tensorflow.ndarray.LongNdArray;
-import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
+import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.TUint8;
+import org.tensorflow.types.family.TNumber;
 
 public class ConstantTest {
+
   private static final float EPSILON = 1e-7f;
 
   @Test
@@ -56,7 +61,7 @@ public class ConstantTest {
     IntNdArray array = NdArrays.wrap(shape, buffer);
 
     try (Graph g = new Graph();
-         Session sess = new Session(g)) {
+        Session sess = new Session(g)) {
       Scope scope = new Scope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
@@ -162,6 +167,30 @@ public class ConstantTest {
       t.setInt(10);
       assertEquals(NdArrays.vectorOf(10, 2, 3, 4), t);
       assertEquals(NdArrays.vectorOf(1, 2, 3, 4), c1.asTensor());
+    }
+  }
+
+  private static void testCreateFromNumber(Ops tf, Class<? extends TNumber> type) {
+    Operand<? extends TNumber> constant = tf.constant(type, 10);
+    assertEquals(type, constant.type());
+
+    try (TFloat64 t = tf.dtypes.cast(constant, TFloat64.class).asTensor()) {
+      assertEquals(10.0, t.getDouble());
+    }
+  }
+
+  @Test
+  public void createFromNumber() {
+    try (EagerSession s = EagerSession.create()) {
+      Ops tf = Ops.create(s);
+
+      testCreateFromNumber(tf, TBfloat16.class);
+      testCreateFromNumber(tf, TFloat64.class);
+      testCreateFromNumber(tf, TFloat32.class);
+      testCreateFromNumber(tf, TFloat16.class);
+      testCreateFromNumber(tf, TInt64.class);
+      testCreateFromNumber(tf, TInt32.class);
+      testCreateFromNumber(tf, TUint8.class);
     }
   }
 }
