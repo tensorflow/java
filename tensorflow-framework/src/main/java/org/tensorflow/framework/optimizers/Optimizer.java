@@ -72,14 +72,6 @@ public abstract class Optimizer {
   }
 
   /**
-   * Gets the Optimizer's Ops instance
-   * @return the Optimizer's Ops instance
-   */
-  public final Ops getTF() {
-    return tf;
-  }
-
-  /**
    * Creates a name by combining a variable name and a slot name
    *
    * @param variable the variable
@@ -88,6 +80,15 @@ public abstract class Optimizer {
    */
   public static String createName(Output<? extends TType> variable, String slotName) {
     return variable.op().name() + "-" + slotName;
+  }
+
+  /**
+   * Gets the Optimizer's Ops instance
+   *
+   * @return the Optimizer's Ops instance
+   */
+  public final Ops getTF() {
+    return tf;
   }
 
   /**
@@ -299,7 +300,8 @@ public abstract class Optimizer {
      * Sets the shared name
      *
      * @param sharedName If non-empty, this variable is named in the given bucket with this
-     *     shared_name. Otherwise, the node name is used instead.
+     *     sharedName. Otherwise, the node name is used instead.
+     * @return this options instance
      */
     public Optimizer.Options sharedName(String sharedName) {
       this.sharedName = sharedName;

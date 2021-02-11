@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow.op;
 
+import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operation;
 
 /**
@@ -48,4 +49,11 @@ public interface Op {
    * @return an {@link Operation}
    */
   Operation op();
+
+  /**
+   * Return the execution environment this op was created in.
+   */
+  default ExecutionEnvironment env() {
+    return op().env();
+  }
 }

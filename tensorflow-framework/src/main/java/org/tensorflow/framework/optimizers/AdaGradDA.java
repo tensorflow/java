@@ -40,7 +40,7 @@ import java.util.Optional;
  * networks as it will require careful initialization of the gradient accumulators for it to train.
  *
  * @see <a href="http://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf">Duchi, J, et al., 2011,
- *    Adaptive Subgradient Methods for Online Learning and Stochastic Optimization</a>.
+ *     Adaptive Subgradient Methods for Online Learning and Stochastic Optimization</a>
  */
 public class AdaGradDA extends Optimizer {
 

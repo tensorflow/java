@@ -89,6 +89,7 @@ public class Huber extends Loss {
    * Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
+   * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    */
   public Huber(Ops tf, String name) {
     this(tf, name, DELTA_DEFAULT, Reduction.AUTO);
@@ -109,6 +110,7 @@ public class Huber extends Loss {
    * Creates a Huber Loss using {@link #DELTA_DEFAULT} as the delta
    *
    * @param tf the TensorFlow Ops
+   * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    * @param reduction Type of Reduction to apply to the loss.
    */
   public Huber(Ops tf, String name, Reduction reduction) {
@@ -119,7 +121,7 @@ public class Huber extends Loss {
    * Creates a Huber Loss
    *
    * @param tf the TensorFlow Ops
-   * @param name the name of the loss
+   * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    * @param delta the point where the Huber loss function changes from quadratic to linear.
    * @param reduction Type of Reduction to apply to the loss.
    */
@@ -130,8 +132,8 @@ public class Huber extends Loss {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-          Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses = Losses.huber(getTF(), labels, predictions, delta);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }

@@ -31,7 +31,7 @@ class KLDivergenceTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      KLDivergence<TFloat32, TFloat64> instance =
+      KLDivergence<TFloat64> instance =
           new KLDivergence<>(tf, "KLD_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[][] trueArray = {{.5f, .8f, .12f}, {.7f, .43f, .8f}};
@@ -54,7 +54,7 @@ class KLDivergenceTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      KLDivergence<TFloat32, TFloat64> instance =
+      KLDivergence<TFloat64> instance =
           new KLDivergence<>(tf, "KLD_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       float[] trueArray = {

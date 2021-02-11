@@ -31,7 +31,7 @@ class CategoricalCrossentropyTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalCrossentropy<TFloat64, TFloat64> instance =
+      CategoricalCrossentropy<TFloat64> instance =
           new CategoricalCrossentropy<>(
               tf, "CCE_testUnweighted", false, 0, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
@@ -55,7 +55,7 @@ class CategoricalCrossentropyTest {
   public void testUnweightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalCrossentropy<TFloat64, TFloat64> instance =
+      CategoricalCrossentropy<TFloat64> instance =
           new CategoricalCrossentropy<>(
               tf, "CCE_testUnweightedLogits", true, 0, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
@@ -79,7 +79,7 @@ class CategoricalCrossentropyTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalCrossentropy<TFloat64, TFloat64> instance =
+      CategoricalCrossentropy<TFloat64> instance =
           new CategoricalCrossentropy<>(
               tf, "CCE_testWeighted", false, 0, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
@@ -104,7 +104,7 @@ class CategoricalCrossentropyTest {
   public void testWeightedLogits() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalCrossentropy<TFloat64, TFloat64> instance =
+      CategoricalCrossentropy<TFloat64> instance =
           new CategoricalCrossentropy<>(tf, "CCE_testWeighted", true, 0, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {0, 1, 0, 0, 0, 1};
@@ -129,7 +129,7 @@ class CategoricalCrossentropyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       float labelSmoothing = 0.1F;
-      CategoricalCrossentropy<TFloat64, TFloat64> instance =
+      CategoricalCrossentropy<TFloat64> instance =
           new CategoricalCrossentropy<>(
               tf, "CCE_testWeighted", true, labelSmoothing, -1, 1001L, TFloat64.class);
       session.run(instance.resetStates());

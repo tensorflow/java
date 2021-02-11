@@ -22,12 +22,13 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes the cosine similarity between labels and predictions.
  *
- * <p>Note that it is a number between <code>-1</code> and <code>1</code>. When it is a negative number between <code>-1</code> and <code>0</code>, <code>0</code>
- * indicates orthogonality and values closer to <code>-1</code>indicate greater similarity. The values closer to
- * <code>1</code> indicate greater dissimilarity. This makes it usable as a loss function in a setting where you
- * try to maximize the proximity between predictions and targets. If either <code>labels</code> or <code>predictions</code> is
- * a zero vector, cosine similarity will be <code>0</code> regardless of the proximity between predictions and
- * targets.
+ * <p>Note that it is a number between <code>-1</code> and <code>1</code>. When it is a negative
+ * number between <code>-1</code> and <code>0</code>, <code>0</code> indicates orthogonality and
+ * values closer to <code>-1</code>indicate greater similarity. The values closer to <code>1</code>
+ * indicate greater dissimilarity. This makes it usable as a loss function in a setting where you
+ * try to maximize the proximity between predictions and targets. If either <code>labels</code> or
+ * <code>predictions</code> is a zero vector, cosine similarity will be <code>0</code> regardless of
+ * the proximity between predictions and targets.
  *
  * <p><code>loss = -sum(l2Norm(labels) * l2Norm(predictions))</code>
  *
@@ -71,7 +72,7 @@ public class CosineSimilarity extends Loss {
   public static final int DEFAULT_AXIS = -1;
   public static final Reduction DEFAULT_REDUCTION = Reduction.AUTO;
 
-  private final int axis;
+  private final int[] axis;
 
   /**
    * Creates a Cosine Similarity Loss using {@link Class#getSimpleName()} as the loss name, an axis
@@ -107,6 +108,17 @@ public class CosineSimilarity extends Loss {
 
     this(tf, null, axis, DEFAULT_REDUCTION);
   }
+  /**
+   * Creates a Cosine Similarity Loss using {@link Class#getSimpleName()} as the loss name, and a
+   * Loss Reduction of {@link #DEFAULT_REDUCTION}
+   *
+   * @param tf the TensorFlow Ops
+   * @param axis The dimension along which the cosine similarity is computed.
+   */
+  public CosineSimilarity(Ops tf, int[] axis) {
+
+    this(tf, null, axis, DEFAULT_REDUCTION);
+  }
 
   /**
    * Creates a Cosine Similarity Loss using a Loss Reduction of {@link #DEFAULT_REDUCTION}
@@ -116,6 +128,18 @@ public class CosineSimilarity extends Loss {
    * @param axis The dimension along which the cosine similarity is computed.
    */
   public CosineSimilarity(Ops tf, String name, int axis) {
+
+    this(tf, name, axis, DEFAULT_REDUCTION);
+  }
+
+  /**
+   * Creates a Cosine Similarity Loss using a Loss Reduction of {@link #DEFAULT_REDUCTION}
+   *
+   * @param tf the TensorFlow Ops
+   * @param name the name of the loss
+   * @param axis The dimension along which the cosine similarity is computed.
+   */
+  public CosineSimilarity(Ops tf, String name, int[] axis) {
 
     this(tf, name, axis, DEFAULT_REDUCTION);
   }
@@ -153,6 +177,18 @@ public class CosineSimilarity extends Loss {
    */
   public CosineSimilarity(Ops tf, int axis, Reduction reduction) {
 
+    this(tf, null, new int[] {axis}, reduction);
+  }
+
+  /**
+   * Creates a Cosine Similarity Loss using {@link Class#getSimpleName()} as the loss name
+   *
+   * @param tf the TensorFlow Ops
+   * @param axis The dimension along which the cosine similarity is computed.
+   * @param reduction Type of Reduction to apply to the loss.
+   */
+  public CosineSimilarity(Ops tf, int[] axis, Reduction reduction) {
+
     this(tf, null, axis, reduction);
   }
 
@@ -165,15 +201,28 @@ public class CosineSimilarity extends Loss {
    * @param reduction Type of Reduction to apply to the loss.
    */
   public CosineSimilarity(Ops tf, String name, int axis, Reduction reduction) {
+    this(tf, name, new int[] {axis}, reduction);
+  }
+
+  /**
+   * Creates a Cosine Similarity Loss
+   *
+   * @param tf the TensorFlow Ops
+   * @param name the name of the loss
+   * @param axis The dimension along which the cosine similarity is computed.
+   * @param reduction Type of Reduction to apply to the loss.
+   */
+  public CosineSimilarity(Ops tf, String name, int[] axis, Reduction reduction) {
     super(tf, name, reduction);
     this.axis = axis;
   }
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-          Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses = Losses.cosineSimilarity(getTF(), labels, predictions, axis);
+    losses = tf.math.neg(losses);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }
 }

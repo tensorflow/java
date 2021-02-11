@@ -39,4 +39,19 @@ final class All implements Index {
 
   private All() {
   }
+
+  @Override
+  public boolean beginMask() {
+    return true;
+  }
+
+  @Override
+  public boolean endMask() {
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return All.class.getSimpleName() + "()";
+  }
 }

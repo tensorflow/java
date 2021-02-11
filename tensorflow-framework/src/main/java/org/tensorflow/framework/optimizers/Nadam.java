@@ -24,8 +24,6 @@ import java.util.Optional;
  */
 public class Nadam extends Optimizer {
 
-  private static final float DECAY_BASE = 0.96f;
-  private static final float DECAY = 0.004f;
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
   public static final float EPSILON_DEFAULT = 1e-8f;
   public static final float BETA_ONE_DEFAULT = 0.9f;
@@ -33,7 +31,8 @@ public class Nadam extends Optimizer {
   public static final String FIRST_MOMENT = "m";
   public static final String SECOND_MOMENT = "v";
   public static final String MOMENTUM = "momentum";
-
+  private static final float DECAY_BASE = 0.96f;
+  private static final float DECAY = 0.004f;
   /** The learning rate. */
   private final float learningRate;
 

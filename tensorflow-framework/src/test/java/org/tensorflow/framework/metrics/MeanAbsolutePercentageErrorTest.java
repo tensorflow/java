@@ -34,7 +34,7 @@ class MeanAbsolutePercentageErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       session.setEpsilon(1E-6f);
       Ops tf = session.getTF();
-      MeanAbsolutePercentageError<TFloat32, TFloat32> instance =
+      MeanAbsolutePercentageError<TFloat32> instance =
           new MeanAbsolutePercentageError<>(tf, "MAPE_testUnweighted", 1001L, TFloat32.class);
       session.run(instance.resetStates());
       session.evaluate(0.0f, instance.getTotal());
@@ -76,7 +76,7 @@ class MeanAbsolutePercentageErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       session.setEpsilon(1E-6f);
       Ops tf = session.getTF();
-      MeanAbsolutePercentageError<TFloat64, TFloat64> instance =
+      MeanAbsolutePercentageError<TFloat64> instance =
           new MeanAbsolutePercentageError<>(tf, "MAPE_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       session.evaluate(0.0, instance.getTotal());

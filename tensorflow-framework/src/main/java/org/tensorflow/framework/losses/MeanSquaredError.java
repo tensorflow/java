@@ -95,8 +95,8 @@ public class MeanSquaredError extends Loss {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-          Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     Operand<T> losses = Losses.meanSquaredError(getTF(), labels, predictions);
     return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
   }

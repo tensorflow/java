@@ -62,7 +62,6 @@ import org.tensorflow.types.family.TFloating;
  * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
  * <p>For a GlorotUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
  * for the distribution parameter.
- * <p></p>
  *
  * @param <T> The TType for the call operation
  * @see VarianceScaling.Distribution

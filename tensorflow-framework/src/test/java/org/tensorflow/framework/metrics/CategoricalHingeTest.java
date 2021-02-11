@@ -31,7 +31,7 @@ class CategoricalHingeTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalHinge<TFloat64, TFloat64> instance =
+      CategoricalHinge<TFloat64> instance =
           new CategoricalHinge<>(tf, "CH_testUnweighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {
@@ -64,7 +64,7 @@ class CategoricalHingeTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalHinge<TFloat64, TFloat64> instance =
+      CategoricalHinge<TFloat64> instance =
           new CategoricalHinge<>(tf, "CH_testWeighted", 1001L, TFloat64.class);
       session.run(instance.resetStates());
       int[] trueArray = {

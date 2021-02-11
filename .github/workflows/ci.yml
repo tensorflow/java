@@ -50,9 +50,12 @@ jobs:
     steps:
       - name: Install environment
         run: |
-          yum -y update
-          yum -y install centos-release-scl-rh epel-release
-          yum -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch python36-devel python36-numpy python36-pip python36-six
+          echo Not updating glibc since CUDA fails with updated versions
+          GLIBC="glibc glibc-common glibc-devel glibc-headers"
+          yum --disablerepo updates -y install $GLIBC
+          yum -x "$GLIBC" -y update
+          yum -x "$GLIBC" -y install centos-release-scl-rh epel-release
+          yum -x "$GLIBC" -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/

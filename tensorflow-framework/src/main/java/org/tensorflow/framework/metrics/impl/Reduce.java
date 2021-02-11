@@ -19,7 +19,6 @@ import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.Metric;
 import org.tensorflow.framework.metrics.MetricReduction;
-import org.tensorflow.framework.utils.CastHelper;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -29,13 +28,14 @@ import org.tensorflow.types.family.TNumber;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Encapsulates metrics that perform a reduce operation on the metric values.
  *
- * @param <U> The data type for the metric values
  * @param <T> The data type for the metric result
  */
-public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metric<U, T> {
+public abstract class Reduce<T extends TNumber> extends Metric<T> {
   public static final String TOTAL = "total";
   public static final String COUNT = "count";
   protected final MetricReduction reduction;
@@ -45,8 +45,10 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   private final Class<T> resultType;
   /** the variable that holds the total of the metric values */
   protected Variable<T> total;
-  /** the variable that holds the count of the metric values.
-   * For {@link MetricReduction#WEIGHTED_MEAN}, this  count may be weighted */
+  /**
+   * the variable that holds the count of the metric values. For {@link
+   * MetricReduction#WEIGHTED_MEAN}, this count may be weighted
+   */
   protected Variable<T> count;
 
   /**
@@ -95,12 +97,10 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
   public Op resetStates() {
     List<Op> controls = new ArrayList<>();
     if (total != null) {
-      controls.add(
-          getTF().assign(total, CastHelper.cast(getTF(), getTF().constant(0), total.type())));
+      controls.add(getTF().assign(total, cast(getTF(), getTF().constant(0), total.type())));
     }
     if (count != null) {
-      controls.add(
-          getTF().assign(count, CastHelper.cast(getTF(), getTF().constant(0), count.type())));
+      controls.add(getTF().assign(count, cast(getTF(), getTF().constant(0), count.type())));
     }
     return getTF().withControlDependencies(controls).noOp();
   }
@@ -115,67 +115,67 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
    * @throws IllegalArgumentException if values is null
    */
   @Override
-  public <V extends TNumber> List<Op> updateStateList(Operand<U> values, Operand<V> sampleWeights) {
+  public List<Op> updateStateList(
+      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
 
     if (values == null) {
       throw new IllegalArgumentException("values is required.");
     }
+    Ops tf = getTF();
     List<Op> updateOperations = new ArrayList<>();
     // cast everything to match the variables
-    Operand<U> lSampleWeights = null;
-    Operand<U> lValues = values;
+    Operand<T> tSampleWeights = null;
+    Operand<T> tValues = cast(tf, values, getResultType());
 
     if (sampleWeights != null) {
-      lSampleWeights = CastHelper.cast(getTF(), sampleWeights, lValues.type());
-      LossTuple<U> tuple =
-          LossesHelper.squeezeOrExpandDimensions(getTF(), null, lValues, lSampleWeights);
-      lValues = tuple.getTarget();
-      lSampleWeights = tuple.getSampleWeights();
+      tSampleWeights = cast(getTF(), sampleWeights, getResultType());
+      LossTuple<T> tuple =
+          LossesHelper.squeezeOrExpandDimensions(getTF(), null, tValues, tSampleWeights);
+      tValues = tuple.getTarget();
+      tSampleWeights = tuple.getSampleWeights();
       try {
-        lSampleWeights = MetricsHelper.broadcastWeights(getTF(), lSampleWeights, lValues);
+        tSampleWeights = MetricsHelper.broadcastWeights(getTF(), tSampleWeights, tValues);
       } catch (IllegalArgumentException ex) {
         // if we get here we have static shapes with either
         // different ranks or different dimension sizes.
         // first, reduce the values down to the rank of the samples
-        int valuesRank = lValues.shape().numDimensions();
-        int weightsRank = lSampleWeights.shape().numDimensions();
+        int valuesRank = tValues.shape().numDimensions();
+        int weightsRank = tSampleWeights.shape().numDimensions();
         int numAxes = Math.min(0, valuesRank - weightsRank);
         if (numAxes
             > 0) { // values rank is greater than weights rank, reduce values to weights rank.
           int[] axes = new int[numAxes];
           for (int i = 0; i < numAxes; i++) axes[i] = i + weightsRank;
           if (reduction == MetricReduction.SUM) {
-            lValues = getTF().reduceSum(lValues, getTF().constant(axes));
+            tValues = getTF().reduceSum(tValues, getTF().constant(axes));
           } else {
-            lValues = getTF().math.mean(lValues, getTF().constant(axes));
+            tValues = getTF().math.mean(tValues, getTF().constant(axes));
           }
         }
       }
-      lValues = getTF().math.mul(lValues, lSampleWeights);
+      tValues = getTF().math.mul(tValues, tSampleWeights);
     }
 
-    Operand<U> weightedValueSum =
-        getTF().reduceSum(lValues, LossesHelper.allAxes(getTF(), lValues));
+    Operand<? extends TNumber> weightedValueSum =
+        getTF().reduceSum(tValues, LossesHelper.allAxes(getTF(), tValues));
     Operand<T> totalUpdate =
-        getTF().assignAdd(total, CastHelper.cast(getTF(), weightedValueSum, total.type()));
+        getTF().assignAdd(total, cast(getTF(), weightedValueSum, total.type()));
     updateOperations.add(totalUpdate);
     Operand<T> numValues;
     if (reduction != MetricReduction.SUM) {
       switch (reduction) {
         case SUM_OVER_BATCH_SIZE:
-          numValues =
-              CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
+          numValues = cast(getTF(), getTF().constant(tValues.shape().size()), resultType);
           break;
         case WEIGHTED_MEAN:
-          if (lSampleWeights == null) {
-            numValues =
-                CastHelper.cast(getTF(), getTF().constant(lValues.shape().size()), resultType);
+          if (tSampleWeights == null) {
+            numValues = cast(getTF(), getTF().constant(tValues.shape().size()), resultType);
           } else {
             numValues =
-                CastHelper.cast(
+                cast(
                     getTF(),
                     getTF()
-                        .reduceSum(lSampleWeights, LossesHelper.allAxes(getTF(), lSampleWeights)),
+                        .reduceSum(tSampleWeights, LossesHelper.allAxes(getTF(), tSampleWeights)),
                     resultType);
           }
           break;
@@ -202,7 +202,7 @@ public abstract class Reduce<U extends TNumber, T extends TNumber> extends Metri
         break;
       case WEIGHTED_MEAN:
       case SUM_OVER_BATCH_SIZE:
-        fResult = getTF().math.divNoNan(total, CastHelper.cast(getTF(), count, resultType));
+        fResult = getTF().math.divNoNan(total, cast(getTF(), count, resultType));
         break;
       default:
         throw new UnsupportedOperationException(

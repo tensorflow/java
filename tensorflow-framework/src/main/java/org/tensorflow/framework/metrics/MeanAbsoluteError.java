@@ -21,13 +21,14 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * A metric that computes the mean of absolute difference between labels and predictions.
  *
- * @param <U> the data type for the predictions.
  * @param <T> The data type for the metric result.
  */
-public class MeanAbsoluteError<U extends TNumber, T extends TNumber> extends MeanMetricWrapper<U, T>
+public class MeanAbsoluteError<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
 
   /**
@@ -46,7 +47,10 @@ public class MeanAbsoluteError<U extends TNumber, T extends TNumber> extends Mea
 
   /** {@inheritDoc} */
   @Override
-  public <V extends TNumber> Operand<T> call(Operand<V> labels, Operand<T> predictions) {
-    return Losses.meanAbsoluteError(getTF(), labels, predictions);
+  public Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.meanAbsoluteError(getTF(), tLabels, tPredictions);
   }
 }
