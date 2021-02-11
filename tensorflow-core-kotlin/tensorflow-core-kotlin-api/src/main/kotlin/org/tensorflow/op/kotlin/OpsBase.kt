@@ -18,8 +18,10 @@ package org.tensorflow.op.kotlin
 
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
+import org.tensorflow.ndarray.index.Index
 import org.tensorflow.op.core.Constant
 import org.tensorflow.op.core.StopGradient
+import org.tensorflow.op.core.StridedSlice
 import org.tensorflow.op.dtypes.Cast
 import org.tensorflow.op.linalg.MatMul
 import org.tensorflow.op.math.Add
@@ -50,7 +52,7 @@ import org.tensorflow.types.family.TType
 /**
  * Interface extended by [KotlinOps], used for now to declare extensions on Operand
  *
- * Should be replaced by multiple receivers when available
+ * FIXME: Should be replaced by multiple receivers when available
  */
 public abstract class OpsBase {
     public abstract val tf: KotlinOps
@@ -61,10 +63,9 @@ public abstract class OpsBase {
     public fun <T : TType> Operand<T>.matMul(
         b: Operand<T>,
         transposeA: Boolean? = null,
-        transposeB: Boolean? = null
+        transposeB: Boolean? = null,
     ): MatMul<T> =
         tf.linalg.matMul(this, b, transposeA, transposeB)
-
 
     /**
      * @see LinalgOps.matMul
@@ -102,10 +103,44 @@ public abstract class OpsBase {
     public infix fun <T : TType> Operand<T>.pow(b: Operand<T>): Pow<T> = tf.math.pow(this, b)
 
     /**
+     * @see MathOps.add
+     */
+    public operator fun <T : TNumber> Operand<T>.plus(scalar: Number): Add<T> =
+        this + tf.constantOfSameType(this, scalar)
+
+    /**
+     * @see MathOps.sub
+     */
+    public operator fun <T : TNumber> Operand<T>.minus(scalar: Number): Sub<T> =
+        this - tf.constantOfSameType(this, scalar)
+
+    /**
+     * @see MathOps.mul
+     */
+    public operator fun <T : TNumber> Operand<T>.times(scalar: Number): Mul<T> =
+        this * tf.constantOfSameType(this, scalar)
+
+    /**
+     * @see MathOps.div
+     */
+    public operator fun <T : TNumber> Operand<T>.div(scalar: Number): Div<T> =
+        this / tf.constantOfSameType(this, scalar)
+
+    /**
+     * @see MathOps.mod
+     */
+    public operator fun <T : TNumber> Operand<T>.rem(scalar: Number): Mod<T> =
+        this % tf.constantOfSameType(this, scalar)
+
+    /**
+     * @see MathOps.pow
+     */
+    public infix fun <T : TNumber> Operand<T>.pow(scalar: Number): Pow<T> = this pow tf.constantOfSameType(this, scalar)
+
+    /**
      * @see MathOps.neg
      */
     public operator fun <T : TType> Operand<T>.unaryMinus(): Neg<T> = tf.math.neg(this)
-
 
     /**
      * @see MathOps.logicalNot
@@ -122,7 +157,6 @@ public abstract class OpsBase {
      */
     public infix fun Operand<TBool>.or(b: Operand<TBool>): LogicalOr = tf.math.logicalOr(this, b)
 
-
     /**
      * @see MathOps.equal
      */
@@ -133,7 +167,6 @@ public abstract class OpsBase {
      */
     public infix fun <T : TType> Operand<T>.neq(b: Operand<T>): NotEqual = tf.math.notEqual(this, b)
 
-
     /**
      * @see MathOps.less
      */
@@ -143,7 +176,6 @@ public abstract class OpsBase {
      * @see MathOps.greater
      */
     public infix fun <T : TNumber> Operand<T>.gt(b: Operand<T>): Greater = tf.math.greater(this, b)
-
 
     /**
      * @see MathOps.lessEqual
@@ -197,7 +229,6 @@ public abstract class OpsBase {
      */
     public fun Boolean.asConstant(): Constant<TBool> = tf.constant(this)
 
-
     /**
      * @see KotlinOps.constant
      */
@@ -233,7 +264,6 @@ public abstract class OpsBase {
      */
     public fun Shape.asConstant(): Constant<TInt64> = tf.constant(this)
 
-
     /**
      * Creates a 1D constant from [array].
      *
@@ -241,7 +271,6 @@ public abstract class OpsBase {
      */
     @JvmName("intsAsConstant")
     public fun Collection<Int>.asConstant(): Constant<TInt32> = tf.constant(this)
-
 
     /**
      * Creates a 1D constant from [array].
@@ -251,7 +280,6 @@ public abstract class OpsBase {
     @JvmName("longsAsConstant")
     public fun Collection<Long>.asConstant(): Constant<TInt64> = tf.constant(this)
 
-
     /**
      * Creates a 1D constant from [array].
      *
@@ -259,7 +287,6 @@ public abstract class OpsBase {
      */
     @JvmName("floatsAsConstant")
     public fun Collection<Float>.asConstant(): Constant<TFloat32> = tf.constant(this)
-
 
     /**
      * Creates a 1D constant from [array].
@@ -269,7 +296,6 @@ public abstract class OpsBase {
     @JvmName("doublesAsConstant")
     public fun Collection<Double>.asConstant(): Constant<TFloat64> = tf.constant(this)
 
-
     /**
      * Creates a 1D constant from [array].
      *
@@ -277,7 +303,6 @@ public abstract class OpsBase {
      */
     @JvmName("bytesAsConstant")
     public fun Collection<Byte>.asConstant(): Constant<TUint8> = tf.constant(this)
-
 
     /**
      * Creates a 1D constant from [array].
@@ -287,7 +312,9 @@ public abstract class OpsBase {
     @JvmName("booleansAsConstant")
     public fun Collection<Boolean>.asConstant(): Constant<TBool> = tf.constant(this)
 
-//    public operator fun <T: TNumber> Operand<T>.plus(scalar: Number): Add<T> {
-//        this.type()
-//    }
+    /**
+     * @see KotlinOps.stridedSlice
+     */
+    public operator fun <T : TType> Operand<T>.get(vararg indices: Index): StridedSlice<T> =
+        tf.stridedSlice(this, *indices)
 }

@@ -159,7 +159,6 @@ public fun ExecutionEnvironment.tf(device: DeviceSpec): KotlinOps = tf.withDevic
 
 // TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be too error prone to be worth doing
 
-
 /**
  * Creates a 1D constant from [array].
  *
@@ -168,13 +167,11 @@ public fun ExecutionEnvironment.tf(device: DeviceSpec): KotlinOps = tf.withDevic
 @JvmName("constantDoubles")
 public fun KotlinOps.constant(array: Collection<Double>): Constant<TFloat64> = constant(array.toDoubleArray())
 
-
 /**
  * @see KotlinOps.constant
  */
 @JvmName("constantFloats")
 public fun KotlinOps.constant(array: Collection<Float>): Constant<TFloat32> = constant(array.toFloatArray())
-
 
 /**
  * Creates a 1D constant from [array].
@@ -184,7 +181,6 @@ public fun KotlinOps.constant(array: Collection<Float>): Constant<TFloat32> = co
 @JvmName("constantInts")
 public fun KotlinOps.constant(array: Collection<Int>): Constant<TInt32> = constant(array.toIntArray())
 
-
 /**
  * Creates a 1D constant from [array].
  *
@@ -193,7 +189,6 @@ public fun KotlinOps.constant(array: Collection<Int>): Constant<TInt32> = consta
 @JvmName("constantLongs")
 public fun KotlinOps.constant(array: Collection<Long>): Constant<TInt64> = constant(array.toLongArray())
 
-
 /**
  * Creates a 1D constant from [array].
  *
@@ -201,7 +196,6 @@ public fun KotlinOps.constant(array: Collection<Long>): Constant<TInt64> = const
  */
 @JvmName("constantBytes")
 public fun KotlinOps.constant(array: Collection<Byte>): Constant<TUint8> = constant(array.toByteArray())
-
 
 /**
  * Creates a 1D constant from [array].

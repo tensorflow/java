@@ -33,6 +33,7 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer
 import org.tensorflow.ndarray.buffer.FloatDataBuffer
 import org.tensorflow.ndarray.buffer.IntDataBuffer
 import org.tensorflow.ndarray.buffer.LongDataBuffer
+import org.tensorflow.ndarray.index.Index
 import org.tensorflow.op.Op
 import org.tensorflow.op.Ops
 import org.tensorflow.op.Scope
@@ -2134,14 +2135,34 @@ public class KotlinOps(
      * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(    
+    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(
         shape,
         data
+    )
+
+    /**
+     * Creates a scalar of ``` type```, with the value of ``` number```. ``` number``` may be
+     * truncated if it does not
+     *  fit in the target type.
+     *
+     * @param type the type of tensor to create.  Must be concrete (i.e. not [
+     * org.tensorflow.types.family.TFloating])
+     * @param number the value of the tensor
+     * @return a constant of the passed type
+     * @throws IllegalArgumentException if the type is abstract (i.e. [
+     * org.tensorflow.types.family.TFloating]) or
+     *  unknown.
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun <T : TNumber> constant(type: Class<T>, number: Number): Constant<T> =
+        java.constant<T>(
+            type,
+            number
         )
 
     /**
      * Create a [ TString] constant with data from the given buffer, using the given encoding.
-     * 
+     *
      * @param scope is a scope used to add the underlying operation.
      * @param charset charset used to encode/decode string bytes.
      * @param shape the tensor shape.
@@ -2191,24 +2212,42 @@ public class KotlinOps(
      *  Note: this endpoint cannot be simply called ``` constant} since it will conflict with
      *  other endpoints accepting an NdArray in parameter {e.g. [ #tensorOf(Scope, FloatNdArray)```
      * ].
-     * 
+     *
      * @param scope is a scope used to add the underlying operation.
      * @param tensor a Tensor holding the constant value
      * @return a constant of the same data type as `tensor`
      * @see org.tensorflow.op.Ops.constantOf
      */
-    public fun <T : TType> constantOf(tensor: T): Constant<T> = java.constantOf<T>(    
+    public fun <T : TType> constantOf(tensor: T): Constant<T> = java.constantOf<T>(
         tensor
+    )
+
+    /**
+     * Creates a scalar of the same type as ``` toMatch```, with the value of ``` number```. ```
+     * number``` may be
+     *  truncated if it does not fit in the target type.
+     *
+     * @param toMatch the operand providing the target type
+     * @param number the value of the tensor
+     * @return a constant with the same type as ``` toMatch```
+     * @throws IllegalArgumentException if the type is unknown (which should be impossible).
+     * @see Ops#constant(Class, Number)
+     * @see org.tensorflow.op.Ops.constantOfSameType
+     */
+    public fun <T : TNumber> constantOfSameType(toMatch: Operand<T>, number: Number): Constant<T> =
+        java.constantOfSameType<T>(
+            toMatch,
+            number
         )
 
     /**
      * This op consumes a lock created by `MutexLock`.
-     *  
+     *
      *  This op exists to consume a tensor created by `MutexLock` (other than
      *  direct control dependencies).  It should be the only that consumes the tensor,
      *  and will raise an error if it is not.  Its only purpose is to keep the
      *  mutex lock tensor alive until it is consumed by this op.
-     *  
+     *
      *  <b>NOTE</b>: This operation must run on the same device as its input.  This may
      *  be enforced via the `colocate_with` mechanism.
      * 
@@ -4278,7 +4317,7 @@ public class KotlinOps(
 
     /**
      * Creates a one valued tensor given its type and shape.
-     * 
+     *
      * @param scope is a scope used to add the underlying operation
      * @param dims a 1-D operand that represents the shape of the output tensor
      * @param type the output tensor type class. Can not be TString.
@@ -4287,10 +4326,10 @@ public class KotlinOps(
      * ones.
      * @see org.tensorflow.op.Ops.ones
      */
-    public fun <T : TType, U : TNumber> ones(dims: Operand<U>, type: Class<T>): Ones<T> =
-            java.ones<T, U>(    
-        dims,
-        type
+    public fun <T : TType> ones(dims: Operand<out TNumber>, type: Class<T>): Ones<T> =
+        java.ones<T>(
+            dims,
+            type
         )
 
     /**
@@ -7558,22 +7597,97 @@ public class KotlinOps(
      *  <li>
      *  Adversarial training, where no backprop should happen through the adversarial
      *     example generation process.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param input
      * @return a new instance of StopGradient
      * @see org.tensorflow.op.Ops.stopGradient
      */
-    public fun <T : TType> stopGradient(input: Operand<T>): StopGradient<T> = java.stopGradient<T>(    
+    public fun <T : TType> stopGradient(input: Operand<T>): StopGradient<T> = java.stopGradient<T>(
         input
+    )
+
+    /**
+     * Return a strided slice from `input`.
+     *
+     *  The goal of this op is to produce a new tensor with a subset of the elements from the `n`
+     * dimensional `input`
+     *  tensor. The subset is chosen using a sequence of `m` sparse range specifications encoded
+     * into the arguments of this
+     *  function. Note, in some cases `m` could be equal to `n`, but this need not be the case. Each
+     * range specification
+     *  entry can be one of the following:
+     *
+     *  - An ellipsis (...) using [ Indices#ellipsis()]. Ellipses are used to imply zero or more
+     * dimensions of
+     *  full-dimension selection. For example, ``` stridedSlice(foo, Indices.ellipsis()``` is the
+     * identity slice.
+     *
+     *  - A new axis using [ Indices#newAxis()]. This is used to insert a new shape=1 dimension.
+     *  For example, ```` stridedSlice(foo, Indices.newAxis())``` where ``` foo``` is shape ``` (3,
+     * 4)```
+     *  produces a ``` (1, 3, 4)``` tensor.
+     *
+     *  - A range ``` begin:end:stride} using [ Indices#slice(Long, Long, long)```  Index.slice()]
+     * or [ Indices#all()]. This is used to specify
+     *  how much to choose from a given dimension. ``` stride``` can be any integer but 0.  ```
+     * begin``` is an integer which
+     *  represents the index of the first value to select while ``` end``` represents the index of
+     * the last value to select
+     *  (exclusive). Begin and end can be null, in which case the index begins or ends at the
+     * beginning or end of the dimension,
+     *  respectively (reversed if stride is negative).  When both are null, ``` slice()``` is the
+     * same as ``` all()```.
+     *  The number of values selected in each dimension is ``` end - begin``` if ``` stride > 0```
+     * and ``` begin - end```
+     *  if ``` stride < 0```. ``` begin``` and ``` end``` can be negative where ``` -1``` is the
+     * last element, ``` -2```
+     *  is the second to last. For example, given a shape ``` (3,)``` tensor ``` stridedSlice(foo,
+     * Indices.all())```, the
+     *  effective ``` begin``` and ``` end``` are ``` 0``` and ``` 3```. Do not assume this is
+     * equivalent to
+     *  ``` stridedSlice(foo, Indices.slice(0, -1))``` which has an effective ``` begin``` and ```
+     * end``` of ``` 0``` and
+     *  ``` 2```. Another example is ``` stridedSlice(foo, Indices.slice(-2, null, -1))``` which
+     * reverses the first dimension
+     *  of a tensor while dropping the last two (in the original order elements). For example ```
+     * foo = [1,2,3,4];
+     *  stridedSlice(foo, Indices.slice(-2, null, -1)```
+     *  is ``` [4,3]```.
+     *
+     *  - A single index using [ Indices#at(long)]. This is used to keep only elements that have a
+     * given index. For
+     *  example (``` stridedSlice(foo, Indices.at(2))``` on a shape ``` (5,6)``` tensor produces a
+     * shape ``` (6,)``` tensor.
+     *  The dimension can be kept with size one using [ Indices#at(long, boolean)].
+     *
+     *  These semantics generally follow NumPy's indexing semantics, which can be found here:
+     *  <a
+     * href="https://numpy.org/doc/stable/reference/arrays.indexing.html">https://numpy.org/doc/stable/reference/arrays.indexing.html</a>
+     *
+     *
+     *  <i>Requirements</i>:
+     *  `0 != strides&#91;i] for i in &#91;0, m)` Only one ellipsis.
+     *
+     * @param scope current scope
+     * @param T data type for ` output()` output
+     * @param indices The indices to slice.  See [ Indices].
+     * @return a new instance of StridedSlice
+     * @see Indices
+     * @see org.tensorflow.op.Ops.stridedSlice
+     */
+    public fun <T : TType> stridedSlice(input: Operand<T>, vararg indices: Index): StridedSlice<T> =
+        java.stridedSlice<T>(
+            input,
+            *indices
         )
 
     /**
      * Return a strided slice from `input`.
-     *  
+     *
      *  Note, most python users will want to use the Python `Tensor.__getitem__`
      *  or `Variable.__getitem__` rather than this op directly.
-     *  
+     *
      *  The goal of this op is to produce a new tensor with a subset of
      *  the elements from the `n` dimensional `input` tensor. The subset is chosen using
      *  a sequence of `m` sparse range specifications encoded into the arguments
@@ -7714,21 +7828,52 @@ public class KotlinOps(
         end,
         strides,
         *listOfNotNull(
-            beginMask?.let{ org.tensorflow.op.core.StridedSlice.beginMask(it) },
-            endMask?.let{ org.tensorflow.op.core.StridedSlice.endMask(it) },
-            ellipsisMask?.let{ org.tensorflow.op.core.StridedSlice.ellipsisMask(it) },
-            newAxisMask?.let{ org.tensorflow.op.core.StridedSlice.newAxisMask(it) },
-            shrinkAxisMask?.let{ org.tensorflow.op.core.StridedSlice.shrinkAxisMask(it) }
+            beginMask?.let { org.tensorflow.op.core.StridedSlice.beginMask(it) },
+            endMask?.let { org.tensorflow.op.core.StridedSlice.endMask(it) },
+            ellipsisMask?.let { org.tensorflow.op.core.StridedSlice.ellipsisMask(it) },
+            newAxisMask?.let { org.tensorflow.op.core.StridedSlice.newAxisMask(it) },
+            shrinkAxisMask?.let { org.tensorflow.op.core.StridedSlice.shrinkAxisMask(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Assign `value` to the sliced l-value reference of `ref`.
-     *  
+     *
+     *  The values of `value` are assigned to the positions in the variable `ref` that are selected
+     * by the slice
+     *  parameters. The slice parameters `begin`, `end`, `strides`, etc. work exactly as in
+     * `StridedSlice`.
+     *
+     *  NOTE this op currently does not support broadcasting and so `value`'s shape must be exactly
+     * the shape produced by
+     *  the slice of `ref`.
+     *
+     * @param T data type for ` outputRef()` output
+     * @param scope current scope
+     * @param ref the tensor to assign to.
+     * @param value the value to assign.
+     * @param indices The indices to slice.  See [ Indices].
+     * @return a new instance of StridedSliceAssign
+     * @see org.tensorflow.op.Ops#stridedSlice(Operand, Index...)
+     * @see org.tensorflow.op.Ops.stridedSliceAssign
+     */
+    public fun <T : TType> stridedSliceAssign(
+        ref: Operand<T>,
+        value: Operand<T>,
+        vararg indices: Index,
+    ): StridedSliceAssign<T> = java.stridedSliceAssign<T>(
+        ref,
+        value,
+        *indices
+    )
+
+    /**
+     * Assign `value` to the sliced l-value reference of `ref`.
+     *
      *  The values of `value` are assigned to the positions in the variable
      *  `ref` that are selected by the slice parameters. The slice parameters
      *  `begin`, `end`, `strides`, etc. work exactly as in `StridedSlice`.
-     *  
+     *
      *  NOTE this op currently does not support broadcasting and so `value`'s
      *  shape must be exactly the shape produced by the slice of `ref`.
      * 
@@ -9927,7 +10072,7 @@ public class KotlinOps(
 
     /**
      * Creates a zeroed tensor given its type and shape.
-     * 
+     *
      * @param scope is a scope used to add the underlying operation
      * @param dims a 1-D operand that represents the shape of the output tensor
      * @param type the output tensor datatype
@@ -9936,10 +10081,10 @@ public class KotlinOps(
      * zeros.
      * @see org.tensorflow.op.Ops.zeros
      */
-    public fun <T : TType, U : TNumber> zeros(dims: Operand<U>, type: Class<T>): Zeros<T> =
-            java.zeros<T, U>(    
-        dims,
-        type
+    public fun <T : TType> zeros(dims: Operand<out TNumber>, type: Class<T>): Zeros<T> =
+        java.zeros<T>(
+            dims,
+            type
         )
 
     /**
@@ -10007,7 +10152,7 @@ public class KotlinOps(
      *  
      *  <i>NOTE</i>: Bitcast is implemented as a low-level cast, so machines with different
      *  endian orderings will give different results.
-     * 
+     *
      * @param U data type for ` output()` output
      * @param input
      * @param type
@@ -10016,11 +10161,29 @@ public class KotlinOps(
      */
     @JvmName("bitcastReified")
     public inline fun <reified U : TType> bitcast(input: Operand<out TType>): Bitcast<U> =
-            bitcast<U>(input, U::class.java)
+        bitcast<U>(input, U::class.java)
+
+    /**
+     * Creates a scalar of ``` type```, with the value of ``` number```. ``` number``` may be
+     * truncated if it does not
+     *  fit in the target type.
+     *
+     * @param type the type of tensor to create.  Must be concrete (i.e. not [
+     * org.tensorflow.types.family.TFloating])
+     * @param number the value of the tensor
+     * @return a constant of the passed type
+     * @throws IllegalArgumentException if the type is abstract (i.e. [
+     * org.tensorflow.types.family.TFloating]) or
+     *  unknown.
+     * @see org.tensorflow.op.Ops.constant
+     */
+    @JvmName("constantReified")
+    public inline fun <reified T : TNumber> constant(number: Number): Constant<T> =
+        constant<T>(T::class.java, number)
 
     /**
      * Create a constant with data from the given buffer.
-     * 
+     *
      * @param T the tensor type
      * @param scope is a scope used to add the underlying operation.
      * @param type the tensor type class
@@ -10284,7 +10447,7 @@ public class KotlinOps(
 
     /**
      * Creates a one valued tensor given its type and shape.
-     * 
+     *
      * @param scope is a scope used to add the underlying operation
      * @param dims a 1-D operand that represents the shape of the output tensor
      * @param type the output tensor type class. Can not be TString.
@@ -10294,8 +10457,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.ones
      */
     @JvmName("onesReified")
-    public inline fun <reified T : TType, U : TNumber> ones(dims: Operand<U>): Ones<T> = ones<T,
-            U>(dims, T::class.java)
+    public inline fun <reified T : TType> ones(dims: Operand<out TNumber>): Ones<T> = ones<T>(dims,
+        T::class.java)
 
     /**
      * A placeholder op for a value that will be fed into the computation.
@@ -11030,7 +11193,7 @@ public class KotlinOps(
 
     /**
      * Creates a zeroed tensor given its type and shape.
-     * 
+     *
      * @param scope is a scope used to add the underlying operation
      * @param dims a 1-D operand that represents the shape of the output tensor
      * @param type the output tensor datatype
@@ -11040,6 +11203,6 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.zeros
      */
     @JvmName("zerosReified")
-    public inline fun <reified T : TType, U : TNumber> zeros(dims: Operand<U>): Zeros<T> = zeros<T,
-            U>(dims, T::class.java)
+    public inline fun <reified T : TType> zeros(dims: Operand<out TNumber>): Zeros<T> =
+        zeros<T>(dims, T::class.java)
 }
