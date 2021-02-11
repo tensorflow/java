@@ -15,6 +15,7 @@
  */
 package org.tensorflow.ndarray.index;
 
+import java.util.StringJoiner;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
 /**
@@ -71,4 +72,19 @@ final class Hyperslab implements Index {
   private final long stride;
   private final long count;
   private final long block;
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", Hyperslab.class.getSimpleName() + "Hyperslab(", ")")
+        .add("start=" + start)
+        .add("stride=" + stride)
+        .add("count=" + count)
+        .add("block=" + block)
+        .toString();
+  }
+
+  @Override
+  public boolean isStridedSlicingCompliant() {
+    return false;
+  }
 }

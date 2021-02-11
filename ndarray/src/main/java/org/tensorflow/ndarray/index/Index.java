@@ -23,19 +23,16 @@ import org.tensorflow.ndarray.impl.dimension.Dimension;
  * An index used for slicing a view out of an N-dimensional array.
  *
  * <p>A slice, i.e. a reduced view, of an N-dimensional array is obtain by calling
- * {@link NdArray#slice(Index...)}, given a list of indices
- * that select which elements on a given dimension should be included/excluded
- * from that view.
+ * {@link NdArray#slice(Index...)}, given a list of indices that select which elements on a given dimension should be
+ * included/excluded from that view.
  */
 public interface Index {
 
   /**
-   * Returns the number of elements that can be retrieved using this index on the
-   * given dimension.
+   * Returns the number of elements that can be retrieved using this index on the given dimension.
    *
    * <p>An index that maps one-by-one all elements of the dimensions will return a value
-   * equal to {@code dim.numElements()}, while an index that only maps a subset of these
-   * will return a smaller value.
+   * equal to {@code dim.numElements()}, while an index that only maps a subset of these will return a smaller value.
    *
    * @param dim the indexed dimension
    * @return number of elements accessible
@@ -43,8 +40,7 @@ public interface Index {
   long numElements(Dimension dim);
 
   /**
-   * Transforms an element coordinate to a new coordinate by applying this index to the
-   * given dimension.
+   * Transforms an element coordinate to a new coordinate by applying this index to the given dimension.
    *
    * <p>For example, if the coordinate is 0 and this index flips the {@code n} elements on this
    * dimension, then the returned value will be {@code n-1}.
@@ -72,6 +68,64 @@ public interface Index {
    * Returns true if this index is a single point, reducing the number of dimensions by one
    */
   default boolean isPoint() {
+    return false;
+  }
+
+  /**
+   * Returns true if this index is a new axis, adding a dimension of size 1
+   */
+  default boolean isNewAxis() {
+    return false;
+  }
+
+  /**
+   * Returns true if this index is an ellipsis, expanding to take as many dimensions as possible (and applying all() to
+   * them)
+   */
+  default boolean isEllipsis() {
+    return false;
+  }
+
+  /**
+   * Get whether the Index supports strided slice style indexing (using start, end, stride, and flags, i.e. <a
+   * href="https://www.tensorflow.org/api_docs/python/tf/strided_slice">TensorFlow's</a>).
+   */
+  default boolean isStridedSlicingCompliant() {
+    return true;
+  }
+
+  /**
+   * Get the start of the index, for strided slice style indexing.
+   */
+  default long begin() {
+    return 0;
+  }
+
+  /**
+   * Get the end of the index, strided slice style indexing.
+   */
+  default long end() {
+    return 0;
+  }
+
+  /**
+   * Get the stride of the index, for strided slice style indexing.
+   */
+  default long stride() {
+    return 1;
+  }
+
+  /**
+   * Get whether the Index should start at the beginning of the dimension, for strided slice style indexing.
+   */
+  default boolean beginMask() {
+    return false;
+  }
+
+  /**
+   * Get whether the Index should end at the beginning of the dimension, for strided slice style indexing.
+   */
+  default boolean endMask() {
     return false;
   }
 }

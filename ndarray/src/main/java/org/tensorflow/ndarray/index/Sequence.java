@@ -16,6 +16,7 @@
  */
 package org.tensorflow.ndarray.index;
 
+import java.util.StringJoiner;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.impl.dimension.Dimension;
 
@@ -36,4 +37,16 @@ final class Sequence implements Index {
   }
 
   private final NdArray<? extends Number> coords;
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", Sequence.class.getSimpleName() + "(", ")")
+        .add("coords=" + coords)
+        .toString();
+  }
+
+  @Override
+  public boolean isStridedSlicingCompliant() {
+    return false;
+  }
 }

@@ -24,11 +24,11 @@ import static org.tensorflow.ndarray.index.Indices.all;
 import static org.tensorflow.ndarray.index.Indices.at;
 import static org.tensorflow.ndarray.index.Indices.even;
 import static org.tensorflow.ndarray.index.Indices.flip;
-import static org.tensorflow.ndarray.index.Indices.from;
+import static org.tensorflow.ndarray.index.Indices.sliceFrom;
 import static org.tensorflow.ndarray.index.Indices.odd;
 import static org.tensorflow.ndarray.index.Indices.range;
 import static org.tensorflow.ndarray.index.Indices.seq;
-import static org.tensorflow.ndarray.index.Indices.to;
+import static org.tensorflow.ndarray.index.Indices.sliceTo;
 
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
@@ -212,13 +212,13 @@ public abstract class NdArrayTestBase<T> {
     assertEquals(val101, vector10_flip.getObject(3));
 
     // Vector (1,0,[from 1]) from vector (1,0,*)
-    NdArray<T> vector10_1toX = vector10X.slice(from(1));
+    NdArray<T> vector10_1toX = vector10X.slice(sliceFrom(1));
     assertEquals(vector10_1toX.shape(), Shape.of(4));
     assertEquals(val101, vector10_1toX.getObject(0));
     assertEquals(val102, vector10_1toX.getObject(1));
 
     // Vector (1,0,[to 1]) from vector (1,0,*)
-    NdArray<T> vector10_Xto1 = vector10X.slice(to(2));
+    NdArray<T> vector10_Xto1 = vector10X.slice(sliceTo(2));
     assertEquals(vector10_Xto1.shape(), Shape.of(2));
     assertEquals(val100, vector10_Xto1.getObject(0));
     assertEquals(val101, vector10_Xto1.getObject(1));
