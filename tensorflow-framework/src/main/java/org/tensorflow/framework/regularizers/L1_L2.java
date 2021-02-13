@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.regularizers;
 
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * A regularizer that applies both L1 and L2 regularization penalties.
@@ -30,10 +29,8 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>The difference between this class and the {@link L1L2} is use of the default regularization
  * penalty {@link #DEFAULT_REGULARIZATION_PENALTY}, whereas {@link L1L2} defaults to 0.
- *
- * @param <R> the data type for the weights
  */
-public class L1_L2<R extends TNumber> extends L1L2<R> {
+public class L1_L2 extends L1L2 {
 
   /**
    * Creates a regularizer that applies an L1 and l2 regularization penalty of {@link
@@ -41,22 +38,24 @@ public class L1_L2<R extends TNumber> extends L1L2<R> {
    *
    * @param tf the TensorFlow Ops
    */
-  public L1_L2(Ops tf, Class<R> type) {
-    this(tf, DEFAULT_REGULARIZATION_PENALTY, DEFAULT_REGULARIZATION_PENALTY, type);
+  public L1_L2(Ops tf) {
+    this(tf, DEFAULT_REGULARIZATION_PENALTY, DEFAULT_REGULARIZATION_PENALTY);
   }
 
   /**
    * Creates a regularizer that applies an L1 and l2 regularization penalty
    *
    * @param tf the TensorFlow Ops
-   * @param l1 the L1 regularization penalty
-   * @param l2 the L2 regularization penalty
+   * @param l1 the L1 regularization penalty. If null, then l1 will be set to {@link
+   *     #DEFAULT_REGULARIZATION_PENALTY}.
+   * @param l2 the L2 regularization penalty. If null, then l2 will be set to {@link
+   *     #DEFAULT_REGULARIZATION_PENALTY}.
    * @throws IllegalArgumentException if the l1 or l2 regularization factor is NaN or is infinite.
    */
-  public L1_L2(Ops tf, Float l1, Float l2, Class<R> type) {
-    super(tf,
-            l1 == null ? DEFAULT_REGULARIZATION_PENALTY : l1,
-            l2 == null ? DEFAULT_REGULARIZATION_PENALTY : l2,
-            type);
+  public L1_L2(Ops tf, Float l1, Float l2) {
+    super(
+        tf,
+        l1 == null ? DEFAULT_REGULARIZATION_PENALTY : l1,
+        l2 == null ? DEFAULT_REGULARIZATION_PENALTY : l2);
   }
 }

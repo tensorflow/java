@@ -127,10 +127,10 @@ public class ND {
     DoubleNdArray result = NdArrays.ofDoubles(a.shape());
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
-            .forEachIndexed(
-                    (idx, v) -> {
-                      result.setDouble(v.getDouble() * v.getDouble(), idx);
-                    });
+        .forEachIndexed(
+            (idx, v) -> {
+              result.setDouble(v.getDouble() * v.getDouble(), idx);
+            });
     return result;
   }
 
@@ -308,22 +308,22 @@ public class ND {
   public static DoubleNdArray mul(DoubleNdArray a, DoubleNdArray b) {
     if (!a.shape().equals(b.shape()))
       throw new IllegalArgumentException(
-              String.format(
-                      "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
+          String.format(
+              "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
     boolean sameSize = a.shape().size() == b.shape().size();
     DoubleNdArray result = NdArrays.ofDoubles(a.shape());
     int nDims = a.shape().numDimensions();
 
     a.elements(nDims - 1)
-            .forEachIndexed(
-                    (idx, v) -> {
-                      if (sameSize) {
-                        result.setDouble(v.getDouble() * b.getDouble(idx), idx);
-                      } else {
-                        double value = v.getDouble() * b.getDouble(idx[0], 0L);
-                        result.setDouble(value, idx);
-                      }
-                    });
+        .forEachIndexed(
+            (idx, v) -> {
+              if (sameSize) {
+                result.setDouble(v.getDouble() * b.getDouble(idx), idx);
+              } else {
+                double value = v.getDouble() * b.getDouble(idx[0], 0L);
+                result.setDouble(value, idx);
+              }
+            });
     return result;
   }
 
@@ -528,7 +528,7 @@ public class ND {
     a.elements(nDims - 1)
         .forEachIndexed(
             (idx, v) -> {
-              result.setFloat((float) Math.max(v.getFloat(), b.getFloat(idx)), idx);
+              result.setFloat(Math.max(v.getFloat(), b.getFloat(idx)), idx);
             });
     return result;
   }
@@ -547,7 +547,7 @@ public class ND {
     a.elements(nDims - 1)
         .forEachIndexed(
             (idx, v) -> {
-              result.setFloat((float) Math.max(v.getFloat(), scalar), idx);
+              result.setFloat(Math.max(v.getFloat(), scalar), idx);
             });
     return result;
   }
@@ -580,7 +580,7 @@ public class ND {
     a.elements(nDims - 1)
         .forEachIndexed(
             (idx, v) -> {
-              result.setFloat((float) Math.min(v.getFloat(), b.getFloat(idx)), idx);
+              result.setFloat(Math.min(v.getFloat(), b.getFloat(idx)), idx);
             });
     return result;
   }
@@ -599,7 +599,7 @@ public class ND {
     a.elements(nDims - 1)
         .forEachIndexed(
             (idx, v) -> {
-              result.setFloat((float) Math.min(v.getFloat(), scalar), idx);
+              result.setFloat(Math.min(v.getFloat(), scalar), idx);
             });
     return result;
   }
@@ -624,7 +624,7 @@ public class ND {
    */
   public static FloatNdArray abs(FloatNdArray a) {
     FloatNdArray result = NdArrays.ofFloats(a.shape());
-    a.scalars().forEachIndexed((idx, f) -> result.setFloat((float) Math.abs(f.getFloat()), idx));
+    a.scalars().forEachIndexed((idx, f) -> result.setFloat(Math.abs(f.getFloat()), idx));
     return result;
   }
 
@@ -636,7 +636,7 @@ public class ND {
    */
   public static DoubleNdArray abs(DoubleNdArray a) {
     DoubleNdArray result = NdArrays.ofDoubles(a.shape());
-    a.scalars().forEachIndexed((idx, f) -> result.setDouble( Math.abs(f.getDouble()), idx));
+    a.scalars().forEachIndexed((idx, f) -> result.setDouble(Math.abs(f.getDouble()), idx));
     return result;
   }
 
@@ -755,7 +755,7 @@ public class ND {
   }
 
   /**
-   * Sum all elements of an array based on the specified axis
+   * Sum all elements of an array over on the specified axis
    *
    * @param a the array
    * @param axis the axis to sum
@@ -771,10 +771,10 @@ public class ND {
     final double[] sums = new double[(int) axisSize];
 
     a.scalars()
-            .forEachIndexed(
-                    (idx, f) -> {
-                      sums[(int) idx[xis]] += f.getDouble();
-                    });
+        .forEachIndexed(
+            (idx, f) -> {
+              sums[(int) idx[xis]] += f.getDouble();
+            });
 
     if (keepDims) {
       long[] newDims = shape.asArray();
@@ -782,11 +782,11 @@ public class ND {
       final AtomicInteger counter = new AtomicInteger();
       DoubleNdArray arrayK = NdArrays.ofDoubles(Shape.of(newDims));
       arrayK
-              .elements(newDims.length - 1)
-              .forEachIndexed(
-                      (idx, v) -> {
-                        v.setDouble(sums[counter.getAndAdd(1)]);
-                      });
+          .elements(newDims.length - 1)
+          .forEachIndexed(
+              (idx, v) -> {
+                v.setDouble(sums[counter.getAndAdd(1)]);
+              });
       return arrayK;
     } else {
       return NdArrays.vectorOf(sums);
