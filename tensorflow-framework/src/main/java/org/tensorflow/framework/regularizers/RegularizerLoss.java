@@ -57,8 +57,8 @@ class RegularizerLoss<R extends TNumber> extends Loss {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber, U extends TNumber> Operand<T> call(
-      Operand<U> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+  public <T extends TNumber> Operand<T> call(
+      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     if (sampleWeights == null) {
       throw new IllegalArgumentException("sampleWeights cannot be null");
     }
