@@ -15,16 +15,13 @@ limitations under the License.
 package org.tensorflow.framework.regularizers;
 
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * A regularizer that applies a L2 (Ridge Regression) regularization penalty.
  *
  * <p>The L2 regularization penalty is computed as: <code>loss = l2 * reduceSum(square(x))</code>
- *
- * @param <R> the data type for the operands and result
  */
-public class L2<R extends TNumber> extends L1L2<R> {
+public class L2 extends L1L2 {
 
   /**
    * Create a regularizer that applies an L2 regularization penalty of {@link
@@ -32,8 +29,8 @@ public class L2<R extends TNumber> extends L1L2<R> {
    *
    * @param tf the TensorFlow Ops
    */
-  public L2(Ops tf, Class<R> type) {
-    this(tf, DEFAULT_REGULARIZATION_PENALTY, type);
+  public L2(Ops tf) {
+    this(tf, DEFAULT_REGULARIZATION_PENALTY);
   }
 
   /**
@@ -43,7 +40,7 @@ public class L2<R extends TNumber> extends L1L2<R> {
    * @param l2 the L2 regularization penalty
    * @throws IllegalArgumentException if the l2 regularization factor is NaN or is infinite.
    */
-  public L2(Ops tf, float l2, Class<R> type) {
-    super(tf, null, l2, type);
+  public L2(Ops tf, float l2) {
+    super(tf, null, l2);
   }
 }

@@ -24,33 +24,31 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>Regularizers allow you to apply penalties on layer parameters or layer activity during
  * optimization. These penalties are summed into the loss function that the network optimizes.
- *
- * @param <R> the data type of the operands and result
  */
-public abstract class Regularizer<R extends TNumber> {
+public abstract class Regularizer {
 
   public static final float DEFAULT_REGULARIZATION_PENALTY = 0.01f;
 
   private final Ops tf;
   private final String name;
-  protected Class<R> type;
 
   /**
-   * Creates a Regularizer
+   * Creates a Regularizer, using {@link Class#getSimpleName()} for the name
    *
    * @param tf the TensorFlow ops.
    */
-  protected Regularizer(Ops tf, Class<R> type) {
-    this(tf, null, type);
+  protected Regularizer(Ops tf) {
+    this(tf, null);
   }
   /**
    * Creates a Regularizer
    *
    * @param tf the TensorFlow ops.
+   * @param name the name of this regularizer, if null use {@link Class#getSimpleName()} for the
+   *     name.
    */
-  protected Regularizer(Ops tf, String name, Class<R> type) {
+  protected Regularizer(Ops tf, String name) {
     this.tf = tf;
-    this.type = type;
     this.name = name == null ? this.getClass().getSimpleName() : name;
   }
 
@@ -61,7 +59,7 @@ public abstract class Regularizer<R extends TNumber> {
    * @return this Regularizer as a Loss
    */
   public Loss asLoss() {
-    return new RegularizerLoss<>(this.tf, this);
+    return new RegularizerLoss(this.tf, this);
   }
 
   /**
@@ -70,7 +68,7 @@ public abstract class Regularizer<R extends TNumber> {
    * @param input the weighted input
    * @return the result of computing the regularization penalty
    */
-  public abstract Operand<R> call(Operand<R> input);
+  public abstract <R extends TNumber> Operand<R> call(Operand<R> input);
 
   /**
    * Gets the TensorFlow Ops

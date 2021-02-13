@@ -19,27 +19,24 @@ import org.tensorflow.framework.losses.Loss;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * A Regularizer call wrapped as a Loss instance
  *
  * <p>This class facilitates using a regularizer as a loss, only <code>sampleWeights</code> are
  * regularized.
- *
- * @param <R> the datatype for the weights type
  */
-class RegularizerLoss<R extends TNumber> extends Loss {
+class RegularizerLoss extends Loss {
 
-  private final Regularizer<R> regularizer;
-  private final Class<R> type;
+  private final Regularizer regularizer;
+
   /**
    * Creates a Loss using {@link Class#getSimpleName()} as the name and a Loss Reduction of {@link
    * Loss#REDUCTION_DEFAULT}
    *
    * @param tf the TensorFlow Ops
+   * @param regularizer the regularizer used to calculate the loss
    */
-  public RegularizerLoss(Ops tf, Regularizer<R> regularizer) {
+  public RegularizerLoss(Ops tf, Regularizer regularizer) {
     this(tf, null, regularizer);
   }
 
@@ -48,11 +45,11 @@ class RegularizerLoss<R extends TNumber> extends Loss {
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this Loss, if null the name will be {@link Class#getSimpleName()}.
+   * @param regularizer the regularizer used to calculate the loss
    */
-  public RegularizerLoss(Ops tf, String name, Regularizer<R> regularizer) {
+  public RegularizerLoss(Ops tf, String name, Regularizer regularizer) {
     super(tf, name);
     this.regularizer = regularizer;
-    this.type = regularizer.type;
   }
 
 
@@ -63,7 +60,6 @@ class RegularizerLoss<R extends TNumber> extends Loss {
     if (sampleWeights == null) {
       throw new IllegalArgumentException("sampleWeights cannot be null");
     }
-    Operand<R> result = regularizer.call(cast(getTF(), sampleWeights, type));
-    return cast(tf, result, sampleWeights.type());
+    return regularizer.call(sampleWeights);
   }
 }
