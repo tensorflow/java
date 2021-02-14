@@ -89,7 +89,7 @@ public class L1L2 extends Regularizer {
    * @param tf the TensorFlow Ops
    * @return a L1L2 instance using {@link #DEFAULT_REGULARIZATION_PENALTY} for the l1 and l2 values.
    */
-  public static L1L2 l1_l2(Ops tf) {
+  public static L1L2 create(Ops tf) {
     return new L1L2(tf, DEFAULT_REGULARIZATION_PENALTY, DEFAULT_REGULARIZATION_PENALTY);
   }
 
