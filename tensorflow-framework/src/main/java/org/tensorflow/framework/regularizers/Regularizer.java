@@ -67,6 +67,7 @@ public abstract class Regularizer {
    *
    * @param input the weighted input
    * @return the result of computing the regularization penalty
+   * @param <R> the data type of the input and result
    */
   public abstract <R extends TNumber> Operand<R> call(Operand<R> input);
 
