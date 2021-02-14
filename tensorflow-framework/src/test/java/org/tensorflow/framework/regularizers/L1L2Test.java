@@ -21,17 +21,21 @@ class L1L2Test extends CommonTest {
         assertEquals(0.2f, instance.getL1());
         assertEquals(0.3f, instance.getL2());
 
-        instance = new L1L2(tf, null, null);
+        instance = new L1L2(tf, 0, 0);
         assertEquals(0.f, instance.getL1());
         assertEquals(0.f, instance.getL2());
 
-        instance = new L1L2(tf, 0.5f, null);
+        instance = new L1L2(tf, 0.5f, 0);
         assertEquals(0.5f, instance.getL1());
         assertEquals(0.f, instance.getL2());
 
-        instance = new L1L2(tf, null, 0.5f);
+        instance = new L1L2(tf, 0, 0.5f);
         assertEquals(0.f, instance.getL1());
         assertEquals(0.5f, instance.getL2());
+
+        instance = new L1L2(tf);
+        assertEquals(Regularizer.DEFAULT_REGULARIZATION_PENALTY, instance.getL1());
+        assertEquals(Regularizer.DEFAULT_REGULARIZATION_PENALTY, instance.getL2());
       }
   }
 
@@ -42,16 +46,16 @@ class L1L2Test extends CommonTest {
         Ops tf = session.getTF();
         L1L2 instance = new L1L2(tf);
         Operand<TFloat32> result = instance.call(tf.constant(555f));
-        session.evaluate(0f, result);
+        session.evaluate(3085.8f, result);
       }
   }
 
   @Test
-  public void testCallL1L20() {
+  public void testCallL1L2_0() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        L1L2 instance = new L1L2(tf);
+        L1L2 instance = new L1L2(tf, 0, 0);
         Operand<TFloat32> weights =
             tf.constant(new float[][] {{1.0f, 0.9f, 0.8f}, {1.2f, 0.7f, 1.1f}});
         Operand<TFloat32> result = instance.call(weights);
@@ -90,11 +94,11 @@ class L1L2Test extends CommonTest {
   }
 
   @Test
-  public void testCallL2Null() {
+  public void testCallL2_0() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        L1L2 instance = new L1L2(tf, 0.01f, null);
+        L1L2 instance = new L1L2(tf, 0.01f, 0);
         float[][] w = {{1.0f, 0.9f, 0.8f}, {1.2f, 0.7f, 1.1f}};
         Operand<TFloat32> weights = tf.constant(w);
         Operand<TFloat32> result = instance.call(weights);
@@ -104,11 +108,11 @@ class L1L2Test extends CommonTest {
   }
 
   @Test
-  public void testCallL1Null() {
+  public void testCallL1_0() {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        L1L2 instance = new L1L2(tf, null, 0.02f);
+        L1L2 instance = new L1L2(tf, 0, 0.02f);
         double[][] w = {{1.0, 0.9, 0.8}, {1.2, 0.7, 1.1}};
         Operand<TFloat64> weights = tf.constant(w);
         Operand<TFloat64> result = instance.call(weights);

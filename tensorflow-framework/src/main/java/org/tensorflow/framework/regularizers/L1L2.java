@@ -30,8 +30,6 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>loss = l2 * reduceSum(square(x))</pre>
  *
- * <p>The difference between this class and the {@link L1_L2} is use of the default regularization
- * penalty {@link #DEFAULT_REGULARIZATION_PENALTY}, whereas {@link L1L2} defaults to 0.
  */
 public class L1L2 extends Regularizer {
 
@@ -44,7 +42,7 @@ public class L1L2 extends Regularizer {
    * @param tf the TensorFlow Ops
    */
   public L1L2(Ops tf) {
-    this(tf, null, null);
+    this(tf, DEFAULT_REGULARIZATION_PENALTY, DEFAULT_REGULARIZATION_PENALTY);
   }
 
   /**
@@ -56,42 +54,25 @@ public class L1L2 extends Regularizer {
    * @throws IllegalArgumentException if the l1 or l2 regularization factor is {@link Float#isNaN}
    *     of {@link Float#isInfinite}
    */
-  public L1L2(Ops tf, Float l1, Float l2) {
+  public L1L2(Ops tf, float l1, float l2) {
     super(tf);
-    if (l1 != null) {
-      if (l1.isNaN() || l1.isInfinite()) {
-        throw new IllegalArgumentException(
-            String.format(
-                "L1 Value: %f is not a valid regularization penalty number, a positive/negative infinity or NaN is not a property value",
-                l1));
-      }
-      this.l1 = l1;
-    } else {
-      this.l1 = 0f;
+    if (Float.isNaN(l1) || Float.isInfinite(l1)) {
+      throw new IllegalArgumentException(
+          String.format(
+              "L1 Value: %f is not a valid regularization penalty number, a positive/negative infinity or NaN is not a property value",
+              l1));
     }
-    if (l2 != null) {
-      if (l2.isNaN() || l2.isInfinite()) {
-        throw new IllegalArgumentException(
-            String.format(
-                "L2 Value: %f is not a valid regularization penalty number, a positive/negative infinity or NaN is not a property value",
-                l2));
-      }
-      this.l2 = l2;
-    } else {
-      this.l2 = 0f;
+    this.l1 = l1;
+
+    if (Float.isNaN(l2) || Float.isInfinite(l2)) {
+      throw new IllegalArgumentException(
+          String.format(
+              "L2 Value: %f is not a valid regularization penalty number, a positive/negative infinity or NaN is not a property value",
+              l2));
     }
+    this.l2 = l2;
   }
 
-  /**
-   * Creates an L1L2 instance using {@link #DEFAULT_REGULARIZATION_PENALTY} for the l1 and l2
-   * values.
-   *
-   * @param tf the TensorFlow Ops
-   * @return a L1L2 instance using {@link #DEFAULT_REGULARIZATION_PENALTY} for the l1 and l2 values.
-   */
-  public static L1L2 create(Ops tf) {
-    return new L1L2(tf, DEFAULT_REGULARIZATION_PENALTY, DEFAULT_REGULARIZATION_PENALTY);
-  }
 
   /** {@inheritDoc} */
   @Override

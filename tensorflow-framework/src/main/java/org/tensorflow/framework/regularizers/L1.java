@@ -42,6 +42,6 @@ public class L1 extends L1L2 {
    * @throws IllegalArgumentException if the l1 regularization factor is NaN or is infinite.
    */
   public L1(Ops tf, float l1) {
-    super(tf, l1, null);
+    super(tf, l1, 0f);
   }
 }
