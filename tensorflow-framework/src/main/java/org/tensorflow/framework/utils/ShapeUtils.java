@@ -14,9 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TInt32;

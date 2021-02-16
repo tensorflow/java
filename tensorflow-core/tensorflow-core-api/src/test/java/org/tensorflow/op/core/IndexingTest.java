@@ -20,9 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.ndarray.index.Index;
+import org.tensorflow.ndarray.index.Indices;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TFloat32;
 
@@ -62,9 +63,11 @@ public class IndexingTest {
       long[] shape = {10, 10, 10, 10, 10, 10, 10, 10};
       Zeros<TFloat32> op = Zeros.create(scope, Constant.vectorOf(scope, shape), TFloat32.class);
       StridedSlice<TFloat32> output = StridedSliceHelper.stridedSlice(scope, op, slice);
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output.asOutput()).run().get(0)) {
+      try (TensorScope tensorScope = new TensorScope();
+          TFloat32 result = (TFloat32) sess.runner().fetch(output.asOutput()).run(tensorScope).get(0)) {
         // expected shape from Python tensorflow
-        assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.shape(), "Slice index didn't match expected (Python)");
+        assertEquals(Shape.of(1, 10, 1, 10, 10, 10, 4, 3), result.shape(),
+            "Slice index didn't match expected (Python)");
       }
     }
   }

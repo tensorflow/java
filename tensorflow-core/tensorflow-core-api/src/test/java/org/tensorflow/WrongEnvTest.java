@@ -35,7 +35,8 @@ public class WrongEnvTest {
   @Test
   public void testTwoEagers() {
     try (EagerSession e1 = EagerSession.create();
-        EagerSession e2 = EagerSession.create()) {
+        EagerSession e2 = EagerSession.create();
+        TensorScope scope = new TensorScope()) {
       Ops tf1 = Ops.create(e1);
       Ops tf2 = Ops.create(e2);
 
@@ -44,7 +45,7 @@ public class WrongEnvTest {
 
       Operand<TInt32> c = tf2.math.add(a, b);
 
-      try (TInt32 tensor = c.asTensor()) {
+      try (TInt32 tensor = c.asTensor(scope)) {
         assertEquals(11, tensor.getInt());
       }
 

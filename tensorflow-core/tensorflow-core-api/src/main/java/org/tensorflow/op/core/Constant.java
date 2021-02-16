@@ -38,13 +38,13 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
 import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -1360,36 +1360,38 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   @SuppressWarnings("unchecked")
   @Endpoint
   public static <T extends TNumber> Constant<T> tensorOf(Scope scope, Class<T> type, Number number) {
-    if (type.equals(TBfloat16.class)) {
-      try (TBfloat16 tensor = TBfloat16.scalarOf(number.floatValue())) {
-        return (Constant<T>) create(scope, tensor);
+    try (TensorScope tensorScope = new TensorScope()) {
+      if (type.equals(TBfloat16.class)) {
+        try (TBfloat16 tensor = TBfloat16.scalarOf(tensorScope, number.floatValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TFloat64.class)) {
+        try (TFloat64 tensor = TFloat64.scalarOf(tensorScope, number.doubleValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TFloat32.class)) {
+        try (TFloat32 tensor = TFloat32.scalarOf(tensorScope, number.floatValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TFloat16.class)) {
+        try (TFloat16 tensor = TFloat16.scalarOf(tensorScope, number.floatValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TInt64.class)) {
+        try (TInt64 tensor = TInt64.scalarOf(tensorScope, number.longValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TInt32.class)) {
+        try (TInt32 tensor = TInt32.scalarOf(tensorScope, number.intValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else if (type.equals(TUint8.class)) {
+        try (TUint8 tensor = TUint8.scalarOf(tensorScope, number.byteValue())) {
+          return (Constant<T>) create(scope, tensor);
+        }
+      } else {
+        throw new IllegalArgumentException("Tensor type " + type + " is an abstract or unknown numeric type.");
       }
-    } else if (type.equals(TFloat64.class)) {
-      try (TFloat64 tensor = TFloat64.scalarOf(number.doubleValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else if (type.equals(TFloat32.class)) {
-      try (TFloat32 tensor = TFloat32.scalarOf(number.floatValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else if (type.equals(TFloat16.class)) {
-      try (TFloat16 tensor = TFloat16.scalarOf(number.floatValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else if (type.equals(TInt64.class)) {
-      try (TInt64 tensor = TInt64.scalarOf(number.longValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else if (type.equals(TInt32.class)) {
-      try (TInt32 tensor = TInt32.scalarOf(number.intValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else if (type.equals(TUint8.class)) {
-      try (TUint8 tensor = TUint8.scalarOf(number.byteValue())) {
-        return (Constant<T>) create(scope, tensor);
-      }
-    } else {
-      throw new IllegalArgumentException("Tensor type " + type + " is an abstract or unknown numeric type.");
     }
   }
 

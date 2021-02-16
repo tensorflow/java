@@ -39,12 +39,8 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
-import org.tensorflow.ndarray.DoubleNdArray;
-import org.tensorflow.ndarray.FloatNdArray;
-import org.tensorflow.ndarray.IntNdArray;
-import org.tensorflow.ndarray.LongNdArray;
-import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
@@ -175,7 +171,8 @@ public class ConstantTest {
     Operand<? extends TNumber> constant = tf.constant(type, 10);
     assertEquals(type, constant.type());
 
-    try (TFloat64 t = tf.dtypes.cast(constant, TFloat64.class).asTensor()) {
+    try (TensorScope tensorScope = new TensorScope();
+        TFloat64 t = tf.dtypes.cast(constant, TFloat64.class).asTensor(tensorScope)) {
       assertEquals(10.0, t.getDouble());
     }
   }
