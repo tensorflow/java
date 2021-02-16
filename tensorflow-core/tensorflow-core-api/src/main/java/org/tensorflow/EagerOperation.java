@@ -69,6 +69,11 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
+  public EagerSession env() {
+    return session;
+  }
+
+  @Override
   public int numOutputs() {
     return outputHandles.length;
   }

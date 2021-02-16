@@ -14,11 +14,14 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
+import org.tensorflow.Signature.TensorDescription;
 import org.tensorflow.op.Ops;
+import org.tensorflow.proto.framework.DataType;
+
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SignatureTest {
 
@@ -41,6 +44,29 @@ public class SignatureTest {
       assertThrows(IllegalArgumentException.class, () -> builder.input("x", tf.constant(10)));
       assertThrows(IllegalArgumentException.class, () -> builder.output("y", tf.constant(20.0f)));
     }
+  }
+
+  @Test
+  public void getInputsAndOutputs() {
+    Ops tf = Ops.create();
+    Signature builder = Signature.builder()
+          .input("x",  tf.constant(10.0f))
+          .output("y", tf.constant(new float[][] {{10.0f, 30.0f}}))
+          .output("z", tf.constant(20.0f)).build();
+
+    Map<String, TensorDescription> inputs = builder.getInputs();
+    assertEquals(inputs.size(), 1);
+
+    Map<String, TensorDescription> outputs = builder.getOutputs();
+    assertEquals(outputs.size(), 2);
+
+    assertEquals(outputs.get("y").dataType, DataType.DT_FLOAT);
+    assertEquals(outputs.get("z").dataType, DataType.DT_FLOAT);
+    assertArrayEquals(outputs.get("y").shape.asArray(), new long [] {1,2});
+    assertArrayEquals(outputs.get("z").shape.asArray(), new long [] {});
+
+    Signature emptySignature = Signature.builder().build();
+    assertEquals(emptySignature.getInputs().size(), 0);
   }
 
   @Test

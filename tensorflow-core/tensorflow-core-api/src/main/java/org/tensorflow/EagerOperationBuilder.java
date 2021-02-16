@@ -75,6 +75,7 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public EagerOperationBuilder addInput(Output<?> input) {
+    session.checkInput(input);
     addInput(opHandle, (TFE_TensorHandle) input.getUnsafeNativeHandle());
     return this;
   }
@@ -83,6 +84,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   public EagerOperationBuilder addInputList(Output<?>[] inputs) {
     TFE_TensorHandle[] inputHandles = new TFE_TensorHandle[inputs.length];
     for (int i = 0; i < inputs.length; ++i) {
+      session.checkInput(inputs[i]);
       inputHandles[i] = (TFE_TensorHandle) inputs[i].getUnsafeNativeHandle();
     }
     addInputList(opHandle, inputHandles);

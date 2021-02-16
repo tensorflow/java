@@ -23,29 +23,12 @@ import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperationBuilder}. */
 public class GraphOperationBuilderTest {
-
-  @Test
-  public void failWhenMixingOperationsOnDifferentGraphs() {
-    try (Graph g1 = new Graph();
-        Graph g2 = new Graph()) {
-      Ops tf = Ops.create(g1);
-      Constant<TInt32> c1 = tf.constant(3);
-      tf.math.add(c1, c1);
-      try {
-        Ops tf2 = Ops.create(g2);
-        tf2.math.add(c1, c1);
-      } catch (Exception e) {
-        fail(e.toString());
-      }
-    }
-  }
 
   @Test
   public void failOnUseAfterBuild() {

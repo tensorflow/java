@@ -158,6 +158,17 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return Types.GRAPH;
   }
 
+  @Override
+  public void checkInput(Op input) {
+    if (input.env().isEager()) {
+      throw new IllegalArgumentException(
+          "Input " + input + " was from an eager session, can't use in a graph.  Use tf.constantOf(input.asTensor())");
+    }
+    if (input.env() != this) {
+      throw new IllegalArgumentException("Input " + input + " was from a different graph, can't use.");
+    }
+  }
+
   /**
    * Import a representation of a TensorFlow graph.
    *

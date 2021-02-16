@@ -15,9 +15,11 @@
  */
 package org.tensorflow;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;
@@ -31,6 +33,16 @@ public class Signature  {
 
   /** The default signature key, when not provided */
   public static final String DEFAULT_KEY = "serving_default";
+
+  public static class TensorDescription {
+    public final DataType dataType;
+    public final Shape shape;
+
+    public TensorDescription(DataType dataType, Shape shape) {
+      this.dataType = dataType;
+      this.shape = shape;
+    }
+  }
 
   /**
    * Builds a new function signature.
@@ -172,6 +184,32 @@ public class Signature  {
       printTensorInfo(signatureDef.getOutputsMap(), strBuilder);
     }
     return strBuilder.toString();
+  }
+
+  private Map<String, TensorDescription> buildTensorDescriptionMap(Map<String, TensorInfo> dataMapIn) {
+    Map<String, TensorDescription> dataTypeMap = new HashMap<>();
+    dataMapIn.forEach((a, b) -> {
+      long[] tensorDims = b.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
+      Shape tensorShape = Shape.of(tensorDims);
+      dataTypeMap.put(a, new TensorDescription(b.getDtype(),
+                                               tensorShape));
+    });
+    return dataTypeMap;
+  }
+
+  /**
+   * Returns the names of the inputs in this signature mapped to their expected data type and shape
+   * @return
+   */
+  public Map<String, TensorDescription> getInputs() {
+    return buildTensorDescriptionMap(signatureDef.getInputsMap());
+  }
+
+  /**
+   * Returns the names of the outputs in this signature mapped to their expected data type and shape
+   */
+  public Map<String, TensorDescription> getOutputs() {
+    return buildTensorDescriptionMap(signatureDef.getOutputsMap());
   }
 
   Signature(String key, SignatureDef signatureDef) {

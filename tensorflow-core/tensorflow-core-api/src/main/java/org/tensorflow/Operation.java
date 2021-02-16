@@ -25,16 +25,24 @@ import org.tensorflow.types.family.TType;
  */
 public interface Operation {
 
-  /** Returns the full name of the Operation. */
+  /**
+   * Returns the full name of the Operation.
+   */
   String name();
 
   /**
-   * Returns the type of the operation, i.e., the name of the computation performed by the
-   * operation.
+   * Returns the type of the operation, i.e., the name of the computation performed by the operation.
    */
   String type();
 
-  /** Returns the number of tensors produced by this operation. */
+  /**
+   * Returns the execution environment this operation was created in.
+   */
+  ExecutionEnvironment env();
+
+  /**
+   * Returns the number of tensors produced by this operation.
+   */
   int numOutputs();
 
   /**
