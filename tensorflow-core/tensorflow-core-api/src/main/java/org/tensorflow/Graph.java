@@ -31,7 +31,11 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -212,6 +216,73 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new OperationIterator(this);
   }
 
+  private GraphOperation graphOp(Operand<?> operand) {
+    checkInput(operand);
+    return (GraphOperation) operand.op();
+  }
+
+  /**
+   * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
+   * Respects control dependencies.
+   *
+   * @param inputs the inputs of the subgraph.  Must be from single output ops.
+   * @param outputs the outputs of the subgraph
+   * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
+   * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
+   * solely on inputs)
+   */
+  public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs) {
+    Queue<GraphOperation> currents = new LinkedList<>();
+    Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
+    Set<GraphOperation> inputControls = new LinkedHashSet<>(inputs.size());
+
+    for (Operand<?> input : inputs) {
+      if (input.op().numOutputs() > 1) {
+        throw new IllegalStateException("Only ops with one output are supported as subgraph inputs");
+      }
+      GraphOperation op = graphOp(input);
+      inputControls.add(op);
+      seen.add(op);
+    }
+
+    for (Operand<?> operand : outputs) {
+      GraphOperation op = graphOp(operand);
+      if (!inputs.contains(operand)) {
+        seen.add(op);
+      }
+      currents.add(op);
+    }
+
+    while (!currents.isEmpty()) {
+      GraphOperation op = currents.poll();
+
+      // skip if already present
+      if (!seen.add(op)) {
+        continue;
+      }
+
+      if (op.numControlInputs() + op.numInputs() == 0) {
+        throw new IllegalStateException("Operation " + op
+            + " has no inputs, but is not set as an input.  You can't calculate outputs with the given inputs.");
+      }
+
+      for (GraphOperation control : op.controlInputs()) {
+        if (!inputControls.contains(control)) {
+          currents.add(control);
+        }
+      }
+
+      for (Operand<?> input : op.inputs()) {
+        if (!inputs.contains(input)) {
+          currents.add(graphOp(input));
+        }
+      }
+
+    }
+
+    return seen;
+  }
+
   /**
    * Returns a builder to add {@link Operation}s to the Graph.
    *
@@ -230,7 +301,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void attachFunction(DefinedFunction function) {
+  public void attachFunction(ConcreteFunction function) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();

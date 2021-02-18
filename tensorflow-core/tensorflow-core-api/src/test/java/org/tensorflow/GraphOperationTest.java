@@ -22,11 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /** Unit tests for {@link org.tensorflow.GraphOperation}. */
@@ -187,6 +190,70 @@ public class GraphOperationTest {
         fail();
       } catch (IllegalStateException e) {
       }
+    }
+  }
+
+  @Test
+  public void inputs() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+
+      Operand<TFloat32> a = tf.constant(1f);
+      Operand<TFloat32> b = tf.constant(2f);
+      Operand<TFloat32> c = tf.math.add(a, b);
+
+      GraphOperation op = (GraphOperation) c.op();
+
+      assertEquals(2, op.numInputs());
+      assertEquals(Arrays.asList(a, b), op.inputs());
+    }
+  }
+
+  @Test
+  public void consumers() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+
+      Operand<TFloat32> a = tf.constant(1f);
+      Operand<TFloat32> b = tf.constant(2f);
+      Operand<TFloat32> c = tf.math.add(a, b);
+
+      GraphOperation op = (GraphOperation) a.op();
+
+      assertEquals(1, op.numConsumers());
+      assertEquals(new LinkedHashSet<>(Collections.singletonList(c.op())), op.consumers());
+    }
+  }
+
+  @Test
+  public void controlInputs() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+
+      Operand<TFloat32> a = tf.constant(1f);
+      Operand<TFloat32> b = tf.constant(2f);
+      Operand<TFloat32> c = tf.withControlDependencies(Arrays.asList(a, b)).constant(3f);
+
+      GraphOperation op = (GraphOperation) c.op();
+
+      assertEquals(2, op.numControlInputs());
+      assertEquals(new LinkedHashSet<>(Arrays.asList(a.op(), b.op())), op.controlInputs());
+    }
+  }
+
+  @Test
+  public void controlConsumers() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+
+      Operand<TFloat32> a = tf.constant(1f);
+      Operand<TFloat32> b = tf.constant(2f);
+      Operand<TFloat32> c = tf.withControlDependencies(Arrays.asList(a, b)).constant(3f);
+
+      GraphOperation op = (GraphOperation) a.op();
+
+      assertEquals(1, op.numControlConsumers());
+      assertEquals(new LinkedHashSet<>(Collections.singletonList(c.op())), op.controlConsumers());
     }
   }
 }

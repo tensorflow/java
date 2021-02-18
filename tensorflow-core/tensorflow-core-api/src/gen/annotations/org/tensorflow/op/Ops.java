@@ -21,7 +21,6 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import org.tensorflow.ConcreteFunction;
-import org.tensorflow.DefinedFunction;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
@@ -351,9 +350,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -376,8 +375,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -1075,15 +1074,15 @@ public final class Ops {
   /**
    * empty
    */
-  public Map<String, Operand<?>> call(ConcreteFunction function,
-      Map<String, Operand<?>> arguments) {
-    return Function.call(scope, function, arguments);
+  public Operand<?> call(ConcreteFunction function, Operand<?> argument) {
+    return Function.call(scope, function, argument);
   }
 
   /**
    * empty
    */
-  public List<Operand<?>> call(DefinedFunction function, List<Operand<?>> arguments) {
+  public Map<String, Operand<?>> call(ConcreteFunction function,
+      Map<String, Operand<?>> arguments) {
     return Function.call(scope, function, arguments);
   }
 
@@ -1853,13 +1852,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of {@code type}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be truncated if it does not
+   *  fit in the target type.
    *
    * @param type the type of tensor to create.  Must be concrete (i.e. not {@link org.tensorflow.types.family.TFloating})
    * @param number the value of the tensor
    * @return a constant of the passed type
-   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or unknown.
+   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or
+   *  unknown.
    */
   public <T extends TNumber> Constant<T> constant(Class<T> type, Number number) {
     return Constant.tensorOf(scope, type, number);
@@ -1911,14 +1911,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code number} may be
+   *  truncated if it does not fit in the target type.
    *
    * @param toMatch the operand providing the target type
    * @param number the value of the tensor
    * @return a constant with the same type as {@code toMatch}
-   * @see Ops#constant(Class, Number)
    * @throws IllegalArgumentException if the type is unknown (which should be impossible).
+   * @see Ops#constant(Class, Number)
    */
   public <T extends TNumber> Constant<T> constantOfSameType(Operand<T> toMatch, Number number) {
     return Constant.tensorOfSameType(scope, toMatch, number);

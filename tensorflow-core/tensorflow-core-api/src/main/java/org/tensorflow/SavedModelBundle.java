@@ -163,11 +163,12 @@ public class SavedModelBundle implements AutoCloseable {
         throw new IllegalArgumentException("Function \"" + signature.key() + "\" was already added to the model");
       }
       functions.put(signature.key(), function);
-      if (session == null) {
-        session = function.session();
-      } else if (session != function.session()) {
-        throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
-      }
+      //TODO fix saving
+//      if (session == null) {
+//        session = function.session();
+//      } else if (session != function.session()) {
+//        throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
+//      }
       metaGraphDefBuilder.putSignatureDef(signature.key(), signature.asSignatureDef());
       return this;
     }

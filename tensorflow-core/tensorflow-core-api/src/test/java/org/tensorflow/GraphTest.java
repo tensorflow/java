@@ -19,10 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
@@ -110,6 +114,68 @@ public class GraphTest {
       assertTrue(operations.remove(iterator.next()));
 
       assertFalse(iterator.hasNext());
+    }
+  }
+
+  @Test
+  public void completeSubgraph() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> control = tf.constant(0);
+      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
+      Operand<TInt32> b = tf.constant(2);
+      Operand<TInt32> c = tf.constant(3);
+
+      Operand<TInt32> d = tf.math.add(a, b);
+      Operand<TInt32> output = tf.math.mul(d, c);
+
+      Set<GraphOperation> subgraph = g
+          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b)), Collections.singleton(output));
+
+      assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
+          subgraph);
+    }
+  }
+
+  @Test
+  public void completeSubgraphMissingInput() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> control = tf.constant(0);
+      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
+      Operand<TInt32> b = tf.constant(2);
+      Operand<TInt32> c = tf.constant(3);
+
+      Operand<TInt32> d = tf.math.add(a, b);
+      Operand<TInt32> output = tf.math.mul(d, c);
+
+      try {
+        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, b)), Collections.singleton(output));
+        fail();
+      } catch (IllegalStateException e) {
+        assertTrue(e.getMessage().contains("is not set as an input"));
+      }
+    }
+  }
+
+  @Test
+  public void completeSubgraphMissingControlInput() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> control = tf.constant(0);
+      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
+      Operand<TInt32> b = tf.constant(2);
+      Operand<TInt32> c = tf.constant(3);
+
+      Operand<TInt32> d = tf.math.add(a, b);
+      Operand<TInt32> output = tf.math.mul(d, c);
+
+      try {
+        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(a, b)), Collections.singleton(output));
+        fail();
+      } catch (IllegalStateException e) {
+        assertTrue(e.getMessage().contains("is not set as an input"));
+      }
     }
   }
 

@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
-import java.util.List;
 
 /** Defines an environment for creating and executing TensorFlow {@link Operation}s. */
 public interface ExecutionEnvironment {
@@ -40,9 +39,9 @@ public interface ExecutionEnvironment {
    * Attach the function to this execution environment, allowing it to be called by creating an op with the function
    * name as it's {@code type}.
    *
-   * Done automatically in the {@link org.tensorflow.op.Ops#callFunction(DefinedFunction, List)} ops.
+   * Done automatically in the {@link org.tensorflow.op.Ops#call(ConcreteFunction, java.util.Map)} ops.
    */
-  void attachFunction(DefinedFunction function);
+  void attachFunction(ConcreteFunction function);
 
   /**
    * Returns true if the given operation is valid in this execution environment.
