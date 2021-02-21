@@ -164,16 +164,7 @@ public final class TensorBuffers {
     if (numElements > Integer.MAX_VALUE) {
       throw new IllegalArgumentException("Cannot map string tensor of " + numElements + " elements");
     }
-    ByteBuffer dataBuffer = tensorMemory.asByteBuffer();
-
-    LongBuffer offsetBuffer = dataBuffer.asLongBuffer();
-    offsetBuffer.limit((int)numElements);
-    LongDataBuffer offsets = DataBuffers.of(offsetBuffer.slice());
-
-    dataBuffer.position((int)numElements * Long.BYTES);
-    ByteDataBuffer data = DataBuffers.of(dataBuffer.slice());
-
-    return new ByteSequenceTensorBuffer(offsets, data);
+    return new ByteSequenceTensorBuffer(tensorMemory, numElements);
   }
 
   private static Pointer tensorMemory(TF_Tensor nativeTensor) {

@@ -17,11 +17,20 @@
 
 package org.tensorflow.internal.buffer;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Assign;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Copy;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Init;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetDataPointer;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetSize;
+
 import java.nio.ReadOnlyBufferException;
 import java.util.function.Function;
-import org.tensorflow.ndarray.buffer.ByteDataBuffer;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.ndarray.buffer.DataBuffer;
-import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.internal.c_api.TF_TString;
 import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
 import org.tensorflow.ndarray.impl.buffer.Validator;
 import org.tensorflow.ndarray.NdArray;
@@ -29,19 +38,8 @@ import org.tensorflow.ndarray.NdArray;
 /**
  * Buffer for storing string tensor data.
  *
- * <p>The values are stored a sequence of bytes, with their length and offset in the tensor.
- * Given a string tensor of n elements, data is stored in the buffer as followed:
- * <pre>
- * off<sub>0</sub>, off<sub>1</sub>, ..., off<sub>n-1</sub>, len<sub>0</sub>, bytes<sub>0</sub>, len<sub>1</sub>, bytes<sub>1</sub>, ..., len<sub>n-1</sub>, bytes<sub>n-1</sub>
- * </pre>
- *
- * <p>Each offset is a 64-bit integer that indicates the location of the string in the tensor, i.e.
- * the position of the first byte of its length value.
- *
- * <p>The length of the string, which is the number of bytes in the sequence, is encoded as a varint
- * and is one byte long or more depending on its value.
- *
- * <p>The string bytes starts right after the varint length value.
+ * <p>The values are stored as an array of {@link TF_TString}, internally wrapped with
+ * {@code tensorflow::tstring}, which is essentially a portable version of {@code std::string}.
  *
  * <p>The data of the buffer must be initialized only once, by calling {@link #init(NdArray, Function)},
  * and the buffer must have been allocated with enough space (use {@link #computeSize(NdArray, Function)}
@@ -59,14 +57,8 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
    * @return number of bytes required to store the data.
    */
   public static <T> long computeSize(ByteSequenceProvider<?> byteSequenceProvider) {
-    // reserve space to store 64-bit offsets
-    long size = byteSequenceProvider.numSequences() * Long.BYTES;
-
-    // reserve space to store length and data of each values
-    for (byte[] elementBytes : byteSequenceProvider) {
-      size += elementBytes.length + ByteSequenceTensorBuffer.varintLength(elementBytes.length);
-    }
-    return size;
+    // reserve space to store TF_TString objects
+    return byteSequenceProvider.numSequences() * Loader.sizeof(TF_TString.class);
   }
 
   /**
@@ -86,30 +78,15 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
 
   @Override
   public long size() {
-    return offsets.size();
+    return data.capacity() - data.position();
   }
 
   @Override
   public byte[] getObject(long index) {
     Validator.getArgs(this, index);
-    long offset = offsets.getLong(index);
-
-    // Read string length as a varint from the given offset
-    byte b;
-    int pos = 0;
-    int length = 0;
-    do {
-      b = data.getByte(offset++);
-      length |= (b & 0x7F) << pos;
-      pos += 7;
-    } while ((b & 0x80) != 0);
-
-    // Read string of the given length
-    byte[] bytes = new byte[length];
-    if (length > 0) {
-      data.offset(offset).read(bytes);
-    }
-    return bytes;
+    TF_TString tstring = data.getPointer(index);
+    BytePointer ptr = TF_TString_GetDataPointer(tstring).capacity(TF_TString_GetSize(tstring));
+    return ptr.getStringBytes();
   }
 
   @Override
@@ -126,12 +103,9 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
   public DataBuffer<byte[]> copyTo(DataBuffer<byte[]> dst, long size) {
     if (size == size() && dst instanceof ByteSequenceTensorBuffer) {
       ByteSequenceTensorBuffer tensorDst = (ByteSequenceTensorBuffer) dst;
-      if (offsets.size() != size || data.size() != size) {
-        throw new IllegalArgumentException(
-            "Cannot copy string tensor data to another tensor of a different size");
+      for (int i = 0; i < size; i++) {
+        TF_TString_Assign(tensorDst.data.getPointer(i), data.getPointer(i));
       }
-      offsets.copyTo(tensorDst.offsets, size);
-      data.copyTo(tensorDst.data, size);
     } else {
       slowCopyTo(dst, size);
     }
@@ -139,55 +113,25 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
   }
 
   @Override
-  public DataBuffer<byte[]> offset(long index) {
-    return new ByteSequenceTensorBuffer(offsets.offset(index), data);
-  }
-
-  @Override
-  public DataBuffer<byte[]> narrow(long size) {
-    return new ByteSequenceTensorBuffer(offsets.narrow(size), data);
-  }
-
-  @Override
   public DataBuffer<byte[]> slice(long index, long size) {
-    return new ByteSequenceTensorBuffer(offsets.slice(index, size), data);
+    return new ByteSequenceTensorBuffer(data.getPointer(index), size);
   }
 
-  ByteSequenceTensorBuffer(LongDataBuffer offsets, ByteDataBuffer data) {
-    this.offsets = offsets;
-    this.data = data;
+  ByteSequenceTensorBuffer(Pointer tensorMemory, long numElements) {
+    this.data = new TF_TString(tensorMemory).capacity(tensorMemory.position() + numElements);
   }
 
   private class InitDataWriter {
-    long offsetIndex = 0;
-    long dataIndex = 0;
+    long index = 0;
 
     void writeNext(byte[] bytes) {
-      offsets.setLong(dataIndex, offsetIndex++);
-
-      // Encode string length as a varint first
-      int v = bytes.length;
-      while (v >= 0x80) {
-        data.setByte((byte) ((v & 0x7F) | 0x80), dataIndex++);
-        v >>= 7;
+      try (PointerScope scope = new PointerScope()) {
+        TF_TString tstring = data.getPointer(index++);
+        TF_TString_Init(tstring);
+        TF_TString_Copy(tstring, new BytePointer(bytes), bytes.length);
       }
-      data.setByte((byte) v, dataIndex++);
-
-      // Then write string data bytes
-      data.offset(dataIndex).write(bytes);
-      dataIndex += bytes.length;
     }
   }
 
-  private static int varintLength(int length) {
-    int len = 1;
-    while (length >= 0x80) {
-      length >>= 7;
-      len++;
-    }
-    return len;
-  }
-
-  private final LongDataBuffer offsets;
-  private final ByteDataBuffer data;
+  private final TF_TString data;
 }
