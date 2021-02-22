@@ -219,6 +219,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * XStats associated with the event.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -229,6 +230,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * XStats associated with the event.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -240,6 +242,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * XStats associated with the event.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -250,6 +253,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * XStats associated with the event.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -260,6 +264,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * XStats associated with the event.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -912,6 +917,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -926,6 +932,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -940,6 +947,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -954,6 +962,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -975,6 +984,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -993,6 +1003,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1013,6 +1024,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1034,6 +1046,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1052,6 +1065,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1070,6 +1084,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1089,6 +1104,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1106,6 +1122,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1123,6 +1140,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1134,6 +1152,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1148,6 +1167,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1163,6 +1183,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1174,6 +1195,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>
@@ -1186,6 +1208,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * XStats associated with the event.
+     * Each of these XStats should have a different metadata_id.
      * </pre>
      *
      * <code>repeated .tensorflow.profiler.XStat stats = 4;</code>

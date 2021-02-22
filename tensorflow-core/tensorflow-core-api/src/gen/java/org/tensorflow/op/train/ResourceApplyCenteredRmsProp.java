@@ -82,7 +82,7 @@ public final class ResourceApplyCenteredRmsProp extends RawOp {
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum 
+   * @param momentum Momentum Scale. Must be a scalar.
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
    * @param options carries optional attributes values

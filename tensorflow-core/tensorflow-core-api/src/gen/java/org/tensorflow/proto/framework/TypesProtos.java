@@ -44,11 +44,12 @@ public final class TypesProtos {
       "_REF\020t\022\021\n\rDT_UINT16_REF\020u\022\025\n\021DT_COMPLEX1" +
       "28_REF\020v\022\017\n\013DT_HALF_REF\020w\022\023\n\017DT_RESOURCE" +
       "_REF\020x\022\022\n\016DT_VARIANT_REF\020y\022\021\n\rDT_UINT32_" +
-      "REF\020z\022\021\n\rDT_UINT64_REF\020{B\200\001\n\036org.tensorf" +
-      "low.proto.frameworkB\013TypesProtosP\001ZLgith" +
-      "ub.com/tensorflow/tensorflow/tensorflow/" +
-      "go/core/framework/types_go_proto\370\001\001b\006pro" +
-      "to3"
+      "REF\020z\022\021\n\rDT_UINT64_REF\020{*5\n\017SpecializedT" +
+      "ype\022\016\n\nST_INVALID\020\000\022\022\n\016ST_TENSOR_LIST\020\001B" +
+      "\200\001\n\036org.tensorflow.proto.frameworkB\013Type" +
+      "sProtosP\001ZLgithub.com/tensorflow/tensorf" +
+      "low/tensorflow/go/core/framework/types_g" +
+      "o_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

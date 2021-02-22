@@ -19,6 +19,7 @@ public interface XStatMetadataOrBuilder extends
   /**
    * <pre>
    * Name of the stat (should be short).
+   * Two XStatMetadata with different id should have different names.
    * </pre>
    *
    * <code>string name = 2;</code>
@@ -27,6 +28,7 @@ public interface XStatMetadataOrBuilder extends
   /**
    * <pre>
    * Name of the stat (should be short).
+   * Two XStatMetadata with different id should have different names.
    * </pre>
    *
    * <code>string name = 2;</code>

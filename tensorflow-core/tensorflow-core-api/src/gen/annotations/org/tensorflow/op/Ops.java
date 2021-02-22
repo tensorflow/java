@@ -67,6 +67,7 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ConsumeMutexLock;
 import org.tensorflow.op.core.ControlTrigger;
 import org.tensorflow.op.core.CountUpTo;
+import org.tensorflow.op.core.DecodeProto;
 import org.tensorflow.op.core.DeepCopy;
 import org.tensorflow.op.core.DeleteSessionTensor;
 import org.tensorflow.op.core.DestroyResourceOp;
@@ -76,6 +77,8 @@ import org.tensorflow.op.core.DynamicStitch;
 import org.tensorflow.op.core.EditDistance;
 import org.tensorflow.op.core.Empty;
 import org.tensorflow.op.core.EmptyTensorList;
+import org.tensorflow.op.core.EmptyTensorMap;
+import org.tensorflow.op.core.EncodeProto;
 import org.tensorflow.op.core.EnsureShape;
 import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
@@ -100,12 +103,14 @@ import org.tensorflow.op.core.InplaceAdd;
 import org.tensorflow.op.core.InplaceSub;
 import org.tensorflow.op.core.InplaceUpdate;
 import org.tensorflow.op.core.IsVariableInitialized;
+import org.tensorflow.op.core.KthOrderStatistic;
 import org.tensorflow.op.core.LookupTableExport;
 import org.tensorflow.op.core.LookupTableFind;
 import org.tensorflow.op.core.LookupTableImport;
 import org.tensorflow.op.core.LookupTableInsert;
 import org.tensorflow.op.core.LookupTableSize;
 import org.tensorflow.op.core.LoopCond;
+import org.tensorflow.op.core.MakeUnique;
 import org.tensorflow.op.core.MapClear;
 import org.tensorflow.op.core.MapIncompleteSize;
 import org.tensorflow.op.core.MapPeek;
@@ -243,6 +248,12 @@ import org.tensorflow.op.core.TensorListScatterIntoExistingList;
 import org.tensorflow.op.core.TensorListSetItem;
 import org.tensorflow.op.core.TensorListSplit;
 import org.tensorflow.op.core.TensorListStack;
+import org.tensorflow.op.core.TensorMapErase;
+import org.tensorflow.op.core.TensorMapHasKey;
+import org.tensorflow.op.core.TensorMapInsert;
+import org.tensorflow.op.core.TensorMapLookup;
+import org.tensorflow.op.core.TensorMapSize;
+import org.tensorflow.op.core.TensorMapStackKeys;
 import org.tensorflow.op.core.TensorScatterNdAdd;
 import org.tensorflow.op.core.TensorScatterNdMax;
 import org.tensorflow.op.core.TensorScatterNdMin;
@@ -251,6 +262,8 @@ import org.tensorflow.op.core.TensorScatterNdUpdate;
 import org.tensorflow.op.core.TensorStridedSliceUpdate;
 import org.tensorflow.op.core.Tile;
 import org.tensorflow.op.core.Timestamp;
+import org.tensorflow.op.core.TopKUnique;
+import org.tensorflow.op.core.TopKWithUnique;
 import org.tensorflow.op.core.TryRpc;
 import org.tensorflow.op.core.Unbatch;
 import org.tensorflow.op.core.UnbatchGrad;
@@ -337,6 +350,8 @@ public final class Ops {
 
   public final SparseOps sparse;
 
+  public final TpuOps tpu;
+
   public final BitwiseOps bitwise;
 
   public final MathOps math;
@@ -345,9 +360,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final TrainOps train;
-
   public final QuantizationOps quantization;
+
+  public final TrainOps train;
 
   private final Scope scope;
 
@@ -366,12 +381,13 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
+    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+    train = new TrainOps(this);
   }
 
   /**
@@ -1919,6 +1935,71 @@ public final class Ops {
   }
 
   /**
+   * The op extracts fields from a serialized protocol buffers message into tensors.
+   *  <p>
+   *  The `decode_proto` op extracts fields from a serialized protocol buffers
+   *  message into tensors.  The fields in `field_names` are decoded and converted
+   *  to the corresponding `output_types` if possible.
+   *  <p>
+   *  A `message_type` name must be provided to give context for the field names.
+   *  The actual message descriptor can be looked up either in the linked-in
+   *  descriptor pool or a filename provided by the caller using the
+   *  `descriptor_source` attribute.
+   *  <p>
+   *  Each output tensor is a dense tensor. This means that it is padded to hold
+   *  the largest number of repeated elements seen in the input minibatch. (The
+   *  shape is also padded by one to prevent zero-sized dimensions). The actual
+   *  repeat counts for each example in the minibatch can be found in the `sizes`
+   *  output. In many cases the output of `decode_proto` is fed immediately into
+   *  tf.squeeze if missing values are not a concern. When using tf.squeeze, always
+   *  pass the squeeze dimension explicitly to avoid surprises.
+   *  <p>
+   *  For the most part, the mapping between Proto field types and TensorFlow dtypes
+   *  is straightforward. However, there are a few special cases:
+   *  <p>
+   *  - A proto field that contains a submessage or group can only be converted
+   *  to `DT_STRING` (the serialized submessage). This is to reduce the complexity
+   *  of the API. The resulting string can be used as input to another instance of
+   *  the decode_proto op.
+   *  <p>
+   *  - TensorFlow lacks support for unsigned integers. The ops represent uint64
+   *  types as a `DT_INT64` with the same twos-complement bit pattern (the obvious
+   *  way). Unsigned int32 values can be represented exactly by specifying type
+   *  `DT_INT64`, or using twos-complement if the caller specifies `DT_INT32` in
+   *  the `output_types` attribute.
+   *  <p>
+   *  Both binary and text proto serializations are supported, and can be
+   *  chosen using the `format` attribute.
+   *  <p>
+   *  The `descriptor_source` attribute selects the source of protocol
+   *  descriptors to consult when looking up `message_type`. This may be:
+   *  <p>
+   *  - An empty string  or "local://", in which case protocol descriptors are
+   *  created for C++ (not Python) proto definitions linked to the binary.
+   *  <p>
+   *  - A file, in which case protocol descriptors are created from the file,
+   *  which is expected to contain a `FileDescriptorSet` serialized as a string.
+   *  NOTE: You can build a `descriptor_source` file using the `--descriptor_set_out`
+   *  and `--include_imports` options to the protocol compiler `protoc`.
+   *  <p>
+   *  - A "bytes://<bytes>", in which protocol descriptors are created from `<bytes>`,
+   *  which is expected to be a `FileDescriptorSet` serialized as a string.
+   *
+   * @param bytes Tensor of serialized protos with shape `batch_shape`.
+   * @param messageType Name of the proto message type to decode.
+   * @param fieldNames List of strings containing proto field names. An extension field can be decoded
+   *  by using its full name, e.g. EXT_PACKAGE.EXT_FIELD_NAME.
+   * @param outputTypes List of TF types to use for the respective field in field_names.
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeProto
+   */
+  public DecodeProto decodeProto(Operand<TString> bytes, String messageType,
+      List<String> fieldNames, List<Class<? extends TType>> outputTypes,
+      DecodeProto.Options... options) {
+    return DecodeProto.create(scope, bytes, messageType, fieldNames, outputTypes, options);
+  }
+
+  /**
    * Makes a copy of `x`.
    *
    * @param <T> data type for {@code y()} output
@@ -2159,6 +2240,73 @@ public final class Ops {
   }
 
   /**
+   * Creates and returns an empty tensor map.
+   *  <p>
+   *  handle: an empty tensor map
+   *
+   * @return a new instance of EmptyTensorMap
+   */
+  public EmptyTensorMap emptyTensorMap() {
+    return EmptyTensorMap.create(scope);
+  }
+
+  /**
+   * The op serializes protobuf messages provided in the input tensors.
+   *  <p>
+   *  The types of the tensors in `values` must match the schema for the fields
+   *  specified in `field_names`. All the tensors in `values` must have a common
+   *  shape prefix, <i>batch_shape</i>.
+   *  <p>
+   *  The `sizes` tensor specifies repeat counts for each field.  The repeat count
+   *  (last dimension) of a each tensor in `values` must be greater than or equal
+   *  to corresponding repeat count in `sizes`.
+   *  <p>
+   *  A `message_type` name must be provided to give context for the field names.
+   *  The actual message descriptor can be looked up either in the linked-in
+   *  descriptor pool or a filename provided by the caller using the
+   *  `descriptor_source` attribute.
+   *  <p>
+   *  For the most part, the mapping between Proto field types and TensorFlow dtypes
+   *  is straightforward. However, there are a few special cases:
+   *  <p>
+   *  - A proto field that contains a submessage or group can only be converted
+   *  to `DT_STRING` (the serialized submessage). This is to reduce the complexity
+   *  of the API. The resulting string can be used as input to another instance of
+   *  the decode_proto op.
+   *  <p>
+   *  - TensorFlow lacks support for unsigned integers. The ops represent uint64
+   *  types as a `DT_INT64` with the same twos-complement bit pattern (the obvious
+   *  way). Unsigned int32 values can be represented exactly by specifying type
+   *  `DT_INT64`, or using twos-complement if the caller specifies `DT_INT32` in
+   *  the `output_types` attribute.
+   *  <p>
+   *  The `descriptor_source` attribute selects the source of protocol
+   *  descriptors to consult when looking up `message_type`. This may be:
+   *  <p>
+   *  - An empty string  or "local://", in which case protocol descriptors are
+   *  created for C++ (not Python) proto definitions linked to the binary.
+   *  <p>
+   *  - A file, in which case protocol descriptors are created from the file,
+   *  which is expected to contain a `FileDescriptorSet` serialized as a string.
+   *  NOTE: You can build a `descriptor_source` file using the `--descriptor_set_out`
+   *  and `--include_imports` options to the protocol compiler `protoc`.
+   *  <p>
+   *  - A "bytes://<bytes>", in which protocol descriptors are created from `<bytes>`,
+   *  which is expected to be a `FileDescriptorSet` serialized as a string.
+   *
+   * @param sizes Tensor of int32 with shape `[batch_shape, len(field_names)]`.
+   * @param values List of tensors containing values for the corresponding field.
+   * @param fieldNames List of strings containing proto field names.
+   * @param messageType Name of the proto message type to decode.
+   * @param options carries optional attributes values
+   * @return a new instance of EncodeProto
+   */
+  public EncodeProto encodeProto(Operand<TInt32> sizes, Iterable<Operand<?>> values,
+      List<String> fieldNames, String messageType, EncodeProto.Options... options) {
+    return EncodeProto.create(scope, sizes, values, fieldNames, messageType, options);
+  }
+
+  /**
    * Ensures that the tensor's shape matches the expected shape.
    *  <p>
    *  Raises an error if the input tensor's shape does not match the specified shape.
@@ -2218,7 +2366,7 @@ public final class Ops {
   }
 
   /**
-   * Extract `patches` from `input` and put them in the "depth" output dimension. 3D extension of `extract_image_patches`.
+   * Extract `patches` from `input` and put them in the `"depth"` output dimension. 3D extension of `extract_image_patches`.
    *
    * @param <T> data type for {@code patches()} output
    * @param input 5-D Tensor with shape `[batch, in_planes, in_rows, in_cols, depth]`.
@@ -2227,10 +2375,10 @@ public final class Ops {
    *  `input`. Must be: `[1, stride_planes, stride_rows, stride_cols, 1]`.
    * @param padding The type of padding algorithm to use.
    *  <p>
-   *  We specify the size-related attributes as:
+   *  The size-related attributes are specified as follows:
    *  <pre>{@code
-   *        ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
-   *        strides = [1, stride_planes, strides_rows, strides_cols, 1]
+   *  ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
+   *  strides = [1, stride_planes, strides_rows, strides_cols, 1]
    *  }</pre>
    * @return a new instance of ExtractVolumePatches
    */
@@ -2864,6 +3012,32 @@ public final class Ops {
   }
 
   /**
+   * Computes the Kth order statistic of a data set. The current
+   *  <p>
+   *  implementation uses a binary search requiring exactly 32 passes over
+   *  the input data. The running time is linear with respect to input
+   *  size. The median-of-medians algorithm is probably faster, but is
+   *  difficult to implement efficiently in XLA. The implementation imposes
+   *  a total ordering on floats. The ordering is consistent with the usual
+   *  partial order.  Positive NaNs are greater than positive
+   *  infinity. Negative NaNs are less than negative infinity. NaNs with
+   *  distinct payloads are treated as distinct. Subnormal numbers are
+   *  preserved (not flushed to zero). Positive infinity is greater than all
+   *  numbers. Negative infinity is less than all numbers. Positive is
+   *  greater than negative zero. There are less than k values greater than
+   *  the kth order statistic. There are at least k values greater than or
+   *  equal to the Kth order statistic. The semantics are not the same as
+   *  top_k_unique.
+   *
+   * @param input
+   * @param k
+   * @return a new instance of KthOrderStatistic
+   */
+  public KthOrderStatistic kthOrderStatistic(Operand<TFloat32> input, Long k) {
+    return KthOrderStatistic.create(scope, input, k);
+  }
+
+  /**
    * Outputs all keys and values in the table.
    *
    * @param <T> data type for {@code keys()} output
@@ -2951,6 +3125,21 @@ public final class Ops {
    */
   public LoopCond loopCond(Operand<TBool> input) {
     return LoopCond.create(scope, input);
+  }
+
+  /**
+   * Make all elements in the non-Batch dimension unique, but \"close\" to
+   *  <p>
+   *  their initial value. Never returns a sub-normal number. Never returns
+   *  zero. The sign of each input element is always identical to the sign
+   *  of the corresponding output element. Behavior for infinite elements is
+   *  undefined. Behavior for subnormal elements is undefined.
+   *
+   * @param input
+   * @return a new instance of MakeUnique
+   */
+  public MakeUnique makeUnique(Operand<TFloat32> input) {
+    return MakeUnique.create(scope, input);
   }
 
   /**
@@ -6695,6 +6884,103 @@ public final class Ops {
   }
 
   /**
+   * Returns a tensor map with item from given key erased.
+   *  <p>
+   *  input_handle: the original map
+   *  output_handle: the map with value from given key removed
+   *  key: the key of the value to be erased
+   *
+   * @param inputHandle
+   * @param key
+   * @param valueDtype
+   * @return a new instance of TensorMapErase
+   */
+  public <U extends TType> TensorMapErase tensorMapErase(Operand<?> inputHandle,
+      Operand<? extends TType> key, Class<U> valueDtype) {
+    return TensorMapErase.create(scope, inputHandle, key, valueDtype);
+  }
+
+  /**
+   * Returns whether the given key exists in the map.
+   *  <p>
+   *  input_handle: the input map
+   *  key: the key to check
+   *  has_key: whether the key is already in the map or not
+   *
+   * @param inputHandle
+   * @param key
+   * @return a new instance of TensorMapHasKey
+   */
+  public TensorMapHasKey tensorMapHasKey(Operand<?> inputHandle, Operand<? extends TType> key) {
+    return TensorMapHasKey.create(scope, inputHandle, key);
+  }
+
+  /**
+   * Returns a map that is the 'input_handle' with the given key-value pair inserted.
+   *  <p>
+   *  input_handle: the original map
+   *  output_handle: the map with key and value inserted
+   *  key: the key to be inserted
+   *  value: the value to be inserted
+   *
+   * @param inputHandle
+   * @param key
+   * @param value
+   * @return a new instance of TensorMapInsert
+   */
+  public TensorMapInsert tensorMapInsert(Operand<?> inputHandle, Operand<? extends TType> key,
+      Operand<? extends TType> value) {
+    return TensorMapInsert.create(scope, inputHandle, key, value);
+  }
+
+  /**
+   * Returns the value from a given key in a tensor map.
+   *  <p>
+   *  input_handle: the input map
+   *  key: the key to be looked up
+   *  value: the value found from the given key
+   *
+   * @param <U> data type for {@code value()} output
+   * @param inputHandle
+   * @param key
+   * @param valueDtype
+   * @return a new instance of TensorMapLookup
+   */
+  public <U extends TType> TensorMapLookup<U> tensorMapLookup(Operand<?> inputHandle,
+      Operand<? extends TType> key, Class<U> valueDtype) {
+    return TensorMapLookup.create(scope, inputHandle, key, valueDtype);
+  }
+
+  /**
+   * Returns the number of tensors in the input tensor map.
+   *  <p>
+   *  input_handle: the input map
+   *  size: the number of tensors in the map
+   *
+   * @param inputHandle
+   * @return a new instance of TensorMapSize
+   */
+  public TensorMapSize tensorMapSize(Operand<?> inputHandle) {
+    return TensorMapSize.create(scope, inputHandle);
+  }
+
+  /**
+   * Returns a Tensor stack of all keys in a tensor map.
+   *  <p>
+   *  input_handle: the input map
+   *  keys: the returned Tensor of all keys in the map
+   *
+   * @param <T> data type for {@code keys()} output
+   * @param inputHandle
+   * @param keyDtype
+   * @return a new instance of TensorMapStackKeys
+   */
+  public <T extends TType> TensorMapStackKeys<T> tensorMapStackKeys(Operand<?> inputHandle,
+      Class<T> keyDtype) {
+    return TensorMapStackKeys.create(scope, inputHandle, keyDtype);
+  }
+
+  /**
    * Adds sparse `updates` to an existing tensor according to `indices`.
    *  <p>
    *  This operation creates a new tensor by adding sparse `updates` to the passed
@@ -6876,73 +7162,37 @@ public final class Ops {
    *  scattered onto an existing tensor (as opposed to a zero-tensor). If the memory
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>
-   *  If `indices` contains duplicates, then their updates are accumulated (summed).
+   *  If `indices` contains duplicates, then we pick the last update for the index.
    *  <p>
-   *  <b>WARNING</b>: The order in which updates are applied is nondeterministic, so the
-   *  output will be nondeterministic if `indices` contains duplicates -- because
-   *  of some numerical approximation issues, numbers summed in different order
-   *  may yield different results.
+   *  If an out of bound index is found on CPU, an error is returned.
+   *  <p>
+   *  <b>WARNING</b>: There are some GPU specific semantics for this operation.
+   *  - If an out of bound index is found, the index is ignored.
+   *  - The order in which updates are applied is nondeterministic, so the output
+   *  will be nondeterministic if `indices` contains duplicates.
    *  <p>
    *  `indices` is an integer tensor containing indices into a new tensor of shape
-   *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
+   *  `shape`.
+   *  <ul>
+   *  <li>
+   *  `indices` must have at least 2 axes: `(num_updates, index_depth)`.
+   *  </li>
+   *  <li>
+   *  The last axis of `indices` is how deep to index into `tensor` so  this index
+   *    depth must be less than the rank of `tensor`: `indices.shape[-1] <= tensor.ndim`
+   *  </li>
+   *  </ul>
+   *  if `indices.shape[-1] = tensor.rank` this Op indexes and updates scalar elements.
+   *  if `indices.shape[-1] < tensor.rank` it indexes and updates slices of the input
+   *  `tensor`.
    *  <p>
-   *      indices.shape[-1] <= shape.rank
-   *  <p>
-   *  The last dimension of `indices` corresponds to indices into elements
-   *  (if `indices.shape[-1] = shape.rank`) or slices
-   *  (if `indices.shape[-1] < shape.rank`) along dimension `indices.shape[-1]` of
-   *  `shape`.  `updates` is a tensor with shape
-   *  <p>
-   *      indices.shape[:-1] + shape[indices.shape[-1]:]
-   *  <p>
-   *  The simplest form of scatter is to insert individual elements in a tensor by
-   *  index. For example, say we want to insert 4 scattered elements in a rank-1
-   *  tensor with 8 elements.
-   *  <p>
-   *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
-   *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd1.png" alt>
-   *  </div>
-   *  <p>
-   *  In Python, this scatter operation would look like this:
-   *  <p>
-   *      >>> indices = tf.constant([[4], [3], [1], [7]])
-   *      >>> updates = tf.constant([9, 10, 11, 12])
-   *      >>> tensor = tf.ones([8], dtype=tf.int32)
-   *      >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates))
-   *      tf.Tensor([ 1 11  1 10  9  1  1 12], shape=(8,), dtype=int32)
-   *  <p>
-   *  We can also, insert entire slices of a higher rank tensor all at once. For
-   *  example, if we wanted to insert two slices in the first dimension of a
-   *  rank-3 tensor with two matrices of new values.
-   *  <p>
-   *  In Python, this scatter operation would look like this:
-   *  <p>
-   *      >>> indices = tf.constant([[0], [2]])
-   *      >>> updates = tf.constant([[[5, 5, 5, 5], [6, 6, 6, 6],
-   *      ...                         [7, 7, 7, 7], [8, 8, 8, 8]],
-   *      ...                        [[5, 5, 5, 5], [6, 6, 6, 6],
-   *      ...                         [7, 7, 7, 7], [8, 8, 8, 8]]])
-   *      >>> tensor = tf.ones([4, 4, 4], dtype=tf.int32)
-   *      >>> print(tf.tensor_scatter_nd_update(tensor, indices, updates).numpy())
-   *      [[[5 5 5 5]
-   *        [6 6 6 6]
-   *        [7 7 7 7]
-   *        [8 8 8 8]]
-   *       [[1 1 1 1]
-   *        [1 1 1 1]
-   *        [1 1 1 1]
-   *        [1 1 1 1]]
-   *       [[5 5 5 5]
-   *        [6 6 6 6]
-   *        [7 7 7 7]
-   *        [8 8 8 8]]
-   *       [[1 1 1 1]
-   *        [1 1 1 1]
-   *        [1 1 1 1]
-   *        [1 1 1 1]]]
-   *  <p>
-   *  Note that on CPU, if an out of bound index is found, an error is returned.
-   *  On GPU, if an out of bound index is found, the index is ignored.
+   *  Each `update` has a rank of `tensor.rank - indices.shape[-1]`.
+   *  The overall shape of `updates` is:
+   *  <pre>{@code
+   *  indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
+   *  }</pre>
+   *  For usage examples see the python [tf.tensor_scatter_nd_update](
+   *  https://www.tensorflow.org/api_docs/python/tf/tensor_scatter_nd_update) function
    *
    * @param <T> data type for {@code output()} output
    * @param tensor Tensor to copy/update.
@@ -7031,6 +7281,46 @@ public final class Ops {
    */
   public Timestamp timestamp() {
     return Timestamp.create(scope);
+  }
+
+  /**
+   * Returns the TopK unique values in the array in sorted order. The
+   *  <p>
+   *  running time is proportional to the product of K and the input
+   *  size. Sorting the whole array is more efficient for sufficiently large
+   *  values of K. The median-of-medians algorithm is probably faster, but
+   *  difficult to implement efficiently in XLA. If there are fewer than K
+   *  unique numbers (not NANs), the results are padded with negative
+   *  infinity. NaNs are never returned. Subnormal numbers are flushed to
+   *  zero. If an element appears at multiple indices, the highest index is
+   *  returned. If a TopK element never appears in the input due to padding
+   *  values, the indices are padded with negative one. If a padding value
+   *  appears in the input and padding is needed, the highest index of the
+   *  padding value will be returned. The semantics are not the same as
+   *  kth_order_statistic.
+   *
+   * @param input
+   * @param k
+   * @return a new instance of TopKUnique
+   */
+  public TopKUnique topKUnique(Operand<TFloat32> input, Long k) {
+    return TopKUnique.create(scope, input, k);
+  }
+
+  /**
+   * Returns the TopK values in the array in sorted order. This is a combination
+   *  <p>
+   *  of MakeUnique and TopKUnique. The returned top-K will have its lower bits
+   *  replaced by iota, thus it will be close to the original value but not exactly
+   *  the same. The running time is proportional to the product of K and the input
+   *  size. NaNs are never returned. Subnormal numbers are flushed to zero.
+   *
+   * @param input
+   * @param k
+   * @return a new instance of TopKWithUnique
+   */
+  public TopKWithUnique topKWithUnique(Operand<TFloat32> input, Long k) {
+    return TopKWithUnique.create(scope, input, k);
   }
 
   /**

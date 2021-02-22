@@ -1,10 +1,10 @@
 op {
   graph_op_name: "CollectiveReduce"
   endpoint {
-    name: "collective.AllReduce"
+    name: "collective.Reduce"
   }
-  out_arg: {
-    name: "data"
-    rename_to: "output"
+  endpoint {
+    name: "collective.AllReduce"
+    deprecated: true
   }
 }

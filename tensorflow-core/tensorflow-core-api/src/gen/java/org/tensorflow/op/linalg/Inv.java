@@ -28,10 +28,9 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Computes the inverse of one or more square invertible matrices or their
+ * Computes the inverse of one or more square invertible matrices or their adjoints (conjugate transposes).
  * <p>
- * adjoints (conjugate transposes).
- * <p>
+ * 
  * The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
  * form square matrices. The output is a tensor of the same shape as the input
  * containing the inverse for all input submatrices `[..., :, :]`.

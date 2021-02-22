@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "TPUExecuteAndUpdateVariables"
+  endpoint: {
+    name: "tpu.ExecuteAndUpdateVariables"
+  }
+}

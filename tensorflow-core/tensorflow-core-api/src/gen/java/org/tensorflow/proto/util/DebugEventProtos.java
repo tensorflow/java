@@ -126,10 +126,11 @@ public final class DebugEventProtos {
       "\022\017\n\013CURT_HEALTH\020\002\022\022\n\016CONCISE_HEALTH\020\003\022\017\n" +
       "\013FULL_HEALTH\020\004\022\t\n\005SHAPE\020\005\022\021\n\rFULL_NUMERI" +
       "CS\020\006\022\017\n\013FULL_TENSOR\020\007\022\036\n\032REDUCE_INF_NAN_" +
-      "THREE_SLOTS\020\010B|\n\031org.tensorflow.proto.ut" +
-      "ilB\020DebugEventProtosP\001ZHgithub.com/tenso" +
-      "rflow/tensorflow/tensorflow/go/core/core" +
-      "_protos_go_proto\370\001\001b\006proto3"
+      "THREE_SLOTS\020\010B\211\001\n\031org.tensorflow.proto.u" +
+      "tilB\020DebugEventProtosP\001ZUgithub.com/tens" +
+      "orflow/tensorflow/tensorflow/go/core/pro" +
+      "tobuf/for_core_protos_go_proto\370\001\001b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

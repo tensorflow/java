@@ -20,7 +20,7 @@ diff -ruN tensorflow-2.4.1/tensorflow/core/protobuf/data/experimental/snapshot.p
  
 +option java_outer_classname = "SnapshotProtos";
 +option java_multiple_files = true;
-+option java_package = "org.tensorflow.util";
++option java_package = "org.tensorflow.data.experimental";
 +
  // Each SnapshotRecord represents one batch of pre-processed input data. A batch
  // consists of a list of tensors that we encode as TensorProtos. This message
@@ -135,3 +135,16 @@ diff -ruN tensorflow-2.4.1/tensorflow/core/profiler/profiler_options.proto tenso
  
  // Next ID: 11
  message ProfileOptions {
+
+diff --git a/tensorflow/core/protobuf/data/experimental/service_config.proto b/tensorflow/core/protobuf/data/experimental/service_config.proto
+index 3dcd2cd48d..ae2cfdd94f 100644
+--- a/tensorflow/core/protobuf/data/experimental/service_config.proto
++++ b/tensorflow/core/protobuf/data/experimental/service_config.proto
+@@ -1,6 +1,7 @@
+ syntax = "proto3";
+
+ package tensorflow.data.experimental;
++option java_package = "org.tensorflow.data.experimental";
+
+ // Configuration for a tf.data service DispatchServer.
+ message DispatcherConfig {

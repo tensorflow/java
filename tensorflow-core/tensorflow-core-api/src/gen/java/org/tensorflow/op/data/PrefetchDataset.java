@@ -57,8 +57,17 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
       return this;
     }
     
+    /**
+     * @param bufferSizeMin 
+     */
+    public Options bufferSizeMin(Long bufferSizeMin) {
+      this.bufferSizeMin = bufferSizeMin;
+      return this;
+    }
+    
     private Long slackPeriod;
     private Boolean legacyAutotune;
+    private Long bufferSizeMin;
     
     private Options() {
     }
@@ -96,6 +105,9 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
         if (opts.legacyAutotune != null) {
           opBuilder.setAttr("legacy_autotune", opts.legacyAutotune);
         }
+        if (opts.bufferSizeMin != null) {
+          opBuilder.setAttr("buffer_size_min", opts.bufferSizeMin);
+        }
       }
     }
     return new PrefetchDataset(opBuilder.build());
@@ -113,6 +125,13 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
    */
   public static Options legacyAutotune(Boolean legacyAutotune) {
     return new Options().legacyAutotune(legacyAutotune);
+  }
+  
+  /**
+   * @param bufferSizeMin 
+   */
+  public static Options bufferSizeMin(Long bufferSizeMin) {
+    return new Options().bufferSizeMin(bufferSizeMin);
   }
   
   /**
