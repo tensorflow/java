@@ -16,7 +16,6 @@ package org.tensorflow.framework.constraints;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -24,10 +23,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Constrains the weights incident to each hidden unit to have a norm less than or equal to a
  * desired value.
- *
- * @param <T> the data type for the weights
  */
-public class MaxNorm<T extends TNumber> extends Constraint<T> {
+public class MaxNorm extends Constraint {
   public static final double MAX_VALUE_DEFAULT = 2.0;
   public static final int AXIS_DEFAULT = 0;
 
@@ -82,13 +79,10 @@ public class MaxNorm<T extends TNumber> extends Constraint<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> weights) {
+  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
     Ops tf = getTF();
     Class<T> type = weights.type();
-    Operand<T> norms =
-        sqrt(
-            tf.reduceSum(
-                tf.math.square(weights), tf.constant(getAxes()), ReduceSum.keepDims(Boolean.TRUE)));
+    Operand<T> norms = norm(weights, getAxes());
     Operand<T> desired = clip(norms, 0f, this.getMaxValue());
 
     return tf.math.mul(

@@ -1834,13 +1834,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of {@code type}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be truncated if it does not
+   *  fit in the target type.
    *
    * @param type the type of tensor to create.  Must be concrete (i.e. not {@link org.tensorflow.types.family.TFloating})
    * @param number the value of the tensor
    * @return a constant of the passed type
-   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or unknown.
+   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or
+   *  unknown.
    */
   public <T extends TNumber> Constant<T> constant(Class<T> type, Number number) {
     return Constant.tensorOf(scope, type, number);
@@ -1892,14 +1893,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code number} may be
+   *  truncated if it does not fit in the target type.
    *
    * @param toMatch the operand providing the target type
    * @param number the value of the tensor
    * @return a constant with the same type as {@code toMatch}
-   * @see Ops#constant(Class, Number)
    * @throws IllegalArgumentException if the type is unknown (which should be impossible).
+   * @see Ops#constant(Class, Number)
    */
   public <T extends TNumber> Constant<T> constantOfSameType(Operand<T> toMatch, Number number) {
     return Constant.tensorOfSameType(scope, toMatch, number);

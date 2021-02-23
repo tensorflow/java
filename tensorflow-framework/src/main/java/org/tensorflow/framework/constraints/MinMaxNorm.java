@@ -16,17 +16,12 @@ package org.tensorflow.framework.constraints;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/**
- * Constrains the weights to have the norm between a lower bound and an upper bound.
- *
- * @param <T> the data type for the weights
- */
-public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
+/** Constrains the weights to have the norm between a lower bound and an upper bound. */
+public class MinMaxNorm extends Constraint {
   public static final double MIN_VALUE_DEFAULT = 0.0;
   public static final double MAX_VALUE_DEFAULT = 1.0;
   public static final double RATE_DEFAULT = 1.0;
@@ -49,7 +44,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
   private final int[] axes;
 
   /**
-   * Create a MaxNorm constraint using {@link #MIN_VALUE_DEFAULT} for the min value, {@link
+   * Create a MinMaxNorm constraint using {@link #MIN_VALUE_DEFAULT} for the min value, {@link
    * #MAX_VALUE_DEFAULT} for the max value, {@link #RATE_DEFAULT} for the rate and {@link
    * #AXIS_DEFAULT} for the axis
    *
@@ -60,8 +55,8 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
   }
 
   /**
-   * Create a MaxNorm constraint using {@link #RATE_DEFAULT} for the rate and {@link #AXIS_DEFAULT}
-   * for the axis
+   * Create a MinMaxNorm constraint using {@link #RATE_DEFAULT} for the rate and {@link
+   * #AXIS_DEFAULT} for the axis
    *
    * @param tf the TensorFlow Ops
    * @param minValue the minimum norm for the incoming weights.
@@ -72,7 +67,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
   }
 
   /**
-   * Create a MaxNorm constraint
+   * Create a MinMaxNorm constraint
    *
    * @param tf the TensorFlow Ops
    * @param minValue the minimum norm for the incoming weights.
@@ -84,7 +79,7 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
     this(tf, minValue, maxValue, rate, new int[] {axis});
   }
   /**
-   * Create a MaxNorm constraint
+   * Create a MinMaxNorm constraint
    *
    * @param tf the TensorFlow Ops
    * @param minValue the minimum norm for the incoming weights.
@@ -102,13 +97,10 @@ public class MinMaxNorm<T extends TNumber> extends Constraint<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> weights) {
+  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
     Class<T> type = weights.type();
     Ops tf = getTF();
-    Operand<T> norms =
-        sqrt(
-            tf.reduceSum(
-                tf.math.square(weights), tf.constant(getAxes()), ReduceSum.keepDims(Boolean.TRUE)));
+    Operand<T> norms = norm(weights, getAxes());
     Operand<T> desired =
         tf.math.add(
             tf.math.mul(

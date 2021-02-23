@@ -18,12 +18,8 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * Constrains the weights to be non-negative.
- *
- * @param <T> the data type for the weights
- */
-public class NonNeg<T extends TNumber> extends Constraint<T> {
+/** Constrains the weights to be non-negative. */
+public class NonNeg extends Constraint {
 
   /**
    * Create a NonNeg constraint
@@ -36,7 +32,7 @@ public class NonNeg<T extends TNumber> extends Constraint<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> weights) {
+  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
     Ops tf = getTF();
     Class<T> type = weights.type();
     return tf.math.mul(

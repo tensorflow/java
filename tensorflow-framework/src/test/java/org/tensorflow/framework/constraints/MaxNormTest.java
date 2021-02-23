@@ -35,7 +35,7 @@ class MaxNormTest {
         for (AtomicInteger i = new AtomicInteger();
             i.get() < testValues.length;
             i.getAndIncrement()) {
-          MaxNorm<TFloat32> instance = new MaxNorm<>(tf, testValues[i.get()]);
+          MaxNorm instance = new MaxNorm(tf, testValues[i.get()]);
           Operand<TFloat32> result = instance.call(weights);
           session.evaluate(result, v -> v.floatValue() <= testValues[i.get()]);
         }
@@ -47,7 +47,7 @@ class MaxNormTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        MaxNorm<TFloat32> instance = new MaxNorm<>(tf, 2.0);
+        MaxNorm instance = new MaxNorm(tf, 2.0);
         Operand<TFloat32> weights =
             tf.constant(
                 new float[][] {

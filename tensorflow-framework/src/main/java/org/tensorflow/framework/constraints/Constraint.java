@@ -16,16 +16,13 @@ package org.tensorflow.framework.constraints;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/**
- * Base class for Constraints. Constraint subclasses impose constraints on weight values
- *
- * @param <T> the date type for the weights
- */
-public abstract class Constraint<T extends TNumber> {
+/** Base class for Constraints. Constraint subclasses impose constraints on weight values */
+public abstract class Constraint {
 
   public static final float EPSILON = 1e-7f;
 
@@ -46,7 +43,7 @@ public abstract class Constraint<T extends TNumber> {
    * @param weights the weights
    * @return the constrained weights
    */
-  public abstract Operand<T> call(Operand<T> weights);
+  public abstract <T extends TNumber> Operand<T> call(Operand<T> weights);
 
   /**
    * Gets the TensorFlow Ops
@@ -62,8 +59,11 @@ public abstract class Constraint<T extends TNumber> {
    *
    * @param x the input Operand.
    * @return the element-wise square root.
+   * @param <T> The data type for the operand and result.
+   * @throws IllegalArgumentException if x is null
    */
-  protected Operand<T> sqrt(Operand<T> x) {
+  protected <T extends TNumber> Operand<T> sqrt(Operand<T> x) {
+    if (x == null) throw new IllegalArgumentException("Operand x must not be null");
     Class<T> type = x.type();
     Operand<T> zero = cast(tf, tf.constant(0), type);
     Operand<T> inf = cast(tf, tf.constant(Double.POSITIVE_INFINITY), type);
@@ -77,8 +77,10 @@ public abstract class Constraint<T extends TNumber> {
    * @param minValue the minimum value
    * @param maxValue the maximum value
    * @return the operand with clipped values
+   * @param <T> The data type for the operand and result.
+   * @throws IllegalArgumentException if x is null
    */
-  protected Operand<T> clip(Operand<T> x, double minValue, double maxValue) {
+  protected <T extends TNumber> Operand<T> clip(Operand<T> x, double minValue, double maxValue) {
     if (x == null) throw new IllegalArgumentException("Operand x must not be null");
     Ops tf = getTF();
     Class<T> type = x.type();
@@ -89,5 +91,20 @@ public abstract class Constraint<T extends TNumber> {
     Operand<T> minValueConstant = cast(tf, tf.constant(min), type);
     Operand<T> maxValueConstant = cast(tf, tf.constant(max), type);
     return tf.clipByValue(x, minValueConstant, maxValueConstant);
+  }
+
+  /**
+   * Calculates the norm of the weights along the axes
+   *
+   * @param weights the weights used to calculate the norms
+   * @param axes the axes along which to calculate weight norms.
+   * @param <T> the data type for the weights and the result
+   * @return the norms
+   * @throws IllegalArgumentException if weights is null
+   */
+  protected <T extends TNumber> Operand<T> norm(Operand<T> weights, int[] axes) {
+    if (weights == null) throw new IllegalArgumentException("weights must not be null");
+    return sqrt(
+        tf.reduceSum(tf.math.square(weights), tf.constant(axes), ReduceSum.keepDims(Boolean.TRUE)));
   }
 }

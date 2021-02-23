@@ -16,17 +16,12 @@ package org.tensorflow.framework.constraints;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/**
- * Constrains the weights to have unit norm.
- *
- * @param <T> the data type for the weights
- */
-public class UnitNorm<T extends TNumber> extends Constraint<T> {
+/** Constrains the weights to have unit norm. */
+public class UnitNorm extends Constraint {
   public static final int AXIS_DEFAULT = 0;
 
   /** integer, axis along which to calculate weight norms. */
@@ -64,19 +59,12 @@ public class UnitNorm<T extends TNumber> extends Constraint<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> weights) {
+  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
     Class<T> type = weights.type();
 
     Ops tf = getTF();
     return tf.math.div(
-        weights,
-        tf.math.add(
-            cast(tf, tf.constant(EPSILON), type),
-            sqrt(
-                tf.reduceSum(
-                    tf.math.square(weights),
-                    tf.constant(getAxes()),
-                    ReduceSum.keepDims(Boolean.TRUE)))));
+        weights, tf.math.add(cast(tf, tf.constant(EPSILON), type), norm(weights, getAxes())));
   }
 
   /**
