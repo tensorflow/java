@@ -31,7 +31,7 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Mutually accumulates multiple tensors of identical type and shape.
  * 
- * @param <T> data type for {@code output()} output
+ * @param <T> data type for {@code data()} output
  */
 public final class CollectiveGather<T extends TNumber> extends RawOp implements Operand<T> {
   
@@ -113,23 +113,23 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
   
   /**
    */
-  public Output<T> output() {
-    return output;
+  public Output<T> data() {
+    return data;
   }
   
   @Override
   public Output<T> asOutput() {
-    return output;
+    return data;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CollectiveGather";
   
-  private Output<T> output;
+  private Output<T> data;
   
   private CollectiveGather(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    output = operation.output(outputIdx++);
+    data = operation.output(outputIdx++);
   }
 }

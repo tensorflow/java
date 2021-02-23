@@ -109,6 +109,14 @@ public final class TPUReplicateMetadata extends RawOp {
       return this;
     }
     
+    /**
+     * @param useSpmdForXlaPartitioning 
+     */
+    public Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
+      this.useSpmdForXlaPartitioning = useSpmdForXlaPartitioning;
+      return this;
+    }
+    
     private Long numCoresPerReplica;
     private String topology;
     private Boolean useTpu;
@@ -118,6 +126,7 @@ public final class TPUReplicateMetadata extends RawOp {
     private List<String> paddingMap;
     private String stepMarkerLocation;
     private Boolean allowSoftPlacement;
+    private Boolean useSpmdForXlaPartitioning;
     
     private Options() {
     }
@@ -180,6 +189,9 @@ public final class TPUReplicateMetadata extends RawOp {
         }
         if (opts.allowSoftPlacement != null) {
           opBuilder.setAttr("allow_soft_placement", opts.allowSoftPlacement);
+        }
+        if (opts.useSpmdForXlaPartitioning != null) {
+          opBuilder.setAttr("use_spmd_for_xla_partitioning", opts.useSpmdForXlaPartitioning);
         }
       }
     }
@@ -247,6 +259,13 @@ public final class TPUReplicateMetadata extends RawOp {
    */
   public static Options allowSoftPlacement(Boolean allowSoftPlacement) {
     return new Options().allowSoftPlacement(allowSoftPlacement);
+  }
+  
+  /**
+   * @param useSpmdForXlaPartitioning 
+   */
+  public static Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
+    return new Options().useSpmdForXlaPartitioning(useSpmdForXlaPartitioning);
   }
   
   /** The name of this op, as known by TensorFlow core engine */

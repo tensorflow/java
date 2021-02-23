@@ -182,6 +182,11 @@ public final class MathOps {
 
   /**
    * Computes acos of x element-wise.
+   *  <p>
+   *
+   *    Provided an input tensor, the `tf.math.acos` operation returns the inverse cosine of each element of the tensor. If `y = tf.math.cos(x)` then, `x = tf.math.acos(y)`.
+   *  <p>
+   *    Input range is `[-1, 1]` and the output has a range of `[0, pi]`.
    *
    * @param <T> data type for {@code y()} output
    * @param x
@@ -214,6 +219,10 @@ public final class MathOps {
    *  <p>
    *  <i>NOTE</i>: `math.Add` supports broadcasting. `AddN` does not. More about broadcasting
    *  [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+   *  <p>
+   *  Given two input tensors, the `tf.add` operation computes the sum for every element in the tensor.
+   *  <p>
+   *  Both input and output have a range `(-inf, inf)`.
    *
    * @param <T> data type for {@code z()} output
    * @param x
@@ -2072,7 +2081,7 @@ public final class MathOps {
   }
 
   /**
-   * Returns (x - y)(x - y) element-wise.
+   * Returns conj(x - y)(x - y) element-wise.
    *  <p>
    *  <i>NOTE</i>: `math.SquaredDifference` supports broadcasting. More about broadcasting
    *  [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
@@ -2129,10 +2138,11 @@ public final class MathOps {
    *    element in the tensor. Input range is `[-inf, inf]` and
    *    output range is `[-1,1]`.
    *  <p>
-   *    <pre>{@code
-   *    x = tf.constant([-float("inf"), -5, -0.5, 1, 1.2, 2, 3, float("inf")])
-   *    tf.math.tanh(x) ==> [-1. -0.99990916 -0.46211717 0.7615942 0.8336547 0.9640276 0.9950547 1.]
-   *    }</pre>
+   *    >>> x = tf.constant([-float("inf"), -5, -0.5, 1, 1.2, 2, 3, float("inf")])
+   *    >>> tf.math.tanh(x)
+   *    <tf.Tensor: shape=(8,), dtype=float32, numpy=
+   *    array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
+   *            0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)>
    *
    * @param <T> data type for {@code y()} output
    * @param x

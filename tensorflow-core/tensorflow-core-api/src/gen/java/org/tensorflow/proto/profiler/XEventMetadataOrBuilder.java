@@ -60,4 +60,53 @@ public interface XEventMetadataOrBuilder extends
    * <code>bytes metadata = 3;</code>
    */
   com.google.protobuf.ByteString getMetadata();
+
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  java.util.List<org.tensorflow.proto.profiler.XStat> 
+      getStatsList();
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  org.tensorflow.proto.profiler.XStat getStats(int index);
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  int getStatsCount();
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  java.util.List<? extends org.tensorflow.proto.profiler.XStatOrBuilder> 
+      getStatsOrBuilderList();
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  org.tensorflow.proto.profiler.XStatOrBuilder getStatsOrBuilder(
+      int index);
 }

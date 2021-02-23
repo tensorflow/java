@@ -55,11 +55,11 @@ public final class DebugProtos {
       "\001(\t\022\021\n\tfile_path\030\002 \001(\t\022\025\n\rlast_modified\030" +
       "\003 \001(\003\022\r\n\005bytes\030\004 \001(\003\022\r\n\005lines\030\005 \003(\t\"K\n\023D" +
       "ebuggedSourceFiles\0224\n\014source_files\030\001 \003(\013" +
-      "2\036.tensorflow.DebuggedSourceFileB|\n\036org." +
-      "tensorflow.proto.frameworkB\013DebugProtosP" +
-      "\001ZHgithub.com/tensorflow/tensorflow/tens" +
-      "orflow/go/core/core_protos_go_proto\370\001\001b\006" +
-      "proto3"
+      "2\036.tensorflow.DebuggedSourceFileB\211\001\n\036org" +
+      ".tensorflow.proto.frameworkB\013DebugProtos" +
+      "P\001ZUgithub.com/tensorflow/tensorflow/ten" +
+      "sorflow/go/core/protobuf/for_core_protos" +
+      "_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

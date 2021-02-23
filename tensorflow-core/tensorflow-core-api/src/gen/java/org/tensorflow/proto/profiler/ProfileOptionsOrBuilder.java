@@ -100,4 +100,41 @@ public interface ProfileOptionsOrBuilder extends
    * <code>bool enable_hlo_proto = 7;</code>
    */
   boolean getEnableHloProto();
+
+  /**
+   * <pre>
+   * The local profiler starts profiling at this Unix timestamp in nanoseconds.
+   * </pre>
+   *
+   * <code>uint64 start_timestamp_ns = 8;</code>
+   */
+  long getStartTimestampNs();
+
+  /**
+   * <pre>
+   * The local profiler collects `duration_ms` milliseconds of data. If the
+   * value is 0, profiling continues until interrupted.
+   * </pre>
+   *
+   * <code>uint64 duration_ms = 9;</code>
+   */
+  long getDurationMs();
+
+  /**
+   * <pre>
+   * Directory to save profile data to. No-op when empty.
+   * </pre>
+   *
+   * <code>string repository_path = 10;</code>
+   */
+  java.lang.String getRepositoryPath();
+  /**
+   * <pre>
+   * Directory to save profile data to. No-op when empty.
+   * </pre>
+   *
+   * <code>string repository_path = 10;</code>
+   */
+  com.google.protobuf.ByteString
+      getRepositoryPathBytes();
 }

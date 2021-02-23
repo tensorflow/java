@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RebatchDatasetV2"
+  endpoint {
+    name: "data.RebatchDatasetV2"
+  }
+}

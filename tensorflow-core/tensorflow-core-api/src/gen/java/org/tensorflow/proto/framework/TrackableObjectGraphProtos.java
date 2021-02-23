@@ -65,11 +65,11 @@ public final class TrackableObjectGraphProtos {
       "ckpoint_key\030\003 \001(\t\022\030\n\020optional_restore\030\004 " +
       "\001(\010\032l\n\025SlotVariableReference\022!\n\031original" +
       "_variable_node_id\030\001 \001(\005\022\021\n\tslot_name\030\002 \001" +
-      "(\t\022\035\n\025slot_variable_node_id\030\003 \001(\005B\213\001\n\036or" +
+      "(\t\022\035\n\025slot_variable_node_id\030\003 \001(\005B\230\001\n\036or" +
       "g.tensorflow.proto.frameworkB\032TrackableO" +
-      "bjectGraphProtosP\001ZHgithub.com/tensorflo" +
-      "w/tensorflow/tensorflow/go/core/core_pro" +
-      "tos_go_proto\370\001\001b\006proto3"
+      "bjectGraphProtosP\001ZUgithub.com/tensorflo" +
+      "w/tensorflow/tensorflow/go/core/protobuf" +
+      "/for_core_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

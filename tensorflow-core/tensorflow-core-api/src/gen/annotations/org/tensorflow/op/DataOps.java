@@ -22,7 +22,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
 import org.tensorflow.op.data.BatchDataset;
-import org.tensorflow.op.data.CSVDataset;
 import org.tensorflow.op.data.ConcatenateDataset;
 import org.tensorflow.op.data.DeleteIterator;
 import org.tensorflow.op.data.DeserializeIterator;
@@ -96,27 +95,6 @@ public final class DataOps {
       Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, BatchDataset.Options... options) {
     return BatchDataset.create(scope, inputDataset, batchSize, dropRemainder, outputTypes, outputShapes, options);
-  }
-
-  /**
-   *
-   * @param filenames
-   * @param compressionType
-   * @param bufferSize
-   * @param header
-   * @param fieldDelim
-   * @param useQuoteDelim
-   * @param naValue
-   * @param selectCols
-   * @param recordDefaults
-   * @param outputShapes
-   * @return a new instance of CSVDataset
-   */
-  public CSVDataset cSVDataset(Operand<TString> filenames, Operand<TString> compressionType,
-      Operand<TInt64> bufferSize, Operand<TBool> header, Operand<TString> fieldDelim,
-      Operand<TBool> useQuoteDelim, Operand<TString> naValue, Operand<TInt64> selectCols,
-      Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
-    return CSVDataset.create(scope, filenames, compressionType, bufferSize, header, fieldDelim, useQuoteDelim, naValue, selectCols, recordDefaults, outputShapes);
   }
 
   /**

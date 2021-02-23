@@ -28,6 +28,9 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
+ * Writes a serialized proto summary.
+ * <p>
+ * Writes `tensor`, a serialized proto at `step` using summary `writer`.
  */
 public final class WriteRawProtoSummary extends RawOp {
   

@@ -29,7 +29,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Extract `patches` from `input` and put them in the "depth" output dimension. 3D extension of `extract_image_patches`.
+ * Extract `patches` from `input` and put them in the `"depth"` output dimension. 3D extension of `extract_image_patches`.
  * 
  * @param <T> data type for {@code patches()} output
  */
@@ -46,10 +46,10 @@ public final class ExtractVolumePatches<T extends TNumber> extends RawOp impleme
    * `input`. Must be: `[1, stride_planes, stride_rows, stride_cols, 1]`.
    * @param padding The type of padding algorithm to use.
    * <p>
-   * We specify the size-related attributes as:
+   * The size-related attributes are specified as follows:
    * <pre>{@code
-   *       ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
-   *       strides = [1, stride_planes, strides_rows, strides_cols, 1]
+   * ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
+   * strides = [1, stride_planes, strides_rows, strides_cols, 1]
    * }</pre>
    * 
    * @return a new instance of ExtractVolumePatches

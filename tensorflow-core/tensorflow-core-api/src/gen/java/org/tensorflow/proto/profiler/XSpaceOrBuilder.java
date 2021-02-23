@@ -100,4 +100,39 @@ public interface XSpaceOrBuilder extends
    */
   com.google.protobuf.ByteString
       getWarningsBytes(int index);
+
+  /**
+   * <pre>
+   * List of hostnames that XPlanes are generated from.
+   * </pre>
+   *
+   * <code>repeated string hostnames = 4;</code>
+   */
+  java.util.List<java.lang.String>
+      getHostnamesList();
+  /**
+   * <pre>
+   * List of hostnames that XPlanes are generated from.
+   * </pre>
+   *
+   * <code>repeated string hostnames = 4;</code>
+   */
+  int getHostnamesCount();
+  /**
+   * <pre>
+   * List of hostnames that XPlanes are generated from.
+   * </pre>
+   *
+   * <code>repeated string hostnames = 4;</code>
+   */
+  java.lang.String getHostnames(int index);
+  /**
+   * <pre>
+   * List of hostnames that XPlanes are generated from.
+   * </pre>
+   *
+   * <code>repeated string hostnames = 4;</code>
+   */
+  com.google.protobuf.ByteString
+      getHostnamesBytes(int index);
 }

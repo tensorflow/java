@@ -29,6 +29,12 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes acos of x element-wise.
+ * <p>
+ * 
+ *   Provided an input tensor, the `tf.math.acos` operation returns the inverse cosine of each element of the tensor. If `y = tf.math.cos(x)` then, `x = tf.math.acos(y)`.
+ * <p>
+ *   Input range is `[-1, 1]` and the output has a range of `[0, pi]`.
+ * 
  * 
  * @param <T> data type for {@code y()} output
  */

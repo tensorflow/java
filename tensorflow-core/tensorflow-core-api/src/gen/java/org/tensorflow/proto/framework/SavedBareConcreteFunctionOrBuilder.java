@@ -68,4 +68,44 @@ public interface SavedBareConcreteFunctionOrBuilder extends
    * <code>int64 allowed_positional_arguments = 3;</code>
    */
   long getAllowedPositionalArguments();
+
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  boolean hasFunctionSpec();
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  org.tensorflow.proto.framework.FunctionSpec getFunctionSpec();
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  org.tensorflow.proto.framework.FunctionSpecOrBuilder getFunctionSpecOrBuilder();
 }

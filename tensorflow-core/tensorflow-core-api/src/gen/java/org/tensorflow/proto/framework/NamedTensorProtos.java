@@ -32,10 +32,11 @@ public final class NamedTensorProtos {
       "proto\022\ntensorflow\032&tensorflow/core/frame" +
       "work/tensor.proto\"I\n\020NamedTensorProto\022\014\n" +
       "\004name\030\001 \001(\t\022\'\n\006tensor\030\002 \001(\0132\027.tensorflow" +
-      ".TensorProtoB\202\001\n\036org.tensorflow.proto.fr" +
-      "ameworkB\021NamedTensorProtosP\001ZHgithub.com" +
+      ".TensorProtoB\217\001\n\036org.tensorflow.proto.fr" +
+      "ameworkB\021NamedTensorProtosP\001ZUgithub.com" +
       "/tensorflow/tensorflow/tensorflow/go/cor" +
-      "e/core_protos_go_proto\370\001\001b\006proto3"
+      "e/protobuf/for_core_protos_go_proto\370\001\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

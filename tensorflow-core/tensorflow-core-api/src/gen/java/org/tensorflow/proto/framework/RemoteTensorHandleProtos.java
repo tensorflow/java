@@ -44,11 +44,11 @@ public final class RemoteTensorHandleProtos {
       "\005\022\016\n\006device\030\003 \001(\t\022\021\n\top_device\030\004 \001(\t\022#\n\005" +
       "dtype\030\005 \001(\0162\024.tensorflow.DataType\022K\n\032res" +
       "ource_dtypes_and_shapes\030\006 \003(\0132\'.tensorfl" +
-      "ow.eager.ResourceDtypeAndShapeB\211\001\n\036org.t" +
+      "ow.eager.ResourceDtypeAndShapeB\226\001\n\036org.t" +
       "ensorflow.proto.frameworkB\030RemoteTensorH" +
-      "andleProtosP\001ZHgithub.com/tensorflow/ten" +
-      "sorflow/tensorflow/go/core/core_protos_g" +
-      "o_proto\370\001\001b\006proto3"
+      "andleProtosP\001ZUgithub.com/tensorflow/ten" +
+      "sorflow/tensorflow/go/core/protobuf/for_" +
+      "core_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -4,6 +4,10 @@
 package org.tensorflow.proto.profiler;
 
 /**
+ * <pre>
+ * Next ID: 11
+ * </pre>
+ *
  * Protobuf type {@code tensorflow.ProfileOptions}
  */
 public  final class ProfileOptions extends
@@ -17,6 +21,7 @@ private static final long serialVersionUID = 0L;
   }
   private ProfileOptions() {
     deviceType_ = 0;
+    repositoryPath_ = "";
   }
 
   @java.lang.Override
@@ -83,6 +88,22 @@ private static final long serialVersionUID = 0L;
           case 56: {
 
             enableHloProto_ = input.readBool();
+            break;
+          }
+          case 64: {
+
+            startTimestampNs_ = input.readUInt64();
+            break;
+          }
+          case 72: {
+
+            durationMs_ = input.readUInt64();
+            break;
+          }
+          case 82: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            repositoryPath_ = s;
             break;
           }
           default: {
@@ -359,6 +380,75 @@ private static final long serialVersionUID = 0L;
     return enableHloProto_;
   }
 
+  public static final int START_TIMESTAMP_NS_FIELD_NUMBER = 8;
+  private long startTimestampNs_;
+  /**
+   * <pre>
+   * The local profiler starts profiling at this Unix timestamp in nanoseconds.
+   * </pre>
+   *
+   * <code>uint64 start_timestamp_ns = 8;</code>
+   */
+  public long getStartTimestampNs() {
+    return startTimestampNs_;
+  }
+
+  public static final int DURATION_MS_FIELD_NUMBER = 9;
+  private long durationMs_;
+  /**
+   * <pre>
+   * The local profiler collects `duration_ms` milliseconds of data. If the
+   * value is 0, profiling continues until interrupted.
+   * </pre>
+   *
+   * <code>uint64 duration_ms = 9;</code>
+   */
+  public long getDurationMs() {
+    return durationMs_;
+  }
+
+  public static final int REPOSITORY_PATH_FIELD_NUMBER = 10;
+  private volatile java.lang.Object repositoryPath_;
+  /**
+   * <pre>
+   * Directory to save profile data to. No-op when empty.
+   * </pre>
+   *
+   * <code>string repository_path = 10;</code>
+   */
+  public java.lang.String getRepositoryPath() {
+    java.lang.Object ref = repositoryPath_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      repositoryPath_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   * Directory to save profile data to. No-op when empty.
+   * </pre>
+   *
+   * <code>string repository_path = 10;</code>
+   */
+  public com.google.protobuf.ByteString
+      getRepositoryPathBytes() {
+    java.lang.Object ref = repositoryPath_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      repositoryPath_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -393,6 +483,15 @@ private static final long serialVersionUID = 0L;
     }
     if (enableHloProto_ != false) {
       output.writeBool(7, enableHloProto_);
+    }
+    if (startTimestampNs_ != 0L) {
+      output.writeUInt64(8, startTimestampNs_);
+    }
+    if (durationMs_ != 0L) {
+      output.writeUInt64(9, durationMs_);
+    }
+    if (!getRepositoryPathBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, repositoryPath_);
     }
     unknownFields.writeTo(output);
   }
@@ -431,6 +530,17 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(7, enableHloProto_);
     }
+    if (startTimestampNs_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(8, startTimestampNs_);
+    }
+    if (durationMs_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(9, durationMs_);
+    }
+    if (!getRepositoryPathBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, repositoryPath_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -459,6 +569,12 @@ private static final long serialVersionUID = 0L;
         != other.getPythonTracerLevel()) return false;
     if (getEnableHloProto()
         != other.getEnableHloProto()) return false;
+    if (getStartTimestampNs()
+        != other.getStartTimestampNs()) return false;
+    if (getDurationMs()
+        != other.getDurationMs()) return false;
+    if (!getRepositoryPath()
+        .equals(other.getRepositoryPath())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -486,6 +602,14 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + ENABLE_HLO_PROTO_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getEnableHloProto());
+    hash = (37 * hash) + START_TIMESTAMP_NS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getStartTimestampNs());
+    hash = (37 * hash) + DURATION_MS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getDurationMs());
+    hash = (37 * hash) + REPOSITORY_PATH_FIELD_NUMBER;
+    hash = (53 * hash) + getRepositoryPath().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -582,6 +706,10 @@ private static final long serialVersionUID = 0L;
     return builder;
   }
   /**
+   * <pre>
+   * Next ID: 11
+   * </pre>
+   *
    * Protobuf type {@code tensorflow.ProfileOptions}
    */
   public static final class Builder extends
@@ -633,6 +761,12 @@ private static final long serialVersionUID = 0L;
 
       enableHloProto_ = false;
 
+      startTimestampNs_ = 0L;
+
+      durationMs_ = 0L;
+
+      repositoryPath_ = "";
+
       return this;
     }
 
@@ -666,6 +800,9 @@ private static final long serialVersionUID = 0L;
       result.deviceTracerLevel_ = deviceTracerLevel_;
       result.pythonTracerLevel_ = pythonTracerLevel_;
       result.enableHloProto_ = enableHloProto_;
+      result.startTimestampNs_ = startTimestampNs_;
+      result.durationMs_ = durationMs_;
+      result.repositoryPath_ = repositoryPath_;
       onBuilt();
       return result;
     }
@@ -734,6 +871,16 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getEnableHloProto() != false) {
         setEnableHloProto(other.getEnableHloProto());
+      }
+      if (other.getStartTimestampNs() != 0L) {
+        setStartTimestampNs(other.getStartTimestampNs());
+      }
+      if (other.getDurationMs() != 0L) {
+        setDurationMs(other.getDurationMs());
+      }
+      if (!other.getRepositoryPath().isEmpty()) {
+        repositoryPath_ = other.repositoryPath_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1118,6 +1265,174 @@ private static final long serialVersionUID = 0L;
     public Builder clearEnableHloProto() {
       
       enableHloProto_ = false;
+      onChanged();
+      return this;
+    }
+
+    private long startTimestampNs_ ;
+    /**
+     * <pre>
+     * The local profiler starts profiling at this Unix timestamp in nanoseconds.
+     * </pre>
+     *
+     * <code>uint64 start_timestamp_ns = 8;</code>
+     */
+    public long getStartTimestampNs() {
+      return startTimestampNs_;
+    }
+    /**
+     * <pre>
+     * The local profiler starts profiling at this Unix timestamp in nanoseconds.
+     * </pre>
+     *
+     * <code>uint64 start_timestamp_ns = 8;</code>
+     */
+    public Builder setStartTimestampNs(long value) {
+      
+      startTimestampNs_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The local profiler starts profiling at this Unix timestamp in nanoseconds.
+     * </pre>
+     *
+     * <code>uint64 start_timestamp_ns = 8;</code>
+     */
+    public Builder clearStartTimestampNs() {
+      
+      startTimestampNs_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long durationMs_ ;
+    /**
+     * <pre>
+     * The local profiler collects `duration_ms` milliseconds of data. If the
+     * value is 0, profiling continues until interrupted.
+     * </pre>
+     *
+     * <code>uint64 duration_ms = 9;</code>
+     */
+    public long getDurationMs() {
+      return durationMs_;
+    }
+    /**
+     * <pre>
+     * The local profiler collects `duration_ms` milliseconds of data. If the
+     * value is 0, profiling continues until interrupted.
+     * </pre>
+     *
+     * <code>uint64 duration_ms = 9;</code>
+     */
+    public Builder setDurationMs(long value) {
+      
+      durationMs_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * The local profiler collects `duration_ms` milliseconds of data. If the
+     * value is 0, profiling continues until interrupted.
+     * </pre>
+     *
+     * <code>uint64 duration_ms = 9;</code>
+     */
+    public Builder clearDurationMs() {
+      
+      durationMs_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object repositoryPath_ = "";
+    /**
+     * <pre>
+     * Directory to save profile data to. No-op when empty.
+     * </pre>
+     *
+     * <code>string repository_path = 10;</code>
+     */
+    public java.lang.String getRepositoryPath() {
+      java.lang.Object ref = repositoryPath_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        repositoryPath_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     * Directory to save profile data to. No-op when empty.
+     * </pre>
+     *
+     * <code>string repository_path = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRepositoryPathBytes() {
+      java.lang.Object ref = repositoryPath_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        repositoryPath_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     * Directory to save profile data to. No-op when empty.
+     * </pre>
+     *
+     * <code>string repository_path = 10;</code>
+     */
+    public Builder setRepositoryPath(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      repositoryPath_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Directory to save profile data to. No-op when empty.
+     * </pre>
+     *
+     * <code>string repository_path = 10;</code>
+     */
+    public Builder clearRepositoryPath() {
+      
+      repositoryPath_ = getDefaultInstance().getRepositoryPath();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Directory to save profile data to. No-op when empty.
+     * </pre>
+     *
+     * <code>string repository_path = 10;</code>
+     */
+    public Builder setRepositoryPathBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      repositoryPath_ = value;
       onChanged();
       return this;
     }

@@ -43,10 +43,11 @@ public final class ClusterProtos {
       "tasks\030\002 \003(\0132\035.tensorflow.JobDef.TasksEnt" +
       "ry\032,\n\nTasksEntry\022\013\n\003key\030\001 \001(\005\022\r\n\005value\030\002" +
       " \001(\t:\0028\001\"-\n\nClusterDef\022\037\n\003job\030\001 \003(\0132\022.te" +
-      "nsorflow.JobDefB\200\001\n org.tensorflow.proto" +
-      ".distruntimeB\rClusterProtosP\001ZHgithub.co" +
+      "nsorflow.JobDefB\215\001\n org.tensorflow.proto" +
+      ".distruntimeB\rClusterProtosP\001ZUgithub.co" +
       "m/tensorflow/tensorflow/tensorflow/go/co" +
-      "re/core_protos_go_proto\370\001\001b\006proto3"
+      "re/protobuf/for_core_protos_go_proto\370\001\001b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

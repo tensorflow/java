@@ -175,7 +175,7 @@ public final class ConfigProtos {
       "\032\n\022cache_rpc_response\030\004 \001(\010\022*\n\"disable_s" +
       "ession_connection_sharing\030\005 \001(\010\"0\n\017Sessi" +
       "onMetadata\022\014\n\004name\030\001 \001(\t\022\017\n\007version\030\002 \001(" +
-      "\003\"\310\n\n\013ConfigProto\022>\n\014device_count\030\001 \003(\0132" +
+      "\003\"\232\014\n\013ConfigProto\022>\n\014device_count\030\001 \003(\0132" +
       "(.tensorflow.ConfigProto.DeviceCountEntr" +
       "y\022$\n\034intra_op_parallelism_threads\030\002 \001(\005\022" +
       "$\n\034inter_op_parallelism_threads\030\005 \001(\005\022\037\n" +
@@ -194,7 +194,7 @@ public final class ConfigProtos {
       "evices_in_session\030\021 \001(\010\022:\n\014experimental\030" +
       "\020 \001(\0132$.tensorflow.ConfigProto.Experimen" +
       "tal\0322\n\020DeviceCountEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005" +
-      "value\030\002 \001(\005:\0028\001\032\302\004\n\014Experimental\022\037\n\027coll" +
+      "value\030\002 \001(\005:\0028\001\032\224\006\n\014Experimental\022\037\n\027coll" +
       "ective_group_leader\030\001 \001(\t\022\025\n\rexecutor_ty" +
       "pe\030\003 \001(\t\022\032\n\022recv_buf_max_chunk\030\004 \001(\005\022\031\n\021" +
       "use_numa_affinity\030\005 \001(\010\0225\n-collective_de" +
@@ -205,51 +205,57 @@ public final class ConfigProtos {
       "e_cluster_devices_in_session\030\n \001(\010\0225\n\020se" +
       "ssion_metadata\030\013 \001(\0132\033.tensorflow.Sessio" +
       "nMetadata\022!\n\031optimize_for_static_graph\030\014" +
-      " \001(\010\022\032\n\022enable_mlir_bridge\030\r \001(\010\022&\n\036enab" +
-      "le_mlir_graph_optimization\030\020 \001(\010\022\'\n\037disa" +
-      "ble_output_partition_graphs\030\016 \001(\010\022#\n\033xla" +
-      "_fusion_autotuner_thresh\030\017 \001(\003J\004\010\002\020\003\"\341\004\n" +
-      "\nRunOptions\0226\n\013trace_level\030\001 \001(\0162!.tenso" +
-      "rflow.RunOptions.TraceLevel\022\025\n\rtimeout_i" +
-      "n_ms\030\002 \001(\003\022\034\n\024inter_op_thread_pool\030\003 \001(\005" +
-      "\022\037\n\027output_partition_graphs\030\005 \001(\010\022/\n\rdeb" +
-      "ug_options\030\006 \001(\0132\030.tensorflow.DebugOptio" +
-      "ns\022*\n\"report_tensor_allocations_upon_oom" +
-      "\030\007 \001(\010\0229\n\014experimental\030\010 \001(\0132#.tensorflo" +
-      "w.RunOptions.Experimental\032\322\001\n\014Experiment" +
-      "al\022\034\n\024collective_graph_key\030\001 \001(\003\022\034\n\024use_" +
-      "run_handler_pool\030\002 \001(\010\022[\n\030run_handler_po" +
-      "ol_options\030\003 \001(\01329.tensorflow.RunOptions" +
-      ".Experimental.RunHandlerPoolOptions\032)\n\025R" +
-      "unHandlerPoolOptions\022\020\n\010priority\030\001 \001(\003\"R" +
-      "\n\nTraceLevel\022\014\n\010NO_TRACE\020\000\022\022\n\016SOFTWARE_T" +
-      "RACE\020\001\022\022\n\016HARDWARE_TRACE\020\002\022\016\n\nFULL_TRACE" +
-      "\020\003J\004\010\004\020\005\"\207\003\n\013RunMetadata\022)\n\nstep_stats\030\001" +
-      " \001(\0132\025.tensorflow.StepStats\022,\n\ncost_grap" +
-      "h\030\002 \001(\0132\030.tensorflow.CostGraphDef\022.\n\020par" +
-      "tition_graphs\030\003 \003(\0132\024.tensorflow.GraphDe" +
-      "f\022?\n\017function_graphs\030\004 \003(\0132&.tensorflow." +
-      "RunMetadata.FunctionGraphs\032\255\001\n\016FunctionG" +
-      "raphs\022.\n\020partition_graphs\030\001 \003(\0132\024.tensor" +
-      "flow.GraphDef\0224\n\026pre_optimization_graph\030" +
-      "\002 \001(\0132\024.tensorflow.GraphDef\0225\n\027post_opti" +
-      "mization_graph\030\003 \001(\0132\024.tensorflow.GraphD" +
-      "ef\":\n\020TensorConnection\022\023\n\013from_tensor\030\001 " +
-      "\001(\t\022\021\n\tto_tensor\030\002 \001(\t\"\260\003\n\017CallableOptio" +
-      "ns\022\014\n\004feed\030\001 \003(\t\022\r\n\005fetch\030\002 \003(\t\022\016\n\006targe" +
-      "t\030\003 \003(\t\022+\n\013run_options\030\004 \001(\0132\026.tensorflo" +
-      "w.RunOptions\0227\n\021tensor_connection\030\005 \003(\0132" +
-      "\034.tensorflow.TensorConnection\022B\n\014feed_de" +
-      "vices\030\006 \003(\0132,.tensorflow.CallableOptions" +
-      ".FeedDevicesEntry\022D\n\rfetch_devices\030\007 \003(\013" +
-      "2-.tensorflow.CallableOptions.FetchDevic" +
-      "esEntry\022\027\n\017fetch_skip_sync\030\010 \001(\010\0322\n\020Feed" +
-      "DevicesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\0323\n\021FetchDevicesEntry\022\013\n\003key\030\001 \001(\t\022\r" +
-      "\n\005value\030\002 \001(\t:\0028\001B}\n\036org.tensorflow.prot" +
-      "o.frameworkB\014ConfigProtosP\001ZHgithub.com/" +
-      "tensorflow/tensorflow/tensorflow/go/core" +
-      "/core_protos_go_proto\370\001\001b\006proto3"
+      " \001(\010\022\032\n\022enable_mlir_bridge\030\r \001(\010\022S\n\023mlir" +
+      "_bridge_rollout\030\021 \001(\01626.tensorflow.Confi" +
+      "gProto.Experimental.MlirBridgeRollout\022&\n" +
+      "\036enable_mlir_graph_optimization\030\020 \001(\010\022\'\n" +
+      "\037disable_output_partition_graphs\030\016 \001(\010\022#" +
+      "\n\033xla_fusion_autotuner_thresh\030\017 \001(\003\"{\n\021M" +
+      "lirBridgeRollout\022#\n\037MLIR_BRIDGE_ROLLOUT_" +
+      "UNSPECIFIED\020\000\022\037\n\033MLIR_BRIDGE_ROLLOUT_ENA" +
+      "BLED\020\001\022 \n\034MLIR_BRIDGE_ROLLOUT_DISABLED\020\002" +
+      "J\004\010\002\020\003\"\341\004\n\nRunOptions\0226\n\013trace_level\030\001 \001" +
+      "(\0162!.tensorflow.RunOptions.TraceLevel\022\025\n" +
+      "\rtimeout_in_ms\030\002 \001(\003\022\034\n\024inter_op_thread_" +
+      "pool\030\003 \001(\005\022\037\n\027output_partition_graphs\030\005 " +
+      "\001(\010\022/\n\rdebug_options\030\006 \001(\0132\030.tensorflow." +
+      "DebugOptions\022*\n\"report_tensor_allocation" +
+      "s_upon_oom\030\007 \001(\010\0229\n\014experimental\030\010 \001(\0132#" +
+      ".tensorflow.RunOptions.Experimental\032\322\001\n\014" +
+      "Experimental\022\034\n\024collective_graph_key\030\001 \001" +
+      "(\003\022\034\n\024use_run_handler_pool\030\002 \001(\010\022[\n\030run_" +
+      "handler_pool_options\030\003 \001(\01329.tensorflow." +
+      "RunOptions.Experimental.RunHandlerPoolOp" +
+      "tions\032)\n\025RunHandlerPoolOptions\022\020\n\010priori" +
+      "ty\030\001 \001(\003\"R\n\nTraceLevel\022\014\n\010NO_TRACE\020\000\022\022\n\016" +
+      "SOFTWARE_TRACE\020\001\022\022\n\016HARDWARE_TRACE\020\002\022\016\n\n" +
+      "FULL_TRACE\020\003J\004\010\004\020\005\"\207\003\n\013RunMetadata\022)\n\nst" +
+      "ep_stats\030\001 \001(\0132\025.tensorflow.StepStats\022,\n" +
+      "\ncost_graph\030\002 \001(\0132\030.tensorflow.CostGraph" +
+      "Def\022.\n\020partition_graphs\030\003 \003(\0132\024.tensorfl" +
+      "ow.GraphDef\022?\n\017function_graphs\030\004 \003(\0132&.t" +
+      "ensorflow.RunMetadata.FunctionGraphs\032\255\001\n" +
+      "\016FunctionGraphs\022.\n\020partition_graphs\030\001 \003(" +
+      "\0132\024.tensorflow.GraphDef\0224\n\026pre_optimizat" +
+      "ion_graph\030\002 \001(\0132\024.tensorflow.GraphDef\0225\n" +
+      "\027post_optimization_graph\030\003 \001(\0132\024.tensorf" +
+      "low.GraphDef\":\n\020TensorConnection\022\023\n\013from" +
+      "_tensor\030\001 \001(\t\022\021\n\tto_tensor\030\002 \001(\t\"\260\003\n\017Cal" +
+      "lableOptions\022\014\n\004feed\030\001 \003(\t\022\r\n\005fetch\030\002 \003(" +
+      "\t\022\016\n\006target\030\003 \003(\t\022+\n\013run_options\030\004 \001(\0132\026" +
+      ".tensorflow.RunOptions\0227\n\021tensor_connect" +
+      "ion\030\005 \003(\0132\034.tensorflow.TensorConnection\022" +
+      "B\n\014feed_devices\030\006 \003(\0132,.tensorflow.Calla" +
+      "bleOptions.FeedDevicesEntry\022D\n\rfetch_dev" +
+      "ices\030\007 \003(\0132-.tensorflow.CallableOptions." +
+      "FetchDevicesEntry\022\027\n\017fetch_skip_sync\030\010 \001" +
+      "(\010\0322\n\020FeedDevicesEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
+      "alue\030\002 \001(\t:\0028\001\0323\n\021FetchDevicesEntry\022\013\n\003k" +
+      "ey\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001B\212\001\n\036org.tens" +
+      "orflow.proto.frameworkB\014ConfigProtosP\001ZU" +
+      "github.com/tensorflow/tensorflow/tensorf" +
+      "low/go/core/protobuf/for_core_protos_go_" +
+      "proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -326,7 +332,7 @@ public final class ConfigProtos {
     internal_static_tensorflow_ConfigProto_Experimental_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_ConfigProto_Experimental_descriptor,
-        new java.lang.String[] { "CollectiveGroupLeader", "ExecutorType", "RecvBufMaxChunk", "UseNumaAffinity", "CollectiveDeterministicSequentialExecution", "CollectiveNccl", "ShareSessionStateInClusterspecPropagation", "DisableThreadSpinning", "ShareClusterDevicesInSession", "SessionMetadata", "OptimizeForStaticGraph", "EnableMlirBridge", "EnableMlirGraphOptimization", "DisableOutputPartitionGraphs", "XlaFusionAutotunerThresh", });
+        new java.lang.String[] { "CollectiveGroupLeader", "ExecutorType", "RecvBufMaxChunk", "UseNumaAffinity", "CollectiveDeterministicSequentialExecution", "CollectiveNccl", "ShareSessionStateInClusterspecPropagation", "DisableThreadSpinning", "ShareClusterDevicesInSession", "SessionMetadata", "OptimizeForStaticGraph", "EnableMlirBridge", "MlirBridgeRollout", "EnableMlirGraphOptimization", "DisableOutputPartitionGraphs", "XlaFusionAutotunerThresh", });
     internal_static_tensorflow_RunOptions_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_tensorflow_RunOptions_fieldAccessorTable = new

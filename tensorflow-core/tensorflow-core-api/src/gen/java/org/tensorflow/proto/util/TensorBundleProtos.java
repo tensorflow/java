@@ -48,10 +48,11 @@ public final class TensorBundleProtos {
       " \001(\0132\034.tensorflow.TensorShapeProto\022\020\n\010sh" +
       "ard_id\030\003 \001(\005\022\016\n\006offset\030\004 \001(\003\022\014\n\004size\030\005 \001" +
       "(\003\022\016\n\006crc32c\030\006 \001(\007\022,\n\006slices\030\007 \003(\0132\034.ten" +
-      "sorflow.TensorSliceProtoB~\n\031org.tensorfl" +
-      "ow.proto.utilB\022TensorBundleProtosP\001ZHgit" +
-      "hub.com/tensorflow/tensorflow/tensorflow" +
-      "/go/core/core_protos_go_proto\370\001\001b\006proto3"
+      "sorflow.TensorSliceProtoB\213\001\n\031org.tensorf" +
+      "low.proto.utilB\022TensorBundleProtosP\001ZUgi" +
+      "thub.com/tensorflow/tensorflow/tensorflo" +
+      "w/go/core/protobuf/for_core_protos_go_pr" +
+      "oto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

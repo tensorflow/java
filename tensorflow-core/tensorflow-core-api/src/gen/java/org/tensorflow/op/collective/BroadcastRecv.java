@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Receives a tensor value broadcast from another device.
  * 
- * @param <T> data type for {@code output()} output
+ * @param <T> data type for {@code data()} output
  */
 public final class BroadcastRecv<T extends TType> extends RawOp implements Operand<T> {
   
@@ -114,23 +114,23 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
   
   /**
    */
-  public Output<T> output() {
-    return output;
+  public Output<T> data() {
+    return data;
   }
   
   @Override
   public Output<T> asOutput() {
-    return output;
+    return data;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CollectiveBcastRecv";
   
-  private Output<T> output;
+  private Output<T> data;
   
   private BroadcastRecv(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    output = operation.output(outputIdx++);
+    data = operation.output(outputIdx++);
   }
 }

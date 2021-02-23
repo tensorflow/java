@@ -200,6 +200,14 @@ private static final long serialVersionUID = 0L;
      * <code>ROW_PARTITION_SPEC = 10;</code>
      */
     ROW_PARTITION_SPEC(10),
+    /**
+     * <pre>
+     * TF Numpy NDarray spec
+     * </pre>
+     *
+     * <code>NDARRAY_SPEC = 11;</code>
+     */
+    NDARRAY_SPEC(11),
     UNRECOGNIZED(-1),
     ;
 
@@ -287,6 +295,14 @@ private static final long serialVersionUID = 0L;
      * <code>ROW_PARTITION_SPEC = 10;</code>
      */
     public static final int ROW_PARTITION_SPEC_VALUE = 10;
+    /**
+     * <pre>
+     * TF Numpy NDarray spec
+     * </pre>
+     *
+     * <code>NDARRAY_SPEC = 11;</code>
+     */
+    public static final int NDARRAY_SPEC_VALUE = 11;
 
 
     public final int getNumber() {
@@ -318,6 +334,7 @@ private static final long serialVersionUID = 0L;
         case 8: return PER_REPLICA_SPEC;
         case 9: return VARIABLE_SPEC;
         case 10: return ROW_PARTITION_SPEC;
+        case 11: return NDARRAY_SPEC;
         default: return null;
       }
     }

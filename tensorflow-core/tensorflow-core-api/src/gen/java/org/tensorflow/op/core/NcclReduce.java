@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  * data: the value of the reduction across all `num_devices` devices.
  * reduction: the reduction operation to perform.
  * 
- * @param <T> data type for {@code output()} output
+ * @param <T> data type for {@code data()} output
  */
 public final class NcclReduce<T extends TNumber> extends RawOp implements Operand<T> {
   
@@ -63,23 +63,23 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
   
   /**
    */
-  public Output<T> output() {
-    return output;
+  public Output<T> data() {
+    return data;
   }
   
   @Override
   public Output<T> asOutput() {
-    return output;
+    return data;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "NcclReduce";
   
-  private Output<T> output;
+  private Output<T> data;
   
   private NcclReduce(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    output = operation.output(outputIdx++);
+    data = operation.output(outputIdx++);
   }
 }

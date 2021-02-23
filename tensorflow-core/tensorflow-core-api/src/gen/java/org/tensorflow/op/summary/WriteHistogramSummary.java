@@ -29,6 +29,9 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
+ * Writes a histogram summary.
+ * <p>
+ * Writes histogram `values` at `step` with `tag` using summary `writer`.
  */
 public final class WriteHistogramSummary extends RawOp {
   

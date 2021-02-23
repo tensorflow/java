@@ -135,27 +135,34 @@ public final class SavedObjectGraphProtos {
       "ound_inputs\030\002 \003(\005\022B\n\035canonicalized_input" +
       "_signature\030\003 \001(\0132\033.tensorflow.Structured" +
       "Value\0225\n\020output_signature\030\004 \001(\0132\033.tensor" +
-      "flow.StructuredValue\"|\n\031SavedBareConcret" +
-      "eFunction\022\036\n\026concrete_function_name\030\001 \001(" +
-      "\t\022\031\n\021argument_keywords\030\002 \003(\t\022$\n\034allowed_" +
-      "positional_arguments\030\003 \001(\003\"\"\n\rSavedConst" +
-      "ant\022\021\n\toperation\030\001 \001(\t\"\366\001\n\rSavedVariable" +
-      "\022#\n\005dtype\030\001 \001(\0162\024.tensorflow.DataType\022+\n" +
-      "\005shape\030\002 \001(\0132\034.tensorflow.TensorShapePro" +
-      "to\022\021\n\ttrainable\030\003 \001(\010\022<\n\017synchronization" +
-      "\030\004 \001(\0162#.tensorflow.VariableSynchronizat" +
-      "ion\0224\n\013aggregation\030\005 \001(\0162\037.tensorflow.Va" +
-      "riableAggregation\022\014\n\004name\030\006 \001(\t\"\225\001\n\014Func" +
-      "tionSpec\0220\n\013fullargspec\030\001 \001(\0132\033.tensorfl" +
-      "ow.StructuredValue\022\021\n\tis_method\030\002 \001(\010\0224\n" +
-      "\017input_signature\030\005 \001(\0132\033.tensorflow.Stru" +
-      "cturedValueJ\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSavedResource" +
-      "\022\016\n\006device\030\001 \001(\t\"A\n\016SaveableObject\022\025\n\rsa" +
-      "ve_function\030\002 \001(\005\022\030\n\020restore_function\030\003 " +
-      "\001(\005B\207\001\n\036org.tensorflow.proto.frameworkB\026" +
-      "SavedObjectGraphProtosP\001ZHgithub.com/ten" +
-      "sorflow/tensorflow/tensorflow/go/core/co" +
-      "re_protos_go_proto\370\001\001b\006proto3"
+      "flow.StructuredValue\"\255\001\n\031SavedBareConcre" +
+      "teFunction\022\036\n\026concrete_function_name\030\001 \001" +
+      "(\t\022\031\n\021argument_keywords\030\002 \003(\t\022$\n\034allowed" +
+      "_positional_arguments\030\003 \001(\003\022/\n\rfunction_" +
+      "spec\030\004 \001(\0132\030.tensorflow.FunctionSpec\"\"\n\r" +
+      "SavedConstant\022\021\n\toperation\030\001 \001(\t\"\327\002\n\rSav" +
+      "edVariable\022#\n\005dtype\030\001 \001(\0162\024.tensorflow.D" +
+      "ataType\022+\n\005shape\030\002 \001(\0132\034.tensorflow.Tens" +
+      "orShapeProto\022\021\n\ttrainable\030\003 \001(\010\022<\n\017synch" +
+      "ronization\030\004 \001(\0162#.tensorflow.VariableSy" +
+      "nchronization\0224\n\013aggregation\030\005 \001(\0162\037.ten" +
+      "sorflow.VariableAggregation\022\014\n\004name\030\006 \001(" +
+      "\t\022\016\n\006device\030\007 \001(\t\022O\n,experimental_distri" +
+      "buted_variable_components\030\010 \003(\0132\031.tensor" +
+      "flow.SavedVariable\"\226\002\n\014FunctionSpec\0220\n\013f" +
+      "ullargspec\030\001 \001(\0132\033.tensorflow.Structured" +
+      "Value\022\021\n\tis_method\030\002 \001(\010\0224\n\017input_signat" +
+      "ure\030\005 \001(\0132\033.tensorflow.StructuredValue\022J" +
+      "\n\024experimental_compile\030\006 \001(\0162,.tensorflo" +
+      "w.FunctionSpec.ExperimentalCompile\"3\n\023Ex" +
+      "perimentalCompile\022\013\n\007DEFAULT\020\000\022\006\n\002ON\020\001\022\007" +
+      "\n\003OFF\020\002J\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSavedResource\022\016\n\006" +
+      "device\030\001 \001(\t\"A\n\016SaveableObject\022\025\n\rsave_f" +
+      "unction\030\002 \001(\005\022\030\n\020restore_function\030\003 \001(\005B" +
+      "\224\001\n\036org.tensorflow.proto.frameworkB\026Save" +
+      "dObjectGraphProtosP\001ZUgithub.com/tensorf" +
+      "low/tensorflow/tensorflow/go/core/protob" +
+      "uf/for_core_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -220,7 +227,7 @@ public final class SavedObjectGraphProtos {
     internal_static_tensorflow_SavedBareConcreteFunction_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_SavedBareConcreteFunction_descriptor,
-        new java.lang.String[] { "ConcreteFunctionName", "ArgumentKeywords", "AllowedPositionalArguments", });
+        new java.lang.String[] { "ConcreteFunctionName", "ArgumentKeywords", "AllowedPositionalArguments", "FunctionSpec", });
     internal_static_tensorflow_SavedConstant_descriptor =
       getDescriptor().getMessageTypes().get(7);
     internal_static_tensorflow_SavedConstant_fieldAccessorTable = new
@@ -232,13 +239,13 @@ public final class SavedObjectGraphProtos {
     internal_static_tensorflow_SavedVariable_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_SavedVariable_descriptor,
-        new java.lang.String[] { "Dtype", "Shape", "Trainable", "Synchronization", "Aggregation", "Name", });
+        new java.lang.String[] { "Dtype", "Shape", "Trainable", "Synchronization", "Aggregation", "Name", "Device", "ExperimentalDistributedVariableComponents", });
     internal_static_tensorflow_FunctionSpec_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_tensorflow_FunctionSpec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_FunctionSpec_descriptor,
-        new java.lang.String[] { "Fullargspec", "IsMethod", "InputSignature", });
+        new java.lang.String[] { "Fullargspec", "IsMethod", "InputSignature", "ExperimentalCompile", });
     internal_static_tensorflow_SavedResource_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_tensorflow_SavedResource_fieldAccessorTable = new

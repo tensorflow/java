@@ -34,10 +34,11 @@ public final class ErrorCodesProtos {
       "LEMENTED\020\014\022\014\n\010INTERNAL\020\r\022\017\n\013UNAVAILABLE\020" +
       "\016\022\r\n\tDATA_LOSS\020\017\022K\nGDO_NOT_USE_RESERVED_" +
       "FOR_FUTURE_EXPANSION_USE_DEFAULT_IN_SWIT" +
-      "CH_INSTEAD_\020\024B\201\001\n\036org.tensorflow.proto.f" +
-      "rameworkB\020ErrorCodesProtosP\001ZHgithub.com" +
+      "CH_INSTEAD_\020\024B\216\001\n\036org.tensorflow.proto.f" +
+      "rameworkB\020ErrorCodesProtosP\001ZUgithub.com" +
       "/tensorflow/tensorflow/tensorflow/go/cor" +
-      "e/core_protos_go_proto\370\001\001b\006proto3"
+      "e/protobuf/for_core_protos_go_proto\370\001\001b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
