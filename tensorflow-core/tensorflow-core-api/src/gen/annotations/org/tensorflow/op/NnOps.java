@@ -136,6 +136,9 @@ public final class NnOps {
 
   /**
    * Performs 3D average pooling on the input.
+   *  <p>
+   *  Each entry in `output` is the mean of the corresponding size `ksize` window in
+   *  `value`.
    *
    * @param <T> data type for {@code output()} output
    * @param input Shape `[batch, depth, rows, cols, channels]` tensor to pool over.
@@ -666,9 +669,28 @@ public final class NnOps {
   }
 
   /**
-   * Returns the permuted vector/tensor in the destination data format given the
+   * Permute input tensor from `src_format` to `dst_format`.
    *  <p>
-   *  one in the source data format.
+   *  Input tensor must be a vector of size 4, or a 4x2 tensor.
+   *  <p>
+   *  For example, with `src_format` of `NHWC`, `dst_format` of `NCHW`, and inputs:
+   *  <pre>{@code
+   *  [1, 2, 3, 4]
+   *  }</pre>
+   *  and
+   *  <pre>{@code
+   *  [[1, 2, 3, 4],
+   *   [5, 6, 7, 8]]
+   *  }</pre>
+   *  , the outputs will be (respectively):
+   *  <pre>{@code
+   *  [1, 4, 2, 3]
+   *  }</pre>
+   *  and
+   *  <pre>{@code
+   *  [[1, 4, 2, 3],
+   *   [5, 8, 6, 7]]
+   *  }</pre>
    *
    * @param <T> data type for {@code y()} output
    * @param x Vector of size 4 or Tensor of shape (4, 2) in source data format.

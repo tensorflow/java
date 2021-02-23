@@ -200,6 +200,7 @@ public interface XPlaneOrBuilder extends
   /**
    * <pre>
    * XStats associated with this plane, e.g. device capabilities.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 6;</code>
@@ -209,6 +210,7 @@ public interface XPlaneOrBuilder extends
   /**
    * <pre>
    * XStats associated with this plane, e.g. device capabilities.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 6;</code>
@@ -217,6 +219,7 @@ public interface XPlaneOrBuilder extends
   /**
    * <pre>
    * XStats associated with this plane, e.g. device capabilities.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 6;</code>
@@ -225,6 +228,7 @@ public interface XPlaneOrBuilder extends
   /**
    * <pre>
    * XStats associated with this plane, e.g. device capabilities.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 6;</code>
@@ -234,6 +238,7 @@ public interface XPlaneOrBuilder extends
   /**
    * <pre>
    * XStats associated with this plane, e.g. device capabilities.
+   * Each of these XStats should have a different metadata_id.
    * </pre>
    *
    * <code>repeated .tensorflow.profiler.XStat stats = 6;</code>

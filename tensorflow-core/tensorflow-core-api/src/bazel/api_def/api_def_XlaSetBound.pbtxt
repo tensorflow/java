@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "XlaSetBound"
+  endpoint: {
+    name: "xla.XlaSetBound"
+  }
+}

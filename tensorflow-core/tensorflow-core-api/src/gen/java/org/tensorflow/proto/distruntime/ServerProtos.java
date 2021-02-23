@@ -38,11 +38,11 @@ public final class ServerProtos {
       "\005\0227\n\026default_session_config\030\004 \001(\0132\027.tens" +
       "orflow.ConfigProto\022\020\n\010protocol\030\005 \001(\t\022\014\n\004" +
       "port\030\006 \001(\005\022@\n\026cluster_device_filters\030\007 \001" +
-      "(\0132 .tensorflow.ClusterDeviceFiltersB\177\n " +
-      "org.tensorflow.proto.distruntimeB\014Server" +
-      "ProtosP\001ZHgithub.com/tensorflow/tensorfl" +
-      "ow/tensorflow/go/core/core_protos_go_pro" +
-      "to\370\001\001b\006proto3"
+      "(\0132 .tensorflow.ClusterDeviceFiltersB\214\001\n" +
+      " org.tensorflow.proto.distruntimeB\014Serve" +
+      "rProtosP\001ZUgithub.com/tensorflow/tensorf" +
+      "low/tensorflow/go/core/protobuf/for_core" +
+      "_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

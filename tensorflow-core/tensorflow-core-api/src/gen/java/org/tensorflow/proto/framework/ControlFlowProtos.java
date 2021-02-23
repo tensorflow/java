@@ -71,10 +71,10 @@ public final class ControlFlowProtos {
       "\001(\0132\025.tensorflow.ValuesDef\022\037\n\027maximum_it" +
       "erations_name\030\013 \001(\t\022:\n\017nested_contexts\030\014" +
       " \003(\0132!.tensorflow.ControlFlowContextDefB" +
-      "\202\001\n\036org.tensorflow.proto.frameworkB\021Cont" +
-      "rolFlowProtosP\001ZHgithub.com/tensorflow/t" +
-      "ensorflow/tensorflow/go/core/core_protos" +
-      "_go_proto\370\001\001b\006proto3"
+      "\217\001\n\036org.tensorflow.proto.frameworkB\021Cont" +
+      "rolFlowProtosP\001ZUgithub.com/tensorflow/t" +
+      "ensorflow/tensorflow/go/core/protobuf/fo" +
+      "r_core_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

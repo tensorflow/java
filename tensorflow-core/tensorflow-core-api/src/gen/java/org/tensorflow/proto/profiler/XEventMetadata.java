@@ -5,8 +5,9 @@ package org.tensorflow.proto.profiler;
 
 /**
  * <pre>
- * Metadata for an XEvent, shared by all instances of the same event.
- * Next ID: 5
+ * Metadata for an XEvent, corresponds to an event type and is shared by
+ * all XEvents with the same metadata_id.
+ * Next ID: 6
  * </pre>
  *
  * Protobuf type {@code tensorflow.profiler.XEventMetadata}
@@ -24,6 +25,7 @@ private static final long serialVersionUID = 0L;
     name_ = "";
     displayName_ = "";
     metadata_ = com.google.protobuf.ByteString.EMPTY;
+    stats_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -46,6 +48,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -78,6 +81,15 @@ private static final long serialVersionUID = 0L;
             displayName_ = s;
             break;
           }
+          case 42: {
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              stats_ = new java.util.ArrayList<org.tensorflow.proto.profiler.XStat>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            stats_.add(
+                input.readMessage(org.tensorflow.proto.profiler.XStat.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -93,6 +105,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        stats_ = java.util.Collections.unmodifiableList(stats_);
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -220,6 +235,66 @@ private static final long serialVersionUID = 0L;
     return metadata_;
   }
 
+  public static final int STATS_FIELD_NUMBER = 5;
+  private java.util.List<org.tensorflow.proto.profiler.XStat> stats_;
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  public java.util.List<org.tensorflow.proto.profiler.XStat> getStatsList() {
+    return stats_;
+  }
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  public java.util.List<? extends org.tensorflow.proto.profiler.XStatOrBuilder> 
+      getStatsOrBuilderList() {
+    return stats_;
+  }
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  public int getStatsCount() {
+    return stats_.size();
+  }
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  public org.tensorflow.proto.profiler.XStat getStats(int index) {
+    return stats_.get(index);
+  }
+  /**
+   * <pre>
+   * XStats that are constant for all XEvents with the same metadata_id.
+   * Each of these XStats should have a different metadata_id.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+   */
+  public org.tensorflow.proto.profiler.XStatOrBuilder getStatsOrBuilder(
+      int index) {
+    return stats_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -246,6 +321,9 @@ private static final long serialVersionUID = 0L;
     if (!getDisplayNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, displayName_);
     }
+    for (int i = 0; i < stats_.size(); i++) {
+      output.writeMessage(5, stats_.get(i));
+    }
     unknownFields.writeTo(output);
   }
 
@@ -268,6 +346,10 @@ private static final long serialVersionUID = 0L;
     }
     if (!getDisplayNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, displayName_);
+    }
+    for (int i = 0; i < stats_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, stats_.get(i));
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -292,6 +374,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getDisplayName())) return false;
     if (!getMetadata()
         .equals(other.getMetadata())) return false;
+    if (!getStatsList()
+        .equals(other.getStatsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -312,6 +396,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getDisplayName().hashCode();
     hash = (37 * hash) + METADATA_FIELD_NUMBER;
     hash = (53 * hash) + getMetadata().hashCode();
+    if (getStatsCount() > 0) {
+      hash = (37 * hash) + STATS_FIELD_NUMBER;
+      hash = (53 * hash) + getStatsList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -409,8 +497,9 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Metadata for an XEvent, shared by all instances of the same event.
-   * Next ID: 5
+   * Metadata for an XEvent, corresponds to an event type and is shared by
+   * all XEvents with the same metadata_id.
+   * Next ID: 6
    * </pre>
    *
    * Protobuf type {@code tensorflow.profiler.XEventMetadata}
@@ -445,6 +534,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getStatsFieldBuilder();
       }
     }
     @java.lang.Override
@@ -458,6 +548,12 @@ private static final long serialVersionUID = 0L;
 
       metadata_ = com.google.protobuf.ByteString.EMPTY;
 
+      if (statsBuilder_ == null) {
+        stats_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      } else {
+        statsBuilder_.clear();
+      }
       return this;
     }
 
@@ -484,10 +580,20 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.tensorflow.proto.profiler.XEventMetadata buildPartial() {
       org.tensorflow.proto.profiler.XEventMetadata result = new org.tensorflow.proto.profiler.XEventMetadata(this);
+      int from_bitField0_ = bitField0_;
       result.id_ = id_;
       result.name_ = name_;
       result.displayName_ = displayName_;
       result.metadata_ = metadata_;
+      if (statsBuilder_ == null) {
+        if (((bitField0_ & 0x00000001) != 0)) {
+          stats_ = java.util.Collections.unmodifiableList(stats_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.stats_ = stats_;
+      } else {
+        result.stats_ = statsBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -550,6 +656,32 @@ private static final long serialVersionUID = 0L;
       if (other.getMetadata() != com.google.protobuf.ByteString.EMPTY) {
         setMetadata(other.getMetadata());
       }
+      if (statsBuilder_ == null) {
+        if (!other.stats_.isEmpty()) {
+          if (stats_.isEmpty()) {
+            stats_ = other.stats_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureStatsIsMutable();
+            stats_.addAll(other.stats_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.stats_.isEmpty()) {
+          if (statsBuilder_.isEmpty()) {
+            statsBuilder_.dispose();
+            statsBuilder_ = null;
+            stats_ = other.stats_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            statsBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getStatsFieldBuilder() : null;
+          } else {
+            statsBuilder_.addAllMessages(other.stats_);
+          }
+        }
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -578,6 +710,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long id_ ;
     /**
@@ -834,6 +967,336 @@ private static final long serialVersionUID = 0L;
       metadata_ = getDefaultInstance().getMetadata();
       onChanged();
       return this;
+    }
+
+    private java.util.List<org.tensorflow.proto.profiler.XStat> stats_ =
+      java.util.Collections.emptyList();
+    private void ensureStatsIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        stats_ = new java.util.ArrayList<org.tensorflow.proto.profiler.XStat>(stats_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.profiler.XStat, org.tensorflow.proto.profiler.XStat.Builder, org.tensorflow.proto.profiler.XStatOrBuilder> statsBuilder_;
+
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public java.util.List<org.tensorflow.proto.profiler.XStat> getStatsList() {
+      if (statsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(stats_);
+      } else {
+        return statsBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public int getStatsCount() {
+      if (statsBuilder_ == null) {
+        return stats_.size();
+      } else {
+        return statsBuilder_.getCount();
+      }
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public org.tensorflow.proto.profiler.XStat getStats(int index) {
+      if (statsBuilder_ == null) {
+        return stats_.get(index);
+      } else {
+        return statsBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder setStats(
+        int index, org.tensorflow.proto.profiler.XStat value) {
+      if (statsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureStatsIsMutable();
+        stats_.set(index, value);
+        onChanged();
+      } else {
+        statsBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder setStats(
+        int index, org.tensorflow.proto.profiler.XStat.Builder builderForValue) {
+      if (statsBuilder_ == null) {
+        ensureStatsIsMutable();
+        stats_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        statsBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder addStats(org.tensorflow.proto.profiler.XStat value) {
+      if (statsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureStatsIsMutable();
+        stats_.add(value);
+        onChanged();
+      } else {
+        statsBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder addStats(
+        int index, org.tensorflow.proto.profiler.XStat value) {
+      if (statsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureStatsIsMutable();
+        stats_.add(index, value);
+        onChanged();
+      } else {
+        statsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder addStats(
+        org.tensorflow.proto.profiler.XStat.Builder builderForValue) {
+      if (statsBuilder_ == null) {
+        ensureStatsIsMutable();
+        stats_.add(builderForValue.build());
+        onChanged();
+      } else {
+        statsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder addStats(
+        int index, org.tensorflow.proto.profiler.XStat.Builder builderForValue) {
+      if (statsBuilder_ == null) {
+        ensureStatsIsMutable();
+        stats_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        statsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder addAllStats(
+        java.lang.Iterable<? extends org.tensorflow.proto.profiler.XStat> values) {
+      if (statsBuilder_ == null) {
+        ensureStatsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, stats_);
+        onChanged();
+      } else {
+        statsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder clearStats() {
+      if (statsBuilder_ == null) {
+        stats_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+      } else {
+        statsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public Builder removeStats(int index) {
+      if (statsBuilder_ == null) {
+        ensureStatsIsMutable();
+        stats_.remove(index);
+        onChanged();
+      } else {
+        statsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public org.tensorflow.proto.profiler.XStat.Builder getStatsBuilder(
+        int index) {
+      return getStatsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public org.tensorflow.proto.profiler.XStatOrBuilder getStatsOrBuilder(
+        int index) {
+      if (statsBuilder_ == null) {
+        return stats_.get(index);  } else {
+        return statsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.profiler.XStatOrBuilder> 
+         getStatsOrBuilderList() {
+      if (statsBuilder_ != null) {
+        return statsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(stats_);
+      }
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public org.tensorflow.proto.profiler.XStat.Builder addStatsBuilder() {
+      return getStatsFieldBuilder().addBuilder(
+          org.tensorflow.proto.profiler.XStat.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public org.tensorflow.proto.profiler.XStat.Builder addStatsBuilder(
+        int index) {
+      return getStatsFieldBuilder().addBuilder(
+          index, org.tensorflow.proto.profiler.XStat.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * XStats that are constant for all XEvents with the same metadata_id.
+     * Each of these XStats should have a different metadata_id.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.profiler.XStat stats = 5;</code>
+     */
+    public java.util.List<org.tensorflow.proto.profiler.XStat.Builder> 
+         getStatsBuilderList() {
+      return getStatsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.profiler.XStat, org.tensorflow.proto.profiler.XStat.Builder, org.tensorflow.proto.profiler.XStatOrBuilder> 
+        getStatsFieldBuilder() {
+      if (statsBuilder_ == null) {
+        statsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.tensorflow.proto.profiler.XStat, org.tensorflow.proto.profiler.XStat.Builder, org.tensorflow.proto.profiler.XStatOrBuilder>(
+                stats_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
+        stats_ = null;
+      }
+      return statsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

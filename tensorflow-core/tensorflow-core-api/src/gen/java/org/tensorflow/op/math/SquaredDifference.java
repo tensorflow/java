@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Returns (x - y)(x - y) element-wise.
+ * Returns conj(x - y)(x - y) element-wise.
  * <p>
  * <i>NOTE</i>: `math.SquaredDifference` supports broadcasting. More about broadcasting
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)

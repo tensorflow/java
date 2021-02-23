@@ -21,6 +21,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private FunctionSpec() {
+    experimentalCompile_ = 0;
   }
 
   @java.lang.Override
@@ -84,6 +85,12 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 48: {
+            int rawValue = input.readEnum();
+
+            experimentalCompile_ = rawValue;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -114,6 +121,122 @@ private static final long serialVersionUID = 0L;
     return org.tensorflow.proto.framework.SavedObjectGraphProtos.internal_static_tensorflow_FunctionSpec_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
             org.tensorflow.proto.framework.FunctionSpec.class, org.tensorflow.proto.framework.FunctionSpec.Builder.class);
+  }
+
+  /**
+   * <pre>
+   * Whether the function should be compiled by XLA.
+   * The public interface to `tf.function` uses an optional boolean to
+   * represent three distinct states for this field.  Unfortunately, proto3
+   * removes the ability to explicitly check for the presence or absence of a
+   * field, so we instead map to an enum.
+   * See `tf.function` for details.
+   * </pre>
+   *
+   * Protobuf enum {@code tensorflow.FunctionSpec.ExperimentalCompile}
+   */
+  public enum ExperimentalCompile
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>DEFAULT = 0;</code>
+     */
+    DEFAULT(0),
+    /**
+     * <code>ON = 1;</code>
+     */
+    ON(1),
+    /**
+     * <code>OFF = 2;</code>
+     */
+    OFF(2),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>DEFAULT = 0;</code>
+     */
+    public static final int DEFAULT_VALUE = 0;
+    /**
+     * <code>ON = 1;</code>
+     */
+    public static final int ON_VALUE = 1;
+    /**
+     * <code>OFF = 2;</code>
+     */
+    public static final int OFF_VALUE = 2;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static ExperimentalCompile valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static ExperimentalCompile forNumber(int value) {
+      switch (value) {
+        case 0: return DEFAULT;
+        case 1: return ON;
+        case 2: return OFF;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<ExperimentalCompile>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        ExperimentalCompile> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<ExperimentalCompile>() {
+            public ExperimentalCompile findValueByNumber(int number) {
+              return ExperimentalCompile.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return org.tensorflow.proto.framework.FunctionSpec.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final ExperimentalCompile[] VALUES = values();
+
+    public static ExperimentalCompile valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private ExperimentalCompile(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:tensorflow.FunctionSpec.ExperimentalCompile)
   }
 
   public static final int FULLARGSPEC_FIELD_NUMBER = 1;
@@ -195,6 +318,23 @@ private static final long serialVersionUID = 0L;
     return getInputSignature();
   }
 
+  public static final int EXPERIMENTAL_COMPILE_FIELD_NUMBER = 6;
+  private int experimentalCompile_;
+  /**
+   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   */
+  public int getExperimentalCompileValue() {
+    return experimentalCompile_;
+  }
+  /**
+   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   */
+  public org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile getExperimentalCompile() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile result = org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.valueOf(experimentalCompile_);
+    return result == null ? org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.UNRECOGNIZED : result;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -218,6 +358,9 @@ private static final long serialVersionUID = 0L;
     if (inputSignature_ != null) {
       output.writeMessage(5, getInputSignature());
     }
+    if (experimentalCompile_ != org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.DEFAULT.getNumber()) {
+      output.writeEnum(6, experimentalCompile_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -238,6 +381,10 @@ private static final long serialVersionUID = 0L;
     if (inputSignature_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, getInputSignature());
+    }
+    if (experimentalCompile_ != org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(6, experimentalCompile_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -266,6 +413,7 @@ private static final long serialVersionUID = 0L;
       if (!getInputSignature()
           .equals(other.getInputSignature())) return false;
     }
+    if (experimentalCompile_ != other.experimentalCompile_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -288,6 +436,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + INPUT_SIGNATURE_FIELD_NUMBER;
       hash = (53 * hash) + getInputSignature().hashCode();
     }
+    hash = (37 * hash) + EXPERIMENTAL_COMPILE_FIELD_NUMBER;
+    hash = (53 * hash) + experimentalCompile_;
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -440,6 +590,8 @@ private static final long serialVersionUID = 0L;
         inputSignature_ = null;
         inputSignatureBuilder_ = null;
       }
+      experimentalCompile_ = 0;
+
       return this;
     }
 
@@ -477,6 +629,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.inputSignature_ = inputSignatureBuilder_.build();
       }
+      result.experimentalCompile_ = experimentalCompile_;
       onBuilt();
       return result;
     }
@@ -533,6 +686,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasInputSignature()) {
         mergeInputSignature(other.getInputSignature());
+      }
+      if (other.experimentalCompile_ != 0) {
+        setExperimentalCompileValue(other.getExperimentalCompileValue());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -905,6 +1061,51 @@ private static final long serialVersionUID = 0L;
         inputSignature_ = null;
       }
       return inputSignatureBuilder_;
+    }
+
+    private int experimentalCompile_ = 0;
+    /**
+     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     */
+    public int getExperimentalCompileValue() {
+      return experimentalCompile_;
+    }
+    /**
+     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     */
+    public Builder setExperimentalCompileValue(int value) {
+      experimentalCompile_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     */
+    public org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile getExperimentalCompile() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile result = org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.valueOf(experimentalCompile_);
+      return result == null ? org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.UNRECOGNIZED : result;
+    }
+    /**
+     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     */
+    public Builder setExperimentalCompile(org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      experimentalCompile_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     */
+    public Builder clearExperimentalCompile() {
+      
+      experimentalCompile_ = 0;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

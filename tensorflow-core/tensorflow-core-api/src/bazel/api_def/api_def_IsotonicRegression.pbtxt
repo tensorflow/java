@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "IsotonicRegression"
+  endpoint {
+    name: "nn.IsotonicRegression"
+  }
+}

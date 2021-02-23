@@ -29,6 +29,9 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
+ * Writes a tensor summary.
+ * <p>
+ * Writes `tensor` at `step` with `tag` using summary `writer`.
  */
 public final class WriteSummary extends RawOp {
   

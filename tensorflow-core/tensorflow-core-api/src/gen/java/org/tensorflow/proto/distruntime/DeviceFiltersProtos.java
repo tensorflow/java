@@ -51,11 +51,11 @@ public final class DeviceFiltersProtos {
       "asksEntry\022\013\n\003key\030\001 \001(\005\022,\n\005value\030\002 \001(\0132\035." +
       "tensorflow.TaskDeviceFilters:\0028\001\"B\n\024Clus" +
       "terDeviceFilters\022*\n\004jobs\030\001 \003(\0132\034.tensorf" +
-      "low.JobDeviceFiltersB\206\001\n org.tensorflow." +
+      "low.JobDeviceFiltersB\223\001\n org.tensorflow." +
       "proto.distruntimeB\023DeviceFiltersProtosP\001" +
-      "ZHgithub.com/tensorflow/tensorflow/tenso" +
-      "rflow/go/core/core_protos_go_proto\370\001\001b\006p" +
-      "roto3"
+      "ZUgithub.com/tensorflow/tensorflow/tenso" +
+      "rflow/go/core/protobuf/for_core_protos_g" +
+      "o_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

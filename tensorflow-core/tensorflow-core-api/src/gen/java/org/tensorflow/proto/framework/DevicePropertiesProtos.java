@@ -51,11 +51,11 @@ public final class DevicePropertiesProtos {
       "ndwidth\030\r \001(\003\0322\n\020EnvironmentEntry\022\013\n\003key" +
       "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"M\n\013NamedDevice" +
       "\022\014\n\004name\030\001 \001(\t\0220\n\nproperties\030\002 \001(\0132\034.ten" +
-      "sorflow.DevicePropertiesB\207\001\n\036org.tensorf" +
+      "sorflow.DevicePropertiesB\224\001\n\036org.tensorf" +
       "low.proto.frameworkB\026DevicePropertiesPro" +
-      "tosP\001ZHgithub.com/tensorflow/tensorflow/" +
-      "tensorflow/go/core/core_protos_go_proto\370" +
-      "\001\001b\006proto3"
+      "tosP\001ZUgithub.com/tensorflow/tensorflow/" +
+      "tensorflow/go/core/protobuf/for_core_pro" +
+      "tos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

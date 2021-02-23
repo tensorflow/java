@@ -71,6 +71,19 @@ private static final long serialVersionUID = 0L;
             allowedPositionalArguments_ = input.readInt64();
             break;
           }
+          case 34: {
+            org.tensorflow.proto.framework.FunctionSpec.Builder subBuilder = null;
+            if (functionSpec_ != null) {
+              subBuilder = functionSpec_.toBuilder();
+            }
+            functionSpec_ = input.readMessage(org.tensorflow.proto.framework.FunctionSpec.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(functionSpec_);
+              functionSpec_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -206,6 +219,54 @@ private static final long serialVersionUID = 0L;
     return allowedPositionalArguments_;
   }
 
+  public static final int FUNCTION_SPEC_FIELD_NUMBER = 4;
+  private org.tensorflow.proto.framework.FunctionSpec functionSpec_;
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  public boolean hasFunctionSpec() {
+    return functionSpec_ != null;
+  }
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  public org.tensorflow.proto.framework.FunctionSpec getFunctionSpec() {
+    return functionSpec_ == null ? org.tensorflow.proto.framework.FunctionSpec.getDefaultInstance() : functionSpec_;
+  }
+  /**
+   * <pre>
+   * The spec of the function that this ConcreteFunction is traced from. This
+   * allows the ConcreteFunction to be called with nest structure inputs. This
+   * field may not be populated. If this field is absent, the concrete function
+   * can only be called with flat inputs.
+   * TODO(b/169361281): support calling saved ConcreteFunction with structured
+   * inputs in C++ SavedModel API.
+   * </pre>
+   *
+   * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+   */
+  public org.tensorflow.proto.framework.FunctionSpecOrBuilder getFunctionSpecOrBuilder() {
+    return getFunctionSpec();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -228,6 +289,9 @@ private static final long serialVersionUID = 0L;
     }
     if (allowedPositionalArguments_ != 0L) {
       output.writeInt64(3, allowedPositionalArguments_);
+    }
+    if (functionSpec_ != null) {
+      output.writeMessage(4, getFunctionSpec());
     }
     unknownFields.writeTo(output);
   }
@@ -253,6 +317,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(3, allowedPositionalArguments_);
     }
+    if (functionSpec_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(4, getFunctionSpec());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -274,6 +342,11 @@ private static final long serialVersionUID = 0L;
         .equals(other.getArgumentKeywordsList())) return false;
     if (getAllowedPositionalArguments()
         != other.getAllowedPositionalArguments()) return false;
+    if (hasFunctionSpec() != other.hasFunctionSpec()) return false;
+    if (hasFunctionSpec()) {
+      if (!getFunctionSpec()
+          .equals(other.getFunctionSpec())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -294,6 +367,10 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + ALLOWED_POSITIONAL_ARGUMENTS_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getAllowedPositionalArguments());
+    if (hasFunctionSpec()) {
+      hash = (37 * hash) + FUNCTION_SPEC_FIELD_NUMBER;
+      hash = (53 * hash) + getFunctionSpec().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -433,6 +510,12 @@ private static final long serialVersionUID = 0L;
       bitField0_ = (bitField0_ & ~0x00000001);
       allowedPositionalArguments_ = 0L;
 
+      if (functionSpecBuilder_ == null) {
+        functionSpec_ = null;
+      } else {
+        functionSpec_ = null;
+        functionSpecBuilder_ = null;
+      }
       return this;
     }
 
@@ -467,6 +550,11 @@ private static final long serialVersionUID = 0L;
       }
       result.argumentKeywords_ = argumentKeywords_;
       result.allowedPositionalArguments_ = allowedPositionalArguments_;
+      if (functionSpecBuilder_ == null) {
+        result.functionSpec_ = functionSpec_;
+      } else {
+        result.functionSpec_ = functionSpecBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -531,6 +619,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getAllowedPositionalArguments() != 0L) {
         setAllowedPositionalArguments(other.getAllowedPositionalArguments());
+      }
+      if (other.hasFunctionSpec()) {
+        mergeFunctionSpec(other.getFunctionSpec());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -817,6 +908,204 @@ private static final long serialVersionUID = 0L;
       allowedPositionalArguments_ = 0L;
       onChanged();
       return this;
+    }
+
+    private org.tensorflow.proto.framework.FunctionSpec functionSpec_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.FunctionSpec, org.tensorflow.proto.framework.FunctionSpec.Builder, org.tensorflow.proto.framework.FunctionSpecOrBuilder> functionSpecBuilder_;
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public boolean hasFunctionSpec() {
+      return functionSpecBuilder_ != null || functionSpec_ != null;
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public org.tensorflow.proto.framework.FunctionSpec getFunctionSpec() {
+      if (functionSpecBuilder_ == null) {
+        return functionSpec_ == null ? org.tensorflow.proto.framework.FunctionSpec.getDefaultInstance() : functionSpec_;
+      } else {
+        return functionSpecBuilder_.getMessage();
+      }
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public Builder setFunctionSpec(org.tensorflow.proto.framework.FunctionSpec value) {
+      if (functionSpecBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        functionSpec_ = value;
+        onChanged();
+      } else {
+        functionSpecBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public Builder setFunctionSpec(
+        org.tensorflow.proto.framework.FunctionSpec.Builder builderForValue) {
+      if (functionSpecBuilder_ == null) {
+        functionSpec_ = builderForValue.build();
+        onChanged();
+      } else {
+        functionSpecBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public Builder mergeFunctionSpec(org.tensorflow.proto.framework.FunctionSpec value) {
+      if (functionSpecBuilder_ == null) {
+        if (functionSpec_ != null) {
+          functionSpec_ =
+            org.tensorflow.proto.framework.FunctionSpec.newBuilder(functionSpec_).mergeFrom(value).buildPartial();
+        } else {
+          functionSpec_ = value;
+        }
+        onChanged();
+      } else {
+        functionSpecBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public Builder clearFunctionSpec() {
+      if (functionSpecBuilder_ == null) {
+        functionSpec_ = null;
+        onChanged();
+      } else {
+        functionSpec_ = null;
+        functionSpecBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public org.tensorflow.proto.framework.FunctionSpec.Builder getFunctionSpecBuilder() {
+      
+      onChanged();
+      return getFunctionSpecFieldBuilder().getBuilder();
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    public org.tensorflow.proto.framework.FunctionSpecOrBuilder getFunctionSpecOrBuilder() {
+      if (functionSpecBuilder_ != null) {
+        return functionSpecBuilder_.getMessageOrBuilder();
+      } else {
+        return functionSpec_ == null ?
+            org.tensorflow.proto.framework.FunctionSpec.getDefaultInstance() : functionSpec_;
+      }
+    }
+    /**
+     * <pre>
+     * The spec of the function that this ConcreteFunction is traced from. This
+     * allows the ConcreteFunction to be called with nest structure inputs. This
+     * field may not be populated. If this field is absent, the concrete function
+     * can only be called with flat inputs.
+     * TODO(b/169361281): support calling saved ConcreteFunction with structured
+     * inputs in C++ SavedModel API.
+     * </pre>
+     *
+     * <code>.tensorflow.FunctionSpec function_spec = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        org.tensorflow.proto.framework.FunctionSpec, org.tensorflow.proto.framework.FunctionSpec.Builder, org.tensorflow.proto.framework.FunctionSpecOrBuilder> 
+        getFunctionSpecFieldBuilder() {
+      if (functionSpecBuilder_ == null) {
+        functionSpecBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            org.tensorflow.proto.framework.FunctionSpec, org.tensorflow.proto.framework.FunctionSpec.Builder, org.tensorflow.proto.framework.FunctionSpecOrBuilder>(
+                getFunctionSpec(),
+                getParentForChildren(),
+                isClean());
+        functionSpec_ = null;
+      }
+      return functionSpecBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

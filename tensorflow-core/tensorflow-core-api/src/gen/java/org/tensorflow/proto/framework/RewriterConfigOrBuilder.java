@@ -9,6 +9,23 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
+   * CPU Conversion settings between NHCW and NCHW.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+   */
+  int getCpuLayoutConversionValue();
+  /**
+   * <pre>
+   * CPU Conversion settings between NHCW and NCHW.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.CpuLayout getCpuLayoutConversion();
+
+  /**
+   * <pre>
    * Optimize tensor layouts (default is ON)
    * e.g. This will try to use NCHW layout on GPU which is faster.
    * </pre>
@@ -340,6 +357,16 @@ public interface RewriterConfigOrBuilder extends
    * <code>int32 min_graph_nodes = 17;</code>
    */
   int getMinGraphNodes();
+
+  /**
+   * <pre>
+   * Disable optimizations that assume compressed tensors. Note that this flag
+   * is experimental and may be removed in the future.
+   * </pre>
+   *
+   * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
+   */
+  boolean getExperimentalDisableCompressedTensorOptimization();
 
   /**
    * <pre>

@@ -427,6 +427,8 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * This field will eventually be deprecated and replaced by
+     * mlir_bridge_rollout (b/166038521).
      * Whether to enable the MLIR-based TF-&gt;XLA bridge.
      * This is a replacement to the existing bridge, and not ready for
      * production usage yet.
@@ -442,6 +444,27 @@ private static final long serialVersionUID = 0L;
      * <code>bool enable_mlir_bridge = 13;</code>
      */
     boolean getEnableMlirBridge();
+
+    /**
+     * <pre>
+     * This field is underdevelopment, for now use enable_mlir_bridge
+     * (b/166038521).
+     * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+     * </pre>
+     *
+     * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+     */
+    int getMlirBridgeRolloutValue();
+    /**
+     * <pre>
+     * This field is underdevelopment, for now use enable_mlir_bridge
+     * (b/166038521).
+     * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+     * </pre>
+     *
+     * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+     */
+    org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout getMlirBridgeRollout();
 
     /**
      * <pre>
@@ -500,6 +523,7 @@ private static final long serialVersionUID = 0L;
     private Experimental() {
       collectiveGroupLeader_ = "";
       executorType_ = "";
+      mlirBridgeRollout_ = 0;
     }
 
     @java.lang.Override
@@ -617,6 +641,12 @@ private static final long serialVersionUID = 0L;
               enableMlirGraphOptimization_ = input.readBool();
               break;
             }
+            case 136: {
+              int rawValue = input.readEnum();
+
+              mlirBridgeRollout_ = rawValue;
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -647,6 +677,143 @@ private static final long serialVersionUID = 0L;
       return org.tensorflow.proto.framework.ConfigProtos.internal_static_tensorflow_ConfigProto_Experimental_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               org.tensorflow.proto.framework.ConfigProto.Experimental.class, org.tensorflow.proto.framework.ConfigProto.Experimental.Builder.class);
+    }
+
+    /**
+     * <pre>
+     * An enum that describes the state of the MLIR bridge rollout.
+     * </pre>
+     *
+     * Protobuf enum {@code tensorflow.ConfigProto.Experimental.MlirBridgeRollout}
+     */
+    public enum MlirBridgeRollout
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <pre>
+       * If this field is left unspecified, the MLIR bridge may be selectively
+       * enabled on a per graph basis.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_UNSPECIFIED = 0;</code>
+       */
+      MLIR_BRIDGE_ROLLOUT_UNSPECIFIED(0),
+      /**
+       * <pre>
+       * Enabling the MLIR bridge enables it for all graphs in this session.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_ENABLED = 1;</code>
+       */
+      MLIR_BRIDGE_ROLLOUT_ENABLED(1),
+      /**
+       * <pre>
+       * Disabling the MLIR bridge disables it for all graphs in this session.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_DISABLED = 2;</code>
+       */
+      MLIR_BRIDGE_ROLLOUT_DISABLED(2),
+      UNRECOGNIZED(-1),
+      ;
+
+      /**
+       * <pre>
+       * If this field is left unspecified, the MLIR bridge may be selectively
+       * enabled on a per graph basis.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_UNSPECIFIED = 0;</code>
+       */
+      public static final int MLIR_BRIDGE_ROLLOUT_UNSPECIFIED_VALUE = 0;
+      /**
+       * <pre>
+       * Enabling the MLIR bridge enables it for all graphs in this session.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_ENABLED = 1;</code>
+       */
+      public static final int MLIR_BRIDGE_ROLLOUT_ENABLED_VALUE = 1;
+      /**
+       * <pre>
+       * Disabling the MLIR bridge disables it for all graphs in this session.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_DISABLED = 2;</code>
+       */
+      public static final int MLIR_BRIDGE_ROLLOUT_DISABLED_VALUE = 2;
+
+
+      public final int getNumber() {
+        if (this == UNRECOGNIZED) {
+          throw new java.lang.IllegalArgumentException(
+              "Can't get the number of an unknown enum value.");
+        }
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static MlirBridgeRollout valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static MlirBridgeRollout forNumber(int value) {
+        switch (value) {
+          case 0: return MLIR_BRIDGE_ROLLOUT_UNSPECIFIED;
+          case 1: return MLIR_BRIDGE_ROLLOUT_ENABLED;
+          case 2: return MLIR_BRIDGE_ROLLOUT_DISABLED;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<MlirBridgeRollout>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          MlirBridgeRollout> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<MlirBridgeRollout>() {
+              public MlirBridgeRollout findValueByNumber(int number) {
+                return MlirBridgeRollout.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return org.tensorflow.proto.framework.ConfigProto.Experimental.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final MlirBridgeRollout[] VALUES = values();
+
+      public static MlirBridgeRollout valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        if (desc.getIndex() == -1) {
+          return UNRECOGNIZED;
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private MlirBridgeRollout(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:tensorflow.ConfigProto.Experimental.MlirBridgeRollout)
     }
 
     public static final int COLLECTIVE_GROUP_LEADER_FIELD_NUMBER = 1;
@@ -915,6 +1082,8 @@ private static final long serialVersionUID = 0L;
     private boolean enableMlirBridge_;
     /**
      * <pre>
+     * This field will eventually be deprecated and replaced by
+     * mlir_bridge_rollout (b/166038521).
      * Whether to enable the MLIR-based TF-&gt;XLA bridge.
      * This is a replacement to the existing bridge, and not ready for
      * production usage yet.
@@ -931,6 +1100,35 @@ private static final long serialVersionUID = 0L;
      */
     public boolean getEnableMlirBridge() {
       return enableMlirBridge_;
+    }
+
+    public static final int MLIR_BRIDGE_ROLLOUT_FIELD_NUMBER = 17;
+    private int mlirBridgeRollout_;
+    /**
+     * <pre>
+     * This field is underdevelopment, for now use enable_mlir_bridge
+     * (b/166038521).
+     * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+     * </pre>
+     *
+     * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+     */
+    public int getMlirBridgeRolloutValue() {
+      return mlirBridgeRollout_;
+    }
+    /**
+     * <pre>
+     * This field is underdevelopment, for now use enable_mlir_bridge
+     * (b/166038521).
+     * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+     * </pre>
+     *
+     * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+     */
+    public org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout getMlirBridgeRollout() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout result = org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.valueOf(mlirBridgeRollout_);
+      return result == null ? org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.UNRECOGNIZED : result;
     }
 
     public static final int ENABLE_MLIR_GRAPH_OPTIMIZATION_FIELD_NUMBER = 16;
@@ -1040,6 +1238,9 @@ private static final long serialVersionUID = 0L;
       if (enableMlirGraphOptimization_ != false) {
         output.writeBool(16, enableMlirGraphOptimization_);
       }
+      if (mlirBridgeRollout_ != org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.MLIR_BRIDGE_ROLLOUT_UNSPECIFIED.getNumber()) {
+        output.writeEnum(17, mlirBridgeRollout_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1107,6 +1308,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(16, enableMlirGraphOptimization_);
       }
+      if (mlirBridgeRollout_ != org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.MLIR_BRIDGE_ROLLOUT_UNSPECIFIED.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(17, mlirBridgeRollout_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1149,6 +1354,7 @@ private static final long serialVersionUID = 0L;
           != other.getOptimizeForStaticGraph()) return false;
       if (getEnableMlirBridge()
           != other.getEnableMlirBridge()) return false;
+      if (mlirBridgeRollout_ != other.mlirBridgeRollout_) return false;
       if (getEnableMlirGraphOptimization()
           != other.getEnableMlirGraphOptimization()) return false;
       if (getDisableOutputPartitionGraphs()
@@ -1200,6 +1406,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + ENABLE_MLIR_BRIDGE_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getEnableMlirBridge());
+      hash = (37 * hash) + MLIR_BRIDGE_ROLLOUT_FIELD_NUMBER;
+      hash = (53 * hash) + mlirBridgeRollout_;
       hash = (37 * hash) + ENABLE_MLIR_GRAPH_OPTIMIZATION_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getEnableMlirGraphOptimization());
@@ -1376,6 +1584,8 @@ private static final long serialVersionUID = 0L;
 
         enableMlirBridge_ = false;
 
+        mlirBridgeRollout_ = 0;
+
         enableMlirGraphOptimization_ = false;
 
         disableOutputPartitionGraphs_ = false;
@@ -1424,6 +1634,7 @@ private static final long serialVersionUID = 0L;
         }
         result.optimizeForStaticGraph_ = optimizeForStaticGraph_;
         result.enableMlirBridge_ = enableMlirBridge_;
+        result.mlirBridgeRollout_ = mlirBridgeRollout_;
         result.enableMlirGraphOptimization_ = enableMlirGraphOptimization_;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
@@ -1512,6 +1723,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getEnableMlirBridge() != false) {
           setEnableMlirBridge(other.getEnableMlirBridge());
+        }
+        if (other.mlirBridgeRollout_ != 0) {
+          setMlirBridgeRolloutValue(other.getMlirBridgeRolloutValue());
         }
         if (other.getEnableMlirGraphOptimization() != false) {
           setEnableMlirGraphOptimization(other.getEnableMlirGraphOptimization());
@@ -2311,6 +2525,8 @@ private static final long serialVersionUID = 0L;
       private boolean enableMlirBridge_ ;
       /**
        * <pre>
+       * This field will eventually be deprecated and replaced by
+       * mlir_bridge_rollout (b/166038521).
        * Whether to enable the MLIR-based TF-&gt;XLA bridge.
        * This is a replacement to the existing bridge, and not ready for
        * production usage yet.
@@ -2330,6 +2546,8 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
+       * This field will eventually be deprecated and replaced by
+       * mlir_bridge_rollout (b/166038521).
        * Whether to enable the MLIR-based TF-&gt;XLA bridge.
        * This is a replacement to the existing bridge, and not ready for
        * production usage yet.
@@ -2352,6 +2570,8 @@ private static final long serialVersionUID = 0L;
       }
       /**
        * <pre>
+       * This field will eventually be deprecated and replaced by
+       * mlir_bridge_rollout (b/166038521).
        * Whether to enable the MLIR-based TF-&gt;XLA bridge.
        * This is a replacement to the existing bridge, and not ready for
        * production usage yet.
@@ -2369,6 +2589,81 @@ private static final long serialVersionUID = 0L;
       public Builder clearEnableMlirBridge() {
         
         enableMlirBridge_ = false;
+        onChanged();
+        return this;
+      }
+
+      private int mlirBridgeRollout_ = 0;
+      /**
+       * <pre>
+       * This field is underdevelopment, for now use enable_mlir_bridge
+       * (b/166038521).
+       * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+       * </pre>
+       *
+       * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+       */
+      public int getMlirBridgeRolloutValue() {
+        return mlirBridgeRollout_;
+      }
+      /**
+       * <pre>
+       * This field is underdevelopment, for now use enable_mlir_bridge
+       * (b/166038521).
+       * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+       * </pre>
+       *
+       * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+       */
+      public Builder setMlirBridgeRolloutValue(int value) {
+        mlirBridgeRollout_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * This field is underdevelopment, for now use enable_mlir_bridge
+       * (b/166038521).
+       * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+       * </pre>
+       *
+       * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+       */
+      public org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout getMlirBridgeRollout() {
+        @SuppressWarnings("deprecation")
+        org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout result = org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.valueOf(mlirBridgeRollout_);
+        return result == null ? org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       * This field is underdevelopment, for now use enable_mlir_bridge
+       * (b/166038521).
+       * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+       * </pre>
+       *
+       * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+       */
+      public Builder setMlirBridgeRollout(org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        mlirBridgeRollout_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * This field is underdevelopment, for now use enable_mlir_bridge
+       * (b/166038521).
+       * Whether to enable the MLIR-based TF-&gt;XLA bridge.
+       * </pre>
+       *
+       * <code>.tensorflow.ConfigProto.Experimental.MlirBridgeRollout mlir_bridge_rollout = 17;</code>
+       */
+      public Builder clearMlirBridgeRollout() {
+        
+        mlirBridgeRollout_ = 0;
         onChanged();
         return this;
       }

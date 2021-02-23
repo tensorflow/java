@@ -32,6 +32,11 @@ import org.tensorflow.types.family.TType;
  * <p>
  * <i>NOTE</i>: `math.Add` supports broadcasting. `AddN` does not. More about broadcasting
  * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+ * <p>
+ * Given two input tensors, the `tf.add` operation computes the sum for every element in the tensor.
+ * <p>
+ * Both input and output have a range `(-inf, inf)`.
+ * 
  * 
  * @param <T> data type for {@code z()} output
  */

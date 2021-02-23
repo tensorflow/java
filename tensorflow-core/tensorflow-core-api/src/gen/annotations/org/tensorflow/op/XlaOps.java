@@ -37,6 +37,10 @@ import org.tensorflow.op.xla.Send;
 import org.tensorflow.op.xla.Sharding;
 import org.tensorflow.op.xla.Sort;
 import org.tensorflow.op.xla.Svd;
+import org.tensorflow.op.xla.XlaRecvFromHost;
+import org.tensorflow.op.xla.XlaSendToHost;
+import org.tensorflow.op.xla.XlaSetBound;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -380,6 +384,53 @@ public final class XlaOps {
   public <T extends TType> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
       String precisionConfig) {
     return Svd.create(scope, a, maxIter, epsilon, precisionConfig);
+  }
+
+  /**
+   * An op to receive a tensor from the host.
+   *  <p>
+   *  output: the tensor that will be received from the host.
+   *  Toutput: element type for output.
+   *  shape: shape for output.
+   *  key: A unique identifier for this region used to match up host transfers.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param Toutput
+   * @param shape
+   * @param key
+   * @return a new instance of XlaRecvFromHost
+   */
+  public <T extends TType> XlaRecvFromHost<T> xlaRecvFromHost(Class<T> Toutput, Shape shape,
+      String key) {
+    return XlaRecvFromHost.create(scope, Toutput, shape, key);
+  }
+
+  /**
+   * An op to send a tensor to the host.
+   *  <p>
+   *  input: the tensor that will be sent to the host.
+   *  Tinput: element type for input.
+   *  key: A unique identifier for this region used to match up host transfers.
+   *
+   * @param input
+   * @param key
+   * @return a new instance of XlaSendToHost
+   */
+  public XlaSendToHost xlaSendToHost(Operand<? extends TType> input, String key) {
+    return XlaSendToHost.create(scope, input, key);
+  }
+
+  /**
+   * Set a bound for the given input value as a hint to Xla compiler,
+   *  <p>
+   *          returns the same value.
+   *
+   * @param input
+   * @param bound
+   * @return a new instance of XlaSetBound
+   */
+  public XlaSetBound xlaSetBound(Operand<TInt32> input, Operand<TInt32> bound) {
+    return XlaSetBound.create(scope, input, bound);
   }
 
   /**

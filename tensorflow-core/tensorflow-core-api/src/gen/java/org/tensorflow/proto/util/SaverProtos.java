@@ -36,10 +36,11 @@ public final class SaverProtos {
       "t_every_n_hours\030\006 \001(\002\022=\n\007version\030\007 \001(\0162," +
       ".tensorflow.SaverDef.CheckpointFormatVer" +
       "sion\"5\n\027CheckpointFormatVersion\022\n\n\006LEGAC" +
-      "Y\020\000\022\006\n\002V1\020\001\022\006\n\002V2\020\002Bw\n\031org.tensorflow.pr" +
-      "oto.utilB\013SaverProtosP\001ZHgithub.com/tens" +
-      "orflow/tensorflow/tensorflow/go/core/cor" +
-      "e_protos_go_proto\370\001\001b\006proto3"
+      "Y\020\000\022\006\n\002V1\020\001\022\006\n\002V2\020\002B\204\001\n\031org.tensorflow.p" +
+      "roto.utilB\013SaverProtosP\001ZUgithub.com/ten" +
+      "sorflow/tensorflow/tensorflow/go/core/pr" +
+      "otobuf/for_core_protos_go_proto\370\001\001b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

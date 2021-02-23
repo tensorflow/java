@@ -98,8 +98,10 @@ public final class EventProtos {
       "TTING_DOWN\020\003*k\n\022WorkerShutdownMode\022\013\n\007DE" +
       "FAULT\020\000\022\022\n\016NOT_CONFIGURED\020\001\022\030\n\024WAIT_FOR_" +
       "COORDINATOR\020\002\022\032\n\026SHUTDOWN_AFTER_TIMEOUT\020" +
-      "\003B-\n\031org.tensorflow.proto.utilB\013EventPro" +
-      "tosP\001\370\001\001b\006proto3"
+      "\003Bv\n\031org.tensorflow.proto.utilB\013EventPro" +
+      "tosP\001ZGgithub.com/tensorflow/tensorflow/" +
+      "tensorflow/go/core/util/event_go_proto\370\001" +
+      "\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

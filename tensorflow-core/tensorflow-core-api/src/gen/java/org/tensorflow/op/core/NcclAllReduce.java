@@ -43,7 +43,7 @@ import org.tensorflow.types.family.TNumber;
  * num_devices: The number of devices participating in this reduction.
  * shared_name: Identifier that shared between ops of the same reduction.
  * 
- * @param <T> data type for {@code output()} output
+ * @param <T> data type for {@code data()} output
  */
 public final class NcclAllReduce<T extends TNumber> extends RawOp implements Operand<T> {
   
@@ -70,23 +70,23 @@ public final class NcclAllReduce<T extends TNumber> extends RawOp implements Ope
   
   /**
    */
-  public Output<T> output() {
-    return output;
+  public Output<T> data() {
+    return data;
   }
   
   @Override
   public Output<T> asOutput() {
-    return output;
+    return data;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "NcclAllReduce";
   
-  private Output<T> output;
+  private Output<T> data;
   
   private NcclAllReduce(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    output = operation.output(outputIdx++);
+    data = operation.output(outputIdx++);
   }
 }

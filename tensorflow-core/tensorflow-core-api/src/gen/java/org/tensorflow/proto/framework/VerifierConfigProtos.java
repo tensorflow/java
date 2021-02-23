@@ -33,11 +33,11 @@ public final class VerifierConfigProtos {
       "\"\n\032verification_timeout_in_ms\030\001 \001(\003\022=\n\022s" +
       "tructure_verifier\030\002 \001(\0162!.tensorflow.Ver" +
       "ifierConfig.Toggle\"&\n\006Toggle\022\013\n\007DEFAULT\020" +
-      "\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002B\205\001\n\036org.tensorflow.pr" +
-      "oto.frameworkB\024VerifierConfigProtosP\001ZHg" +
+      "\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002B\222\001\n\036org.tensorflow.pr" +
+      "oto.frameworkB\024VerifierConfigProtosP\001ZUg" +
       "ithub.com/tensorflow/tensorflow/tensorfl" +
-      "ow/go/core/core_protos_go_proto\370\001\001b\006prot" +
-      "o3"
+      "ow/go/core/protobuf/for_core_protos_go_p" +
+      "roto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

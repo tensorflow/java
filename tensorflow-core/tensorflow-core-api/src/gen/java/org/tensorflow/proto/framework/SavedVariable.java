@@ -25,6 +25,8 @@ private static final long serialVersionUID = 0L;
     synchronization_ = 0;
     aggregation_ = 0;
     name_ = "";
+    device_ = "";
+    experimentalDistributedVariableComponents_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -47,6 +49,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -99,6 +102,21 @@ private static final long serialVersionUID = 0L;
             name_ = s;
             break;
           }
+          case 58: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            device_ = s;
+            break;
+          }
+          case 66: {
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              experimentalDistributedVariableComponents_ = new java.util.ArrayList<org.tensorflow.proto.framework.SavedVariable>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            experimentalDistributedVariableComponents_.add(
+                input.readMessage(org.tensorflow.proto.framework.SavedVariable.parser(), extensionRegistry));
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -114,6 +132,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        experimentalDistributedVariableComponents_ = java.util.Collections.unmodifiableList(experimentalDistributedVariableComponents_);
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -246,6 +267,110 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int DEVICE_FIELD_NUMBER = 7;
+  private volatile java.lang.Object device_;
+  /**
+   * <code>string device = 7;</code>
+   */
+  public java.lang.String getDevice() {
+    java.lang.Object ref = device_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      device_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string device = 7;</code>
+   */
+  public com.google.protobuf.ByteString
+      getDeviceBytes() {
+    java.lang.Object ref = device_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      device_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int EXPERIMENTAL_DISTRIBUTED_VARIABLE_COMPONENTS_FIELD_NUMBER = 8;
+  private java.util.List<org.tensorflow.proto.framework.SavedVariable> experimentalDistributedVariableComponents_;
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  public java.util.List<org.tensorflow.proto.framework.SavedVariable> getExperimentalDistributedVariableComponentsList() {
+    return experimentalDistributedVariableComponents_;
+  }
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  public java.util.List<? extends org.tensorflow.proto.framework.SavedVariableOrBuilder> 
+      getExperimentalDistributedVariableComponentsOrBuilderList() {
+    return experimentalDistributedVariableComponents_;
+  }
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  public int getExperimentalDistributedVariableComponentsCount() {
+    return experimentalDistributedVariableComponents_.size();
+  }
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  public org.tensorflow.proto.framework.SavedVariable getExperimentalDistributedVariableComponents(int index) {
+    return experimentalDistributedVariableComponents_.get(index);
+  }
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  public org.tensorflow.proto.framework.SavedVariableOrBuilder getExperimentalDistributedVariableComponentsOrBuilder(
+      int index) {
+    return experimentalDistributedVariableComponents_.get(index);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -277,6 +402,12 @@ private static final long serialVersionUID = 0L;
     }
     if (!getNameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 6, name_);
+    }
+    if (!getDeviceBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, device_);
+    }
+    for (int i = 0; i < experimentalDistributedVariableComponents_.size(); i++) {
+      output.writeMessage(8, experimentalDistributedVariableComponents_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -310,6 +441,13 @@ private static final long serialVersionUID = 0L;
     if (!getNameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, name_);
     }
+    if (!getDeviceBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, device_);
+    }
+    for (int i = 0; i < experimentalDistributedVariableComponents_.size(); i++) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(8, experimentalDistributedVariableComponents_.get(i));
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -337,6 +475,10 @@ private static final long serialVersionUID = 0L;
     if (aggregation_ != other.aggregation_) return false;
     if (!getName()
         .equals(other.getName())) return false;
+    if (!getDevice()
+        .equals(other.getDevice())) return false;
+    if (!getExperimentalDistributedVariableComponentsList()
+        .equals(other.getExperimentalDistributedVariableComponentsList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -363,6 +505,12 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + aggregation_;
     hash = (37 * hash) + NAME_FIELD_NUMBER;
     hash = (53 * hash) + getName().hashCode();
+    hash = (37 * hash) + DEVICE_FIELD_NUMBER;
+    hash = (53 * hash) + getDevice().hashCode();
+    if (getExperimentalDistributedVariableComponentsCount() > 0) {
+      hash = (37 * hash) + EXPERIMENTAL_DISTRIBUTED_VARIABLE_COMPONENTS_FIELD_NUMBER;
+      hash = (53 * hash) + getExperimentalDistributedVariableComponentsList().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -496,6 +644,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getExperimentalDistributedVariableComponentsFieldBuilder();
       }
     }
     @java.lang.Override
@@ -517,6 +666,14 @@ private static final long serialVersionUID = 0L;
 
       name_ = "";
 
+      device_ = "";
+
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        experimentalDistributedVariableComponents_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.clear();
+      }
       return this;
     }
 
@@ -543,6 +700,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public org.tensorflow.proto.framework.SavedVariable buildPartial() {
       org.tensorflow.proto.framework.SavedVariable result = new org.tensorflow.proto.framework.SavedVariable(this);
+      int from_bitField0_ = bitField0_;
       result.dtype_ = dtype_;
       if (shapeBuilder_ == null) {
         result.shape_ = shape_;
@@ -553,6 +711,16 @@ private static final long serialVersionUID = 0L;
       result.synchronization_ = synchronization_;
       result.aggregation_ = aggregation_;
       result.name_ = name_;
+      result.device_ = device_;
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        if (((bitField0_ & 0x00000001) != 0)) {
+          experimentalDistributedVariableComponents_ = java.util.Collections.unmodifiableList(experimentalDistributedVariableComponents_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.experimentalDistributedVariableComponents_ = experimentalDistributedVariableComponents_;
+      } else {
+        result.experimentalDistributedVariableComponents_ = experimentalDistributedVariableComponentsBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -620,6 +788,36 @@ private static final long serialVersionUID = 0L;
         name_ = other.name_;
         onChanged();
       }
+      if (!other.getDevice().isEmpty()) {
+        device_ = other.device_;
+        onChanged();
+      }
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        if (!other.experimentalDistributedVariableComponents_.isEmpty()) {
+          if (experimentalDistributedVariableComponents_.isEmpty()) {
+            experimentalDistributedVariableComponents_ = other.experimentalDistributedVariableComponents_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureExperimentalDistributedVariableComponentsIsMutable();
+            experimentalDistributedVariableComponents_.addAll(other.experimentalDistributedVariableComponents_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.experimentalDistributedVariableComponents_.isEmpty()) {
+          if (experimentalDistributedVariableComponentsBuilder_.isEmpty()) {
+            experimentalDistributedVariableComponentsBuilder_.dispose();
+            experimentalDistributedVariableComponentsBuilder_ = null;
+            experimentalDistributedVariableComponents_ = other.experimentalDistributedVariableComponents_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            experimentalDistributedVariableComponentsBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getExperimentalDistributedVariableComponentsFieldBuilder() : null;
+          } else {
+            experimentalDistributedVariableComponentsBuilder_.addAllMessages(other.experimentalDistributedVariableComponents_);
+          }
+        }
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -648,6 +846,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int dtype_ = 0;
     /**
@@ -994,6 +1193,441 @@ private static final long serialVersionUID = 0L;
       name_ = value;
       onChanged();
       return this;
+    }
+
+    private java.lang.Object device_ = "";
+    /**
+     * <code>string device = 7;</code>
+     */
+    public java.lang.String getDevice() {
+      java.lang.Object ref = device_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        device_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string device = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDeviceBytes() {
+      java.lang.Object ref = device_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        device_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string device = 7;</code>
+     */
+    public Builder setDevice(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      device_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string device = 7;</code>
+     */
+    public Builder clearDevice() {
+      
+      device_ = getDefaultInstance().getDevice();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string device = 7;</code>
+     */
+    public Builder setDeviceBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      device_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.util.List<org.tensorflow.proto.framework.SavedVariable> experimentalDistributedVariableComponents_ =
+      java.util.Collections.emptyList();
+    private void ensureExperimentalDistributedVariableComponentsIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        experimentalDistributedVariableComponents_ = new java.util.ArrayList<org.tensorflow.proto.framework.SavedVariable>(experimentalDistributedVariableComponents_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.SavedVariable, org.tensorflow.proto.framework.SavedVariable.Builder, org.tensorflow.proto.framework.SavedVariableOrBuilder> experimentalDistributedVariableComponentsBuilder_;
+
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.SavedVariable> getExperimentalDistributedVariableComponentsList() {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        return java.util.Collections.unmodifiableList(experimentalDistributedVariableComponents_);
+      } else {
+        return experimentalDistributedVariableComponentsBuilder_.getMessageList();
+      }
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public int getExperimentalDistributedVariableComponentsCount() {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        return experimentalDistributedVariableComponents_.size();
+      } else {
+        return experimentalDistributedVariableComponentsBuilder_.getCount();
+      }
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public org.tensorflow.proto.framework.SavedVariable getExperimentalDistributedVariableComponents(int index) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        return experimentalDistributedVariableComponents_.get(index);
+      } else {
+        return experimentalDistributedVariableComponentsBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder setExperimentalDistributedVariableComponents(
+        int index, org.tensorflow.proto.framework.SavedVariable value) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.set(index, value);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.setMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder setExperimentalDistributedVariableComponents(
+        int index, org.tensorflow.proto.framework.SavedVariable.Builder builderForValue) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder addExperimentalDistributedVariableComponents(org.tensorflow.proto.framework.SavedVariable value) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.add(value);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder addExperimentalDistributedVariableComponents(
+        int index, org.tensorflow.proto.framework.SavedVariable value) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.add(index, value);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder addExperimentalDistributedVariableComponents(
+        org.tensorflow.proto.framework.SavedVariable.Builder builderForValue) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.add(builderForValue.build());
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.addMessage(builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder addExperimentalDistributedVariableComponents(
+        int index, org.tensorflow.proto.framework.SavedVariable.Builder builderForValue) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.add(index, builderForValue.build());
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.addMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder addAllExperimentalDistributedVariableComponents(
+        java.lang.Iterable<? extends org.tensorflow.proto.framework.SavedVariable> values) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, experimentalDistributedVariableComponents_);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder clearExperimentalDistributedVariableComponents() {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        experimentalDistributedVariableComponents_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public Builder removeExperimentalDistributedVariableComponents(int index) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        ensureExperimentalDistributedVariableComponentsIsMutable();
+        experimentalDistributedVariableComponents_.remove(index);
+        onChanged();
+      } else {
+        experimentalDistributedVariableComponentsBuilder_.remove(index);
+      }
+      return this;
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public org.tensorflow.proto.framework.SavedVariable.Builder getExperimentalDistributedVariableComponentsBuilder(
+        int index) {
+      return getExperimentalDistributedVariableComponentsFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public org.tensorflow.proto.framework.SavedVariableOrBuilder getExperimentalDistributedVariableComponentsOrBuilder(
+        int index) {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        return experimentalDistributedVariableComponents_.get(index);  } else {
+        return experimentalDistributedVariableComponentsBuilder_.getMessageOrBuilder(index);
+      }
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.framework.SavedVariableOrBuilder> 
+         getExperimentalDistributedVariableComponentsOrBuilderList() {
+      if (experimentalDistributedVariableComponentsBuilder_ != null) {
+        return experimentalDistributedVariableComponentsBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(experimentalDistributedVariableComponents_);
+      }
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public org.tensorflow.proto.framework.SavedVariable.Builder addExperimentalDistributedVariableComponentsBuilder() {
+      return getExperimentalDistributedVariableComponentsFieldBuilder().addBuilder(
+          org.tensorflow.proto.framework.SavedVariable.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public org.tensorflow.proto.framework.SavedVariable.Builder addExperimentalDistributedVariableComponentsBuilder(
+        int index) {
+      return getExperimentalDistributedVariableComponentsFieldBuilder().addBuilder(
+          index, org.tensorflow.proto.framework.SavedVariable.getDefaultInstance());
+    }
+    /**
+     * <pre>
+     * List of component variables for a distributed variable.
+     * When this field is non-empty, the SavedVariable will be assumed
+     * to be a distributed variable defined by the components listed here.
+     * This is only supported by experimental loaders at the moment.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.SavedVariable.Builder> 
+         getExperimentalDistributedVariableComponentsBuilderList() {
+      return getExperimentalDistributedVariableComponentsFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<
+        org.tensorflow.proto.framework.SavedVariable, org.tensorflow.proto.framework.SavedVariable.Builder, org.tensorflow.proto.framework.SavedVariableOrBuilder> 
+        getExperimentalDistributedVariableComponentsFieldBuilder() {
+      if (experimentalDistributedVariableComponentsBuilder_ == null) {
+        experimentalDistributedVariableComponentsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+            org.tensorflow.proto.framework.SavedVariable, org.tensorflow.proto.framework.SavedVariable.Builder, org.tensorflow.proto.framework.SavedVariableOrBuilder>(
+                experimentalDistributedVariableComponents_,
+                ((bitField0_ & 0x00000001) != 0),
+                getParentForChildren(),
+                isClean());
+        experimentalDistributedVariableComponents_ = null;
+      }
+      return experimentalDistributedVariableComponentsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

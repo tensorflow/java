@@ -52,23 +52,6 @@
       <classifier>${javacpp.platform.windows-x86_64}</classifier>
     </dependency-->
     <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>mkl-dnn</artifactId>
-      <version>${mkl-dnn.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>mkl-dnn</artifactId>
-      <version>${mkl-dnn.version}</version>
-      <classifier>${javacpp.platform.linux-x86_64}</classifier>
-    </dependency>
-    <!--dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>mkl-dnn</artifactId>
-      <version>${mkl-dnn.version}</version>
-      <classifier>${javacpp.platform.windows-x86_64}</classifier>
-    </dependency-->
-    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>${javacpp.moduleId}</artifactId>
       <version>${project.version}</version>

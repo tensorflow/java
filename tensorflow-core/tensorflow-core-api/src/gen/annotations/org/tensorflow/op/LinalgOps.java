@@ -511,10 +511,9 @@ public final class LinalgOps {
   }
 
   /**
-   * Computes the inverse of one or more square invertible matrices or their
+   * Computes the inverse of one or more square invertible matrices or their adjoints (conjugate transposes).
    *  <p>
-   *  adjoints (conjugate transposes).
-   *  <p>
+   *
    *  The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
    *  form square matrices. The output is a tensor of the same shape as the input
    *  containing the inverse for all input submatrices `[..., :, :]`.
@@ -611,9 +610,9 @@ public final class LinalgOps {
    *  The input is a tensor of shape `[N, M, M]` whose inner-most 2 dimensions
    *  form square matrices. The outputs are two tensors containing the signs and
    *  absolute values of the log determinants for all N input submatrices
-   *  `[..., :, :]` such that the determinant = sign*exp(log_abs_determinant).
-   *  The log_abs_determinant is computed as det(P)*sum(log(diag(LU))) where LU
-   *  is the LU decomposition of the input and P is the corresponding
+   *  `[..., :, :]` such that `determinant = sign*exp(log_abs_determinant)`.
+   *  The `log_abs_determinant` is computed as `det(P)*sum(log(diag(LU)))` where `LU`
+   *  is the `LU` decomposition of the input and `P` is the corresponding
    *  permutation matrix.
    *
    * @param <T> data type for {@code sign()} output
@@ -1334,6 +1333,10 @@ public final class LinalgOps {
    *  <p>
    *  Computes the QR decomposition of each inner matrix in `tensor` such that
    *  `tensor[..., :, :] = q[..., :, :] * r[..., :,:])`
+   *  <p>
+   *  Currently, the gradient for the QR decomposition is well-defined only when
+   *  the first `P` columns of the inner matrix are linearly independent, where
+   *  `P` is the minimum of `M` and `N`, the 2 inner-most dimmensions of `tensor`.
    *  <pre>{@code
    *  # a is a tensor.
    *  # q is a tensor of orthonormal matrices.
