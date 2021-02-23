@@ -59,6 +59,8 @@ import org.tensorflow.op.core.Batch;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
+import org.tensorflow.op.core.BooleanMask;
+import org.tensorflow.op.core.BooleanMaskUpdate;
 import org.tensorflow.op.core.BroadcastDynamicShape;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
@@ -362,9 +364,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -388,8 +390,8 @@ public final class Ops {
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -1003,6 +1005,61 @@ public final class Ops {
    */
   public <U extends TType> Bitcast<U> bitcast(Operand<? extends TType> input, Class<U> type) {
     return Bitcast.create(scope, input, type);
+  }
+
+  /**
+   * Apply boolean mask to tensor.  Returns the flat array of each element corresponding to a {@code true} in the mask.
+   *  <p>
+   *  Numpy equivalent is {@code tensor[mask]}.
+   *  <p>
+   *  In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match
+   *  the first K dimensions of {@code tensor}'s shape.  We then have:
+   *    {@code booleanMask(tensor, mask)[i, j1,...,jd] = tensor[i1,...,iK,j1,...,jd]}
+   *  where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major order).
+   *  <p>
+   *  The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default).
+   *  In that case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match
+   *  the first {@code axis + dim(mask)} dimensions of {@code tensor}'s shape.
+   *
+   * @param scope
+   * @param tensor The tensor to mask.
+   * @param mask The mask to apply.
+   * @param options carries optional attributes values
+   * @return The masked tensor.
+   */
+  public <T extends TType> Operand<T> booleanMask(Operand<T> tensor, Operand<TBool> mask,
+      BooleanMask.Options... options) {
+    return BooleanMask.create(scope, tensor, mask, options);
+  }
+
+  /**
+   * Updates a tensor at the masked values, and returns the updated tensor.  Does not mutate the input tensors.  {@code
+   *  updates} will be broadcasted by default
+   *  <p>
+   *  Numpy equivalent is `tensor[mask] = updates`.
+   *  <p>
+   *  In general, {@code 0 < dim(mask) = K <= dim(tensor)}, and {@code mask}'s shape must match the first K dimensions of
+   *  {@code tensor}'s shape.  We then have: {@code booleanMask(tensor, mask)[i, j1,...,jd] =
+   *  tensor[i1,...,iK,j1,...,jd]} where {@code (i1,...,iK)} is the ith {@code true} entry of {@code mask} (row-major
+   *  order).
+   *  <p>
+   *  The {@code axis} could be used with {@code mask} to indicate the axis to mask from (it's 0 by default). In that
+   *  case, {@code axis + dim(mask) <= dim(tensor)} and {@code mask}'s shape must match the first {@code axis +
+   *  dim(mask)} dimensions of {@code tensor}'s shape.
+   *  <p>
+   *  The shape of {@code updates} should be {@code [n, t_1, t_2, ...]} where {@code n} is the number of true values in
+   *  {@code mask} and {@code t_i} is the {@code i}th dimension of {@code tensor} after {@code axis} and {@code mask}.
+   *  {@code updates} will be broadcasted to this shape by default, which can be disabled using {@code options}.
+   *
+   * @param tensor The tensor to mask.
+   * @param mask The mask to apply.
+   * @param updates the new values
+   * @param options carries optional attributes values
+   * @return The masked tensor.
+   */
+  public <T extends TType> Operand<T> booleanMaskUpdate(Operand<T> tensor, Operand<TBool> mask,
+      Operand<T> updates, BooleanMaskUpdate.Options... options) {
+    return BooleanMaskUpdate.create(scope, tensor, mask, updates, options);
   }
 
   /**
@@ -1850,13 +1907,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of {@code type}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be truncated if it does not
+   *  fit in the target type.
    *
    * @param type the type of tensor to create.  Must be concrete (i.e. not {@link org.tensorflow.types.family.TFloating})
    * @param number the value of the tensor
    * @return a constant of the passed type
-   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or unknown.
+   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or
+   *  unknown.
    */
   public <T extends TNumber> Constant<T> constant(Class<T> type, Number number) {
     return Constant.tensorOf(scope, type, number);
@@ -1908,14 +1966,14 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}.
-   *  {@code number} may be truncated if it does not fit in the target type.
+   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code number} may be
+   *  truncated if it does not fit in the target type.
    *
    * @param toMatch the operand providing the target type
    * @param number the value of the tensor
    * @return a constant with the same type as {@code toMatch}
-   * @see Ops#constant(Class, Number)
    * @throws IllegalArgumentException if the type is unknown (which should be impossible).
+   * @see Ops#constant(Class, Number)
    */
   public <T extends TNumber> Constant<T> constantOfSameType(Operand<T> toMatch, Number number) {
     return Constant.tensorOfSameType(scope, toMatch, number);

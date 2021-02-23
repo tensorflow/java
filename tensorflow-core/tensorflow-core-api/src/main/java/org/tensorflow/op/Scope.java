@@ -126,6 +126,25 @@ public final class Scope {
   }
 
   /**
+   * Returns a new scope where added operations will be prefixed by this scope's op name
+   * (set by {@link #withName(String)}), or the given default if it is unset.  This is intended to be used for
+   * composite ops.
+   *
+   * <p>Ops created with this scope will have {@code name/opName/} as the prefix. The actual
+   * name will be unique in the returned scope. All other properties are inherited from the current
+   * scope.
+   *
+   * <p>The default child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
+   *
+   * @param defaultName name of the sub scope if this scope's name hasn't been set.
+   * @return a new subscope
+   * @throws IllegalArgumentException if the name is invalid
+   */
+  public Scope withNameAsSubScope(String defaultName){
+    return new Scope(env, nameScope.withSubScope(nameScope.makeOpName(defaultName)), controlDependencies, deviceSpec);
+  }
+
+  /**
    * Return a new scope that uses the provided device specification for an op.
    *
    * <p>Operations created within this scope will place the created operations on the device(s) matching the provided
