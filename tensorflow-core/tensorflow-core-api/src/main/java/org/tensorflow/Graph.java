@@ -44,6 +44,7 @@ import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -51,6 +52,7 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Placeholder;
+import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.train.Restore;
 import org.tensorflow.op.train.Save;
 import org.tensorflow.proto.framework.GraphDef;
@@ -462,8 +464,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         // the python implementation for compatibility.
         // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
         saverDef = SaverDef.newBuilder()
-                           .setFilenameTensorName("save/filename")
-                           .setSaveTensorName("save/Save")
+                           .setFilenameTensorName("save/Const")
+                           .setSaveTensorName("save/control_dependency")
                            .setRestoreOpName("save/restore_all")
                            .build();
       }
@@ -818,14 +820,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
 
     Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
+    // Added for compatibility with TF 1.x
+    PlaceholderWithDefault<TString> constName = tf.withName("Const").placeholderWithDefault(saveFilename, Shape.scalar());
     Save saveVariables = tf.train.save(
         saveFilename,
         varNamesTensor,
         varSlices,
         varOutputs
     );
-    Identity<TString> id = tf.withSubScope("control_dependency")
-            .withControlDependencies(Arrays.asList(saveFilename,saveVariables)).identity(saveFilename);
+    Identity<TString> id = tf.withControlDependencies(Arrays.asList(saveFilename,saveVariables))
+            .withName("control_dependency").identity(saveFilename);
     Restore restoreVariables = tf.train.restore(
         saveFilename,
         varNamesTensor,
@@ -839,7 +843,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     NoOp restoreAll = tf.withControlDependencies(restoreOps).withName("restore_all").noOp();
 
     return SaverDef.newBuilder()
-        .setFilenameTensorName(saveFilename.op().name())
+        .setFilenameTensorName(constName.op().name())
         .setSaveTensorName(id.op().name())
         .setRestoreOpName(restoreAll.op().name())
         .build();
