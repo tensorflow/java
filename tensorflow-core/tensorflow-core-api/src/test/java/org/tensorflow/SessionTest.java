@@ -20,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Comparator;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
@@ -220,11 +220,16 @@ public class SessionTest {
       Variable<TFloat32> x = tf.withName("x").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Variable<TFloat32> y = tf.withName("y").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
-      GraphDef graphDef = g.toGraphDef();
 
       try (Session s = new Session(g)) {
         s.run(init);
         s.save(testFolder.resolve("checkpoint").toString());
+        GraphDef graphDef = g.toGraphDef();
+
+        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(testFolder.resolve("graph.pb").toFile()))) {
+          graphDef.writeTo(os);
+        }
+
         try (Graph restoredGraph = new Graph()) {
           restoredGraph.importGraphDef(graphDef);
           try (Session restoredSession = new Session(restoredGraph)) {
