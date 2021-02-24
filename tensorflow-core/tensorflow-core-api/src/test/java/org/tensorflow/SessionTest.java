@@ -226,10 +226,6 @@ public class SessionTest {
         s.save(testFolder.resolve("checkpoint").toString());
         GraphDef graphDef = g.toGraphDef();
 
-        try (BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(testFolder.resolve("graph.pb").toFile()))) {
-          graphDef.writeTo(os);
-        }
-
         try (Graph restoredGraph = new Graph()) {
           restoredGraph.importGraphDef(graphDef);
           try (Session restoredSession = new Session(restoredGraph)) {
