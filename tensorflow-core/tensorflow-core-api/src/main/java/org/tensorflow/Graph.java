@@ -28,6 +28,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.train.Restore;
@@ -439,15 +441,32 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Return the {@link SaverDef} instance used to save the state of all variables present in
    * this graph.
    *
-   * <p/>On the first call of this method, all nodes necessary to save and restore the state of the
-   * variables are added to the graph. Consequently, any variables that are added to the graph after
-   * this call could not be saved nor restored using this {@link SaverDef}.
+   * <p/> The first time this method is called it builds the {@link SaverDef}. If this graph already
+   * contains a "save/restore_all" operation then it is assumed to contain all necessary saving and
+   * restoring operations. If that operation does not exist then the graph is mutated to add all
+   * the nodes necessary to save and restore the state of the graph. Consequently, any variables
+   * that are added to the graph after this call will not be saved nor restored using this
+   * {@link SaverDef}.
    *
    * @return a {@link SaverDef} instance
    */
   synchronized SaverDef saverDef() {
     if (saverDef == null) {
-      saverDef = addVariableSaver(this);
+      // Check to see if this graph has a restore operation
+      if (operation("save/restore_all") == null) {
+        // No saver, create one by mutating the graph
+        saverDef = addVariableSaver(this);
+      } else {
+        // This graph already has saving/restoring operations,
+        // regenerate SaverDef without mutating. The names mirror
+        // the python implementation for compatibility.
+        // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
+        saverDef = SaverDef.newBuilder()
+                           .setFilenameTensorName("save/filename")
+                           .setSaveTensorName("save/control_dependency")
+                           .setRestoreOpName("save/restore_all")
+                           .build();
+      }
     }
     return saverDef;
   }
@@ -798,13 +817,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
     Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
 
-    Placeholder<TString> saveFilename = tf.placeholder(TString.class);
+    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
     Save saveVariables = tf.train.save(
         saveFilename,
         varNamesTensor,
         varSlices,
         varOutputs
     );
+    Identity<TString> id = tf.withControlDependencies(Arrays.asList(saveFilename,saveVariables))
+            .withName("control_dependency").identity(saveFilename);
     Restore restoreVariables = tf.train.restore(
         saveFilename,
         varNamesTensor,
@@ -815,11 +836,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     for (int i = 0; i < varOutputs.size(); ++i) {
       restoreOps.add(tf.assign(varOutputs.get(i), (Operand) restoreVariables.tensors().get(i)));
     }
-    NoOp restoreAll = tf.withControlDependencies(restoreOps).noOp();
+    NoOp restoreAll = tf.withControlDependencies(restoreOps).withName("restore_all").noOp();
 
     return SaverDef.newBuilder()
         .setFilenameTensorName(saveFilename.op().name())
-        .setSaveTensorName(saveVariables.op().name())
+        .setSaveTensorName(id.op().name())
         .setRestoreOpName(restoreAll.op().name())
         .build();
   }
