@@ -24,6 +24,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewContext;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -326,14 +327,12 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private static volatile EagerSession defaultSession = null;
 
-  private final PointerScope nativeResources;
+  private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
 
   private EagerSession(Options options) {
-    try (PointerScope scope = new PointerScope()) {
-      this.nativeResources = scope.extend();
-      this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
-    }
+    this.nativeResources = new WeakPointerScope();
+    this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
   }
 
   private void checkSession() {
@@ -363,7 +362,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       TFE_ContextOptionsSetDevicePlacementPolicy(opts, devicePlacementPolicy);
       TFE_Context context = TFE_NewContext(opts, status);
       status.throwExceptionIfNotOK();
-      return context;
+      return context.retainReference();
     }
   }
 
