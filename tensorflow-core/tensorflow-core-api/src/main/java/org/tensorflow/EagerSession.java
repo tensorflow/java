@@ -311,6 +311,23 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     return nativeHandle;
   }
 
+  /**
+   * Attach the list of native resources to this eager session scope.
+   *
+   * <p>When the eager session is closed (i.e. by calling {@link #close()} explicitly or
+   * implicitly via try-with-resources), all native resources attached to the session will be
+   * released as well, unless so other references are {@link Pointer#retainReference() retaining}
+   * them.</p>
+   *
+   * <p>Attached resources can still be garbage collected though if their associated {@link Pointer}
+   * is no longer reachable in Java, independently of their reference count. Therefore, it is
+   * assumed that these resources are not required by the native library once the Java client no
+   * longer needs them.</p>
+   *
+   * <p>Attaching a resource already attached to this session will have no effect.</p>
+   *
+   * @param resources resources to attach to the session
+   */
   void attach(Pointer... resources) {
     checkSession();
     for (Pointer r : resources) {
@@ -318,6 +335,21 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+  /**
+   * Detach a list of resources from this eager session scope.
+   *
+   * <p>Detached native resources will prevent them to be automatically released when the session is
+   * closed.</p>
+   *
+   * <p>Note though that this method will decrement the reference count of each resources being
+   * detached, which may automatically released them if that count reaches 0. Therefore,
+   * invoking {@link Pointer#retainReference()} prior to this call on any resource that must remain
+   * valid after being detached might be required.</p>
+   *
+   * <p>Detaching a resource that is not attached to this session will have no effect.</p>
+   *
+   * @param resources resources to detach from the session
+   */
   void detach(Pointer... resources) {
     checkSession();
     for (Pointer r : resources) {

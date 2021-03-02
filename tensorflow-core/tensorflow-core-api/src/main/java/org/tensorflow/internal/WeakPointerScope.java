@@ -1,11 +1,8 @@
 package org.tensorflow.internal;
 
-import java.lang.ref.WeakReference;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import org.bytedeco.javacpp.Pointer;
 
 /**
@@ -26,10 +23,16 @@ public class WeakPointerScope implements AutoCloseable {
    * <p>Pointers attached to the scope will be automatically freed once the scope is closed, unless
    * they have been already released by the garbage collector</p>
    *
+   * <p>It this {@code pointer} was already attached to this scope, this method has no effect.</p>
+   *
    * @param pointer pointer to attach
+   * @throws IllegalStateException if that scope has already been closed
    */
   public void attach(Pointer pointer) {
-    pointers.add(pointer.retainReference());
+    checkScope();
+    if (pointers.add(pointer)) {
+      pointer.retainReference();
+    }
   }
 
   /**
@@ -41,8 +44,10 @@ public class WeakPointerScope implements AutoCloseable {
    * <p>If this {@code pointer} is not attached to this scope, this method has no effect.</p>
    *
    * @param pointer pointer to detach
+   * @throws IllegalStateException if that scope has already been closed
    */
   public void detach(Pointer pointer) {
+    checkScope();
     if (pointers.remove(pointer)) {
       pointer.releaseReference();
     }
@@ -50,9 +55,16 @@ public class WeakPointerScope implements AutoCloseable {
 
   @Override
   public synchronized void close() {
+    checkScope();
     pointers.forEach(Pointer::releaseReference);
-    pointers.clear();
+    pointers = null;
   }
 
-  private final Set<Pointer> pointers = Collections.newSetFromMap(new WeakHashMap<>());
+  private Set<Pointer> pointers = Collections.newSetFromMap(new WeakHashMap<>());
+
+  private void checkScope() {
+    if (pointers == null) {
+      throw new IllegalStateException("Pointer scope has been closed");
+    }
+  }
 }
