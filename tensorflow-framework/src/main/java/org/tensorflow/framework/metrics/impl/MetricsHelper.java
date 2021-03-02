@@ -309,7 +309,8 @@ public class MetricsHelper {
    *     topK is set)
    * @param topK Optional, indicates that the positive labels should be limited to the top k
    *     predictions, may be null.
-   * @param classId Optional, limits the prediction and labels to the specified class
+   * @param classIndex Optional, limits the prediction and labels to the specified class.
+   *                The classIndex is and integer representing a specific classification class's input data..
    * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
    *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
    *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
@@ -336,7 +337,7 @@ public class MetricsHelper {
       Operand<T> predictions,
       Operand<TFloat32> thresholds,
       Integer topK,
-      Integer classId,
+      Integer classIndex,
       Operand<T> sampleWeight,
       boolean multiLabel,
       Operand<T> labelWeights) {
@@ -352,6 +353,7 @@ public class MetricsHelper {
     Operand<T> tPredictions = predictions;
     Operand<T> tSampleWeight = sampleWeight;
 
+    // reshape to scalar for operations later.
     Operand<TInt32> numThresholds =
         tf.reshape(tf.shape.size(thresholds, tf.constant(0)), tf.constant(Shape.scalar()));
     Operand<TBool> oneThresh;
@@ -363,7 +365,6 @@ public class MetricsHelper {
       //    y_true], _ = ragged_assert_compatible_and_get_flat_values([y_pred, y_true],
       //                                                   sampleWeights)
       oneThresh = tf.constant(true);
-      numThresholds = tf.shape.size(tf.shape(thresholds));
     }
 
     List<Op> controlOps = new ArrayList<>();
@@ -400,9 +401,9 @@ public class MetricsHelper {
       tPredictions = filterTopK(tf, tPredictions, topK);
     }
 
-    if (classId != null) {
-      tLabels = tf.gather(tLabels, tf.constant(new int[] {classId}), tf.constant(1));
-      tPredictions = tf.gather(tPredictions, tf.constant(new int[] {classId}), tf.constant(1));
+    if (classIndex != null) {
+      tLabels = tf.gather(tLabels, tf.constant(new int[] {classIndex}), tf.constant(1));
+      tPredictions = tf.gather(tPredictions, tf.constant(new int[] {classIndex}), tf.constant(1));
     }
     org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(tPredictions);
     Operand<TInt32> numPredictions =
@@ -417,6 +418,7 @@ public class MetricsHelper {
                 tf.constant(0)));
     Operand<TInt32> threshLabelTile = tf.select(oneThresh, numLabels, tf.constant(1));
 
+    // The ExtraDims are added so the operands of the tile operations later on are compatible.
     Operand<T> predictionsExtraDim;
     Operand<TBool> labelsExtraDim;
     if (multiLabel) {
