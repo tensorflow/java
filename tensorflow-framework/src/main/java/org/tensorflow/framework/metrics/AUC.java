@@ -613,7 +613,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     }
     Ops tf = getTF();
 
-    if (this.isMultiLabel()) {
+    if (isMultiLabel()) {
       if (shape == null) {
         throw new IllegalArgumentException("For multiLabel, a shape must be provided");
       }
@@ -622,14 +622,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
             String.format(
                 "labels must have rank=2 when multiLabel is true. Found rank %d.",
                 shape.numDimensions()));
-      this.numLabels = (int) shape.size(1);
-      variableShape = Shape.of(this.numThresholds, this.numLabels);
+      numLabels = (int) shape.size(1);
+      variableShape = Shape.of(numThresholds, numLabels);
     } else {
-      variableShape = Shape.of(this.numThresholds);
+      variableShape = Shape.of(numThresholds);
     }
 
     // Create metric variables
-    Zeros<T> zeros = new Zeros<>(getTF());
+    Zeros<T> zeros = new Zeros<>(tf);
     Operand<T> zero = zeros.call(tf.constant(variableShape), type);
     if (truePositives == null) {
       truePositives = tf.withName(getTruePositivesName()).variable(zero);
@@ -651,7 +651,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf.assign(falseNegatives, zero));
     }
 
-    this.initialized = true;
+    initialized = true;
     return initializers;
   }
 
@@ -668,39 +668,39 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     List<Op> updateOperations = new ArrayList<>();
     Map<ConfusionMatrixEnum, Assign<T>> varInitializers = Collections.EMPTY_MAP;
-    if (!this.initialized) {
+    if (!initialized) {
       varInitializers = build(tPredictions.shape());
     }
-    if (this.isMultiLabel() || this.getLabelWeights() != null) {
+    if (isMultiLabel() || getLabelWeights() != null) {
       // labels should have shape (number of examples, number of labels).
       List<SymbolicShape<? extends TNumber>> symbols = new ArrayList<>();
       symbols.add(new SymbolicShape<>(tLabels, "N", "L"));
-      if (this.isMultiLabel()) {
+      if (isMultiLabel()) {
         // TP, TN, FP, and FN should all have shape
         //(number of thresholds, number of labels).
-        symbols.add(new SymbolicShape<>(this.truePositives, "T", "L"));
-        symbols.add(new SymbolicShape<>(this.falsePositives, "T", "L"));
-        symbols.add(new SymbolicShape<>(this.trueNegatives, "T", "L"));
-        symbols.add(new SymbolicShape<>(this.falseNegatives, "T", "L"));
+        symbols.add(new SymbolicShape<>(truePositives, "T", "L"));
+        symbols.add(new SymbolicShape<>(falsePositives, "T", "L"));
+        symbols.add(new SymbolicShape<>(trueNegatives, "T", "L"));
+        symbols.add(new SymbolicShape<>(falseNegatives, "T", "L"));
       }
-      if (this.getLabelWeights() != null) {
-        symbols.add(new SymbolicShape<>(this.getLabelWeights(), "L", ""));
+      if (getLabelWeights() != null) {
+        symbols.add(new SymbolicShape<>(getLabelWeights(), "L", ""));
       }
       updateOperations.addAll(
           MetricsHelper.assertShapes(tf, symbols, "Number of labels is not consistent."));
     }
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
-    confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, this.truePositives);
-    confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, this.falsePositives);
-    confusionMatrix.put(ConfusionMatrixEnum.TRUE_NEGATIVES, this.trueNegatives);
-    confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, this.falseNegatives);
+    confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, truePositives);
+    confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, falsePositives);
+    confusionMatrix.put(ConfusionMatrixEnum.TRUE_NEGATIVES, trueNegatives);
+    confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, falseNegatives);
 
     // Only forward labelWeights to update_confusion_matrix_variables when
     // multiLabel is false. Otherwise the averaging of individual label AUCs is
     // handled in AUC.result
-    if (this.isMultiLabel()) {
-      this.labelWeights = null;
+    if (isMultiLabel()) {
+      labelWeights = null;
     }
     updateOperations.addAll(
         MetricsHelper.updateConfusionMatrixVariables(
@@ -730,7 +730,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         tf.slice(
             truePositives,
             tf.constant(new int[] {0}),
-            tf.constant(new int[] {this.getNumThresholds() - 1}));
+            tf.constant(new int[] {getNumThresholds() - 1}));
     // truePositives[1:]
     Operand<T> tp1 =
         tf.slice(truePositives, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
@@ -744,7 +744,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
             tf.slice(
                 p,
                 tf.constant(new int[] {0}),
-                tf.constant(new int[] {this.getNumThresholds() - 1})),
+                tf.constant(new int[] {getNumThresholds() - 1})),
             tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})));
 
     Operand<T> precisionSlope =
@@ -764,7 +764,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
                     tf.slice(
                         p,
                         tf.constant(new int[] {0}),
-                        tf.constant(new int[] {this.getNumThresholds() - 1})),
+                        tf.constant(new int[] {getNumThresholds() - 1})),
                     tf.dtypes.cast(tf.constant(0), p.type())),
                 tf.math.greater(
                     tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
@@ -773,7 +773,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
                 tf.slice(
                     p,
                     tf.constant(new int[] {0}),
-                    tf.constant(new int[] {this.getNumThresholds() - 1})),
+                    tf.constant(new int[] {getNumThresholds() - 1})),
                 tf.math.maximum(
                     tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
                     tf.dtypes.cast(tf.constant(0), p.type()))),
@@ -790,15 +790,15 @@ public class AUC<T extends TNumber> extends Metric<T> {
         tf.math.divNoNan(
             aucTotalPos,
             tf.math.maximum(
-                tf.math.add(tp1, fn1), tf.dtypes.cast(tf.constant(0), this.truePositives.type())));
+                tf.math.add(tp1, fn1), tf.dtypes.cast(tf.constant(0), truePositives.type())));
 
-    if (this.isMultiLabel()) {
+    if (isMultiLabel()) {
       Operand<T> byLabelAuc = tf.reduceSum(prAucIncrement, tf.constant(0));
-      if (this.getLabelWeights() == null) {
+      if (getLabelWeights() == null) {
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
         return tf.math.divNoNan(
-            tf.reduceSum(tf.math.mul(byLabelAuc, this.getLabelWeights()), allAxes(tf, byLabelAuc)),
+            tf.reduceSum(tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, byLabelAuc)),
             tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights())));
       }
     } else {
@@ -810,17 +810,17 @@ public class AUC<T extends TNumber> extends Metric<T> {
   @Override
   public Operand<T> result() {
 
-    if (this.getCurve() == AUCCurve.PR
-        && this.getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
+    if (getCurve() == AUCCurve.PR
+        && getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
       // This use case is different and is handled separately.
-      return this.interpolatePRAuc();
+      return interpolatePRAuc();
     }
     Ops tf = getTF();
     Operand<T> x;
     Operand<T> y;
     Operand<T> recall = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
 
-    if (this.getCurve() == AUCCurve.ROC) {
+    if (getCurve() == AUCCurve.ROC) {
       x = tf.math.divNoNan(falsePositives, tf.math.add(falsePositives, trueNegatives));
       y = recall;
     } else { // AUCCurve.PR
@@ -832,12 +832,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
     // y[:self.numThresholds - 1]
     Operand<T> ySlice1 =
         tf.slice(
-            y, tf.constant(new int[] {0}), tf.constant(new int[] {this.getNumThresholds() - 1}));
+            y, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
     // y[1:]
     Operand<T> ySlice2 = tf.slice(y, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
 
     Operand<T> heights = null;
-    switch (this.getSummationMethod()) {
+    switch (getSummationMethod()) {
       case INTERPOLATION:
         heights =
             tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
@@ -850,19 +850,19 @@ public class AUC<T extends TNumber> extends Metric<T> {
         break;
     }
 
-    if (this.isMultiLabel()) {
+    if (isMultiLabel()) {
       Operand<T> riemannTerms =
           tf.math.mul(
               tf.math.sub(
                   tf.slice(
                       x,
                       tf.constant(new int[] {0}),
-                      tf.constant(new int[] {this.getNumThresholds() - 1})),
+                      tf.constant(new int[] {getNumThresholds() - 1})),
                   tf.slice(x, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))),
               heights);
       Operand<T> byLabelAuc = tf.reduceSum(riemannTerms, tf.constant(0));
 
-      if (this.getLabelWeights() == null) {
+      if (getLabelWeights() == null) {
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
         //Weighted average of the label AUCs.
@@ -875,7 +875,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     } else {
       Operand<T> slice1 =
           tf.slice(
-              x, tf.constant(new int[] {0}), tf.constant(new int[] {this.getNumThresholds() - 1}));
+              x, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
       Operand<T> slice2 = tf.slice(x, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
       Operand<T> sub = tf.math.sub(slice1, slice2);
       Operand<T> operand = tf.math.mul(sub, heights);
