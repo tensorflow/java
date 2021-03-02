@@ -75,7 +75,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   public Precision(Ops tf, long seed, Class<T> type) {
-    this(tf, null, new float[] {DEFAULT_THRESHOLD}, null, null, seed, type);
+    this(tf, null, null, null, null, seed, type);
   }
 
   /**
@@ -90,7 +90,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   public Precision(Ops tf, String name, long seed, Class<T> type) {
-    this(tf, name, new float[] {DEFAULT_THRESHOLD}, null, null, seed, type);
+    this(tf, name, null, null, null, seed, type);
   }
 
   /**
@@ -297,23 +297,23 @@ public class Precision<T extends TNumber> extends Metric<T> {
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-
+    Ops tf = getTF();
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, truePositives);
     confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, falsePositives);
 
-    Operand<T> tPredictions = cast(getTF(), predictions, type);
-    Operand<T> tLabels = cast(getTF(), labels, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
+    Operand<T> tPredictions = cast(tf, predictions, type);
+    Operand<T> tLabels = cast(tf, labels, type);
+    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
 
     return new ArrayList<Op>(
         MetricsHelper.updateConfusionMatrixVariables(
-            getTF(),
+            tf,
             confusionMatrix,
             Collections.EMPTY_MAP,
             tLabels,
             tPredictions,
-            thresholds,
+            tf.constant(thresholds),
             topK,
             classId,
             tSampleWeights,

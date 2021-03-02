@@ -328,24 +328,24 @@ public class Recall<T extends TNumber> extends Metric<T> {
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-
+    Ops tf = getTF();
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, this.truePositives);
     confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, this.falseNegatives);
 
-    Operand<T> tPredictions = cast(getTF(), predictions, type);
-    Operand<T> tLabels = cast(getTF(), labels, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
+    Operand<T> tPredictions = cast(tf, predictions, type);
+    Operand<T> tLabels = cast(tf, labels, type);
+    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
 
     return MetricsHelper.updateConfusionMatrixVariables(
-        getTF(),
+        tf,
         confusionMatrix,
         Collections.EMPTY_MAP,
         tLabels,
         tPredictions,
-        this.thresholds,
-        this.topK,
-        this.classId,
+        tf.constant(thresholds),
+        topK,
+        classId,
         tSampleWeights,
         false,
         null);

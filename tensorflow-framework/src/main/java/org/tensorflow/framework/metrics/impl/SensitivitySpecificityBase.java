@@ -143,10 +143,10 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
-    confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, this.getTruePositives());
-    confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, this.getFalsePositives());
-    confusionMatrix.put(ConfusionMatrixEnum.TRUE_NEGATIVES, this.getTrueNegatives());
-    confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, this.getFalseNegatives());
+    confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, getTruePositives());
+    confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, getFalsePositives());
+    confusionMatrix.put(ConfusionMatrixEnum.TRUE_NEGATIVES, getTrueNegatives());
+    confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, getFalseNegatives());
 
     return MetricsHelper.updateConfusionMatrixVariables(
         tf,
@@ -154,7 +154,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
         Collections.EMPTY_MAP,
         tLabels,
         tPredictions,
-        this.getThresholds(),
+        tf.constant(thresholds),
         null,
         null,
         tSampleWeights,

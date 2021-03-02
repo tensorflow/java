@@ -140,9 +140,10 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Operand<T> tLabels = cast(getTF(), labels, type);
-    Operand<T> tPredictions = cast(getTF(), predictions, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
+    Ops tf = getTF();
+    Operand<T> tLabels = cast(tf, labels, type);
+    Operand<T> tPredictions = cast(tf, predictions, type);
+    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     return new ArrayList<>(
         MetricsHelper.updateConfusionMatrixVariables(
             getTF(),
@@ -150,7 +151,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
             Collections.singletonMap(confusionMatrixCond, initializer),
             tLabels,
             tPredictions,
-            thresholds,
+            tf.constant(thresholds),
             null,
             null,
             tSampleWeights,

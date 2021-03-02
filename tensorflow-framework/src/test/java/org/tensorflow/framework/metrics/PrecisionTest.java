@@ -16,6 +16,7 @@ package org.tensorflow.framework.metrics;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
+import org.tensorflow.framework.metrics.impl.MetricsHelper;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -125,7 +126,6 @@ public class PrecisionTest {
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat64> precision = instance.result();
-
       session.evaluate(0, precision);
     }
   }

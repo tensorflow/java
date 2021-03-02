@@ -58,9 +58,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>Usage: <br>
  *
  * <pre>
- * AUC m = new  getTF().keras.metrics.AUC( getTF(), 3);
- * m.updateState( getTF().constant(new float[] {0, 0, 1,1}),
- *          getTF().constant(new float[] {0f, 0.5f, 0.3f, 0.9f}));
+ * AUC m = new  tf.keras.metrics.AUC( tf, 3);
+ * m.updateState( tf.constant(new float[] {0, 0, 1,1}),
+ *          tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f}));
  *
  * // threshold values are [0 - 1e-7, 0.5, 1 + 1e-7]
  * // tp = [2, 1, 0], fp = [2, 0, 0], fn = [0, 1, 2], tn = [0, 2, 2]
@@ -73,9 +73,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  * m.resetStates()
- * m.updateState( getTF().constant(new float[] {0, 0, 1, 1}),
- *                 getTF().constant(new float[] {0f, 0.5f, 0.3f, 0.9f}, ),
- *                 getTF().constant(new float[] {1, 0, 0, 1}));
+ * m.updateState( tf.constant(new float[] {0, 0, 1, 1}),
+ *                 tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f}, ),
+ *                 tf.constant(new float[] {1, 0, 0, 1}));
  * result = m.result();
  * System.out.println(result.data().getFloat());
  * 1.0
@@ -209,7 +209,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         null,
-        null,
+            DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -264,7 +264,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         name,
-        null,
+            DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -322,7 +322,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         name,
-        null,
+            DEFAULT_NUM_THRESHOLDS,
         curve,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -378,7 +378,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         null,
-        null,
+            DEFAULT_NUM_THRESHOLDS,
         curve,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -435,7 +435,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, null, null, curve, summationMethod, thresholds, false, null, seed, type);
+    this(tf, null, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
   }
 
   /**
@@ -487,7 +487,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, name, null, curve, summationMethod, thresholds, false, null, seed, type);
+    this(tf, name, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
   }
 
   /**
@@ -496,7 +496,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1. if null, the default is {@link #DEFAULT_NUM_THRESHOLDS}
+   *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used
@@ -520,7 +520,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
   public AUC(
       Ops tf,
       String name,
-      Integer numThresholds,
+      int numThresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       float[] thresholds,
@@ -529,10 +529,10 @@ public class AUC<T extends TNumber> extends Metric<T> {
       long seed,
       Class<T> type) {
     super(tf, name == null ? DEFAULT_NAME : name, seed);
-    this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
-    this.falsePositivesName = this.getVariableName(FALSE_POSITIVES);
-    this.trueNegativesName = this.getVariableName(TRUE_NEGATIVES);
-    this.falseNegativesName = this.getVariableName(FALSE_NEGATIVES);
+    truePositivesName = getVariableName(TRUE_POSITIVES);
+    falsePositivesName = getVariableName(FALSE_POSITIVES);
+    trueNegativesName = getVariableName(TRUE_NEGATIVES);
+    falseNegativesName = getVariableName(FALSE_NEGATIVES);
     this.curve = curve;
     this.summationMethod = summationMethod;
     this.type = type;
@@ -540,18 +540,23 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this.multiLabel = multiLabel;
 
     if (thresholds != null) { // ignore numThresholds
-      for (float t : thresholds)
-        if (t < 0.0f || t > 1.0f)
+      for (float t : thresholds) {
+        if (t < 0.0f || t > 1.0f) {
           throw new IllegalArgumentException(
               String.format(
                   "Threshold values must be in [0, 1]. Invalid values: %s",
                   Arrays.toString(thresholds)));
+        }
+      }
       this.numThresholds = thresholds.length + 2;
       Arrays.sort(thresholds);
     } else {
-      if (numThresholds <= 1) throw new IllegalArgumentException("numThresholds must be > 1.");
+
+      if (numThresholds <= 1) {
+        throw new IllegalArgumentException("numThresholds must be > 1.");
+      }
       this.numThresholds = numThresholds;
-      thresholds = new float[numThresholds - 2];
+      thresholds = new float[this.numThresholds - 2];
       // linearly interpolate (numThresholds - 2) thresholds between endpoints
       for (int i = 0; i < thresholds.length; i++) {
         thresholds[i] = (i + 1) * 1.0f / (this.numThresholds - 1);
@@ -559,39 +564,38 @@ public class AUC<T extends TNumber> extends Metric<T> {
     }
     // Add an endpoint "threshold" below zero and above one for either
     // threshold method to account for floating point imprecision.
-    if (thresholds.length != this.numThresholds - 2)
+    if (thresholds.length != this.numThresholds - 2) {
       throw new IllegalArgumentException(
           "Thresholds length must contain numThresholds - 2 entries");
+    }
+    // Add an endpoint "threshold" below zero and above one for either
+    // threshold method to account for floating point imprecisions.
     this.thresholds = new float[this.numThresholds];
     this.thresholds[0] = -EPSILON;
     System.arraycopy(thresholds, 0, this.thresholds, 1, thresholds.length);
     this.thresholds[this.numThresholds - 1] = 1 + EPSILON;
+
+    // # Handle multilabel arguments.
 
     if (labelWeights != null) {
       // assert that labelWeights are non-negative.
 
       this.labelWeights = labelWeights;
       Op checks =
-          getTF()
-              .withSubScope("AUC")
+          tf.withSubScope("AUC")
               .assertThat(
-                  getTF()
-                      .math
-                      .greaterEqual(
-                          labelWeights, cast(getTF(), getTF().constant(0), labelWeights.type())),
+                  tf.math.greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
                   Collections.singletonList(
-                      getTF().constant("All values of labelWeights must be non-negative.")));
+                      tf.constant("All values of labelWeights must be non-negative.")));
 
       Ops ltf =
-          getTF()
-              .withSubScope("updateState")
-              .withControlDependencies(Collections.singletonList(checks));
+          tf.withSubScope("updateState").withControlDependencies(Collections.singletonList(checks));
 
       this.labelWeights = ltf.identity(this.labelWeights);
     }
 
-    if (this.multiLabel) {
-      this.numLabels = null;
+    if (multiLabel) {
+      numLabels = null;
     }
   }
 
@@ -607,6 +611,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     if (initialized) {
       return Collections.EMPTY_MAP;
     }
+    Ops tf = getTF();
 
     if (this.isMultiLabel()) {
       if (shape == null) {
@@ -623,26 +628,27 @@ public class AUC<T extends TNumber> extends Metric<T> {
       variableShape = Shape.of(this.numThresholds);
     }
 
+    // Create metric variables
     Zeros<T> zeros = new Zeros<>(getTF());
-    Operand<T> zero = zeros.call(getTF().constant(variableShape), type);
+    Operand<T> zero = zeros.call(tf.constant(variableShape), type);
     if (truePositives == null) {
-      truePositives = getTF().withName(getTruePositivesName()).variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, getTF().assign(truePositives, zero));
+      truePositives = tf.withName(getTruePositivesName()).variable(zero);
+      initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf.assign(truePositives, zero));
     }
 
     if (falsePositives == null) {
-      falsePositives = getTF().withName(getFalsePositivesName()).variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, getTF().assign(falsePositives, zero));
+      falsePositives = tf.withName(getFalsePositivesName()).variable(zero);
+      initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, tf.assign(falsePositives, zero));
     }
 
     if (trueNegatives == null) {
-      trueNegatives = getTF().withName(getTrueNegativesName()).variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, getTF().assign(trueNegatives, zero));
+      trueNegatives = tf.withName(getTrueNegativesName()).variable(zero);
+      initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, tf.assign(trueNegatives, zero));
     }
 
     if (falseNegatives == null) {
-      falseNegatives = getTF().withName(getFalseNegativesName()).variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, getTF().assign(falseNegatives, zero));
+      falseNegatives = tf.withName(getFalseNegativesName()).variable(zero);
+      initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf.assign(falseNegatives, zero));
     }
 
     this.initialized = true;
@@ -656,19 +662,22 @@ public class AUC<T extends TNumber> extends Metric<T> {
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-
-    Operand<T> lLabels = cast(getTF(), labels, type);
-    Operand<T> lPredictions = cast(getTF(), predictions, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
+    Ops tf = getTF();
+    Operand<T> tLabels = cast(tf, labels, type);
+    Operand<T> tPredictions = cast(tf, predictions, type);
+    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     List<Op> updateOperations = new ArrayList<>();
     Map<ConfusionMatrixEnum, Assign<T>> varInitializers = Collections.EMPTY_MAP;
     if (!this.initialized) {
-      varInitializers = build(lPredictions.shape());
+      varInitializers = build(tPredictions.shape());
     }
     if (this.isMultiLabel() || this.getLabelWeights() != null) {
+      // labels should have shape (number of examples, number of labels).
       List<SymbolicShape<? extends TNumber>> symbols = new ArrayList<>();
-      symbols.add(new SymbolicShape<>(lLabels, "N", "L"));
+      symbols.add(new SymbolicShape<>(tLabels, "N", "L"));
       if (this.isMultiLabel()) {
+        // TP, TN, FP, and FN should all have shape
+        //(number of thresholds, number of labels).
         symbols.add(new SymbolicShape<>(this.truePositives, "T", "L"));
         symbols.add(new SymbolicShape<>(this.falsePositives, "T", "L"));
         symbols.add(new SymbolicShape<>(this.trueNegatives, "T", "L"));
@@ -678,30 +687,34 @@ public class AUC<T extends TNumber> extends Metric<T> {
         symbols.add(new SymbolicShape<>(this.getLabelWeights(), "L", ""));
       }
       updateOperations.addAll(
-          MetricsHelper.assertShapes(getTF(), symbols, "Number of labels is not consistent."));
+          MetricsHelper.assertShapes(tf, symbols, "Number of labels is not consistent."));
     }
-    if (this.isMultiLabel()) {
-      this.labelWeights = null;
-    }
+
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, this.truePositives);
     confusionMatrix.put(ConfusionMatrixEnum.FALSE_POSITIVES, this.falsePositives);
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_NEGATIVES, this.trueNegatives);
     confusionMatrix.put(ConfusionMatrixEnum.FALSE_NEGATIVES, this.falseNegatives);
 
+    // Only forward labelWeights to update_confusion_matrix_variables when
+    // multiLabel is false. Otherwise the averaging of individual label AUCs is
+    // handled in AUC.result
+    if (this.isMultiLabel()) {
+      this.labelWeights = null;
+    }
     updateOperations.addAll(
         MetricsHelper.updateConfusionMatrixVariables(
-            getTF(),
+            tf,
             confusionMatrix,
             varInitializers,
-            lLabels,
-            lPredictions,
-            this.thresholds,
+            tLabels,
+            tPredictions,
+            tf.constant(thresholds),
             null,
             null,
             tSampleWeights,
-            this.isMultiLabel(),
-            this.getLabelWeights()));
+            isMultiLabel(),
+            getLabelWeights()));
     return updateOperations;
   }
 
@@ -712,147 +725,84 @@ public class AUC<T extends TNumber> extends Metric<T> {
    */
   private Operand<T> interpolatePRAuc() {
     // truePositives[:self.numThresholds - 1]
+    Ops tf = getTF();
     Operand<T> tp0 =
-        getTF()
-            .slice(
-                truePositives,
-                getTF().constant(new int[] {0}),
-                getTF().constant(new int[] {this.getNumThresholds() - 1}));
+        tf.slice(
+            truePositives,
+            tf.constant(new int[] {0}),
+            tf.constant(new int[] {this.getNumThresholds() - 1}));
     // truePositives[1:]
     Operand<T> tp1 =
-        getTF()
-            .slice(
-                truePositives, getTF().constant(new int[] {1}), getTF().constant(new int[] {-1}));
+        tf.slice(truePositives, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
 
-    Operand<T> dTP = getTF().math.sub(tp0, tp1);
+    Operand<T> dTP = tf.math.sub(tp0, tp1);
 
-    Operand<T> p = getTF().math.add(truePositives, falsePositives);
+    Operand<T> p = tf.math.add(truePositives, falsePositives);
 
     Operand<T> dP =
-        getTF()
-            .math
-            .sub(
-                getTF()
-                    .slice(
-                        p,
-                        getTF().constant(new int[] {0}),
-                        getTF().constant(new int[] {this.getNumThresholds() - 1})),
-                getTF()
-                    .slice(p, getTF().constant(new int[] {1}), getTF().constant(new int[] {-1})));
+        tf.math.sub(
+            tf.slice(
+                p,
+                tf.constant(new int[] {0}),
+                tf.constant(new int[] {this.getNumThresholds() - 1})),
+            tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})));
 
     Operand<T> precisionSlope =
-        getTF()
-            .math
-            .divNoNan(
-                dTP, getTF().math.maximum(dP, getTF().dtypes.cast(getTF().constant(0), dP.type())));
+        tf.math.divNoNan(dTP, tf.math.maximum(dP, tf.dtypes.cast(tf.constant(0), dP.type())));
 
     Operand<T> intercept =
-        getTF()
-            .math
-            .sub(
-                getTF()
-                    .slice(
-                        truePositives,
-                        getTF().constant(new int[] {1}),
-                        getTF().constant(new int[] {-1})),
-                getTF()
-                    .math
-                    .mul(
-                        precisionSlope,
-                        getTF()
-                            .slice(
-                                p,
-                                getTF().constant(new int[] {1}),
-                                getTF().constant(new int[] {-1}))));
+        tf.math.sub(
+            tf.slice(truePositives, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
+            tf.math.mul(
+                precisionSlope,
+                tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))));
 
     Operand<T> safePRatio =
-        getTF()
-            .select(
-                getTF()
-                    .math
-                    .logicalAnd(
-                        getTF()
-                            .math
-                            .greater(
-                                getTF()
-                                    .slice(
-                                        p,
-                                        getTF().constant(new int[] {0}),
-                                        getTF().constant(new int[] {this.getNumThresholds() - 1})),
-                                getTF().dtypes.cast(getTF().constant(0), p.type())),
-                        getTF()
-                            .math
-                            .greater(
-                                getTF()
-                                    .slice(
-                                        p,
-                                        getTF().constant(new int[] {1}),
-                                        getTF().constant(new int[] {-1})),
-                                getTF().dtypes.cast(getTF().constant(0), p.type()))),
-                getTF()
-                    .math
-                    .divNoNan(
-                        getTF()
-                            .slice(
-                                p,
-                                getTF().constant(new int[] {0}),
-                                getTF().constant(new int[] {this.getNumThresholds() - 1})),
-                        getTF()
-                            .math
-                            .maximum(
-                                getTF()
-                                    .slice(
-                                        p,
-                                        getTF().constant(new int[] {1}),
-                                        getTF().constant(new int[] {-1})),
-                                getTF().dtypes.cast(getTF().constant(0), p.type()))),
-                getTF()
-                    .onesLike(
-                        getTF()
-                            .slice(
-                                p,
-                                getTF().constant(new int[] {1}),
-                                getTF().constant(new int[] {-1}))));
+        tf.select(
+            tf.math.logicalAnd(
+                tf.math.greater(
+                    tf.slice(
+                        p,
+                        tf.constant(new int[] {0}),
+                        tf.constant(new int[] {this.getNumThresholds() - 1})),
+                    tf.dtypes.cast(tf.constant(0), p.type())),
+                tf.math.greater(
+                    tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
+                    tf.dtypes.cast(tf.constant(0), p.type()))),
+            tf.math.divNoNan(
+                tf.slice(
+                    p,
+                    tf.constant(new int[] {0}),
+                    tf.constant(new int[] {this.getNumThresholds() - 1})),
+                tf.math.maximum(
+                    tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
+                    tf.dtypes.cast(tf.constant(0), p.type()))),
+            tf.onesLike(tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))));
 
     Operand<T> fn1 =
-        getTF()
-            .slice(
-                falseNegatives, getTF().constant(new int[] {1}), getTF().constant(new int[] {-1}));
+        tf.slice(falseNegatives, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
 
     Operand<T> aucTotalPos =
-        getTF()
-            .math
-            .mul(
-                precisionSlope,
-                getTF().math.add(dTP, getTF().math.mul(intercept, getTF().math.log(safePRatio))));
+        tf.math.mul(
+            precisionSlope, tf.math.add(dTP, tf.math.mul(intercept, tf.math.log(safePRatio))));
 
     Operand<T> prAucIncrement =
-        getTF()
-            .math
-            .divNoNan(
-                aucTotalPos,
-                getTF()
-                    .math
-                    .maximum(
-                        getTF().math.add(tp1, fn1),
-                        getTF().dtypes.cast(getTF().constant(0), this.truePositives.type())));
+        tf.math.divNoNan(
+            aucTotalPos,
+            tf.math.maximum(
+                tf.math.add(tp1, fn1), tf.dtypes.cast(tf.constant(0), this.truePositives.type())));
 
     if (this.isMultiLabel()) {
-      Operand<T> byLabelAuc = getTF().reduceSum(prAucIncrement, getTF().constant(0));
+      Operand<T> byLabelAuc = tf.reduceSum(prAucIncrement, tf.constant(0));
       if (this.getLabelWeights() == null) {
-        return MetricsHelper.mean(getTF(), byLabelAuc);
+        return MetricsHelper.mean(tf, byLabelAuc);
       } else {
-        return getTF()
-            .math
-            .divNoNan(
-                getTF()
-                    .reduceSum(
-                        getTF().math.mul(byLabelAuc, this.getLabelWeights()),
-                        allAxes(getTF(), byLabelAuc)),
-                getTF().reduceSum(getLabelWeights(), allAxes(getTF(), getLabelWeights())));
+        return tf.math.divNoNan(
+            tf.reduceSum(tf.math.mul(byLabelAuc, this.getLabelWeights()), allAxes(tf, byLabelAuc)),
+            tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights())));
       }
     } else {
-      return getTF().reduceSum(prAucIncrement, allAxes(getTF(), prAucIncrement));
+      return tf.reduceSum(prAucIncrement, allAxes(tf, prAucIncrement));
     }
   }
 
@@ -862,13 +812,13 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     if (this.getCurve() == AUCCurve.PR
         && this.getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
+      // This use case is different and is handled separately.
       return this.interpolatePRAuc();
     }
     Ops tf = getTF();
     Operand<T> x;
     Operand<T> y;
-    Operand<T> recall =
-        getTF().math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
+    Operand<T> recall = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
 
     if (this.getCurve() == AUCCurve.ROC) {
       x = tf.math.divNoNan(falsePositives, tf.math.add(falsePositives, trueNegatives));
@@ -890,7 +840,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     switch (this.getSummationMethod()) {
       case INTERPOLATION:
         heights =
-            tf.math.div(tf.math.add(ySlice1, ySlice2), tf.dtypes.cast(tf.constant(2), y.type()));
+            tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
         break;
       case MINORING:
         heights = tf.math.minimum(ySlice1, ySlice2);
@@ -915,6 +865,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       if (this.getLabelWeights() == null) {
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
+        //Weighted average of the label AUCs.
         return tf.math.divNoNan(
             tf.reduceSum(
                 tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, getLabelWeights())),
