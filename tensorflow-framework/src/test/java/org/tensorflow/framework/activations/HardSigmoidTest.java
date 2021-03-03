@@ -21,8 +21,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /** @author Jim Clarke */
 public class HardSigmoidTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -41,8 +39,6 @@ public class HardSigmoidTest {
   @AfterEach
   public void tearDown() {}
 
-
-
   /** Test of HardSigmoid call method. */
   @Test
   public void testCallFloat() {
@@ -51,7 +47,7 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat32> instance = new HardSigmoid<>(tf);
+        HardSigmoid instance = new HardSigmoid(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -65,7 +61,7 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat64> instance = new HardSigmoid<>(tf);
+        HardSigmoid instance = new HardSigmoid(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

@@ -21,10 +21,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /** Test the Orthogonal initializer */
 public class OrthogonalTest {
@@ -156,7 +152,7 @@ public class OrthogonalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(10, 10);
-        Orthogonal<TFloat32> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+        Orthogonal instance = new Orthogonal(tf, GAIN_VALUE, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -271,7 +267,7 @@ public class OrthogonalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(10, 10);
-        Orthogonal<TFloat64> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+        Orthogonal instance = new Orthogonal(tf, GAIN_VALUE, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -284,7 +280,7 @@ public class OrthogonalTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Orthogonal<TFloat64> instance = new Orthogonal<>(tf, GAIN_VALUE, SEED);
+        Orthogonal instance = new Orthogonal(tf, GAIN_VALUE, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);

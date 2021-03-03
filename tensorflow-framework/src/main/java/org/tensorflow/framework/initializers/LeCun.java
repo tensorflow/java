@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
 
 /**
  * LeCun normal initializer.
@@ -27,7 +26,7 @@ import org.tensorflow.types.family.TFloating;
  * stddev = sqrt(1 / fanIn)</code> where <code>fanIn</code> is the number of input units in the
  * weight tensor.
  *
- * <p>If the distribution is UNIFORM, itraws samples from a uniform distribution within <code>
+ * <p>If the distribution is UNIFORM, it draws samples from a uniform distribution within <code>
  * [-limit, limit]</code>, where <code>limit = Math.sqrt(3 / fanIn)</code> (<code>fanIn</code> is
  * the number of input units in the weight tensor)
  *
@@ -59,14 +58,14 @@ import org.tensorflow.types.family.TFloating;
  *
  * <p><b>NOTE:</b> *
  *
- * <p>For a LeCunNormal equivalent initializer, use {@link VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
+ * <p>For a LeCunNormal equivalent initializer, use {@link
+ * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
  *
  * <p>For a LeCunUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM} *
  * for the distribution parameter. *
  *
  * <p>
  *
- * @param <T> The TType for the call operation
  * @see <a
  *     href="https://papers.nips.cc/paper/6698-self-normalizing-neural-networks">Self-Normalizing
  *     Neural Networks, Klambauer et al., 2017</a>
@@ -74,7 +73,7 @@ import org.tensorflow.types.family.TFloating;
  *     al., 1998</a>
  * @see VarianceScaling.Distribution
  */
-public class LeCun<T extends TFloating> extends VarianceScaling<T> {
+public class LeCun extends VarianceScaling {
 
   /**
    * Creates a LeCunNormal Initializer
@@ -82,7 +81,7 @@ public class LeCun<T extends TFloating> extends VarianceScaling<T> {
    * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the Glorot initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and dtype.
+   *     will always produce the same random tensor for a given shape and data type.
    */
   public LeCun(Ops tf, Distribution distribution, long seed) {
     super(tf, 1.0, Mode.FAN_IN, distribution, seed);

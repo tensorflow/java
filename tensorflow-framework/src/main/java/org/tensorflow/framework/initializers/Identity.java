@@ -19,7 +19,7 @@ import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TType;
 
 /**
  * Initializer that generates the identity matrix.
@@ -34,10 +34,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; values =
  *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
- *
- * @param <T> The TType for the call operation
  */
-public class Identity<T extends TFloating> extends BaseInitializer<T> {
+public class Identity extends BaseInitializer {
   public static final double GAIN_DEFAULT = 1.0;
 
   private final double gain;
@@ -65,7 +63,7 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());

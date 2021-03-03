@@ -48,7 +48,7 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat32> instance = new Softsign<>(tf);
+        Softsign instance = new Softsign(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -71,7 +71,7 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat64> instance = new Softsign<>(tf);
+        Softsign instance = new Softsign(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

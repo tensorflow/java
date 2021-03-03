@@ -55,10 +55,8 @@ import org.tensorflow.types.family.TNumber;
  *     result = relu.call(input);
  *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
  * </pre>
- *
- * @param <T> the data type of the result
  */
-public class ReLU<T extends TNumber> extends Activation<T> {
+public class ReLU extends Activation {
 
   public static final float ALPHA_DEFAULT = 0.0f;
   public static final float MAX_VALUE_DEFAULT = Float.NaN;
@@ -96,7 +94,7 @@ public class ReLU<T extends TNumber> extends Activation<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Operand<T> input) {
     Class<T> inputType = input.type();
 
     boolean clipMax = !Float.isNaN(maxValue);

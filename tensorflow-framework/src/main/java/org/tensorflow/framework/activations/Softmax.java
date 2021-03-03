@@ -19,7 +19,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceMax;
 import org.tensorflow.op.core.ReduceSum;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Softmax converts a real vector to a vector of categorical probabilities.
@@ -35,10 +35,8 @@ import org.tensorflow.types.family.TFloating;
  * <p>The softmax of each vector x is computed as: <code>exp(x) / tf.sum(exp(x))</code>.
  *
  * <p>The input values in are the log-odds of the resulting probability.
- *
- * @param <T> the data type of the activation
  */
-public class Softmax<T extends TFloating> extends Activation<T> {
+public class Softmax extends Activation {
 
   private static final int AXIS_DEFAULT = -1;
 
@@ -70,9 +68,10 @@ public class Softmax<T extends TFloating> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
+   * @param <T> the data type of the activation
    */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Operand<T> input) {
     Shape shape = input.shape();
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {

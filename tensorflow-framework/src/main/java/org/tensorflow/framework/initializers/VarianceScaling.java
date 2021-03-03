@@ -19,13 +19,16 @@ import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Initializer capable of adapting its scale to the shape of weights tensors.
  *
- * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from
- * a truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
+ * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from a
+ * truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
  * truncation, if used) <code>stddev = Math.sqrt(scale / n)</code>, where <code>n</code> is:
  *
  * <ul>
@@ -49,11 +52,10 @@ import org.tensorflow.types.family.TFloating;
  *          initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
- * @param <T> The TType for the call operation
  * @see VarianceScaling.Mode
  * @see VarianceScaling.Distribution
  */
-public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
+public class VarianceScaling extends BaseInitializer {
 
   public static final double SCALE_DEFAULT = 1.0;
   public static final Mode MODE_DEFAULT = Mode.FAN_IN;
@@ -63,7 +65,6 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
   private final Mode mode;
   private final Distribution distribution;
   private final long seed;
-
 
   /**
    * Creates a VarianceScaling Initializer
@@ -97,7 +98,12 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+    if (!TNumber.class.isAssignableFrom(type)) {
+      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
+    }
+    @SuppressWarnings("unchecked")
+    Class<TNumber> nType = (Class<TNumber>) type;
     Shape shape = ShapeUtils.toShape(this.tf.scope(), dims);
     double lscale = this.scale;
     double[] fans /* fanIn, fanOut */ = computeFans(shape);
@@ -112,28 +118,28 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
         lscale /= Math.max(1., (fans[0] + fans[1]) / 2.);
         break;
     }
-    Operand<T> distOp;
-    Operand<T> mulOp = null;
+    Operand<TNumber> distOp;
+    Operand<TNumber> mulOp = null;
     double stddev;
     long[] seeds = {seed, 0};
     switch (distribution) {
       case TRUNCATED_NORMAL:
-        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
+        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), nType);
         stddev = Math.sqrt(lscale) / .87962566103423978;
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
         break;
       case NORMAL:
-        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), type);
+        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), nType);
         stddev = Math.sqrt(lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
         break;
       case UNIFORM:
-        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
+        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), nType);
         stddev = Math.sqrt(3.0 * lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
         break;
     }
-    return mulOp;
+    return cast(tf, mulOp, type);
   }
 
   /**

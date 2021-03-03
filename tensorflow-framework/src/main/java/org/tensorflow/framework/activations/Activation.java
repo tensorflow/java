@@ -20,13 +20,8 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Abstract base class for Activations
- *
- * <p><b>Note:</b> The {@link #tf} attribute must be set prior to invoking the call method. See
- * {@link #setTF(Ops)} and the constructor {@link #Activation(Ops)}.
- *
- * @param <T> the data type of the activation
  */
-public abstract class Activation<T extends TNumber> {
+public abstract class Activation {
 
   /** The TensorFlow Ops */
   protected Ops tf;
@@ -41,15 +36,6 @@ public abstract class Activation<T extends TNumber> {
   }
 
   /**
-   * Sets the TensorFlow Ops
-   *
-   * @param tf the TensorFlow Ops
-   */
-  protected void setTF(Ops tf) {
-    this.tf = tf;
-  }
-
-  /**
    * Gets the TensorFlow Ops
    *
    * @return the TensorFlow Ops
@@ -59,10 +45,20 @@ public abstract class Activation<T extends TNumber> {
   }
 
   /**
+   * Sets the TensorFlow Ops
+   *
+   * @param tf the TensorFlow Ops
+   */
+  protected void setTF(Ops tf) {
+    this.tf = tf;
+  }
+
+  /**
    * Gets the calculation operation for the activation.
    *
    * @param input the input tensor
    * @return The operand for the activation
+   * @param <T> the data type of the input and result
    */
-  public abstract Operand<T> call(Operand<T> input);
+  public abstract <T extends TNumber> Operand<T> call(Operand<T> input);
 }

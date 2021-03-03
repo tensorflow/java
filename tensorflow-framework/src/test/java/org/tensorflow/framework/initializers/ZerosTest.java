@@ -48,7 +48,7 @@ public class ZerosTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Zeros<TUint8> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.class);
         session.evaluate(expected, operand);
       }
@@ -62,7 +62,7 @@ public class ZerosTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Zeros<TInt32> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.class);
         session.evaluate(expected, operand);
       }
@@ -76,7 +76,7 @@ public class ZerosTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Zeros<TInt64> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.class);
         session.evaluate(expected, operand);
       }
@@ -90,7 +90,7 @@ public class ZerosTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Zeros<TFloat32> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -105,7 +105,7 @@ public class ZerosTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Zeros<TFloat64> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -119,7 +119,7 @@ public class ZerosTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Zeros<TString> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TString> operand = instance.call(tf.constant(shape), TString.class);
         session.evaluateString(operand, String::isEmpty);
       }
@@ -134,7 +134,7 @@ public class ZerosTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Zeros<TBool> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TBool> operand = instance.call(tf.constant(shape), TBool.class);
         session.evaluate(expected, operand);
       }
@@ -147,7 +147,7 @@ public class ZerosTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Zeros<TFloat64> instance = new Zeros<>(tf);
+        Zeros instance = new Zeros(tf);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);

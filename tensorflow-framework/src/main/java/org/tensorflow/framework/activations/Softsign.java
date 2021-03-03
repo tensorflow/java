@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Softsign activation function, <code>softsign(x) = x / (abs(x) + 1)</code>.
@@ -30,10 +30,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = softsign.call(input);
  *     // result is [-0.5f, 0.f, 0.5f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Softsign<T extends TFloating> extends Activation<T> {
+public class Softsign extends Activation {
 
   /**
    * Creates a Softsign activation.
@@ -49,9 +47,10 @@ public class Softsign<T extends TFloating> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
+   * @param <T> the data type of the activation
    */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.nn.softsign(input);
   }
 }

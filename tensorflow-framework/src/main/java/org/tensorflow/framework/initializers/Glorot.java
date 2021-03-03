@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
 
 /**
  * The Glorot initializer, also called Xavier initializer.
@@ -58,16 +57,17 @@ import org.tensorflow.types.family.TFloating;
  * </pre>
  *
  * <p><b>NOTE:</b>
+ *
  * <p>For a GlorotNormal equivalent initializer, use {@link
  * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
+ *
  * <p>For a GlorotUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
  * for the distribution parameter.
  *
- * @param <T> The TType for the call operation
  * @see VarianceScaling.Distribution
  * @see <a href="http://proceedings.mlr.press/v9/glorot10a.html">Glorot et al., 2010</a>
  */
-public class Glorot<T extends TFloating> extends VarianceScaling<T> {
+public class Glorot extends VarianceScaling {
 
   public static final double SCALE = 1.0;
 
@@ -77,7 +77,7 @@ public class Glorot<T extends TFloating> extends VarianceScaling<T> {
    * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the Glorot initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and dtype.
+   *     will always produce the same random tensor for a given shape and data type.
    * @see VarianceScaling.Distribution
    */
   public Glorot(Ops tf, Distribution distribution, long seed) {

@@ -48,7 +48,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TInt32> instance = new Linear<>(tf);
+        Linear instance = new Linear(tf);
         Operand<TInt32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -62,7 +62,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat32> instance = new Linear<>(tf);
+        Linear instance = new Linear(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -76,7 +76,7 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat64> instance = new Linear<>(tf);
+        Linear instance = new Linear(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

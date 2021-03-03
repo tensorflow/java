@@ -18,12 +18,8 @@ import org.tensorflow.Operand;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
-/**
- * An interface for Initializers
- *
- * @param <T> The data Type for initializer operation
- */
-public interface Initializer<T extends TType> {
+/** An interface for Initializers */
+public interface Initializer {
 
   /**
    * Generates the operation used to perform the initialization.
@@ -31,6 +27,7 @@ public interface Initializer<T extends TType> {
    * @param dims the shape dimensions
    * @param type the type of tensor
    * @return An operand for the initialization.
+   * @param <T> The data Type for initializer operation
    */
-  Operand<T> call(Operand<TInt64> dims, Class<T> type);
+  <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type);
 }

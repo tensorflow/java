@@ -32,10 +32,8 @@ import org.tensorflow.types.family.TType;
  *      Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
- *
- * @param <T> The TType for the call operation
  */
-public class Ones<T extends TType> extends BaseInitializer<T> {
+public class Ones extends BaseInitializer {
 
   /**
    * Creates an Initializer that sets all values to one.
@@ -57,9 +55,10 @@ public class Ones<T extends TType> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
-      throw new IllegalArgumentException("Tensor type must be numeric or boolean: " + type.getSimpleName());
+      throw new IllegalArgumentException(
+          "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
     return tf.fill(dims, tf.dtypes.cast(tf.constant(1.0), type));
   }

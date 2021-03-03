@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Hard sigmoid activation.
@@ -40,10 +40,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = hardSigmoid.call(input);
  *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
  * </pre>
- *
- * @param <T> the data type of the result
  */
-public class HardSigmoid<T extends TFloating> extends Activation<T> {
+public class HardSigmoid extends Activation {
 
   /**
    * Creates Hard sigmoid activation.
@@ -59,9 +57,10 @@ public class HardSigmoid<T extends TFloating> extends Activation<T> {
    *
    * @param input the input tensor
    * @return The operand for the activation
+   * @param <T> the data type of the result
    */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Operand<T> input) {
     Class<T> inputType = input.type();
     Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), inputType);
     Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), inputType);

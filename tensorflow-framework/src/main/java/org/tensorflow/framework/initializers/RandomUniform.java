@@ -20,6 +20,9 @@ import org.tensorflow.op.random.RandomUniformInt;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Initializer that generates tensors with a uniform distribution.
@@ -33,10 +36,8 @@ import org.tensorflow.types.family.TNumber;
  *     Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
- *
- * @param <T> The TType for the call operation
  */
-public class RandomUniform<T extends TNumber> extends BaseInitializer<T> {
+public class RandomUniform extends BaseInitializer {
 
   public static final double MINVAL_DEFAULT = -0.05;
   public static final double MAXVAL_DEFAULT = 0.05;
@@ -46,12 +47,12 @@ public class RandomUniform<T extends TNumber> extends BaseInitializer<T> {
   private final long seed;
 
   /**
-   * Creates a RandomUniform initializer using {@link #MINVAL_DEFAULT} for the minval and
-   * {@link #MAXVAL_DEFAULT} for the maxval
+   * Creates a RandomUniform initializer using {@link #MINVAL_DEFAULT} for the minval and {@link
+   * #MAXVAL_DEFAULT} for the maxval
    *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and dtype.
+   *     will always produce the same random tensor for a given shape and data type.
    */
   public RandomUniform(Ops tf, long seed) {
     this(tf, MINVAL_DEFAULT, MAXVAL_DEFAULT, seed);
@@ -64,7 +65,7 @@ public class RandomUniform<T extends TNumber> extends BaseInitializer<T> {
    * @param minval Lower bound of the range of random values to generate (inclusive).
    * @param maxval Upper bound of the range of random values to generate (exclusive).
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and dtype.
+   *     will always produce the same random tensor for a given shape and data type.
    */
   public RandomUniform(Ops tf, double minval, double maxval, long seed) {
     super(tf);
@@ -75,28 +76,34 @@ public class RandomUniform<T extends TNumber> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    Operand<T> distOp;
+  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+    if (!TNumber.class.isAssignableFrom(type)) {
+      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
+    }
+    @SuppressWarnings("unchecked")
+    Class<TNumber> nType = (Class<TNumber>) type;
+    Operand<TNumber> distOp;
     if (TIntegral.class.isAssignableFrom(type)) {
       RandomUniformInt.Options options = RandomUniformInt.seed(this.seed);
       distOp =
           tf.random.randomUniformInt(
               dims,
-              tf.dtypes.cast(tf.constant(this.minval), type),
-              tf.dtypes.cast(tf.constant(this.maxval), type),
+              cast(tf, tf.constant(this.minval), nType),
+              cast(tf, tf.constant(this.maxval), nType),
               options);
     } else {
       long[] seeds = {seed, 0};
-      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
+      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), nType);
       if (this.minval == 0) {
         if (this.maxval != 1.0) {
-          distOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.maxval), type));
+          distOp = tf.math.mul(distOp, cast(tf, tf.constant(this.maxval), distOp.type()));
         }
       } else {
-        distOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.maxval - this.minval), type));
-        distOp = tf.math.add(distOp, tf.dtypes.cast(tf.constant(this.minval), type));
+        distOp =
+            tf.math.mul(distOp, cast(tf, tf.constant(this.maxval - this.minval), distOp.type()));
+        distOp = tf.math.add(distOp, cast(tf, tf.constant(this.minval), distOp.type()));
       }
     }
-    return distOp;
+    return cast(tf, distOp, type);
   }
 }

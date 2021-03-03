@@ -21,8 +21,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /** @author Jim Clarke */
 public class SigmoidTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -41,7 +39,6 @@ public class SigmoidTest {
   @AfterEach
   public void tearDown() {}
 
-
   /** Test of Sigmoid call method */
   @Test
   public void testCallFloat() {
@@ -59,7 +56,7 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat32> instance = new Sigmoid<>(tf);
+        Sigmoid instance = new Sigmoid(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -77,7 +74,7 @@ public class SigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Sigmoid<TFloat64> instance = new Sigmoid<>(tf);
+        Sigmoid instance = new Sigmoid(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

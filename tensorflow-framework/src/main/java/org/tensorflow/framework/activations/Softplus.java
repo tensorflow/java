@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Softplus activation function, <code>softplus(x) = log(exp(x) + 1)</code>.
@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TFloating;
  *     //                 1.3132616e+00f, 2.0000000e+01f]
  * </pre>
  */
-public class Softplus<T extends TFloating> extends Activation<T> {
+public class Softplus extends Activation {
 
   /**
    * Creates a Softplus activation function.
@@ -50,7 +50,7 @@ public class Softplus<T extends TFloating> extends Activation<T> {
    * @return The operand for the activation
    */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.math.softplus(input);
   }
 }

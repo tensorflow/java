@@ -30,10 +30,8 @@ import org.tensorflow.types.family.TType;
  *      Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
- *
- * @param <T> The TType for the call operation
  */
-public class Zeros<T extends TType> extends BaseInitializer<T> {
+public class Zeros extends BaseInitializer {
 
   /**
    * Creates an Initializer that sets all values to one.
@@ -45,7 +43,7 @@ public class Zeros<T extends TType> extends BaseInitializer<T> {
   }
 
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> dtype) {
-    return tf.zeros(dims, dtype);
+  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+    return tf.zeros(dims, type);
   }
 }
