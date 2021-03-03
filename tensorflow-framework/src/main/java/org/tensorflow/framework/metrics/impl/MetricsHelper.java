@@ -299,18 +299,25 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param variablesToUpdate Map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding variables to update as values.
+   *     corresponding variables to update as values. If <code>multiLabel</code> is
+   *     false then all shapes are (T), where T is the number of thresholds. If
+   *     <code>multiLabel</code> is true then all shapes are (T, C0), where C0 is the number
+   *     of classes.
    * @param varInitializers Map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding initializer Operands to initializer the corresponding variables from
    *     variablesToUpdate.
    * @param labels the labels, will be cast to {@link TBool}
-   * @param predictions the predictions whose values are in the range <code>[0, 1]</code>.
+   *     shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more
+   *     class dimensions, and L1 is a potential extra dimension of size 1 that
+   *     would be squeezed. If <code>multiLabel</code> or if
+   *     <code>labelWeights</code> <code>!= null</code>, then Cx must be a single dimension.
+   * @param predictions the predictions shape (N, Cx, P1?).
    * @param thresholds thresholds in `the range <code>[0, 1]</code>, or {@link #NEG_INF} (used when
    *     topK is set)
-   * @param topK Optional, indicates that the positive labels should be limited to the top k
-   *     predictions, may be null.
+   * @param topK Optional, used only if <code>multiLabel</code>, indicates that only the top k
+   *     predictions should be considered. May be null.
    * @param classIndex Optional, limits the prediction and labels to the specified class.
-   *                The classIndex is and integer representing a specific classification class's input data..
+   *     The classIndex is an integer index into the first dimension of Cx.
    * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
    *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
    *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
@@ -356,6 +363,8 @@ public class MetricsHelper {
     // reshape to scalar for operations later.
     Operand<TInt32> numThresholds =
         tf.reshape(tf.shape.size(thresholds, tf.constant(0)), tf.constant(Shape.scalar()));
+
+    // true if we will process thresholds as one-dimensional (possibly because we flatten them)
     Operand<TBool> oneThresh;
     if (multiLabel) {
       oneThresh = tf.math.equal(tf.constant(1), tf.rank(thresholds));
