@@ -44,7 +44,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>Usage:
  *
  * <pre>
- * SparseCategoricalAccuracy m = new tf.keras.metrics.SparseCategoricalAccuracy();
+ * SparseCategoricalAccuracy m = new org.tensorflow.framework.metrcis.SparseCategoricalAccuracy();
  * m.update_state(tf.constant(new float[][] {{2}, {1}},
  *     tf.constant(new float[][] {{0.1f, 0.9f, 0.8f}, [{0.05f, 0.95f, 0f}});
  * Operand&lt;TFloat32&gt; result = m.result();
@@ -63,15 +63,6 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * 0.3
  * </pre>
  *
- * <p>Usage with tf.keras API:
- *
- * <pre>
- * Model model = new tf.keras. models.Model(inputs, outputs);
- * model.compile(
- *     "sgd",
- *     loss="mse",
- *     metrics=["sparse_categorical_accuracy"]);
- * </pre>
  *
  * @param <T> The data type for the metric result
  */
