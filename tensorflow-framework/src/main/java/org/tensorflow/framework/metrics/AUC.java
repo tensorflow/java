@@ -209,7 +209,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         null,
-            DEFAULT_NUM_THRESHOLDS,
+        DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -264,7 +264,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         name,
-            DEFAULT_NUM_THRESHOLDS,
+        DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -322,7 +322,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         name,
-            DEFAULT_NUM_THRESHOLDS,
+        DEFAULT_NUM_THRESHOLDS,
         curve,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -378,7 +378,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     this(
         tf,
         null,
-            DEFAULT_NUM_THRESHOLDS,
+        DEFAULT_NUM_THRESHOLDS,
         curve,
         AUCSummationMethod.INTERPOLATION,
         thresholds,
@@ -435,7 +435,17 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, null, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
+    this(
+        tf,
+        null,
+        DEFAULT_NUM_THRESHOLDS,
+        curve,
+        summationMethod,
+        thresholds,
+        false,
+        null,
+        seed,
+        type);
   }
 
   /**
@@ -487,7 +497,17 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, name, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
+    this(
+        tf,
+        name,
+        DEFAULT_NUM_THRESHOLDS,
+        curve,
+        summationMethod,
+        thresholds,
+        false,
+        null,
+        seed,
+        type);
   }
 
   /**
@@ -677,7 +697,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       symbols.add(new SymbolicShape<>(tLabels, "N", "L"));
       if (isMultiLabel()) {
         // TP, TN, FP, and FN should all have shape
-        //(number of thresholds, number of labels).
+        // (number of thresholds, number of labels).
         symbols.add(new SymbolicShape<>(truePositives, "T", "L"));
         symbols.add(new SymbolicShape<>(falsePositives, "T", "L"));
         symbols.add(new SymbolicShape<>(trueNegatives, "T", "L"));
@@ -699,9 +719,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
     // Only forward labelWeights to update_confusion_matrix_variables when
     // multiLabel is false. Otherwise the averaging of individual label AUCs is
     // handled in AUC.result
-    if (isMultiLabel()) {
-      labelWeights = null;
-    }
     updateOperations.addAll(
         MetricsHelper.updateConfusionMatrixVariables(
             tf,
@@ -714,7 +731,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
             null,
             tSampleWeights,
             isMultiLabel(),
-            getLabelWeights()));
+            isMultiLabel() ? null : getLabelWeights()));
     return updateOperations;
   }
 
@@ -742,9 +759,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> dP =
         tf.math.sub(
             tf.slice(
-                p,
-                tf.constant(new int[] {0}),
-                tf.constant(new int[] {getNumThresholds() - 1})),
+                p, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1})),
             tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})));
 
     Operand<T> precisionSlope =
@@ -771,9 +786,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
                     tf.dtypes.cast(tf.constant(0), p.type()))),
             tf.math.divNoNan(
                 tf.slice(
-                    p,
-                    tf.constant(new int[] {0}),
-                    tf.constant(new int[] {getNumThresholds() - 1})),
+                    p, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1})),
                 tf.math.maximum(
                     tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
                     tf.dtypes.cast(tf.constant(0), p.type()))),
@@ -810,8 +823,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
   @Override
   public Operand<T> result() {
 
-    if (getCurve() == AUCCurve.PR
-        && getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
+    if (getCurve() == AUCCurve.PR && getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
       // This use case is different and is handled separately.
       return interpolatePRAuc();
     }
@@ -831,16 +843,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
     // Find the rectangle heights based on `summationMethod`.
     // y[:self.numThresholds - 1]
     Operand<T> ySlice1 =
-        tf.slice(
-            y, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
+        tf.slice(y, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
     // y[1:]
     Operand<T> ySlice2 = tf.slice(y, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
 
     Operand<T> heights = null;
     switch (getSummationMethod()) {
       case INTERPOLATION:
-        heights =
-            tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
+        heights = tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
         break;
       case MINORING:
         heights = tf.math.minimum(ySlice1, ySlice2);
@@ -865,7 +875,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       if (getLabelWeights() == null) {
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
-        //Weighted average of the label AUCs.
+        // Weighted average of the label AUCs.
         return tf.math.divNoNan(
             tf.reduceSum(
                 tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, getLabelWeights())),
@@ -874,8 +884,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     } else {
       Operand<T> slice1 =
-          tf.slice(
-              x, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
+          tf.slice(x, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
       Operand<T> slice2 = tf.slice(x, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
       Operand<T> sub = tf.math.sub(slice1, slice2);
       Operand<T> operand = tf.math.mul(sub, heights);
