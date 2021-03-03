@@ -36,16 +36,36 @@ import org.tensorflow.types.family.TType;
 public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
   
   /**
+   * Optional attributes for {@link org.tensorflow.op.data.IgnoreErrorsDataset}
+   */
+  public static class Options {
+    
+    /**
+     * @param logWarning 
+     */
+    public Options logWarning(Boolean logWarning) {
+      this.logWarning = logWarning;
+      return this;
+    }
+    
+    private Boolean logWarning;
+    
+    private Options() {
+    }
+  }
+  
+  /**
    * Factory method to create a class wrapping a new IgnoreErrorsDataset operation.
    * 
    * @param scope current scope
    * @param inputDataset 
    * @param outputTypes 
    * @param outputShapes 
+   * @param options carries optional attributes values
    * @return a new instance of IgnoreErrorsDataset
    */
   @Endpoint(describeByClass = true)
-  public static IgnoreErrorsDataset create(Scope scope, Operand<?> inputDataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  public static IgnoreErrorsDataset create(Scope scope, Operand<?> inputDataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("IgnoreErrorsDataset", scope.makeOpName("IgnoreErrorsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -55,7 +75,21 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.logWarning != null) {
+          opBuilder.setAttr("log_warning", opts.logWarning);
+        }
+      }
+    }
     return new IgnoreErrorsDataset(opBuilder.build());
+  }
+  
+  /**
+   * @param logWarning 
+   */
+  public static Options logWarning(Boolean logWarning) {
+    return new Options().logWarning(logWarning);
   }
   
   /**

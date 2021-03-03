@@ -7,19 +7,15 @@ export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
 export BAZEL_VC="${VCINSTALLDIR:-}"
 if [[ -d $BAZEL_VC ]]; then
-    # Work around compiler issues on Windows documented mainly in configure.py but also elsewhere
-    export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --copt=-DWIN32_LEAN_AND_MEAN --host_copt=-DWIN32_LEAN_AND_MEAN --copt=-DNOGDI --host_copt=-DNOGDI --copt=-D_USE_MATH_DEFINES --host_copt=-D_USE_MATH_DEFINES --define=override_eigen_strong_inline=true"
-    # https://software.intel.com/en-us/articles/intel-optimization-for-tensorflow-installation-guide#wind_B_S
-    export PATH=$PATH:$(pwd)/bazel-tensorflow-core-api/external/mkl_windows/lib/
+    export BUILD_FLAGS="--copt=//arch:AVX `#--copt=//arch:AVX2` --define=override_eigen_strong_inline=true"
     export PYTHON_BIN_PATH=$(which python.exe)
 else
-    export BUILD_FLAGS="--copt=-msse4.1 --copt=-msse4.2 --copt=-mavx `#--copt=-mavx2 --copt=-mfma` --cxxopt=-std=c++14 --host_cxxopt=-std=c++14 --linkopt=-lstdc++ --host_linkopt=-lstdc++"
+    export BUILD_FLAGS="--copt=-msse4.1 --copt=-msse4.2 --copt=-mavx `#--copt=-mavx2 --copt=-mfma` --linkopt=-lstdc++ --host_linkopt=-lstdc++"
     export PYTHON_BIN_PATH=$(which python3)
 fi
 
 if [[ "${EXTENSION:-}" == *mkl* ]]; then
-    # Don't use MKL-DNN v1 as it is only currently supported by Linux platform
-    export BUILD_FLAGS="$BUILD_FLAGS --config=mkl --define build_with_mkl_dnn_v1_only=false"
+    export BUILD_FLAGS="$BUILD_FLAGS --config=mkl"
 fi
 
 if [[ "${EXTENSION:-}" == *gpu* ]]; then
@@ -70,6 +66,15 @@ for TENSORFLOW_DLL in ${TENSORFLOW_DLLS[@]}; do
     fi
 done
 echo "Listing $TENSORFLOW_BIN:" && ls -l $TENSORFLOW_BIN
+
+if [[ -x /usr/bin/install_name_tool ]] && [[ -e $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib ]]; then
+    # Fix library with correct rpath on Mac
+    chmod +w $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
+    UGLYPATH=$(otool -L $TENSORFLOW_BIN/libtensorflow_cc.2.dylib | grep @loader_path | cut -f1 -d ' ')
+    install_name_tool -add_rpath @loader_path/. -id @rpath/libiomp5.dylib $BAZEL_BIN/external/llvm_openmp/libiomp5.dylib
+    install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_cc.2.dylib
+    install_name_tool -change $UGLYPATH @rpath/libiomp5.dylib $TENSORFLOW_BIN/libtensorflow_framework.2.dylib
+fi
 
 GEN_SRCS_DIR=src/gen/java
 mkdir -p $GEN_SRCS_DIR

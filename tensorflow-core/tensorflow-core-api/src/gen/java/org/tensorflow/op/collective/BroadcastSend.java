@@ -31,7 +31,7 @@ import org.tensorflow.types.family.TType;
 /**
  * Broadcasts a tensor value to one or more other devices.
  * 
- * @param <T> data type for {@code output()} output
+ * @param <T> data type for {@code data()} output
  */
 public final class BroadcastSend<T extends TType> extends RawOp implements Operand<T> {
   
@@ -113,23 +113,23 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
   
   /**
    */
-  public Output<T> output() {
-    return output;
+  public Output<T> data() {
+    return data;
   }
   
   @Override
   public Output<T> asOutput() {
-    return output;
+    return data;
   }
   
   /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CollectiveBcastSend";
   
-  private Output<T> output;
+  private Output<T> data;
   
   private BroadcastSend(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    output = operation.output(outputIdx++);
+    data = operation.output(outputIdx++);
   }
 }

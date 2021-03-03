@@ -59,7 +59,6 @@ public class EagerSessionTest {
       sleep(50); // allow some time to the background thread for cleaning up resources
 
       long before = Pointer.totalBytes();
-      s.detach(ref.retainReference());
       ref = null;
       System.gc();
       sleep(50); // allow some time to the background thread for cleaning up resources

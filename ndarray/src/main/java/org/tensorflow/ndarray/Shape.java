@@ -276,6 +276,27 @@ public final class Shape {
   }
 
   /**
+   * Return a {@code end - begin} dimensional shape with dimensions matching this Shape from {@code begin} to {@code end}.
+   * @param begin Where to start the sub-shape.
+   * @param end Where to end the sub-shape, exclusive.
+   * @return the sub-shape bounded by begin and end.
+   */
+  public Shape subShape(int begin, int end){
+    if (end > numDimensions()) {
+      throw new ArrayIndexOutOfBoundsException(
+          "End index " + end + " out of bounds: shape only has " + numDimensions() + " dimensions.");
+    }
+    if (begin < 0) {
+      throw new ArrayIndexOutOfBoundsException(
+          "Begin index " + begin + " out of bounds: cannot be less than 0.");
+    }
+
+    long[] newDimensions = new long[end - begin];
+    System.arraycopy(dimensionSizes, begin, newDimensions, 0, end - begin);
+    return Shape.of(newDimensions);
+  }
+
+  /**
    * Returns a new Shape, with a new first dimension added. In order for this call to succeed,
    * {@link Shape#isUnknown()} must be {@code false}.
    *

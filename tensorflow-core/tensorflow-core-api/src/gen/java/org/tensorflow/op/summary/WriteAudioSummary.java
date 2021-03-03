@@ -29,6 +29,10 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
+ * Writes an audio summary.
+ * <p>
+ * Writes encoded audio summary `tensor` at `step` with `tag` using summary `writer`.
+ * `sample_rate` is the audio sample rate is Hz.
  */
 public final class WriteAudioSummary extends RawOp {
   

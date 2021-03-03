@@ -67,10 +67,11 @@ public final class BfcMemoryMapProtos {
       "nsorflow.BinSummary\022#\n\005chunk\030\003 \003(\0132\024.ten" +
       "sorflow.MemChunk\022\'\n\tsnap_shot\030\004 \003(\0132\024.te" +
       "nsorflow.SnapShot\022,\n\005stats\030\005 \001(\0132\035.tenso" +
-      "rflow.MemAllocatorStatsB{\n\031org.tensorflo" +
-      "w.proto.utilB\022BfcMemoryMapProtosP\001ZHgith" +
-      "ub.com/tensorflow/tensorflow/tensorflow/" +
-      "go/core/core_protos_go_protob\006proto3"
+      "rflow.MemAllocatorStatsB\210\001\n\031org.tensorfl" +
+      "ow.proto.utilB\022BfcMemoryMapProtosP\001ZUgit" +
+      "hub.com/tensorflow/tensorflow/tensorflow" +
+      "/go/core/protobuf/for_core_protos_go_pro" +
+      "tob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

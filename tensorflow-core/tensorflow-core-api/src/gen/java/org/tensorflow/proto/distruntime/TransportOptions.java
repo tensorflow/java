@@ -614,10 +614,10 @@ public final class TransportOptions {
     java.lang.String[] descriptorData = {
       "\n0tensorflow/core/protobuf/transport_opt" +
       "ions.proto\022\ntensorflow\"*\n\020RecvBufRespExt" +
-      "ra\022\026\n\016tensor_content\030\001 \003(\014Bl\n org.tensor" +
-      "flow.proto.distruntimeZHgithub.com/tenso" +
-      "rflow/tensorflow/tensorflow/go/core/core" +
-      "_protos_go_protob\006proto3"
+      "ra\022\026\n\016tensor_content\030\001 \003(\014By\n org.tensor" +
+      "flow.proto.distruntimeZUgithub.com/tenso" +
+      "rflow/tensorflow/tensorflow/go/core/prot" +
+      "obuf/for_core_protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

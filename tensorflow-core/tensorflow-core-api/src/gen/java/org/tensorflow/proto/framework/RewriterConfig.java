@@ -21,6 +21,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private RewriterConfig() {
+    cpuLayoutConversion_ = 0;
     layoutOptimizer_ = 0;
     constantFolding_ = 0;
     shapeOptimization_ = 0;
@@ -231,6 +232,17 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             autoMixedPrecisionMkl_ = rawValue;
+            break;
+          }
+          case 208: {
+
+            experimentalDisableCompressedTensorOptimization_ = input.readBool();
+            break;
+          }
+          case 400: {
+            int rawValue = input.readEnum();
+
+            cpuLayoutConversion_ = rawValue;
             break;
           }
           case 802: {
@@ -445,6 +457,117 @@ private static final long serialVersionUID = 0L;
 
   /**
    * <pre>
+   * Enum for layout conversion between NCHW and NHWC on CPU. Default is OFF.
+   * </pre>
+   *
+   * Protobuf enum {@code tensorflow.RewriterConfig.CpuLayout}
+   */
+  public enum CpuLayout
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>NO_CONVERSION_ON_CPU = 0;</code>
+     */
+    NO_CONVERSION_ON_CPU(0),
+    /**
+     * <code>NCHW_TO_NHWC = 1;</code>
+     */
+    NCHW_TO_NHWC(1),
+    /**
+     * <code>NHWC_TO_NCHW = 2;</code>
+     */
+    NHWC_TO_NCHW(2),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>NO_CONVERSION_ON_CPU = 0;</code>
+     */
+    public static final int NO_CONVERSION_ON_CPU_VALUE = 0;
+    /**
+     * <code>NCHW_TO_NHWC = 1;</code>
+     */
+    public static final int NCHW_TO_NHWC_VALUE = 1;
+    /**
+     * <code>NHWC_TO_NCHW = 2;</code>
+     */
+    public static final int NHWC_TO_NCHW_VALUE = 2;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static CpuLayout valueOf(int value) {
+      return forNumber(value);
+    }
+
+    public static CpuLayout forNumber(int value) {
+      switch (value) {
+        case 0: return NO_CONVERSION_ON_CPU;
+        case 1: return NCHW_TO_NHWC;
+        case 2: return NHWC_TO_NCHW;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<CpuLayout>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        CpuLayout> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<CpuLayout>() {
+            public CpuLayout findValueByNumber(int number) {
+              return CpuLayout.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return org.tensorflow.proto.framework.RewriterConfig.getDescriptor().getEnumTypes().get(1);
+    }
+
+    private static final CpuLayout[] VALUES = values();
+
+    public static CpuLayout valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private CpuLayout(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:tensorflow.RewriterConfig.CpuLayout)
+  }
+
+  /**
+   * <pre>
    * Enum controlling the number of times to run optimizers. The default is to
    * run them twice.
    * </pre>
@@ -529,7 +652,7 @@ private static final long serialVersionUID = 0L;
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return org.tensorflow.proto.framework.RewriterConfig.getDescriptor().getEnumTypes().get(1);
+      return org.tensorflow.proto.framework.RewriterConfig.getDescriptor().getEnumTypes().get(2);
     }
 
     private static final NumIterationsType[] VALUES = values();
@@ -734,7 +857,7 @@ private static final long serialVersionUID = 0L;
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return org.tensorflow.proto.framework.RewriterConfig.getDescriptor().getEnumTypes().get(2);
+      return org.tensorflow.proto.framework.RewriterConfig.getDescriptor().getEnumTypes().get(3);
     }
 
     private static final MemOptType[] VALUES = values();
@@ -1633,6 +1756,31 @@ private static final long serialVersionUID = 0L;
 
   }
 
+  public static final int CPU_LAYOUT_CONVERSION_FIELD_NUMBER = 50;
+  private int cpuLayoutConversion_;
+  /**
+   * <pre>
+   * CPU Conversion settings between NHCW and NCHW.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+   */
+  public int getCpuLayoutConversionValue() {
+    return cpuLayoutConversion_;
+  }
+  /**
+   * <pre>
+   * CPU Conversion settings between NHCW and NCHW.
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.CpuLayout getCpuLayoutConversion() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.CpuLayout result = org.tensorflow.proto.framework.RewriterConfig.CpuLayout.valueOf(cpuLayoutConversion_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.CpuLayout.UNRECOGNIZED : result;
+  }
+
   public static final int LAYOUT_OPTIMIZER_FIELD_NUMBER = 1;
   private int layoutOptimizer_;
   /**
@@ -2107,6 +2255,20 @@ private static final long serialVersionUID = 0L;
     return minGraphNodes_;
   }
 
+  public static final int EXPERIMENTAL_DISABLE_COMPRESSED_TENSOR_OPTIMIZATION_FIELD_NUMBER = 26;
+  private boolean experimentalDisableCompressedTensorOptimization_;
+  /**
+   * <pre>
+   * Disable optimizations that assume compressed tensors. Note that this flag
+   * is experimental and may be removed in the future.
+   * </pre>
+   *
+   * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
+   */
+  public boolean getExperimentalDisableCompressedTensorOptimization() {
+    return experimentalDisableCompressedTensorOptimization_;
+  }
+
   public static final int MEMORY_OPTIMIZATION_FIELD_NUMBER = 4;
   private int memoryOptimization_;
   /**
@@ -2573,6 +2735,12 @@ private static final long serialVersionUID = 0L;
     if (autoMixedPrecisionMkl_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
       output.writeEnum(25, autoMixedPrecisionMkl_);
     }
+    if (experimentalDisableCompressedTensorOptimization_ != false) {
+      output.writeBool(26, experimentalDisableCompressedTensorOptimization_);
+    }
+    if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
+      output.writeEnum(50, cpuLayoutConversion_);
+    }
     for (int i = 0; i < optimizers_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 100, optimizers_.getRaw(i));
     }
@@ -2693,6 +2861,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(25, autoMixedPrecisionMkl_);
     }
+    if (experimentalDisableCompressedTensorOptimization_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(26, experimentalDisableCompressedTensorOptimization_);
+    }
+    if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(50, cpuLayoutConversion_);
+    }
     {
       int dataSize = 0;
       for (int i = 0; i < optimizers_.size(); i++) {
@@ -2728,6 +2904,7 @@ private static final long serialVersionUID = 0L;
     }
     org.tensorflow.proto.framework.RewriterConfig other = (org.tensorflow.proto.framework.RewriterConfig) obj;
 
+    if (cpuLayoutConversion_ != other.cpuLayoutConversion_) return false;
     if (layoutOptimizer_ != other.layoutOptimizer_) return false;
     if (constantFolding_ != other.constantFolding_) return false;
     if (shapeOptimization_ != other.shapeOptimization_) return false;
@@ -2750,6 +2927,8 @@ private static final long serialVersionUID = 0L;
     if (metaOptimizerIterations_ != other.metaOptimizerIterations_) return false;
     if (getMinGraphNodes()
         != other.getMinGraphNodes()) return false;
+    if (getExperimentalDisableCompressedTensorOptimization()
+        != other.getExperimentalDisableCompressedTensorOptimization()) return false;
     if (memoryOptimization_ != other.memoryOptimization_) return false;
     if (!getMemoryOptimizerTargetNodeNameScope()
         .equals(other.getMemoryOptimizerTargetNodeNameScope())) return false;
@@ -2792,6 +2971,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + CPU_LAYOUT_CONVERSION_FIELD_NUMBER;
+    hash = (53 * hash) + cpuLayoutConversion_;
     hash = (37 * hash) + LAYOUT_OPTIMIZER_FIELD_NUMBER;
     hash = (53 * hash) + layoutOptimizer_;
     hash = (37 * hash) + CONSTANT_FOLDING_FIELD_NUMBER;
@@ -2832,6 +3013,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + metaOptimizerIterations_;
     hash = (37 * hash) + MIN_GRAPH_NODES_FIELD_NUMBER;
     hash = (53 * hash) + getMinGraphNodes();
+    hash = (37 * hash) + EXPERIMENTAL_DISABLE_COMPRESSED_TENSOR_OPTIMIZATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getExperimentalDisableCompressedTensorOptimization());
     hash = (37 * hash) + MEMORY_OPTIMIZATION_FIELD_NUMBER;
     hash = (53 * hash) + memoryOptimization_;
     hash = (37 * hash) + MEMORY_OPTIMIZER_TARGET_NODE_NAME_SCOPE_FIELD_NUMBER;
@@ -3005,6 +3189,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      cpuLayoutConversion_ = 0;
+
       layoutOptimizer_ = 0;
 
       constantFolding_ = 0;
@@ -3042,6 +3228,8 @@ private static final long serialVersionUID = 0L;
       metaOptimizerIterations_ = 0;
 
       minGraphNodes_ = 0;
+
+      experimentalDisableCompressedTensorOptimization_ = false;
 
       memoryOptimization_ = 0;
 
@@ -3110,6 +3298,7 @@ private static final long serialVersionUID = 0L;
     public org.tensorflow.proto.framework.RewriterConfig buildPartial() {
       org.tensorflow.proto.framework.RewriterConfig result = new org.tensorflow.proto.framework.RewriterConfig(this);
       int from_bitField0_ = bitField0_;
+      result.cpuLayoutConversion_ = cpuLayoutConversion_;
       result.layoutOptimizer_ = layoutOptimizer_;
       result.constantFolding_ = constantFolding_;
       result.shapeOptimization_ = shapeOptimization_;
@@ -3129,6 +3318,7 @@ private static final long serialVersionUID = 0L;
       result.disableMetaOptimizer_ = disableMetaOptimizer_;
       result.metaOptimizerIterations_ = metaOptimizerIterations_;
       result.minGraphNodes_ = minGraphNodes_;
+      result.experimentalDisableCompressedTensorOptimization_ = experimentalDisableCompressedTensorOptimization_;
       result.memoryOptimization_ = memoryOptimization_;
       result.memoryOptimizerTargetNodeNameScope_ = memoryOptimizerTargetNodeNameScope_;
       result.metaOptimizerTimeoutMs_ = metaOptimizerTimeoutMs_;
@@ -3215,6 +3405,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(org.tensorflow.proto.framework.RewriterConfig other) {
       if (other == org.tensorflow.proto.framework.RewriterConfig.getDefaultInstance()) return this;
+      if (other.cpuLayoutConversion_ != 0) {
+        setCpuLayoutConversionValue(other.getCpuLayoutConversionValue());
+      }
       if (other.layoutOptimizer_ != 0) {
         setLayoutOptimizerValue(other.getLayoutOptimizerValue());
       }
@@ -3271,6 +3464,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getMinGraphNodes() != 0) {
         setMinGraphNodes(other.getMinGraphNodes());
+      }
+      if (other.getExperimentalDisableCompressedTensorOptimization() != false) {
+        setExperimentalDisableCompressedTensorOptimization(other.getExperimentalDisableCompressedTensorOptimization());
       }
       if (other.memoryOptimization_ != 0) {
         setMemoryOptimizationValue(other.getMemoryOptimizationValue());
@@ -3362,6 +3558,71 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     private int bitField0_;
+
+    private int cpuLayoutConversion_ = 0;
+    /**
+     * <pre>
+     * CPU Conversion settings between NHCW and NCHW.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+     */
+    public int getCpuLayoutConversionValue() {
+      return cpuLayoutConversion_;
+    }
+    /**
+     * <pre>
+     * CPU Conversion settings between NHCW and NCHW.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+     */
+    public Builder setCpuLayoutConversionValue(int value) {
+      cpuLayoutConversion_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * CPU Conversion settings between NHCW and NCHW.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.CpuLayout getCpuLayoutConversion() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.CpuLayout result = org.tensorflow.proto.framework.RewriterConfig.CpuLayout.valueOf(cpuLayoutConversion_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.CpuLayout.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * CPU Conversion settings between NHCW and NCHW.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+     */
+    public Builder setCpuLayoutConversion(org.tensorflow.proto.framework.RewriterConfig.CpuLayout value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      cpuLayoutConversion_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * CPU Conversion settings between NHCW and NCHW.
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.CpuLayout cpu_layout_conversion = 50;</code>
+     */
+    public Builder clearCpuLayoutConversion() {
+      
+      cpuLayoutConversion_ = 0;
+      onChanged();
+      return this;
+    }
 
     private int layoutOptimizer_ = 0;
     /**
@@ -4602,6 +4863,47 @@ private static final long serialVersionUID = 0L;
     public Builder clearMinGraphNodes() {
       
       minGraphNodes_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private boolean experimentalDisableCompressedTensorOptimization_ ;
+    /**
+     * <pre>
+     * Disable optimizations that assume compressed tensors. Note that this flag
+     * is experimental and may be removed in the future.
+     * </pre>
+     *
+     * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
+     */
+    public boolean getExperimentalDisableCompressedTensorOptimization() {
+      return experimentalDisableCompressedTensorOptimization_;
+    }
+    /**
+     * <pre>
+     * Disable optimizations that assume compressed tensors. Note that this flag
+     * is experimental and may be removed in the future.
+     * </pre>
+     *
+     * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
+     */
+    public Builder setExperimentalDisableCompressedTensorOptimization(boolean value) {
+      
+      experimentalDisableCompressedTensorOptimization_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Disable optimizations that assume compressed tensors. Note that this flag
+     * is experimental and may be removed in the future.
+     * </pre>
+     *
+     * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
+     */
+    public Builder clearExperimentalDisableCompressedTensorOptimization() {
+      
+      experimentalDisableCompressedTensorOptimization_ = false;
       onChanged();
       return this;
     }

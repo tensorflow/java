@@ -32,6 +32,10 @@ import org.tensorflow.types.family.TType;
  * <p>
  * Computes the QR decomposition of each inner matrix in `tensor` such that
  * `tensor[..., :, :] = q[..., :, :] * r[..., :,:])`
+ * <p>
+ * Currently, the gradient for the QR decomposition is well-defined only when
+ * the first `P` columns of the inner matrix are linearly independent, where
+ * `P` is the minimum of `M` and `N`, the 2 inner-most dimmensions of `tensor`.
  * <pre>{@code
  * # a is a tensor.
  * # q is a tensor of orthonormal matrices.

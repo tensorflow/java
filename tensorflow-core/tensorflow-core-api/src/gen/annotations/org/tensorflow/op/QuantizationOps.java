@@ -27,6 +27,9 @@ import org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel;
 import org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannelGradient;
 import org.tensorflow.op.quantization.Quantize;
 import org.tensorflow.op.quantization.QuantizeAndDequantize;
+import org.tensorflow.op.quantization.QuantizeAndDequantizeV3;
+import org.tensorflow.op.quantization.QuantizeAndDequantizeV4;
+import org.tensorflow.op.quantization.QuantizeAndDequantizeV4Grad;
 import org.tensorflow.op.quantization.QuantizeDownAndShrinkRange;
 import org.tensorflow.op.quantization.QuantizedConcat;
 import org.tensorflow.op.quantization.RequantizationRange;
@@ -528,6 +531,64 @@ public final class QuantizationOps {
       Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits,
       QuantizeAndDequantize.Options... options) {
     return QuantizeAndDequantize.create(scope, input, inputMin, inputMax, numBits, options);
+  }
+
+  /**
+   * Quantizes then dequantizes a tensor.
+   *  <p>
+   *  This is almost identical to QuantizeAndDequantizeV2, except that num_bits is a
+   *  tensor, so its value can change during training.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param inputMin
+   * @param inputMax
+   * @param numBits
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizeAndDequantizeV3
+   */
+  public <T extends TNumber> QuantizeAndDequantizeV3<T> quantizeAndDequantizeV3(Operand<T> input,
+      Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits,
+      QuantizeAndDequantizeV3.Options... options) {
+    return QuantizeAndDequantizeV3.create(scope, input, inputMin, inputMax, numBits, options);
+  }
+
+  /**
+   * Returns the gradient of `quantization.QuantizeAndDequantizeV4`.
+   *  <p>
+   *  This is almost identical to QuantizeAndDequantizeV2, except that it returns a
+   *  gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
+   *
+   * @param <T> data type for {@code output()} output
+   * @param input
+   * @param inputMin
+   * @param inputMax
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizeAndDequantizeV4
+   */
+  public <T extends TNumber> QuantizeAndDequantizeV4<T> quantizeAndDequantizeV4(Operand<T> input,
+      Operand<T> inputMin, Operand<T> inputMax, QuantizeAndDequantizeV4.Options... options) {
+    return QuantizeAndDequantizeV4.create(scope, input, inputMin, inputMax, options);
+  }
+
+  /**
+   * Returns the gradient of `QuantizeAndDequantizeV4`.
+   *  <p>
+   *  Returns a gradient of 1 for inputs that are within the quantization range,
+   *  or 0 otherwise.
+   *
+   * @param <T> data type for {@code inputBackprop()} output
+   * @param gradients
+   * @param input
+   * @param inputMin
+   * @param inputMax
+   * @param options carries optional attributes values
+   * @return a new instance of QuantizeAndDequantizeV4Grad
+   */
+  public <T extends TNumber> QuantizeAndDequantizeV4Grad<T> quantizeAndDequantizeV4Grad(
+      Operand<T> gradients, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax,
+      QuantizeAndDequantizeV4Grad.Options... options) {
+    return QuantizeAndDequantizeV4Grad.create(scope, gradients, input, inputMin, inputMax, options);
   }
 
   /**

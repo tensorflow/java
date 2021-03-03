@@ -53,10 +53,11 @@ public final class GraphDebugInfoProtos {
       "&.tensorflow.GraphDebugInfo.FileLineCol\032" +
       "T\n\013TracesEntry\022\013\n\003key\030\001 \001(\t\0224\n\005value\030\002 \001" +
       "(\0132%.tensorflow.GraphDebugInfo.StackTrac" +
-      "e:\0028\001B\205\001\n\036org.tensorflow.proto.framework" +
-      "B\024GraphDebugInfoProtosP\001ZHgithub.com/ten" +
-      "sorflow/tensorflow/tensorflow/go/core/co" +
-      "re_protos_go_proto\370\001\001b\006proto3"
+      "e:\0028\001B\222\001\n\036org.tensorflow.proto.framework" +
+      "B\024GraphDebugInfoProtosP\001ZUgithub.com/ten" +
+      "sorflow/tensorflow/tensorflow/go/core/pr" +
+      "otobuf/for_core_protos_go_proto\370\001\001b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

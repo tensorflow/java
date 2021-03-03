@@ -32,11 +32,11 @@ public final class SavedModelProtos {
       "roto\022\ntensorflow\032)tensorflow/core/protob" +
       "uf/meta_graph.proto\"_\n\nSavedModel\022\"\n\032sav" +
       "ed_model_schema_version\030\001 \001(\003\022-\n\013meta_gr" +
-      "aphs\030\002 \003(\0132\030.tensorflow.MetaGraphDefB\201\001\n" +
+      "aphs\030\002 \003(\0132\030.tensorflow.MetaGraphDefB\216\001\n" +
       "\036org.tensorflow.proto.frameworkB\020SavedMo" +
-      "delProtosP\001ZHgithub.com/tensorflow/tenso" +
-      "rflow/tensorflow/go/core/core_protos_go_" +
-      "proto\370\001\001b\006proto3"
+      "delProtosP\001ZUgithub.com/tensorflow/tenso" +
+      "rflow/tensorflow/go/core/protobuf/for_co" +
+      "re_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

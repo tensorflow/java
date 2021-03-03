@@ -20,10 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Comparator;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
@@ -32,6 +36,7 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.NdArrays;
@@ -208,21 +213,40 @@ public class SessionTest {
   }
 
   @Test
-  public void save() throws IOException  {
-    Path testFolder = Files.createTempDirectory("tf-session-save-test");
+  public void saveAndRestore() throws IOException  {
+    Path testFolder = Files.createTempDirectory("tf-session-save-restore-test");
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Variable<TFloat32> x = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
-      Variable<TFloat32> y = tf.variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> x = tf.withName("x").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> y = tf.withName("y").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
 
       try (Session s = new Session(g)) {
         s.run(init);
         s.save(testFolder.resolve("checkpoint").toString());
+        GraphDef graphDef = g.toGraphDef();
+
+        try (Graph restoredGraph = new Graph()) {
+          restoredGraph.importGraphDef(graphDef);
+          try (Session restoredSession = new Session(restoredGraph)) {
+            restoredSession.restore(testFolder.resolve("checkpoint").toString());
+            try (AutoCloseableList<Tensor> oldList = new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
+                 AutoCloseableList<Tensor> newList = new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())){
+              assertEquals(oldList.get(0),newList.get(0));
+              assertEquals(oldList.get(1),newList.get(1));
+            }
+          }
+        }
       }
     }
     assertTrue(Files.exists(testFolder.resolve("checkpoint.index")));
     assertTrue(Files.exists(testFolder.resolve("checkpoint.data-00000-of-00001")));
+
+    // Cleanup test dir
+    Files.walk(testFolder)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .forEach(File::delete);
   }
 
   private static RunOptions fullTraceRunOptions() {

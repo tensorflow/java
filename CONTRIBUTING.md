@@ -88,6 +88,10 @@ in [IntelliJ](https://github.com/google/styleguide/blob/gh-pages/intellij-java-g
 [Eclipse](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml).
 [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html) should also be used for C++ code.
 
+### Dependencies
+
+For dependencies, we can use anything compliant with [this list](https://opensource.google/docs/thirdparty/licenses/#notice), but we want to keep the core libraries as dependency free as possible.
+
 ### Code generation
 
 Code generation for `Ops` and related classes is done during `tensorflow-core-api`'s `compile` phase, using the annotation processor in

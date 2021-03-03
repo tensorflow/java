@@ -34,10 +34,11 @@ import org.tensorflow.types.family.TType;
  *   element in the tensor. Input range is `[-inf, inf]` and
  *   output range is `[-1,1]`.
  * <p>
- *   <pre>{@code
- *   x = tf.constant([-float("inf"), -5, -0.5, 1, 1.2, 2, 3, float("inf")])
- *   tf.math.tanh(x) ==> [-1. -0.99990916 -0.46211717 0.7615942 0.8336547 0.9640276 0.9950547 1.]
- *   }</pre>
+ *   >>> x = tf.constant([-float("inf"), -5, -0.5, 1, 1.2, 2, 3, float("inf")])
+ *   >>> tf.math.tanh(x)
+ *   <tf.Tensor: shape=(8,), dtype=float32, numpy=
+ *   array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
+ *           0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)>
  * 
  * 
  * @param <T> data type for {@code y()} output

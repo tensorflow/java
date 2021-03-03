@@ -214,6 +214,7 @@
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
           </includePaths>
           <linkPaths>
+            <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
             <linkPath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/</linkPath>
           </linkPaths>
           <resourcePaths>
@@ -364,7 +365,6 @@
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.lib</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*.obj</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*mklml*</exclude>
-                <exclude>org/tensorflow/internal/c_api/${native.classifier}/*iomp5*</exclude>
                 <exclude>org/tensorflow/internal/c_api/${native.classifier}/*msvcr120*</exclude>
               </excludes>
             </configuration>
@@ -373,7 +373,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.0</version>
+        <version>3.0.0-M5</version>
         <executions>
           <execution>
             <!--
@@ -389,6 +389,8 @@
           </execution>
         </executions>
         <configuration>
+          <!-- Activate the use of TCP to transmit events to the plugin -->
+          <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
           <additionalClasspathElements>
             <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
             <!-- Note: the following path is not accessible in deploying profile, so other libraries like

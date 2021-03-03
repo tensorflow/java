@@ -69,39 +69,40 @@ public final class XPlaneProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n.tensorflow/core/profiler/protobuf/xpla" +
-      "ne.proto\022\023tensorflow.profiler\"W\n\006XSpace\022" +
+      "ne.proto\022\023tensorflow.profiler\"j\n\006XSpace\022" +
       "+\n\006planes\030\001 \003(\0132\033.tensorflow.profiler.XP" +
-      "lane\022\016\n\006errors\030\002 \003(\t\022\020\n\010warnings\030\003 \003(\t\"\272" +
-      "\003\n\006XPlane\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022)\n\005l" +
-      "ines\030\003 \003(\0132\032.tensorflow.profiler.XLine\022F" +
-      "\n\016event_metadata\030\004 \003(\0132..tensorflow.prof" +
-      "iler.XPlane.EventMetadataEntry\022D\n\rstat_m" +
-      "etadata\030\005 \003(\0132-.tensorflow.profiler.XPla" +
-      "ne.StatMetadataEntry\022)\n\005stats\030\006 \003(\0132\032.te" +
-      "nsorflow.profiler.XStat\032Y\n\022EventMetadata" +
-      "Entry\022\013\n\003key\030\001 \001(\003\0222\n\005value\030\002 \001(\0132#.tens" +
-      "orflow.profiler.XEventMetadata:\0028\001\032W\n\021St" +
-      "atMetadataEntry\022\013\n\003key\030\001 \001(\003\0221\n\005value\030\002 " +
-      "\001(\0132\".tensorflow.profiler.XStatMetadata:" +
-      "\0028\001\"\273\001\n\005XLine\022\n\n\002id\030\001 \001(\003\022\022\n\ndisplay_id\030" +
-      "\n \001(\003\022\014\n\004name\030\002 \001(\t\022\024\n\014display_name\030\013 \001(" +
-      "\t\022\024\n\014timestamp_ns\030\003 \001(\003\022\023\n\013duration_ps\030\t" +
-      " \001(\003\022+\n\006events\030\004 \003(\0132\033.tensorflow.profil" +
-      "er.XEventJ\004\010\005\020\006J\004\010\006\020\007J\004\010\007\020\010J\004\010\010\020\t\"\225\001\n\006XE" +
-      "vent\022\023\n\013metadata_id\030\001 \001(\003\022\023\n\toffset_ps\030\002" +
-      " \001(\003H\000\022\031\n\017num_occurrences\030\005 \001(\003H\000\022\023\n\013dur" +
-      "ation_ps\030\003 \001(\003\022)\n\005stats\030\004 \003(\0132\032.tensorfl" +
-      "ow.profiler.XStatB\006\n\004data\"\255\001\n\005XStat\022\023\n\013m" +
-      "etadata_id\030\001 \001(\003\022\026\n\014double_value\030\002 \001(\001H\000" +
-      "\022\026\n\014uint64_value\030\003 \001(\004H\000\022\025\n\013int64_value\030" +
-      "\004 \001(\003H\000\022\023\n\tstr_value\030\005 \001(\tH\000\022\025\n\013bytes_va" +
-      "lue\030\006 \001(\014H\000\022\023\n\tref_value\030\007 \001(\004H\000B\007\n\005valu" +
-      "e\"R\n\016XEventMetadata\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030" +
-      "\002 \001(\t\022\024\n\014display_name\030\004 \001(\t\022\020\n\010metadata\030" +
-      "\003 \001(\014\">\n\rXStatMetadata\022\n\n\002id\030\001 \001(\003\022\014\n\004na" +
-      "me\030\002 \001(\t\022\023\n\013description\030\003 \001(\tB2\n\035org.ten" +
-      "sorflow.proto.profilerB\014XPlaneProtosP\001\370\001" +
-      "\001b\006proto3"
+      "lane\022\016\n\006errors\030\002 \003(\t\022\020\n\010warnings\030\003 \003(\t\022\021" +
+      "\n\thostnames\030\004 \003(\t\"\272\003\n\006XPlane\022\n\n\002id\030\001 \001(\003" +
+      "\022\014\n\004name\030\002 \001(\t\022)\n\005lines\030\003 \003(\0132\032.tensorfl" +
+      "ow.profiler.XLine\022F\n\016event_metadata\030\004 \003(" +
+      "\0132..tensorflow.profiler.XPlane.EventMeta" +
+      "dataEntry\022D\n\rstat_metadata\030\005 \003(\0132-.tenso" +
+      "rflow.profiler.XPlane.StatMetadataEntry\022" +
+      ")\n\005stats\030\006 \003(\0132\032.tensorflow.profiler.XSt" +
+      "at\032Y\n\022EventMetadataEntry\022\013\n\003key\030\001 \001(\003\0222\n" +
+      "\005value\030\002 \001(\0132#.tensorflow.profiler.XEven" +
+      "tMetadata:\0028\001\032W\n\021StatMetadataEntry\022\013\n\003ke" +
+      "y\030\001 \001(\003\0221\n\005value\030\002 \001(\0132\".tensorflow.prof" +
+      "iler.XStatMetadata:\0028\001\"\273\001\n\005XLine\022\n\n\002id\030\001" +
+      " \001(\003\022\022\n\ndisplay_id\030\n \001(\003\022\014\n\004name\030\002 \001(\t\022\024" +
+      "\n\014display_name\030\013 \001(\t\022\024\n\014timestamp_ns\030\003 \001" +
+      "(\003\022\023\n\013duration_ps\030\t \001(\003\022+\n\006events\030\004 \003(\0132" +
+      "\033.tensorflow.profiler.XEventJ\004\010\005\020\006J\004\010\006\020\007" +
+      "J\004\010\007\020\010J\004\010\010\020\t\"\225\001\n\006XEvent\022\023\n\013metadata_id\030\001" +
+      " \001(\003\022\023\n\toffset_ps\030\002 \001(\003H\000\022\031\n\017num_occurre" +
+      "nces\030\005 \001(\003H\000\022\023\n\013duration_ps\030\003 \001(\003\022)\n\005sta" +
+      "ts\030\004 \003(\0132\032.tensorflow.profiler.XStatB\006\n\004" +
+      "data\"\255\001\n\005XStat\022\023\n\013metadata_id\030\001 \001(\003\022\026\n\014d" +
+      "ouble_value\030\002 \001(\001H\000\022\026\n\014uint64_value\030\003 \001(" +
+      "\004H\000\022\025\n\013int64_value\030\004 \001(\003H\000\022\023\n\tstr_value\030" +
+      "\005 \001(\tH\000\022\025\n\013bytes_value\030\006 \001(\014H\000\022\023\n\tref_va" +
+      "lue\030\007 \001(\004H\000B\007\n\005value\"}\n\016XEventMetadata\022\n" +
+      "\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\024\n\014display_name" +
+      "\030\004 \001(\t\022\020\n\010metadata\030\003 \001(\014\022)\n\005stats\030\005 \003(\0132" +
+      "\032.tensorflow.profiler.XStat\">\n\rXStatMeta" +
+      "data\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\023\n\013descri" +
+      "ption\030\003 \001(\tB2\n\035org.tensorflow.proto.prof" +
+      "ilerB\014XPlaneProtosP\001\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -112,7 +113,7 @@ public final class XPlaneProtos {
     internal_static_tensorflow_profiler_XSpace_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_profiler_XSpace_descriptor,
-        new java.lang.String[] { "Planes", "Errors", "Warnings", });
+        new java.lang.String[] { "Planes", "Errors", "Warnings", "Hostnames", });
     internal_static_tensorflow_profiler_XPlane_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tensorflow_profiler_XPlane_fieldAccessorTable = new
@@ -154,7 +155,7 @@ public final class XPlaneProtos {
     internal_static_tensorflow_profiler_XEventMetadata_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_profiler_XEventMetadata_descriptor,
-        new java.lang.String[] { "Id", "Name", "DisplayName", "Metadata", });
+        new java.lang.String[] { "Id", "Name", "DisplayName", "Metadata", "Stats", });
     internal_static_tensorflow_profiler_XStatMetadata_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_tensorflow_profiler_XStatMetadata_fieldAccessorTable = new

@@ -61,4 +61,73 @@ public interface SavedVariableOrBuilder extends
    */
   com.google.protobuf.ByteString
       getNameBytes();
+
+  /**
+   * <code>string device = 7;</code>
+   */
+  java.lang.String getDevice();
+  /**
+   * <code>string device = 7;</code>
+   */
+  com.google.protobuf.ByteString
+      getDeviceBytes();
+
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  java.util.List<org.tensorflow.proto.framework.SavedVariable> 
+      getExperimentalDistributedVariableComponentsList();
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  org.tensorflow.proto.framework.SavedVariable getExperimentalDistributedVariableComponents(int index);
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  int getExperimentalDistributedVariableComponentsCount();
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  java.util.List<? extends org.tensorflow.proto.framework.SavedVariableOrBuilder> 
+      getExperimentalDistributedVariableComponentsOrBuilderList();
+  /**
+   * <pre>
+   * List of component variables for a distributed variable.
+   * When this field is non-empty, the SavedVariable will be assumed
+   * to be a distributed variable defined by the components listed here.
+   * This is only supported by experimental loaders at the moment.
+   * </pre>
+   *
+   * <code>repeated .tensorflow.SavedVariable experimental_distributed_variable_components = 8;</code>
+   */
+  org.tensorflow.proto.framework.SavedVariableOrBuilder getExperimentalDistributedVariableComponentsOrBuilder(
+      int index);
 }

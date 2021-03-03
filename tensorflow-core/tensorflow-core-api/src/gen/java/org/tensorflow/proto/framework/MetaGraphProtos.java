@@ -178,11 +178,11 @@ public final class MetaGraphProtos {
       "8\001\032F\n\014OutputsEntry\022\013\n\003key\030\001 \001(\t\022%\n\005value" +
       "\030\002 \001(\0132\026.tensorflow.TensorInfo:\0028\001\"M\n\014As" +
       "setFileDef\022+\n\013tensor_info\030\001 \001(\0132\026.tensor" +
-      "flow.TensorInfo\022\020\n\010filename\030\002 \001(\tB\200\001\n\036or" +
+      "flow.TensorInfo\022\020\n\010filename\030\002 \001(\tB\215\001\n\036or" +
       "g.tensorflow.proto.frameworkB\017MetaGraphP" +
-      "rotosP\001ZHgithub.com/tensorflow/tensorflo" +
-      "w/tensorflow/go/core/core_protos_go_prot" +
-      "o\370\001\001b\006proto3"
+      "rotosP\001ZUgithub.com/tensorflow/tensorflo" +
+      "w/tensorflow/go/core/protobuf/for_core_p" +
+      "rotos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

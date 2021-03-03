@@ -29,6 +29,7 @@ import org.tensorflow.op.image.CropAndResizeGradImage;
 import org.tensorflow.op.image.DecodeAndCropJpeg;
 import org.tensorflow.op.image.DecodeBmp;
 import org.tensorflow.op.image.DecodeGif;
+import org.tensorflow.op.image.DecodeImage;
 import org.tensorflow.op.image.DecodeJpeg;
 import org.tensorflow.op.image.DecodePng;
 import org.tensorflow.op.image.DrawBoundingBoxes;
@@ -49,6 +50,7 @@ import org.tensorflow.op.image.ResizeNearestNeighbor;
 import org.tensorflow.op.image.RgbToHsv;
 import org.tensorflow.op.image.SampleDistortedBoundingBox;
 import org.tensorflow.op.image.ScaleAndTranslate;
+import org.tensorflow.op.image.StatelessSampleDistortedBoundingBox;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
@@ -355,6 +357,69 @@ public final class ImageOps {
    */
   public DecodeGif decodeGif(Operand<TString> contents) {
     return DecodeGif.create(scope, contents);
+  }
+
+  /**
+   * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
+   *  <p>
+   *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+   *  appropriate operation to convert the input bytes string into a Tensor of type
+   *  dtype.
+   *  <p>
+   *  <i>NOTE</i>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
+   *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
+   *  [height, width, num_channels]. Make sure to take this into account when
+   *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
+   *  PNG files. Alternately, set the expand_animations argument of this function to
+   *  False, in which case the op will return 3-dimensional tensors and will truncate
+   *  animated GIF files to the first frame.
+   *  <p>
+   *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+   *  canvas (maximum frame width x maximum frame height), then it fills the
+   *  unoccupied areas (in the first frame) with zeros (black). For frames after the
+   *  first frame that does not occupy the entire canvas, it uses the previous
+   *  frame to fill the unoccupied areas.
+   *
+   * @param <T> data type for {@code image()} output
+   * @param contents 0-D. The encoded image bytes.
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeImage
+   */
+  public DecodeImage<TUint8> decodeImage(Operand<TString> contents,
+      DecodeImage.Options... options) {
+    return DecodeImage.create(scope, contents, options);
+  }
+
+  /**
+   * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
+   *  <p>
+   *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+   *  appropriate operation to convert the input bytes string into a Tensor of type
+   *  dtype.
+   *  <p>
+   *  <i>NOTE</i>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
+   *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
+   *  [height, width, num_channels]. Make sure to take this into account when
+   *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
+   *  PNG files. Alternately, set the expand_animations argument of this function to
+   *  False, in which case the op will return 3-dimensional tensors and will truncate
+   *  animated GIF files to the first frame.
+   *  <p>
+   *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+   *  canvas (maximum frame width x maximum frame height), then it fills the
+   *  unoccupied areas (in the first frame) with zeros (black). For frames after the
+   *  first frame that does not occupy the entire canvas, it uses the previous
+   *  frame to fill the unoccupied areas.
+   *
+   * @param <T> data type for {@code image()} output
+   * @param contents 0-D. The encoded image bytes.
+   * @param dtype The desired DType of the returned Tensor.
+   * @param options carries optional attributes values
+   * @return a new instance of DecodeImage
+   */
+  public <T extends TNumber> DecodeImage<T> decodeImage(Operand<TString> contents, Class<T> dtype,
+      DecodeImage.Options... options) {
+    return DecodeImage.create(scope, contents, dtype, options);
   }
 
   /**
@@ -943,6 +1008,87 @@ public final class ImageOps {
       Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
     return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
+  }
+
+  /**
+   * Generate a randomly distorted bounding box for an image deterministically.
+   *  <p>
+   *  Bounding box annotations are often supplied in addition to ground-truth labels
+   *  in image recognition or object localization tasks. A common technique for
+   *  training such a system is to randomly distort an image while preserving its
+   *  content, i.e. <i>data augmentation</i>. This Op, given the same `seed`,
+   *  deterministically outputs a randomly distorted localization of an object, i.e.
+   *  bounding box, given an `image_size`, `bounding_boxes` and a series of
+   *  constraints.
+   *  <p>
+   *  The output of this Op is a single bounding box that may be used to crop the
+   *  original image. The output is returned as 3 tensors: `begin`, `size` and
+   *  `bboxes`. The first 2 tensors can be fed directly into `tf.slice` to crop the
+   *  image. The latter may be supplied to `tf.image.draw_bounding_boxes` to visualize
+   *  what the bounding box looks like.
+   *  <p>
+   *  Bounding boxes are supplied and returned as `[y_min, x_min, y_max, x_max]`. The
+   *  bounding box coordinates are floats in `[0.0, 1.0]` relative to the width and
+   *  the height of the underlying image.
+   *  <p>
+   *  The output of this Op is guaranteed to be the same given the same `seed` and is
+   *  independent of how many times the function is called, and independent of global
+   *  seed settings (e.g. `tf.random.set_seed`).
+   *  <p>
+   *  Example usage:
+   *  <p>
+   *  >>> image = np.array([[[1], [2], [3]], [[4], [5], [6]], [[7], [8], [9]]])
+   *  >>> bbox = tf.constant(
+   *  ...   [0.0, 0.0, 1.0, 1.0], dtype=tf.float32, shape=[1, 1, 4])
+   *  >>> seed = (1, 2)
+   *  >>> # Generate a single distorted bounding box.
+   *  >>> bbox_begin, bbox_size, bbox_draw = (
+   *  ...   tf.image.stateless_sample_distorted_bounding_box(
+   *  ...     tf.shape(image), bounding_boxes=bbox, seed=seed))
+   *  >>> # Employ the bounding box to distort the image.
+   *  >>> tf.slice(image, bbox_begin, bbox_size)
+   *  <tf.Tensor: shape=(2, 2, 1), dtype=int64, numpy=
+   *  array([[[1],
+   *          [2]],
+   *         [[4],
+   *          [5]]])>
+   *  >>> # Draw the bounding box in an image summary.
+   *  >>> colors = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+   *  >>> tf.image.draw_bounding_boxes(
+   *  ...   tf.expand_dims(tf.cast(image, tf.float32),0), bbox_draw, colors)
+   *  <tf.Tensor: shape=(1, 3, 3, 1), dtype=float32, numpy=
+   *  array([[[[1.],
+   *           [1.],
+   *           [3.]],
+   *          [[1.],
+   *           [1.],
+   *           [6.]],
+   *          [[7.],
+   *           [8.],
+   *           [9.]]]], dtype=float32)>
+   *  <p>
+   *  Note that if no bounding box information is available, setting
+   *  `use_image_if_no_bounding_boxes = true` will assume there is a single implicit
+   *  bounding box covering the whole image. If `use_image_if_no_bounding_boxes` is
+   *  false and no bounding boxes are supplied, an error is raised.
+   *
+   * @param <T> data type for {@code begin()} output
+   * @param imageSize 1-D, containing `[height, width, channels]`.
+   * @param boundingBoxes 3-D with shape `[batch, N, 4]` describing the N bounding boxes
+   *  associated with the image.
+   * @param minObjectCovered The cropped area of the image must contain at least this
+   *  fraction of any bounding box supplied. The value of this parameter should be
+   *  non-negative. In the case of 0, the cropped area does not need to overlap
+   *  any of the bounding boxes supplied.
+   * @param seed 1-D with shape `[2]`. The seed to the random number generator. Must have dtype
+   *  `int32` or `int64`. (When using XLA, only `int32` is allowed.)
+   * @param options carries optional attributes values
+   * @return a new instance of StatelessSampleDistortedBoundingBox
+   */
+  public <T extends TNumber> StatelessSampleDistortedBoundingBox<T> statelessSampleDistortedBoundingBox(
+      Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered,
+      Operand<? extends TNumber> seed, StatelessSampleDistortedBoundingBox.Options... options) {
+    return StatelessSampleDistortedBoundingBox.create(scope, imageSize, boundingBoxes, minObjectCovered, seed, options);
   }
 
   /**

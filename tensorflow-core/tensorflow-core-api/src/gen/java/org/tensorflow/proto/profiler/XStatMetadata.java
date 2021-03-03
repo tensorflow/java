@@ -5,7 +5,8 @@ package org.tensorflow.proto.profiler;
 
 /**
  * <pre>
- * Metadata for an XStat, shared by all instances of the same stat.
+ * Metadata for an XStat, corresponds to a stat type and is shared by all
+ * XStats with the same metadata_id.
  * Next ID: 4
  * </pre>
  *
@@ -122,6 +123,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * Name of the stat (should be short).
+   * Two XStatMetadata with different id should have different names.
    * </pre>
    *
    * <code>string name = 2;</code>
@@ -141,6 +143,7 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * Name of the stat (should be short).
+   * Two XStatMetadata with different id should have different names.
    * </pre>
    *
    * <code>string name = 2;</code>
@@ -379,7 +382,8 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Metadata for an XStat, shared by all instances of the same stat.
+   * Metadata for an XStat, corresponds to a stat type and is shared by all
+   * XStats with the same metadata_id.
    * Next ID: 4
    * </pre>
    *
@@ -585,6 +589,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * Name of the stat (should be short).
+     * Two XStatMetadata with different id should have different names.
      * </pre>
      *
      * <code>string name = 2;</code>
@@ -604,6 +609,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * Name of the stat (should be short).
+     * Two XStatMetadata with different id should have different names.
      * </pre>
      *
      * <code>string name = 2;</code>
@@ -624,6 +630,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * Name of the stat (should be short).
+     * Two XStatMetadata with different id should have different names.
      * </pre>
      *
      * <code>string name = 2;</code>
@@ -641,6 +648,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * Name of the stat (should be short).
+     * Two XStatMetadata with different id should have different names.
      * </pre>
      *
      * <code>string name = 2;</code>
@@ -654,6 +662,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <pre>
      * Name of the stat (should be short).
+     * Two XStatMetadata with different id should have different names.
      * </pre>
      *
      * <code>string name = 2;</code>

@@ -28,6 +28,9 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 /**
+ * Writes a graph summary.
+ * <p>
+ * Writes TensorFlow graph `tensor` at `step` using summary `writer`.
  */
 public final class WriteGraphSummary extends RawOp {
   

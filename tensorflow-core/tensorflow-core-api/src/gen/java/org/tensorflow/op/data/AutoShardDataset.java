@@ -57,7 +57,16 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
       return this;
     }
     
+    /**
+     * @param numReplicas 
+     */
+    public Options numReplicas(Long numReplicas) {
+      this.numReplicas = numReplicas;
+      return this;
+    }
+    
     private Long autoShardPolicy;
+    private Long numReplicas;
     
     private Options() {
     }
@@ -93,6 +102,9 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
         if (opts.autoShardPolicy != null) {
           opBuilder.setAttr("auto_shard_policy", opts.autoShardPolicy);
         }
+        if (opts.numReplicas != null) {
+          opBuilder.setAttr("num_replicas", opts.numReplicas);
+        }
       }
     }
     return new AutoShardDataset(opBuilder.build());
@@ -103,6 +115,13 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
    */
   public static Options autoShardPolicy(Long autoShardPolicy) {
     return new Options().autoShardPolicy(autoShardPolicy);
+  }
+  
+  /**
+   * @param numReplicas 
+   */
+  public static Options numReplicas(Long numReplicas) {
+    return new Options().numReplicas(numReplicas);
   }
   
   /**

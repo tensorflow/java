@@ -61,19 +61,24 @@ jobs:
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
           ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
+          if [[ "${{ matrix.ext }}" == *-gpu ]]; then
           echo Installing CUDA
-          curl -L https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda-repo-rhel7-10-1-local-10.1.243-418.87.00-1.0-1.x86_64.rpm -o $HOME/cuda.rpm
-          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.5/cudnn-10.1-linux-x64-v7.6.5.32.tgz -o $HOME/cudnn.tgz
-          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.4/nccl_2.4.8-1+cuda10.1_x86_64.txz -o $HOME/nccl.txz
+          curl -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda-repo-rhel7-11-0-local-11.0.3_450.51.06-1.x86_64.rpm -o $HOME/cuda.rpm
+          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-linux-x64-v8.0.3.33.tgz -o $HOME/cudnn.tgz
+          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.7/nccl_2.7.8-1+cuda11.0_x86_64.txz -o $HOME/nccl.txz
           rpm -i $HOME/cuda.rpm
-          cd /var/cuda-repo-10-1-local-10.1.243-418.87.00/; rpm -i --nodeps cuda*.rpm libc*.rpm
+          pushd /var/cuda-repo-rhel7-11-0-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
           ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
           ln -sf /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/libnvidia-ml.so
           tar hxvf $HOME/cudnn.tgz -C /usr/local/
           tar hxvf $HOME/nccl.txz --strip-components=1 -C /usr/local/cuda/
           mv /usr/local/cuda/lib/* /usr/local/cuda/lib64/
+          echo Removing downloaded archives and unused libraries to avoid running out of disk space
+          rm -f *.rpm *.tgz *.txz *.tar.*
+          rm -f $(find /usr/local/cuda/ -name '*.a' -and -not -name libcudart_static.a -and -not -name libcudadevrt.a)
+          fi
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -104,9 +109,9 @@ jobs:
         run: |
           python3 -m pip install numpy six
           echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
+          curl -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
           bash bazel.sh
-          brew install libomp
+          brew install libomp perl
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Build project
@@ -132,26 +137,34 @@ jobs:
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
+        with:
+          minimum-size: 8GB
+          maximum-size: 16GB
+          disk-root: "C:"
       - name: Install environment
         shell: cmd
         run: |
+          set "PATH=C:\msys64\usr\bin;%PATH%"
+          echo Removing broken stuff from WSL and MSYS2
+          rm "C:/WINDOWS/system32/bash.EXE" "C:/msys64/usr/bin/python.exe"
           python -m pip install numpy six
-          echo Removing broken version of Bash from WSL
-          rm.exe "C:/WINDOWS/system32/bash.EXE"
-          echo Removing some unused stuff to avoid running out of disk space
-          rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
           echo Removing old versions of MSVC that interfere with Bazel
           bash.exe -lc "find 'C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/' -iname '14.1*' -exec rm -Rf {} \;"
           echo Downloading Bazel
           mkdir C:\bazel
-          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel-2.0.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          curl.exe -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
+          set "EXT=${{ matrix.ext }}"
+          if "%EXT:~-4%"=="-gpu" (
+          echo Removing some unused stuff to avoid running out of disk space
+          rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
           echo Installing CUDA
-          curl.exe -L http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_windows.exe -o cuda.exe
-          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v7.6.5/cudnn-10.1-windows7-x64-v7.6.5.32.zip -o cudnn.zip
+          curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_451.82_win10.exe -o cuda.exe
+          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-windows-x64-v8.0.3.33.zip -o cudnn.zip
           cuda.exe -s
           mkdir cuda
           unzip.exe cudnn.zip
-          cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.1/"
+          cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/"
+          )
           echo %JAVA_HOME%
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -159,9 +172,9 @@ jobs:
         shell: cmd
         run: |
           call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
-          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
-          set "CUDA_PATH_V10_1=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1"
-          set "PATH=C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v10.1\libnvvp;%PATH%"
+          set "CUDA_PATH=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0"
+          set "CUDA_PATH_V11_0=%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0"
+          set "PATH=C:\msys64\usr\bin;C:\bazel;C:\Program Files\Git\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0\bin;%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v11.0\libnvvp;%PATH%"
           echo Shorten work paths to prevent Bazel from reaching MAX_PATH limit
           set "TEST_TMPDIR=C:\tmp"
           set "TMPDIR=C:\tmp"

@@ -34,11 +34,11 @@ public final class QueueRunnerProtos {
       "\022\022\n\nqueue_name\030\001 \001(\t\022\027\n\017enqueue_op_name\030" +
       "\002 \003(\t\022\025\n\rclose_op_name\030\003 \001(\t\022\026\n\016cancel_o" +
       "p_name\030\004 \001(\t\022<\n\034queue_closed_exception_t" +
-      "ypes\030\005 \003(\0162\026.tensorflow.error.CodeB\202\001\n\036o" +
+      "ypes\030\005 \003(\0162\026.tensorflow.error.CodeB\217\001\n\036o" +
       "rg.tensorflow.proto.frameworkB\021QueueRunn" +
-      "erProtosP\001ZHgithub.com/tensorflow/tensor" +
-      "flow/tensorflow/go/core/core_protos_go_p" +
-      "roto\370\001\001b\006proto3"
+      "erProtosP\001ZUgithub.com/tensorflow/tensor" +
+      "flow/tensorflow/go/core/protobuf/for_cor" +
+      "e_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

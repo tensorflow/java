@@ -14,10 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.ndarray.FloatNdArray;
-import org.tensorflow.ndarray.NdArray;
-import org.tensorflow.ndarray.NdArrays;
-import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.*;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -104,6 +101,23 @@ public class ND {
   }
 
   /**
+   * Gets the square root of an array.
+   *
+   * @param a the array
+   * @return the square root of the array.
+   */
+  public static DoubleNdArray sqrt(DoubleNdArray a) {
+    DoubleNdArray result = NdArrays.ofDoubles(a.shape());
+    int nDims = a.shape().numDimensions();
+    a.elements(nDims - 1)
+        .forEachIndexed(
+            (idx, v) -> {
+              result.setDouble(Math.sqrt(v.getDouble()), idx);
+            });
+    return result;
+  }
+
+  /**
    * Gets the square of an array.
    *
    * @param a the array
@@ -116,6 +130,23 @@ public class ND {
         .forEachIndexed(
             (idx, v) -> {
               result.setFloat(v.getFloat() * v.getFloat(), idx);
+            });
+    return result;
+  }
+
+  /**
+   * Gets the square of an array.
+   *
+   * @param a the array
+   * @return the square of the array.
+   */
+  public static DoubleNdArray square(DoubleNdArray a) {
+    DoubleNdArray result = NdArrays.ofDoubles(a.shape());
+    int nDims = a.shape().numDimensions();
+    a.elements(nDims - 1)
+        .forEachIndexed(
+            (idx, v) -> {
+              result.setDouble(v.getDouble() * v.getDouble(), idx);
             });
     return result;
   }
@@ -569,6 +600,18 @@ public class ND {
   }
 
   /**
+   * Sum all elements of an array
+   *
+   * @param a the array
+   * @return an a array with one element containing the sum.
+   */
+  public static DoubleNdArray sum(DoubleNdArray a) {
+    AtomicReference<Double> sum = new AtomicReference<Double>(0D);
+    a.scalars().forEach(f -> sum.set(sum.get() + f.getDouble()));
+    return NdArrays.scalarOf(sum.get());
+  }
+
+  /**
    * Sum all elements of an array based on the specified axis
    *
    * @param a the array
@@ -576,6 +619,17 @@ public class ND {
    * @return an a array the sum over the axis less the diemsnion
    */
   public static FloatNdArray sum(FloatNdArray a, int axis) {
+    return sum(a, axis, false);
+  }
+
+  /**
+   * Sum all elements of an array based on the specified axis
+   *
+   * @param a the array
+   * @param axis the axis to sum
+   * @return an a array the sum over the axis less the diemsnion
+   */
+  public static DoubleNdArray sum(DoubleNdArray a, int axis) {
     return sum(a, axis, false);
   }
 
@@ -611,6 +665,45 @@ public class ND {
           .forEachIndexed(
               (idx, v) -> {
                 v.setFloat(sums[counter.getAndAdd(1)]);
+              });
+      return arrayK;
+    } else {
+      return NdArrays.vectorOf(sums);
+    }
+  }
+
+  /**
+   * Sum all elements of an array based on the specified axis
+   *
+   * @param a the array
+   * @param axis the axis to sum
+   * @param keepDims indicates whether the dimensions over the sum should be kept or not.
+   * @return an a array the sum over the axis
+   */
+  public static DoubleNdArray sum(DoubleNdArray a, int axis, boolean keepDims) {
+    Shape shape = a.shape();
+    int nDims = shape.numDimensions();
+    int xis = nDims - 1 - axis;
+    long totalSize = shape.size();
+    long axisSize = shape.size(xis);
+    final double[] sums = new double[(int) axisSize];
+
+    a.scalars()
+        .forEachIndexed(
+            (idx, f) -> {
+              sums[(int) idx[xis]] += f.getDouble();
+            });
+
+    if (keepDims) {
+      long[] newDims = shape.asArray();
+      newDims[axis] = 1;
+      final AtomicInteger counter = new AtomicInteger();
+      DoubleNdArray arrayK = NdArrays.ofDoubles(Shape.of(newDims));
+      arrayK
+          .elements(newDims.length - 1)
+          .forEachIndexed(
+              (idx, v) -> {
+                v.setDouble(sums[counter.getAndAdd(1)]);
               });
       return arrayK;
     } else {
