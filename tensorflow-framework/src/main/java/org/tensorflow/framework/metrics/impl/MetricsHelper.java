@@ -413,6 +413,7 @@ public class MetricsHelper {
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
             tf.constant(1),
             tf.reduceProd(
+                    // take all but the first dimension
                 tf.shape.takeLast(
                     predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
                 tf.constant(0)));
@@ -479,21 +480,21 @@ public class MetricsHelper {
 
     Map<ConfusionMatrixEnum, Operand[]> loopVars = new HashMap<>();
     loopVars.put(ConfusionMatrixEnum.TRUE_POSITIVES, new Operand[] {labelIsPos, predIsPos});
-    Variable<T> update_tn = variablesToUpdate.get(ConfusionMatrixEnum.TRUE_NEGATIVES);
-    Variable<T> update_fp = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_POSITIVES);
-    Variable<T> update_fn = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_NEGATIVES);
+    Variable<T> updateTN = variablesToUpdate.get(ConfusionMatrixEnum.TRUE_NEGATIVES);
+    Variable<T> updateFP = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_POSITIVES);
+    Variable<T> updateFN = variablesToUpdate.get(ConfusionMatrixEnum.FALSE_NEGATIVES);
 
     Operand<TBool> predIsNeg = null;
     Operand<TBool> labelIsNeg;
-    if (update_fn != null || update_tn != null) {
+    if (updateFN != null || updateTN != null) {
       predIsNeg = tf.math.logicalNot(predIsPos);
       loopVars.put(ConfusionMatrixEnum.FALSE_NEGATIVES, new Operand[] {labelIsPos, predIsNeg});
     }
 
-    if (update_fp != null || update_tn != null) {
+    if (updateFP != null || updateTN != null) {
       labelIsNeg = tf.math.logicalNot(labelIsPos);
       loopVars.put(ConfusionMatrixEnum.FALSE_POSITIVES, new Operand[] {labelIsNeg, predIsPos});
-      if (update_tn != null) {
+      if (updateTN != null) {
         loopVars.put(ConfusionMatrixEnum.TRUE_NEGATIVES, new Operand[] {labelIsNeg, predIsNeg});
       }
     }
