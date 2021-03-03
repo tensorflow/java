@@ -65,12 +65,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   @Override
   public EagerOperation build() {
     TFE_TensorHandle[] tensorHandles = execute(opHandle, session);
-    EagerOperation operation =
-        new EagerOperation(session, opHandle, tensorHandles, type, name);
-    // Release our reference to the native op handle now that we transferred its
-    // ownership to the EagerOperation
-    session.detach(opHandle);
-    return operation;
+    return new EagerOperation(session, opHandle, tensorHandles, type, name);
   }
 
   @Override

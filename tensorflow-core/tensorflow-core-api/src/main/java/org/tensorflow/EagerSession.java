@@ -24,6 +24,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_NewContext;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -310,6 +311,23 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     return nativeHandle;
   }
 
+  /**
+   * Attach the list of native resources to this eager session scope.
+   *
+   * <p>When the eager session is closed (i.e. by calling {@link #close()} explicitly or
+   * implicitly via try-with-resources), all native resources attached to the session will be
+   * released as well, unless so other references are {@link Pointer#retainReference() retaining}
+   * them.</p>
+   *
+   * <p>Attached resources can still be garbage collected though if their associated {@link Pointer}
+   * is no longer reachable in Java, independently of their reference count. Therefore, it is
+   * assumed that these resources are not required by the native library once the Java client no
+   * longer needs them.</p>
+   *
+   * <p>Attaching a resource already attached to this session will have no effect.</p>
+   *
+   * @param resources resources to attach to the session
+   */
   void attach(Pointer... resources) {
     checkSession();
     for (Pointer r : resources) {
@@ -317,6 +335,21 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+  /**
+   * Detach a list of resources from this eager session scope.
+   *
+   * <p>Detached native resources will prevent them to be automatically released when the session is
+   * closed.</p>
+   *
+   * <p>Note though that this method will decrement the reference count of each resources being
+   * detached, which may automatically released them if that count reaches 0. Therefore,
+   * invoking {@link Pointer#retainReference()} prior to this call on any resource that must remain
+   * valid after being detached might be required.</p>
+   *
+   * <p>Detaching a resource that is not attached to this session will have no effect.</p>
+   *
+   * @param resources resources to detach from the session
+   */
   void detach(Pointer... resources) {
     checkSession();
     for (Pointer r : resources) {
@@ -326,14 +359,12 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private static volatile EagerSession defaultSession = null;
 
-  private final PointerScope nativeResources;
+  private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
 
   private EagerSession(Options options) {
-    try (PointerScope scope = new PointerScope()) {
-      this.nativeResources = scope.extend();
-      this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
-    }
+    this.nativeResources = new WeakPointerScope();
+    this.nativeHandle = allocate(options.async, options.devicePlacementPolicy.code, options.config);
   }
 
   private void checkSession() {
@@ -363,7 +394,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       TFE_ContextOptionsSetDevicePlacementPolicy(opts, devicePlacementPolicy);
       TFE_Context context = TFE_NewContext(opts, status);
       status.throwExceptionIfNotOK();
-      return context;
+      return context.retainReference();
     }
   }
 
