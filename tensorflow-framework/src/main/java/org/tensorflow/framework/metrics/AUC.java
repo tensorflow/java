@@ -58,7 +58,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>Usage: <br>
  *
  * <pre>
- * AUC m = new  tf.keras.metrics.AUC( tf, 3);
+ * AUC m = new  org.tensorflow.framework.metrcis.AUC( tf, 3);
  * m.updateState( tf.constant(new float[] {0, 0, 1,1}),
  *          tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f}));
  *
