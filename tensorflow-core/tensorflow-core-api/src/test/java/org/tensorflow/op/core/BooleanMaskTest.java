@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
@@ -29,10 +30,12 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 public class BooleanMaskTest {
+
   @Test
-  public void testBooleanMask(){
+  public void testBooleanMask() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope tensorScope = new TensorScope()) {
       Scope scope = new Scope(g);
 
       Operand<TInt32> input = Constant.arrayOf(scope, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -43,25 +46,23 @@ public class BooleanMaskTest {
       Operand<TInt32> output1 = BooleanMask.create(scope, input, mask);
       Operand<TInt32> output2 = BooleanMask.create(scope, input2, mask, BooleanMask.axis(1));
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output1).run().get(0)) {
-        // expected shape from Python tensorflow
-        assertEquals(Shape.of(5), result.shape());
-        assertEquals(0, result.getFloat(0));
-        assertEquals(1, result.getFloat(1));
-        assertEquals(4, result.getFloat(2));
-        assertEquals(5, result.getFloat(3));
-        assertEquals(6, result.getFloat(4));
-      }
+      TFloat32 result = (TFloat32) sess.runner().fetch(output1).run(tensorScope).get(0);
+      // expected shape from Python tensorflow
+      assertEquals(Shape.of(5), result.shape());
+      assertEquals(0, result.getFloat(0));
+      assertEquals(1, result.getFloat(1));
+      assertEquals(4, result.getFloat(2));
+      assertEquals(5, result.getFloat(3));
+      assertEquals(6, result.getFloat(4));
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output2).run().get(0)) {
-        // expected shape from Python tensorflow
-        assertEquals(Shape.of(5), result.shape());
-        assertEquals(0, result.getFloat(0));
-        assertEquals(1, result.getFloat(1));
-        assertEquals(4, result.getFloat(2));
-        assertEquals(5, result.getFloat(3));
-        assertEquals(6, result.getFloat(4));
-      }
+      TFloat32 result2 = (TFloat32) sess.runner().fetch(output2).run(tensorScope).get(0);
+      // expected shape from Python tensorflow
+      assertEquals(Shape.of(5), result2.shape());
+      assertEquals(0, result2.getFloat(0));
+      assertEquals(1, result2.getFloat(1));
+      assertEquals(4, result2.getFloat(2));
+      assertEquals(5, result2.getFloat(3));
+      assertEquals(6, result2.getFloat(4));
     }
   }
 }

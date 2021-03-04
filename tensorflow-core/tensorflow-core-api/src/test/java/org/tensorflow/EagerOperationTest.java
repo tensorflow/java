@@ -35,7 +35,8 @@ public class EagerOperationTest {
   public void failToCreateIfSessionIsClosed() {
     EagerSession session = EagerSession.create();
     session.close();
-    try (TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
+    try (TensorScope scope = new TensorScope()) {
+      TInt32 t = TInt32.tensorOf(scope, Shape.of(2, 3));
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
               .setAttr("dtype", t.dataType())

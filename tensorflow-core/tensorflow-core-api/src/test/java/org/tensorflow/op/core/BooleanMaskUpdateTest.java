@@ -24,6 +24,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
+import org.tensorflow.TensorScope;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
@@ -34,7 +35,8 @@ public class BooleanMaskUpdateTest {
   @Test
   public void testBooleanMaskUpdateSlice() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope tensorScope = new TensorScope()) {
       Scope scope = new Scope(g);
 
       Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
@@ -47,31 +49,31 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
-      try (TInt32 result = (TInt32) results.get(0);
-          TInt32 bcastResult = (TInt32) results.get(1)) {
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run(tensorScope);
+      TInt32 result = (TInt32) results.get(0);
+      TInt32 bcastResult = (TInt32) results.get(1);
 
-        assertEquals(Shape.of(3, 3), result.shape());
+      assertEquals(Shape.of(3, 3), result.shape());
 
-        assertEquals(-1, result.getInt(0, 0));
-        assertEquals(-1, result.getInt(0, 1));
-        assertEquals(-1, result.getInt(0, 2));
-        assertEquals(1, result.getInt(1, 0));
-        assertEquals(1, result.getInt(1, 1));
-        assertEquals(1, result.getInt(1, 2));
-        assertEquals(2, result.getInt(2, 0));
-        assertEquals(2, result.getInt(2, 1));
-        assertEquals(2, result.getInt(2, 2));
+      assertEquals(-1, result.getInt(0, 0));
+      assertEquals(-1, result.getInt(0, 1));
+      assertEquals(-1, result.getInt(0, 2));
+      assertEquals(1, result.getInt(1, 0));
+      assertEquals(1, result.getInt(1, 1));
+      assertEquals(1, result.getInt(1, 2));
+      assertEquals(2, result.getInt(2, 0));
+      assertEquals(2, result.getInt(2, 1));
+      assertEquals(2, result.getInt(2, 2));
 
-        assertEquals(result, bcastResult);
-      }
+      assertEquals(result, bcastResult);
     }
   }
 
   @Test
   public void testBooleanMaskUpdateSliceWithBroadcast() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope tensorScope = new TensorScope()) {
       Scope scope = new Scope(g);
 
       Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
@@ -84,31 +86,31 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
-      try (TInt32 result = (TInt32) results.get(0);
-          TInt32 bcastResult = (TInt32) results.get(1)) {
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run(tensorScope);
+      TInt32 result = (TInt32) results.get(0);
+      TInt32 bcastResult = (TInt32) results.get(1);
 
-        assertEquals(Shape.of(3, 3), result.shape());
+      assertEquals(Shape.of(3, 3), result.shape());
 
-        assertEquals(-1, result.getInt(0, 0));
-        assertEquals(-1, result.getInt(0, 1));
-        assertEquals(-1, result.getInt(0, 2));
-        assertEquals(1, result.getInt(1, 0));
-        assertEquals(1, result.getInt(1, 1));
-        assertEquals(1, result.getInt(1, 2));
-        assertEquals(2, result.getInt(2, 0));
-        assertEquals(2, result.getInt(2, 1));
-        assertEquals(2, result.getInt(2, 2));
+      assertEquals(-1, result.getInt(0, 0));
+      assertEquals(-1, result.getInt(0, 1));
+      assertEquals(-1, result.getInt(0, 2));
+      assertEquals(1, result.getInt(1, 0));
+      assertEquals(1, result.getInt(1, 1));
+      assertEquals(1, result.getInt(1, 2));
+      assertEquals(2, result.getInt(2, 0));
+      assertEquals(2, result.getInt(2, 1));
+      assertEquals(2, result.getInt(2, 2));
 
-        assertEquals(result, bcastResult);
-      }
+      assertEquals(result, bcastResult);
     }
   }
 
   @Test
   public void testBooleanMaskUpdateAxis() {
     try (Graph g = new Graph();
-        Session sess = new Session(g)) {
+        Session sess = new Session(g);
+        TensorScope tensorScope = new TensorScope()) {
       Scope scope = new Scope(g);
 
       Operand<TInt32> input = Constant.tensorOf(scope, new int[][][]{{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});
@@ -122,25 +124,24 @@ public class BooleanMaskUpdateTest {
       Operand<TInt32> bcastOutput = BooleanMaskUpdate
           .create(scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));
 
-      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
-      try (TInt32 result = (TInt32) results.get(0);
-          TInt32 bcastResult = (TInt32) results.get(1)) {
+      List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run(tensorScope);
+      TInt32 result = (TInt32) results.get(0);
+      TInt32 bcastResult = (TInt32) results.get(1);
 
-        assertEquals(Shape.of(1, 1, 10), result.shape());
+      assertEquals(Shape.of(1, 1, 10), result.shape());
 
-        assertEquals(-1, result.getInt(0, 0, 0));
-        assertEquals(-1, result.getInt(0, 0, 1));
-        assertEquals(2, result.getInt(0, 0, 2));
-        assertEquals(3, result.getInt(0, 0, 3));
-        assertEquals(-1, result.getInt(0, 0, 4));
-        assertEquals(-1, result.getInt(0, 0, 5));
-        assertEquals(-1, result.getInt(0, 0, 6));
-        assertEquals(7, result.getInt(0, 0, 7));
-        assertEquals(8, result.getInt(0, 0, 8));
-        assertEquals(9, result.getInt(0, 0, 9));
+      assertEquals(-1, result.getInt(0, 0, 0));
+      assertEquals(-1, result.getInt(0, 0, 1));
+      assertEquals(2, result.getInt(0, 0, 2));
+      assertEquals(3, result.getInt(0, 0, 3));
+      assertEquals(-1, result.getInt(0, 0, 4));
+      assertEquals(-1, result.getInt(0, 0, 5));
+      assertEquals(-1, result.getInt(0, 0, 6));
+      assertEquals(7, result.getInt(0, 0, 7));
+      assertEquals(8, result.getInt(0, 0, 8));
+      assertEquals(9, result.getInt(0, 0, 9));
 
-        assertEquals(result, bcastResult);
-      }
+      assertEquals(result, bcastResult);
     }
   }
 }

@@ -354,9 +354,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
+
+  public final TpuOps tpu;
 
   public final MathOps math;
 
@@ -385,8 +385,8 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
+    tpu = new TpuOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
