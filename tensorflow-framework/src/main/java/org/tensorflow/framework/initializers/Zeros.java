@@ -42,6 +42,7 @@ public class Zeros extends BaseInitializer {
     super(tf);
   }
 
+  /** {@inheritDoc} */
   @Override
   public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
     return tf.zeros(dims, type);

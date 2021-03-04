@@ -44,6 +44,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
+// TFloating
 public class SELU extends Activation {
 
   /**
@@ -55,13 +56,7 @@ public class SELU extends Activation {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   * @param <T> the data type of the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.nn.selu(input);

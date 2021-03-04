@@ -21,6 +21,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates tensors with a constant value.
  *
@@ -91,11 +93,11 @@ public class Constant extends BaseInitializer {
     }
     switch (valueType) {
       case LONG:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(longValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(longValue), type));
       case DOUBLE:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(doubleValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(doubleValue), type));
       default:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(booleanValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(booleanValue), type));
     }
   }
 

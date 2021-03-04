@@ -31,6 +31,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
  * </pre>
  */
+// TFloating
 public class Tanh extends Activation {
 
   /**

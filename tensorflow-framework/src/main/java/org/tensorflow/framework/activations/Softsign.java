@@ -31,6 +31,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result is [-0.5f, 0.f, 0.5f]
  * </pre>
  */
+// TFloating
 public class Softsign extends Activation {
 
   /**
@@ -42,13 +43,7 @@ public class Softsign extends Activation {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   * @param <T> the data type of the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.nn.softsign(input);

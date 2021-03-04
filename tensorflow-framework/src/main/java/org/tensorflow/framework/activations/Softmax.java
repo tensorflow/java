@@ -36,6 +36,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <p>The input values in are the log-odds of the resulting probability.
  */
+// TFloating
 public class Softmax extends Activation {
 
   private static final int AXIS_DEFAULT = -1;
@@ -63,13 +64,7 @@ public class Softmax extends Activation {
     this.axis = axis;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   * @param <T> the data type of the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     Shape shape = input.shape();

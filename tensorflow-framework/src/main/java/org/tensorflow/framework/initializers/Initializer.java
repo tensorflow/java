@@ -25,9 +25,9 @@ public interface Initializer {
    * Generates the operation used to perform the initialization.
    *
    * @param dims the shape dimensions
-   * @param type the type of tensor
-   * @return An operand for the initialization.
+   * @param type the data type of tensor
    * @param <T> The data Type for initializer operation
+   * @return An operand for the initialization.
    */
   <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type);
 }

@@ -39,6 +39,7 @@ import org.tensorflow.types.family.TNumber;
  *     //                 5.0000000e-01f,7.3105860e-01f, 1.f]
  * </pre>
  */
+// TFloating
 public class Sigmoid extends Activation {
 
   /**
@@ -50,13 +51,7 @@ public class Sigmoid extends Activation {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   * @param <T> the data type of the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.math.sigmoid(input);

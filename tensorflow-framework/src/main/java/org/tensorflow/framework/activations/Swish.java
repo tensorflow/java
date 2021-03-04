@@ -39,6 +39,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
+// TFloating
 public class Swish extends Activation {
 
   /**

@@ -80,6 +80,7 @@ public class RandomUniform extends BaseInitializer {
     if (!TNumber.class.isAssignableFrom(type)) {
       throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
     }
+    // Suppression is ok because it is guarded by the if statement
     @SuppressWarnings("unchecked")
     Class<TNumber> nType = (Class<TNumber>) type;
     Operand<TNumber> distOp;

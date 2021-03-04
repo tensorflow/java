@@ -21,6 +21,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates the identity matrix.
  *
@@ -73,9 +75,9 @@ public class Identity extends BaseInitializer {
     Shape diagShape = Shape.of(diagSize);
 
     Operand<T> op;
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), type);
+    Operand<T> zero = cast(tf, tf.constant(0), type);
     Operand<T> diagOnes =
-        tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), type));
+        tf.fill(tf.constant(diagShape.asArray()), cast(tf, tf.constant(1.0), type));
     if (isSquare) {
       op =
           tf.linalg.matrixDiag(
@@ -89,6 +91,6 @@ public class Identity extends BaseInitializer {
       op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 
-    return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), type));
+    return tf.math.mul(op, cast(tf, tf.constant(gain), type));
   }
 }

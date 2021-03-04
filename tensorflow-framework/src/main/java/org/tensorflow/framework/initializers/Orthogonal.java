@@ -107,10 +107,10 @@ public class Orthogonal extends BaseInitializer {
     Output<TNumber> qo = qrOp.q();
     Output<TNumber> ro = qrOp.r();
     Operand<TNumber> diagOp =
-        tf.linalg.matrixDiagPart(ro, tf.constant(0), tf.dtypes.cast(tf.constant(0), op.type()));
+        tf.linalg.matrixDiagPart(ro, tf.constant(0), cast(tf, tf.constant(0), op.type()));
     Operand<TNumber> qop = tf.math.mul(qo, tf.math.sign(diagOp));
     if (numRows < numCols) qop = tf.linalg.transpose(qop, null);
 
-    return cast(tf, tf.math.mul(qop, tf.dtypes.cast(tf.constant(this.gain), op.type())), type);
+    return cast(tf, tf.math.mul(qop, cast(tf, tf.constant(this.gain), op.type())), type);
   }
 }

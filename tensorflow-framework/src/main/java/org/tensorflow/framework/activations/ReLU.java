@@ -56,6 +56,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
  * </pre>
  */
+// TFloating
 public class ReLU extends Activation {
 
   public static final float ALPHA_DEFAULT = 0.0f;

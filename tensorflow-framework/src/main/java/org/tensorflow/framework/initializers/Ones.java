@@ -21,6 +21,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates tensors initialized to 1.
  *
@@ -60,6 +62,7 @@ public class Ones extends BaseInitializer {
       throw new IllegalArgumentException(
           "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
-    return tf.fill(dims, tf.dtypes.cast(tf.constant(1.0), type));
+
+    return cast(tf, tf.fill(dims, tf.constant(1)), type);
   }
 }

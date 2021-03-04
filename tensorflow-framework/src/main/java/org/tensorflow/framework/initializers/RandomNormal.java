@@ -91,11 +91,12 @@ public class RandomNormal extends BaseInitializer {
       throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
     }
     long[] seeds = {seed, 0};
+    // Suppression is ok because it is guarded by the if statement
     @SuppressWarnings("unchecked")
     Class<TNumber> nType = (Class<TNumber>) type;
     Operand<TNumber> distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), nType);
     Operand<TNumber> op =
-        tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.stddev), distOp.type()));
-    return cast(tf, tf.math.add(op, tf.dtypes.cast(tf.constant(mean), distOp.type())), type);
+        tf.math.mul(distOp, cast(tf, tf.constant(this.stddev), distOp.type()));
+    return cast(tf, tf.math.add(op, cast(tf, tf.constant(mean), distOp.type())), type);
   }
 }

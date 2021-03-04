@@ -52,13 +52,7 @@ public class HardSigmoid extends Activation {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   * @param <T> the data type of the result
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     Class<T> inputType = input.type();

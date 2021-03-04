@@ -17,6 +17,7 @@ package org.tensorflow.framework.activations;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -47,6 +48,7 @@ import org.tensorflow.types.family.TNumber;
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
+// TFloating
 public class ELU extends Activation {
 
   private static final double ALPHA_DEFAULT = 1.0;
@@ -75,14 +77,14 @@ public class ELU extends Activation {
     this.alpha = alpha;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
+
+    if (!TFloating.class.isAssignableFrom(input.type()) ) {
+      throw new IllegalArgumentException(
+              "Tensor type must be numeric or boolean: " + input.type().getSimpleName());
+    }
 
     Operand<T> result = tf.nn.elu(input);
     if (alpha == 1.0) {

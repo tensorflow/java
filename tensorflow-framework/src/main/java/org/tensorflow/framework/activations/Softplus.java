@@ -32,6 +32,7 @@ import org.tensorflow.types.family.TNumber;
  *     //                 1.3132616e+00f, 2.0000000e+01f]
  * </pre>
  */
+// TFloating
 public class Softplus extends Activation {
 
   /**
@@ -43,12 +44,7 @@ public class Softplus extends Activation {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(Operand<T> input) {
     return tf.math.softplus(input);
