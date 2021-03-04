@@ -18,6 +18,7 @@ package org.tensorflow.op.core;
 import java.nio.charset.Charset;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
+import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.BooleanNdArray;
@@ -1355,13 +1356,15 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
    */
   @Endpoint(name = "constantOf")
   public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
-    return new Constant<>(
-        scope
-            .env()
-            .opBuilder("Const", scope.makeOpName("Const"))
-            .setAttr("value", tensor)
-            .setAttr("dtype", tensor.dataType())
-            .build());
+    OperationBuilder builder = scope
+        .env()
+        .opBuilder("Const", scope.makeOpName("Const"))
+        .setAttr("value", tensor)
+        .setAttr("dtype", tensor.dataType());
+
+    scope.apply(builder);
+
+    return new Constant<>(builder.build());
   }
 
   @Override
