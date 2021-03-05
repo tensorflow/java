@@ -364,12 +364,10 @@ public class ConcreteFunction implements AutoCloseable {
    * @throws IllegalArgumentException if there are multiple input or output parameters defined in the function
    */
   public Tensor call(Tensor tensor) throws IllegalArgumentException {
-    try (EagerSession session = EagerSession.create()) {
-      Ops tf = Ops.create(session);
-      Operand<?> argument = tf.constantOf((TType) tensor);
-      Operand<?> output = call(tf, argument);
-      return output.asTensor();
-    }
+    Ops tf = Ops.create();
+    Operand<?> argument = tf.constantOf((TType) tensor);
+    Operand<?> output = call(tf, argument);
+    return output.asTensor();
   }
 
   /**
