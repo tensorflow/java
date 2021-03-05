@@ -228,11 +228,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * @param inputs the inputs of the subgraph.  Must be from single output ops.
    * @param outputs the outputs of the subgraph
+   * @param allowConstants whether to allow constants in the function body (that aren't in inputs)
    * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
    * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
    * solely on inputs)
    */
-  public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs) {
+  public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
+          boolean allowConstants) {
     Queue<GraphOperation> currents = new LinkedList<>();
     Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
     Set<GraphOperation> inputOps = new LinkedHashSet<>(inputs.size());
@@ -260,9 +262,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
 
       if (op.numControlInputs() + op.numInputs() == 0) {
-        throw new IllegalStateException("Operation " + op
-                + " has no inputs, but is not set as an input.  "
-                + "It is impossible to calculate the specified outputs with the given inputs.");
+        if (!(allowConstants && op.type().equals(Constant.OP_TYPE))) {
+          throw new IllegalStateException("Operation " + op
+                  + " has no inputs, but is not set as an input.  "
+                  + "It is impossible to calculate the specified outputs with the given inputs.");
+        }
       }
 
       for (GraphOperation control : op.controlInputs()) {
