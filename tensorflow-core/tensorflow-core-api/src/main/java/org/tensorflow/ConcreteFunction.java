@@ -329,7 +329,7 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * Invokes a function.
+   * Invokes a function using the default eager session.
    *
    * <p>Caller is responsible for closing all Tensors.
    *
@@ -338,26 +338,24 @@ public class ConcreteFunction implements AutoCloseable {
    */
   public Map<String, Tensor> call(Map<String, Tensor> arguments)
       throws IllegalArgumentException {
-    //TODO default device settings?  Should probably execute on GPU if available
-    try (EagerSession session = EagerSession.create()) {
-      Ops tf = Ops.create(session);
-      Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
+    //FIXME need to manage input/output operand lifetimes
+    Ops tf = Ops.create();
+    Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
 
-      for (String inputName : arguments.keySet()) {
-        Tensor argument = arguments.get(inputName);
-        inputs.put(inputName, tf.constantOf((TType) argument));
-      }
-      Map<String, Operand<?>> outputs = tf.call(this, inputs);
-      Map<String, Tensor> tensorOutputs = new LinkedHashMap<>(outputs.size());
-      for (String outputName : outputs.keySet()) {
-        tensorOutputs.put(outputName, outputs.get(outputName).asTensor());
-      }
-      return tensorOutputs;
+    for (String inputName : arguments.keySet()) {
+      Tensor argument = arguments.get(inputName);
+      inputs.put(inputName, tf.constantOf((TType) argument));
     }
+    Map<String, Operand<?>> outputs = tf.call(this, inputs);
+    Map<String, Tensor> tensorOutputs = new LinkedHashMap<>(outputs.size());
+    for (String outputName : outputs.keySet()) {
+      tensorOutputs.put(outputName, outputs.get(outputName).asTensor());
+    }
+    return tensorOutputs;
   }
 
   /**
-   * Invokes a function with a single input and output.
+   * Invokes a function with a single input and output using the default eager session.
    *
    * <p>Caller is responsible for closing all Tensors.
    *
