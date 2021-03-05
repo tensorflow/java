@@ -17,8 +17,10 @@ package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionToFunctionDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +35,7 @@ import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.Graph.Reference;
+import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
@@ -41,7 +44,11 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.proto.framework.AttrValue;
+import org.tensorflow.proto.framework.FunctionDef;
+import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.SignatureDef;
+import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -468,5 +475,46 @@ public class ConcreteFunction implements AutoCloseable {
     scope = new PointerScope();
     this.nativeHandle = nativeHandle;
     scope.attach(nativeHandle.withDeallocator());
+  }
+
+  /**
+   * Detects the signature from the handle
+   */
+  static ConcreteFunction fromNativeHandle(TF_Function function) {
+    TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
+    TF_Status status2 = TF_Status.newStatus();
+    TF_FunctionToFunctionDef(function, funcDefBuffer, status2);
+    status2.throwExceptionIfNotOK();
+    FunctionDef funcDef = null;
+    try {
+      funcDef = FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
+    } catch (InvalidProtocolBufferException e) {
+      throw new IllegalStateException("Failed to parse FunctionDef proto", e);
+    }
+
+    Signature.Builder builder = Signature.builder().methodName(funcDef.getSignature().getName())
+        .key(TF_FunctionName(function).getString());
+
+    for (ArgDef input : funcDef.getSignature().getInputArgList()) {
+      TensorInfo info = TensorInfo.newBuilder()
+          .setDtype(input.getType())
+          .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
+          .setName(input.getName())
+          .build();
+
+      builder.input(input.getName(), info);
+    }
+
+    for (ArgDef outputDef : funcDef.getSignature().getOutputArgList()) {
+      TensorInfo info = TensorInfo.newBuilder()
+          .setDtype(outputDef.getType())
+          .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
+          .setName(outputDef.getName())
+          .build();
+
+      builder.output(outputDef.getName(), info);
+    }
+
+    return new ConcreteFunction(builder.build(), function);
   }
 }

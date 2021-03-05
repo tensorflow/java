@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
@@ -76,7 +77,24 @@ public class ConcreteFunctionTest {
     try (ConcreteFunction f1 = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
         ConcreteFunction f2 = ConcreteFunction.create(ConcreteFunctionTest::minusTwo);
         TFloat32 x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(6.0f, ((TFloat32)f2.call(f1.call(x))).getFloat());
+      assertEquals(6.0f, ((TFloat32) f2.call(f1.call(x))).getFloat());
+    }
+  }
+
+  @Test
+  public void getGraphFunctions() {
+    try (ConcreteFunction function = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
+        Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      tf.call(function, tf.constant(3f));
+
+      ConcreteFunction attached = g.getFunction(function.getNativeFunctionName());
+      assertNotNull(attached);
+
+      try (TFloat32 x = TFloat32.scalarOf(10f);
+          TFloat32 y = (TFloat32) attached.call(x)) {
+        assertEquals(15f, y.getFloat());
+      }
     }
   }
 }

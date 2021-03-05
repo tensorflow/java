@@ -97,6 +97,22 @@ public class Signature  {
     }
 
     /**
+     * Register a tensor as an input of the function.
+     *
+     * @param inputName user-friendly name for this input tensor
+     * @param input input tensor info
+     * @return this builder
+     * @throws IllegalArgumentException if {@code inputName} is already mapped to another input
+     */
+    Builder input(String inputName, TensorInfo input) {
+      if (signatureBuilder.containsInputs(inputName)) {
+        throw new IllegalArgumentException("\"" + inputName + "\" is already being mapped to another input");
+      }
+      signatureBuilder.putInputs(inputName, input);
+      return this;
+    }
+
+    /**
      * Register a tensor as an output of the function.
      *
      * @param outputName user-friendly name for this output tensor
@@ -113,8 +129,24 @@ public class Signature  {
     }
 
     /**
-     * Provide extensible name information enabling third-party users to mark a signature as
-     * supporting a particular method
+     * Register a tensor as an output of the function.
+     *
+     * @param outputName user-friendly name for this output tensor
+     * @param output output tensor
+     * @return this builder
+     * @throws IllegalArgumentException if {@code outputName} is already mapped to another output
+     */
+    Builder output(String outputName, TensorInfo output) {
+      if (signatureBuilder.containsOutputs(outputName)) {
+        throw new IllegalArgumentException("\"" + outputName + "\" is already being mapped to another output");
+      }
+      signatureBuilder.putOutputs(outputName, output);
+      return this;
+    }
+
+    /**
+     * Provide extensible name information enabling third-party users to mark a signature as supporting a particular
+     * method
      *
      * @param methodName method name or null for none (default)
      * @return this builder

@@ -16,11 +16,15 @@
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteFunction;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetFunctions;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNumFunctions;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
@@ -40,10 +44,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_ImportGraphDefOptions;
 import org.tensorflow.internal.c_api.TF_Operation;
@@ -382,10 +388,74 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   @Override
   public void attachFunction(ConcreteFunction function) {
     try (Reference ref = ref();
-            PointerScope scope = new PointerScope()) {
+        PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), function.gradNativeHandle(), status);
       status.throwExceptionIfNotOK();
+    }
+  }
+
+  /**
+   * Get the function attached to the graph with the given native name.  Returns {@code null} if none found.
+   *
+   * @param key the name of the native function.  Note that this may include an argument hash.
+   * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct name
+   */
+  public synchronized ConcreteFunction getFunction(String key) {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+
+      int numFunctions = TF_GraphNumFunctions(ref.nativeHandle());
+
+      PointerPointer<TF_Function> output = new PointerPointer<>(numFunctions);
+
+      TF_GraphGetFunctions(ref.nativeHandle(), output, numFunctions, status);
+      status.throwExceptionIfNotOK();
+
+      ConcreteFunction func = null;
+
+      for (int i = 0; i < numFunctions; i++) {
+        TF_Function function = output.get(TF_Function.class, i);
+
+        String functionName = TF_FunctionName(function).getString();
+
+        if (functionName.equals(key) && func == null) {
+          func = ConcreteFunction.fromNativeHandle(function);
+        } else {
+          TF_DeleteFunction(function);
+        }
+      }
+
+      return func;
+    }
+  }
+
+  /**
+   * Get the functions attached to the graph.
+   *
+   * @return all functions attached to this graph.
+   */
+  public synchronized List<ConcreteFunction> getFunctions() {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+
+      int numFunctions = TF_GraphNumFunctions(ref.nativeHandle());
+
+      PointerPointer<TF_Function> output = new PointerPointer<>(numFunctions);
+
+      TF_GraphGetFunctions(ref.nativeHandle(), output, numFunctions, status);
+      status.throwExceptionIfNotOK();
+
+      List<ConcreteFunction> funcs = new ArrayList<>(numFunctions);
+      for (int i = 0; i < numFunctions; i++) {
+        TF_Function function = output.get(TF_Function.class, i);
+
+        funcs.add(ConcreteFunction.fromNativeHandle(function));
+      }
+
+      return funcs;
     }
   }
 
