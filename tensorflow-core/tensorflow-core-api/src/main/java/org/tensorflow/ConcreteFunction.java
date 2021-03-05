@@ -170,7 +170,6 @@ public class ConcreteFunction implements AutoCloseable {
    * @return the new function
    */
   public static ConcreteFunction create(Function<Ops, Signature> functionBuilder) {
-    //TODO make sure this works oki with graph closing
     try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
       Signature signature = functionBuilder.apply(tf);

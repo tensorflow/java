@@ -29,6 +29,7 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -213,6 +214,7 @@ public class SavedModelBundleTest {
   }
 
   @Test
+  @Ignore // this is supported now
   public void cannotExportMultipleFunctionsWithDifferentSessions() throws IOException {
     Path testFolder = Files.createTempDirectory("tf-saved-model-export-test");
     try (Graph g = new Graph()) {

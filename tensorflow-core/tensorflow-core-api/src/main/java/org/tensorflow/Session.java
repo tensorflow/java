@@ -511,9 +511,11 @@ public final class Session implements AutoCloseable {
    * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
    */
   public void runInit() {
-    Runner runner = runner();
-    graph.initializers().forEach(runner::addTarget);
-    runner.run();
+    if (!graph.initializers().isEmpty()) {
+      Runner runner = runner();
+      graph.initializers().forEach(runner::addTarget);
+      runner.run();
+    }
   }
 
   /**

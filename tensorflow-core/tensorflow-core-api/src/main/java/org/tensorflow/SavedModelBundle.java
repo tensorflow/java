@@ -51,19 +51,22 @@ import org.tensorflow.proto.util.SaverDef;
  * SavedModelBundle represents a model loaded from storage.
  *
  * <p>The model consists of a description of the computation (a {@link Graph}), a {@link Session}
- * with tensors (e.g., parameters or variables in the graph) initialized to values saved in storage,
- * and a description of the model as a <a
- * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
+ * with tensors (e.g., parameters or variables in the graph) initialized to values saved in storage, and a description
+ * of the model as a <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
  * protocol buffer</a>.
  */
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
 
-  /** Options for loading a SavedModel. */
+  /**
+   * Options for loading a SavedModel.
+   */
   public static final class Loader {
 
-    /** Load a <code>SavedModelBundle</code> with the configured options. */
+    /**
+     * Load a <code>SavedModelBundle</code> with the configured options.
+     */
     public SavedModelBundle load() {
       return SavedModelBundle.load(exportDir, tags, configProto, runOptions);
     }
@@ -71,9 +74,8 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Sets options to use when executing model initialization operations.
      *
-     * @param options A <a
-     *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
-     *     protocol buffer</a>.
+     * @param options A <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">RunOptions
+     * protocol buffer</a>.
      * @return this object
      */
     public Loader withRunOptions(RunOptions options) {
@@ -84,9 +86,8 @@ public class SavedModelBundle implements AutoCloseable {
     /**
      * Set configuration of the <code>Session</code> object created when loading the model.
      *
-     * @param configProto A <a
-     *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto
-     *     protocol buffer</a>.
+     * @param configProto A <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto
+     * protocol buffer</a>.
      * @return this object
      */
     public Loader withConfigProto(ConfigProto configProto) {
@@ -114,12 +115,14 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private String exportDir = null;
-    private String[] tags = { DEFAULT_TAG };
+    private String[] tags = {DEFAULT_TAG};
     private ConfigProto configProto = null;
     private RunOptions runOptions = null;
   }
 
-  /** Options for exporting a SavedModel. */
+  /**
+   * Options for exporting a SavedModel.
+   */
   public static final class Exporter {
 
     /**
@@ -144,9 +147,9 @@ public class SavedModelBundle implements AutoCloseable {
      * names to a graph) and a valid session to a graph to be saved in the model.
      *
      * <p><i>Note:Eventually, TensorFlow for Java will support the export of functions objects like
-     * the Python API does but right now, only session-centric models are supported (i.e. models that
-     * has a single main graph and one or more signatures). These models are compatible with those
-     * exported by TensorFlow 1.x or by TensorFlow 2.x estimators.
+     * the Python API does but right now, only session-centric models are supported (i.e. models that has a single main
+     * graph and one or more signatures). These models are compatible with those exported by TensorFlow 1.x or by
+     * TensorFlow 2.x estimators.
      *
      * <br>Therefore, all functions exported in a model should share the same session at the moment
      * or an exception will be thrown.</i>
@@ -154,8 +157,8 @@ public class SavedModelBundle implements AutoCloseable {
      * @param function a function carrying a signature and a valid session to the graph to be saved
      * @return this object
      * @throws IllegalArgumentException if a function with the same name has already been added to the model
-     * @throws UnsupportedOperationException if this function does not share the same session with the other
-     *                                       functions added to this model
+     * @throws UnsupportedOperationException if this function does not share the same session with the other functions
+     * added to this model
      */
     public Exporter withFunction(ConcreteFunction function) {
       Signature signature = function.signature();
@@ -163,12 +166,6 @@ public class SavedModelBundle implements AutoCloseable {
         throw new IllegalArgumentException("Function \"" + signature.key() + "\" was already added to the model");
       }
       functions.put(signature.key(), function);
-      //TODO fix saver
-//      if (session == null) {
-//        session = function.session();
-//      } else if (session != function.session()) {
-//        throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
-//      }
       metaGraphDefBuilder.putSignatureDef(signature.key(), signature.asSignatureDef());
       return this;
     }
@@ -179,33 +176,39 @@ public class SavedModelBundle implements AutoCloseable {
      * @throws IOException if saved model or variable state cannot be written on disk
      */
     public void export() throws IOException {
-      if (functions.isEmpty() || session == null) {
+      if (functions.isEmpty()) {
         throw new IllegalStateException("Model should contain at least one valid function");
       }
-      Graph graph = session.graph();
+      try (Graph graph = new Graph();
+          Session session = new Session(graph)) {
 
-      // It is imperative to retrieve the graphDef after the saverDef, as the former might add
-      // new ops to the graph for saving and restoring the variables.
-      SaverDef saverDef = graph.saverDef();
+        functions.values().forEach(graph::attachFunction);
 
-      MetaGraphDef.Builder metaGraphDef = metaGraphDefBuilder
-          .setSaverDef(saverDef)
-          .setGraphDef(graph.toGraphDef())
-          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
-      functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
+        session.runInit();
 
-      // Make sure saved model directories exist
-      Path variableDir = Paths.get(exportDir, "variables");
-      variableDir.toFile().mkdirs();
+        // It is imperative to retrieve the graphDef after the saverDef, as the former might add
+        // new ops to the graph for saving and restoring the variables.
+        SaverDef saverDef = graph.saverDef();
 
-      // Save the variables state
-      session.save(variableDir.resolve("variables").toString());
+        MetaGraphDef.Builder metaGraphDef = metaGraphDefBuilder
+            .setSaverDef(saverDef)
+            .setGraphDef(graph.toGraphDef())
+            .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
+        functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
-      // Save the graph
-      SavedModel savedModelDef = SavedModel.newBuilder().addMetaGraphs(metaGraphDef).build();
-      try (OutputStream file =
-          new FileOutputStream(Paths.get(exportDir, "saved_model.pb").toString())) {
-        savedModelDef.writeTo(file);
+        // Make sure saved model directories exist
+        Path variableDir = Paths.get(exportDir, "variables");
+        variableDir.toFile().mkdirs();
+
+        // Save the variables state
+        session.save(variableDir.resolve("variables").toString());
+
+        // Save the graph
+        SavedModel savedModelDef = SavedModel.newBuilder().addMetaGraphs(metaGraphDef).build();
+        try (OutputStream file =
+            new FileOutputStream(Paths.get(exportDir, "saved_model.pb").toString())) {
+          savedModelDef.writeTo(file);
+        }
       }
     }
 
@@ -214,16 +217,14 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private final String exportDir;
-    private String[] tags = { DEFAULT_TAG };
+    private String[] tags = {DEFAULT_TAG};
     private final MetaGraphDef.Builder metaGraphDefBuilder = MetaGraphDef.newBuilder();
     private final Map<String, ConcreteFunction> functions = new LinkedHashMap<>();
-    private Session session;
   }
 
   /**
-   * Load a saved model from an export directory. The model that is being loaded should be created
-   * using the <a href="https://www.tensorflow.org/api_docs/python/tf/saved_model">Saved Model
-   * API</a>.
+   * Load a saved model from an export directory. The model that is being loaded should be created using the <a
+   * href="https://www.tensorflow.org/api_docs/python/tf/saved_model">Saved Model API</a>.
    *
    * <p>This method is a shorthand for:
    *
@@ -268,15 +269,16 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
-   * Returns the <a
-   * href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
+   * Returns the <a href="https://www.tensorflow.org/code/tensorflow/core/protobuf/meta_graph.proto">MetaGraphDef
    * protocol buffer</a> associated with the saved model.
    */
   public MetaGraphDef metaGraphDef() {
     return metaGraphDef;
   }
 
-  /** Returns the graph that describes the computation performed by the model. */
+  /**
+   * Returns the graph that describes the computation performed by the model.
+   */
   public Graph graph() {
     return graph;
   }
@@ -307,8 +309,7 @@ public class SavedModelBundle implements AutoCloseable {
    *
    * @param signatureKey name of the {@code SignatureDef} in the saved model.
    * @return object that can be used to make calls to a function
-   * @throws IllegalArgumentException if {@code signatureKey} is not found in this
-   *                                  saved model.
+   * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
    */
   public ConcreteFunction function(String signatureKey) {
     ConcreteFunction function = functions.get(signatureKey);
@@ -349,8 +350,7 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
-   * Releases resources (the {@link Graph} and {@link Session}) associated with the saved model
-   * bundle.
+   * Releases resources (the {@link Graph} and {@link Session}) associated with the saved model bundle.
    */
   @Override
   public void close() {
@@ -363,7 +363,8 @@ public class SavedModelBundle implements AutoCloseable {
   private final MetaGraphDef metaGraphDef;
   private final Map<String, ConcreteFunction> functions;
 
-  private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, ConcreteFunction> functions) {
+  private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef,
+      Map<String, ConcreteFunction> functions) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
@@ -371,8 +372,8 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
-   * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session
-   * object, plus the MetaGraphDef.
+   * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session object, plus the
+   * MetaGraphDef.
    *
    * <p>Invoked from the native load method. Takes ownership of the handles.
    */

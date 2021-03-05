@@ -1158,12 +1158,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
     }
 
+    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
+
+    if (varNames.isEmpty()) {
+      return SaverDef.newBuilder()
+          .setFilenameTensorName(saveFilename.op().name())
+          .setSaveTensorName(tf.withName("empty_save").noOp().op().name())
+          .setRestoreOpName(tf.withName("restore_all").noOp().op().name())
+          .build();
+    }
+
     // FIXME Need an easier way to initialize an NdArray from a list
     String[] tmp = new String[varNames.size()];
     Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
     Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
-
-    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
     Save saveVariables = tf.train.save(saveFilename, varNamesTensor, varSlices, varOutputs);
     Identity<TString> id =
         tf.withControlDependencies(Arrays.asList(saveFilename, saveVariables))
