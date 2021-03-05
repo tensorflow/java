@@ -39,6 +39,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.types.family.TType;
@@ -100,7 +101,8 @@ public class ConcreteFunction implements AutoCloseable {
           .collect(Collectors.toList());
 
       List<GraphOperation> ops = new ArrayList<>(
-          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs), true));
+          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs),
+              null, Collections.singleton(Placeholder.OP_NAME)));
 
       PointerPointer<TF_Operation> operations = new PointerPointer<>(ops.size());
       for (int i = 0; i < ops.size(); i++) {
