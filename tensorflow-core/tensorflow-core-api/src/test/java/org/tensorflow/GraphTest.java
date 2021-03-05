@@ -30,6 +30,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.GraphDef;
@@ -130,7 +131,8 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       Set<GraphOperation> subgraph = g
-          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output), false);
+          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output), null,
+              null);
 
       assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
           subgraph);
@@ -150,7 +152,8 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       Set<GraphOperation> subgraph = g
-          .completeSubgraph(Collections.emptySet(), Collections.singleton(output), true);
+          .completeSubgraph(Collections.emptySet(), Collections.singleton(output), Collections.singleton(
+              Constant.OP_NAME), null);
 
       assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
           subgraph);
@@ -170,7 +173,7 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       try {
-        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, b)), Collections.singleton(output), false);
+        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, b)), Collections.singleton(output), null, null);
         fail();
       } catch (IllegalStateException e) {
         assertTrue(e.getMessage().contains("is not set as an input"));
@@ -191,7 +194,7 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       try {
-        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(a, b)), Collections.singleton(output), false);
+        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(a, b)), Collections.singleton(output), null, null);
         fail();
       } catch (IllegalStateException e) {
         assertTrue(e.getMessage().contains("is not set as an input"));

@@ -226,15 +226,29 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
    * Respects control dependencies.
    *
+   * If both {@code allowedBodyOps} and {@code forbiddenBodyOps} are null, forbids 0-input ops in the body.
+   *
    * @param inputs the inputs of the subgraph.  Must be from single output ops.
    * @param outputs the outputs of the subgraph
-   * @param allowConstants whether to allow constants in the function body (that aren't in inputs)
+   * @param allowedBodyOps types of ops to allow as 0-input ops in the body.  Allows all (except {@code
+   * forbiddenBodyOps}) if null.
+   * @param forbiddenBodyOps types of ops to never allow as 0-input ops in the body.  Forbids all (except {@code
+   * allowedBodyOps}) if null.
    * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
    * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
    * solely on inputs)
    */
   public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
-          boolean allowConstants) {
+      Set<String> allowedBodyOps, Set<String> forbiddenBodyOps) {
+
+    if (forbiddenBodyOps != null && allowedBodyOps != null) {
+      for (String t : forbiddenBodyOps) {
+        if (allowedBodyOps.contains(t)) {
+          throw new IllegalArgumentException("Can't allow and forbid op type " + t + ".");
+        }
+      }
+    }
+
     Queue<GraphOperation> currents = new LinkedList<>();
     Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
     Set<GraphOperation> inputOps = new LinkedHashSet<>(inputs.size());
@@ -262,10 +276,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
 
       if (op.numControlInputs() + op.numInputs() == 0) {
-        if (!(allowConstants && op.type().equals(Constant.OP_TYPE))) {
+        if ((forbiddenBodyOps != null && forbiddenBodyOps.contains(op.type()))
+            || (allowedBodyOps != null && !allowedBodyOps.contains(op.type()))
+            || (forbiddenBodyOps == null && allowedBodyOps == null)) {
           throw new IllegalStateException("Operation " + op
-                  + " has no inputs, but is not set as an input.  "
-                  + "It is impossible to calculate the specified outputs with the given inputs.");
+              + " of type " + op.type() +
+              " has no inputs and is not an allowed 0-input op type, but is not set as an input.  "
+              + "It is impossible to calculate the specified outputs with the given inputs.");
         }
       }
 
@@ -609,10 +626,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         // the python implementation for compatibility.
         // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
         saverDef = SaverDef.newBuilder()
-                .setFilenameTensorName("save/filename")
-                .setSaveTensorName("save/control_dependency")
-                .setRestoreOpName("save/restore_all")
-                .build();
+            .setFilenameTensorName("save/filename")
+            .setSaveTensorName("save/control_dependency")
+            .setRestoreOpName("save/restore_all")
+            .build();
       }
     }
     return saverDef;
@@ -794,13 +811,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   static void resolveOutputs(String type, TF_Operation[] srcOps,
-          int[] srcIndices, TF_Output dst, int n) {
+      int[] srcIndices, TF_Output dst, int n) {
     if (srcOps.length != n) {
       throw new IllegalArgumentException("expected " + n + ", got " + srcOps.length + " " + type + " Operations");
     }
     if (srcIndices.length != n) {
       throw new IllegalArgumentException(
-              "expected " + n + ", got " + srcIndices.length + " " + type + " Operation output indices");
+          "expected " + n + ", got " + srcIndices.length + " " + type + " Operation output indices");
     }
     for (int i = 0; i < n; ++i) {
       if (srcOps[i] == null || srcOps[i].isNull()) {
@@ -891,9 +908,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       condOutputIndices[0] = condOutputOutput.index();
 
       Object[] condOutputHandlesAndIndices =
-              buildSubgraph(condGraphBuilder, params.cond_graph(),
-                      condInputHandles, condInputIndices,
-                      condOutputHandles, condOutputIndices);
+          buildSubgraph(condGraphBuilder, params.cond_graph(),
+              condInputHandles, condInputIndices,
+              condOutputHandles, condOutputIndices);
 
       // build body subgraph
       TF_Output bodyInputsOutput = params.body_inputs();
@@ -910,23 +927,23 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
 
       Object[] bodyOutputHandlesAndIndices =
-              buildSubgraph(bodyGraphBuilder, params.body_graph(),
-                      bodyInputHandles, bodyInputIndices,
-                      bodyOutputHandles, bodyOutputIndices);
+          buildSubgraph(bodyGraphBuilder, params.body_graph(),
+              bodyInputHandles, bodyInputIndices,
+              bodyOutputHandles, bodyOutputIndices);
 
       if (condOutputHandlesAndIndices == null ||
-              bodyOutputHandlesAndIndices == null) {
+          bodyOutputHandlesAndIndices == null) {
         return null;
       }
 
       // set cond_output param to output of the conditional subgraph
       condOutputOutput.oper((TF_Operation) condOutputHandlesAndIndices[0])
-              .index((Integer) condOutputHandlesAndIndices[1]);
+          .index((Integer) condOutputHandlesAndIndices[1]);
 
       // set body_outputs param to outputs of the body subgraph
       for (int i = 0, j = ninputs; i < ninputs; ++i, ++j) {
         bodyOutputsOutput.position(i).oper((TF_Operation) bodyOutputHandlesAndIndices[i])
-                .index((Integer) bodyOutputHandlesAndIndices[j]);
+            .index((Integer) bodyOutputHandlesAndIndices[j]);
       }
 
       // set loop name param
@@ -973,18 +990,18 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
     Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
     Save saveVariables = tf.train.save(
-            saveFilename,
-            varNamesTensor,
-            varSlices,
-            varOutputs
+        saveFilename,
+        varNamesTensor,
+        varSlices,
+        varOutputs
     );
     Identity<TString> id = tf.withControlDependencies(Arrays.asList(saveFilename, saveVariables))
-            .withName("control_dependency").identity(saveFilename);
+        .withName("control_dependency").identity(saveFilename);
     Restore restoreVariables = tf.train.restore(
-            saveFilename,
-            varNamesTensor,
-            varSlices,
-            varTypes
+        saveFilename,
+        varNamesTensor,
+        varSlices,
+        varTypes
     );
     List<Op> restoreOps = new ArrayList<>(varOutputs.size());
     for (int i = 0; i < varOutputs.size(); ++i) {
