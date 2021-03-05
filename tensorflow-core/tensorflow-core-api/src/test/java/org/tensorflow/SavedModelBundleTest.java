@@ -104,7 +104,7 @@ public class SavedModelBundleTest {
     Shape xyShape = Shape.of(2, 3L);
     try (ConcreteFunction f = ConcreteFunction.create(tf -> buildGraphWithVariables(tf, xyShape))) {
       // Init variable state by running the Init operation directly
-      f.session().run(Init.DEFAULT_NAME);
+      //TODO f.session().run(Init.DEFAULT_NAME);
 
       // Call the graph and remember the result of computation for later
       try (TFloat32 xTensor = TFloat32.tensorOf(xValue);
@@ -178,7 +178,7 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g);
           ConcreteFunction f1 = ConcreteFunction.create(f1Signature, s);
           ConcreteFunction f2 = ConcreteFunction.create(f2Signature, s)) {
-        f1.session().run(Init.DEFAULT_NAME);
+        //TODO f1.session().run(Init.DEFAULT_NAME);
         try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
             TFloat32 t = (TFloat32)f1.call(x)) {
           reducedSum = t.getFloat();
@@ -221,7 +221,7 @@ public class SavedModelBundleTest {
       Signature f2Signature = buildIdentityGraph(tf, "identity");
       try (ConcreteFunction f1 = ConcreteFunction.create(f1Signature, g);
           ConcreteFunction f2 = ConcreteFunction.create(f2Signature, g)) {
-        f1.session().run(Init.DEFAULT_NAME);
+        //TODO f1.session().run(Init.DEFAULT_NAME);
         try {
           SavedModelBundle.exporter(testFolder.toString())
               .withFunction(f1)
@@ -245,7 +245,7 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g);
           ConcreteFunction f1 = ConcreteFunction.create(f1Signature, s);
           ConcreteFunction f2 = ConcreteFunction.create(f2Signature, s)) {
-        f1.session().run(Init.DEFAULT_NAME);
+        //TODO f1.session().run(Init.DEFAULT_NAME);
         try {
           SavedModelBundle.exporter(testFolder.toString())
               .withFunction(f1)

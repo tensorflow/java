@@ -18,6 +18,7 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
@@ -376,6 +377,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
     return new GraphOperationBuilder(this, type, name);
+  }
+
+  @Override
+  public void attachFunction(ConcreteFunction function) {
+    try (Reference ref = ref();
+            PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), function.gradNativeHandle(), status);
+      status.throwExceptionIfNotOK();
+    }
   }
 
   @Override

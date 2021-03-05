@@ -15,7 +15,8 @@
  */
 package org.tensorflow;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import org.tensorflow.ndarray.Shape;
@@ -35,12 +36,25 @@ public class Signature  {
   public static final String DEFAULT_KEY = "serving_default";
 
   public static class TensorDescription {
+
+    /**
+     * The name of the tensor's operand in the graph
+     */
+    public final String name;
+    /**
+     * The data type of the tensor
+     */
     public final DataType dataType;
+
+    /**
+     * The shape of the tensor
+     */
     public final Shape shape;
 
-    public TensorDescription(DataType dataType, Shape shape) {
+    public TensorDescription(DataType dataType, Shape shape, String name) {
       this.dataType = dataType;
       this.shape = shape;
+      this.name = name;
     }
   }
 
@@ -187,29 +201,33 @@ public class Signature  {
   }
 
   private Map<String, TensorDescription> buildTensorDescriptionMap(Map<String, TensorInfo> dataMapIn) {
-    Map<String, TensorDescription> dataTypeMap = new HashMap<>();
-    dataMapIn.forEach((a, b) -> {
-      long[] tensorDims = b.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
+    Map<String, TensorDescription> dataTypeMap = new LinkedHashMap<>();
+    dataMapIn.forEach((name, info) -> {
+      long[] tensorDims = info.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
       Shape tensorShape = Shape.of(tensorDims);
-      dataTypeMap.put(a, new TensorDescription(b.getDtype(),
-                                               tensorShape));
+      dataTypeMap.put(name, new TensorDescription(info.getDtype(), tensorShape, info.getName()));
     });
-    return dataTypeMap;
+    return Collections.unmodifiableMap(dataTypeMap);
   }
 
   /**
-   * Returns the names of the inputs in this signature mapped to their expected data type and shape
-   * @return
+   * Returns the names of the inputs in this signature mapped to their expected data type, shape, and operand name
    */
   public Map<String, TensorDescription> getInputs() {
-    return buildTensorDescriptionMap(signatureDef.getInputsMap());
+    if (inputMap == null) {
+      inputMap = buildTensorDescriptionMap(signatureDef.getInputsMap());
+    }
+    return inputMap;
   }
 
   /**
-   * Returns the names of the outputs in this signature mapped to their expected data type and shape
+   * Returns the names of the outputs in this signature mapped to their expected data type, shape, and operand name
    */
   public Map<String, TensorDescription> getOutputs() {
-    return buildTensorDescriptionMap(signatureDef.getOutputsMap());
+    if (outputMap == null) {
+      outputMap = buildTensorDescriptionMap(signatureDef.getOutputsMap());
+    }
+    return outputMap;
   }
 
   Signature(String key, SignatureDef signatureDef) {
@@ -223,6 +241,8 @@ public class Signature  {
 
   private final String key;
   private final SignatureDef signatureDef;
+  private Map<String, TensorDescription> inputMap;
+  private Map<String, TensorDescription> outputMap;
 
   private static void printTensorInfo(Map<String, TensorInfo> tensorMap, StringBuilder strBuilder) {
     tensorMap.forEach((key, tensorInfo) -> {

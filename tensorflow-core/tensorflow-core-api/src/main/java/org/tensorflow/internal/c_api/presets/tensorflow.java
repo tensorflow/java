@@ -29,7 +29,6 @@ import org.bytedeco.javacpp.tools.InfoMap;
 import org.bytedeco.javacpp.tools.InfoMapper;
 
 /**
- *
  * @author Samuel Audet
  */
 @Properties(
@@ -61,17 +60,28 @@ import org.bytedeco.javacpp.tools.InfoMapper;
         @Platform(
             value = "windows",
             preload = {
-                "api-ms-win-crt-locale-l1-1-0", "api-ms-win-crt-string-l1-1-0", "api-ms-win-crt-stdio-l1-1-0", "api-ms-win-crt-math-l1-1-0",
-                "api-ms-win-crt-heap-l1-1-0", "api-ms-win-crt-runtime-l1-1-0", "api-ms-win-crt-convert-l1-1-0", "api-ms-win-crt-environment-l1-1-0",
-                "api-ms-win-crt-time-l1-1-0", "api-ms-win-crt-filesystem-l1-1-0", "api-ms-win-crt-utility-l1-1-0", "api-ms-win-crt-multibyte-l1-1-0",
-                "api-ms-win-core-string-l1-1-0", "api-ms-win-core-errorhandling-l1-1-0", "api-ms-win-core-timezone-l1-1-0", "api-ms-win-core-file-l1-1-0",
-                "api-ms-win-core-namedpipe-l1-1-0", "api-ms-win-core-handle-l1-1-0", "api-ms-win-core-file-l2-1-0", "api-ms-win-core-heap-l1-1-0",
-                "api-ms-win-core-libraryloader-l1-1-0", "api-ms-win-core-synch-l1-1-0", "api-ms-win-core-processthreads-l1-1-0",
-                "api-ms-win-core-processenvironment-l1-1-0", "api-ms-win-core-datetime-l1-1-0", "api-ms-win-core-localization-l1-2-0",
-                "api-ms-win-core-sysinfo-l1-1-0", "api-ms-win-core-synch-l1-2-0", "api-ms-win-core-console-l1-1-0", "api-ms-win-core-debug-l1-1-0",
-                "api-ms-win-core-rtlsupport-l1-1-0", "api-ms-win-core-processthreads-l1-1-1", "api-ms-win-core-file-l1-2-0", "api-ms-win-core-profile-l1-1-0",
-                "api-ms-win-core-memory-l1-1-0", "api-ms-win-core-util-l1-1-0", "api-ms-win-core-interlocked-l1-1-0", "ucrtbase",
-                "vcruntime140", "vcruntime140_1", "msvcp140", "concrt140", "vcomp140", "msvcr120", "libiomp5md", "mklml", "tensorflow_framework"
+                "api-ms-win-crt-locale-l1-1-0", "api-ms-win-crt-string-l1-1-0", "api-ms-win-crt-stdio-l1-1-0",
+                "api-ms-win-crt-math-l1-1-0",
+                "api-ms-win-crt-heap-l1-1-0", "api-ms-win-crt-runtime-l1-1-0", "api-ms-win-crt-convert-l1-1-0",
+                "api-ms-win-crt-environment-l1-1-0",
+                "api-ms-win-crt-time-l1-1-0", "api-ms-win-crt-filesystem-l1-1-0", "api-ms-win-crt-utility-l1-1-0",
+                "api-ms-win-crt-multibyte-l1-1-0",
+                "api-ms-win-core-string-l1-1-0", "api-ms-win-core-errorhandling-l1-1-0",
+                "api-ms-win-core-timezone-l1-1-0", "api-ms-win-core-file-l1-1-0",
+                "api-ms-win-core-namedpipe-l1-1-0", "api-ms-win-core-handle-l1-1-0", "api-ms-win-core-file-l2-1-0",
+                "api-ms-win-core-heap-l1-1-0",
+                "api-ms-win-core-libraryloader-l1-1-0", "api-ms-win-core-synch-l1-1-0",
+                "api-ms-win-core-processthreads-l1-1-0",
+                "api-ms-win-core-processenvironment-l1-1-0", "api-ms-win-core-datetime-l1-1-0",
+                "api-ms-win-core-localization-l1-2-0",
+                "api-ms-win-core-sysinfo-l1-1-0", "api-ms-win-core-synch-l1-2-0", "api-ms-win-core-console-l1-1-0",
+                "api-ms-win-core-debug-l1-1-0",
+                "api-ms-win-core-rtlsupport-l1-1-0", "api-ms-win-core-processthreads-l1-1-1",
+                "api-ms-win-core-file-l1-2-0", "api-ms-win-core-profile-l1-1-0",
+                "api-ms-win-core-memory-l1-1-0", "api-ms-win-core-util-l1-1-0", "api-ms-win-core-interlocked-l1-1-0",
+                "ucrtbase",
+                "vcruntime140", "vcruntime140_1", "msvcp140", "concrt140", "vcomp140", "msvcr120", "libiomp5md",
+                "mklml", "tensorflow_framework"
             }
         ),
         @Platform(
@@ -100,132 +110,149 @@ import org.bytedeco.javacpp.tools.InfoMapper;
 @NoException
 public class tensorflow implements LoadEnabled, InfoMapper {
 
-    @Override public void init(ClassProperties properties) {
-        String platform = properties.getProperty("platform");
-        String extension = properties.getProperty("platform.extension");
-        List<String> preloads = properties.get("platform.preload");
-        List<String> resources = properties.get("platform.preloadresource");
-        List<String> preloadpaths = properties.get("platform.preloadpath");
+  @Override
+  public void init(ClassProperties properties) {
+    String platform = properties.getProperty("platform");
+    String extension = properties.getProperty("platform.extension");
+    List<String> preloads = properties.get("platform.preload");
+    List<String> resources = properties.get("platform.preloadresource");
+    List<String> preloadpaths = properties.get("platform.preloadpath");
 
-        String vcredistdir = System.getenv("VCToolsRedistDir");
-        if (vcredistdir != null && vcredistdir.length() > 0) {
-            switch (platform) {
-                case "windows-x86":
-                    preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC142.CRT");
-                    preloadpaths.add(1, vcredistdir + "\\x86\\Microsoft.VC142.OpenMP");
-                    preloadpaths.add(2, vcredistdir + "\\x86\\Microsoft.VC141.CRT");
-                    preloadpaths.add(3, vcredistdir + "\\x86\\Microsoft.VC141.OpenMP");
-                    break;
-                case "windows-x86_64":
-                    preloadpaths.add(0, vcredistdir + "\\x64\\Microsoft.VC142.CRT");
-                    preloadpaths.add(1, vcredistdir + "\\x64\\Microsoft.VC142.OpenMP");
-                    preloadpaths.add(2, vcredistdir + "\\x64\\Microsoft.VC141.CRT");
-                    preloadpaths.add(3, vcredistdir + "\\x64\\Microsoft.VC141.OpenMP");
-                    break;
-                default:
-                    // not Windows
-            }
-        }
-
-        // Only apply this at load time
-        if (!Loader.isLoadLibraries()) {
-            return;
-        }
-
-        // Let users enable loading of the full version of MKL
-        String load = System.getProperty("org.bytedeco.openblas.load",
-                      System.getProperty("org.bytedeco.mklml.load", "")).toLowerCase();
-
-        int i = 0;
-        if (load.equals("mkl") || load.equals("mkl_rt")) {
-            String[] libs = {"iomp5", "libiomp5md", "mkl_core", "mkl_avx", "mkl_avx2", "mkl_avx512", "mkl_avx512_mic",
-                             "mkl_def", "mkl_mc", "mkl_mc3", "mkl_intel_lp64", "mkl_intel_thread", "mkl_gnu_thread", "mkl_rt"};
-            for (i = 0; i < libs.length; i++) {
-                preloads.add(i, libs[i] + "#" + libs[i]);
-            }
-            load = "mkl_rt";
-            resources.add("/org/bytedeco/mkl/");
-        }
-
-        if (load.length() > 0) {
-            if (platform.startsWith("linux")) {
-                preloads.add(i, load + "#mklml_intel");
-            } else if (platform.startsWith("macosx")) {
-                preloads.add(i, load + "#mklml");
-            } else if (platform.startsWith("windows")) {
-                preloads.add(i, load + "#mklml");
-            }
-        }
-
-        // Only apply this at load time since we don't want to copy the CUDA libraries here
-        if (!Loader.isLoadLibraries() || extension == null || !extension.endsWith("-gpu")) {
-            return;
-        }
-        String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl", "nvrtc", "myelin", "nvinfer",
-                         "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer", "cudnn_adv_train", "cudnn_cnn_infer", "cudnn_cnn_train"};
-        for (String lib : libs) {
-            if (platform.startsWith("linux")) {
-                lib += lib.startsWith("cudnn") ? "@.8"
-                     : lib.equals("nccl") ? "@.2"
-                     : lib.equals("myelin") ? "@.1"
-                     : lib.equals("nvinfer") ? "@.7"
-                     : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "@.10"
-                     : lib.equals("cudart") ? "@.11.0"
-                     : lib.equals("nvrtc") ? "@.11.0"
-                     : "@.11";
-            } else if (platform.startsWith("windows")) {
-                lib += lib.startsWith("cudnn") ? "64_8"
-                     : lib.equals("nccl") ? "64_2"
-                     : lib.equals("myelin") ? "64_1"
-                     : lib.equals("nvinfer") ? "64_7"
-                     : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "64_10"
-                     : lib.equals("cudart") ? "64_110"
-                     : lib.equals("nvrtc") ? "64_110_0"
-                     : "64_11";
-            } else {
-                continue; // no CUDA
-            }
-            if (!preloads.contains(lib)) {
-                preloads.add(i++, lib);
-            }
-        }
-        if (i > 0) {
-            resources.add("/org/bytedeco/cuda/");
-            resources.add("/org/bytedeco/tensorrt/");
-        }
+    String vcredistdir = System.getenv("VCToolsRedistDir");
+    if (vcredistdir != null && vcredistdir.length() > 0) {
+      switch (platform) {
+        case "windows-x86":
+          preloadpaths.add(0, vcredistdir + "\\x86\\Microsoft.VC142.CRT");
+          preloadpaths.add(1, vcredistdir + "\\x86\\Microsoft.VC142.OpenMP");
+          preloadpaths.add(2, vcredistdir + "\\x86\\Microsoft.VC141.CRT");
+          preloadpaths.add(3, vcredistdir + "\\x86\\Microsoft.VC141.OpenMP");
+          break;
+        case "windows-x86_64":
+          preloadpaths.add(0, vcredistdir + "\\x64\\Microsoft.VC142.CRT");
+          preloadpaths.add(1, vcredistdir + "\\x64\\Microsoft.VC142.OpenMP");
+          preloadpaths.add(2, vcredistdir + "\\x64\\Microsoft.VC141.CRT");
+          preloadpaths.add(3, vcredistdir + "\\x64\\Microsoft.VC141.OpenMP");
+          break;
+        default:
+          // not Windows
+      }
     }
 
-    public void map(InfoMap infoMap) {
-        infoMap.put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
-               .put(new Info("TF_Buffer::data").javaText("public native @Const Pointer data(); public native TF_Buffer data(Pointer data);"))
-               .put(new Info("TF_Status").pointerTypes("TF_Status").base("org.tensorflow.internal.c_api.AbstractTF_Status"))
-               .put(new Info("TF_Buffer").pointerTypes("TF_Buffer").base("org.tensorflow.internal.c_api.AbstractTF_Buffer"))
-               .put(new Info("TF_Tensor").pointerTypes("TF_Tensor").base("org.tensorflow.internal.c_api.AbstractTF_Tensor"))
-               .put(new Info("TF_Session").pointerTypes("TF_Session").base("org.tensorflow.internal.c_api.AbstractTF_Session"))
-               .put(new Info("TF_SessionOptions").pointerTypes("TF_SessionOptions").base("org.tensorflow.internal.c_api.AbstractTF_SessionOptions"))
-               .put(new Info("TF_Graph").pointerTypes("TF_Graph").base("org.tensorflow.internal.c_api.AbstractTF_Graph"))
-               .put(new Info("TF_Graph::graph").javaText("public native @MemberGetter @ByRef Graph graph();"))
-               .put(new Info("TF_Graph::refiner").javaText("public native @MemberGetter @ByRef ShapeRefiner refiner();"))
-               .put(new Info("TF_ImportGraphDefOptions").pointerTypes("TF_ImportGraphDefOptions").base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
-               .put(new Info("TF_Operation", "TF_WhileParams", "TFE_MonitoringCounterCell", "TFE_MonitoringSamplerCell",
-                             "TFE_MonitoringCounter0", "TFE_MonitoringCounter1", "TFE_MonitoringCounter2",
-                             "TFE_MonitoringIntGaugeCell", "TFE_MonitoringStringGaugeCell", "TFE_MonitoringBoolGaugeCell",
-                             "TFE_MonitoringIntGauge0", "TFE_MonitoringIntGauge1", "TFE_MonitoringIntGauge2",
-                             "TFE_MonitoringStringGauge0", "TFE_MonitoringStringGauge1", "TFE_MonitoringStringGauge2",
-                             "TFE_MonitoringBoolGauge0", "TFE_MonitoringBoolGauge1", "TFE_MonitoringBoolGauge2",
-                             "TFE_MonitoringSampler0", "TFE_MonitoringSampler1", "TFE_MonitoringSampler2").purify())
-               .put(new Info("TF_Operation::node").javaText("public native @MemberGetter @ByRef Node node();"))
-               .put(new Info("TFE_MonitoringCounterCell::cell").javaText("public native @MemberGetter @ByRef CounterCell cell();"))
-               .put(new Info("TFE_MonitoringSamplerCell::cell").javaText("public native @MemberGetter @ByRef SamplerCell cell();"))
-               .put(new Info("TFE_MonitoringIntGaugeCell::cell").javaText("public native @MemberGetter @ByRef IntGaugeCell cell();"))
-               .put(new Info("TFE_MonitoringStringGaugeCell::cell").javaText("public native @MemberGetter @ByRef StringGaugeCell cell();"))
-               .put(new Info("TFE_MonitoringBoolGaugeCell::cell").javaText("public native @MemberGetter @ByRef BoolGaugeCell cell();"))
-               .put(new Info("TFE_Context").pointerTypes("TFE_Context").base("org.tensorflow.internal.c_api.AbstractTFE_Context"))
-               .put(new Info("TFE_ContextOptions").pointerTypes("TFE_ContextOptions").base("org.tensorflow.internal.c_api.AbstractTFE_ContextOptions"))
-               .put(new Info("TFE_Context::context").javaText("@MemberGetter public native @ByRef EagerContext context();"))
-               .put(new Info("TFE_Op").pointerTypes("TFE_Op").base("org.tensorflow.internal.c_api.AbstractTFE_Op"))
-               .put(new Info("TFE_Op::operation").javaText("@MemberGetter public native @ByRef EagerOperation operation();"))
-               .put(new Info("TFE_TensorHandle").pointerTypes("TFE_TensorHandle").base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
-               .put(new Info("TF_ShapeInferenceContextDimValueKnown", "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());
+    // Only apply this at load time
+    if (!Loader.isLoadLibraries()) {
+      return;
     }
+
+    // Let users enable loading of the full version of MKL
+    String load = System.getProperty("org.bytedeco.openblas.load",
+        System.getProperty("org.bytedeco.mklml.load", "")).toLowerCase();
+
+    int i = 0;
+    if (load.equals("mkl") || load.equals("mkl_rt")) {
+      String[] libs = {"iomp5", "libiomp5md", "mkl_core", "mkl_avx", "mkl_avx2", "mkl_avx512", "mkl_avx512_mic",
+          "mkl_def", "mkl_mc", "mkl_mc3", "mkl_intel_lp64", "mkl_intel_thread", "mkl_gnu_thread", "mkl_rt"};
+      for (i = 0; i < libs.length; i++) {
+        preloads.add(i, libs[i] + "#" + libs[i]);
+      }
+      load = "mkl_rt";
+      resources.add("/org/bytedeco/mkl/");
+    }
+
+    if (load.length() > 0) {
+      if (platform.startsWith("linux")) {
+        preloads.add(i, load + "#mklml_intel");
+      } else if (platform.startsWith("macosx")) {
+        preloads.add(i, load + "#mklml");
+      } else if (platform.startsWith("windows")) {
+        preloads.add(i, load + "#mklml");
+      }
+    }
+
+    // Only apply this at load time since we don't want to copy the CUDA libraries here
+    if (!Loader.isLoadLibraries() || extension == null || !extension.endsWith("-gpu")) {
+      return;
+    }
+    String[] libs = {"cudart", "cublasLt", "cublas", "cufft", "curand", "cusolver", "cusparse", "cudnn", "nccl",
+        "nvrtc", "myelin", "nvinfer",
+        "cudnn_ops_infer", "cudnn_ops_train", "cudnn_adv_infer", "cudnn_adv_train", "cudnn_cnn_infer",
+        "cudnn_cnn_train"};
+    for (String lib : libs) {
+      if (platform.startsWith("linux")) {
+        lib += lib.startsWith("cudnn") ? "@.8"
+            : lib.equals("nccl") ? "@.2"
+                : lib.equals("myelin") ? "@.1"
+                    : lib.equals("nvinfer") ? "@.7"
+                        : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "@.10"
+                            : lib.equals("cudart") ? "@.11.0"
+                                : lib.equals("nvrtc") ? "@.11.0"
+                                    : "@.11";
+      } else if (platform.startsWith("windows")) {
+        lib += lib.startsWith("cudnn") ? "64_8"
+            : lib.equals("nccl") ? "64_2"
+                : lib.equals("myelin") ? "64_1"
+                    : lib.equals("nvinfer") ? "64_7"
+                        : lib.equals("cufft") || lib.equals("curand") || lib.equals("cusolver") ? "64_10"
+                            : lib.equals("cudart") ? "64_110"
+                                : lib.equals("nvrtc") ? "64_110_0"
+                                    : "64_11";
+      } else {
+        continue; // no CUDA
+      }
+      if (!preloads.contains(lib)) {
+        preloads.add(i++, lib);
+      }
+    }
+    if (i > 0) {
+      resources.add("/org/bytedeco/cuda/");
+      resources.add("/org/bytedeco/tensorrt/");
+    }
+  }
+
+  public void map(InfoMap infoMap) {
+    infoMap.put(new Info("TF_CAPI_EXPORT", "TF_Bool").cppTypes().annotations())
+        .put(new Info("TF_Buffer::data")
+            .javaText("public native @Const Pointer data(); public native TF_Buffer data(Pointer data);"))
+        .put(new Info("TF_Status").pointerTypes("TF_Status").base("org.tensorflow.internal.c_api.AbstractTF_Status"))
+        .put(new Info("TF_Buffer").pointerTypes("TF_Buffer").base("org.tensorflow.internal.c_api.AbstractTF_Buffer"))
+        .put(new Info("TF_Tensor").pointerTypes("TF_Tensor").base("org.tensorflow.internal.c_api.AbstractTF_Tensor"))
+        .put(new Info("TF_Session").pointerTypes("TF_Session").base("org.tensorflow.internal.c_api.AbstractTF_Session"))
+        .put(new Info("TF_SessionOptions").pointerTypes("TF_SessionOptions")
+            .base("org.tensorflow.internal.c_api.AbstractTF_SessionOptions"))
+        .put(new Info("TF_Graph").pointerTypes("TF_Graph").base("org.tensorflow.internal.c_api.AbstractTF_Graph"))
+        .put(new Info("TF_Graph::graph").javaText("public native @MemberGetter @ByRef Graph graph();"))
+        .put(new Info("TF_Graph::refiner").javaText("public native @MemberGetter @ByRef ShapeRefiner refiner();"))
+        .put(new Info("TF_Function").pointerTypes("TF_Function")
+            .base("org.tensorflow.internal.c_api.AbstractTF_Function"))
+        .put(new Info("TF_ImportGraphDefOptions").pointerTypes("TF_ImportGraphDefOptions")
+            .base("org.tensorflow.internal.c_api.AbstractTF_ImportGraphDefOptions"))
+        .put(new Info("TF_Operation", "TF_WhileParams", "TFE_MonitoringCounterCell", "TFE_MonitoringSamplerCell",
+            "TFE_MonitoringCounter0", "TFE_MonitoringCounter1", "TFE_MonitoringCounter2",
+            "TFE_MonitoringIntGaugeCell", "TFE_MonitoringStringGaugeCell", "TFE_MonitoringBoolGaugeCell",
+            "TFE_MonitoringIntGauge0", "TFE_MonitoringIntGauge1", "TFE_MonitoringIntGauge2",
+            "TFE_MonitoringStringGauge0", "TFE_MonitoringStringGauge1", "TFE_MonitoringStringGauge2",
+            "TFE_MonitoringBoolGauge0", "TFE_MonitoringBoolGauge1", "TFE_MonitoringBoolGauge2",
+            "TFE_MonitoringSampler0", "TFE_MonitoringSampler1", "TFE_MonitoringSampler2").purify())
+        .put(new Info("TF_Operation::node").javaText("public native @MemberGetter @ByRef Node node();"))
+        .put(new Info("TFE_MonitoringCounterCell::cell")
+            .javaText("public native @MemberGetter @ByRef CounterCell cell();"))
+        .put(new Info("TFE_MonitoringSamplerCell::cell")
+            .javaText("public native @MemberGetter @ByRef SamplerCell cell();"))
+        .put(new Info("TFE_MonitoringIntGaugeCell::cell")
+            .javaText("public native @MemberGetter @ByRef IntGaugeCell cell();"))
+        .put(new Info("TFE_MonitoringStringGaugeCell::cell")
+            .javaText("public native @MemberGetter @ByRef StringGaugeCell cell();"))
+        .put(new Info("TFE_MonitoringBoolGaugeCell::cell")
+            .javaText("public native @MemberGetter @ByRef BoolGaugeCell cell();"))
+        .put(new Info("TFE_Context").pointerTypes("TFE_Context")
+            .base("org.tensorflow.internal.c_api.AbstractTFE_Context"))
+        .put(new Info("TFE_ContextOptions").pointerTypes("TFE_ContextOptions")
+            .base("org.tensorflow.internal.c_api.AbstractTFE_ContextOptions"))
+        .put(new Info("TFE_Context::context").javaText("@MemberGetter public native @ByRef EagerContext context();"))
+        .put(new Info("TFE_Op").pointerTypes("TFE_Op").base("org.tensorflow.internal.c_api.AbstractTFE_Op"))
+        .put(new Info("TFE_Op::operation").javaText("@MemberGetter public native @ByRef EagerOperation operation();"))
+        .put(new Info("TFE_TensorHandle").pointerTypes("TFE_TensorHandle")
+            .base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
+        .put(new Info("TF_ShapeInferenceContextDimValueKnown",
+            "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)").skip());
+  }
 }

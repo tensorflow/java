@@ -38,6 +38,14 @@ public interface ExecutionEnvironment {
   OperationBuilder opBuilder(String type, String name);
 
   /**
+   * Attach the function to this execution environment, allowing it to be called by creating an op with the function
+   * name as it's {@code type}.
+   *
+   * Done automatically in the {@link org.tensorflow.op.Ops#call(ConcreteFunction, java.util.Map)} ops.
+   */
+  void attachFunction(ConcreteFunction function);
+
+  /**
    * Returns true if the given operation is valid in this execution environment.
    *
    * @param opType The op to check.

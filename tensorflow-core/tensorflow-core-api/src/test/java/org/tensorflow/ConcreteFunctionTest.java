@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
@@ -78,44 +77,6 @@ public class ConcreteFunctionTest {
         ConcreteFunction f2 = ConcreteFunction.create(ConcreteFunctionTest::minusTwo);
         TFloat32 x = TFloat32.scalarOf(3.0f)) {
       assertEquals(6.0f, ((TFloat32)f2.call(f1.call(x))).getFloat());
-    }
-  }
-
-  @Test
-  public void closingFunctionReleaseAllResourcesItOwns() {
-    Graph g;
-    Session s;
-    try (ConcreteFunction f = ConcreteFunction.create(ConcreteFunctionTest::plusFive)) {
-      g = f.graph();
-      s = f.session();
-    }
-    assertThrows(IllegalStateException.class, () -> s.run("Add"));
-    assertThrows(IllegalStateException.class, () -> g.toGraphDef());
-  }
-
-  @Test
-  public void closingFunctionCreatedFromGraphOnlyReleaseResourcesItOwns() {
-    try (Graph g = new Graph()) {
-      Signature signature = plusFive(Ops.create(g));
-      Session s;
-      try (ConcreteFunction f = ConcreteFunction.create(signature, g)) {
-        s = f.session();
-      }
-      assertThrows(IllegalStateException.class, () -> s.run(Init.DEFAULT_NAME));
-      g.toGraphDef();  // check that graph is still valid
-    }
-  }
-
-  @Test
-  public void closingFunctionCreatedFromSessionDoesNotReleaseResources() {
-    try (Graph g = new Graph()) {
-      Signature signature = plusFive(Ops.create(g));
-      try (Session s = new Session(g)) {
-        try (ConcreteFunction f = ConcreteFunction.create(signature, s)) {
-        }
-        s.run(Init.DEFAULT_NAME);  // check that session is still valid
-      }
-      g.toGraphDef();  // check that graph is still valid
     }
   }
 }

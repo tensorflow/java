@@ -15,15 +15,33 @@
  */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
+import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.Graph.Reference;
+import org.tensorflow.internal.c_api.TF_Function;
+import org.tensorflow.internal.c_api.TF_Operation;
+import org.tensorflow.internal.c_api.TF_Output;
+import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
+import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.SignatureDef;
-import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.types.family.TType;
 
 /**
  * A graph that can be invoked as a single function, with an input and output signature.
@@ -39,16 +57,87 @@ import org.tensorflow.proto.framework.TensorInfo;
  */
 public class ConcreteFunction implements AutoCloseable {
 
+  private static TF_Operation outputHandle(Operand<?> operand) {
+    if (operand == null) {
+      throw new NullPointerException("Can't get output handle for null operand");
+    }
+
+    Pointer handle = operand.asOutput().getUnsafeNativeHandle();
+    if (handle.isNull()) {
+      throw new NullPointerException("Native handle of operand is null, has it been closed?");
+    }
+
+    if (!(handle instanceof TF_Operation)) {
+      throw new IllegalArgumentException("Operand was not a graph operand");
+    }
+
+    return (TF_Operation) handle;
+  }
+
+  private static TF_Output resolveToOutput(Graph graph, List<Operand<?>> operands) {
+    TF_Output handles = new TF_Output(operands.size());
+    for (int i = 0; i < operands.size(); i++) {
+      Operand<?> input = operands.get(i);
+      graph.checkInput(input);
+      TF_Operation handle = outputHandle(input);
+      handles.position(i).oper(handle).index(input.asOutput().index());
+    }
+    handles.position(0);
+    return handles;
+  }
+
+  private static TF_Function createNative(Graph graph, Signature signature) {
+    try (PointerScope scope = new PointerScope();
+        Reference ref = graph.ref()) {
+      TF_Status status = TF_Status.newStatus();
+
+      List<Operand<?>> inputs = signature.getInputs().values().stream()
+          .map((x) -> graph.outputOrError(x.name))
+          .collect(Collectors.toList());
+
+      List<Operand<?>> outputs = signature.getOutputs().values().stream()
+          .map((x) -> graph.outputOrError(x.name))
+          .collect(Collectors.toList());
+
+      List<GraphOperation> ops = new ArrayList<>(graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
+
+      PointerPointer<TF_Operation> operations = new PointerPointer<>(ops.size());
+      for (int i = 0; i < ops.size(); i++) {
+        operations.put(i, ops.get(i).getUnsafeNativeHandle());
+      }
+
+      TF_Function handle = TF_GraphToFunction(
+          ref.nativeHandle(),
+          new BytePointer(signature.key()), //TODO or methodName?
+          (byte) 1,
+          ops.size(),
+          operations,
+          inputs.size(),
+          resolveToOutput(graph, inputs),
+          outputs.size(),
+          resolveToOutput(graph, outputs),
+          null,
+          null,
+          new BytePointer(signature.methodName() != null ? signature.methodName() : "Method " + signature.key()),
+          status
+      );
+
+      status.throwExceptionIfNotOK();
+
+      return handle.withDeallocator();
+    }
+  }
+
   /**
    * Creates a function by building a new graph.
    *
    * <p>The {@code functionBuilder} must initialize the function graph from the provided
-   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors
-   * and fetch the output tensors on execution.
+   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors and fetch the output
+   * tensors on execution.
    *
    * <p>The function will be the owner of the new graph and its resulting session. Therefore,
-   * the function must be enclosed properly with a try-with-resources block to guarantee that
-   * all native resources will be freed once the function is discarded. For example:
+   * the function must be enclosed properly with a try-with-resources block to guarantee that all native resources will
+   * be freed once the function is discarded. For example:
    *
    * <pre>{@code
    * public class MyModel {
@@ -72,14 +161,11 @@ public class ConcreteFunction implements AutoCloseable {
    * @return the new function
    */
   public static ConcreteFunction create(Function<Ops, Signature> functionBuilder) {
-    Graph graph = new Graph();
-    try {
+    //TODO make sure this works oki with graph closing
+    try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
       Signature signature = functionBuilder.apply(tf);
-      return new ConcreteFunction(signature, graph, new Session(graph), Ownership.GRAPH_AND_SESSION);
-    } catch (Exception e) {
-      graph.close();
-      throw e;
+      return new ConcreteFunction(signature, graph);
     }
   }
 
@@ -87,8 +173,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Create a function from a signature and an existing graph.
    *
    * <p>The function will keep the ownership of the session used to run the graph but not
-   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope
-   * of the function. For example:
+   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope of the function. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -109,15 +195,15 @@ public class ConcreteFunction implements AutoCloseable {
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Graph graph) {
-    return new ConcreteFunction(signature, graph, new Session(graph), Ownership.SESSION_ONLY);
+    return new ConcreteFunction(signature, graph);
   }
 
   /**
    * Create a function from a signature and a valid graph session.
    *
    * <p>The function will not own the session nor its graph, meaning that their lifetime
-   * can extend beyond the scope of the function. Therefore the function does not need to be
-   * closed after its usage. For example:
+   * can extend beyond the scope of the function. Therefore the function does not need to be closed after its usage. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -143,7 +229,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Session session) {
-    return new ConcreteFunction(signature, session.graph(), session, Ownership.NONE);
+    return new ConcreteFunction(signature, session.graph());
   }
 
   /**
@@ -154,49 +240,117 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
+   * Get the name of the function.
+   */
+  public String getNativeFunctionName() {
+    try (PointerScope scope = new PointerScope()) {
+      return TF_FunctionName(nativeHandle()).getString();
+    }
+  }
+
+
+  public Map<String, Operand<?>> call(Scope scope,
+      Map<String, Operand<?>> arguments) {
+    List<Operand<?>> inputList = new ArrayList<>();
+
+    for (String inputName : signature().inputNames()) {
+      Operand<?> input = arguments.get(inputName);
+      if (input == null) {
+        throw new IllegalArgumentException(
+            "Function " + signature().methodName() + " has parameter \"" + inputName
+                + "\", but no argument was passed for it.");
+      }
+      inputList.add(input);
+    }
+
+    scope.env().attachFunction(this);
+    String name = getNativeFunctionName();
+
+    OperationBuilder opBuilder = scope.env().opBuilder(name, scope.makeOpName(name));
+    for (Operand<?> input : inputList) {
+      opBuilder.addInput(input.asOutput());
+    }
+    opBuilder = scope.apply(opBuilder);
+    Operation op = opBuilder.build();
+
+    int numOutputs1 = op.numOutputs();
+    List<Operand<?>> outputList = new ArrayList<>(signature().outputNames().size());
+
+    for (int i = 0; i < numOutputs1; i++) {
+      outputList.add(op.output(i));
+    }
+
+    Map<String, Operand<?>> namedOutputs = new LinkedHashMap<>(signature().outputNames().size());
+
+    List<String> outputNames = new ArrayList<>(signature().outputNames());
+    for (int i = 0; i < outputNames.size(); i++) {
+      String outputName = outputNames.get(i);
+
+      if (i > outputList.size()) {
+        throw new IllegalStateException("Somehow, not all required outputs were returned from the function");
+      }
+
+      Operand<?> output = outputList.get(i);
+      namedOutputs.put(outputName, output);
+    }
+
+    return Collections.unmodifiableMap(namedOutputs);
+  }
+
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
+   *
+   * @param scope the scope to call the function in
+   * @param argument the argument to the call
+   * @return the output of the function
+   */
+  public Operand<?> call(Scope scope, Operand<?> argument) {
+    final SignatureDef signatureDef = signature.asSignatureDef();
+
+    if (signatureDef.getInputsCount() != 1) {
+      throw new IllegalArgumentException(
+          String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
+    }
+    String inputName = signatureDef.getInputsMap().keySet().iterator().next();
+
+    if (signatureDef.getOutputsCount() != 1) {
+      throw new IllegalArgumentException(
+          String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
+    }
+    String outputName = signatureDef.getOutputsMap().keySet().iterator().next();
+
+    Map<String, Operand<?>> inputMap = new LinkedHashMap<>();
+    inputMap.put(inputName, argument);
+
+    return call(scope, inputMap).get(outputName);
+  }
+
+  /**
    * Invokes a function.
    *
    * <p>Caller is responsible for closing all Tensors.
    *
-   * @param arguments list of tensors to pass in input to the function,
-   *                  mapped by their signature name
-   * @return output tensors resulting from the execution of the function,
-   *         mapped by their signature name
+   * @param arguments list of tensors to pass in input to the function, mapped by their signature name
+   * @return output tensors resulting from the execution of the function, mapped by their signature name
    */
   public Map<String, Tensor> call(Map<String, Tensor> arguments)
       throws IllegalArgumentException {
+    //TODO default device settings?  Should probably execute on GPU if available
+    try (EagerSession session = EagerSession.create()) {
+      Ops tf = Ops.create(session);
+      Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
 
-    final SignatureDef signatureDef = signature.asSignatureDef();
-    final Session.Runner runner = session.runner();
-
-    signatureDef.getInputsMap().forEach((argName, t) -> {
-      Tensor tensor = arguments.get(argName);
-      if (tensor == null) {
-        throw new IllegalArgumentException(String.format("Missing argument [%s]", argName));
+      for (String inputName : arguments.keySet()) {
+        Tensor argument = arguments.get(inputName);
+        inputs.put(inputName, tf.constantOf((TType) argument));
       }
-      runner.feed(t.getName(), tensor);
-    });
-
-    Map<String, TensorInfo> outputToNode = signatureDef.getOutputsMap();
-    outputToNode.values().forEach(t -> runner.fetch(t.getName()));
-
-    List<Tensor> resultTensors = runner.run();
-    try {
-      ListIterator<Tensor> resultTensorIter = resultTensors.listIterator();
-      Map<String, Tensor> returnMap = new HashMap<String, Tensor>();
-
-      // Use the output names as present in the signature definition
-      for (String nodeName: outputToNode.keySet()) {
-        returnMap.put(nodeName, resultTensorIter.next());
+      Map<String, Operand<?>> outputs = tf.call(this, inputs);
+      Map<String, Tensor> tensorOutputs = new LinkedHashMap<>(outputs.size());
+      for (String outputName : outputs.keySet()) {
+        tensorOutputs.put(outputName, outputs.get(outputName).asTensor());
       }
-      return returnMap;
-
-    } catch (Exception e) {
-      // Release tensors before throwing exception
-      for (Tensor t : resultTensors) {
-        t.close();
-      }
-      throw e;
+      return tensorOutputs;
     }
   }
 
@@ -207,25 +361,39 @@ public class ConcreteFunction implements AutoCloseable {
    *
    * @param tensor input tensor
    * @return output tensor
-   * @throws IllegalArgumentException if there are multiple input or output parameters defined
-   *                                  in the function
+   * @throws IllegalArgumentException if there are multiple input or output parameters defined in the function
    */
   public Tensor call(Tensor tensor) throws IllegalArgumentException {
-    final SignatureDef signatureDef = signature.asSignatureDef();
-
-    if (signatureDef.getInputsCount() != 1) {
-      throw new IllegalArgumentException(
-        String.format("Function [%s] requires multiple inputs", signatureDef.getMethodName()));
+    try (EagerSession session = EagerSession.create()) {
+      Ops tf = Ops.create(session);
+      Operand<?> argument = tf.constantOf((TType) tensor);
+      Operand<?> output = call(tf, argument);
+      return output.asTensor();
     }
-    String inputNodeName = signatureDef.getInputsMap().values().iterator().next().getName();
+  }
 
-    if (signatureDef.getOutputsCount() != 1) {
-      throw new IllegalArgumentException(
-        String.format("Function [%s] has multiple outputs", signatureDef.getMethodName()));
-    }
-    String outputNodeName = signatureDef.getOutputsMap().values().iterator().next().getName();
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param tf the scope to call the function in
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   */
+  public Map<String, Operand<?>> call(Ops tf, Map<String, Operand<?>> arguments) {
+    return tf.call(this, arguments);
+  }
 
-    return session.runner().feed(inputNodeName, tensor).fetch(outputNodeName).run().get(0);
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
+   *
+   * @param tf the scope to call the function in
+   * @param argument the argument to the call
+   * @return the output of the function
+   */
+  public Operand<?> call(Ops tf, Operand<?> argument) {
+    return tf.call(this, argument);
   }
 
   /**
@@ -241,34 +409,9 @@ public class ConcreteFunction implements AutoCloseable {
     SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
-  /**
-   * Returns the session used to execute the graph when calling this function
-   *
-   * <p>In general, a user does not need to handle directly the session of a function and rely
-   * on {@link #call(Map)} to execute the graph instead. But in some cases, direct access to
-   * the session might be necessary, as it allows more running options.
-   *
-   * @return the function session
-   */
-  public Session session() {
-    return session;
-  }
-
-  /**
-   * Returns the graph of this function
-   */
-  public Graph graph() {
-    return graph;
-  }
-
   @Override
   public void close() {
-    if (ownership != Ownership.NONE) {
-      session.close();
-      if (ownership == Ownership.GRAPH_AND_SESSION) {
-        graph.close();
-      }
-    }
+    scope.close();
   }
 
   @Override
@@ -276,19 +419,56 @@ public class ConcreteFunction implements AutoCloseable {
     return signature.toString();
   }
 
-  private enum Ownership {
-    GRAPH_AND_SESSION, SESSION_ONLY, NONE;
+  /**
+   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
+   * JIT is extremely non-obvious.
+   *
+   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
+   * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
+   */
+  private void makeJit() {
+    try (PointerScope scope = new PointerScope()) {
+      byte[] bytes = AttrValue.newBuilder().setB(true).build().toByteArray();
+      BytePointer trueValue = new BytePointer(bytes);
+
+      TF_Status status1 = TF_Status.newStatus();
+      TF_FunctionSetAttrValueProto(nativeHandle(), "_XlaMustCompile", trueValue, bytes.length, status1);
+      status1.throwExceptionIfNotOK();
+
+      TF_Status status2 = TF_Status.newStatus();
+      TF_FunctionSetAttrValueProto(nativeHandle(), "_noinline", trueValue, bytes.length, status2);
+      status2.throwExceptionIfNotOK();
+    }
   }
 
-  private final Graph graph;
-  private final Session session;
-  private final Signature signature;
-  private final Ownership ownership;
+  TF_Function nativeHandle() {
+    if (nativeHandle.isNull()) {
+      throw new IllegalStateException("Function has been closed");
+    }
+    return nativeHandle;
+  }
 
-  ConcreteFunction(Signature signature, Graph graph, Session session, Ownership ownership) {
-    this.graph = graph;
-    this.session = session;
+  /**
+   * Get the native handle of the function's gradient, so that it can be attached to a Graph.  Not implemented yet.
+   *
+   * TODO implement
+   */
+  TF_Function gradNativeHandle() {
+    return null;
+  }
+
+  private final Signature signature;
+  private final TF_Function nativeHandle;
+  private final PointerScope scope;
+
+  ConcreteFunction(Signature signature, Graph graph) {
+    this(signature, createNative(graph, signature));
+  }
+
+  ConcreteFunction(Signature signature, TF_Function nativeHandle) {
     this.signature = signature;
-    this.ownership = ownership;
+    scope = new PointerScope();
+    this.nativeHandle = nativeHandle;
+    scope.attach(nativeHandle);
   }
 }
