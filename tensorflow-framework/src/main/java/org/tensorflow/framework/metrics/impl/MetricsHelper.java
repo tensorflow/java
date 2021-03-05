@@ -325,7 +325,7 @@ public class MetricsHelper {
    * @param multiLabel indicates whether multidimensional prediction/labels should be treated as
    *     multilabel responses, or flattened into a single label. When true, the values of <code>
    *     variablesToUpdate</code> must have a second dimension equal to the number of labels and
-   *     predictions, and those tensors must not be RaggedTensors.
+   *     predictions per example, and those tensors must not be RaggedTensors.
    * @param labelWeights tensor of non-negative weights for multilabel data. The weights are applied
    *     when calculating TRUE_POSITIVES, FALSE_POSITIVES, TRUE_NEGATIVES, and FALSE_NEGATIVES
    *     without explicit multilabel handling (i.e. when the data is to be flattened). May be null.
@@ -429,8 +429,14 @@ public class MetricsHelper {
     Operand<TInt32> threshLabelTile = tf.select(oneThresh, numLabels, tf.constant(1));
 
     // The ExtraDims are added so the operands of the tile operations later on are compatible.
+
+    // if multilabel, then shape (1, N, D0)
+    // else shape (1, ND),
+    // where Dx == Cx except that D0 == 1 if classIndex != null
+    //       ND is the product of N and all Dx
     Operand<T> predictionsExtraDim;
     Operand<TBool> labelsExtraDim;
+
     if (multiLabel) {
       predictionsExtraDim = tf.expandDims(tPredictions, tf.constant(0));
       labelsExtraDim = tf.expandDims(cast(tf, tLabels, TBool.class), tf.constant(0));
@@ -438,9 +444,22 @@ public class MetricsHelper {
       predictionsExtraDim = tf.reshape(tPredictions, tf.constant(Shape.of(1, -1)));
       labelsExtraDim = tf.reshape(cast(tf, tLabels, TBool.class), tf.constant(Shape.of(1, -1)));
     }
+
+    // the shape of each thresholds tile
+    // if multilabel, then [T, 1, -1]
+    // else [T, 1], where T is numThresholds
     List<Operand<TInt32>> threshPretileShape;
+
+    // the tiling multiples for thresholds
+    // if multilabel, then [1, N, threshLabelTile]
+    // else [1, ND], where ND is the product of N and all Dx
     List<Operand<TInt32>> threshTiles;
+
+    // the tiling multiples for predictionsExtraDim
+    // If multilabel, then [T, 1, 1]
+    // else [T, 1]
     List<Operand<TInt32>> dataTiles;
+
     if (multiLabel) {
       threshPretileShape = Arrays.asList(numThresholds, tf.constant(1), tf.constant(-1));
       threshTiles = Arrays.asList(tf.constant(1), numPredictions, threshLabelTile);
@@ -456,9 +475,15 @@ public class MetricsHelper {
     Operand<T> thresholdsReshaped =
         tf.reshape(cast(tf, thresholds, predictions.type()), tf.stack(threshPretileShape));
     Operand<TInt32> threshTilesShape = tf.stack(threshTiles);
+
+    // if multilabel, then shape (T, N, threshLabelTile)
+    // else shape (T, ND)
     Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
+
     Operand<TInt32> stackedTiles = tf.stack(dataTiles);
 
+    // if multilabel, then shape (T, N, D0)
+    // else shape (T, ND)
     Operand<T> predsTiled = tf.tile(predictionsExtraDim, stackedTiles);
 
     // Compare predictions and threshold.
