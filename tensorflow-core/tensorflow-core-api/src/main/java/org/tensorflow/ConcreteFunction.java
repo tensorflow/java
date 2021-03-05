@@ -99,7 +99,8 @@ public class ConcreteFunction implements AutoCloseable {
           .map((x) -> graph.outputOrError(x.name))
           .collect(Collectors.toList());
 
-      List<GraphOperation> ops = new ArrayList<>(graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
+      List<GraphOperation> ops = new ArrayList<>(
+          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs), true));
 
       PointerPointer<TF_Operation> operations = new PointerPointer<>(ops.size());
       for (int i = 0; i < ops.size(); i++) {
@@ -123,8 +124,7 @@ public class ConcreteFunction implements AutoCloseable {
       );
 
       status.throwExceptionIfNotOK();
-
-      return handle.withDeallocator();
+      return handle;
     }
   }
 
@@ -469,6 +469,6 @@ public class ConcreteFunction implements AutoCloseable {
     this.signature = signature;
     scope = new PointerScope();
     this.nativeHandle = nativeHandle;
-    scope.attach(nativeHandle);
+    scope.attach(nativeHandle.withDeallocator());
   }
 }
