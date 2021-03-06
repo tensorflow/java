@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -209,30 +208,6 @@ public class SavedModelBundleTest {
         fail();
       } catch (IllegalArgumentException e) {
         // as expected
-      }
-    }
-  }
-
-  @Test
-  @Ignore // this is supported now
-  public void cannotExportMultipleFunctionsWithDifferentSessions() throws IOException {
-    Path testFolder = Files.createTempDirectory("tf-saved-model-export-test");
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-      Signature f1Signature = buildGraphWithVariables(tf, Shape.of(1, 1));
-      Signature f2Signature = buildIdentityGraph(tf, "identity");
-      try (ConcreteFunction f1 = ConcreteFunction.create(f1Signature, g);
-          ConcreteFunction f2 = ConcreteFunction.create(f2Signature, g)) {
-        //TODO f1.session().run(Init.DEFAULT_NAME);
-        try {
-          SavedModelBundle.exporter(testFolder.toString())
-              .withFunction(f1)
-              .withFunction(f2)
-              .export();
-          fail();
-        } catch (UnsupportedOperationException e) {
-          // as expected
-        }
       }
     }
   }

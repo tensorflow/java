@@ -214,7 +214,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Shape value);
+  OperationBuilder setAttr(String name, Shape value);
 
   /**
    * Set the shape values of an attribute of the operation being built.
@@ -223,5 +223,14 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Shape[] value);
+  OperationBuilder setAttr(String name, Shape[] value);
+
+  /**
+   * Set a function name attribute of the operation being build.
+   *
+   * @param attrName the attribute to set
+   * @param functionName the function name
+   * @return the OperationBuilder instance for chaining.
+   */
+  OperationBuilder setFunctionName(String attrName, String functionName);
 }

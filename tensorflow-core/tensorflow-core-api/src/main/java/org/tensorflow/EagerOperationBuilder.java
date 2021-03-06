@@ -22,6 +22,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloat;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrInt;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrIntList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrShape;
@@ -217,6 +218,12 @@ final class EagerOperationBuilder implements OperationBuilder {
     return this;
   }
 
+  @Override
+  public OperationBuilder setFunctionName(String attrName, String functionName) {
+    setAttrFunctionName(opHandle, attrName, functionName);
+    return this;
+  }
+
   private TFE_Op opHandle;
 
   private final EagerSession session;
@@ -409,7 +416,14 @@ final class EagerOperationBuilder implements OperationBuilder {
       }
       TF_Status status = TF_Status.newStatus();
       TFE_OpSetAttrShapeList(opHandle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-          numDims.length, status);
+              numDims.length, status);
+    }
+  }
+
+  private static void setAttrFunctionName(TFE_Op opHandle, String attrName, String functionName) {
+    requireOp(opHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TFE_OpSetAttrFunctionName(opHandle, attrName, functionName, functionName.length());
     }
   }
 }

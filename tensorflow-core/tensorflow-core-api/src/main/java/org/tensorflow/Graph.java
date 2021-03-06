@@ -1163,7 +1163,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (varNames.isEmpty()) {
       return SaverDef.newBuilder()
           .setFilenameTensorName(saveFilename.op().name())
-          .setSaveTensorName(tf.withName("empty_save").noOp().op().name())
+          .setSaveTensorName(tf.withName("empty_save").identity(saveFilename).op().name())
           .setRestoreOpName(tf.withName("restore_all").noOp().op().name())
           .build();
     }

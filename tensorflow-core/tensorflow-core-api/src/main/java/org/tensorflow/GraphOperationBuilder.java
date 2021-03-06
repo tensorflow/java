@@ -24,6 +24,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloat;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFuncName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrInt;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrIntList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrShape;
@@ -45,6 +46,7 @@ import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
+import org.tensorflow.Graph.Reference;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_OperationDescription;
@@ -344,6 +346,14 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return this;
   }
 
+  @Override
+  public OperationBuilder setFunctionName(String attrName, String functionName) {
+    try (Reference r = graph.ref()) {
+      setAttrFunctionName(unsafeNativeHandle, attrName, functionName);
+    }
+    return this;
+  }
+
   private TF_OperationDescription unsafeNativeHandle;
   private Graph graph;
 
@@ -537,6 +547,13 @@ public final class GraphOperationBuilder implements OperationBuilder {
         lengths.put(i, value[i].length);
       }
       TF_SetAttrStringList(handle, new BytePointer(name), valuePointers, lengths, value.length);
+    }
+  }
+
+  private static void setAttrFunctionName(TF_OperationDescription opHandle, String attrName, String functionName) {
+    requireHandle(opHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_SetAttrFuncName(opHandle, attrName, functionName, functionName.length());
     }
   }
 }

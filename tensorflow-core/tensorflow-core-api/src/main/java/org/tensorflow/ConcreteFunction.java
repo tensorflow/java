@@ -19,6 +19,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionToFunctionDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
@@ -44,11 +45,13 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.proto.framework.AttrValue;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.framework.TensorShapeProto;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -65,77 +68,6 @@ import org.tensorflow.types.family.TType;
  */
 public class ConcreteFunction implements AutoCloseable {
 
-  private static TF_Operation outputHandle(Operand<?> operand) {
-    if (operand == null) {
-      throw new NullPointerException("Can't get output handle for null operand");
-    }
-
-    Pointer handle = operand.asOutput().getUnsafeNativeHandle();
-    if (handle.isNull()) {
-      throw new NullPointerException("Native handle of operand is null, has it been closed?");
-    }
-
-    if (!(handle instanceof TF_Operation)) {
-      throw new IllegalArgumentException("Operand was not a graph operand");
-    }
-
-    return (TF_Operation) handle;
-  }
-
-  private static TF_Output resolveToOutput(Graph graph, List<Operand<?>> operands) {
-    TF_Output handles = new TF_Output(operands.size());
-    for (int i = 0; i < operands.size(); i++) {
-      Operand<?> input = operands.get(i);
-      graph.checkInput(input);
-      TF_Operation handle = outputHandle(input);
-      handles.position(i).oper(handle).index(input.asOutput().index());
-    }
-    handles.position(0);
-    return handles;
-  }
-
-  private static TF_Function createNative(Graph graph, Signature signature) {
-    try (PointerScope scope = new PointerScope();
-        Reference ref = graph.ref()) {
-      TF_Status status = TF_Status.newStatus();
-
-      List<Operand<?>> inputs = signature.getInputs().values().stream()
-          .map((x) -> graph.outputOrError(x.name))
-          .collect(Collectors.toList());
-
-      List<Operand<?>> outputs = signature.getOutputs().values().stream()
-          .map((x) -> graph.outputOrError(x.name))
-          .collect(Collectors.toList());
-
-      List<GraphOperation> ops = new ArrayList<>(
-          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs),
-              null, Collections.singleton(Placeholder.OP_NAME)));
-
-      PointerPointer<TF_Operation> operations = new PointerPointer<>(ops.size());
-      for (int i = 0; i < ops.size(); i++) {
-        operations.put(i, ops.get(i).getUnsafeNativeHandle());
-      }
-
-      TF_Function handle = TF_GraphToFunction(
-          ref.nativeHandle(),
-          new BytePointer(signature.key()), //TODO or methodName?
-          (byte) 1,
-          ops.size(),
-          operations,
-          inputs.size(),
-          resolveToOutput(graph, inputs),
-          outputs.size(),
-          resolveToOutput(graph, outputs),
-          null,
-          null,
-          new BytePointer(signature.methodName() != null ? signature.methodName() : "Method " + signature.key()),
-          status
-      );
-
-      status.throwExceptionIfNotOK();
-      return handle;
-    }
-  }
 
   /**
    * Creates a function by building a new graph.
@@ -173,7 +105,7 @@ public class ConcreteFunction implements AutoCloseable {
     try (Graph graph = new Graph()) {
       Ops tf = Ops.create(graph);
       Signature signature = functionBuilder.apply(tf);
-      return new ConcreteFunction(signature, graph);
+      return buildFromGraph(graph, signature);
     }
   }
 
@@ -203,7 +135,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Graph graph) {
-    return new ConcreteFunction(signature, graph);
+    return buildFromGraph(graph, signature);
   }
 
   /**
@@ -237,7 +169,7 @@ public class ConcreteFunction implements AutoCloseable {
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Session session) {
-    return new ConcreteFunction(signature, session.graph());
+    return buildFromGraph(session.graph(), signature);
   }
 
   /**
@@ -256,6 +188,8 @@ public class ConcreteFunction implements AutoCloseable {
     }
   }
 
+  public static final String CALL_OP = "PartitionedCall";
+  public static final String STATEFUL_CALL_OP = "StatefulPartitionedCall";
 
   public Map<String, Operand<?>> call(Scope scope,
       Map<String, Operand<?>> arguments) {
@@ -274,10 +208,17 @@ public class ConcreteFunction implements AutoCloseable {
     scope.env().attachFunction(this);
     String name = getNativeFunctionName();
 
-    OperationBuilder opBuilder = scope.env().opBuilder(name, scope.makeOpName(name));
-    for (Operand<?> input : inputList) {
-      opBuilder.addInput(input.asOutput());
-    }
+    String displayName = Scope.isValidOpName(name) ? name : "FunctionCall";
+
+    OperationBuilder opBuilder = scope.env()
+        .opBuilder(stateful ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
+
+    opBuilder.addInputList(inputList.stream().map(Operand::asOutput).toArray(Output[]::new));
+
+    opBuilder.setFunctionName("f", name);
+    opBuilder.setAttr("Tin", inputList.stream().map(x -> x.asOutput().dataType()).toArray(DataType[]::new));
+    opBuilder.setAttr("Tout", signature().getOutputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new));
+
     opBuilder = scope.apply(opBuilder);
     Operation op = opBuilder.build();
 
@@ -413,6 +354,10 @@ public class ConcreteFunction implements AutoCloseable {
     SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
+  public boolean isStateful() {
+    return stateful;
+  }
+
   @Override
   public void close() {
     scope.close();
@@ -464,31 +409,35 @@ public class ConcreteFunction implements AutoCloseable {
   private final Signature signature;
   private final TF_Function nativeHandle;
   private final PointerScope scope;
+  private final boolean stateful;
 
-  ConcreteFunction(Signature signature, Graph graph) {
-    this(signature, createNative(graph, signature));
-  }
-
-  ConcreteFunction(Signature signature, TF_Function nativeHandle) {
+  ConcreteFunction(Signature signature, TF_Function nativeHandle, boolean stateful) {
     this.signature = signature;
-    scope = new PointerScope();
-    this.nativeHandle = nativeHandle;
-    scope.attach(nativeHandle.withDeallocator());
+    try (PointerScope scope = new PointerScope()) {
+      scope.extend();
+      this.nativeHandle = nativeHandle.withDeallocator();
+      scope.attach(nativeHandle);
+      this.scope = scope;
+    }
+    this.stateful = stateful;
   }
 
   /**
    * Detects the signature from the handle
    */
   static ConcreteFunction fromNativeHandle(TF_Function function) {
-    TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
-    TF_Status status2 = TF_Status.newStatus();
-    TF_FunctionToFunctionDef(function, funcDefBuffer, status2);
-    status2.throwExceptionIfNotOK();
+
     FunctionDef funcDef = null;
-    try {
-      funcDef = FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
-    } catch (InvalidProtocolBufferException e) {
-      throw new IllegalStateException("Failed to parse FunctionDef proto", e);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
+      TF_Status status2 = TF_Status.newStatus();
+      TF_FunctionToFunctionDef(function, funcDefBuffer, status2);
+      status2.throwExceptionIfNotOK();
+      try {
+        funcDef = FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
+      } catch (InvalidProtocolBufferException e) {
+        throw new IllegalStateException("Failed to parse FunctionDef proto", e);
+      }
     }
 
     Signature.Builder builder = Signature.builder().methodName(funcDef.getSignature().getName())
@@ -514,6 +463,158 @@ public class ConcreteFunction implements AutoCloseable {
       builder.output(outputDef.getName(), info);
     }
 
-    return new ConcreteFunction(builder.build(), function);
+    return new ConcreteFunction(
+        builder.build(),
+        function,
+        funcDef.getNodeDefList().stream().anyMatch(x -> TensorFlow.isOpStateful(x.getOp()))
+    );
+  }
+
+
+  private static TF_Operation outputHandle(Operand<?> operand) {
+    if (operand == null) {
+      throw new NullPointerException("Can't get output handle for null operand");
+    }
+
+    Pointer handle = operand.asOutput().getUnsafeNativeHandle();
+    if (handle.isNull()) {
+      throw new NullPointerException("Native handle of operand is null, has it been closed?");
+    }
+
+    if (!(handle instanceof TF_Operation)) {
+      throw new IllegalArgumentException("Operand was not a graph operand");
+    }
+
+    return (TF_Operation) handle;
+  }
+
+  private static TF_Output resolveToOutput(Graph graph, List<Operand<?>> operands) {
+    TF_Output handles = new TF_Output(operands.size());
+    for (int i = 0; i < operands.size(); i++) {
+      Operand<?> input = operands.get(i);
+      graph.checkInput(input);
+      TF_Operation handle = outputHandle(input);
+
+      handles.position(i).oper(handle).index(input.asOutput().index());
+    }
+    handles.position(0);
+    return handles;
+  }
+
+  /**
+   * Returns the function name if {@code op} is a function call op, or null otherwise.
+   */
+  static String findFunctionCall(GraphOperation op) {
+    if (op.type().equals(STATEFUL_CALL_OP) || op.type().equals(CALL_OP)) {
+      try (PointerScope scope = new PointerScope()) {
+        TF_Status status = TF_Status.newStatus();
+        TF_Buffer buff = TF_Buffer.newBuffer();
+        TF_OperationGetAttrValueProto(op.getUnsafeNativeHandle(), "f", buff, status);
+        status.throwExceptionIfNotOK();
+        AttrValue def = AttrValue.parseFrom(buff.dataAsByteBuffer());
+
+        return def.getFunc().getName();
+      } catch (InvalidProtocolBufferException e) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  private static ConcreteFunction buildFromGraph(Graph graph, Signature signature) {
+    try (PointerScope scope = new PointerScope();
+        Reference ref = graph.ref()) {
+      TF_Status status = TF_Status.newStatus();
+
+      List<Operand<?>> inputs = signature.getInputs().values().stream()
+          .map((x) -> graph.outputOrError(x.name))
+          .collect(Collectors.toList());
+
+      List<Operand<?>> outputs = signature.getOutputs().values().stream()
+          .map((x) -> graph.outputOrError(x.name))
+          .collect(Collectors.toList());
+
+      List<GraphOperation> ops = new ArrayList<>(
+          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs),
+              null, Collections.singleton(Placeholder.OP_NAME)));
+
+      inputs.forEach(input -> ops.remove(input.op()));
+
+      // Python sometimes has NoOps as outputs
+      Ops tf = Ops.create(graph).withSubScope("functionControlOutputs");
+      for (int i = 0; i < outputs.size(); i++) {
+        Operand<?> output = outputs.get(i);
+        if (output.op().numOutputs() < 1) {
+          Operand<TBool> realOutput = tf
+              .withControlDependencies(Collections.singletonList(output))
+              .withName(output.op().name() + "_control")
+              .constant(false);
+          ops.add((GraphOperation) realOutput.op());
+          outputs.set(i, realOutput);
+        }
+      }
+
+      PointerPointer<TF_Operation> operations = new PointerPointer<>(ops.size());
+      for (int i = 0; i < ops.size(); i++) {
+        operations.put(i, ops.get(i).getUnsafeNativeHandle());
+      }
+
+      TF_Function handle = TF_GraphToFunction(
+          ref.nativeHandle(),
+          new BytePointer(signature.key()),
+          (byte) 1,
+          ops.size(),
+          operations,
+          inputs.size(),
+          resolveToOutput(graph, inputs),
+          outputs.size(),
+          resolveToOutput(graph, outputs),
+          null,
+          null,
+          new BytePointer(signature.methodName() != null ? signature.methodName() : "Method " + signature.key()),
+          status
+      );
+
+      status.throwExceptionIfNotOK();
+      return new ConcreteFunction(signature, handle, ops.stream().anyMatch(x -> TensorFlow.isOpStateful(x.type())));
+    }
+  }
+
+  ConcreteFunction withNewSignature(Signature signature) {
+    if (this.signature.getInputs().size() != signature.getInputs().size()) {
+      throw new IllegalArgumentException(
+          "New signature must have the same number of inputs.  Expected " + this.signature.getInputs().size() + ", got "
+              + signature.getInputs().size());
+    }
+
+    if (this.signature.getOutputs().size() != signature.getOutputs().size()) {
+      throw new IllegalArgumentException(
+          "New signature must have the same number of inputs.  Expected " + this.signature.getInputs().size() + ", got "
+              + signature.getInputs().size());
+    }
+
+    List<DataType> inputs = this.signature.getInputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+    List<DataType> newInputs = signature.getInputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+
+    if (!inputs.equals(newInputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the new signature's inputs (in order) must match.  Expected " + inputs + ", got " + newInputs);
+    }
+
+    List<DataType> outputs = this.signature.getOutputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+    List<DataType> newOutputs = signature.getOutputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+
+    if (!outputs.equals(newOutputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the new signature's outputs (in order) must match.  Expected " + outputs + ", got "
+              + newOutputs);
+    }
+
+    return new ConcreteFunction(signature, nativeHandle, stateful);
   }
 }

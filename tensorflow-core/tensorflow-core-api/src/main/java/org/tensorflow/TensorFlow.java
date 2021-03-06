@@ -23,6 +23,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadLibrary;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_Version;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
@@ -30,10 +32,14 @@ import org.tensorflow.internal.c_api.TF_Library;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.proto.framework.OpList;
 
-/** Static utility methods describing the TensorFlow runtime. */
+/**
+ * Static utility methods describing the TensorFlow runtime.
+ */
 public final class TensorFlow {
 
-  /** Returns the version of the underlying TensorFlow runtime. */
+  /**
+   * Returns the version of the underlying TensorFlow runtime.
+   */
   public static String version() {
     return TF_Version().getString();
   }
@@ -41,11 +47,10 @@ public final class TensorFlow {
   /**
    * All the TensorFlow operations available in this address space.
    *
-   * @return A <a
-   *     href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a>
-   *     protocol buffer, which lists all the available TensorFlow operations.
+   * @return A <a href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a> protocol
+   * buffer, which lists all the available TensorFlow operations.
    */
-  public static OpList registeredOpList() {
+  public static synchronized OpList registeredOpList() {
     TF_Buffer buf = TF_GetAllOpList();
     try {
       return OpList.parseFrom(buf.dataAsByteBuffer());
@@ -56,14 +61,25 @@ public final class TensorFlow {
     }
   }
 
+  private static Set<String> statefulOps;
+
+  public static synchronized boolean isOpStateful(String opType) {
+    if (statefulOps == null) {
+      statefulOps = registeredOpList().getOpList().stream()
+          .filter(x -> x.getIsStateful())
+          .map(x -> x.getName())
+          .collect(Collectors.toSet());
+    }
+
+    return statefulOps.contains(opType);
+  }
+
   /**
-   * Load the dynamic library in filename and register the operations and kernels present in that
-   * library.
+   * Load the dynamic library in filename and register the operations and kernels present in that library.
    *
    * @param filename Path of the dynamic library containing operations and kernels to load.
-   * @return A <a
-   *     href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a>
-   *     protocol buffer message defining the operations defined in the library.
+   * @return A <a href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a> protocol
+   * buffer message defining the operations defined in the library.
    * @throws UnsatisfiedLinkError if filename cannot be loaded.
    */
   public static OpList loadLibrary(String filename) {
@@ -104,9 +120,12 @@ public final class TensorFlow {
     }
   }
 
-  private TensorFlow() {}
+  private TensorFlow() {
+  }
 
-  /** Load the TensorFlow runtime C library. */
+  /**
+   * Load the TensorFlow runtime C library.
+   */
   static {
     try {
       NativeLibrary.load();
