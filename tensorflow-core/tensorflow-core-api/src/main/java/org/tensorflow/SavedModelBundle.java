@@ -17,7 +17,6 @@ package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadSessionFromSavedModel;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -32,7 +31,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -40,18 +38,14 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
-import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
-import org.tensorflow.proto.framework.SignatureDef;
-import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.proto.util.SaverDef;
 
 /**
@@ -387,53 +381,6 @@ public class SavedModelBundle implements AutoCloseable {
     this.functions = functions;
   }
 
-  private static final Pattern INFERENCE_FUNCTION_NAME_PATTERN = Pattern
-      .compile("__inference_(.+)_\\d+", Pattern.DOTALL);
-
-  /**
-   * Check that all outputs of the signature come from a single call op that takes the inputs.
-   */
-  private static GraphOperation findFunctionWrapper(Graph graph, SignatureDef signatureDef) {
-
-    GraphOperation callOp = null;
-    for (TensorInfo output : signatureDef.getOutputsMap().values()) {
-      GraphOperation op = (GraphOperation) graph.outputOrError(output.getName()).op();
-      if (callOp == null) {
-        callOp = op;
-      } else if (!callOp.equals(op)) {
-        return null;
-      }
-    }
-
-    if (callOp == null) {
-      return null;
-    }
-
-    if (callOp != null) {
-
-      if (callOp.numInputs() != signatureDef.getInputsCount() || callOp.numOutputs() != signatureDef
-          .getOutputsCount()) {
-        return null;
-      }
-
-      int i = 0;
-      List<Operand<?>> opInputs = callOp.inputs();
-
-      for (TensorInfo input : signatureDef.getInputsMap().values()) {
-        if (!graph.outputOrError(input.getName()).equals(opInputs.get(i))) {
-          return null;
-        }
-        i++;
-      }
-    }
-
-    if (!callOp.type().equals(ConcreteFunction.CALL_OP) && !callOp.type().equals(ConcreteFunction.STATEFUL_CALL_OP)) {
-      return null;
-    }
-
-    return callOp;
-  }
-
   /**
    * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session object, plus the
    * MetaGraphDef.
@@ -453,53 +400,6 @@ public class SavedModelBundle implements AutoCloseable {
     final Map<String, ConcreteFunction> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
     List<ConcreteFunction> graphFunctions = graph.getFunctions();
     metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
-
-      GraphOperation callOp = findFunctionWrapper(graph, signatureDef);
-
-      // if the function is a thin wrapper around a function call, unwrap it
-      if (callOp != null) {
-
-        try (PointerScope scope = new PointerScope()) {
-          TF_Operation op = ((GraphOperation) graph
-              .outputOrError(signatureDef.getOutputsMap().values().iterator().next().getName()).op())
-              .getUnsafeNativeHandle();
-          TF_Status status = TF_Status.newStatus();
-          TF_Buffer buff = TF_Buffer.newBuffer();
-          TF_OperationGetAttrValueProto(op, "f", buff, status);
-          status.throwExceptionIfNotOK();
-          AttrValue def = AttrValue.parseFrom(buff.dataAsByteBuffer());
-
-          String functionName = def.getFunc().getName();
-
-          ConcreteFunction function = null;
-          for (ConcreteFunction fn : graphFunctions) {
-            if (fn.getNativeFunctionName().equals(functionName)) {
-              function = fn;
-              break;
-            }
-          }
-
-          if (function != null) {
-            functions.put(signatureName, function.withNewSignature(new Signature(signatureName, signatureDef)));
-          }
-        } catch (InvalidProtocolBufferException | IllegalArgumentException ignored) {
-
-        }
-      }
-//
-//      // try to do the unwrapping based on name if there are no outputs (and thus we can't find the call op)
-//      if (!functions.containsKey(signatureName) && signatureDef.getOutputsCount() < 1) {
-//        for (ConcreteFunction fn : graphFunctions) {
-//          Matcher matcher = INFERENCE_FUNCTION_NAME_PATTERN.matcher(fn.getNativeFunctionName());
-//          if (matcher.find()) {
-//            String fnName = matcher.group(1);
-//            if (fnName.equals(signatureName)) {
-//              functions.put(signatureName, fn);
-//              break;
-//            }
-//          }
-//        }
-//      }
 
       // otherwise use the wrapper
       if (!functions.containsKey(signatureName)) {
