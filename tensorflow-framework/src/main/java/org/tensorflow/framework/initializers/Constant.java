@@ -47,9 +47,13 @@ public class Constant extends BaseInitializer<TType> {
    *
    * @param tf the TensorFlow Ops
    * @param value the value used for the constant.
+   * @throws IllegalArgumentException if value is not a scalar.
    */
   public Constant(Ops tf, Operand<? extends TType> value) {
     super(tf);
+    if (!value.shape().isScalar()) {
+      throw new IllegalArgumentException("value must be scalar, got shape : " + value.shape());
+    }
     this.value = value;
   }
 

@@ -22,7 +22,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /** Test the Constant initializer */
 public class ConstantTest {
@@ -131,6 +130,23 @@ public class ConstantTest {
 
               Constant instance = new Constant(tf, tf.constant(22));
               instance.call(tf.constant(shape), TString.class);
+            }
+          });
+  }
+
+  /** Test of call method, of class Constant. */
+  @Test
+  public void testCallNonScalar() {
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(2, 2);
+
+              Constant instance = new Constant(tf, tf.constant(new int[] {1, 2}));
+              instance.call(tf.constant(shape), TInt32.class);
             }
           });
   }
