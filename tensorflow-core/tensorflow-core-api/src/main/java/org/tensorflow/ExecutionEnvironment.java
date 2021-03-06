@@ -38,8 +38,7 @@ public interface ExecutionEnvironment {
   OperationBuilder opBuilder(String type, String name);
 
   /**
-   * Attach the function to this execution environment, allowing it to be called by creating an op with the function
-   * name as it's {@code type}.
+   * Attach the function and its dependencies to this execution environment, allowing it to be called.
    *
    * Done automatically in the {@link org.tensorflow.op.Ops#call(ConcreteFunction, java.util.Map)} ops.
    */

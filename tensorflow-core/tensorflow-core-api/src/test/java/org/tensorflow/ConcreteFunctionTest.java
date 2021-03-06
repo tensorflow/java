@@ -40,11 +40,21 @@ public class ConcreteFunctionTest {
     return Signature.builder().key("minusTwo").input("x", input).output("y", output).build();
   }
 
+  @SuppressWarnings("unchecked")
+  private static Signature plusFiveMinusTwo(Ops tf) {
+    Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
+    try (ConcreteFunction plusFive = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
+        ConcreteFunction minusTwo = ConcreteFunction.create(ConcreteFunctionTest::minusTwo)) {
+      Operand<TFloat32> result = (Operand<TFloat32>) minusTwo.call(tf, plusFive.call(tf, input));
+      return Signature.builder().key("plusFiveMinusTwo").input("x", input).output("y", result).build();
+    }
+  }
+
   @Test
   public void createFunction() {
     try (ConcreteFunction f = ConcreteFunction.create(ConcreteFunctionTest::plusFive);
         TFloat32 x = TFloat32.scalarOf(3.0f)) {
-      assertEquals(8.0f, ((TFloat32)f.call(x)).getFloat());
+      assertEquals(8.0f, ((TFloat32) f.call(x)).getFloat());
     }
   }
 
@@ -94,6 +104,33 @@ public class ConcreteFunctionTest {
       try (TFloat32 x = TFloat32.scalarOf(10f);
           TFloat32 y = (TFloat32) attached.call(x)) {
         assertEquals(15f, y.getFloat());
+      }
+    }
+  }
+
+  @Test
+  public void testNestedFunctionEager() {
+    try (EagerSession sess = EagerSession.create();
+        ConcreteFunction function = ConcreteFunction.create(ConcreteFunctionTest::plusFiveMinusTwo)) {
+      Ops tf = Ops.create(sess);
+      Operand<TFloat32> a = tf.constant(10f);
+      Operand<TFloat32> result = (Operand<TFloat32>) function.call(tf, a);
+      try (TFloat32 t = result.asTensor()) {
+        assertEquals(13f, t.getFloat());
+      }
+    }
+  }
+
+  @Test
+  public void testNestedFunctionGraph() {
+    try (Graph graph = new Graph();
+        ConcreteFunction function = ConcreteFunction.create(ConcreteFunctionTest::plusFiveMinusTwo)) {
+      Ops tf = Ops.create(graph);
+      Operand<TFloat32> a = tf.constant(10f);
+      Operand<TFloat32> result = (Operand<TFloat32>) function.call(tf, a);
+      try (Session sess = new Session(graph);
+          TFloat32 t = (TFloat32) sess.runner().fetch(result).run().get(0)) {
+        assertEquals(13f, t.getFloat());
       }
     }
   }

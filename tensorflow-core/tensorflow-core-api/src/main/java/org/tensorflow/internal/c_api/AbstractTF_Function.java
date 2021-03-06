@@ -52,7 +52,7 @@ public abstract class AbstractTF_Function extends Pointer {
   /**
    * Adds a deallocator if there isn't already one.  Attaches to the current scope regardless.
    */
-  public TF_Function withDeallocator() {
+  public TF_Function withDeallocatorInScope() {
     if (hasDeallocator) {
       Iterator<PointerScope> it = PointerScope.getScopeIterator();
       if (it != null) {

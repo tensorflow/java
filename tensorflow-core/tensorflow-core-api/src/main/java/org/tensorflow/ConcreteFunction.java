@@ -15,19 +15,15 @@
  */
 package org.tensorflow;
 
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionToFunctionDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +34,6 @@ import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.Graph.Reference;
-import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
@@ -49,7 +44,6 @@ import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
-import org.tensorflow.proto.framework.NodeDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
@@ -186,9 +180,35 @@ public class ConcreteFunction implements AutoCloseable {
    * Get the name of the function.
    */
   public String getNativeFunctionName() {
-    try (PointerScope scope = new PointerScope()) {
-      return TF_FunctionName(nativeHandle()).getString();
-    }
+    return nativeFunction.getName();
+  }
+
+  /**
+   * Get the {@link FunctionDef} proto.
+   */
+  public FunctionDef getFunctionDef() {
+    return nativeFunction.getFunctionDef();
+  }
+
+  /**
+   * Get whether the function is stateful.
+   */
+  public boolean isStateful() {
+    return nativeFunction.isStateful();
+  }
+
+  Set<TF_Function> getDependencies() {
+    return dependencies;
+  }
+
+  @Override
+  public void close() {
+    scope.close();
+  }
+
+  @Override
+  public String toString() {
+    return signature.toString();
   }
 
   public static final String CALL_OP = "PartitionedCall";
@@ -214,7 +234,7 @@ public class ConcreteFunction implements AutoCloseable {
     String displayName = Scope.isValidOpName(name) ? name : "FunctionCall";
 
     OperationBuilder opBuilder = scope.env()
-        .opBuilder(stateful ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
+        .opBuilder(isStateful() ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
 
     opBuilder.addInputList(inputList.stream().map(Operand::asOutput).toArray(Output[]::new));
 
@@ -357,20 +377,6 @@ public class ConcreteFunction implements AutoCloseable {
     SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
-  public boolean isStateful() {
-    return stateful;
-  }
-
-  @Override
-  public void close() {
-    scope.close();
-  }
-
-  @Override
-  public String toString() {
-    return signature.toString();
-  }
-
   /**
    * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
    * JIT is extremely non-obvious.
@@ -394,10 +400,10 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   TF_Function nativeHandle() {
-    if (nativeHandle.isNull()) {
+    if (nativeFunction.getNativeHandle().isNull()) {
       throw new IllegalStateException("Function has been closed");
     }
-    return nativeHandle;
+    return nativeFunction.getNativeHandle();
   }
 
   /**
@@ -410,43 +416,93 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   private final Signature signature;
-  private final TF_Function nativeHandle;
+  private final NativeFunction nativeFunction;
   private final PointerScope scope;
-  private final boolean stateful;
+  private final Set<TF_Function> dependencies;
 
-  ConcreteFunction(Signature signature, TF_Function nativeHandle, boolean stateful) {
-    this.signature = signature;
-    try (PointerScope scope = new PointerScope()) {
-      scope.extend();
-      this.nativeHandle = nativeHandle.withDeallocator();
-      scope.attach(nativeHandle);
-      this.scope = scope;
+  ConcreteFunction(Signature signature, NativeFunction nativeFunction, Collection<NativeFunction> availableFunctions) {
+    this(signature, nativeFunction, nativeFunction.getAllDependencies(availableFunctions));
+  }
+
+  private static boolean dataTypesMatch(List<DataType> a, List<DataType> b) {
+    if (a.size() != b.size()) {
+      return false;
     }
-    this.stateful = stateful;
+
+    for (int i = 0; i < a.size(); i++) {
+      DataType aType = a.get(i);
+      DataType bType = b.get(i);
+
+      if (aType != DataType.DT_INVALID && bType != DataType.DT_INVALID && !a.equals(b)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private ConcreteFunction(Signature signature, NativeFunction nativeFunction, Set<TF_Function> dependencies) {
+    this.signature = signature;
+    this.nativeFunction = nativeFunction;
+    this.dependencies = Collections.unmodifiableSet(dependencies);
+
+    if (this.signature.getInputs().size() != nativeFunction.getFunctionDef().getSignature().getInputArgCount()) {
+      throw new IllegalArgumentException(
+          "Signature must have the same number of inputs as the native function.  Expected "
+              + nativeFunction.getFunctionDef().getSignature().getInputArgCount() + ", got "
+              + this.signature.getInputs().size());
+    }
+
+    if (this.signature.getOutputs().size() != nativeFunction.getFunctionDef().getSignature().getOutputArgCount()) {
+      throw new IllegalArgumentException(
+          "New signature must have the same number of outputs as the native function.  Expected "
+              + nativeFunction.getFunctionDef().getSignature().getOutputArgCount() + ", got "
+              + this.signature.getOutputs().size());
+    }
+
+    List<DataType> inputs = this.signature.getInputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+    List<DataType> nativeInputs = nativeFunction.getFunctionDef().getSignature().getInputArgList().stream()
+        .map(ArgDef::getType)
+        .collect(Collectors.toList());
+
+    if (!dataTypesMatch(inputs, nativeInputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the signature's inputs must match the native function's (in order).  Expected "
+              + nativeInputs + ", got " + inputs);
+    }
+
+    List<DataType> outputs = this.signature.getOutputs().values().stream().map(x -> x.dataType)
+        .collect(Collectors.toList());
+    List<DataType> nativeOutputs = nativeFunction.getFunctionDef().getSignature().getOutputArgList().stream()
+        .map(ArgDef::getType)
+        .collect(Collectors.toList());
+
+    if (!dataTypesMatch(outputs, nativeOutputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the signature's outputs must match the native function's (in order).  Expected "
+              + nativeOutputs + ", got "
+              + outputs);
+    }
+
+    try (PointerScope scope = new PointerScope()) {
+      this.scope = scope;
+      scope.extend();
+      this.nativeFunction.getNativeHandle().withDeallocatorInScope();
+      this.dependencies.forEach(TF_Function::withDeallocatorInScope);
+    }
   }
 
   /**
    * Detects the signature from the handle
    */
-  static ConcreteFunction fromNativeHandle(TF_Function function) {
+  static ConcreteFunction fromNativeHandle(NativeFunction nativeFunction,
+      Collection<NativeFunction> availableFunctions) {
 
-    FunctionDef funcDef = null;
-    try (PointerScope scope = new PointerScope()) {
-      TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
-      TF_Status status2 = TF_Status.newStatus();
-      TF_FunctionToFunctionDef(function, funcDefBuffer, status2);
-      status2.throwExceptionIfNotOK();
-      try {
-        funcDef = FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
-      } catch (InvalidProtocolBufferException e) {
-        throw new IllegalStateException("Failed to parse FunctionDef proto", e);
-      }
-    }
+    Signature.Builder builder = Signature.builder().methodName(nativeFunction.getFunctionDef().getSignature().getName())
+        .key(nativeFunction.getName());
 
-    Signature.Builder builder = Signature.builder().methodName(funcDef.getSignature().getName())
-        .key(TF_FunctionName(function).getString());
-
-    for (ArgDef input : funcDef.getSignature().getInputArgList()) {
+    for (ArgDef input : nativeFunction.getFunctionDef().getSignature().getInputArgList()) {
       TensorInfo info = TensorInfo.newBuilder()
           .setDtype(input.getType())
           .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
@@ -456,7 +512,7 @@ public class ConcreteFunction implements AutoCloseable {
       builder.input(input.getName(), info);
     }
 
-    for (ArgDef outputDef : funcDef.getSignature().getOutputArgList()) {
+    for (ArgDef outputDef : nativeFunction.getFunctionDef().getSignature().getOutputArgList()) {
       TensorInfo info = TensorInfo.newBuilder()
           .setDtype(outputDef.getType())
           .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
@@ -468,8 +524,8 @@ public class ConcreteFunction implements AutoCloseable {
 
     return new ConcreteFunction(
         builder.build(),
-        function,
-        funcDef.getNodeDefList().stream().anyMatch(x -> TensorFlow.isOpStateful(x.getOp()))
+        nativeFunction,
+        availableFunctions
     );
   }
 
@@ -559,91 +615,11 @@ public class ConcreteFunction implements AutoCloseable {
       );
 
       status.throwExceptionIfNotOK();
-      return new ConcreteFunction(signature, handle, ops.stream().anyMatch(x -> TensorFlow.isOpStateful(x.type())));
+      return new ConcreteFunction(signature, new NativeFunction(handle), graph.getNativeFunctions());
     }
   }
 
   ConcreteFunction withNewSignature(Signature signature) {
-    if (this.signature.getInputs().size() != signature.getInputs().size()) {
-      throw new IllegalArgumentException(
-          "New signature must have the same number of inputs.  Expected " + this.signature.getInputs().size() + ", got "
-              + signature.getInputs().size());
-    }
-
-    if (this.signature.getOutputs().size() != signature.getOutputs().size()) {
-      throw new IllegalArgumentException(
-          "New signature must have the same number of inputs.  Expected " + this.signature.getInputs().size() + ", got "
-              + signature.getInputs().size());
-    }
-
-    List<DataType> inputs = this.signature.getInputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-    List<DataType> newInputs = signature.getInputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-
-    if (!inputs.equals(newInputs)) {
-      throw new IllegalArgumentException(
-          "Data types of the new signature's inputs (in order) must match.  Expected " + inputs + ", got " + newInputs);
-    }
-
-    List<DataType> outputs = this.signature.getOutputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-    List<DataType> newOutputs = signature.getOutputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-
-    if (!outputs.equals(newOutputs)) {
-      throw new IllegalArgumentException(
-          "Data types of the new signature's outputs (in order) must match.  Expected " + outputs + ", got "
-              + newOutputs);
-    }
-
-    return new ConcreteFunction(signature, nativeHandle, stateful);
-  }
-
-  /**
-   * Returns the function name if {@code op} is a function call op, or null otherwise.
-   */
-  static String findFunctionCall(GraphOperation op) {
-    if (op.type().equals(STATEFUL_CALL_OP) || op.type().equals(CALL_OP)) {
-      try (PointerScope scope = new PointerScope()) {
-        TF_Status status = TF_Status.newStatus();
-        TF_Buffer buff = TF_Buffer.newBuffer();
-        TF_OperationGetAttrValueProto(op.getUnsafeNativeHandle(), "f", buff, status);
-        status.throwExceptionIfNotOK();
-        AttrValue def = AttrValue.parseFrom(buff.dataAsByteBuffer());
-
-        return def.getFunc().getName();
-      } catch (InvalidProtocolBufferException e) {
-        return null;
-      }
-    }
-
-    return null;
-  }
-
-  FunctionDef functionDef() {
-    try (PointerScope scope = new PointerScope()) {
-      TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
-      TF_Status status2 = TF_Status.newStatus();
-      TF_FunctionToFunctionDef(nativeHandle(), funcDefBuffer, status2);
-      status2.throwExceptionIfNotOK();
-      try {
-        return FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
-      } catch (InvalidProtocolBufferException e) {
-        throw new IllegalStateException("Failed to parse FunctionDef proto", e);
-      }
-    }
-  }
-
-  static List<String> findDependencies(FunctionDef def) {
-    Set<String> deps = new LinkedHashSet<>();
-
-    for (NodeDef node : def.getNodeDefList()) {
-      if (node.getOp().equals(CALL_OP) || node.getOp().equals(STATEFUL_CALL_OP)) {
-        deps.add(node.getAttrMap().get("f").getFunc().getName());
-      }
-    }
-
-    return new ArrayList<>(deps);
+    return new ConcreteFunction(signature, nativeFunction, dependencies);
   }
 }

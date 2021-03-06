@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
@@ -460,8 +459,6 @@ public class SavedModelBundle implements AutoCloseable {
       // if the function is a thin wrapper around a function call, unwrap it
       if (callOp != null) {
 
-        //TODO my problem is with __inference_signature_wrapper_66
-
         try (PointerScope scope = new PointerScope()) {
           TF_Operation op = ((GraphOperation) graph
               .outputOrError(signatureDef.getOutputsMap().values().iterator().next().getName()).op())
@@ -489,20 +486,20 @@ public class SavedModelBundle implements AutoCloseable {
 
         }
       }
-
-      // try to do the unwrapping based on name if there are no outputs (and thus we can't find the call op)
-      if (!functions.containsKey(signatureName) && signatureDef.getOutputsCount() < 1) {
-        for (ConcreteFunction fn : graphFunctions) {
-          Matcher matcher = INFERENCE_FUNCTION_NAME_PATTERN.matcher(fn.getNativeFunctionName());
-          if (matcher.find()) {
-            String fnName = matcher.group(1);
-            if (fnName.equals(signatureName)) {
-              functions.put(signatureName, fn);
-              break;
-            }
-          }
-        }
-      }
+//
+//      // try to do the unwrapping based on name if there are no outputs (and thus we can't find the call op)
+//      if (!functions.containsKey(signatureName) && signatureDef.getOutputsCount() < 1) {
+//        for (ConcreteFunction fn : graphFunctions) {
+//          Matcher matcher = INFERENCE_FUNCTION_NAME_PATTERN.matcher(fn.getNativeFunctionName());
+//          if (matcher.find()) {
+//            String fnName = matcher.group(1);
+//            if (fnName.equals(signatureName)) {
+//              functions.put(signatureName, fn);
+//              break;
+//            }
+//          }
+//        }
+//      }
 
       // otherwise use the wrapper
       if (!functions.containsKey(signatureName)) {
