@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
@@ -47,6 +49,7 @@ import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
+import org.tensorflow.proto.framework.NodeDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
@@ -501,27 +504,6 @@ public class ConcreteFunction implements AutoCloseable {
     return handles;
   }
 
-  /**
-   * Returns the function name if {@code op} is a function call op, or null otherwise.
-   */
-  static String findFunctionCall(GraphOperation op) {
-    if (op.type().equals(STATEFUL_CALL_OP) || op.type().equals(CALL_OP)) {
-      try (PointerScope scope = new PointerScope()) {
-        TF_Status status = TF_Status.newStatus();
-        TF_Buffer buff = TF_Buffer.newBuffer();
-        TF_OperationGetAttrValueProto(op.getUnsafeNativeHandle(), "f", buff, status);
-        status.throwExceptionIfNotOK();
-        AttrValue def = AttrValue.parseFrom(buff.dataAsByteBuffer());
-
-        return def.getFunc().getName();
-      } catch (InvalidProtocolBufferException e) {
-        return null;
-      }
-    }
-
-    return null;
-  }
-
   private static ConcreteFunction buildFromGraph(Graph graph, Signature signature) {
     try (PointerScope scope = new PointerScope();
         Reference ref = graph.ref()) {
@@ -616,5 +598,52 @@ public class ConcreteFunction implements AutoCloseable {
     }
 
     return new ConcreteFunction(signature, nativeHandle, stateful);
+  }
+
+  /**
+   * Returns the function name if {@code op} is a function call op, or null otherwise.
+   */
+  static String findFunctionCall(GraphOperation op) {
+    if (op.type().equals(STATEFUL_CALL_OP) || op.type().equals(CALL_OP)) {
+      try (PointerScope scope = new PointerScope()) {
+        TF_Status status = TF_Status.newStatus();
+        TF_Buffer buff = TF_Buffer.newBuffer();
+        TF_OperationGetAttrValueProto(op.getUnsafeNativeHandle(), "f", buff, status);
+        status.throwExceptionIfNotOK();
+        AttrValue def = AttrValue.parseFrom(buff.dataAsByteBuffer());
+
+        return def.getFunc().getName();
+      } catch (InvalidProtocolBufferException e) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+
+  FunctionDef functionDef() {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Buffer funcDefBuffer = TF_Buffer.newBuffer();
+      TF_Status status2 = TF_Status.newStatus();
+      TF_FunctionToFunctionDef(nativeHandle(), funcDefBuffer, status2);
+      status2.throwExceptionIfNotOK();
+      try {
+        return FunctionDef.parseFrom(funcDefBuffer.dataAsByteBuffer());
+      } catch (InvalidProtocolBufferException e) {
+        throw new IllegalStateException("Failed to parse FunctionDef proto", e);
+      }
+    }
+  }
+
+  static List<String> findDependencies(FunctionDef def) {
+    Set<String> deps = new LinkedHashSet<>();
+
+    for (NodeDef node : def.getNodeDefList()) {
+      if (node.getOp().equals(CALL_OP) || node.getOp().equals(STATEFUL_CALL_OP)) {
+        deps.add(node.getAttrMap().get("f").getFunc().getName());
+      }
+    }
+
+    return new ArrayList<>(deps);
   }
 }
