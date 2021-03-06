@@ -83,7 +83,7 @@ public final class Scope {
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(), new ArrayList<>(), DeviceSpec.newBuilder().build());
+    this(env, new NameScope().withUsedFrom(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
   }
 
   /**
@@ -106,7 +106,7 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withSubScope(String childScopeName) {
-    return new Scope(env, nameScope.withSubScope(childScopeName), controlDependencies, deviceSpec);
+    return new Scope(env, nameScope.withSubScope(childScopeName).withUsedFrom(env), controlDependencies, deviceSpec);
   }
 
   /**
@@ -141,7 +141,8 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withNameAsSubScope(String defaultName){
-    return new Scope(env, nameScope.withSubScope(nameScope.makeOpName(defaultName)), controlDependencies, deviceSpec);
+    return new Scope(env, nameScope.withSubScope(nameScope.makeOpName(defaultName)).withUsedFrom(env),
+            controlDependencies, deviceSpec);
   }
 
   /**
@@ -181,8 +182,12 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
+  public static boolean isValidOpName(String name) {
+    return NameScope.isValidName(name);
+  }
+
   private Scope(
-      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies, DeviceSpec deviceSpec) {
+          ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies, DeviceSpec deviceSpec) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;

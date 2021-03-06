@@ -17,14 +17,17 @@ package org.tensorflow.op;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.Graph;
 
 /**
  * A class to manage scoped (hierarchical) names for operators.
  *
  * <p>{@code NameScope} manages hierarchical names where each component in the hierarchy is
- * separated by a forward slash {@code '/'}. For instance, {@code nn/Const_72} or {@code
- * nn/gradient/assign/init}. Each scope is a subtree in this hierarchy.
+ * separated by a forward slash {@code '/'}. For instance, {@code nn/Const_72} or {@code nn/gradient/assign/init}. Each
+ * scope is a subtree in this hierarchy.
  *
  * <p>Use {@code NameScope} to group related operations within a hierarchy, which for example lets
  * tensorboard coalesce nodes for better graph visualizations.
@@ -48,6 +51,45 @@ final class NameScope {
     checkPattern(NAME_REGEX, name);
     // All context except for the opName is shared with the new scope.
     return new NameScope(opPrefix, name, ids);
+  }
+
+  private static final Pattern NAME_PATTERN = Pattern.compile("(.+)_(\\d+)", Pattern.DOTALL);
+
+  /**
+   * "Import" used names from a graph.  Useful when adding to a loaded graph.
+   */
+  NameScope withUsedFrom(ExecutionEnvironment env) {
+
+    if (env instanceof Graph) {
+      ((Graph) env).operations().forEachRemaining(op -> {
+        if (op.name().startsWith(opPrefix != null ? opPrefix : "")) {
+          String name = op.name();
+
+          if (opPrefix != null) {
+            name = name.substring(opPrefix.length() + 1);
+          }
+
+          if (!name.contains("/")) {
+            Matcher matcher = NAME_PATTERN.matcher(name);
+            if (matcher.find()) {
+              String realName = matcher.group(1);
+              int num = Integer.parseInt(matcher.group(2)) + 1;
+
+              if (!(ids.containsKey(realName) && ids.get(realName) > num)) {
+                ids.put(realName, num);
+              }
+            } else {
+              if (!ids.containsKey(name)) {
+                ids.put(name, 1);
+              } else {
+                ids.put(name, ids.get(name) + 1);
+              }
+            }
+          }
+        }
+      });
+    }
+    return this;
   }
 
   String makeOpName(String name) {
@@ -120,15 +162,22 @@ final class NameScope {
   // instance mapped to the next available numeric suffix for it.
   private final Map<String, Integer> ids;
 
+  static boolean isValidName(String name) {
+    if (name == null) {
+      return false;
+    }
+    return NAME_REGEX.matcher(name).matches();
+  }
+
   private static void checkPattern(Pattern pattern, String name) {
     if (name == null) {
       throw new IllegalArgumentException("Names cannot be null");
     }
     if (!pattern.matcher(name).matches()) {
       throw new IllegalArgumentException(
-          String.format(
-              "invalid name: '%s' does not match the regular expression %s",
-              name, NAME_REGEX.pattern()));
+              String.format(
+                      "invalid name: '%s' does not match the regular expression %s",
+                      name, NAME_REGEX.pattern()));
     }
   }
 
