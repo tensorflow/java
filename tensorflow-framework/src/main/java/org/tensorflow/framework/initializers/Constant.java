@@ -34,76 +34,40 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *      Operand&lt;TFloat32&gt; values =
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
+ *
+ * <p>Only scalar values are allowed. The constant value provided must be convertible to the data
+ * type requested when calling the initializer.
  */
-public class Constant extends BaseInitializer {
+public class Constant extends BaseInitializer<TType> {
 
-  private final double doubleValue;
-  private final long longValue;
-  private final boolean booleanValue;
-  private final ValueType valueType;
+  private final Operand<? extends TType> value;
 
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
    * @param tf the TensorFlow Ops
-   * @param value a long value used for the constant.
+   * @param value the value used for the constant.
    */
-  public Constant(Ops tf, long value) {
+  public Constant(Ops tf, Operand<? extends TType> value) {
     super(tf);
-    longValue = value;
-    doubleValue = 0;
-    booleanValue = false;
-    valueType = ValueType.LONG;
+    this.value = value;
   }
 
   /**
-   * Creates an Initializer that generates tensors with a constant value.
+   * Generates the operation used to perform the initialization.
    *
-   * @param tf the TensorFlow Ops
-   * @param value a double value used for the constant.
+   * @param dims the shape dimensions
+   * @param type the data type of tensor
+   * @param <U> The data Type for initializer operation
+   * @return An operand for the initialization.
+   * @throws IllegalArgumentException if the data type is not a TNumber or TBool
    */
-  public Constant(Ops tf, double value) {
-    super(tf);
-    doubleValue = value;
-    longValue = 0;
-    booleanValue = false;
-    valueType = ValueType.DOUBLE;
-  }
-
-  /**
-   * Creates an Initializer that generates tensors with a constant value.
-   *
-   * @param tf the TensorFlow Ops
-   * @param value a boolean value used for the constant.
-   */
-  public Constant(Ops tf, boolean value) {
-    super(tf);
-    booleanValue = value;
-    doubleValue = 0;
-    longValue = 0;
-    valueType = ValueType.BOOLEAN;
-  }
-
-  /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <U extends TType> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
       throw new IllegalArgumentException(
           "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
-    switch (valueType) {
-      case LONG:
-        return tf.fill(dims, cast(tf, tf.constant(longValue), type));
-      case DOUBLE:
-        return tf.fill(dims, cast(tf, tf.constant(doubleValue), type));
-      default:
-        return tf.fill(dims, cast(tf, tf.constant(booleanValue), type));
-    }
-  }
-
-  private enum ValueType {
-    LONG,
-    DOUBLE,
-    BOOLEAN
+    return tf.fill(dims, cast(tf, value, type));
   }
 }
