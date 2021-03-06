@@ -360,6 +360,7 @@ public class MetricsHelper {
     Operand<T> tPredictions = predictions;
     Operand<T> tSampleWeight = sampleWeight;
 
+    // size of the 0th dimension of thresholds
     // reshape to scalar for operations later.
     Operand<TInt32> numThresholds =
         tf.reshape(tf.shape.size(thresholds, tf.constant(0)), tf.constant(Shape.scalar()));
@@ -415,8 +416,12 @@ public class MetricsHelper {
       tPredictions = tf.gather(tPredictions, tf.constant(new int[] {classIndex}), tf.constant(1));
     }
     org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(tPredictions);
+
+    // number of examples
     Operand<TInt32> numPredictions =
         tf.reshape(tf.shape.size(tPredictions, tf.constant(0)), tf.constant(Shape.scalar()));
+
+    // number of labels (or predictions) per example
     Operand<TInt32> numLabels =
         tf.select(
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
@@ -426,14 +431,24 @@ public class MetricsHelper {
                 tf.shape.takeLast(
                     predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
                 tf.constant(0)));
+
+    // If we will treat thresholds as one-dimensional (always true as of this writing),
+    // then threshLabelTile is the number of labels (or predictions) per sample. Else it is 1.
     Operand<TInt32> threshLabelTile = tf.select(oneThresh, numLabels, tf.constant(1));
 
-    // The ExtraDims are added so the operands of the tile operations later on are compatible.
+    /////////
+    // Tile data for threshold comparisons, which is a cross product of thresholds and
+    // predictions/labels.
+    //
+    // In the multilabel case, we want a data shape of (T, N, D0).
+    //                                            else (T, ND).
+    // where T is numThresholds
+    //       Dx == Cx except that D0 == 1 if classIndex != null
+    //       ND is the product of N and all Dx.
+    // In these comments, we refer to all indices beyond the threshold index as a "data position".
 
     // if multilabel, then shape (1, N, D0)
     // else shape (1, ND),
-    // where Dx == Cx except that D0 == 1 if classIndex != null
-    //       ND is the product of N and all Dx
     Operand<T> predictionsExtraDim;
     Operand<TBool> labelsExtraDim;
 
@@ -447,17 +462,19 @@ public class MetricsHelper {
 
     // the shape of each thresholds tile
     // if multilabel, then [T, 1, -1]
-    // else [T, 1], where T is numThresholds
+    //                else [T, -1]
     List<Operand<TInt32>> threshPretileShape;
 
     // the tiling multiples for thresholds
-    // if multilabel, then [1, N, threshLabelTile]
-    // else [1, ND], where ND is the product of N and all Dx
+    // We want to repeat the thresholds for each data position.
+    // if multilabel, then [1, N, threshLabelTile]. (threshLabelTile is typically numLabels)
+    //                else [1, ND]
     List<Operand<TInt32>> threshTiles;
 
-    // the tiling multiples for predictionsExtraDim
+    // tiling multiples for predictionsExtraDim and labelsExtraDim
+    // We want to repeat the predictions and labels for each threshold.
     // If multilabel, then [T, 1, 1]
-    // else [T, 1]
+    //                else [T, 1]
     List<Operand<TInt32>> dataTiles;
 
     if (multiLabel) {
@@ -477,13 +494,13 @@ public class MetricsHelper {
     Operand<TInt32> threshTilesShape = tf.stack(threshTiles);
 
     // if multilabel, then shape (T, N, threshLabelTile)
-    // else shape (T, ND)
+    //                      else (T, ND)
     Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
 
     Operand<TInt32> stackedTiles = tf.stack(dataTiles);
 
     // if multilabel, then shape (T, N, D0)
-    // else shape (T, ND)
+    //                      else (T, ND)
     Operand<T> predsTiled = tf.tile(predictionsExtraDim, stackedTiles);
 
     // Compare predictions and threshold.
