@@ -51,7 +51,7 @@ public class ConstantTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Constant instance = new Constant(tf, 0xf);
+        Constant instance = new Constant(tf, tf.constant(0xf));
         Operand<TUint8> operand = instance.call(tf.constant(shape), TUint8.class);
         session.evaluate(expected, operand);
       }
@@ -67,7 +67,7 @@ public class ConstantTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Constant instance = new Constant(tf, 0xf);
+        Constant instance = new Constant(tf, tf.constant(0xf));
         Operand<TInt32> operand = instance.call(tf.constant(shape), TInt32.class);
         session.evaluate(expected, operand);
       }
@@ -83,7 +83,7 @@ public class ConstantTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Constant instance = new Constant(tf, 0xffL);
+        Constant instance = new Constant(tf, tf.constant(0xffL));
         Operand<TInt64> operand = instance.call(tf.constant(shape), TInt64.class);
         session.evaluate(expected, operand);
       }
@@ -97,7 +97,7 @@ public class ConstantTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Constant instance = new Constant(tf, 12.F);
+        Constant instance = new Constant(tf, tf.constant(12.f));
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -112,7 +112,7 @@ public class ConstantTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Constant instance = new Constant(tf, 11.);
+        Constant instance = new Constant(tf, tf.constant(11.));
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -129,9 +129,8 @@ public class ConstantTest {
               Ops tf = session.getTF();
               Shape shape = Shape.of(2, 2);
 
-              Constant instance = new Constant(tf, 22);
+              Constant instance = new Constant(tf, tf.constant(22));
               instance.call(tf.constant(shape), TString.class);
-              fail("IllegalArgumentException  should have been thrown for TString");
             }
           });
   }
@@ -145,7 +144,7 @@ public class ConstantTest {
         Shape shape = Shape.of(2, 2);
         Boolean[] expected = {true, true, true, true};
 
-        Constant instance = new Constant(tf, true);
+        Constant instance = new Constant(tf, tf.constant(true));
         Operand<TBool> operand = instance.call(tf.constant(shape), TBool.class);
         session.evaluate(expected, operand);
       }
@@ -158,7 +157,7 @@ public class ConstantTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Constant instance = new Constant(tf, 11.);
+        Constant instance = new Constant(tf, tf.constant(11.));
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);

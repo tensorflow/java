@@ -21,6 +21,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /** Test the Zeros initializer */
 public class ZerosTest {
 
@@ -115,14 +117,18 @@ public class ZerosTest {
   @Test
   public void testCallString() {
     for (TestSession.Mode tfMode : tfModes)
-      try (TestSession session = TestSession.createTestSession(tfMode)) {
-        Ops tf = session.getTF();
-        Shape shape = Shape.of(2, 2);
+      assertThrows(
+          java.lang.IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(2, 2);
 
-        Zeros instance = new Zeros(tf);
-        Operand<TString> operand = instance.call(tf.constant(shape), TString.class);
-        session.evaluateString(operand, String::isEmpty);
-      }
+              Zeros instance = new Zeros(tf);
+              Operand<TString> operand = instance.call(tf.constant(shape), TString.class);
+              session.evaluateString(operand, String::isEmpty);
+            }
+          });
   }
 
   /** Test of call method, of class Zeros. */

@@ -21,8 +21,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.linalg.Qr;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TFloating;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -48,7 +47,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  */
-public class Orthogonal extends BaseInitializer {
+public class Orthogonal extends BaseInitializer<TFloating> {
 
   public static final double GAIN_DEFAULT = 1.0;
 
@@ -82,11 +81,8 @@ public class Orthogonal extends BaseInitializer {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    if (!TNumber.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
-    }
-    Class<TNumber> nType = (Class<TNumber>) type;
+  public <U extends TFloating> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
+
     Shape dimsShape = ShapeUtils.toShape(tf.scope(), dims);
     if (dimsShape.numDimensions() < 2) {
       throw new IllegalArgumentException(
@@ -99,18 +95,20 @@ public class Orthogonal extends BaseInitializer {
     long numCols = dimsShape.size(i);
     Shape flatShape = Shape.of(Math.max(numRows, numCols), Math.min(numRows, numCols));
     long[] seeds = {seed, 0};
-    Operand<TNumber> op =
-        tf.random.statelessRandomNormal(tf.constant(flatShape), tf.constant(seeds), nType);
+    Operand<U> op =
+        tf.random.statelessRandomNormal(tf.constant(flatShape), tf.constant(seeds), type);
 
     Qr.Options qrOptions = Qr.fullMatrices(false);
-    Qr<TNumber> qrOp = tf.linalg.qr(op, qrOptions);
-    Output<TNumber> qo = qrOp.q();
-    Output<TNumber> ro = qrOp.r();
-    Operand<TNumber> diagOp =
+    Qr<U> qrOp = tf.linalg.qr(op, qrOptions);
+    Output<U> qo = qrOp.q();
+    Output<U> ro = qrOp.r();
+    Operand<U> diagOp =
         tf.linalg.matrixDiagPart(ro, tf.constant(0), cast(tf, tf.constant(0), op.type()));
-    Operand<TNumber> qop = tf.math.mul(qo, tf.math.sign(diagOp));
-    if (numRows < numCols) qop = tf.linalg.transpose(qop, null);
+    Operand<U> qop = tf.math.mul(qo, tf.math.sign(diagOp));
+    if (numRows < numCols) {
+      qop = tf.linalg.transpose(qop, null);
+    }
 
-    return cast(tf, tf.math.mul(qop, cast(tf, tf.constant(this.gain), op.type())), type);
+    return tf.math.mul(qop, cast(tf, tf.constant(this.gain), op.type()));
   }
 }

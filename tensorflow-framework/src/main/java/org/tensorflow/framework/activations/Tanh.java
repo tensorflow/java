@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Hyperbolic tangent activation function.
@@ -31,8 +31,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
  * </pre>
  */
-// TFloating
-public class Tanh extends Activation {
+public class Tanh extends Activation<TFloating> {
 
   /**
    * Creates a Hyperbolic tangent activation.
@@ -45,7 +44,7 @@ public class Tanh extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.math.tanh(input);
   }
 }

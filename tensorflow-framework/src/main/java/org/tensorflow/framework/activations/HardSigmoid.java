@@ -41,7 +41,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
  * </pre>
  */
-public class HardSigmoid extends Activation {
+public class HardSigmoid extends Activation<TNumber> {
 
   /**
    * Creates Hard sigmoid activation.
@@ -54,12 +54,12 @@ public class HardSigmoid extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
-    Class<T> inputType = input.type();
-    Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), inputType);
-    Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), inputType);
+  public <U extends TNumber> Operand<U> call(Operand<U> input) {
+    Class<U> inputType = input.type();
+    Operand<U> point2 = tf.dtypes.cast(tf.constant(0.2), inputType);
+    Operand<U> point5 = tf.dtypes.cast(tf.constant(0.5), inputType);
 
-    Operand<T> x = tf.math.add(tf.math.mul(input, point2), point5);
+    Operand<U> x = tf.math.add(tf.math.mul(input, point2), point5);
     return tf.clipByValue(
         x, tf.dtypes.cast(tf.constant(0), inputType), tf.dtypes.cast(tf.constant(1), inputType));
   }

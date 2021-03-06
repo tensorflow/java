@@ -19,8 +19,7 @@ import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TFloating;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -55,7 +54,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * @see VarianceScaling.Mode
  * @see VarianceScaling.Distribution
  */
-public class VarianceScaling extends BaseInitializer {
+public class VarianceScaling extends BaseInitializer<TFloating> {
 
   public static final double SCALE_DEFAULT = 1.0;
   public static final Mode MODE_DEFAULT = Mode.FAN_IN;
@@ -98,13 +97,7 @@ public class VarianceScaling extends BaseInitializer {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    if (!TNumber.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
-    }
-    // Suppression is ok because it is guarded by the if statement
-    @SuppressWarnings("unchecked")
-    Class<TNumber> nType = (Class<TNumber>) type;
+  public <U extends TFloating> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     Shape shape = ShapeUtils.toShape(this.tf.scope(), dims);
     double lscale = this.scale;
     double[] fans /* fanIn, fanOut */ = computeFans(shape);
@@ -119,28 +112,28 @@ public class VarianceScaling extends BaseInitializer {
         lscale /= Math.max(1., (fans[0] + fans[1]) / 2.);
         break;
     }
-    Operand<TNumber> distOp;
-    Operand<TNumber> mulOp = null;
+    Operand<U> distOp;
+    Operand<U> mulOp = null;
     double stddev;
     long[] seeds = {seed, 0};
     switch (distribution) {
       case TRUNCATED_NORMAL:
-        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), nType);
+        distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(lscale) / .87962566103423978;
-        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
       case NORMAL:
-        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), nType);
+        distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(lscale);
-        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
       case UNIFORM:
-        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), nType);
+        distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(3.0 * lscale);
-        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), nType));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
     }
-    return cast(tf, mulOp, type);
+    return mulOp;
   }
 
   /**

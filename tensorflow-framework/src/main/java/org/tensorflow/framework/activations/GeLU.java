@@ -15,13 +15,8 @@ limitations under the License.
 package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
-import org.tensorflow.Session;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
-
-import java.util.Arrays;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -39,7 +34,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>or, if <code>approximate</code> is <code>false</code>.
  *
  * <pre>
- *     x * P(X <= x) = 0.5 * x * (1 + erf(x / sqrt(2))),
+ *     x * P(X &lt;= x) = 0.5 * x * (1 + erf(x / sqrt(2))),
  * </pre>
  *
  * where <code>P(X) ~ N(0, 1)</code>.
@@ -47,8 +42,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * @see <a href="https://arxiv.org/abs/1606.08415">Hendrycks, Dan and Gimpel, Kevin, 2016-2020,
  *     Gaussian Error Linear Units (GELUs)</a>
  */
-// TFloating
-public class GeLU extends Activation {
+public class GeLU extends Activation<TFloating> {
 
   private final boolean approximate;
 
@@ -74,11 +68,8 @@ public class GeLU extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
-    if (!TFloating.class.isAssignableFrom(input.type())) {
-      throw new IllegalArgumentException(
-          "Tensor type must be numeric or boolean: " + input.type().getSimpleName());
-    }
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
+
     if (approximate) {
       /*
               coeff = math_ops.cast(0.044715, features.dtype)
@@ -86,9 +77,9 @@ public class GeLU extends Activation {
                     1.0 + math_ops.tanh(0.7978845608028654 *
                               (features + coeff * math_ops.pow(features, 3))))
       */
-      Operand<T> coeff = cast(tf, tf.constant(0.044715), input.type());
-      Operand<T> point5 = cast(tf, tf.constant(0.5), input.type());
-      Operand<T> one = cast(tf, tf.constant(1.0), input.type());
+      Operand<U> coeff = cast(tf, tf.constant(0.044715), input.type());
+      Operand<U> point5 = cast(tf, tf.constant(0.5), input.type());
+      Operand<U> one = cast(tf, tf.constant(1.0), input.type());
 
       return tf.math.mul(
           point5,
@@ -128,5 +119,4 @@ public class GeLU extends Activation {
                           input, cast(tf, tf.constant(1.4142135623730951), input.type()))))));
     }
   }
-
 }

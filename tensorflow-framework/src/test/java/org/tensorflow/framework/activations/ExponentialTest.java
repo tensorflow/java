@@ -20,7 +20,6 @@ import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.TInt32;
 
 /** @author Jim Clarke */
 public class ExponentialTest {
@@ -39,20 +38,6 @@ public class ExponentialTest {
 
   @AfterEach
   public void tearDown() {}
-
-  /** Test of Exponential call method. */
-  @Test
-  public void testCallInt32() {
-    int[] input = {1, -2, 3, -4, -1, 2, -3, 4};
-    for (TestSession.Mode tfMode : tfModes)
-      try (TestSession session = TestSession.createTestSession(tfMode)) {
-        Ops tf = session.getTF();
-        Exponential instance = new Exponential(tf);
-        Operand<TInt32> result = instance.call(tf.constant(input));
-        session.print(result);
-        //session.evaluate(expected, result);
-      }
-  }
 
   /** Test of Exponential call method. */
   @Test

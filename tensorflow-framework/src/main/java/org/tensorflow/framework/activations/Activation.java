@@ -19,7 +19,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /** Abstract base class for Activations */
-public abstract class Activation {
+public abstract class Activation<T extends TNumber> {
 
   /** The TensorFlow Ops */
   protected Ops tf;
@@ -55,8 +55,8 @@ public abstract class Activation {
    * Gets the calculation operation for the activation.
    *
    * @param input the input tensor
-   * @param <T> the data type of the input and result
+   * @param <U> the data type of the input and result
    * @return The operand for the activation
    */
-  public abstract <T extends TNumber> Operand<T> call(Operand<T> input);
+  public abstract <U extends T> Operand<U> call(Operand<U> input);
 }

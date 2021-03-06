@@ -56,8 +56,7 @@ import org.tensorflow.types.family.TNumber;
  *     // result is [-0.f, -0.f,  0.f,  0.f, 10.f]
  * </pre>
  */
-// TFloating
-public class ReLU extends Activation {
+public class ReLU extends Activation<TNumber> {
 
   public static final float ALPHA_DEFAULT = 0.0f;
   public static final float MAX_VALUE_DEFAULT = Float.NaN;
@@ -95,11 +94,11 @@ public class ReLU extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
-    Class<T> inputType = input.type();
+  public <U extends TNumber> Operand<U> call(Operand<U> input) {
+    Class<U> inputType = input.type();
 
     boolean clipMax = !Float.isNaN(maxValue);
-    Operand<T> negativePart = null;
+    Operand<U> negativePart = null;
     if (alpha != 0) {
       if (Float.isNaN(maxValue) && threshold == 0) {
         return tf.nn.leakyRelu(input, LeakyRelu.alpha(alpha));
@@ -113,7 +112,7 @@ public class ReLU extends Activation {
       }
     }
 
-    Operand<T> lInput;
+    Operand<U> lInput;
     if (threshold != 0) {
       // computes input for input > threshold else 0
       Greater greater = tf.math.greater(input, tf.dtypes.cast(tf.constant(threshold), inputType));
@@ -126,8 +125,8 @@ public class ReLU extends Activation {
       lInput = tf.nn.relu(input);
     }
     if (clipMax) {
-      Operand<T> lmaxValue = tf.dtypes.cast(tf.constant(maxValue), inputType);
-      Operand<T> zero = tf.dtypes.cast(tf.constant(0), inputType);
+      Operand<U> lmaxValue = tf.dtypes.cast(tf.constant(maxValue), inputType);
+      Operand<U> zero = tf.dtypes.cast(tf.constant(0), inputType);
       lInput = tf.clipByValue(lInput, zero, lmaxValue);
     }
 

@@ -18,7 +18,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * Exponential linear unit.
@@ -48,8 +47,7 @@ import org.tensorflow.types.family.TNumber;
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
-// TFloating
-public class ELU extends Activation {
+public class ELU extends Activation<TFloating> {
 
   private static final double ALPHA_DEFAULT = 1.0;
 
@@ -79,19 +77,14 @@ public class ELU extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
 
-    if (!TFloating.class.isAssignableFrom(input.type()) ) {
-      throw new IllegalArgumentException(
-              "Tensor type must be numeric or boolean: " + input.type().getSimpleName());
-    }
-
-    Operand<T> result = tf.nn.elu(input);
+    Operand<U> result = tf.nn.elu(input);
     if (alpha == 1.0) {
       return result;
     } else {
-      Class<T> inputType = input.type();
-      Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
+      Class<U> inputType = input.type();
+      Operand<U> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
       Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), inputType));
       return tf.select(cond, result, y);
     }

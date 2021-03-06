@@ -17,8 +17,7 @@ package org.tensorflow.framework.initializers;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TFloating;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -35,7 +34,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  */
-public class TruncatedNormal extends BaseInitializer {
+public class TruncatedNormal extends BaseInitializer<TFloating> {
 
   public static final double MEAN_DEFAULT = 0.0;
   public static final double STDDEV_DEFAULT = 0.05;
@@ -74,20 +73,11 @@ public class TruncatedNormal extends BaseInitializer {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    if (!TNumber.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
-    }
-    // Suppression is ok because it is guarded by the if statement
-    @SuppressWarnings("unchecked")
-    Class<TNumber> nType = (Class<TNumber>) type;
+  public <U extends TFloating> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     long[] seeds = {seed, 0};
-    Operand<TNumber> distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), nType);
-    return cast(
-        tf,
-        tf.math.add(
-            tf.math.mul(distOp, cast(tf, tf.constant(stddev), distOp.type())),
-            cast(tf, tf.constant(mean), distOp.type())),
-        type);
+    Operand<U> distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
+    return tf.math.add(
+        tf.math.mul(distOp, cast(tf, tf.constant(stddev), distOp.type())),
+        cast(tf, tf.constant(mean), distOp.type()));
   }
 }

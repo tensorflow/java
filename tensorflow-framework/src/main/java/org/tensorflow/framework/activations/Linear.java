@@ -33,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  *    // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
  * </pre>
  */
-public class Linear extends Activation {
+public class Linear extends Activation<TNumber> {
 
   /**
    * Creates a linear activation.
@@ -46,7 +46,7 @@ public class Linear extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
+  public <U extends TNumber> Operand<U> call(Operand<U> input) {
     return input;
   }
 }

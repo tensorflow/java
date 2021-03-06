@@ -41,7 +41,9 @@ public abstract class Constraint {
    * Applies the constraint against the provided weights
    *
    * @param weights the weights
+   * @param <T> the data the weights and result
    * @return the constrained weights
+   *
    */
   public abstract <T extends TNumber> Operand<T> call(Operand<T> weights);
 

@@ -35,7 +35,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  */
-public class Ones extends BaseInitializer {
+public class Ones extends BaseInitializer<TType> {
 
   /**
    * Creates an Initializer that sets all values to one.
@@ -55,9 +55,17 @@ public class Ones extends BaseInitializer {
     super(tf);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Generates the operation used to perform the initialization.
+   *
+   * @param dims the shape dimensions
+   * @param type the data type of tensor
+   * @param <U> The data Type for initializer operation
+   * @return An operand for the initialization.
+   * @throws IllegalArgumentException if the data type is not a TNumber or TBool
+   */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <U extends TType> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
       throw new IllegalArgumentException(
           "Tensor type must be numeric or boolean: " + type.getSimpleName());

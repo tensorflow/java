@@ -19,7 +19,7 @@ import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TFloating;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -37,7 +37,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  */
-public class Identity extends BaseInitializer {
+public class Identity extends BaseInitializer<TFloating> {
   public static final double GAIN_DEFAULT = 1.0;
 
   private final double gain;
@@ -65,7 +65,7 @@ public class Identity extends BaseInitializer {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <U extends TFloating> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
@@ -74,9 +74,9 @@ public class Identity extends BaseInitializer {
     long diagSize = Math.min(shape.size(0), shape.size(1));
     Shape diagShape = Shape.of(diagSize);
 
-    Operand<T> op;
-    Operand<T> zero = cast(tf, tf.constant(0), type);
-    Operand<T> diagOnes =
+    Operand<U> op;
+    Operand<U> zero = cast(tf, tf.constant(0), type);
+    Operand<U> diagOnes =
         tf.fill(tf.constant(diagShape.asArray()), cast(tf, tf.constant(1.0), type));
     if (isSquare) {
       op =
@@ -87,7 +87,7 @@ public class Identity extends BaseInitializer {
               tf.constant((int) shape.size(1)),
               zero);
     } else {
-      Operand<T> zeroMatrix = tf.zeros(dims, type);
+      Operand<U> zeroMatrix = tf.zeros(dims, type);
       op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 

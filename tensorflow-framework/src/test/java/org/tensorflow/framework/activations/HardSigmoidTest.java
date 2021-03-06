@@ -78,7 +78,6 @@ public class HardSigmoidTest {
         Ops tf = session.getTF();
         HardSigmoid instance = new HardSigmoid(tf);
         Operand<TInt32> result = instance.call(tf.constant(input));
-        session.print(result);
         int[] expected = {0, 0, 0, 0, 0};
         session.evaluate(expected, result);
       }

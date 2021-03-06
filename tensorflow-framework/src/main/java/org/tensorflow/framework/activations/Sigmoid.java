@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Sigmoid activation. <code>sigmoid(x) = 1 / (1 + exp(-x))</code>.
@@ -39,8 +39,7 @@ import org.tensorflow.types.family.TNumber;
  *     //                 5.0000000e-01f,7.3105860e-01f, 1.f]
  * </pre>
  */
-// TFloating
-public class Sigmoid extends Activation {
+public class Sigmoid extends Activation<TFloating> {
 
   /**
    * Creates a Sigmoid activation.
@@ -53,7 +52,7 @@ public class Sigmoid extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.math.sigmoid(input);
   }
 }

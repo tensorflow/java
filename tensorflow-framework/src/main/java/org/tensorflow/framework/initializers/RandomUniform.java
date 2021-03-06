@@ -20,7 +20,6 @@ import org.tensorflow.op.random.RandomUniformInt;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -37,7 +36,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  */
-public class RandomUniform extends BaseInitializer {
+public class RandomUniform extends BaseInitializer<TNumber> {
 
   public static final double MINVAL_DEFAULT = -0.05;
   public static final double MAXVAL_DEFAULT = 0.05;
@@ -76,25 +75,19 @@ public class RandomUniform extends BaseInitializer {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TType> Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    if (!TNumber.class.isAssignableFrom(type)) {
-      throw new IllegalArgumentException("Tensor type must be numeric: " + type.getSimpleName());
-    }
-    // Suppression is ok because it is guarded by the if statement
-    @SuppressWarnings("unchecked")
-    Class<TNumber> nType = (Class<TNumber>) type;
-    Operand<TNumber> distOp;
+  public <U extends TNumber> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
+    Operand<U> distOp;
     if (TIntegral.class.isAssignableFrom(type)) {
       RandomUniformInt.Options options = RandomUniformInt.seed(this.seed);
       distOp =
           tf.random.randomUniformInt(
               dims,
-              cast(tf, tf.constant(this.minval), nType),
-              cast(tf, tf.constant(this.maxval), nType),
+              cast(tf, tf.constant(this.minval), type),
+              cast(tf, tf.constant(this.maxval), type),
               options);
     } else {
       long[] seeds = {seed, 0};
-      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), nType);
+      distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
       if (this.minval == 0) {
         if (this.maxval != 1.0) {
           distOp = tf.math.mul(distOp, cast(tf, tf.constant(this.maxval), distOp.type()));
@@ -105,6 +98,6 @@ public class RandomUniform extends BaseInitializer {
         distOp = tf.math.add(distOp, cast(tf, tf.constant(this.minval), distOp.type()));
       }
     }
-    return cast(tf, distOp, type);
+    return distOp;
   }
 }

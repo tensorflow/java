@@ -16,7 +16,7 @@ package org.tensorflow.framework.activations;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TFloating;
 
 /**
  * Scaled Exponential Linear Unit (SELU).
@@ -44,8 +44,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
-// TFloating
-public class SELU extends Activation {
+public class SELU extends Activation<TFloating> {
 
   /**
    * Creates a Scaled Exponential Linear Unit (SELU) activation.
@@ -58,7 +57,7 @@ public class SELU extends Activation {
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.nn.selu(input);
   }
 }
