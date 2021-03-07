@@ -387,14 +387,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   public void attachFunction(ConcreteFunction function) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
-      attachNativeFunction(ref.nativeHandle(), function.nativeHandle(), function.gradNativeHandle());
-      function.getDependencies().forEach(x -> attachNativeFunction(ref.nativeHandle(), x, null));
+      attachNativeFunction(ref.nativeHandle(), function.nativeHandle());
+      function.getDependencies().forEach(x -> attachNativeFunction(ref.nativeHandle(), x));
     }
   }
 
-  private void attachNativeFunction(TF_Graph graph, TF_Function fn, TF_Function grad) {
+  private void attachNativeFunction(TF_Graph graph, TF_Function fn) {
     TF_Status status = TF_Status.newStatus();
-    TF_GraphCopyFunction(graph, fn, grad, status);
+    TF_GraphCopyFunction(graph, fn, null, status);
     status.throwExceptionIfNotOK();
   }
 

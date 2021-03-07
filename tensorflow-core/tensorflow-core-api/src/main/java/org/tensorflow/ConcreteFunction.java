@@ -406,15 +406,6 @@ public class ConcreteFunction implements AutoCloseable {
     return nativeFunction.getNativeHandle();
   }
 
-  /**
-   * Get the native handle of the function's gradient, so that it can be attached to a Graph.  Not implemented yet.
-   *
-   * TODO implement
-   */
-  TF_Function gradNativeHandle() {
-    return null;
-  }
-
   private final Signature signature;
   private final NativeFunction nativeFunction;
   private final PointerScope scope;

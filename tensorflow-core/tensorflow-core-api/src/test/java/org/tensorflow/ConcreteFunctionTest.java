@@ -17,12 +17,14 @@ package org.tensorflow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Sub;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 
 public class ConcreteFunctionTest {
@@ -131,6 +133,56 @@ public class ConcreteFunctionTest {
       try (Session sess = new Session(graph);
           TFloat32 t = (TFloat32) sess.runner().fetch(result).run().get(0)) {
         assertEquals(13f, t.getFloat());
+      }
+    }
+  }
+
+  private static Signature square(Ops tf) {
+    Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
+    Operand<TFloat32> output = tf.math.square(input);
+    return Signature.builder().methodName("square").key("square").input("x", input).output("y", output).build();
+  }
+
+  // call op gradients are not defined in c++
+//  @Test
+  public void testGradientsGraph() {
+    try (Graph g = new Graph();
+        ConcreteFunction square = ConcreteFunction.create(ConcreteFunctionTest::square);
+        Session s = new Session(g)) {
+      Ops tf = Ops.create(g);
+
+      Output<TFloat32> x1 = tf.placeholder(TFloat32.class).output();
+      Output<TFloat32> x2 = tf.placeholder(TFloat32.class).output();
+      Output<TFloat32> y0 = (Output<TFloat32>) square.call(tf, x1);
+      Output<TFloat32> y1 = (Output<TFloat32>) square.call(tf, y0);
+      Output<TFloat32> y2 = tf.math.addN(Arrays.asList(y0, x2)).sum();
+
+      Output<?>[] grads0 = g.addGradients(y1, new Output[]{x1});
+      assertNotNull(grads0);
+      assertEquals(1, grads0.length);
+      assertEquals(DataType.DT_FLOAT, grads0[0].dataType());
+
+      Output<?>[] grads1 = g.addGradients(y2, new Output[]{x1, x2});
+      assertNotNull(grads1);
+      assertEquals(2, grads1.length);
+      assertEquals(DataType.DT_FLOAT, grads1[0].dataType());
+      assertEquals(DataType.DT_FLOAT, grads1[1].dataType());
+
+      try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
+          TFloat32 c2 = TFloat32.scalarOf(2.0f);
+          AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(
+              s.runner()
+                  .feed(x1, c1)
+                  .feed(x2, c2)
+                  .fetch(grads0[0])
+                  .fetch(grads1[0])
+                  .fetch(grads1[1])
+                  .run())) {
+
+        assertEquals(3, outputs.size());
+        assertEquals(108.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
+        assertEquals(6.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);
+        assertEquals(1.0f, ((TFloat32) outputs.get(2)).getFloat(), 0.0f);
       }
     }
   }
