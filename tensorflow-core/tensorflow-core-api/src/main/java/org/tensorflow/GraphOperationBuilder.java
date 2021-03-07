@@ -35,9 +35,13 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTensorList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrType;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrTypeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetDevice;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BooleanPointer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -54,7 +58,10 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.AttrValue;
+import org.tensorflow.proto.framework.AttrValue.ListValue;
 import org.tensorflow.proto.framework.DataType;
+import org.tensorflow.proto.framework.NameAttrList;
 
 /**
  * An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}.
@@ -347,9 +354,24 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public OperationBuilder setFunctionName(String attrName, String functionName) {
+  public OperationBuilder setAttr(String name, ConcreteFunction value) {
+    graph.attachFunction(value);
     try (Reference r = graph.ref()) {
-      setAttrFunctionName(unsafeNativeHandle, attrName, functionName);
+      setAttrFunctionName(unsafeNativeHandle, name, value.getNativeFunctionName());
+    }
+    return this;
+  }
+
+  @Override
+  public OperationBuilder setAttr(String name, ConcreteFunction[] value) {
+    for (ConcreteFunction f : value) {
+      graph.attachFunction(f);
+    }
+
+    try (Reference r = graph.ref()) {
+      setAttrFunctionList(unsafeNativeHandle, name, Arrays.stream(value)
+          .map(ConcreteFunction::getNativeFunctionName)
+          .collect(Collectors.toList()));
     }
     return this;
   }
@@ -554,6 +576,22 @@ public final class GraphOperationBuilder implements OperationBuilder {
     requireHandle(opHandle);
     try (PointerScope scope = new PointerScope()) {
       TF_SetAttrFuncName(opHandle, attrName, functionName, functionName.length());
+    }
+  }
+
+  private static void setAttrFunctionList(TF_OperationDescription opHandle, String attrName,
+      List<String> functionNames) {
+    requireHandle(opHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      AttrValue value = AttrValue.newBuilder().setList(ListValue.newBuilder().addAllFunc(
+          functionNames.stream()
+              .map(x -> NameAttrList.newBuilder().setName(x).build())
+              .collect(Collectors.toList())
+      ).build()).build();
+      byte[] bytes = value.toByteArray();
+      TF_SetAttrValueProto(opHandle, attrName, new BytePointer(bytes), bytes.length, status);
+      status.throwExceptionIfNotOK();
     }
   }
 }

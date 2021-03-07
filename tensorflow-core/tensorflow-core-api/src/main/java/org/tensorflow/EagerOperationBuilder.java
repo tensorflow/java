@@ -22,6 +22,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloat;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFunctionList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrInt;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrIntList;
@@ -36,6 +37,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetDevice;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BooleanPointer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -219,8 +223,22 @@ final class EagerOperationBuilder implements OperationBuilder {
   }
 
   @Override
-  public OperationBuilder setFunctionName(String attrName, String functionName) {
-    setAttrFunctionName(opHandle, attrName, functionName);
+  public OperationBuilder setAttr(String name, ConcreteFunction value) {
+    session.attachFunction(value);
+    setAttrFunctionName(opHandle, name, value.getNativeFunctionName());
+    return this;
+  }
+
+  @Override
+  public OperationBuilder setAttr(String name, ConcreteFunction[] value) {
+    for (ConcreteFunction fn : value) {
+      session.attachFunction(fn);
+    }
+
+    setAttrFunctionList(opHandle, session.nativeHandle(), name, Arrays.stream(value)
+        .map(ConcreteFunction::getNativeFunctionName)
+        .collect(Collectors.toList()));
+
     return this;
   }
 
@@ -416,7 +434,7 @@ final class EagerOperationBuilder implements OperationBuilder {
       }
       TF_Status status = TF_Status.newStatus();
       TFE_OpSetAttrShapeList(opHandle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-              numDims.length, status);
+          numDims.length, status);
     }
   }
 
@@ -424,6 +442,22 @@ final class EagerOperationBuilder implements OperationBuilder {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
       TFE_OpSetAttrFunctionName(opHandle, attrName, functionName, functionName.length());
+    }
+  }
+
+  private static void setAttrFunctionList(TFE_Op opHandle, TFE_Context context, String attrName,
+      List<String> functionNames) {
+    requireOp(opHandle);
+    requireContext(context);
+    try (PointerScope scope = new PointerScope()) {
+      PointerPointer<TFE_Op> fns = new PointerPointer<>(functionNames.size());
+      for (int i = 0; i < functionNames.size(); i++) {
+        TF_Status status = TF_Status.newStatus();
+        TFE_Op op = TFE_Op.newOp(context, functionNames.get(i), status);
+        status.throwExceptionIfNotOK();
+        fns.put(i, op);
+      }
+      TFE_OpSetAttrFunctionList(opHandle, new BytePointer(attrName), fns, functionNames.size());
     }
   }
 }

@@ -124,7 +124,7 @@ public class EagerOperationBuilderTest {
           .build();
       // bool
       opBuilder(session, "All", "Bool")
-          .addInput(tf.constant(new boolean[] {true, true, false}).asOutput())
+          .addInput(tf.constant(new boolean[]{true, true, false}).asOutput())
           .addInput(tf.constant(0).asOutput())
           .setAttr("keep_dims", false)
           .build();
@@ -134,7 +134,8 @@ public class EagerOperationBuilderTest {
           .addInput(tf.constant(10.00000f).asOutput())
           .setAttr("tolerance", 0.1f)
           .build();
-      // Missing tests: list(string), list(byte), list(bool), list(type)
+      // Missing tests: list(string), list(byte), list(bool), list(type), list(func)
+      // func is done via ConcreteFunction execution
     }
   }
 

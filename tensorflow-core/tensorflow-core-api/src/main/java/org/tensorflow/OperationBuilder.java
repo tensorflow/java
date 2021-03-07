@@ -226,11 +226,22 @@ public interface OperationBuilder {
   OperationBuilder setAttr(String name, Shape[] value);
 
   /**
-   * Set a function name attribute of the operation being build.
+   * Set the function value of an attribute of the operation being built. Also attaches the function and dependencies to
+   * the execution environment.
    *
-   * @param attrName the attribute to set
-   * @param functionName the function name
+   * @param name attribute name
+   * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-  OperationBuilder setFunctionName(String attrName, String functionName);
+  OperationBuilder setAttr(String name, ConcreteFunction value);
+
+  /**
+   * Set the function values of an attribute of the operation being built. Also attaches the functions and dependencies
+   * to the execution environment.
+   *
+   * @param name attribute name
+   * @param value attribute value
+   * @return the OperationBuilder instance for chaining.
+   */
+  OperationBuilder setAttr(String name, ConcreteFunction[] value);
 }

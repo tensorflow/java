@@ -238,7 +238,7 @@ public class ConcreteFunction implements AutoCloseable {
 
     opBuilder.addInputList(inputList.stream().map(Operand::asOutput).toArray(Output[]::new));
 
-    opBuilder.setFunctionName("f", name);
+    opBuilder.setAttr("f", this);
     opBuilder.setAttr("Tin", inputList.stream().map(x -> x.asOutput().dataType()).toArray(DataType[]::new));
     opBuilder.setAttr("Tout", signature().getOutputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new));
 

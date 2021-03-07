@@ -96,17 +96,18 @@ public class GraphOperationBuilderTest {
       g.opBuilder("MaxPool", "IntList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("ksize", new long[] {1, 1, 1, 1})
-          .setAttr("strides", new long[] {1, 1, 1, 1})
+          .setAttr("strides", new long[]{1, 1, 1, 1})
           .setAttr("padding", "SAME")
           .build();
       assertTrue(hasNode(g, "IntList"));
       // list(float)
       g.opBuilder("FractionalMaxPool", "FloatList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
-          .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
+          .setAttr("pooling_ratio", new float[]{1.0f, 1.44f, 1.73f, 1.0f})
           .build();
       assertTrue(hasNode(g, "FloatList"));
-      // Missing tests: float, list(dtype), list(tensor), list(string), list(bool)
+      // Missing tests: float, list(dtype), list(tensor), list(string), list(bool), list(func)
+      // func is done via ConcreteFunction execution
     }
   }
 
