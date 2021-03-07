@@ -68,10 +68,7 @@ public class Constant extends BaseInitializer<TType> {
    */
   @Override
   public <U extends TType> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
-    if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
-      throw new IllegalArgumentException(
-          "Tensor type must be numeric or boolean: " + type.getSimpleName());
-    }
+
     return tf.fill(dims, cast(tf, value, type));
   }
 }

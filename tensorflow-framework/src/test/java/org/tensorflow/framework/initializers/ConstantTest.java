@@ -121,15 +121,44 @@ public class ConstantTest {
   @Test
   public void testCallString() {
     for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        Shape shape = Shape.of(2, 2);
+        String[][] expected = {
+          {"Java Test", "Java Test"},
+          {"Java Test", "Java Test"},
+        };
+        // There is no tf.constant(String[][]).
+        Operand<TString> expectedOp =
+            org.tensorflow.op.core.Constant.tensorOf(tf.scope(), expected);
+
+        Constant instance = new Constant(tf, tf.constant("Java Test"));
+        Operand<TString> result = instance.call(tf.constant(shape), TString.class);
+        session.evaluate(expectedOp, result);
+      }
+  }
+
+  /** Test of call method, of class Constant. */
+  @Test
+  public void testCallStringInvalidDateTYpe() {
+    for (TestSession.Mode tfMode : tfModes)
       assertThrows(
-          java.lang.IllegalArgumentException.class,
+          org.tensorflow.exceptions.TFUnimplementedException.class,
           () -> {
             try (TestSession session = TestSession.createTestSession(tfMode)) {
               Ops tf = session.getTF();
               Shape shape = Shape.of(2, 2);
+              String[][] expected = {
+                {"Java Test", "Java Test"},
+                {"Java Test", "Java Test"},
+              };
+              // There is no tf.constant(String[][]).
+              Operand<TString> expectedOp =
+                  org.tensorflow.op.core.Constant.tensorOf(tf.scope(), expected);
 
-              Constant instance = new Constant(tf, tf.constant(22));
-              instance.call(tf.constant(shape), TString.class);
+              Constant instance = new Constant(tf, tf.constant("Java Test"));
+              Operand<TInt32> result = instance.call(tf.constant(shape), TInt32.class);
+              session.evaluate(expectedOp, result);
             }
           });
   }
