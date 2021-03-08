@@ -96,9 +96,12 @@ jobs:
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java"]]; then
             printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
+          else
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           fi
           echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} -Dnative.build.flags=$BAZEL_CACHE
           df -h
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -128,10 +131,13 @@ jobs:
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java"]]; then
             printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
+          else
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           fi
           df -h
           echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} -Dnative.build.flags=$BAZEL_CACHE
           df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -195,15 +201,17 @@ jobs:
           mkdir %USERPROFILE%\.m2
           if "${{ github.event_name }}" == "push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
+          set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           if "${{ github.event_name }}" == "push" (
             if "${{ github.repository }}" == "tensorflow/java" (
               printenv "${{ secrets.GCP_CREDS }}" > %USERPROFILE%\.gcp\credentials.json
+              set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=%USERPROFILE%\.gcp\credentials.json"      
             )
-          )
+          )          
           df -h
           wmic pagefile list /format:list
           echo Executing Maven %MAVEN_PHASE%
-          call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} -Dnative.build.flags=%BAZEL_CACHE%
           if ERRORLEVEL 1 exit /b
           df -h
           wmic pagefile list /format:list
