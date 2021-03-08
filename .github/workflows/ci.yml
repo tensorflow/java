@@ -95,7 +95,7 @@ jobs:
           mkdir -p $HOME/.m2
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java"]]; then
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
             printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
           else
@@ -130,7 +130,7 @@ jobs:
           mkdir -p $HOME/.m2
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java"]]; then
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
             printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
           else
