@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - bazel-cache
       - r[0-9]+.*
   pull_request:
     branches:
