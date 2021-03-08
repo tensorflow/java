@@ -28,3 +28,17 @@ diff -ruN tensorflow-1.14.0-rc1/third_party/mkl/mkl.BUILD tensorflow-1.14.0-rc1-
      ],
      linkopts = ["/FORCE:MULTIPLE"],
      visibility = ["//visibility:public"],
+diff --git a/third_party/llvm_openmp/BUILD b/third_party/llvm_openmp/BUILD
+index 099a84dcbaa..f7f9d44118f 100644
+--- a/third_party/llvm_openmp/BUILD
++++ b/third_party/llvm_openmp/BUILD
+@@ -71,7 +71,7 @@ omp_vars_linux = {
+
+ # Windows Cmake vars to expand.
+ omp_vars_win = {
+-    "MSVC": 1,
++    "MSVC": 0,
+ }
+
+ omp_all_cmake_vars = select({
+ 
