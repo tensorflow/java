@@ -260,6 +260,7 @@
               </buildCommand>
               <environmentVariables>
                 <EXTENSION>${javacpp.platform.extension}</EXTENSION>
+                <BAZEL_EXTRA_OPTS>${native.build.opts}</BAZEL_EXTRA_OPTS>
               </environmentVariables>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
