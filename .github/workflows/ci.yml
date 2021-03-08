@@ -96,8 +96,8 @@ jobs:
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
-            printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
+            printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/gcp_creds.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
           else
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           fi
@@ -131,13 +131,8 @@ jobs:
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
-            printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
-            if [[ -f /Users/runner/.gcp/credentials.json ]]; then
-              echo "File exists"
-            else
-              echo "File do not exists"
-            fi
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
+            printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/gcp_creds.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
           else
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           fi
@@ -210,8 +205,8 @@ jobs:
           set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
           if "${{ github.event_name }}" == "push" (
             if "${{ github.repository }}" == "tensorflow/java" (
-              printenv "${{ secrets.GCP_CREDS }}" > %USERPROFILE%\.gcp\credentials.json
-              set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=%USERPROFILE%\.gcp\credentials.json"      
+              printenv "${{ secrets.GCP_CREDS }}" > %USERPROFILE%\gcp_creds.json
+              set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=%USERPROFILE%\gcp_creds.json"      
             )
           )          
           df -h
