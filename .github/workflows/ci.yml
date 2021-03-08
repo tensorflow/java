@@ -132,6 +132,11 @@ jobs:
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
           if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
             printf '%s\n' "${{ secrets.GCP_CREDS }}" > $HOME/.gcp/credentials.json
+            if [[ -f /Users/runner/.gcp/credentials.json ]]; then
+              echo "File exists"
+            else
+              echo "File do not exists"
+            fi
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/.gcp/credentials.json"
           else
             export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
