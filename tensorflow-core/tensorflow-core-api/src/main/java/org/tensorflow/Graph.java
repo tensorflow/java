@@ -280,7 +280,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalArgumentException("Outputs can't be null.");
     }
 
-    Queue<GraphOperation> currents = new LinkedList<>();
+    Queue<GraphOperation> currents = new ArrayDeque<>(outputs.size());
     Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
     Set<GraphOperation> inputOps = new LinkedHashSet<>(inputs.size());
 
@@ -345,7 +345,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public Set<GraphOperation> upstreamOps(Set<GraphOperation> outputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
-    Queue<GraphOperation> todo = new LinkedList<>(outputs);
+    Queue<GraphOperation> todo = new ArrayDeque<>(outputs);
     while (!todo.isEmpty()) {
       GraphOperation current = todo.poll();
 
@@ -367,7 +367,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public synchronized Set<GraphOperation> downstreamOps(Set<GraphOperation> inputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
-    Queue<GraphOperation> todo = new LinkedList<>(inputs);
+    Queue<GraphOperation> todo = new ArrayDeque<>(inputs);
     while (!todo.isEmpty()) {
       GraphOperation current = todo.poll();
 
