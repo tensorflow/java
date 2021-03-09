@@ -21,6 +21,5 @@ set -e
 bazel fetch @org_tensorflow//- || true
 
 BASE=$(bazel info output_base)
-/mnt/c/Users/jimne/_bazel_Ryan/drtzmoke/external/org_tensorflow/configure
-mv /mnt/c/Users/jimne/_bazel_Ryan/drtzmoke/external/org_tensorflow/.tf_configure.bazelrc .
-#"$BASE"/external/org_tensorflow/configure
+"$BASE"/external/org_tensorflow/configure
+mv "$BASE"/external/org_tensorflow/.tf_configure.bazelrc .
