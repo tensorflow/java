@@ -71,6 +71,6 @@ public class Ones extends BaseInitializer<TType> {
           "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
 
-    return cast(tf, tf.fill(dims, tf.constant(1)), type);
+    return tf.fill(dims, cast(tf, tf.constant(1), type));
   }
 }
