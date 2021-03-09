@@ -24,11 +24,9 @@ complete build could be required to reflect the changes, otherwise `-Pdev` shoul
 ### Native Builds
 
 In some cases, like when adding GPU support or re-generating op classes, you will need to re-build the native library. 99% of this is building
-TensorFlow, which by default is configured for the [CI](.github/workflows/ci.yml). The build configuration can be customized using the same methods as
-TensorFlow, so if you're building locally, you may need to clone the [tensorflow](https://github.com/tensorflow/tensorflow) project, run its
-configuration script (`./configure`), and copy the resulting
-`.tf_configure.bazelrc` to `tensorflow-core-api`. This overrides the default options, and you can add to it manually (i.e. adding `build --copt="-g"`
-to build with debugging info).
+TensorFlow, which by default is configured for the [CI](.github/workflows/ci.yml). The build configuration can be customized using the `configure`
+scripts in `tensorflow-core-api`, which call the scripts downloaded with the tensorflow dependency. This overrides the default options, and you can
+add to it manually (i.e. adding `build --copt="-g"` to build with debugging info).
 
 ### GPU Support
 
@@ -90,7 +88,8 @@ in [IntelliJ](https://github.com/google/styleguide/blob/gh-pages/intellij-java-g
 
 ### Dependencies
 
-For dependencies, we can use anything compliant with [this list](https://opensource.google/docs/thirdparty/licenses/#notice), but we want to keep the core libraries as dependency free as possible.
+For dependencies, we can use anything compliant with [this list](https://opensource.google/docs/thirdparty/licenses/#notice), but we want to keep the
+core libraries as dependency free as possible.
 
 ### Code generation
 

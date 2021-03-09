@@ -2,6 +2,10 @@
 # Script to build native TensorFlow libraries
 set -eu
 
+if [ ! -f .tf_configure.bazelrc ]; then
+    echo "WARNING: No .tf_configure.bazelrc, using CI settings.  For local builds, run the ./configure script." >&2
+fi
+
 # Allows us to use ccache with Bazel on Mac
 export BAZEL_USE_CPP_ONLY_TOOLCHAIN=1
 
