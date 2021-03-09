@@ -7,6 +7,15 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # the version of this archive (e.g. google protobuf)
 http_archive(
     name = "org_tensorflow",
+    patches = [
+        ":tensorflow-visibility.patch",
+        ":tensorflow-macosx.patch",
+#        ":tensorflow-windows.patch", # https://github.com/tensorflow/tensorflow/issues/25213
+        ":tensorflow-proto.patch",
+    ],
+    patch_tool = "patch",
+    patch_args = ["-p1"],
+    patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\(.* java_package = \"org\.tensorflow\.\)\(.*\"\)/\\1proto.\\2'/"],
     urls = [
        "https://github.com/tensorflow/tensorflow/archive/v2.4.1.tar.gz",
     ],
