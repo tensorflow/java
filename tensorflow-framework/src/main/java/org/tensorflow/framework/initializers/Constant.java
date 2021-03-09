@@ -16,9 +16,7 @@ package org.tensorflow.framework.initializers;
 
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;

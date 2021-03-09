@@ -52,7 +52,6 @@ public class Exponential extends Activation<TFloating> {
   @Override
   public <U extends TFloating> Operand<U> call(Operand<U> input) {
 
-
     return tf.math.exp(input);
   }
 }

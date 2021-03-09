@@ -85,7 +85,6 @@ public class RandomNormalTest {
           () -> {
             try (TestSession session = TestSession.createTestSession(tfMode)) {
               Ops tf = session.getTF();
-              Shape shape = Shape.of(2, 2);
 
               RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, -2.5, SEED);
             }

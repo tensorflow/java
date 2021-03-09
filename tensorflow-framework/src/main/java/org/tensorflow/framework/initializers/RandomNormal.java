@@ -79,8 +79,9 @@ public class RandomNormal extends BaseInitializer<TFloating> {
    */
   public RandomNormal(Ops tf, double mean, double stddev, long seed) {
     super(tf);
-    if(stddev < 0) {
-      throw new IllegalArgumentException("Standard deviation (stddev) cannot be less than 0, got " + stddev);
+    if (stddev < 0) {
+      throw new IllegalArgumentException(
+          "Standard deviation (stddev) cannot be less than 0, got " + stddev);
     }
     this.mean = mean;
     this.stddev = stddev;

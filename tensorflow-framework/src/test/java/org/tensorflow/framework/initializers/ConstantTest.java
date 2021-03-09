@@ -21,8 +21,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 
-import java.util.Arrays;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Test the Constant initializer */
