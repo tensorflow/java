@@ -3,7 +3,7 @@
 set -eu
 
 if [ ! -f .tf_configure.bazelrc ]; then
-    echo "WARNING: No .tf_configure.bazelrc, using CI settings.  For local builds, run the ./configure script." >&2
+    echo "No .tf_configure.bazelrc, using CI settings.  For local builds, run the ./configure script."
 fi
 
 # Allows us to use ccache with Bazel on Mac
