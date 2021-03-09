@@ -147,7 +147,7 @@ jobs:
     needs: prepare
     strategy:
        matrix:
-         ext: ["", -mkl, -gpu, -mkl-gpu]
+         ext: ["", -gpu] # -mkl, -mkl-gpu]
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
