@@ -557,11 +557,11 @@ public class ConcreteFunction implements AutoCloseable {
       TF_Status status = TF_Status.newStatus();
 
       List<Operand<?>> inputs = signature.getInputs().values().stream()
-          .map((x) -> graph.outputOrError(x.name))
+          .map((x) -> graph.outputOrThrow(x.name))
           .collect(Collectors.toList());
 
       List<Operand<?>> outputs = signature.getOutputs().values().stream()
-          .map((x) -> graph.outputOrError(x.name))
+          .map((x) -> graph.outputOrThrow(x.name))
           .collect(Collectors.toList());
 
       List<GraphOperation> ops = new ArrayList<>(
