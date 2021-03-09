@@ -184,13 +184,18 @@ public final class GraphOperation extends AbstractOperation {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
   }
 
-
+  /**
+   * Get the number of inputs to the op, not including control inputs.
+   */
   public int numInputs() {
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationNumInputs(getUnsafeNativeHandle());
     }
   }
 
+  /**
+   * Get the op's inputs, not including control inputs.
+   */
   public List<Operand<?>> inputs() {
     try (PointerScope scope = new PointerScope()) {
       int numInputs = numInputs();
@@ -204,12 +209,17 @@ public final class GraphOperation extends AbstractOperation {
         TF_Operation op = atPos.oper();
         int index = atPos.index();
         String opName = TF_OperationName(op).getString();
-        operands.add(graph.operationOrError(opName).output(index));
+        operands.add(graph.operation(opName).output(index));
       }
       return operands;
     }
   }
 
+  /**
+   * Get the number of ops that use this op's designated output as an input, not including control dependencies.
+   *
+   * @param index the output to look for usages of
+   */
   public int numConsumers(int index) {
     try (PointerScope scope = new PointerScope()) {
       TF_Output output = new TF_Output().oper(getUnsafeNativeHandle()).index(index);
@@ -217,6 +227,11 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
+  /**
+   * Get the ops that use this op's designated output as an input, not including control dependencies.
+   *
+   * @param index the output to look for usages of
+   */
   public Set<GraphOperation> consumers(int index) {
     try (PointerScope scope = new PointerScope()) {
       TF_Output output = new TF_Output().oper(getUnsafeNativeHandle()).index(index);
@@ -230,12 +245,15 @@ public final class GraphOperation extends AbstractOperation {
         TF_Input atPos = handles.position(i);
         TF_Operation op = atPos.oper();
         String opName = TF_OperationName(op).getString();
-        operands.add(graph.operationOrError(opName));
+        operands.add(graph.operation(opName));
       }
       return operands;
     }
   }
 
+  /**
+   * Get the number of ops that use any of this op's outputs as an input, not including control dependencies.
+   */
   public int numConsumers() {
     int all = 0;
     for (int i = 0; i < numOutputs(); i++) {
@@ -244,6 +262,10 @@ public final class GraphOperation extends AbstractOperation {
     return all;
   }
 
+
+  /**
+   * Get the ops that use any of this op's outputs as an input, not including control dependencies.
+   */
   public Set<GraphOperation> consumers() {
     Set<GraphOperation> all = new LinkedHashSet<>();
     for (int i = 0; i < numOutputs(); i++) {
@@ -252,12 +274,18 @@ public final class GraphOperation extends AbstractOperation {
     return all;
   }
 
+  /**
+   * Get the number of control inputs for this op.
+   */
   public int numControlInputs() {
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationNumControlInputs(getUnsafeNativeHandle());
     }
   }
 
+  /**
+   * Get the control inputs of this op.
+   */
   public Set<GraphOperation> controlInputs() {
     try (PointerScope scope = new PointerScope()) {
       int numInputs = numControlInputs();
@@ -269,18 +297,24 @@ public final class GraphOperation extends AbstractOperation {
       for (int i = 0; i < numInputs; i++) {
         TF_Operation op = handles.get(TF_Operation.class, i);
         String opName = TF_OperationName(op).getString();
-        operands.add(graph.operationOrError(opName));
+        operands.add(graph.operation(opName));
       }
       return operands;
     }
   }
 
+  /**
+   * Get the number of ops with this op as a control dependency.
+   */
   public int numControlConsumers() {
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationNumControlOutputs(getUnsafeNativeHandle());
     }
   }
 
+  /**
+   * Get the ops with this op as a control dependency.
+   */
   public Set<GraphOperation> controlConsumers() {
     try (PointerScope scope = new PointerScope()) {
       int numConsumers = numControlConsumers();
@@ -292,7 +326,7 @@ public final class GraphOperation extends AbstractOperation {
       for (int i = 0; i < numConsumers; i++) {
         TF_Operation op = handles.get(TF_Operation.class, i);
         String opName = TF_OperationName(op).getString();
-        operands.add(graph.operationOrError(opName));
+        operands.add(graph.operation(opName));
       }
       return operands;
     }

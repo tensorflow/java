@@ -161,7 +161,7 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no output exists with the provided name
      */
     public Runner feed(String operation, Tensor t) {
-      return feed(graph.outputOrError(operation), t);
+      return feed(graph.outputOrThrow(operation), t);
     }
 
     /**
@@ -178,7 +178,7 @@ public final class Session implements AutoCloseable {
      * @throws IndexOutOfBoundsException if the operation has no output with the given index
      */
     public Runner feed(String operation, int index, Tensor t) {
-      Operation op = graph.operationOrError(operation);
+      Operation op = graph.operationOrThrow(operation);
       inputs.add(op.output(index));
       inputTensors.add(t);
       return this;
@@ -209,7 +209,7 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no output exists with the provided name
      */
     public Runner fetch(String operation) {
-      return fetch(graph.outputOrError(operation));
+      return fetch(graph.outputOrThrow(operation));
     }
 
     /**
@@ -224,7 +224,7 @@ public final class Session implements AutoCloseable {
      * @throws IndexOutOfBoundsException if the operation has no output with the given index
      */
     public Runner fetch(String operation, int index) {
-      Operation op = graph.operationOrError(operation);
+      Operation op = graph.operationOrThrow(operation);
       outputs.add(op.output(index));
       return this;
     }
@@ -258,7 +258,7 @@ public final class Session implements AutoCloseable {
      * @throws IllegalArgumentException if no operation exists with the provided name
      */
     public Runner addTarget(String operation) {
-      GraphOperation op = graph.operationOrError(operation);
+      GraphOperation op = graph.operationOrThrow(operation);
       targets.add(op);
       return this;
     }

@@ -27,6 +27,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewWhile;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +37,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -144,7 +146,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @return operation in the graph with this name
    * @throws IllegalArgumentException if no such operation exists in the Graph
    */
-  public GraphOperation operationOrError(String name) {
+  public GraphOperation operationOrThrow(String name) {
     GraphOperation op = operation(name);
     if (op == null) {
       throw new IllegalArgumentException("No Operation named [" + name + "] in the Graph");
@@ -199,7 +201,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @throws IllegalArgumentException if no such output exists in the Graph
    * @see #output(String)
    */
-  public Output<?> outputOrError(String output) {
+  public Output<?> outputOrThrow(String output) {
     Output<?> op = output(output);
     if (op == null) {
       throw new IllegalArgumentException("No Operation named [" + output + "] in the Graph");
@@ -224,33 +226,62 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /**
    * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
-   * Respects control dependencies.
+   * Includes control dependencies.
    *
-   * If both {@code allowedBodyOps} and {@code forbiddenBodyOps} are null, forbids 0-input ops in the body.
-   *
-   * @param inputs the inputs of the subgraph.  Must be from single output ops.
-   * @param outputs the outputs of the subgraph
-   * @param allowedBodyOps types of ops to allow as 0-input ops in the body.  Allows all (except {@code
-   * forbiddenBodyOps}) if null.
-   * @param forbiddenBodyOps types of ops to never allow as 0-input ops in the body.  Forbids all (except {@code
-   * allowedBodyOps}) if null.
+   * @param inputs the inputs of the subgraph.  Must be from single output ops.  May not be null.
+   * @param outputs the outputs of the subgraph.  May not be null.
+   * @param allowNoInputBodyOps whether to allow 0-input ops in the body.  For more specificy use {@link
+   * #completeSubgraph(Set, Set, Set, Set)}.
    * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
    * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
    * solely on inputs)
+   * @see #completeSubgraph(Set, Set, Set, Set)
+   */
+  public Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
+      boolean allowNoInputBodyOps) {
+    return completeSubgraph(inputs, outputs, null, allowNoInputBodyOps ? Collections.emptySet() : null);
+  }
+
+  /**
+   * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
+   * Includes control dependencies.
+   *
+   * If both {@code allowedNoInputBodyOps} and {@code forbiddenNoInputBodyOps} are {@code null}, forbids 0-input ops in
+   * the body. To allow all ops in the body, use {@code null} for {@code allowedNoInputBodyOps} and the empty set for
+   * {@code forbiddenNoInputBodyOps}.
+   *
+   * @param inputs the inputs of the subgraph.  Must be from single output ops.  May not be null.
+   * @param outputs the outputs of the subgraph.  May not be null.
+   * @param allowedNoInputBodyOps types of ops to allow as 0-input ops in the body.  Allows all (except {@code
+   * forbiddenNoInputBodyOps}) if null.
+   * @param forbiddenNoInputBodyOps types of ops to never allow as 0-input ops in the body.  Forbids all (except {@code
+   * allowedNoInputBodyOps}) if null.
+   * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
+   * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
+   * solely on inputs)
+   * @see #completeSubgraph(Set, Set, boolean)
    */
   public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
-      Set<String> allowedBodyOps, Set<String> forbiddenBodyOps) {
+      Set<String> allowedNoInputBodyOps, Set<String> forbiddenNoInputBodyOps) {
 
-    if (forbiddenBodyOps != null && allowedBodyOps != null) {
-      for (String t : forbiddenBodyOps) {
-        if (allowedBodyOps.contains(t)) {
+    if (forbiddenNoInputBodyOps != null && allowedNoInputBodyOps != null) {
+      for (String t : forbiddenNoInputBodyOps) {
+        if (allowedNoInputBodyOps.contains(t)) {
           throw new IllegalArgumentException("Can't allow and forbid op type " + t + ".");
         }
       }
     }
 
+    if (inputs == null) {
+      throw new IllegalArgumentException("Inputs can't be null.");
+    }
+
+    if (outputs == null) {
+      throw new IllegalArgumentException("Outputs can't be null.");
+    }
+
     Queue<GraphOperation> currents = new LinkedList<>();
-    Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
+    Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
     Set<GraphOperation> inputOps = new LinkedHashSet<>(inputs.size());
 
     for (Operand<?> input : inputs) {
@@ -276,9 +307,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
 
       if (op.numControlInputs() + op.numInputs() == 0) {
-        if ((forbiddenBodyOps != null && forbiddenBodyOps.contains(op.type()))
-            || (allowedBodyOps != null && !allowedBodyOps.contains(op.type()))
-            || (forbiddenBodyOps == null && allowedBodyOps == null)) {
+        // inverted: (nothing is forbidden || not forbidden) and (everything is allowed || allowed) and (not both null)
+        if ((forbiddenNoInputBodyOps != null && forbiddenNoInputBodyOps.contains(op.type()))
+            || (allowedNoInputBodyOps != null && !allowedNoInputBodyOps.contains(op.type()))
+            || (forbiddenNoInputBodyOps == null && allowedNoInputBodyOps == null)) {
           throw new IllegalStateException("Operation " + op
               + " of type " + op.type() +
               " has no inputs and is not an allowed 0-input op type, but is not set as an input.  "
@@ -302,6 +334,80 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     return seen;
+  }
+
+  /**
+   * Get all ops directly or indirectly required to calculate {@code outputs} (not including {@code outputs}), including
+   * control dependencies.
+   *
+   * @param outputs the starting points of the traversal.
+   * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
+   */
+  public synchronized Set<GraphOperation> upstreamOps(Set<GraphOperation> outputs) {
+    Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
+    Queue<GraphOperation> todo = new ArrayDeque<>(outputs);
+    while (!todo.isEmpty()) {
+      GraphOperation current = todo.poll();
+
+      if (seen.add(current)) {
+        todo.addAll(current.inputs().stream().map(this::graphOp).collect(Collectors.toSet()));
+        todo.addAll(current.controlInputs());
+      }
+    }
+    seen.removeAll(outputs);
+    return seen;
+  }
+
+  /**
+   * Get all ops that use one of {@code inputs} directly or indirectly (not including {@code inputs}), including control
+   * dependencies.
+   *
+   * @param inputs the starting points of the traversal.
+   * @return the ops that depend on {@code inputs}, not including {@code inputs}
+   */
+  public synchronized Set<GraphOperation> downstreamOps(Set<GraphOperation> inputs) {
+    Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
+    Queue<GraphOperation> todo = new ArrayDeque<>(inputs);
+    while (!todo.isEmpty()) {
+      GraphOperation current = todo.poll();
+
+      if (seen.add(current)) {
+        todo.addAll(current.consumers());
+        todo.addAll(current.controlConsumers());
+      }
+    }
+    seen.removeAll(inputs);
+    return seen;
+  }
+
+  /**
+   * Get all ops directly or indirectly required to calculate {@code outputs} (not including {@code outputs}), including
+   * control dependencies.
+   *
+   * @param outputs the starting points of the traversal.
+   * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
+   */
+  public synchronized Set<GraphOperation> upstream(Set<Operand<?>> outputs) {
+    return upstreamOps(outputs.stream().map(this::graphOp).collect(Collectors.toSet()));
+  }
+
+  /**
+   * Get all ops that use one of {@code inputs} directly or indirectly (not including {@code inputs}), including control
+   * dependencies.
+   *
+   * @param inputs the starting points of the traversal.
+   * @return the ops that depend on {@code inputs}, not including {@code inputs}
+   */
+  public synchronized Set<GraphOperation> downstream(Set<Operand<?>> inputs) {
+    Set<GraphOperation> ops = new LinkedHashSet<>();
+    for (Operand<?> input : inputs) {
+      GraphOperation op = graphOp(input);
+      ops.addAll(op.consumers(input.asOutput().index()));
+      ops.addAll(op.controlConsumers());
+    }
+    Set<GraphOperation> downstream = downstreamOps(ops);
+    downstream.addAll(ops);
+    return downstream;
   }
 
   /**
