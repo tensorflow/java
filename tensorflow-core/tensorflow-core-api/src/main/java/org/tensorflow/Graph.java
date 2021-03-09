@@ -343,9 +343,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param outputs the starting points of the traversal.
    * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
    */
-  public synchronized Set<GraphOperation> upstreamOps(Set<GraphOperation> outputs) {
+  public Set<GraphOperation> upstreamOps(Set<GraphOperation> outputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
-    Queue<GraphOperation> todo = new ArrayDeque<>(outputs);
+    Queue<GraphOperation> todo = new LinkedList<>(outputs);
     while (!todo.isEmpty()) {
       GraphOperation current = todo.poll();
 
@@ -367,7 +367,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public synchronized Set<GraphOperation> downstreamOps(Set<GraphOperation> inputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
-    Queue<GraphOperation> todo = new ArrayDeque<>(inputs);
+    Queue<GraphOperation> todo = new LinkedList<>(inputs);
     while (!todo.isEmpty()) {
       GraphOperation current = todo.poll();
 
@@ -387,7 +387,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param outputs the starting points of the traversal.
    * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
    */
-  public synchronized Set<GraphOperation> upstream(Set<Operand<?>> outputs) {
+  public Set<GraphOperation> upstream(Set<Operand<?>> outputs) {
     return upstreamOps(outputs.stream().map(this::graphOp).collect(Collectors.toSet()));
   }
 
