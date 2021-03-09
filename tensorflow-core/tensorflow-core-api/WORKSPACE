@@ -10,7 +10,7 @@ http_archive(
     patches = [
         ":tensorflow-visibility.patch",
         ":tensorflow-macosx.patch",
-        ":tensorflow-windows.patch",
+        # ":tensorflow-windows.patch",
         ":tensorflow-proto.patch",
     ],
     patch_tool = "patch",
