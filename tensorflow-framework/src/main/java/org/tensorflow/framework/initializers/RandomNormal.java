@@ -75,9 +75,13 @@ public class RandomNormal extends BaseInitializer<TFloating> {
    * @param stddev Standard deviation of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
+   * @throws IllegalArgumentException if standard deviation is less than 0.
    */
   public RandomNormal(Ops tf, double mean, double stddev, long seed) {
     super(tf);
+    if(stddev < 0) {
+      throw new IllegalArgumentException("Standard deviation (stddev) cannot be less than 0, got " + stddev);
+    }
     this.mean = mean;
     this.stddev = stddev;
     this.seed = seed;

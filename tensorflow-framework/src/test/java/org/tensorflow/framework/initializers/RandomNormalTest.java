@@ -14,13 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Test the RandomNormal initializer */
 public class RandomNormalTest {
@@ -31,18 +33,6 @@ public class RandomNormalTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
   public RandomNormalTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
 
   /** Test of call method, of class RandomNormal. */
   @Test
@@ -85,5 +75,20 @@ public class RandomNormalTest {
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
+  }
+
+  @Test
+  public void testInvalidStdDev() {
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+              Shape shape = Shape.of(2, 2);
+
+              RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, -2.5, SEED);
+            }
+          });
   }
 }
