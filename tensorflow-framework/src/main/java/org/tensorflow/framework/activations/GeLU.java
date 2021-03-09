@@ -70,6 +70,9 @@ public class GeLU extends Activation<TFloating> {
   @Override
   public <U extends TFloating> Operand<U> call(Operand<U> input) {
 
+    Operand<U> point5 = cast(tf, tf.constant(0.5), input.type());
+    Operand<U> one = cast(tf, tf.constant(1.0), input.type());
+
     if (approximate) {
       /*
               coeff = math_ops.cast(0.044715, features.dtype)
@@ -78,8 +81,9 @@ public class GeLU extends Activation<TFloating> {
                               (features + coeff * math_ops.pow(features, 3))))
       */
       Operand<U> coeff = cast(tf, tf.constant(0.044715), input.type());
-      Operand<U> point5 = cast(tf, tf.constant(0.5), input.type());
-      Operand<U> one = cast(tf, tf.constant(1.0), input.type());
+      // sqrt(2.0 / PI)
+      Operand<U> sqrtTwoDivPI = cast(tf, tf.constant(0.7978845608028654), input.type());
+      Operand<U> three = cast(tf, tf.constant(3), input.type());
 
       return tf.math.mul(
           point5,
@@ -89,13 +93,9 @@ public class GeLU extends Activation<TFloating> {
                   one,
                   tf.math.tanh(
                       tf.math.mul(
-                          // sqrt(2.0 / PI)
-                          cast(tf, tf.constant(0.7978845608028654), input.type()),
+                          sqrtTwoDivPI,
                           tf.math.add(
-                              input,
-                              tf.math.mul(
-                                  coeff,
-                                  tf.math.pow(input, cast(tf, tf.constant(3), input.type()))) // mul
+                              input, tf.math.mul(coeff, tf.math.pow(input, three)) // mul
                               ) // add
                           ) // mul
                       ) // tanh
@@ -108,15 +108,9 @@ public class GeLU extends Activation<TFloating> {
       return 0.5 * features * (1.0 + math_ops.erf(
         features / math_ops.cast(1.4142135623730951, features.dtype)))
        */
+      Operand<U> sqrtTwo = cast(tf, tf.constant(1.4142135623730951), input.type());
       return tf.math.mul(
-          cast(tf, tf.constant(0.5), input.type()),
-          tf.math.mul(
-              input,
-              tf.math.add(
-                  cast(tf, tf.constant(1), input.type()),
-                  tf.math.erf(
-                      tf.math.div(
-                          input, cast(tf, tf.constant(1.4142135623730951), input.type()))))));
+          point5, tf.math.mul(input, tf.math.add(one, tf.math.erf(tf.math.div(input, sqrtTwo)))));
     }
   }
 }
