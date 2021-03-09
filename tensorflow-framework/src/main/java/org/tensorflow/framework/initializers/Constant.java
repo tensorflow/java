@@ -64,7 +64,6 @@ public class Constant extends BaseInitializer<TType> {
    * @param type the data type of tensor
    * @param <U> The data Type for initializer operation
    * @return An operand for the initialization.
-   * @throws IllegalArgumentException if the data type is not a TNumber or TBool
    */
   @Override
   public <U extends TType> Operand<U> call(Operand<TInt64> dims, Class<U> type) {

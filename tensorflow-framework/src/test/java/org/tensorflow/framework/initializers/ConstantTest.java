@@ -21,6 +21,8 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.*;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Test the Constant initializer */
@@ -140,7 +142,7 @@ public class ConstantTest {
 
   /** Test of call method, of class Constant. */
   @Test
-  public void testCallStringInvalidDateTYpe() {
+  public void testCallStringInvalidDataType() {
     for (TestSession.Mode tfMode : tfModes)
       assertThrows(
           org.tensorflow.exceptions.TFUnimplementedException.class,
@@ -158,7 +160,7 @@ public class ConstantTest {
 
               Constant instance = new Constant(tf, tf.constant("Java Test"));
               Operand<TInt32> result = instance.call(tf.constant(shape), TInt32.class);
-              session.evaluate(expectedOp, result);
+              session.run(result); // this will cause the exception to be thrown.
             }
           });
   }
