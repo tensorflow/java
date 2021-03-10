@@ -297,18 +297,25 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param variablesToUpdate Map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding variables to update as values.
+   *     corresponding variables to update as values. If <code>multiLabel</code> is
+   *     false then all shapes are (T), where T is the number of thresholds. If
+   *     <code>multiLabel</code> is true then all shapes are (T, C0), where C0 is the number
+   *     of classes.
    * @param varInitializers Map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding initializer Operands to initializer the corresponding variables from
    *     variablesToUpdate.
    * @param labels the labels, will be cast to {@link TBool}
-   * @param predictions the predictions whose values are in the range <code>[0, 1]</code>.
+   *     shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more
+   *     class dimensions, and L1 is a potential extra dimension of size 1 that
+   *     would be squeezed. If <code>multiLabel</code> or if
+   *     <code>labelWeights</code> <code>!= null</code>, then Cx must be a single dimension.
+   * @param predictions the predictions shape (N, Cx, P1?).
    * @param thresholds thresholds in `the range <code>[0, 1]</code>, or {@link #NEG_INF} (used when
    *     topK is set)
-   * @param topK Optional, indicates that the positive labels should be limited to the top k
-   *     predictions, may be null.
-   * @param classIndex Optional, limits the prediction and labels to the specified class. The
-   *     classIndex is and integer representing a specific classification class's input data..
+   * @param topK Optional, used only if <code>multiLabel</code>, indicates that only the top k
+   *     predictions should be considered. May be null.
+   * @param classIndex Optional, limits the prediction and labels to the specified class.
+   *     The classIndex is an integer index into the first dimension of Cx.
    * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
    *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
    *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
@@ -316,7 +323,7 @@ public class MetricsHelper {
    * @param multiLabel indicates whether multidimensional prediction/labels should be treated as
    *     multilabel responses, or flattened into a single label. When true, the values of <code>
    *     variablesToUpdate</code> must have a second dimension equal to the number of labels and
-   *     predictions, and those tensors must not be RaggedTensors.
+   *     predictions per example, and those tensors must not be RaggedTensors.
    * @param labelWeights tensor of non-negative weights for multilabel data. The weights are applied
    *     when calculating TRUE_POSITIVES, FALSE_POSITIVES, TRUE_NEGATIVES, and FALSE_NEGATIVES
    *     without explicit multilabel handling (i.e. when the data is to be flattened). May be null.
@@ -351,9 +358,12 @@ public class MetricsHelper {
     Operand<T> tPredictions = predictions;
     Operand<T> tSampleWeight = sampleWeight;
 
+    // size of the 0th dimension of thresholds
     // reshape to scalar for operations later.
     Operand<TInt32> numThresholds =
         tf.reshape(tf.shape.size(thresholds, tf.constant(0)), tf.constant(Shape.scalar()));
+
+    // true if we will process thresholds as one-dimensional (possibly because we flatten them)
     Operand<TBool> oneThresh;
     if (multiLabel) {
       oneThresh = tf.math.equal(tf.constant(1), tf.rank(thresholds));
@@ -404,8 +414,11 @@ public class MetricsHelper {
       tPredictions = tf.gather(tPredictions, tf.constant(new int[] {classIndex}), tf.constant(1));
     }
     org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(tPredictions);
+
     Operand<TInt32> numExamples =
         tf.reshape(tf.shape.size(tPredictions, tf.constant(0)), tf.constant(Shape.scalar()));
+
+    // number of labels (or predictions) per example
     Operand<TInt32> numLabels =
         tf.select(
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
@@ -415,11 +428,27 @@ public class MetricsHelper {
                 tf.shape.takeLast(
                     predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
                 tf.constant(0)));
+
+    // If we will treat thresholds as one-dimensional (always true as of this writing),
+    // then threshLabelTile is the number of labels (or predictions) per sample. Else it is 1.
     Operand<TInt32> threshLabelTile = tf.select(oneThresh, numLabels, tf.constant(1));
 
-    // The ExtraDims are added so the operands of the tile operations later on are compatible.
+    /////////
+    // Tile data for threshold comparisons, which is a cross product of thresholds and
+    // predictions/labels.
+    //
+    // In the multilabel case, we want a data shape of (T, N, D0).
+    //                                            else (T, ND).
+    // where T is numThresholds
+    //       Dx == Cx except that D0 == 1 if classIndex != null
+    //       ND is the product of N and all Dx.
+    // In these comments, we refer to all indices beyond the threshold index as a "data position".
+
+    // if multilabel, then shape (1, N, D0)
+    // else shape (1, ND),
     Operand<T> predictionsExtraDim;
     Operand<TBool> labelsExtraDim;
+
     if (multiLabel) {
       predictionsExtraDim = tf.expandDims(tPredictions, tf.constant(0));
       labelsExtraDim = tf.expandDims(cast(tf, tLabels, TBool.class), tf.constant(0));
@@ -427,9 +456,24 @@ public class MetricsHelper {
       predictionsExtraDim = tf.reshape(tPredictions, tf.constant(Shape.of(1, -1)));
       labelsExtraDim = tf.reshape(cast(tf, tLabels, TBool.class), tf.constant(Shape.of(1, -1)));
     }
+
+    // the shape of each thresholds tile
+    // if multilabel, then [T, 1, -1]
+    //                else [T, -1]
     List<Operand<TInt32>> threshPretileShape;
+
+    // the tiling multiples for thresholds
+    // We want to repeat the thresholds for each data position.
+    // if multilabel, then [1, N, threshLabelTile]. (threshLabelTile is typically numLabels)
+    //                else [1, ND]
     List<Operand<TInt32>> threshTiles;
+
+    // tiling multiples for predictionsExtraDim and labelsExtraDim
+    // We want to repeat the predictions and labels for each threshold.
+    // If multilabel, then [T, 1, 1]
+    //                else [T, 1]
     List<Operand<TInt32>> dataTiles;
+
     if (multiLabel) {
       threshPretileShape = Arrays.asList(numThresholds, tf.constant(1), tf.constant(-1));
       threshTiles = Arrays.asList(tf.constant(1), numExamples, threshLabelTile);
@@ -445,10 +489,17 @@ public class MetricsHelper {
     Operand<T> thresholdsReshaped =
         tf.reshape(cast(tf, thresholds, predictions.type()), tf.stack(threshPretileShape));
     Operand<TInt32> threshTilesShape = tf.stack(threshTiles);
-    Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
-    Operand<TInt32> dataTilesShape = tf.stack(dataTiles);
 
+    // if multilabel, then shape (T, N, threshLabelTile)
+    //                      else (T, ND)
+    Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
+
+
+    // if multilabel, then shape (T, N, D0)
+    //                      else (T, ND)
+    Operand<TInt32> dataTilesShape = tf.stack(dataTiles);
     Operand<T> predsTiled = tf.tile(predictionsExtraDim, dataTilesShape);
+
 
     // Compare predictions and threshold.
     Operand<TBool> predIsPos = tf.math.greater(predsTiled, threshTiled);

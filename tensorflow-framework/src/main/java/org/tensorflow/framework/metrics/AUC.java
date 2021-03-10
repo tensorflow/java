@@ -106,12 +106,46 @@ public class AUC<T extends TNumber> extends Metric<T> {
   private final String falseNegativesName;
   private final Map<ConfusionMatrixEnum, Assign<T>> initializers = new HashMap<>();
   private final Class<T> type;
+
+  /**
+   * The size of the label dimension.
+   */
   private Integer numLabels;
+
   private Operand<T> labelWeights;
+
+  /**
+   * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
+   *
+   * If {@link #multiLabel}, shape (T, C0) where T is the number of thresholds and C0 is a single
+   * class dimension within each example.
+   */
   private Variable<T> truePositives;
+
+  /**
+   * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
+   *
+   * If {@link #multiLabel}, shape (T, C0) where T is the number of thresholds and C0 is a single
+   * class dimension within each example.
+   */
   private Variable<T> falsePositives;
+
+  /**
+   * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
+   *
+   * If {@link #multiLabel}, shape (T, C0) where T is the number of thresholds and C0 is a single
+   * class dimension within each example.
+   */
   private Variable<T> trueNegatives;
+
+  /**
+   * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
+   *
+   * If {@link #multiLabel}, shape (T, C0) where T is the number of thresholds and C0 is a single
+   * class dimension within each example.
+   */
   private Variable<T> falseNegatives;
+
   private boolean initialized;
 
   /**
@@ -515,22 +549,24 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
+   * @param numThresholds the number of thresholds to use when discretizing the roc curve.
+   *     This includes the bracketing 0 and 1 thresholds, so the value must be &GreaterEqual; 2.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
+   *     the numThresholds parameter is ignored. Values should be in [0, 1]. This method
+   *     automatically brackets the provided <code>thresholds</code> with a (-{@link #EPSILON})
+   *     below and a (1 + {@link #EPSILON}) above.
    * @param multiLabel boolean indicating whether multilabel data should be treated as such, wherein
    *     AUC is computed separately for each label and then averaged across labels, or (when false)
    *     if the data should be flattened into a single label before AUC computation. In the latter
    *     case, when multilabel data is passed to AUC, each label-prediction pair is treated as an
    *     individual data point. Should be set to <code>false</code> for multi-class data.
    * @param labelWeights non-negative weights used to compute AUCs for multilabel data. When
-   *     multi_label is True, the weights are applied to the individual label AUCs when they are
-   *     averaged to produce the multi-label AUC. When it's false, they are used to weight the
-   *     individual label predictions in computing the confusion matrix on the flattened data.
+   *     <code>multiLabel</code> is true, the weights are applied to the individual label AUCs when
+   *     they are averaged to produce the multi-label AUC. When it's false, they are used to weight
+   *     the individual label predictions in computing the confusion matrix on the flattened data.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
@@ -595,7 +631,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
     System.arraycopy(thresholds, 0, this.thresholds, 1, thresholds.length);
     this.thresholds[this.numThresholds - 1] = 1 + EPSILON;
 
-    // # Handle multilabel arguments.
+    // Handle multilabel arguments.
 
     if (labelWeights != null) {
       // assert that labelWeights are non-negative.
@@ -675,7 +711,20 @@ public class AUC<T extends TNumber> extends Metric<T> {
     return initializers;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Creates a List of Operations to update the metric state based on labels and predictions.
+   *
+   * @param labels shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more
+   *               class dimensions, and L1 is a potential extra dimension of size 1 that
+   *               would be squeezed. Will be cast to <code>T</code>. If
+   *               {@link #multiLabel} or if {@link #labelWeights} <code>!= null</code>,
+   *               then Cx must be a single dimension.
+   * @param predictions the predictions shape (N, Cx, P1?). Will be cast to <code>T</code>.
+   * @param sampleWeights sample weights to be applied to values, may be null. Will be cast to
+   *                      <code>T</code>.
+   *
+   * @return a List of Operations to update the metric state
+   */
   @Override
   @SuppressWarnings("unchecked")
   public List<Op> updateStateList(
