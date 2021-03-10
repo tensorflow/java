@@ -56,7 +56,6 @@ public class Metrics {
         predictions.type());
   }
 
-
   /**
    * Computes how often integer targets are in the top K predictions.
    *
@@ -104,5 +103,4 @@ public class Metrics {
         tf.nn.inTopK(castPredictions, CastHelper.cast(tf, tLabels, TInt32.class), tf.constant(k)),
         predictions.type());
   }
-
 }
