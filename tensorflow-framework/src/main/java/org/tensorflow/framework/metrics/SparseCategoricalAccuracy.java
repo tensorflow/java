@@ -63,7 +63,6 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * 0.3
  * </pre>
  *
- *
  * @param <T> The data type for the metric result
  */
 public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>

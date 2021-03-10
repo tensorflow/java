@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
-import org.tensorflow.Session;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
@@ -255,7 +254,7 @@ public class MetricsHelper {
                   s -> {
                     Long size = dict.get(s);
                     if (size == null) {
-                      size = symbol.getOperand().asOutput().shape().size((int) ll.get());
+                      size = symbol.getOperand().shape().size((int) ll.get());
                       dict.put(s, size);
                     }
                     Op assertion =
@@ -274,7 +273,6 @@ public class MetricsHelper {
 
     return updateOperations;
   }
-
 
   /**
    * Returns an op to update the given confusion matrix variables.
@@ -405,7 +403,7 @@ public class MetricsHelper {
       throw new IllegalArgumentException(
           String.format(
               "Shapes %s and %s are incompatible)",
-              tPredictions.shape().toString(), tLabels.asOutput().shape().toString()));
+              tPredictions.shape().toString(), tLabels.shape().toString()));
 
     if (topK != null) {
       tPredictions = filterTopK(tf, tPredictions, topK);
@@ -417,8 +415,7 @@ public class MetricsHelper {
     }
     org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(tPredictions);
 
-    // number of examples
-    Operand<TInt32> numPredictions =
+    Operand<TInt32> numExamples =
         tf.reshape(tf.shape.size(tPredictions, tf.constant(0)), tf.constant(Shape.scalar()));
 
     // number of labels (or predictions) per example
@@ -427,7 +424,7 @@ public class MetricsHelper {
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
             tf.constant(1),
             tf.reduceProd(
-                    // take all but the first dimension
+                // take all but the first dimension
                 tf.shape.takeLast(
                     predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
                 tf.constant(0)));
@@ -479,12 +476,12 @@ public class MetricsHelper {
 
     if (multiLabel) {
       threshPretileShape = Arrays.asList(numThresholds, tf.constant(1), tf.constant(-1));
-      threshTiles = Arrays.asList(tf.constant(1), numPredictions, threshLabelTile);
+      threshTiles = Arrays.asList(tf.constant(1), numExamples, threshLabelTile);
       dataTiles = Arrays.asList(numThresholds, tf.constant(1), tf.constant(1));
     } else {
       threshPretileShape =
           Arrays.asList(tf.reshape(numThresholds, tf.constant(Shape.scalar())), tf.constant(-1));
-      Operand<TInt32> mul = tf.math.mul(numPredictions, numLabels);
+      Operand<TInt32> mul = tf.math.mul(numExamples, numLabels);
       threshTiles = Arrays.asList(tf.constant(1), mul);
       dataTiles = Arrays.asList(numThresholds, tf.constant(1));
     }
@@ -497,11 +494,12 @@ public class MetricsHelper {
     //                      else (T, ND)
     Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
 
-    Operand<TInt32> stackedTiles = tf.stack(dataTiles);
 
     // if multilabel, then shape (T, N, D0)
     //                      else (T, ND)
-    Operand<T> predsTiled = tf.tile(predictionsExtraDim, stackedTiles);
+    Operand<TInt32> dataTilesShape = tf.stack(dataTiles);
+    Operand<T> predsTiled = tf.tile(predictionsExtraDim, dataTilesShape);
+
 
     // Compare predictions and threshold.
     Operand<TBool> predIsPos = tf.math.greater(predsTiled, threshTiled);
@@ -509,9 +507,8 @@ public class MetricsHelper {
     Operand<TBool> labelIsPos = tf.tile(labelsExtraDim, tf.stack(dataTiles));
     Operand<T> weightsTiled;
     if (tSampleWeight != null) {
-      tSampleWeight =
-          tf.broadcastTo(cast(tf, tSampleWeight, predictions.type()), tf.shape(tPredictions));
-      weightsTiled = tf.tile(tf.reshape(tSampleWeight, tf.stack(threshTiles)), tf.stack(dataTiles));
+      tSampleWeight = tf.broadcastTo(tSampleWeight, tf.shape(tPredictions));
+      weightsTiled = tf.tile(tf.reshape(tSampleWeight, threshTilesShape), dataTilesShape);
     } else {
       weightsTiled = null;
     }
@@ -571,7 +568,6 @@ public class MetricsHelper {
 
     return controlOps;
   }
-
 
   /**
    * Creates an Operand that adds the values by taking the logical and of labels and predictions to
