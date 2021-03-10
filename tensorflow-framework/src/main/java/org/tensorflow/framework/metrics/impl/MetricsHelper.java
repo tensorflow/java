@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
-import org.tensorflow.Session;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
@@ -275,7 +274,6 @@ public class MetricsHelper {
     return updateOperations;
   }
 
-
   /**
    * Returns an op to update the given confusion matrix variables.
    *
@@ -309,8 +307,8 @@ public class MetricsHelper {
    *     topK is set)
    * @param topK Optional, indicates that the positive labels should be limited to the top k
    *     predictions, may be null.
-   * @param classIndex Optional, limits the prediction and labels to the specified class.
-   *                The classIndex is and integer representing a specific classification class's input data..
+   * @param classIndex Optional, limits the prediction and labels to the specified class. The
+   *     classIndex is and integer representing a specific classification class's input data..
    * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
    *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
    *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
@@ -413,7 +411,7 @@ public class MetricsHelper {
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
             tf.constant(1),
             tf.reduceProd(
-                    // take all but the first dimension
+                // take all but the first dimension
                 tf.shape.takeLast(
                     predShape, tf.math.sub(tf.shape.numDimensions(predShape), tf.constant(1))),
                 tf.constant(0)));
@@ -458,8 +456,7 @@ public class MetricsHelper {
     Operand<TBool> labelIsPos = tf.tile(labelsExtraDim, tf.stack(dataTiles));
     Operand<T> weightsTiled;
     if (tSampleWeight != null) {
-      tSampleWeight =
-          tf.broadcastTo(tSampleWeight, tf.shape(tPredictions));
+      tSampleWeight = tf.broadcastTo(tSampleWeight, tf.shape(tPredictions));
       weightsTiled = tf.tile(tf.reshape(tSampleWeight, threshTilesShape), dataTilesShape);
     } else {
       weightsTiled = null;
@@ -520,7 +517,6 @@ public class MetricsHelper {
 
     return controlOps;
   }
-
 
   /**
    * Creates an Operand that adds the values by taking the logical and of labels and predictions to
