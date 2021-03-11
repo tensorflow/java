@@ -22,15 +22,31 @@ import org.tensorflow.framework.utils.SparseTensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+
+import org.tensorflow.op.core.Assign;
+import org.tensorflow.op.core.OneHot;
+import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.Stack;
-import org.tensorflow.op.core.*;
+import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.nn.TopK;
-import org.tensorflow.types.*;
+
+
+import org.tensorflow.types.TBool;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
@@ -81,7 +97,7 @@ public class MetricsHelper {
         && !valuesShapeStatic.hasUnknownDimension()) {
       if (weightsRankStatic == 0) {
         return tf.withSubScope("staticScalarCheckSuccess")
-            .withControlDependencies(Collections.EMPTY_LIST)
+            .withControlDependencies(java.util.Collections.EMPTY_LIST)
             .noOp();
       }
       if (weightsRankStatic != valuesRankStatic) {
@@ -793,7 +809,7 @@ public class MetricsHelper {
     Ops tfc = tf.withSubScope("confusionMatrixLabels").withControlDependencies(labelControls);
     tLabels = tfc.identity(tLabels);
 
-    tfc = tf.withSubScope("confusionMatrixPredicitons").withControlDependencies(predictionControls);
+    tfc = tf.withSubScope("confusionMatrixPredictions").withControlDependencies(predictionControls);
     tPredictions = tfc.identity(tPredictions);
 
     Operand<TInt64> shape = tf.stack(Arrays.asList(numClasses, numClasses));
@@ -802,6 +818,7 @@ public class MetricsHelper {
         weights == null ? cast(tf, tf.onesLike(tPredictions), type) : cast(tf, weights, type);
     SparseTensor<T> cmSparse = new SparseTensor<>(indices, values, shape);
     Operand<T> zeroMatrix = tf.zeros(shape, type);
+
 
     return tf.sparse.sparseTensorDenseAdd(
         cmSparse.getIndices(), cmSparse.getValues(), cmSparse.getDenseShape(), zeroMatrix);
