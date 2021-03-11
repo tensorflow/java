@@ -15,12 +15,13 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.utils.CastHelper;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Helper class with built-in metrics functions. */
 public class Metrics {
@@ -49,8 +50,8 @@ public class Metrics {
    */
   public static <T extends TNumber> Operand<T> topKCategoricalAccuracy(
       Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, long k) {
-    Operand<TFloat32> fPredictions = CastHelper.cast(tf, predictions, TFloat32.class);
-    return CastHelper.cast(
+    Operand<TFloat32> fPredictions = cast(tf, predictions, TFloat32.class);
+    return cast(
         tf,
         tf.nn.inTopK(fPredictions, tf.math.argMax(labels, tf.constant(-1)), tf.constant(k)),
         predictions.type());
@@ -81,15 +82,13 @@ public class Metrics {
   @SuppressWarnings("unchecked")
   public static <T extends TNumber, U extends TNumber> Operand<T> sparseTopKCategoricalAccuracy(
       Ops tf, Operand<U> labels, Operand<T> predictions, int k) {
-    Operand<T> tLabels;
-    if (labels.type() != predictions.type())
-      tLabels = CastHelper.cast(tf, labels, predictions.type());
-    else tLabels = (Operand<T>) labels;
+    Operand<T> tLabels = cast(tf, labels, predictions.type());
+
 
     int predictionsRank = predictions.shape().numDimensions();
     int labelsRank = tLabels.shape().numDimensions();
 
-    Operand<TFloat32> castPredictions = CastHelper.cast(tf, predictions, TFloat32.class);
+    Operand<TFloat32> castPredictions = cast(tf, predictions, TFloat32.class);
     if (predictionsRank != Shape.UNKNOWN_SIZE && labelsRank != Shape.UNKNOWN_SIZE) {
       if (predictionsRank > 2) {
         castPredictions = tf.shape.reduceDims(castPredictions, tf.constant(1));
@@ -98,9 +97,9 @@ public class Metrics {
         tLabels = tf.shape.flatten(tLabels);
       }
     }
-    return CastHelper.cast(
+    return cast(
         tf,
-        tf.nn.inTopK(castPredictions, CastHelper.cast(tf, tLabels, TInt32.class), tf.constant(k)),
+        tf.nn.inTopK(castPredictions, cast(tf, tLabels, TInt32.class), tf.constant(k)),
         predictions.type());
   }
 }
