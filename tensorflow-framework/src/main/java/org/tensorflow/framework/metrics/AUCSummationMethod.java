@@ -15,18 +15,18 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 /**
- * Specifies the Riemann summation method used. {@link #INTERPOLATION} (default) applies mid-point
- * summation scheme for ROC. For PR-AUC, interpolates (true/false) positives but not the ratio that
- * is precision (see Davis &amp; Goadrich 2006 for details); {@link #MINORING} applies left
- * summation for increasing intervals and right summation for decreasing intervals; {@link
- * #MAJORING} does the opposite.
+ * Specifies the Riemann summation method used.
  *
  * @see <a href="https://www.biostat.wisc.edu/~page/rocpr.pdf">Davis &amp; Goadrich. 2006</a>
  * @see <a href="https://en.wikipedia.org/wiki/Riemann_sum">Riemann summation method</a>
  */
 public enum AUCSummationMethod {
+  /** Apply mid-point summation scheme for {@link AUCCurve#ROC}. For {@link AUCCurve#PR}, interpolates (true/false) positives but not the ratio that
+   * is precision */
   INTERPOLATION,
+  /** Apply right summation for increasing intervals and left summation for decreasing intervals */
   MAJORING,
+  /** Apply left summation for increasing intervals and right summation for decreasing intervals */
   MINORING;
 
   /**
