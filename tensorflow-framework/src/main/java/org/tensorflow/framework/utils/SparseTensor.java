@@ -15,14 +15,19 @@ limitations under the License.
 package org.tensorflow.framework.utils;
 
 import org.tensorflow.Operand;
+import org.tensorflow.Tensor;
+import org.tensorflow.op.SparseOps;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * This is a helper class that represents a sparse tensor who's attributes may be passed to
- * {@link org.tensorflow.op.Ops#sparse} methods.
+ * This is a helper class that represents a sparse tensor who's attributes may be passed to {@link
+ * SparseOps} methods.
  *
- * @param <T> the type of the SparseTensor
+ * <p>This class does <em>not inherit from {@link Tensor}</em>, but is merely a place to accumulate the
+ * properties that are needed for the {@link SparseOps} methods.
+ *
+ * @param <T> the type of the SparseTensor's values.
  */
 public class SparseTensor<T extends TType> {
     private final Operand<TInt64> indices;
