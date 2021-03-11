@@ -80,6 +80,7 @@ jobs:
           echo Removing downloaded archives and unused libraries to avoid running out of disk space
           rm -f *.rpm *.tgz *.txz *.tar.*
           rm -f $(find /usr/local/cuda/ -name '*.a' -and -not -name libcudart_static.a -and -not -name libcudadevrt.a)
+          rm -f /usr/local/cuda/doc* /usr/local/cuda/libnvvp* /usr/local/cuda/nsight* /usr/local/cuda/samples*
           fi
       - name: Checkout repository
         uses: actions/checkout@v1
