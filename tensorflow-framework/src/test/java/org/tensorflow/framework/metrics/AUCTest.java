@@ -23,7 +23,9 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class AUCTest {
@@ -199,7 +201,7 @@ public class AUCTest {
       session.run(update);
       Operand<TFloat32> result = instance.result();
 
-      float expectedResult = ( 0.5714285f + 0f * 0f);
+      float expectedResult = (0.5714285f + 0f * 0f);
       session.evaluate(expectedResult, result);
     }
   }

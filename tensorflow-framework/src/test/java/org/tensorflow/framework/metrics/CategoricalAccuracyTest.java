@@ -31,8 +31,7 @@ public class CategoricalAccuracyTest {
   public void testCorrect() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalAccuracy<TFloat32> instance =
-          new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
+      CategoricalAccuracy<TFloat32> instance = new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {
         0, 0, 1,
@@ -60,8 +59,7 @@ public class CategoricalAccuracyTest {
   public void testSampleWeight() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalAccuracy<TFloat32> instance =
-          new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
+      CategoricalAccuracy<TFloat32> instance = new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {
         0, 0, 1,
@@ -92,8 +90,7 @@ public class CategoricalAccuracyTest {
   public void testVariableState() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      CategoricalAccuracy<TFloat32> instance =
-          new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
+      CategoricalAccuracy<TFloat32> instance = new CategoricalAccuracy<>(tf, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {
         0, 0, 1,
