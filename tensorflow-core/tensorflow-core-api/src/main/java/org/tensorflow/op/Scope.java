@@ -117,7 +117,9 @@ public final class Scope {
    *
    * <p>Names must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
    *
-   * @param opName name for an operator in the returned scope
+   * <p>{@code opName} may be null, which unsets the name.
+   *
+   * @param opName name for an operator in the returned scope.  May be null to unset name.
    * @return a new Scope that uses opName for operations.
    * @throws IllegalArgumentException if the name is invalid
    */

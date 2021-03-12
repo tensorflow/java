@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -57,6 +59,7 @@ import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
+import org.tensorflow.variable.Variable;
 
 
 /**
@@ -477,6 +480,18 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
 
   private final List<Op> initializers = new ArrayList<>();
+
+  private final Map<String, Variable<?>> variables = new LinkedHashMap<>();
+
+  @Override
+  public void registerVariable(Variable<?> variable) {
+    variables.put(variable.getName(), variable);
+  }
+
+  @Override
+  public Map<String, Variable<?>> variables() {
+    return Collections.unmodifiableMap(variables);
+  }
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not

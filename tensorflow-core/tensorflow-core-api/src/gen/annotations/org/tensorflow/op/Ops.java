@@ -278,7 +278,6 @@ import org.tensorflow.op.core.Unstack;
 import org.tensorflow.op.core.Unstage;
 import org.tensorflow.op.core.VarHandleOp;
 import org.tensorflow.op.core.VarIsInitializedOp;
-import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.XlaSpmdFullToShardShape;
@@ -294,6 +293,7 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
+import org.tensorflow.variable.Variable;
 
 /**
  * An API for building operations as {@link Op Op}s
@@ -392,6 +392,43 @@ public final class Ops {
     signal = new SignalOps(this);
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);
+  }
+
+  /**
+   * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
+   *  support for assignment and initialization that works in both eager and graph modes.
+   *  <p>
+   *  Initializes the variable with the provided value, and uses it to determin the variables shape and data type.
+   *  <p>
+   *  The name can be set using {@link org.tensorflow.op.Ops#withName(String)} just like any other op.
+   *
+   * @param scope
+   * @param initialValue the initial value of the variable.
+   * @param options carries optional attributes values
+   * @return a new {@link Variable} instance.
+   * @see Variable
+   */
+  public <T extends TType> Variable<T> Variable(Operand<T> initialValue,
+      Variable.Options... options) {
+    return Variable.create(scope, initialValue, options);
+  }
+
+  /**
+   * Create a new {@link Variable} object, representing a mutable tensor value with constant shape and data type, with
+   *  support for assignment and initialization that works in both eager and graph modes.
+   *  <p>
+   *  The name can be set using {@link org.tensorflow.op.Ops#withName(String)} just like any other op.
+   *
+   * @param scope
+   * @param shape the static shape of the variable.
+   * @param dataType the data type of the variable.
+   * @param options carries optional attributes values
+   * @return a new {@link Variable} instance.
+   * @see Variable
+   */
+  public <T extends TType> Variable<T> Variable(Shape shape, Class<T> dataType,
+      Variable.Options... options) {
+    return Variable.create(scope, shape, dataType, options);
   }
 
   /**
@@ -7947,8 +7984,11 @@ public final class Ops {
    * @param init The op to use to initialise this variable.
    * @param options carries optional attributes values
    * @return a new instance of Variable
+   * @deprecated Use {@link org.tensorflow.op.Ops#Variable(Operand)} instead for a tf.Variable like API.
    */
-  public <T extends TType> Variable<T> variable(Operand<T> init, Variable.Options... options) {
+  @Deprecated
+  public <T extends TType> org.tensorflow.op.core.Variable<T> variable(Operand<T> init,
+      org.tensorflow.op.core.Variable.Options... options) {
     return Helpers.createVariableWithInit(scope, init, options);
   }
 
@@ -7964,10 +8004,12 @@ public final class Ops {
    * @param dtype The type of elements in the variable tensor.
    * @param options carries optional attributes values
    * @return a new instance of Variable
+   * @deprecated Use {@link org.tensorflow.op.Ops#Variable(Shape, DataType)} instead for a tf.Variable like API.
    */
-  public <T extends TType> Variable<T> variable(Shape shape, Class<T> dtype,
-      Variable.Options... options) {
-    return Variable.create(scope, shape, dtype, options);
+  @Deprecated
+  public <T extends TType> org.tensorflow.op.core.Variable<T> variable(Shape shape, Class<T> dtype,
+      org.tensorflow.op.core.Variable.Options... options) {
+    return org.tensorflow.op.core.Variable.create(scope, shape, dtype, options);
   }
 
   /**

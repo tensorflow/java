@@ -79,8 +79,10 @@ public final class Variable<T extends TType> extends RawOp implements Operand<T>
    * @param dtype The type of elements in the variable tensor.
    * @param options carries optional attributes values
    * @return a new instance of Variable
+   * @deprecated Use {@link org.tensorflow.op.Ops#Variable(Shape, DataType)} instead for a tf.Variable like API.
    */
   @Endpoint(describeByClass = true)
+  @Deprecated
   public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VariableV2", scope.makeOpName("Variable"));
     opBuilder = scope.apply(opBuilder);

@@ -42,8 +42,10 @@ public abstract class Helpers {
      * @param init The op to use to initialise this variable.
      * @param options carries optional attributes values
      * @return a new instance of Variable
+     * @deprecated Use {@link org.tensorflow.op.Ops#Variable(Operand)} instead for a tf.Variable like API.
      */
     @Endpoint(name = "variable")
+    @Deprecated
     public static <T extends TType> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
         Variable<T> newVar = Variable.create(scope, init.shape(), init.type(), options);
         Assign<T> assignOp = Assign.create(scope, newVar, init);
