@@ -260,6 +260,7 @@
               </buildCommand>
               <environmentVariables>
                 <EXTENSION>${javacpp.platform.extension}</EXTENSION>
+                <BUILD_EXTRA_FLAGS>${native.build.flags}</BUILD_EXTRA_FLAGS>
               </environmentVariables>
               <workingDirectory>${project.basedir}</workingDirectory>
             </configuration>
