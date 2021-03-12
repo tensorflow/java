@@ -28,6 +28,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Gradients;
+import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
@@ -45,12 +46,12 @@ public class VariableTest {
       Variable<TFloat32> variable = tf.Variable(Shape.of(10, 10), TFloat32.class);
 
       assertFalse(variable.isInitialized());
-      assertFalse(variable.isValueInitialized().asTensor().getBoolean(0));
+      assertFalse(variable.isValueInitialized().asTensor().getBoolean());
 
       variable.initialize(tf.ones(tf.array(10, 10), TFloat32.class));
 
       assertTrue(variable.isInitialized());
-      assertTrue(variable.isValueInitialized().asTensor().getBoolean(0));
+      assertTrue(variable.isValueInitialized().asTensor().getBoolean());
 
       assertEquals(1, variable.value().asTensor().getFloat(0, 0));
 
@@ -93,11 +94,11 @@ public class VariableTest {
 
       try (Session session = new Session(graph)) {
 
-        assertFalse(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
+        assertFalse(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean());
 
-        session.run(tf.init());
+        session.runInit();
 
-        assertTrue(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean(0));
+        assertTrue(((TBool) session.runner().fetch(variable.isValueInitialized()).run().get(0)).getBoolean());
 
         // test control deps (in-run assign)
 
@@ -138,7 +139,8 @@ public class VariableTest {
         Session sess = new Session(g)) {
       Ops tf = Ops.create(g);
 
-      Variable<TFloat32> variable = tf.Variable(tf.placeholder(TFloat32.class));
+      Placeholder<TFloat32> initialValue = tf.placeholder(TFloat32.class);
+      Variable<TFloat32> variable = tf.Variable(initialValue);
 
       Output<TFloat32> y0 = tf.math.square(variable.value()).y();
       Output<TFloat32> y1 = tf.math.square(tf.math.square(variable.value())).y();
@@ -151,12 +153,14 @@ public class VariableTest {
       assertNotNull(grads.dy());
       assertEquals(1, grads.dy().size());
 
-      try (TFloat32 c = TFloat32.scalarOf(3.0f);
-          AutoCloseableList<Tensor> outputs =
-              new AutoCloseableList<>(sess.runner().feed(x, c).fetch(grads.dy(0)).run())) {
+      try (TFloat32 c = TFloat32.scalarOf(3.0f)) {
+        sess.runner().addTarget(tf.init()).feed(initialValue, c).run();
+        try (AutoCloseableList<Tensor> outputs =
+            new AutoCloseableList<>(sess.runner().feed(initialValue, c).fetch(grads.dy(0)).run())) {
 
-        //TODO expected value may be wrong, check once C++ gradient exists
-        assertEquals(114.0f, ((TFloat32)outputs.get(0)).getFloat(), 0.0f);
+          //TODO expected value may be wrong, check once C++ gradient exists
+          assertEquals(114.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
+        }
       }
     }
   }

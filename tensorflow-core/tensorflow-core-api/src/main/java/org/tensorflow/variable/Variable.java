@@ -26,6 +26,7 @@ import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Operands;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -36,6 +37,7 @@ import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.IsVariableInitialized;
 import org.tensorflow.op.core.ReadVariableOp;
 import org.tensorflow.op.core.VarHandleOp;
+import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
@@ -65,7 +67,7 @@ public class Variable<T extends TType> implements Operand<T> {
 
   private final VarHandleOp handle;
 
-  private IsVariableInitialized isInitializedOp = null;
+  private VarIsInitializedOp isInitializedOp = null;
   private Op initializationOp = null;
   private ReadVariableOp<T> cachedRead = null;
   private Op lastAssign = null;
@@ -192,7 +194,7 @@ public class Variable<T extends TType> implements Operand<T> {
       throw new IllegalStateException("Variable has not been initialized, can not get.");
     }
     ReadVariableOp<T> ret = cachedRead;
-    if (ret == null) {
+    if (ret == null || scope.env().isEager()) {
       if (lastAssign != null) {
         scope = scope.withControlDependencies(Collections.singletonList(lastAssign));
       }
@@ -233,8 +235,7 @@ public class Variable<T extends TType> implements Operand<T> {
     initializationOp = AssignVariableOp.create(initialScope, handle, value);
 
     //TODO this if will be unnecessary after the init PR
-    if(initialScope.env().isGraph())
-      Init.add(initialScope, initializationOp);
+    Init.add(initialScope, initializationOp);
 
     hasInitialized = true;
     cachedRead = null;
@@ -259,8 +260,8 @@ public class Variable<T extends TType> implements Operand<T> {
      * Get whether the graph value is initialized.  In eager mode, this will be the same as {@link #isInitialized()}.
      */
   public Operand<TBool> isValueInitialized() {
-    if (isInitializedOp == null) {
-      isInitializedOp = IsVariableInitialized.create(initialScope, handle);
+    if (isInitializedOp == null || initializationOp.env().isEager()) {
+      isInitializedOp = VarIsInitializedOp.create(initialScope, handle);
     }
 
     return isInitializedOp;

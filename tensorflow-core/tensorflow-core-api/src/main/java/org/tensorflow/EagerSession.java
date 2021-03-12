@@ -34,7 +34,6 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
-import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.variable.Variable;
 
@@ -294,7 +293,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   @Override
   public boolean isOpEnabled(String opType) {
     switch (opType) {
-      case Variable.OP_NAME:
+      case org.tensorflow.op.core.Variable.OP_NAME:
       case Placeholder.OP_NAME:
       case Assign.OP_NAME:
         return false;
