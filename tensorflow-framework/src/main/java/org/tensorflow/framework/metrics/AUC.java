@@ -26,7 +26,12 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -548,7 +553,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. This
-   *     includes the bracketing 0 and 1 thresholds, so the value must be &GE; 2.
+   *     includes the bracketing 0 and 1 thresholds, so the value must be &ge; 2.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param summationMethod Specifies the Riemann summation method used
