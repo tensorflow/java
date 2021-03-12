@@ -31,7 +31,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.nn.TopK;
 
-
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -39,7 +38,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -313,25 +311,23 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param variablesToUpdate Map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding variables to update as values. If <code>multiLabel</code> is
-   *     false then all shapes are (T), where T is the number of thresholds. If
-   *     <code>multiLabel</code> is true then all shapes are (T, C0), where C0 is the number
-   *     of classes.
+   *     corresponding variables to update as values. If <code>multiLabel</code> is false then all
+   *     shapes are (T), where T is the number of thresholds. If <code>multiLabel</code> is true
+   *     then all shapes are (T, C0), where C0 is the number of classes.
    * @param varInitializers Map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding initializer Operands to initializer the corresponding variables from
    *     variablesToUpdate.
-   * @param labels the labels, will be cast to {@link TBool}
-   *     shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more
-   *     class dimensions, and L1 is a potential extra dimension of size 1 that
-   *     would be squeezed. If <code>multiLabel</code> or if
-   *     <code>labelWeights</code> <code>!= null</code>, then Cx must be a single dimension.
+   * @param labels the labels, will be cast to {@link TBool} shape (N, Cx, L1?) where N is the
+   *     number of examples, Cx is zero or more class dimensions, and L1 is a potential extra
+   *     dimension of size 1 that would be squeezed. If <code>multiLabel</code> or if <code>
+   *     labelWeights</code> <code>!= null</code>, then Cx must be a single dimension.
    * @param predictions the predictions shape (N, Cx, P1?).
    * @param thresholds thresholds in `the range <code>[0, 1]</code>, or {@link #NEG_INF} (used when
    *     topK is set)
    * @param topK Optional, used only if <code>multiLabel</code>, indicates that only the top k
    *     predictions should be considered. May be null.
-   * @param classIndex Optional, limits the prediction and labels to the specified class.
-   *     The classIndex is an integer index into the first dimension of Cx.
+   * @param classIndex Optional, limits the prediction and labels to the specified class. The
+   *     classIndex is an integer index into the first dimension of Cx.
    * @param sampleWeight Optional <code>Tensor</code> whose rank is either 0, or the same rank as
    *     <code>labels</code>, and must be broadcast to <code>labels</code> (i.e., all dimensions
    *     must be either <code>1</code>, or the same as the corresponding <code>labels</code>
@@ -510,12 +506,10 @@ public class MetricsHelper {
     //                      else (T, ND)
     Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
 
-
     // if multilabel, then shape (T, N, D0)
     //                      else (T, ND)
     Operand<TInt32> dataTilesShape = tf.stack(dataTiles);
     Operand<T> predsTiled = tf.tile(predictionsExtraDim, dataTilesShape);
-
 
     // Compare predictions and threshold.
     Operand<TBool> predIsPos = tf.math.greater(predsTiled, threshTiled);
@@ -818,7 +812,6 @@ public class MetricsHelper {
         weights == null ? cast(tf, tf.onesLike(tPredictions), type) : cast(tf, weights, type);
     SparseTensor<T> cmSparse = new SparseTensor<>(indices, values, shape);
     Operand<T> zeroMatrix = tf.zeros(shape, type);
-
 
     return tf.sparse.sparseTensorDenseAdd(
         cmSparse.getIndices(), cmSparse.getValues(), cmSparse.getDenseShape(), zeroMatrix);
