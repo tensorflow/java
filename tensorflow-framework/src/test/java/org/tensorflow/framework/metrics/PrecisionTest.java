@@ -16,7 +16,6 @@ package org.tensorflow.framework.metrics;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.metrics.impl.MetricsHelper;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -203,8 +202,7 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 3
-      Precision<TFloat32> instance =
-          new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
+      Precision<TFloat32> instance = new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.5f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
@@ -220,8 +218,7 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 3
-      Precision<TFloat32> instance =
-          new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
+      Precision<TFloat32> instance = new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[] {0.2f, 0.1f, 0.4f, 0f, 0.2f});
@@ -249,8 +246,7 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set classId to 2
-      Precision<TFloat32> instance =
-          new Precision<>(tf, null, null, 2, 1001L, TFloat32.class);
+      Precision<TFloat32> instance = new Precision<>(tf, null, null, 2, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.6f, 0f, 0.2f}});
@@ -290,8 +286,7 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK and classId to 2
-      Precision<TFloat32> instance =
-          new Precision<>(tf, null, 2, 2, 1001L, TFloat32.class);
+      Precision<TFloat32> instance = new Precision<>(tf, null, 2, 2, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.6f, 0.3f, 0f, 0.2f}});
@@ -321,8 +316,7 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 2
-      Precision<TFloat32> instance =
-          new Precision<>(tf, 0.7f, 2, null, 1001L, TFloat32.class);
+      Precision<TFloat32> instance = new Precision<>(tf, 0.7f, 2, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});

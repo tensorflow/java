@@ -155,8 +155,7 @@ public class BinaryAccuracyTest {
   public void testBinaryAccuracyAThreshold() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance =
-          new BinaryAccuracy<>(tf, 0.7f, 1001L, TFloat32.class);
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 0.7f, 1001L, TFloat32.class);
       session.run(instance.resetStates());
       int[] trueArray = {1, 1, 0, 0};
       float[] predArray = {0.9f, 0.6f, 0.4f, 0.8f};

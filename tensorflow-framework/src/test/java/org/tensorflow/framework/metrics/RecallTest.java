@@ -150,8 +150,7 @@ public class RecallTest {
   public void testUnweightedWithThreshold() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, new float[] {0.5f, 0.7f}, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, new float[] {0.5f, 0.7f}, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{1, 0, 0.6f, 0}});
@@ -169,8 +168,7 @@ public class RecallTest {
   public void testWeightedWithThreshold() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> labels = tf.constant(new float[][] {{0, 1}, {1, 0}});
@@ -192,8 +190,7 @@ public class RecallTest {
   public void testMultipleUpdates() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> labels = tf.constant(new float[][] {{0, 1}, {1, 0}});
@@ -215,8 +212,7 @@ public class RecallTest {
   public void testUnweightedTopK() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, null, null, 3, null, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, null, null, 3, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> labels = tf.constant(new float[][] {{0f, 1f, 1f, 0f, 0f}});
@@ -233,8 +229,7 @@ public class RecallTest {
   public void testWeightedTopK() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, null, null, 3, null, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, null, null, 3, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> labels = tf.constant(new float[][] {{0, 1, 1, 0, 1}});
@@ -262,8 +257,7 @@ public class RecallTest {
   public void testUnweightedClassId() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, null, null, null, 2, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, null, null, null, 2, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.6f, 0f, 0.2f}});
@@ -296,8 +290,7 @@ public class RecallTest {
   public void testUnweightedTopKAndClassId() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, null, null, 2, 2, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, null, null, 2, 2, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.6f, 0.3f, 0, 0.2f}});
@@ -324,8 +317,7 @@ public class RecallTest {
   public void testUnweightedTopKAndThreshold() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Recall<TFloat32> instance =
-          new Recall<>(tf, null, 0.7f, 2, null, 1001L, TFloat32.class);
+      Recall<TFloat32> instance = new Recall<>(tf, null, 0.7f, 2, null, 1001L, TFloat32.class);
       session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});
