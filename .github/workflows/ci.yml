@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - staging
       - r[0-9]+.*
   pull_request:
     branches:
