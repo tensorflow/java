@@ -33,6 +33,7 @@
   <modules>
     <module>tensorflow-core-generator</module>
     <module>tensorflow-core-api</module>
+    <module>tensorflow-core-op-generator</module>
   </modules>
 
   <properties>
