@@ -463,10 +463,10 @@ class ClassGenerator {
 
     }
 
-    body.addStatement("return new $L(opBuilder.build())", className);
+    body.addStatement("return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
 
     factoryBuilder.addCode(body.build());
-    factoryBuilder.addJavadoc("@return a new instance of $L\n", className);
+    factoryBuilder.addJavadoc("\n@return a new instance of $L", className);
     factoryBuilder.addTypeVariables(typeVars);
 
     MethodSpec method = factoryBuilder.build();
@@ -514,7 +514,7 @@ class ClassGenerator {
 
     body.add(");");
 
-    factoryBuilder.addJavadoc("@return a new instance of $L, with default output types\n", className);
+    factoryBuilder.addJavadoc("\n@return a new instance of $L, with default output types", className);
     factoryBuilder.addCode(body.build());
     factoryBuilder.addTypeVariables(typeVars);
 

@@ -198,7 +198,7 @@ public class TypeResolver {
       if(isInput) {
         reachedFromInput.add(arg.getNumberAttr());
       }
-      known.put(arg.getNumberAttr(), new ResolvedType(TypeName.INT));
+      known.put(arg.getNumberAttr(), new ResolvedType(TypeName.LONG));
     }
 
     return type;
