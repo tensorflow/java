@@ -176,7 +176,6 @@ public class OpGenerator {
               cls,
               entry.getKey(),
               entry.getValue(),
-              new TypeResolver(entry.getKey()),
               basePackage,
               basePackage + "." + pack,
               pack,

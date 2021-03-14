@@ -16,9 +16,12 @@
  */
 package org.tensorflow;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -51,8 +54,51 @@ public class TypeResolver {
   private Map<String, ResolvedType> known = new HashMap<>();
   private Set<String> reachedFromInput = new HashSet<>();
 
+  private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
+
   public TypeResolver(OpDef op) {
     this.op = op;
+    calculateArgTypes();
+  }
+
+  private void calculateArgTypes() {
+    Map<String, Integer> genericCounts = new HashMap<>();
+
+    ArrayList<ArgDef> args = new ArrayList<>(op.getInputArgCount() + op.getOutputArgCount());
+    Set<ArgDef> outputs = new HashSet<>(op.getOutputArgList());
+    args.addAll(op.getInputArgList());
+    args.addAll(op.getOutputArgList());
+
+    for (ArgDef arg : args) {
+      ResolvedType type = calculateTypeOf(arg);
+      argTypes.put(arg, type);
+      if (type.javaType instanceof TypeVariableName) {
+        String name = ((TypeVariableName) type.javaType).name;
+
+        int incr = outputs.contains(arg) ? 2 : 1;
+
+        genericCounts.put(name, genericCounts.getOrDefault(name, 0) + incr);
+      }
+    }
+
+    for (Map.Entry<ArgDef, ResolvedType> entry : argTypes.entrySet()) {
+      if (entry.getValue().javaType instanceof TypeVariableName) {
+        TypeVariableName type = (TypeVariableName) entry.getValue().javaType;
+        if (genericCounts.get(type.name) <= 1 && type.bounds.size() == 1) {
+          entry.setValue(new ResolvedType(WildcardTypeName.subtypeOf(type.bounds.get(0)), entry.getValue().iterable));
+        }
+      }
+      ClassName baseClass;
+      if (outputs.contains(entry.getKey())) {
+        baseClass = ClassName.get(Output.class);
+      } else {
+        baseClass = ClassName.get(Operand.class);
+      }
+
+      entry.setValue(
+          new ResolvedType(ParameterizedTypeName.get(baseClass, entry.getValue().javaType), entry.getValue().iterable));
+    }
+
   }
 
   public boolean partOfInput(String attrName) {
@@ -168,7 +214,12 @@ public class TypeResolver {
     return types;
   }
 
-  public ResolvedType typeOf(ArgDef arg) {
+  public ResolvedType typeOf(ArgDef arg){
+    return argTypes.get(arg);
+  }
+
+  private ResolvedType calculateTypeOf(ArgDef arg) {
+
     boolean isInput = op.getInputArgList().contains(arg);
 
     ResolvedType type = new ResolvedType(WILDCARD);

@@ -75,10 +75,16 @@ public final class ResolvedType {
     this(type, false);
   }
 
+  /**
+   * Returns a copy of this type with the specified {@code iterable} value.
+   */
   public ResolvedType withIterable(boolean iterable) {
     return new ResolvedType(javaType, jniType, iterable);
   }
 
+  /**
+   * Get the unboxed version of {@code javaType} if it is a boxed primitive.
+   */
   public TypeName unboxed() {
     if (javaType.isBoxedPrimitive()) {
       return javaType.unbox();
@@ -87,6 +93,9 @@ public final class ResolvedType {
     }
   }
 
+  /**
+   * Wrap {@code javaType} in an array if this type is iterable.
+   */
   public ResolvedType arrayIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -97,6 +106,9 @@ public final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
+  /**
+   * Wrap {@code javaType} in {@link Iterable} if this type is iterable.
+   */
   public ResolvedType iterableIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -107,6 +119,9 @@ public final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
+  /**
+   * Wrap {@code javaType} in {@link List} if this type is iterable.
+   */
   public ResolvedType listIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -117,10 +132,16 @@ public final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
+  /**
+   * True if wrapping will be done by {@link #classIfGeneric()}
+   */
   public boolean shouldWrapInClass() {
     return javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName;
   }
 
+  /**
+   * If {@code javaType} is a single type variable or a wildcard, wrap it in {@link Class}.
+   */
   public ResolvedType classIfGeneric() {
     TypeName newJType;
     if (javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName) {
@@ -131,6 +152,9 @@ public final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
+  /**
+   * Recursively get all type variable names in {@code javaType}.
+   */
   public Set<TypeVariableName> findGenerics() {
     if (javaType instanceof TypeVariableName) {
       return Collections.singleton((TypeVariableName) javaType);
@@ -142,6 +166,19 @@ public final class ResolvedType {
       return names;
     }
     return Collections.emptySet();
+  }
+
+  /**
+   * Return the type argument if {@code javaType} is {@link Operand} or {@link Output}, or return {@code javaType}.
+   */
+  public TypeName unwrapArg(){
+    if(javaType instanceof ParameterizedTypeName){
+      ParameterizedTypeName pType = (ParameterizedTypeName) javaType;
+      if(pType.rawType.equals(ClassName.get(Operand.class)) || pType.rawType.equals(ClassName.get(Output.class))){
+        return pType.typeArguments.get(0);
+      }
+    }
+    return javaType;
   }
 
   @Override

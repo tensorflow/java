@@ -85,18 +85,16 @@ class ClassGenerator {
   private final List<AttrDef> optionalAttributes = new ArrayList<>();
   private final Set<TypeVariableName> typeParams = new LinkedHashSet<>();
 
-  private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
-
   private final Map<ArgDef, ApiDef.Arg> argApis = new HashMap<>();
   private Map<AttrDef, ApiDef.Attr> attrApis = new HashMap<>();
 
-  ClassGenerator(Builder builder, OpDef op, ApiDef apiDef, TypeResolver resolver,
+  ClassGenerator(Builder builder, OpDef op, ApiDef apiDef,
       String basePackage, String fullPackage, String group, String className, Endpoint endpoint) {
 
     this.builder = builder;
     this.op = op;
     this.apiDef = apiDef;
-    this.resolver = resolver;
+    this.resolver = new TypeResolver(op);
     this.basePackage = basePackage;
     this.fullPackage = fullPackage;
     this.group = group;
@@ -124,48 +122,6 @@ class ClassGenerator {
       ApiDef.Arg api = apiDef.getOutArgList().stream().filter(x -> x.getName().equals(arg.getName())).findFirst().get();
       argApis.put(arg, api);
     }
-
-    calculateTypes();
-  }
-
-  public void calculateTypes() {
-    Map<String, Integer> genericCounts = new HashMap<>();
-
-    ArrayList<ArgDef> args = new ArrayList<>(op.getInputArgCount() + op.getOutputArgCount());
-    Set<ArgDef> outputs = new HashSet<>(op.getOutputArgList());
-    args.addAll(op.getInputArgList());
-    args.addAll(op.getOutputArgList());
-
-    for (ArgDef arg : args) {
-      ResolvedType type = resolver.typeOf(arg);
-      argTypes.put(arg, type);
-      if (type.javaType instanceof TypeVariableName) {
-        String name = ((TypeVariableName) type.javaType).name;
-
-        int incr = outputs.contains(arg) ? 2 : 1;
-
-        genericCounts.put(name, genericCounts.getOrDefault(name, 0) + incr);
-      }
-    }
-
-    for (Map.Entry<ArgDef, ResolvedType> entry : argTypes.entrySet()) {
-      if (entry.getValue().javaType instanceof TypeVariableName) {
-        TypeVariableName type = (TypeVariableName) entry.getValue().javaType;
-        if (genericCounts.get(type.name) <= 1 && type.bounds.size() == 1) {
-          entry.setValue(new ResolvedType(WildcardTypeName.subtypeOf(type.bounds.get(0)), entry.getValue().iterable));
-        }
-      }
-      ClassName baseClass;
-      if (outputs.contains(entry.getKey())) {
-        baseClass = ClassName.get(Output.class);
-      } else {
-        baseClass = ClassName.get(Operand.class);
-      }
-
-      entry.setValue(
-          new ResolvedType(ParameterizedTypeName.get(baseClass, entry.getValue().javaType), entry.getValue().iterable));
-    }
-
   }
 
   public String getJavaName(ArgDef arg) {
@@ -207,8 +163,8 @@ class ClassGenerator {
 
     if (op.getOutputArgCount() == 1) {
       ArgDef output = op.getOutputArg(0);
-      ResolvedType rType = argTypes.get(output);
-      TypeName type = ((ParameterizedTypeName) rType.javaType).typeArguments.get(0);
+      ResolvedType rType = resolver.typeOf(output);
+      TypeName type = rType.unwrapArg();
       boolean iterable = rType.iterable;
       TypeName operandTypeParam =
           type instanceof WildcardTypeName ? TypeName.get(TType.class) : type;
@@ -225,7 +181,7 @@ class ClassGenerator {
 
     Set<String> seenGenerics = new HashSet<>();
     for (ArgDef output : op.getOutputArgList()) {
-      ResolvedType type = argTypes.get(output);
+      ResolvedType type = resolver.typeOf(output);
       for (TypeVariableName typeVar : type.findGenerics()) {
         if (seenGenerics.add(typeVar.name)) {
           typeParams.add(typeVar);
@@ -275,7 +231,7 @@ class ClassGenerator {
     if (op.getOutputArgCount() > 0) {
       for (ArgDef output : op.getOutputArgList()) {
         builder
-            .addField(argTypes.get(output).listIfIterable().javaType, getJavaName(output), Modifier.PRIVATE);
+            .addField(resolver.typeOf(output).listIfIterable().javaType, getJavaName(output), Modifier.PRIVATE);
       }
     }
 
@@ -391,7 +347,7 @@ class ClassGenerator {
 
     for (ArgDef input : op.getInputArgList()) {
       ApiDef.Arg argDef = argApis.get(input);
-      ResolvedType type = argTypes.get(input);
+      ResolvedType type = resolver.typeOf(input);
       String name = getJavaName(input);
 
       ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name)
@@ -540,7 +496,7 @@ class ClassGenerator {
       ApiDef.Arg argDef = argApis.get(output);
       builder.addMethod(MethodSpec.methodBuilder(name)
           .addModifiers(Modifier.PUBLIC)
-          .returns(argTypes.get(output).listIfIterable().javaType)
+          .returns(resolver.typeOf(output).listIfIterable().javaType)
           .addJavadoc("$L", argDef.getDescription())
           .addCode("return $L;", name)
           .build());
@@ -550,7 +506,7 @@ class ClassGenerator {
 
   public void buildInterfaceImpl() {
     ArgDef output = op.getOutputArg(0);
-    TypeName type = ((ParameterizedTypeName) argTypes.get(output).javaType).typeArguments.get(0);
+    TypeName type = resolver.typeOf(output).unwrapArg();
 
     boolean uncheckedCast = type instanceof WildcardTypeName;
     TypeName outputTType = uncheckedCast ? TypeName.get(TType.class) : type;
@@ -596,8 +552,8 @@ class ClassGenerator {
     ctor.addParameter(ClassName.get(Operation.class), "operation");
 
     for (ArgDef output : op.getOutputArgList()) {
-      ResolvedType type = argTypes.get(output);
-      if (type.iterable || type.javaType instanceof WildcardTypeName) {
+      ResolvedType type = resolver.typeOf(output);
+      if (type.iterable || type.unwrapArg() instanceof WildcardTypeName) {
         ctor.addAnnotation(
             AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build());
         break;
@@ -609,14 +565,14 @@ class ClassGenerator {
     if (op.getOutputArgCount() > 0) {
       body.addStatement("int outputIdx = 0");
       for (ArgDef output : op.getOutputArgList()) {
-        ResolvedType type = argTypes.get(output);
+        ResolvedType type = resolver.typeOf(output);
         boolean iterable = type.iterable;
         if (iterable) {
           String lengthVar = getJavaName(output) + "Length";
 
           body.addStatement("int $L = operation.outputListLength($S)", lengthVar, output.getName());
 
-          if (type.javaType instanceof WildcardTypeName) {
+          if (type.unwrapArg() instanceof WildcardTypeName) {
             body.addStatement("$L = $T.asList(operation.outputList(outputIdx, $L))",
                 getJavaName(output),
                 Arrays.class,
