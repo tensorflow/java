@@ -167,10 +167,16 @@ public class OpGenerator {
 
         TypeSpec.Builder cls = TypeSpec.classBuilder(name);
         try {
-          new ClassGenerator(cls, entry.getKey(), entry.getValue(), new TypeResolver(entry.getKey()), basePackage,
+          new ClassGenerator(
+              cls,
+              entry.getKey(),
+              entry.getValue(),
+              new TypeResolver(entry.getKey()),
+              basePackage,
               basePackage + "." + pack,
               pack,
-              name, endpoint).buildClass();
+              name,
+              endpoint).buildClass();
         } catch (Exception e) {
           throw new IllegalStateException("Failed to generate class for op " + entry.getKey().getName(), e);
         }
