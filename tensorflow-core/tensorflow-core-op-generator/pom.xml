@@ -41,6 +41,12 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
+      <version>${project.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>28.0-jre</version>
@@ -49,12 +55,6 @@
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
       <version>1.12.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.tensorflow</groupId>
-      <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
