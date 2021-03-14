@@ -182,7 +182,7 @@ public class OpGenerator {
             .build();
 
         File outputFile = new File(outputDir, basePackage.replace('.', '/') +
-            '/' + pack + '/' + spec.name + ".java");
+            '/' + pack.replace('.', '/') + '/' + spec.name + ".java");
         outputFile.getParentFile().mkdirs();
         try {
           StringBuilder builder = new StringBuilder();
