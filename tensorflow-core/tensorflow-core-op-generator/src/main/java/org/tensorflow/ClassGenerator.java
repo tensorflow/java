@@ -86,7 +86,7 @@ class ClassGenerator {
   private final Set<TypeVariableName> typeParams = new LinkedHashSet<>();
 
   private final Map<ArgDef, ApiDef.Arg> argApis = new HashMap<>();
-  private Map<AttrDef, ApiDef.Attr> attrApis = new HashMap<>();
+  private final Map<AttrDef, ApiDef.Attr> attrApis = new HashMap<>();
 
   ClassGenerator(Builder builder, OpDef op, ApiDef apiDef,
       String basePackage, String fullPackage, String group, String className, Endpoint endpoint) {
