@@ -54,6 +54,7 @@
       <groupId>org.tensorflow</groupId>
       <artifactId>tensorflow-core-platform${javacpp.platform.extension}</artifactId>
       <version>${project.version}</version>
+      <scope>runtime</scope>
     </dependency>
   </dependencies>
 
@@ -66,7 +67,7 @@
           <archive>
             <manifestEntries>
               <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
-              <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
+              <Main-Class>org.tensorflow.op.generator.OpGenerator</Main-Class>
             </manifestEntries>
           </archive>
         </configuration>
