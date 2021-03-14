@@ -191,7 +191,7 @@ public class OpGenerator {
           file.writeTo(builder);
 
           Files.writeString(outputFile.toPath(), builder.toString(), StandardOpenOption.WRITE,
-              StandardOpenOption.CREATE);
+              StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException ioException) {
           throw new IllegalStateException("Failed to write file " + outputFile, ioException);
         }

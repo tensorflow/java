@@ -34,11 +34,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 import org.tensorflow.TypeResolver.ResolvedType;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Operator;
@@ -54,7 +60,9 @@ import org.tensorflow.types.family.TType;
 class ClassGenerator {
 
   public static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
-    return apiDef.getVisibility() != Visibility.SKIP || op.getAttrList().stream().anyMatch(x -> x.getType().contains("func"));
+    return apiDef.getVisibility() != Visibility.SKIP
+        && !op.getAttrList().stream().anyMatch(x -> x.getType().contains("func"))
+        && !op.getName().startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
   enum RenderMode {
@@ -75,17 +83,145 @@ class ClassGenerator {
 
   private RenderMode mode = RenderMode.Default;
 
-  private List<AttrDef> attributes = new ArrayList<>();
-  private List<AttrDef> optionalAttributes = new ArrayList<>();
+  private final List<AttrDef> attributes = new ArrayList<>();
+  private final List<AttrDef> optionalAttributes = new ArrayList<>();
+  private final Set<TypeVariableName> typeParams = new LinkedHashSet<>();
 
-  private Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
+  private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
 
-  public static String javaizeName(String name) {
-    return name;
+  public String javaizeName(String name) {
+    StringBuilder result = new StringBuilder();
+    boolean capNext = Character.isUpperCase(name.charAt(0));
+    for (char c : name.toCharArray()) {
+      if (c == '_') {
+        capNext = true;
+      } else if (capNext) {
+        result.append(Character.toUpperCase(c));
+        capNext = false;
+      } else {
+        result.append(c);
+      }
+    }
+    name = result.toString();
+    switch (name){
+      case "size":
+        return "sizeOutput";
+      case "if":
+        return "ifOutput";
+      case "while":
+        return "whileOutput";
+      case "for":
+        return "forOutput";
+      case "case":
+        return "caseOutput";
+      default:
+        return name;
+    }
   }
 
   public static String parseDocumentation(String docs) {
-    return docs; //TODO implement
+    StringBuilder javadoc = new StringBuilder();
+    List<String> markdownExprs = Arrays
+        .asList("\n+\\*\\s+", "\n{2,}", "`{3,}\\s*[^\\s\n]*\\s*\n", "`+", "\\*{1,2}\\b", "\\[");
+    StringJoiner joiner = new StringJoiner("|", "(", ")");
+    markdownExprs.forEach(joiner::add);
+    Pattern markupExpr = Pattern.compile(joiner.toString());
+
+    Pattern codeBlock = Pattern.compile("(```\\s*\n*)");
+
+    boolean inList = false;
+    String input = docs;
+    while (true) {
+      Matcher m = markupExpr.matcher(input);
+      if (m.find()) {
+        MatchResult result = m.toMatchResult();
+
+        String text = input.substring(0, result.start());
+        input = input.substring(result.end());
+        String markup = result.group();
+
+        javadoc.append(text);
+
+        if (markup.startsWith("\n")) {
+          javadoc.append("\n");
+          if (markup.contains("*")) {
+            javadoc.append(inList ? "<li>\n" : "<ul>\n");
+            javadoc.append("<li>\n");
+            inList = true;
+          } else if (inList) {
+            javadoc.append("<li>\n<ul>\n");
+            inList = false;
+          } else if (!input.startsWith("```")) {
+            javadoc.append("<p>\n");
+          }
+        } else if (markup.startsWith("```")) {
+          Matcher cb = codeBlock.matcher(input);
+          if (cb.find()) {
+            result = cb.toMatchResult();
+            text = input.substring(0, result.start());
+            input = input.substring(result.end());
+            javadoc.append("<pre>{@code\n").append(text).append("}</pre>\n");
+          } else {
+            javadoc.append(markup);
+          }
+        } else if (markup.startsWith("`")) {
+          Matcher cb = Pattern.compile(markup).matcher(input);
+          if (cb.find()) {
+            result = cb.toMatchResult();
+            text = input.substring(0, result.start());
+            input = input.substring(result.end());
+            javadoc.append("{@code ").append(text).append("}");
+          } else {
+            javadoc.append(markup);
+          }
+        } else if (markup.equals("**")) {
+          Matcher cb = Pattern.compile("(\\b\\*{2})").matcher(input);
+          if (cb.find()) {
+            result = cb.toMatchResult();
+            text = input.substring(0, result.start());
+            input = input.substring(result.end());
+            javadoc.append("<b>").append(text).append("</b>");
+          } else {
+            javadoc.append(markup);
+          }
+        } else if (markup.equals("*")) {
+          Matcher cb = Pattern.compile("(\\b\\*{1})").matcher(input);
+          if (cb.find()) {
+            result = cb.toMatchResult();
+            text = input.substring(0, result.start());
+            input = input.substring(result.end());
+            javadoc.append("<i>").append(text).append("</i>");
+          } else {
+            javadoc.append(markup);
+          }
+        } else if (markup.startsWith("[")) {
+          //TODO this seems incorrect, there's a "](" between link and label
+          Matcher cb = Pattern.compile("([^\\[]+)\\]\\((http.+)\\)", Pattern.DOTALL).matcher(input);
+          if (cb.find()) {
+            result = cb.toMatchResult();
+            String label = result.group(1);
+            String link = result.group(2);
+            if (input.startsWith(label + "](" + link)) {
+              input = input.substring(label.length() + link.length() + 2);
+              javadoc.append("<a href=\"").append(link).append("\">")
+                  .append(parseDocumentation(label)).append("</a>");
+            } else {
+              javadoc.append(markup);
+            }
+          } else {
+            javadoc.append(markup);
+          }
+        } else {
+          javadoc.append(markup);
+        }
+
+      } else {
+        javadoc.append(input);
+        break;
+      }
+    }
+
+    return javadoc.toString();
   }
 
   private String fullClassName() {
@@ -150,7 +286,8 @@ class ClassGenerator {
         baseClass = ClassName.get(Operand.class);
       }
 
-      entry.setValue(new ResolvedType(ParameterizedTypeName.get(baseClass, entry.getValue().javaType), entry.getValue().iterable));
+      entry.setValue(
+          new ResolvedType(ParameterizedTypeName.get(baseClass, entry.getValue().javaType), entry.getValue().iterable));
     }
 
   }
@@ -165,9 +302,6 @@ class ClassGenerator {
     }
     String desc = parseDocumentation(apiDef.getDescription());
     if (!desc.isEmpty()) {
-      if (!summary.isEmpty()) {
-        builder.addJavadoc("<p>\n");
-      }
       builder.addJavadoc("$L", desc + "\n");
     }
 
@@ -191,20 +325,10 @@ class ClassGenerator {
 
     Set<String> seenGenerics = new HashSet<>();
     for (ArgDef output : op.getOutputArgList()) {
-      TypeName type = argTypes.get(output).javaType;
-      TypeVariableName typeVar = null;
-
-      if (type instanceof TypeVariableName) {
-        typeVar = (TypeVariableName) type;
-      } else if (type instanceof ParameterizedTypeName) {
-        ParameterizedTypeName paramType = (ParameterizedTypeName) type;
-        if (paramType.rawType.equals(ClassName.get(Operand.class)) && paramType.typeArguments
-            .get(0) instanceof TypeVariableName) {
-          typeVar = (TypeVariableName) paramType.typeArguments.get(0);
-        }
-      }
-      if (typeVar != null) {
+      ResolvedType type = argTypes.get(output);
+      for (TypeVariableName typeVar : type.findGenerics()) {
         if (seenGenerics.add(typeVar.name)) {
+          typeParams.add(typeVar);
           builder.addTypeVariable(typeVar);
           builder.addJavadoc(
               "\n@param <" + typeVar.name + "> data type for {@code " + output
@@ -250,7 +374,8 @@ class ClassGenerator {
 
     if (op.getOutputArgCount() > 0) {
       for (ArgDef output : op.getOutputArgList()) {
-        builder.addField(argTypes.get(output).listIfIterable().javaType, javaizeName(output.getName()), Modifier.PRIVATE);
+        builder
+            .addField(argTypes.get(output).listIfIterable().javaType, javaizeName(output.getName()), Modifier.PRIVATE);
       }
     }
 
@@ -287,7 +412,7 @@ class ClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().arrayIfIterable().javaType, name)
                 .addJavadoc("@param $L $L\n", name, parseDocumentation(apiAttr.getDescription()))
-                .addCode("this.$L = $T.asList($L);\nreturn this;\n", name, ClassName.get(Arrays.class), name)
+                .addCode("this.$L = $T.asList($L);\nreturn this;\n", name, Arrays.class, name)
                 .varargs()
                 .build());
 
@@ -318,8 +443,8 @@ class ClassGenerator {
     }
 
     if (type.jniType.equals(ClassName.get(DataType.class))) {
-      body.addStatement("opBuilder.setAttr($S, Operands.$L($L))", attr.getName(),
-          type.iterable ? "toDataTypes" : "toDataType", varName);
+      body.addStatement("opBuilder.setAttr($S, $T.$L($L))", attr.getName(),
+          Operands.class, type.iterable ? "toDataTypes" : "toDataType", varName);
     } else {
       if (type.iterable) {
         String arrayName = javaizeName(attr.getName()) + "Array";
@@ -341,35 +466,38 @@ class ClassGenerator {
   public void buildFactoryMethods() {
     MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder("create")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-        .returns(ClassName.get(fullPackage, className));
+        .returns(ParameterizedTypeName.get(ClassName.get(fullPackage, className), typeParams.toArray(new TypeName[0])));
     factoryBuilder.addAnnotation(
         AnnotationSpec.builder(org.tensorflow.op.annotation.Endpoint.class).addMember("describeByClass", "true")
             .build());
 
-    factoryBuilder.addJavadoc("Factory method to create a class wrapping a new $L operation.", op.getName());
+    factoryBuilder.addJavadoc("Factory method to create a class wrapping a new $L operation.\n", op.getName());
 
     CodeBlock.Builder body = CodeBlock.builder();
 
     factoryBuilder
         .addParameter(ParameterSpec.builder(ClassName.get(Scope.class), "scope").addJavadoc("current scope\n").build());
 
+    Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
+
     body.addStatement("$T opBuilder = scope.env().opBuilder($S, scope.makeOpName($S))",
-        ClassName.get(OperationBuilder.class), op.getName(),
+        OperationBuilder.class, op.getName(),
         className);
 
     for (ArgDef input : op.getInputArgList()) {
       ApiDef.Arg argDef = apiDef.getInArgList().stream().filter(x -> x.getName().equals(input.getName())).findFirst()
           .get();
-      ResolvedType rType = argTypes.get(input);
-      TypeName type = rType.javaType;
+      ResolvedType type = argTypes.get(input);
       String name = javaizeName(input.getName());
 
-      ParameterSpec.Builder param = ParameterSpec.builder(type, name)
+      ParameterSpec.Builder param = ParameterSpec.builder(type.listIfIterable().javaType, name)
           .addJavadoc("$L\n", argDef.getDescription());
       factoryBuilder.addParameter(param.build());
 
-      if (rType.iterable) {
-        body.addStatement("opBuilder.addInputList(Operands.asOutputs($L))", name);
+      typeVars.addAll(type.findGenerics());
+
+      if (type.iterable) {
+        body.addStatement("opBuilder.addInputList($T.asOutputs($L))", Operands.class, name);
       } else {
         body.addStatement("opBuilder.addInput($L.asOutput())", name);
       }
@@ -378,9 +506,10 @@ class ClassGenerator {
 
     body.addStatement("opBuilder = scope.apply(opBuilder)");
 
-    Map<String, TypeName> defaultTypes = new HashMap<>();
+    Map<AttrDef, TypeName> defaultTypes = new HashMap<>();
+    Map<String, TypeName> defaultTypeVars = new HashMap<>();
     for (AttrDef attr : attributes) {
-      if (resolver.visited(attr.getName())) {
+      if (resolver.partOfInput(attr.getName())) {
         continue;
       }
 
@@ -392,12 +521,15 @@ class ClassGenerator {
           .builder(type.classIfGeneric().listIfIterable().javaType, javaizeName(attr.getName()))
           .addJavadoc("$L\n", apiAttr.getDescription());
 
+      typeVars.addAll(type.findGenerics());
+
       factoryBuilder.addParameter(builder.build());
 
-      if (attr.hasDefaultValue() && type.javaType instanceof TypeVariableName) {
+      if (attr.hasDefaultValue() && type.shouldWrapInClass()) {
         TypeName defaultType = TypeResolver.forDataType(attr.getDefaultValue().getType());
-        if (defaultType != ClassName.get(TType.class)) {
-          defaultTypes.put(((TypeVariableName) type.javaType).name, defaultType);
+        if (!(defaultType instanceof WildcardTypeName) && defaultType != ClassName.get(TType.class)) {
+          defaultTypes.put(attr, defaultType);
+          defaultTypeVars.put(((TypeVariableName) type.javaType).name, defaultType);
         }
       }
 
@@ -408,7 +540,7 @@ class ClassGenerator {
     if (optionsClass != null) {
       factoryBuilder.addParameter(
           ParameterSpec.builder(ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options")
-              .addJavadoc("$L\n", "carries optional attribute values").build());
+              .addJavadoc("$L\n", "carries optional attribute values\n").build());
       factoryBuilder.varargs();
 
       body.beginControlFlow("if (options != null)");
@@ -432,16 +564,54 @@ class ClassGenerator {
 
     factoryBuilder.addCode(body.build());
     factoryBuilder.addJavadoc("@return a new instance of $L\n", className);
+    factoryBuilder.addTypeVariables(typeVars);
 
-    builder.addMethod(factoryBuilder.build());
+    MethodSpec method = factoryBuilder.build();
+    builder.addMethod(method);
 
     if (!defaultTypes.isEmpty()) {
-      buildSecondaryFactory(defaultTypes);
+      buildSecondaryFactory(defaultTypes, defaultTypeVars, method);
     }
   }
 
-  public void buildSecondaryFactory(Map<String, TypeName> defaultTypes) {
+  public void buildSecondaryFactory(Map<AttrDef, TypeName> defaultTypes, Map<String, TypeName> defaultTypeVars, MethodSpec main) {
+    MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder(main.name)
+        .addModifiers(main.modifiers)
+        .returns(ParameterizedTypeName.get(ClassName.get(fullPackage, className), typeParams.stream()
+            .map(x -> defaultTypeVars.getOrDefault(x.name, x) ).toArray(TypeName[]::new)));
+    factoryBuilder.addAnnotations(main.annotations);
 
+    factoryBuilder.addJavadoc("Factory method to create a class wrapping a new $L operation, with the default output types.\n", op.getName());
+
+    CodeBlock.Builder body = CodeBlock.builder();
+    body.add("return create(");
+
+    Set<TypeVariableName> typeVars = new LinkedHashSet<>();
+
+    boolean first = true;
+    for(ParameterSpec param : main.parameters){
+      if(!first){
+        body.add(", ");
+      }
+
+      AttrDef attr = op.getAttrList().stream().filter(x -> javaizeName(x.getName()).equals(param.name)).findFirst().orElse(null);
+      if(attr != null && resolver.typesOf(attr).shouldWrapInClass() && defaultTypes.containsKey(attr)){
+        body.add("$T.class", defaultTypes.get(attr));
+      } else {
+        factoryBuilder.addParameter(param);
+        typeVars.addAll(new ResolvedType(param.type).findGenerics());
+        body.add("$L", param.name);
+      }
+      first = first;
+    }
+
+    body.add(");");
+
+    factoryBuilder.addJavadoc("@return a new instance of $L, with default output types\n", className);
+    factoryBuilder.addCode(body.build());
+    factoryBuilder.addTypeVariables(typeVars);
+
+    builder.addMethod(factoryBuilder.build());
   }
 
   public void buildGettersAndSetters() {
@@ -508,7 +678,7 @@ class ClassGenerator {
               AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "{$S, $S}", "rawtypes", "unchecked")
                   .build());
 
-      iterator.addCode("return ($T) $L.iterator();",ClassName.get(Iterator.class), javaizeName(output.getName()));
+      iterator.addCode("return ($T) $L.iterator();", Iterator.class, javaizeName(output.getName()));
 
       builder.addMethod(iterator.build());
     }
@@ -541,15 +711,15 @@ class ClassGenerator {
           body.addStatement("int $L = operation.outputListLength($S)", lengthVar, output.getName());
 
           if (type.javaType instanceof WildcardTypeName) {
-            body.addStatement("$L = $T.asList(($T) operation.outputList(outputIdx, $L))",
-                javaizeName(output.getName()),
-                ClassName.get(Arrays.class),
-                ArrayTypeName.of(type.javaType),
-                lengthVar);
-          } else {
             body.addStatement("$L = $T.asList(operation.outputList(outputIdx, $L))",
                 javaizeName(output.getName()),
-                ClassName.get(Arrays.class),
+                Arrays.class,
+                lengthVar);
+          } else {
+            body.addStatement("$L = $T.asList(($T) operation.outputList(outputIdx, $L))",
+                javaizeName(output.getName()),
+                Arrays.class,
+                ArrayTypeName.of(type.javaType),
                 lengthVar);
           }
           body.addStatement("outputIdx += $L", lengthVar);

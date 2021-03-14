@@ -22,8 +22,10 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,20 +48,21 @@ public class TypeResolver {
     try {
       return TypeName.get(TensorTypeRegistry.find(dataType).type());
     } catch (IllegalArgumentException ignored) {
-      return TypeName.get(TType.class);
+      return WildcardTypeName.subtypeOf(TypeName.get(TType.class));
     }
   }
 
   private final OpDef op;
 
-  private Map<String, TypeName> known = new HashMap<>();
+  private Map<String, ResolvedType> known = new HashMap<>();
+  private Set<String> reachedFromInput = new HashSet<>();
 
   public TypeResolver(OpDef op) {
     this.op = op;
   }
 
-  public boolean visited(String attrName) {
-    return known.containsKey(attrName);
+  public boolean partOfInput(String attrName) {
+    return reachedFromInput.contains(attrName);
   }
 
   public static class ResolvedType {
@@ -141,9 +144,13 @@ public class TypeResolver {
       return new ResolvedType(newJType, jniType, iterable);
     }
 
+    public boolean shouldWrapInClass(){
+      return javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName;
+    }
+
     public ResolvedType classIfGeneric() {
       TypeName newJType;
-      if (javaType instanceof TypeVariableName) {
+      if (javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName) {
         newJType = ParameterizedTypeName.get(ClassName.get(Class.class), javaType);
       } else {
         newJType = javaType;
@@ -151,6 +158,23 @@ public class TypeResolver {
       return new ResolvedType(newJType, jniType, iterable);
     }
 
+    public Set<TypeVariableName> findGenerics(){
+      if(javaType instanceof TypeVariableName){
+        return Collections.singleton((TypeVariableName) javaType);
+      } else if(javaType instanceof ParameterizedTypeName){
+        Set<TypeVariableName> names = new LinkedHashSet<>();
+        for(TypeName t : ((ParameterizedTypeName) javaType).typeArguments){
+          names.addAll(new ResolvedType(t).findGenerics());
+        }
+        return names;
+      }
+      return Collections.emptySet();
+    }
+
+    @Override
+    public String toString() {
+      return "ResolvedType{" + javaType.toString() + "}";
+    }
   }
 
   private char nextGenericLetter = 'T';
@@ -210,6 +234,10 @@ public class TypeResolver {
   }
 
   private ResolvedType typesOf(AttrDef attr, boolean fromInput) {
+    if(known.containsKey(attr.getName())){
+      return known.get(attr.getName());
+    }
+
     boolean iterable = false;
     String typeName = attr.getType();
     if (typeName.startsWith("list(")) {
@@ -217,7 +245,7 @@ public class TypeResolver {
       typeName = typeName.substring(5, typeName.length() - 1);
     }
 
-    ResolvedType types = new ResolvedType(WILDCARD);
+    ResolvedType types;
 
     switch (typeName) {
       case "string":
@@ -251,43 +279,47 @@ public class TypeResolver {
     }
 
     types = types.withIterable(iterable);
+    known.put(attr.getName(), types);
     if (fromInput) {
-      known.put(attr.getName(), types.javaType);
+      reachedFromInput.add(attr.getName());
     }
     return types;
   }
 
   public ResolvedType typeOf(ArgDef arg) {
-    boolean iterable = false;
+    boolean isInput = op.getInputArgList().contains(arg);
 
-    TypeName type = WILDCARD;
+    ResolvedType type = new ResolvedType(WILDCARD);
 
     if (arg.getType() != DataType.DT_INVALID) {
-      type = forDataType(arg.getType());
+      type = new ResolvedType(forDataType(arg.getType()));
     } else if (!arg.getTypeAttr().isEmpty()) {
       String typeAttr = arg.getTypeAttr();
       if (known.containsKey(typeAttr)) {
         type = known.get(typeAttr);
       } else {
         AttrDef attr = op.getAttrList().stream().filter(x -> x.getName().equals(typeAttr)).findFirst().get();
-        ResolvedType types = typesOf(attr, op.getInputArgList().contains(arg));
-        type = types.javaType;
-        iterable = types.iterable;
+        type = typesOf(attr, isInput);
       }
     } else if (!arg.getTypeListAttr().isEmpty()) {
-      iterable = true;
-      known.put(arg.getTypeListAttr(), type);
+      type = type.withIterable(true);
+      if(isInput) {
+        reachedFromInput.add(arg.getTypeListAttr());
+      }
     } else {
       throw new IllegalArgumentException(
           "Can't resolve type of argument " + arg.getName() + " in operation " + op.getName());
     }
 
     if (!arg.getNumberAttr().isEmpty()) {
-      iterable = true;
-      known.put(arg.getNumberAttr(), TypeName.INT);
+      type = type.withIterable(true);
+      if(isInput) {
+        reachedFromInput.add(arg.getNumberAttr());
+      }
+      known.put(arg.getNumberAttr(), new ResolvedType(TypeName.INT));
     }
 
-    return new ResolvedType(type, iterable);
+    return type;
   }
 
 }
