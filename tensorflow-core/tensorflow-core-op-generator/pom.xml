@@ -14,7 +14,7 @@
   <description>Op Generator</description>
 
   <properties>
-    <java.module.name>org.tensorflow.core.generator</java.module.name>
+    <java.module.name>org.tensorflow.core.opgenerator</java.module.name>
   </properties>
 
   <dependencies>
