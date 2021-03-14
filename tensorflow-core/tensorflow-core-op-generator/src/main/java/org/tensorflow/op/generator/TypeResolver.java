@@ -14,7 +14,7 @@
  limitations under the License.
  ==============================================================================
  */
-package org.tensorflow;
+package org.tensorflow.op.generator;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -26,6 +26,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.tensorflow.ConcreteFunction;
+import org.tensorflow.Operand;
+import org.tensorflow.Output;
+import org.tensorflow.Tensor;
 import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.AttrValue;

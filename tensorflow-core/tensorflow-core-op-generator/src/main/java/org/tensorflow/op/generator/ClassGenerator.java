@@ -14,10 +14,10 @@
  limitations under the License.
  ==============================================================================
  */
-package org.tensorflow;
+package org.tensorflow.op.generator;
 
-import static org.tensorflow.GeneratorUtils.javaizeName;
-import static org.tensorflow.GeneratorUtils.parseDocumentation;
+import static org.tensorflow.op.generator.GeneratorUtils.javaizeName;
+import static org.tensorflow.op.generator.GeneratorUtils.parseDocumentation;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ArrayTypeName;
@@ -42,6 +42,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
+import org.tensorflow.Operand;
+import org.tensorflow.Operation;
+import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;

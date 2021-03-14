@@ -14,7 +14,7 @@
  limitations under the License.
  ==============================================================================
  */
-package org.tensorflow;
+package org.tensorflow.op.generator;
 
 import java.util.Arrays;
 import java.util.List;

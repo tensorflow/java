@@ -14,7 +14,7 @@
  limitations under the License.
  ==============================================================================
  */
-package org.tensorflow;
+package org.tensorflow.op.generator;
 
 import com.squareup.javapoet.ArrayTypeName;
 import com.squareup.javapoet.ClassName;
@@ -27,6 +27,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.tensorflow.Operand;
+import org.tensorflow.Output;
 
 public final class ResolvedType {
 

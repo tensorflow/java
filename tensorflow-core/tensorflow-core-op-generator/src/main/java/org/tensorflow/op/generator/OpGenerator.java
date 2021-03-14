@@ -14,7 +14,7 @@
  limitations under the License.
  ==============================================================================
  */
-package org.tensorflow;
+package org.tensorflow.op.generator;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ApiDefMapGet;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ApiDefMapPut;
@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
@@ -36,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.TensorFlow;
 import org.tensorflow.internal.c_api.TF_ApiDefMap;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Status;
