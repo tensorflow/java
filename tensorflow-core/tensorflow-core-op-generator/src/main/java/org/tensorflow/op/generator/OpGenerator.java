@@ -64,11 +64,6 @@ public class OpGenerator {
 
   public static void main(String[] args) {
 
-    String osName = System.getProperty("os.name").toLowerCase();
-    if(osName.contains("windows") || osName.contains("mac")){
-      throw new IllegalStateException("Op generation must be ran on Linux.  Os is currently " + osName);
-    }
-
     if (args.length < 1 || args[0].equals("--help")) {
       System.out.println("Args should be: <outputDir> [--base_package base_package] [apiDefDir1] [apiDefDir2] [...]");
       return;
