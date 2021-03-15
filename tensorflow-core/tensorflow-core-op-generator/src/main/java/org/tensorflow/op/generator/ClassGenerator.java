@@ -16,7 +16,7 @@
  */
 package org.tensorflow.op.generator;
 
-import static org.tensorflow.op.generator.GeneratorUtils.javaizeName;
+import static org.tensorflow.op.generator.GeneratorUtils.javaizeMemberName;
 import static org.tensorflow.op.generator.GeneratorUtils.parseDocumentation;
 
 import com.squareup.javapoet.AnnotationSpec;
@@ -59,37 +59,102 @@ import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
 import org.tensorflow.types.family.TType;
 
-class ClassGenerator {
+/**
+ * A generator to generate a op class
+ */
+final class ClassGenerator {
 
-  public static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
+  /**
+   * Return true if we can generate the operation class for {@code op}.
+   */
+  static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
         && !op.getAttrList().stream().anyMatch(x -> x.getType().contains("func"))
         && !op.getName().startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
   enum RenderMode {
-    Default, ListOperand, Operand;
+    DEFAULT, LIST_OPERAND, OPERAND;
   }
 
+  /**
+   * The in-progress class builder for the top level op class.
+   */
   private final TypeSpec.Builder builder;
+
+  /**
+   * The op to build.
+   */
   private final OpDef op;
+
+  /**
+   * The api definition for the current op.
+   */
   private final ApiDef apiDef;
+
+  /**
+   * A type resolver for the current op.
+   */
   private final TypeResolver resolver;
+
+  /**
+   * The full package of the class.
+   */
   private final String fullPackage;
+
+  /**
+   * The base package for this op generation run.
+   */
   private final String basePackage;
+
+  /**
+   * The group of this op.
+   */
   private final String group;
+
+  /**
+   * The class name for this op.
+   */
   private final String className;
+
+  /**
+   * The endpoint being generated in this class.
+   */
   private final Endpoint endpoint;
 
+  /**
+   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has not been ran.
+   */
   private TypeSpec optionsClass = null;
 
-  private RenderMode mode = RenderMode.Default;
+  /**
+   * What type of op this is.
+   */
+  private RenderMode mode = RenderMode.DEFAULT;
 
-  private final List<AttrDef> attributes = new ArrayList<>();
+  /**
+   * The required attributes of this op.
+   */
+  private final List<AttrDef> requiredAttributes = new ArrayList<>();
+
+  /**
+   * The optional attributes of this op.
+   */
   private final List<AttrDef> optionalAttributes = new ArrayList<>();
+
+  /**
+   * The class's type parameters, initialized in {@link #buildClass()}.
+   */
   private final Set<TypeVariableName> typeParams = new LinkedHashSet<>();
 
+  /**
+   * The api defs for the arguments.
+   */
   private final Map<ArgDef, ApiDef.Arg> argApis = new HashMap<>();
+
+  /**
+   * The api defs for the attributes.
+   */
   private final Map<AttrDef, ApiDef.Attr> attrApis = new HashMap<>();
 
   ClassGenerator(Builder builder, OpDef op, ApiDef apiDef,
@@ -109,7 +174,7 @@ class ClassGenerator {
       if (attr.hasDefaultValue() && !attr.getType().contains("type")) {
         optionalAttributes.add(attr);
       } else {
-        attributes.add(attr);
+        requiredAttributes.add(attr);
       }
     });
 
@@ -128,34 +193,47 @@ class ClassGenerator {
     }
   }
 
-  public String getJavaName(ArgDef arg) {
+  /**
+   * Get the Java variable name for an argument.
+   */
+  private String getJavaName(ArgDef arg) {
     String name = arg.getName();
     String rename = argApis.get(arg).getRenameTo();
     if (!rename.isEmpty()) {
-      return javaizeName(rename);
+      return javaizeMemberName(rename);
     } else {
-      return javaizeName(name);
+      return javaizeMemberName(name);
     }
   }
 
-  public String getJavaName(AttrDef arg) {
+  /**
+   * Get the Java variable name for an attribute.
+   */
+  private String getJavaName(AttrDef arg) {
     String name = arg.getName();
     String rename = attrApis.get(arg).getRenameTo();
     if (!rename.isEmpty()) {
-      return javaizeName(rename);
+      return javaizeMemberName(rename);
     } else {
-      return javaizeName(name);
+      return javaizeMemberName(name);
     }
   }
 
+  /**
+   * Get the fully qualified name of the class being generated.
+   */
   private String fullClassName() {
     return fullPackage + "." + className;
   }
 
-  public void buildClass() {
+  /**
+   * Build the class.
+   */
+  void buildClass() {
     builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
     builder.superclass(ClassName.get(RawOp.class));
 
+    // add class javadocs
     String summary = parseDocumentation(apiDef.getSummary());
     if (!summary.isEmpty()) {
       builder.addJavadoc("$L", summary + "\n");
@@ -165,6 +243,7 @@ class ClassGenerator {
       builder.addJavadoc("$L", desc + "\n");
     }
 
+    // add superinterface and set mode
     if (op.getOutputArgCount() == 1) {
       ArgDef output = op.getOutputArg(0);
       ResolvedType rType = resolver.typeOf(output);
@@ -175,14 +254,15 @@ class ClassGenerator {
       TypeName operandType = ParameterizedTypeName.get(ClassName.get(Operand.class), operandTypeParam);
 
       if (iterable) {
-        mode = RenderMode.ListOperand;
+        mode = RenderMode.LIST_OPERAND;
         builder.addSuperinterface(ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));
       } else {
-        mode = RenderMode.Operand;
+        mode = RenderMode.OPERAND;
         builder.addSuperinterface(operandType);
       }
     }
 
+    // add and store type variables
     Set<String> seenGenerics = new HashSet<>();
     for (ArgDef output : op.getOutputArgList()) {
       ResolvedType type = resolver.typeOf(output);
@@ -197,6 +277,7 @@ class ClassGenerator {
       }
     }
 
+    // add deprecated if necessary
     if (endpoint.getDeprecated()) {
       builder.addAnnotation(Deprecated.class);
       Endpoint first = apiDef.getEndpoint(0);
@@ -209,6 +290,7 @@ class ClassGenerator {
       builder.addJavadoc("\n@deprecated $L", explanation);
     }
 
+    // add the Operator annotation
     if (apiDef.getVisibility() != Visibility.HIDDEN) {
       AnnotationSpec.Builder annotation = AnnotationSpec.builder(Operator.class);
       if (!group.equals("core")) {
@@ -223,15 +305,17 @@ class ClassGenerator {
 
     buildFactoryMethods();
     buildGettersAndSetters();
-    if (mode != RenderMode.Default) {
+    if (mode != RenderMode.DEFAULT) {
       buildInterfaceImpl();
     }
 
+    // add op name field
     builder
         .addField(FieldSpec.builder(TypeResolver.STRING, "OP_NAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .initializer("$S", op.getName())
             .build());
 
+    // add output fields
     if (op.getOutputArgCount() > 0) {
       for (ArgDef output : op.getOutputArgList()) {
         builder
@@ -242,19 +326,28 @@ class ClassGenerator {
     buildConstructor();
   }
 
-  public void buildOptionsClass() {
+  /**
+   * Add a nested class for Options
+   */
+  private void buildOptionsClass() {
+
+    if(optionalAttributes.isEmpty()){
+      return;
+    }
+
     TypeSpec.Builder optionsBuilder = TypeSpec.classBuilder("Options").addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     optionsBuilder.addJavadoc("$L", "Optional attributes for {@link " + fullClassName() + "}");
 
     ClassName optionsClassName = ClassName.get(fullPackage, className, "Options");
 
     for (AttrDef attr : optionalAttributes) {
-      ResolvedType type = resolver.typesOf(attr);
+      ResolvedType type = resolver.typeOf(attr);
 
       String name = getJavaName(attr);
 
       ApiDef.Attr apiAttr = attrApis.get(attr);
 
+      // add the setter method, adding one with varargs and one with List if the attribute is iterable
       if (type.iterable) {
         optionsBuilder.addMethod(
             MethodSpec.methodBuilder(name)
@@ -286,19 +379,28 @@ class ClassGenerator {
                 .build());
       }
 
+      // add the field
       optionsBuilder.addField(type.classIfGeneric().listIfIterable().javaType, name, Modifier.PRIVATE);
     }
 
+    // add a private constructor
     optionsBuilder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
 
     optionsClass = optionsBuilder.build();
     builder.addType(optionsClass);
   }
 
+  /**
+   * Write statements to set an attribute in an OperationBuilder.  Meant to be used in {@link #buildFactoryMethods()}
+   * @param body the body to write to
+   * @param attr the attribute to set
+   * @param type the type of the attribute, or null to get it ourselves
+   * @param optional whether the attribute is optional
+   */
   private void writeSetAttr(CodeBlock.Builder body, AttrDef attr, ResolvedType type, boolean optional) {
     String varName = optional ? "opts." + getJavaName(attr) : getJavaName(attr);
     if (type == null) {
-      type = resolver.typesOf(attr);
+      type = resolver.typeOf(attr);
     }
 
     if (type.jniType.equals(ClassName.get(DataType.class))) {
@@ -306,7 +408,7 @@ class ClassGenerator {
           Operands.class, type.iterable ? "toDataTypes" : "toDataType", varName);
     } else {
       if (type.iterable) {
-        String arrayName = javaizeName(attr.getName()) + "Array";
+        String arrayName = javaizeMemberName(attr.getName()) + "Array";
         body.addStatement("$T[] $L = new $T[$L.size()]", type.jniType, arrayName, type.jniType, varName);
 
         body.beginControlFlow("for (int i = 0 ; i < $L.length ; i++)", arrayName);
@@ -322,10 +424,14 @@ class ClassGenerator {
     }
   }
 
-  public void buildFactoryMethods() {
+  /**
+   * Add the {@code create} factory methods.
+   */
+  private void buildFactoryMethods() {
     MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder("create")
         .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
 
+    // the main creator will inherit any class type params
     TypeName returnType = ClassName.get(fullPackage, className);
     if (!typeParams.isEmpty()) {
       returnType = ParameterizedTypeName.get((ClassName) returnType, typeParams.toArray(new TypeName[0]));
@@ -338,6 +444,7 @@ class ClassGenerator {
 
     factoryBuilder.addJavadoc("Factory method to create a class wrapping a new $L operation.\n", op.getName());
 
+    // we're going to build the body as add arguments
     CodeBlock.Builder body = CodeBlock.builder();
 
     factoryBuilder
@@ -349,6 +456,7 @@ class ClassGenerator {
         OperationBuilder.class, op.getName(),
         className);
 
+    // add the inputs as parameters, and add them to the op builder
     for (ArgDef input : op.getInputArgList()) {
       ApiDef.Arg argDef = argApis.get(input);
       ResolvedType type = resolver.typeOf(input);
@@ -370,14 +478,15 @@ class ClassGenerator {
 
     body.addStatement("opBuilder = scope.apply(opBuilder)");
 
+    // add the required attribute params, and build the default type maps for use in the secondary factory
     Map<AttrDef, TypeName> defaultTypes = new HashMap<>();
     Map<String, TypeName> defaultTypeVars = new HashMap<>();
-    for (AttrDef attr : attributes) {
+    for (AttrDef attr : requiredAttributes) {
       if (resolver.partOfInput(attr.getName())) {
         continue;
       }
 
-      ResolvedType type = resolver.typesOf(attr);
+      ResolvedType type = resolver.typeOf(attr);
       ApiDef.Attr apiAttr = attrApis.get(attr);
 
       ParameterSpec.Builder builder = ParameterSpec
@@ -388,6 +497,7 @@ class ClassGenerator {
 
       factoryBuilder.addParameter(builder.build());
 
+      // we only add defaults for type variable arguments
       if (attr.hasDefaultValue() && type.shouldWrapInClass()) {
         TypeName defaultType = TypeResolver.forDataType(attr.getDefaultValue().getType());
         if (!(defaultType instanceof WildcardTypeName) && defaultType != ClassName.get(TType.class)) {
@@ -397,9 +507,9 @@ class ClassGenerator {
       }
 
       writeSetAttr(body, attr, type, false);
-
     }
 
+    // add optional attributes
     if (optionsClass != null) {
       factoryBuilder.addParameter(
           ParameterSpec.builder(ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options")
@@ -437,13 +547,16 @@ class ClassGenerator {
     }
   }
 
-  public void buildSecondaryFactory(Map<AttrDef, TypeName> defaultTypes, Map<String, TypeName> defaultTypeVars,
-      MethodSpec main) {
-    MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder(main.name)
-        .addModifiers(main.modifiers)
+  /**
+   * Add a secondary factory method with the provided default type maps
+   */
+  private void buildSecondaryFactory(Map<AttrDef, TypeName> defaultTypes, Map<String, TypeName> defaultTypeVars,
+      MethodSpec mainFactory) {
+    MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder(mainFactory.name)
+        .addModifiers(mainFactory.modifiers)
         .returns(ParameterizedTypeName.get(ClassName.get(fullPackage, className), typeParams.stream()
             .map(x -> defaultTypeVars.getOrDefault(x.name, x)).toArray(TypeName[]::new)));
-    factoryBuilder.addAnnotations(main.annotations);
+    factoryBuilder.addAnnotations(mainFactory.annotations);
 
     factoryBuilder
         .addJavadoc("Factory method to create a class wrapping a new $L operation, with the default output types.\n",
@@ -454,15 +567,17 @@ class ClassGenerator {
 
     Set<TypeVariableName> typeVars = new LinkedHashSet<>();
 
+    // we want to add all of the main factory's parameters except for those with defaults
+    // we just pass them through
     boolean first = true;
-    for (ParameterSpec param : main.parameters) {
+    for (ParameterSpec param : mainFactory.parameters) {
       if (!first) {
         body.add(", ");
       }
 
       AttrDef attr = op.getAttrList().stream().filter(x -> getJavaName(x).equals(param.name)).findFirst()
           .orElse(null);
-      if (attr != null && resolver.typesOf(attr).shouldWrapInClass() && defaultTypes.containsKey(attr)) {
+      if (attr != null && resolver.typeOf(attr).shouldWrapInClass() && defaultTypes.containsKey(attr)) {
         body.add("$T.class", defaultTypes.get(attr));
       } else {
         factoryBuilder.addParameter(param);
@@ -481,7 +596,12 @@ class ClassGenerator {
     builder.addMethod(factoryBuilder.build());
   }
 
-  public void buildGettersAndSetters() {
+  /**
+   * Add getters for the outputs and setters/Options creators for the optional attributes.
+   * 
+   * Needs to be called after {@link #buildOptionsClass()}
+   */
+  private void buildGettersAndSetters() {
     if (optionsClass != null) {
       optionsClass.methodSpecs.stream().filter(x -> !x.isConstructor()).forEach(method -> {
         String argName = method.parameters.get(0).name;
@@ -508,14 +628,17 @@ class ClassGenerator {
 
   }
 
-  public void buildInterfaceImpl() {
+  /**
+   * Add interface implementation methods if this is a single output or list output op.
+   */
+  private void buildInterfaceImpl() {
     ArgDef output = op.getOutputArg(0);
     TypeName type = resolver.typeOf(output).unwrapArg();
 
     boolean uncheckedCast = type instanceof WildcardTypeName;
     TypeName outputTType = uncheckedCast ? TypeName.get(TType.class) : type;
 
-    if (mode == RenderMode.Operand) {
+    if (mode == RenderMode.OPERAND) {
       TypeName outputType = ParameterizedTypeName.get(ClassName.get(Output.class), outputTType);
       MethodSpec.Builder asOutput = MethodSpec.methodBuilder("asOutput")
           .addModifiers(Modifier.PUBLIC)
@@ -550,7 +673,10 @@ class ClassGenerator {
     }
   }
 
-  public void buildConstructor() {
+  /**
+   * Add a constructor to get the outputs from an operation
+   */
+  private void buildConstructor() {
     MethodSpec.Builder ctor = MethodSpec.constructorBuilder();
 
     ctor.addParameter(ClassName.get(Operation.class), "operation");

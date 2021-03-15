@@ -22,11 +22,23 @@ import java.util.StringJoiner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.tensorflow.proto.framework.OpDef.ArgDef;
 
-public class GeneratorUtils {
+/**
+ * Utilities for op generation
+ */
+final class GeneratorUtils {
 
-
-  public static String javaizeName(String name) {
+  /**
+   * Convert a Python style name to a Java style name.
+   *
+   * Does snake_case -> camelCase and handles keywords.
+   *
+   * Not valid for class names, meant for fields and methods.
+   *
+   * Genrally you should use {@link ClassGenerator#getJavaName(ArgDef)}.
+   */
+  static String javaizeMemberName(String name) {
     StringBuilder result = new StringBuilder();
     boolean capNext = Character.isUpperCase(name.charAt(0));
     for (char c : name.toCharArray()) {
@@ -56,7 +68,10 @@ public class GeneratorUtils {
     }
   }
 
-  public static String parseDocumentation(String docs) {
+  /**
+   * Convert markdown descriptions to JavaDocs.
+   */
+  static String parseDocumentation(String docs) {
     StringBuilder javadoc = new StringBuilder();
     List<String> markdownExprs = Arrays
         .asList("\n+\\*\\s+", "\n{2,}", "`{3,}\\s*[^\\s\n]*\\s*\n", "`+", "\\*{1,2}\\b", "\\[");

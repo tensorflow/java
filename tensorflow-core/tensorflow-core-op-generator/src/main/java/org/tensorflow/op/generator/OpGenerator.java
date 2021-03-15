@@ -43,9 +43,9 @@ import org.tensorflow.proto.framework.ApiDef;
 import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpList;
 
-public class OpGenerator {
+public final class OpGenerator {
 
-  public static final String license =
+  private static final String license =
       "/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.\n" +
           "\n" +
           "Licensed under the Apache License, Version 2.0 (the \"License\");\n" +
@@ -62,6 +62,13 @@ public class OpGenerator {
           "=======================================================================*/" +
           "\n";
 
+  /**
+   * Args should be {@code <outputDir> [--base_package base_package] [apiDefDir1] [apiDefDir2] [...]}.
+   *
+   * {@code base_package} is {@code org.tensorflow.op} by default.
+   * <p>
+   * <b>Will delete everything in {@code outputDir}.</b>
+   */
   public static void main(String[] args) {
 
     if (args.length < 1 || args[0].equals("--help")) {
@@ -106,7 +113,10 @@ public class OpGenerator {
     generate(outputDir, packageName, apiDirs);
   }
 
-  public static void generate(File outputDir, String packageName, ArrayList<String> apiDirs) {
+  /**
+   * Build the list of ops and api defs, then call {@link #generate(File, String, Map)}
+   */
+  private static void generate(File outputDir, String packageName, ArrayList<String> apiDirs) {
     OpList opList = TensorFlow.registeredOpList();
     Map<OpDef, ApiDef> defs = new LinkedHashMap<>(opList.getOpCount());
     try (PointerScope scope = new PointerScope()) {
@@ -149,7 +159,10 @@ public class OpGenerator {
     generate(outputDir, packageName, defs);
   }
 
-  public static void generate(File outputDir, String basePackage, Map<OpDef, ApiDef> ops) {
+  /**
+   * Generate all the ops that pass {@link ClassGenerator#canGenerateOp(OpDef, ApiDef)}.
+   */
+  private static void generate(File outputDir, String basePackage, Map<OpDef, ApiDef> ops) {
     ops.entrySet().stream().filter(e -> ClassGenerator.canGenerateOp(e.getKey(), e.getValue())).forEach((entry) -> {
       entry.getValue().getEndpointList().forEach((endpoint) -> {
 
