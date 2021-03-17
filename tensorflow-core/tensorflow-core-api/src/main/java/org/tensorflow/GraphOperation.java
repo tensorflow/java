@@ -188,9 +188,7 @@ public final class GraphOperation extends AbstractOperation {
    * Get the number of inputs to the op, not including control inputs.
    */
   public int numInputs() {
-    try (PointerScope scope = new PointerScope()) {
-      return TF_OperationNumInputs(getUnsafeNativeHandle());
-    }
+    return TF_OperationNumInputs(getUnsafeNativeHandle());
   }
 
   /**

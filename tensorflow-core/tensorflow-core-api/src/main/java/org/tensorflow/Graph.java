@@ -33,7 +33,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -182,11 +181,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       return new Output(operation, index);
     } catch (NumberFormatException e) {
-      GraphOperation op = operation(output);
-      if (op == null) {
-        return null;
-      }
-      return new Output(op, 0);
+      throw new IllegalArgumentException("Could not get output for badly formatted output name: \"" + output + "\"", e);
     }
   }
 
@@ -343,7 +338,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param outputs the starting points of the traversal.
    * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
    */
-  public Set<GraphOperation> upstreamOps(Set<GraphOperation> outputs) {
+  public Set<GraphOperation> subgraphToOps(Set<GraphOperation> outputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(outputs.size());
     Queue<GraphOperation> todo = new ArrayDeque<>(outputs);
     while (!todo.isEmpty()) {
@@ -365,7 +360,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param inputs the starting points of the traversal.
    * @return the ops that depend on {@code inputs}, not including {@code inputs}
    */
-  public synchronized Set<GraphOperation> downstreamOps(Set<GraphOperation> inputs) {
+  public synchronized Set<GraphOperation> subgraphFromOps(Set<GraphOperation> inputs) {
     Set<GraphOperation> seen = new LinkedHashSet<>(inputs.size());
     Queue<GraphOperation> todo = new ArrayDeque<>(inputs);
     while (!todo.isEmpty()) {
@@ -387,8 +382,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param outputs the starting points of the traversal.
    * @return the ops needed to calculate {@code outputs}, not including {@code outputs}
    */
-  public Set<GraphOperation> upstream(Set<Operand<?>> outputs) {
-    return upstreamOps(outputs.stream().map(this::graphOp).collect(Collectors.toSet()));
+  public Set<GraphOperation> subgraphTo(Set<Operand<?>> outputs) {
+    return subgraphToOps(outputs.stream().map(this::graphOp).collect(Collectors.toSet()));
   }
 
   /**
@@ -398,14 +393,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param inputs the starting points of the traversal.
    * @return the ops that depend on {@code inputs}, not including {@code inputs}
    */
-  public synchronized Set<GraphOperation> downstream(Set<Operand<?>> inputs) {
+  public synchronized Set<GraphOperation> subgraphFrom(Set<Operand<?>> inputs) {
     Set<GraphOperation> ops = new LinkedHashSet<>();
     for (Operand<?> input : inputs) {
       GraphOperation op = graphOp(input);
       ops.addAll(op.consumers(input.asOutput().index()));
       ops.addAll(op.controlConsumers());
     }
-    Set<GraphOperation> downstream = downstreamOps(ops);
+    Set<GraphOperation> downstream = subgraphFromOps(ops);
     downstream.addAll(ops);
     return downstream;
   }
