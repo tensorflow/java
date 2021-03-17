@@ -41,6 +41,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Placeholder;
+import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
@@ -565,10 +566,16 @@ public class ConcreteFunction implements AutoCloseable {
           .collect(Collectors.toList());
 
       List<GraphOperation> ops = new ArrayList<>(
-          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs),
-              null, Collections.singleton(Placeholder.OP_NAME)));
+          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
 
       inputs.forEach(input -> ops.remove(input.op()));
+
+      ops.forEach(x -> {
+        if(x.type().equals(Placeholder.OP_NAME) || x.type().equals(PlaceholderWithDefault.OP_NAME)){
+          throw new IllegalArgumentException("Can't calculate outputs (" + outputs + ") from inputs (" + inputs + "), "
+              + "they also depend on \"" + x + "\"");
+        }
+      });
 
       // Python sometimes has NoOps as outputs
       Ops tf = Ops.create(graph).withSubScope("functionControlOutputs");
