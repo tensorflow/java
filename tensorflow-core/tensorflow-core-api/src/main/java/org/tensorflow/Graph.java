@@ -220,52 +220,16 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
-   * Includes control dependencies.
+   * Finds the operations used to produce {@code outputs}, assuming {@code inputs} are provided. Includes control dependencies.
+   * <p>
+   * Note that this function can easily return ops upstream of inputs as part of the body.  Depending on your use, the
+   * returned body should probably be filtered for {@code Placeholder}s, at least.
    *
    * @param inputs the inputs of the subgraph.  Must be from single output ops.  May not be null.
    * @param outputs the outputs of the subgraph.  May not be null.
-   * @param allowNoInputBodyOps whether to allow 0-input ops in the body.  For more specificy use {@link
-   * #completeSubgraph(Set, Set, Set, Set)}.
    * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
-   * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
-   * solely on inputs)
-   * @see #completeSubgraph(Set, Set, Set, Set)
    */
-  public Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
-      boolean allowNoInputBodyOps) {
-    return completeSubgraph(inputs, outputs, null, allowNoInputBodyOps ? Collections.emptySet() : null);
-  }
-
-  /**
-   * Finds the operations used to produce {@code outputs} from {@code inputs}, or throws if that is not possible.
-   * Includes control dependencies.
-   *
-   * If both {@code allowedNoInputBodyOps} and {@code forbiddenNoInputBodyOps} are {@code null}, forbids 0-input ops in
-   * the body. To allow all ops in the body, use {@code null} for {@code allowedNoInputBodyOps} and the empty set for
-   * {@code forbiddenNoInputBodyOps}.
-   *
-   * @param inputs the inputs of the subgraph.  Must be from single output ops.  May not be null.
-   * @param outputs the outputs of the subgraph.  May not be null.
-   * @param allowedNoInputBodyOps types of ops to allow as 0-input ops in the body.  Allows all (except {@code
-   * forbiddenNoInputBodyOps}) if null.
-   * @param forbiddenNoInputBodyOps types of ops to never allow as 0-input ops in the body.  Forbids all (except {@code
-   * allowedNoInputBodyOps}) if null.
-   * @return the set of operations needed to calculate outputs from inputs, including outputs and inputs
-   * @throws IllegalStateException if outputs depends on ops outside of the subgraph (i.e. is not calculable based
-   * solely on inputs)
-   * @see #completeSubgraph(Set, Set, boolean)
-   */
-  public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs,
-      Set<String> allowedNoInputBodyOps, Set<String> forbiddenNoInputBodyOps) {
-
-    if (forbiddenNoInputBodyOps != null && allowedNoInputBodyOps != null) {
-      for (String t : forbiddenNoInputBodyOps) {
-        if (allowedNoInputBodyOps.contains(t)) {
-          throw new IllegalArgumentException("Can't allow and forbid op type " + t + ".");
-        }
-      }
-    }
+  public synchronized Set<GraphOperation> completeSubgraph(Set<Operand<?>> inputs, Set<Operand<?>> outputs) {
 
     if (inputs == null) {
       throw new IllegalArgumentException("Inputs can't be null.");
@@ -299,18 +263,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       // skip if already present
       if (!seen.add(op)) {
         continue;
-      }
-
-      if (op.numControlInputs() + op.numInputs() == 0) {
-        // inverted: (nothing is forbidden || not forbidden) and (everything is allowed || allowed) and (not both null)
-        if ((forbiddenNoInputBodyOps != null && forbiddenNoInputBodyOps.contains(op.type()))
-            || (allowedNoInputBodyOps != null && !allowedNoInputBodyOps.contains(op.type()))
-            || (forbiddenNoInputBodyOps == null && allowedNoInputBodyOps == null)) {
-          throw new IllegalStateException("Operation " + op
-              + " of type " + op.type() +
-              " has no inputs and is not an allowed 0-input op type, but is not set as an input.  "
-              + "It is impossible to calculate the specified outputs with the given inputs.");
-        }
       }
 
       for (GraphOperation control : op.controlInputs()) {

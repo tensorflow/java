@@ -131,8 +131,7 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       Set<GraphOperation> subgraph = g
-          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output), null,
-              null);
+          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output));
 
       assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
           subgraph);
@@ -152,53 +151,10 @@ public class GraphTest {
       Operand<TInt32> output = tf.math.mul(d, c);
 
       Set<GraphOperation> subgraph = g
-          .completeSubgraph(Collections.emptySet(), Collections.singleton(output), Collections.singleton(
-              Constant.OP_NAME), null);
+          .completeSubgraph(Collections.emptySet(), Collections.singleton(output));
 
       assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
           subgraph);
-    }
-  }
-
-  @Test
-  public void completeSubgraphMissingInput() {
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-      Operand<TInt32> control = tf.constant(0);
-      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
-      Operand<TInt32> b = tf.constant(2);
-      Operand<TInt32> c = tf.constant(3);
-
-      Operand<TInt32> d = tf.math.add(a, b);
-      Operand<TInt32> output = tf.math.mul(d, c);
-
-      try {
-        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, b)), Collections.singleton(output), null, null);
-        fail();
-      } catch (IllegalStateException e) {
-        assertTrue(e.getMessage().contains("is not set as an input"));
-      }
-    }
-  }
-
-  @Test
-  public void completeSubgraphMissingControlInput() {
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-      Operand<TInt32> control = tf.constant(0);
-      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
-      Operand<TInt32> b = tf.constant(2);
-      Operand<TInt32> c = tf.constant(3);
-
-      Operand<TInt32> d = tf.math.add(a, b);
-      Operand<TInt32> output = tf.math.mul(d, c);
-
-      try {
-        g.completeSubgraph(new LinkedHashSet<>(Arrays.asList(a, b)), Collections.singleton(output), null, null);
-        fail();
-      } catch (IllegalStateException e) {
-        assertTrue(e.getMessage().contains("is not set as an input"));
-      }
     }
   }
 
