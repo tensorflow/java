@@ -35,11 +35,10 @@ namespace tensorflow {
 namespace java {
 
 const char kUsageHeader[] =
-    "\n\nGenerator of operation wrappers in Java.\n\n"
-    "This executable generates wrappers for all operations registered in the "
-    "provided list of libraries. A wrapper exposes an intuitive and\n"
-    "strongly-typed interface for building its underlying operation and linking "
-    "it into a graph.\n\n"
+    "\n\nExporter of operation and API defs, for use in Java op generation.\n\n"
+    "This executable exports the op def and api def protos for all operations "
+    "registered in the provided list of libraries. The protos will be printed "
+    "to stdout in binary format.\n\n"
     "The first argument is the location of the tensorflow binary built for TF-"
     "Java.\nFor example, `bazel-out/k8-opt/bin/external/org_tensorflow/tensorfl"
     "ow/libtensorflow_cc.so`.\n\n"
@@ -110,8 +109,6 @@ int main(int argc, char* argv[]) {
 
   std::ostream & out = std::cout;
   ops.SerializeToOstream(&out);
-
-//    std::cout << ops.DebugString();
 
   return 0;
 }
