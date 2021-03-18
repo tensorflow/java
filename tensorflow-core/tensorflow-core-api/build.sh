@@ -86,12 +86,13 @@ $BAZEL_BIN/java_op_generator \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
     $TENSORFLOW_LIB
 
-mkdir -p src/gen/resources
+GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
+mkdir -p $GEN_RESOURCE_DIR
 
 # Generate Java operator wrappers
 $BAZEL_BIN/java_op_exporter \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
-    $TENSORFLOW_LIB
+    $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
 
 
 # Copy generated Java protos from source jars
