@@ -37,8 +37,9 @@ namespace java {
 const char kUsageHeader[] =
     "\n\nExporter of operation and API defs, for use in Java op generation.\n\n"
     "This executable exports the op def and api def protos for all operations "
-    "registered in the provided list of libraries. The protos will be printed "
-    "to stdout in binary format.\n\n"
+    "registered in the provided list of libraries. The proto will be printed "
+    "to stdout in binary format. It is an OpList proto, with each OpDef having"
+    " the associated ApiDef attached as unknown field 100\n\n"
     "The first argument is the location of the tensorflow binary built for TF-"
     "Java.\nFor example, `bazel-out/k8-opt/bin/external/org_tensorflow/tensorfl"
     "ow/libtensorflow_cc.so`.\n\n"
@@ -82,6 +83,8 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
 }
 }
 
+// See usage header.
+// Writes an OpList proto to stdout, with each OpDef having its ApiDef in field 100
 int main(int argc, char* argv[]) {
   tensorflow::string api_dirs_str;
   std::vector<tensorflow::Flag> flag_list = {
