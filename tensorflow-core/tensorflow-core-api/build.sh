@@ -38,6 +38,7 @@ bazel build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
     :java_op_generator \
+    :java_op_exporter \
     :java_api_import \
     :custom_ops_test
 
@@ -84,6 +85,14 @@ $BAZEL_BIN/java_op_generator \
     --output_dir=$GEN_SRCS_DIR \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
     $TENSORFLOW_LIB
+
+mkdir -p src/gen/resources
+
+# Generate Java operator wrappers
+$BAZEL_BIN/java_op_exporter \
+    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
+    $TENSORFLOW_LIB
+
 
 # Copy generated Java protos from source jars
 cd $GEN_SRCS_DIR
