@@ -39,6 +39,17 @@ abstract class AbstractOperation implements Operation {
 
   @Override
   public <T extends TType> Output<T> output(int idx) {
+    if (getUnsafeNativeHandle(idx) != null && !getUnsafeNativeHandle(idx).isNull()) {
+      int numOutputs = this.numOutputs();
+      if (idx >= numOutputs) {
+        throw new IndexOutOfBoundsException(
+            "Can't get output with index " + idx + ", this op only has " + numOutputs + " outputs.");
+      }
+
+      if (idx < 0) {
+        throw new IndexOutOfBoundsException("Can't get output with index < 0.");
+      }
+    }
     return new Output<>(this, idx);
   }
 
