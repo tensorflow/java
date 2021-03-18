@@ -255,7 +255,7 @@ public class MetricsHelper {
           updateOperations.add(assertion);
         });
 
-    Map<String, Long> dict = new HashMap<>();
+    Map<String, Operand<TInt64>> dict = new HashMap<>();
 
     // check that each operand's dimension size equals the corresponding symbolic shape's dimensions
     // size
@@ -266,9 +266,10 @@ public class MetricsHelper {
               .getSymbols()
               .forEach(
                   s -> {
-                    Long size = dict.get(s);
+                    Operand<TInt64> size = dict.get(s);
                     if (size == null) {
-                      size = symbol.getOperand().shape().size((int) ll.get());
+                      // save size for later checks
+                      size = tf.shape.size( symbol.getOperand(), tf.constant(ll.get()), TInt64.class);
                       dict.put(s, size);
                     }
                     Op assertion =
@@ -279,7 +280,7 @@ public class MetricsHelper {
                                         symbol.getOperand(),
                                         tf.constant(ll.getAndIncrement()),
                                         TInt64.class),
-                                    tf.constant(size)),
+                                        size),
                                 Collections.singletonList(tf.constant(message)));
                     updateOperations.add(assertion);
                   });
