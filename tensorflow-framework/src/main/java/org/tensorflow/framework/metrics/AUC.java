@@ -63,7 +63,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>Usage: <br>
  *
  * <pre>
- * AUC m = new  org.tensorflow.framework.metrcis.AUC( tf, 3);
+ * AUC m = new  org.tensorflow.framework.metrics.AUC( tf, 3);
  * m.updateState( tf.constant(new float[] {0, 0, 1,1}),
  *          tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f}));
  *
@@ -603,7 +603,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         if (t < 0.0f || t > 1.0f) {
           throw new IllegalArgumentException(
               String.format(
-                  "Threshold values must be in [0, 1]. Invalid values: %s",
+                  "Threshold values must be in range [0, 1], inclusive. Invalid values: %s",
                   Arrays.toString(thresholds)));
         }
       }
@@ -621,12 +621,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         thresholds[i] = (i + 1) * 1.0f / (this.numThresholds - 1);
       }
     }
-    // Add an endpoint "threshold" below zero and above one for either
-    // threshold method to account for floating point imprecision.
-    if (thresholds.length != this.numThresholds - 2) {
-      throw new IllegalArgumentException(
-          "Thresholds length must contain numThresholds - 2 entries");
-    }
+
     // Add an endpoint "threshold" below zero and above one for either
     // threshold method to account for floating point imprecisions.
     this.thresholds = new float[this.numThresholds];
@@ -754,7 +749,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         symbols.add(new SymbolicShape<>(falseNegatives, "T", "L"));
       }
       if (getLabelWeights() != null) {
-        symbols.add(new SymbolicShape<>(getLabelWeights(), "L", ""));
+        symbols.add(new SymbolicShape<>(getLabelWeights(), "L"));
       }
       updateOperations.addAll(
           MetricsHelper.assertShapes(tf, symbols, "Number of labels is not consistent."));
