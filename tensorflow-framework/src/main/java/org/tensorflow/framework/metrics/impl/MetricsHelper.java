@@ -448,7 +448,7 @@ public class MetricsHelper {
         tf.reshape(tf.shape.size(tPredictions, tf.constant(0)), tf.constant(Shape.scalar()));
 
     // number of labels (and predictions) per example (after possibly slicing by classIndex)
-    // In the notation we are using for comments, we'll call this D.
+    // In the notation we are using for comments, this is D.
     Operand<TInt32> numLabels =
         tf.select(
             tf.math.equal(tf.shape.numDimensions(predShape), tf.constant(1)),
@@ -513,8 +513,10 @@ public class MetricsHelper {
 
     Operand<TInt32> threshTilesShape = tf.stack(threshTiles);
 
-    // if multilabel, then shape (T, N, threshLabelTile)
-    //                      else (T, ND)
+    // if multilabel, then
+    //     if thresholds has rank > 1, then shape (T, N, T*)
+    //                                 else shape (T, N, D)
+    // else shape (T, ND)
     Operand<T> threshTiled = tf.tile(thresholdsReshaped, threshTilesShape);
 
     Operand<TInt32> dataTilesShape = tf.stack(dataTiles);
