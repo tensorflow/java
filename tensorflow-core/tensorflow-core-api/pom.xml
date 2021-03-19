@@ -329,6 +329,28 @@
         </dependencies>
       </plugin>
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy-native-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <skip>${javacpp.build.skip}</skip>
+              <outputDirectory>${project.build.directory}/native</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/gen/resources</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
@@ -357,6 +379,7 @@
                 <!-- In case of successive builds for multiple platforms without cleaning, ensures
                      we only include files for this platform. -->
                 <include>org/tensorflow/internal/c_api/${native.classifier}/</include>
+                <include>org/tensorflow/op/</include>
               </includes>
               <classesDirectory>${project.build.directory}/native</classesDirectory>
               <excludes>
