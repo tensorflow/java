@@ -24,6 +24,7 @@ import org.tensorflow.op.`data`.experimental.DataServiceDataset
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TType
+import kotlin.Long
 
 /**
  * An API for building `data.experimental` operations as [Op][org.tensorflow.op.Op]s
@@ -44,7 +45,7 @@ public class DataExperimentalOps(
     public val scope: Scope = ops.scope
 
     /**
-     * 
+     *
      * @param datasetId
      * @param processingMode
      * @param address
@@ -70,7 +71,7 @@ public class DataExperimentalOps(
         outputTypes: List<Class<out TType>>,
         outputShapes: List<Shape>,
         taskRefreshIntervalHintMs: Long? = null
-    ): DataServiceDataset = java.dataServiceDataset(    
+    ): DataServiceDataset = java.dataServiceDataset(
         datasetId,
         processingMode,
         address,
@@ -81,8 +82,9 @@ public class DataExperimentalOps(
         outputTypes,
         outputShapes,
         *listOfNotNull(
-            taskRefreshIntervalHintMs?.let{
-            org.tensorflow.op.data.experimental.DataServiceDataset.taskRefreshIntervalHintMs(it) }
+            taskRefreshIntervalHintMs?.let {
+                org.tensorflow.op.data.experimental.DataServiceDataset.taskRefreshIntervalHintMs(it)
+            }
         ).toTypedArray()
-        )
+    )
 }

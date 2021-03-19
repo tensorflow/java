@@ -29,6 +29,7 @@ import org.tensorflow.op.image.CropAndResizeGradImage
 import org.tensorflow.op.image.DecodeAndCropJpeg
 import org.tensorflow.op.image.DecodeBmp
 import org.tensorflow.op.image.DecodeGif
+import org.tensorflow.op.image.DecodeImage
 import org.tensorflow.op.image.DecodeJpeg
 import org.tensorflow.op.image.DecodePng
 import org.tensorflow.op.image.DrawBoundingBoxes
@@ -49,6 +50,7 @@ import org.tensorflow.op.image.ResizeNearestNeighbor
 import org.tensorflow.op.image.RgbToHsv
 import org.tensorflow.op.image.SampleDistortedBoundingBox
 import org.tensorflow.op.image.ScaleAndTranslate
+import org.tensorflow.op.image.StatelessSampleDistortedBoundingBox
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
@@ -56,6 +58,11 @@ import org.tensorflow.types.TString
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `image` operations as [Op][org.tensorflow.op.Op]s
@@ -77,17 +84,17 @@ public class ImageOps(
 
     /**
      * Adjust the contrast of one or more images.
-     *  
+     *
      *  `images` is a tensor of at least 3 dimensions.  The last 3 dimensions are
      *  interpreted as `&#91;height, width, channels]`.  The other dimensions only
      *  represent a collection of images, such as `&#91;batch, height, width, channels].`
-     *  
+     *
      *  Contrast is adjusted independently for each channel of each image.
-     *  
+     *
      *  For each channel, the Op first computes the mean of the image pixels in the
      *  channel and then adjusts each component of each pixel to
      *  `(x - mean) * contrast_factor + mean`.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images Images to adjust.  At least 3-D.
      * @param contrastFactor A float multiplier for adjusting contrast.
@@ -95,21 +102,21 @@ public class ImageOps(
      * @see org.tensorflow.op.ImageOps.adjustContrast
      */
     public fun <T : TNumber> adjustContrast(images: Operand<T>, contrastFactor: Operand<TFloat32>):
-            AdjustContrast<T> = java.adjustContrast<T>(    
+        AdjustContrast<T> = java.adjustContrast<T>(
         images,
         contrastFactor
-        )
+    )
 
     /**
      * Adjust the hue of one or more images.
-     *  
+     *
      *  `images` is a tensor of at least 3 dimensions.  The last dimension is
      *  interpreted as channels, and must be three.
-     *  
+     *
      *  The input image is considered in the RGB colorspace. Conceptually, the RGB
      *  colors are first mapped into HSV. A delta is then applied all the hue values,
      *  and then remapped back to RGB colorspace.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images Images to adjust.  At least 3-D.
      * @param delta A float delta to add to the hue.
@@ -117,21 +124,21 @@ public class ImageOps(
      * @see org.tensorflow.op.ImageOps.adjustHue
      */
     public fun <T : TNumber> adjustHue(images: Operand<T>, delta: Operand<TFloat32>): AdjustHue<T> =
-            java.adjustHue<T>(    
-        images,
-        delta
+        java.adjustHue<T>(
+            images,
+            delta
         )
 
     /**
      * Adjust the saturation of one or more images.
-     *  
+     *
      *  `images` is a tensor of at least 3 dimensions.  The last dimension is
      *  interpreted as channels, and must be three.
-     *  
+     *
      *  The input image is considered in the RGB colorspace. Conceptually, the RGB
      *  colors are first mapped into HSV. A scale is then applied all the saturation
      *  values, and then remapped back to RGB colorspace.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images Images to adjust.  At least 3-D.
      * @param scale A float scale to add to the saturation.
@@ -139,14 +146,14 @@ public class ImageOps(
      * @see org.tensorflow.op.ImageOps.adjustSaturation
      */
     public fun <T : TNumber> adjustSaturation(images: Operand<T>, scale: Operand<TFloat32>):
-            AdjustSaturation<T> = java.adjustSaturation<T>(    
+        AdjustSaturation<T> = java.adjustSaturation<T>(
         images,
         scale
-        )
+    )
 
     /**
      * Greedily selects a subset of bounding boxes in descending order of score,
-     *  
+     *
      *  This operation performs non_max_suppression on the inputs per batch, across
      *  all classes.
      *  Prunes away boxes that have high intersection-over-union (IOU) overlap
@@ -160,7 +167,7 @@ public class ImageOps(
      *  system result in the same boxes being selected by the algorithm.
      *  The output of this operation is the final boxes, scores and classes tensor
      *  returned after performing non_max_suppression.
-     * 
+     *
      * @param boxes A 4-D float tensor of shape `&#91;batch_size, num_boxes, q, 4]`. If `q` is 1
      * then
      *  same boxes are used for all classes otherwise, if `q` is equal to number of
@@ -197,7 +204,7 @@ public class ImageOps(
         scoreThreshold: Operand<TFloat32>,
         padPerClass: Boolean? = null,
         clipBoxes: Boolean? = null
-    ): CombinedNonMaxSuppression = java.combinedNonMaxSuppression(    
+    ): CombinedNonMaxSuppression = java.combinedNonMaxSuppression(
         boxes,
         scores,
         maxOutputSizePerClass,
@@ -205,20 +212,20 @@ public class ImageOps(
         iouThreshold,
         scoreThreshold,
         *listOfNotNull(
-            padPerClass?.let{ org.tensorflow.op.image.CombinedNonMaxSuppression.padPerClass(it) },
-            clipBoxes?.let{ org.tensorflow.op.image.CombinedNonMaxSuppression.clipBoxes(it) }
+            padPerClass?.let { org.tensorflow.op.image.CombinedNonMaxSuppression.padPerClass(it) },
+            clipBoxes?.let { org.tensorflow.op.image.CombinedNonMaxSuppression.clipBoxes(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Extracts crops from the input image tensor and resizes them.
-     *  
+     *
      *  Extracts crops from the input image tensor and resizes them using bilinear
      *  sampling or nearest neighbor sampling (possibly with aspect ratio change) to a
      *  common output size specified by `crop_size`. This is more general than the
      *  `crop_to_bounding_box` op which extracts a fixed size slice from the input image
      *  and does not allow resizing or aspect ratio change.
-     *  
+     *
      *  Returns a tensor with `crops` from the input `image` at positions defined at the
      *  bounding box locations in `boxes`. The cropped boxes are all resized (with
      *  bilinear or nearest neighbor interpolation) to a fixed
@@ -228,7 +235,7 @@ public class ImageOps(
      *  results to using `tf.image.resize_bilinear()` or
      *  `tf.image.resize_nearest_neighbor()`(depends on the `method` argument) with
      *  `align_corners=True`.
-     * 
+     *
      * @param image A 4-D tensor of shape `&#91;batch, image_height, image_width, depth]`.
      *  Both `image_height` and `image_width` need to be positive.
      * @param boxes A 2-D tensor of shape `&#91;num_boxes, 4]`. The `i`-th row of the tensor
@@ -262,20 +269,20 @@ public class ImageOps(
         cropSize: Operand<TInt32>,
         method: String? = null,
         extrapolationValue: Float? = null
-    ): CropAndResize = java.cropAndResize(    
+    ): CropAndResize = java.cropAndResize(
         image,
         boxes,
         boxInd,
         cropSize,
         *listOfNotNull(
-            method?.let{ org.tensorflow.op.image.CropAndResize.method(it) },
-            extrapolationValue?.let{ org.tensorflow.op.image.CropAndResize.extrapolationValue(it) }
+            method?.let { org.tensorflow.op.image.CropAndResize.method(it) },
+            extrapolationValue?.let { org.tensorflow.op.image.CropAndResize.extrapolationValue(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Computes the gradient of the crop_and_resize op wrt the input boxes tensor.
-     * 
+     *
      * @param grads A 4-D tensor of shape `&#91;num_boxes, crop_height, crop_width, depth]`.
      * @param image A 4-D tensor of shape `&#91;batch, image_height, image_width, depth]`.
      *  Both `image_height` and `image_width` need to be positive.
@@ -303,19 +310,19 @@ public class ImageOps(
         boxes: Operand<TFloat32>,
         boxInd: Operand<TInt32>,
         method: String? = null
-    ): CropAndResizeGradBoxes = java.cropAndResizeGradBoxes(    
+    ): CropAndResizeGradBoxes = java.cropAndResizeGradBoxes(
         grads,
         image,
         boxes,
         boxInd,
         *listOfNotNull(
-            method?.let{ org.tensorflow.op.image.CropAndResizeGradBoxes.method(it) }
+            method?.let { org.tensorflow.op.image.CropAndResizeGradBoxes.method(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Computes the gradient of the crop_and_resize op wrt the input image tensor.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param grads A 4-D tensor of shape `&#91;num_boxes, crop_height, crop_width, depth]`.
      * @param boxes A 2-D tensor of shape `&#91;num_boxes, 4]`. The `i`-th row of the tensor
@@ -347,23 +354,23 @@ public class ImageOps(
         imageSize: Operand<TInt32>,
         T_: Class<T>,
         method: String? = null
-    ): CropAndResizeGradImage<T> = java.cropAndResizeGradImage<T>(    
+    ): CropAndResizeGradImage<T> = java.cropAndResizeGradImage<T>(
         grads,
         boxes,
         boxInd,
         imageSize,
         T_,
         *listOfNotNull(
-            method?.let{ org.tensorflow.op.image.CropAndResizeGradImage.method(it) }
+            method?.let { org.tensorflow.op.image.CropAndResizeGradImage.method(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Decode and Crop a JPEG-encoded image to a uint8 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -378,14 +385,14 @@ public class ImageOps(
      *  </ul>
      *  If needed, the JPEG-encoded image is transformed to match the requested number
      *  of color channels.
-     *  
+     *
      *  The attr `ratio` allows downscaling the image by an integer factor during
      *  decoding.  Allowed values are: 1, 2, 4, and 8.  This is much faster than
      *  downscaling the image later.
-     *  
+     *
      *  It is equivalent to a combination of decode and crop, but much faster by only
      *  decoding partial jpeg image.
-     * 
+     *
      * @param contents 0-D.  The JPEG-encoded image.
      * @param cropWindow 1-D.  The crop window: &#91;crop_y, crop_x, crop_height, crop_width].
      * @param options carries optional attributes values
@@ -414,25 +421,25 @@ public class ImageOps(
         tryRecoverTruncated: Boolean? = null,
         acceptableFraction: Float? = null,
         dctMethod: String? = null
-    ): DecodeAndCropJpeg = java.decodeAndCropJpeg(    
+    ): DecodeAndCropJpeg = java.decodeAndCropJpeg(
         contents,
         cropWindow,
         *listOfNotNull(
-            channels?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.channels(it) },
-            ratio?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.ratio(it) },
-            fancyUpscaling?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.fancyUpscaling(it) },
-            tryRecoverTruncated?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.tryRecoverTruncated(it) },
-            acceptableFraction?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.acceptableFraction(it) },
-            dctMethod?.let{ org.tensorflow.op.image.DecodeAndCropJpeg.dctMethod(it) }
+            channels?.let { org.tensorflow.op.image.DecodeAndCropJpeg.channels(it) },
+            ratio?.let { org.tensorflow.op.image.DecodeAndCropJpeg.ratio(it) },
+            fancyUpscaling?.let { org.tensorflow.op.image.DecodeAndCropJpeg.fancyUpscaling(it) },
+            tryRecoverTruncated?.let { org.tensorflow.op.image.DecodeAndCropJpeg.tryRecoverTruncated(it) },
+            acceptableFraction?.let { org.tensorflow.op.image.DecodeAndCropJpeg.acceptableFraction(it) },
+            dctMethod?.let { org.tensorflow.op.image.DecodeAndCropJpeg.dctMethod(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Decode the first frame of a BMP-encoded image to a uint8 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -443,7 +450,7 @@ public class ImageOps(
      *  </li>
      *  <li>
      *  4: output an RGBA image.
-     * 
+     *
      * @param contents 0-D.  The BMP-encoded image.
      * @param options carries optional attributes values
      * @return a new instance of DecodeBmp
@@ -451,39 +458,132 @@ public class ImageOps(
      * @param channels @param channels
      */
     public fun decodeBmp(contents: Operand<TString>, channels: Long? = null): DecodeBmp =
-            java.decodeBmp(    
-        contents,
-        *listOfNotNull(
-            channels?.let{ org.tensorflow.op.image.DecodeBmp.channels(it) }
-        ).toTypedArray()
+        java.decodeBmp(
+            contents,
+            *listOfNotNull(
+                channels?.let { org.tensorflow.op.image.DecodeBmp.channels(it) }
+            ).toTypedArray()
         )
 
     /**
      * Decode the frame(s) of a GIF-encoded image to a uint8 tensor.
-     *  
+     *
      *  GIF images with frame or transparency compression are not supported.
      *  On Linux and MacOS systems, convert animated GIFs from compressed to
      *  uncompressed by running:
-     *  
+     *
      *      convert $src.gif -coalesce $dst.gif
-     *  
+     *
      *  This op also supports decoding JPEGs and PNGs, though it is cleaner to use
      *  `tf.io.decode_image`.
-     * 
+     *
      * @param contents 0-D.  The GIF-encoded image.
      * @return a new instance of DecodeGif
      * @see org.tensorflow.op.ImageOps.decodeGif
      */
-    public fun decodeGif(contents: Operand<TString>): DecodeGif = java.decodeGif(    
+    public fun decodeGif(contents: Operand<TString>): DecodeGif = java.decodeGif(
         contents
-        )
+    )
+
+    /**
+     * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
+     *
+     *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+     *  appropriate operation to convert the input bytes string into a Tensor of type
+     *  dtype.
+     *
+     *  <i>NOTE</i>: decode_gif returns a 4-D array &#91;num_frames, height, width, 3], as
+     *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
+     *  &#91;height, width, num_channels]. Make sure to take this into account when
+     *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
+     *  PNG files. Alternately, set the expand_animations argument of this function to
+     *  False, in which case the op will return 3-dimensional tensors and will truncate
+     *  animated GIF files to the first frame.
+     *
+     *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+     *  canvas (maximum frame width x maximum frame height), then it fills the
+     *  unoccupied areas (in the first frame) with zeros (black). For frames after the
+     *  first frame that does not occupy the entire canvas, it uses the previous
+     *  frame to fill the unoccupied areas.
+     *
+     * @param T data type for ` image()` output
+     * @param contents 0-D. The encoded image bytes.
+     * @param options carries optional attributes values
+     * @return a new instance of DecodeImage
+     * @see org.tensorflow.op.ImageOps.decodeImage
+     * @param channels Number of color channels for the decoded image.
+     * @param expandAnimations Controls the output shape of the returned op. If True, the returned
+     * op will
+     *  produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
+     *  GIFs, whether animated or not. If, False, the returned op will produce a 3-D
+     *  tensor for all file types and will truncate animated GIFs to the first frame.
+     */
+    public fun decodeImage(
+        contents: Operand<TString>,
+        channels: Long? = null,
+        expandAnimations: Boolean? = null
+    ): DecodeImage<TUint8> = java.decodeImage(
+        contents,
+        *listOfNotNull(
+            channels?.let { org.tensorflow.op.image.DecodeImage.channels(it) },
+            expandAnimations?.let { org.tensorflow.op.image.DecodeImage.expandAnimations(it) }
+        ).toTypedArray()
+    )
+
+    /**
+     * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
+     *
+     *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+     *  appropriate operation to convert the input bytes string into a Tensor of type
+     *  dtype.
+     *
+     *  <i>NOTE</i>: decode_gif returns a 4-D array &#91;num_frames, height, width, 3], as
+     *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
+     *  &#91;height, width, num_channels]. Make sure to take this into account when
+     *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
+     *  PNG files. Alternately, set the expand_animations argument of this function to
+     *  False, in which case the op will return 3-dimensional tensors and will truncate
+     *  animated GIF files to the first frame.
+     *
+     *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+     *  canvas (maximum frame width x maximum frame height), then it fills the
+     *  unoccupied areas (in the first frame) with zeros (black). For frames after the
+     *  first frame that does not occupy the entire canvas, it uses the previous
+     *  frame to fill the unoccupied areas.
+     *
+     * @param T data type for ` image()` output
+     * @param contents 0-D. The encoded image bytes.
+     * @param dtype The desired DType of the returned Tensor.
+     * @param options carries optional attributes values
+     * @return a new instance of DecodeImage
+     * @see org.tensorflow.op.ImageOps.decodeImage
+     * @param channels Number of color channels for the decoded image.
+     * @param expandAnimations Controls the output shape of the returned op. If True, the returned
+     * op will
+     *  produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
+     *  GIFs, whether animated or not. If, False, the returned op will produce a 3-D
+     *  tensor for all file types and will truncate animated GIFs to the first frame.
+     */
+    public fun <T : TNumber> decodeImage(
+        contents: Operand<TString>,
+        dtype: Class<T>,
+        channels: Long? = null,
+        expandAnimations: Boolean? = null
+    ): DecodeImage<T> = java.decodeImage<T>(
+        contents,
+        dtype,
+        *listOfNotNull(
+            channels?.let { org.tensorflow.op.image.DecodeImage.channels(it) },
+            expandAnimations?.let { org.tensorflow.op.image.DecodeImage.expandAnimations(it) }
+        ).toTypedArray()
+    )
 
     /**
      * Decode a JPEG-encoded image to a uint8 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -498,14 +598,14 @@ public class ImageOps(
      *  </ul>
      *  If needed, the JPEG-encoded image is transformed to match the requested number
      *  of color channels.
-     *  
+     *
      *  The attr `ratio` allows downscaling the image by an integer factor during
      *  decoding.  Allowed values are: 1, 2, 4, and 8.  This is much faster than
      *  downscaling the image later.
-     *  
+     *
      *  This op also supports decoding PNGs and non-animated GIFs since the interface is
      *  the same, though it is cleaner to use `tf.io.decode_image`.
-     * 
+     *
      * @param contents 0-D.  The JPEG-encoded image.
      * @param options carries optional attributes values
      * @return a new instance of DecodeJpeg
@@ -532,24 +632,24 @@ public class ImageOps(
         tryRecoverTruncated: Boolean? = null,
         acceptableFraction: Float? = null,
         dctMethod: String? = null
-    ): DecodeJpeg = java.decodeJpeg(    
+    ): DecodeJpeg = java.decodeJpeg(
         contents,
         *listOfNotNull(
-            channels?.let{ org.tensorflow.op.image.DecodeJpeg.channels(it) },
-            ratio?.let{ org.tensorflow.op.image.DecodeJpeg.ratio(it) },
-            fancyUpscaling?.let{ org.tensorflow.op.image.DecodeJpeg.fancyUpscaling(it) },
-            tryRecoverTruncated?.let{ org.tensorflow.op.image.DecodeJpeg.tryRecoverTruncated(it) },
-            acceptableFraction?.let{ org.tensorflow.op.image.DecodeJpeg.acceptableFraction(it) },
-            dctMethod?.let{ org.tensorflow.op.image.DecodeJpeg.dctMethod(it) }
+            channels?.let { org.tensorflow.op.image.DecodeJpeg.channels(it) },
+            ratio?.let { org.tensorflow.op.image.DecodeJpeg.ratio(it) },
+            fancyUpscaling?.let { org.tensorflow.op.image.DecodeJpeg.fancyUpscaling(it) },
+            tryRecoverTruncated?.let { org.tensorflow.op.image.DecodeJpeg.tryRecoverTruncated(it) },
+            acceptableFraction?.let { org.tensorflow.op.image.DecodeJpeg.acceptableFraction(it) },
+            dctMethod?.let { org.tensorflow.op.image.DecodeJpeg.dctMethod(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Decode a PNG-encoded image to a uint8 or uint16 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -567,10 +667,10 @@ public class ImageOps(
      *  </ul>
      *  If needed, the PNG-encoded image is transformed to match the requested number
      *  of color channels.
-     *  
+     *
      *  This op also supports decoding JPEGs and non-animated GIFs since the interface
      *  is the same, though it is cleaner to use `tf.io.decode_image`.
-     * 
+     *
      * @param T data type for ` image()` output
      * @param contents 0-D.  The PNG-encoded image.
      * @param options carries optional attributes values
@@ -579,19 +679,19 @@ public class ImageOps(
      * @param channels Number of color channels for the decoded image.
      */
     public fun decodePng(contents: Operand<TString>, channels: Long? = null): DecodePng<TUint8> =
-            java.decodePng(    
-        contents,
-        *listOfNotNull(
-            channels?.let{ org.tensorflow.op.image.DecodePng.channels(it) }
-        ).toTypedArray()
+        java.decodePng(
+            contents,
+            *listOfNotNull(
+                channels?.let { org.tensorflow.op.image.DecodePng.channels(it) }
+            ).toTypedArray()
         )
 
     /**
      * Decode a PNG-encoded image to a uint8 or uint16 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -609,10 +709,10 @@ public class ImageOps(
      *  </ul>
      *  If needed, the PNG-encoded image is transformed to match the requested number
      *  of color channels.
-     *  
+     *
      *  This op also supports decoding JPEGs and non-animated GIFs since the interface
      *  is the same, though it is cleaner to use `tf.io.decode_image`.
-     * 
+     *
      * @param T data type for ` image()` output
      * @param contents 0-D.  The PNG-encoded image.
      * @param dtype
@@ -625,29 +725,29 @@ public class ImageOps(
         contents: Operand<TString>,
         dtype: Class<T>,
         channels: Long? = null
-    ): DecodePng<T> = java.decodePng<T>(    
+    ): DecodePng<T> = java.decodePng<T>(
         contents,
         dtype,
         *listOfNotNull(
-            channels?.let{ org.tensorflow.op.image.DecodePng.channels(it) }
+            channels?.let { org.tensorflow.op.image.DecodePng.channels(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Draw bounding boxes on a batch of images.
-     *  
+     *
      *  Outputs a copy of `images` but draws on top of the pixels zero or more bounding
      *  boxes specified by the locations in `boxes`. The coordinates of the each
      *  bounding box in `boxes` are encoded as `&#91;y_min, x_min, y_max, x_max]`. The
      *  bounding box coordinates are floats in `&#91;0.0, 1.0]` relative to the width and
      *  height of the underlying image.
-     *  
+     *
      *  For example, if an image is 100 x 200 pixels (height x width) and the bounding
      *  box is `&#91;0.1, 0.2, 0.5, 0.9]`, the upper-left and bottom-right coordinates of
      *  the bounding box will be `(40, 10)` to `(100, 50)` (in (x,y) coordinates).
-     *  
+     *
      *  Parts of the bounding box may fall outside the image.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images 4-D with shape `&#91;batch, height, width, depth]`. A batch of images.
      * @param boxes 3-D with shape `&#91;batch, num_bounding_boxes, 4]` containing bounding
@@ -660,17 +760,17 @@ public class ImageOps(
         images: Operand<T>,
         boxes: Operand<TFloat32>,
         colors: Operand<TFloat32>
-    ): DrawBoundingBoxes<T> = java.drawBoundingBoxes<T>(    
+    ): DrawBoundingBoxes<T> = java.drawBoundingBoxes<T>(
         images,
         boxes,
         colors
-        )
+    )
 
     /**
      * JPEG-encode an image.
-     *  
+     *
      *  `image` is a 3-D uint8 Tensor of shape `&#91;height, width, channels]`.
-     *  
+     *
      *  The attr `format` can be used to override the color format of the encoded
      *  output.  Values can be:
      *  <ul>
@@ -694,7 +794,7 @@ public class ImageOps(
      *  </li>
      *  <li>
      *  3: Output an RGB image.
-     * 
+     *
      * @param image 3-D with shape `&#91;height, width, channels]`.
      * @param options carries optional attributes values
      * @return a new instance of EncodeJpeg
@@ -721,41 +821,41 @@ public class ImageOps(
         xDensity: Long? = null,
         yDensity: Long? = null,
         xmpMetadata: String? = null
-    ): EncodeJpeg = java.encodeJpeg(    
+    ): EncodeJpeg = java.encodeJpeg(
         image,
         *listOfNotNull(
-            format?.let{ org.tensorflow.op.image.EncodeJpeg.format(it) },
-            quality?.let{ org.tensorflow.op.image.EncodeJpeg.quality(it) },
-            progressive?.let{ org.tensorflow.op.image.EncodeJpeg.progressive(it) },
-            optimizeSize?.let{ org.tensorflow.op.image.EncodeJpeg.optimizeSize(it) },
-            chromaDownsampling?.let{ org.tensorflow.op.image.EncodeJpeg.chromaDownsampling(it) },
-            densityUnit?.let{ org.tensorflow.op.image.EncodeJpeg.densityUnit(it) },
-            xDensity?.let{ org.tensorflow.op.image.EncodeJpeg.xDensity(it) },
-            yDensity?.let{ org.tensorflow.op.image.EncodeJpeg.yDensity(it) },
-            xmpMetadata?.let{ org.tensorflow.op.image.EncodeJpeg.xmpMetadata(it) }
+            format?.let { org.tensorflow.op.image.EncodeJpeg.format(it) },
+            quality?.let { org.tensorflow.op.image.EncodeJpeg.quality(it) },
+            progressive?.let { org.tensorflow.op.image.EncodeJpeg.progressive(it) },
+            optimizeSize?.let { org.tensorflow.op.image.EncodeJpeg.optimizeSize(it) },
+            chromaDownsampling?.let { org.tensorflow.op.image.EncodeJpeg.chromaDownsampling(it) },
+            densityUnit?.let { org.tensorflow.op.image.EncodeJpeg.densityUnit(it) },
+            xDensity?.let { org.tensorflow.op.image.EncodeJpeg.xDensity(it) },
+            yDensity?.let { org.tensorflow.op.image.EncodeJpeg.yDensity(it) },
+            xmpMetadata?.let { org.tensorflow.op.image.EncodeJpeg.xmpMetadata(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * JPEG encode input image with provided compression quality.
-     *  
+     *
      *  `image` is a 3-D uint8 Tensor of shape `&#91;height, width, channels]`.
      *  `quality` is an int32 jpeg compression quality value between 0 and 100.
-     * 
+     *
      * @param images Images to adjust.  At least 3-D.
      * @param quality An int quality to encode to.
      * @return a new instance of EncodeJpegVariableQuality
      * @see org.tensorflow.op.ImageOps.encodeJpegVariableQuality
      */
     public fun encodeJpegVariableQuality(images: Operand<TUint8>, quality: Operand<TInt32>):
-            EncodeJpegVariableQuality = java.encodeJpegVariableQuality(    
+        EncodeJpegVariableQuality = java.encodeJpegVariableQuality(
         images,
         quality
-        )
+    )
 
     /**
      * PNG-encode an image.
-     *  
+     *
      *  `image` is a 3-D uint8 or uint16 Tensor of shape `&#91;height, width, channels]`
      *  where `channels` is:
      *  <ul>
@@ -775,7 +875,7 @@ public class ImageOps(
      *  The ZLIB compression level, `compression`, can be -1 for the PNG-encoder
      *  default or a value from 0 to 9.  9 is the highest compression level, generating
      *  the smallest output, but is slower.
-     * 
+     *
      * @param image 3-D with shape `&#91;height, width, channels]`.
      * @param options carries optional attributes values
      * @return a new instance of EncodePng
@@ -783,16 +883,16 @@ public class ImageOps(
      * @param compression Compression level.
      */
     public fun encodePng(image: Operand<out TNumber>, compression: Long? = null): EncodePng =
-            java.encodePng(    
-        image,
-        *listOfNotNull(
-            compression?.let{ org.tensorflow.op.image.EncodePng.compression(it) }
-        ).toTypedArray()
+        java.encodePng(
+            image,
+            *listOfNotNull(
+                compression?.let { org.tensorflow.op.image.EncodePng.compression(it) }
+            ).toTypedArray()
         )
 
     /**
      * Extract `patches` from `images` and put them in the "depth" output dimension.
-     * 
+     *
      * @param T data type for ` patches()` output
      * @param images 4-D Tensor with shape `&#91;batch, in_rows, in_cols, depth]`.
      * @param ksizes The size of the sliding window for each dimension of `images`.
@@ -814,34 +914,34 @@ public class ImageOps(
         strides: List<Long>,
         rates: List<Long>,
         padding: String
-    ): ExtractImagePatches<T> = java.extractImagePatches<T>(    
+    ): ExtractImagePatches<T> = java.extractImagePatches<T>(
         images,
         ksizes,
         strides,
         rates,
         padding
-        )
+    )
 
     /**
      * Extract the shape information of a JPEG-encoded image.
-     *  
+     *
      *  This op only parses the image header, so it is much faster than DecodeJpeg.
-     * 
+     *
      * @param T data type for ` imageShape()` output
      * @param contents 0-D. The JPEG-encoded image.
      * @return a new instance of ExtractJpegShape
      * @see org.tensorflow.op.ImageOps.extractJpegShape
      */
     public fun extractJpegShape(contents: Operand<TString>): ExtractJpegShape<TInt32> =
-            java.extractJpegShape(    
-        contents
+        java.extractJpegShape(
+            contents
         )
 
     /**
      * Extract the shape information of a JPEG-encoded image.
-     *  
+     *
      *  This op only parses the image header, so it is much faster than DecodeJpeg.
-     * 
+     *
      * @param T data type for ` imageShape()` output
      * @param contents 0-D. The JPEG-encoded image.
      * @param outputType (Optional) The output type of the operation (int32 or int64).
@@ -850,32 +950,32 @@ public class ImageOps(
      * @see org.tensorflow.op.ImageOps.extractJpegShape
      */
     public fun <T : TNumber> extractJpegShape(contents: Operand<TString>, outputType: Class<T>):
-            ExtractJpegShape<T> = java.extractJpegShape<T>(    
+        ExtractJpegShape<T> = java.extractJpegShape<T>(
         contents,
         outputType
-        )
+    )
 
     /**
      * Convert one or more images from HSV to RGB.
-     *  
+     *
      *  Outputs a tensor of the same shape as the `images` tensor, containing the RGB
      *  value of the pixels. The output is only well defined if the value in `images`
      *  are in `&#91;0,1]`.
-     *  
+     *
      *  See `rgb_to_hsv` for a description of the HSV encoding.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
      * @return a new instance of HsvToRgb
      * @see org.tensorflow.op.ImageOps.hsvToRgb
      */
-    public fun <T : TNumber> hsvToRgb(images: Operand<T>): HsvToRgb<T> = java.hsvToRgb<T>(    
+    public fun <T : TNumber> hsvToRgb(images: Operand<T>): HsvToRgb<T> = java.hsvToRgb<T>(
         images
-        )
+    )
 
     /**
      * Greedily selects a subset of bounding boxes in descending order of score,
-     *  
+     *
      *  pruning away boxes that have high intersection-over-union (IOU) overlap
      *  with previously selected boxes.  Bounding boxes with score less than
      *  `score_threshold` are removed.  Bounding boxes are supplied as
@@ -898,7 +998,7 @@ public class ImageOps(
      *  of other overlapping boxes instead of directly causing them to be pruned.
      *  To enable this Soft-NMS mode, set the `soft_nms_sigma` parameter to be
      *  larger than 0.
-     * 
+     *
      * @param T data type for ` selectedScores()` output
      * @param boxes A 2-D float tensor of shape `&#91;num_boxes, 4]`.
      * @param scores A 1-D float tensor of shape `&#91;num_boxes]` representing a single
@@ -928,7 +1028,7 @@ public class ImageOps(
         scoreThreshold: Operand<T>,
         softNmsSigma: Operand<T>,
         padToMaxOutputSize: Boolean? = null
-    ): NonMaxSuppression<T> = java.nonMaxSuppression<T>(    
+    ): NonMaxSuppression<T> = java.nonMaxSuppression<T>(
         boxes,
         scores,
         maxOutputSize,
@@ -936,28 +1036,28 @@ public class ImageOps(
         scoreThreshold,
         softNmsSigma,
         *listOfNotNull(
-            padToMaxOutputSize?.let{ org.tensorflow.op.image.NonMaxSuppression.padToMaxOutputSize(it) }
+            padToMaxOutputSize?.let { org.tensorflow.op.image.NonMaxSuppression.padToMaxOutputSize(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Greedily selects a subset of bounding boxes in descending order of score,
-     *  
+     *
      *  pruning away boxes that have high overlaps
      *  with previously selected boxes.  Bounding boxes with score less than
      *  `score_threshold` are removed. N-by-n overlap values are supplied as square matrix,
      *  which allows for defining a custom overlap criterium (eg. intersection over union,
      *  intersection over area, etc.).
-     *  
+     *
      *  The output of this operation is a set of integers indexing into the input
      *  collection of bounding boxes representing the selected boxes.  The bounding
      *  box coordinates corresponding to the selected indices can then be obtained
      *  using the `tf.gather operation`.  For example:
-     *  
+     *
      *    selected_indices = tf.image.non_max_suppression_with_overlaps(
      *        overlaps, scores, max_output_size, overlap_threshold, score_threshold)
      *    selected_boxes = tf.gather(boxes, selected_indices)
-     * 
+     *
      * @param overlaps A 2-D float tensor of shape `&#91;num_boxes, num_boxes]` representing
      *  the n-by-n box overlap values.
      * @param scores A 1-D float tensor of shape `&#91;num_boxes]` representing a single
@@ -978,19 +1078,19 @@ public class ImageOps(
         maxOutputSize: Operand<TInt32>,
         overlapThreshold: Operand<TFloat32>,
         scoreThreshold: Operand<TFloat32>
-    ): NonMaxSuppressionWithOverlaps = java.nonMaxSuppressionWithOverlaps(    
+    ): NonMaxSuppressionWithOverlaps = java.nonMaxSuppressionWithOverlaps(
         overlaps,
         scores,
         maxOutputSize,
         overlapThreshold,
         scoreThreshold
-        )
+    )
 
     /**
      * Resize quantized `images` to `size` using quantized bilinear interpolation.
-     *  
+     *
      *  Input images and output images must be quantized types.
-     * 
+     *
      * @param T data type for ` resizedImages()` output
      * @param images 4-D with shape `&#91;batch, height, width, channels]`.
      * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
@@ -1012,27 +1112,27 @@ public class ImageOps(
         max: Operand<TFloat32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): QuantizedResizeBilinear<T> = java.quantizedResizeBilinear<T>(    
+    ): QuantizedResizeBilinear<T> = java.quantizedResizeBilinear<T>(
         images,
         size,
         min,
         max,
         *listOfNotNull(
-            alignCorners?.let{ org.tensorflow.op.image.QuantizedResizeBilinear.alignCorners(it) },
-            halfPixelCenters?.let{ org.tensorflow.op.image.QuantizedResizeBilinear.halfPixelCenters(it) }
+            alignCorners?.let { org.tensorflow.op.image.QuantizedResizeBilinear.alignCorners(it) },
+            halfPixelCenters?.let { org.tensorflow.op.image.QuantizedResizeBilinear.halfPixelCenters(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Randomly crop `image`.
-     *  
+     *
      *  `size` is a 1-D int64 tensor with 2 elements representing the crop height and
      *  width.  The values must be non negative.
-     *  
+     *
      *  This Op picks a random location in `image` and crops a `height` by `width`
      *  rectangle from that location.  The random location is picked so the cropped
      *  area will fit inside the original image.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param image 3-D of shape `&#91;height, width, channels]`.
      * @param size 1-D of length 2 containing: `crop_height`, `crop_width`..
@@ -1049,30 +1149,30 @@ public class ImageOps(
         size: Operand<TInt64>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomCrop<T> = java.randomCrop<T>(    
+    ): RandomCrop<T> = java.randomCrop<T>(
         image,
         size,
         *listOfNotNull(
-            seed?.let{ org.tensorflow.op.image.RandomCrop.seed(it) },
-            seed2?.let{ org.tensorflow.op.image.RandomCrop.seed2(it) }
+            seed?.let { org.tensorflow.op.image.RandomCrop.seed(it) },
+            seed2?.let { org.tensorflow.op.image.RandomCrop.seed2(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Resize `images` to `size` using area interpolation.
-     *  
+     *
      *  Input images can be of different types but output images are always float.
-     *  
+     *
      *  The range of pixel values for the output image might be slightly different
      *  from the range for the input image because of limited numerical precision.
      *  To guarantee an output range, for example `&#91;0.0, 1.0]`, apply
      *  `tf.clip_by_value` to the output.
-     *  
+     *
      *  Each output pixel is computed by first transforming the pixel's footprint into
      *  the input tensor and then averaging the pixels that intersect the footprint. An
      *  input pixel's contribution to the average is weighted by the fraction of its
      *  area that intersects the footprint.  This is the same as OpenCV's INTER_AREA.
-     * 
+     *
      * @param images 4-D with shape `&#91;batch, height, width, channels]`.
      * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
      *  new size for the images.
@@ -1087,19 +1187,19 @@ public class ImageOps(
         images: Operand<out TNumber>,
         size: Operand<TInt32>,
         alignCorners: Boolean? = null
-    ): ResizeArea = java.resizeArea(    
+    ): ResizeArea = java.resizeArea(
         images,
         size,
         *listOfNotNull(
-            alignCorners?.let{ org.tensorflow.op.image.ResizeArea.alignCorners(it) }
+            alignCorners?.let { org.tensorflow.op.image.ResizeArea.alignCorners(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Resize `images` to `size` using bicubic interpolation.
-     *  
+     *
      *  Input images can be of different types but output images are always float.
-     * 
+     *
      * @param images 4-D with shape `&#91;batch, height, width, channels]`.
      * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
      *  new size for the images.
@@ -1116,20 +1216,20 @@ public class ImageOps(
         size: Operand<TInt32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): ResizeBicubic = java.resizeBicubic(    
+    ): ResizeBicubic = java.resizeBicubic(
         images,
         size,
         *listOfNotNull(
-            alignCorners?.let{ org.tensorflow.op.image.ResizeBicubic.alignCorners(it) },
-            halfPixelCenters?.let{ org.tensorflow.op.image.ResizeBicubic.halfPixelCenters(it) }
+            alignCorners?.let { org.tensorflow.op.image.ResizeBicubic.alignCorners(it) },
+            halfPixelCenters?.let { org.tensorflow.op.image.ResizeBicubic.halfPixelCenters(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Resize `images` to `size` using bilinear interpolation.
-     *  
+     *
      *  Input images can be of different types but output images are always float.
-     * 
+     *
      * @param images 4-D with shape `&#91;batch, height, width, channels]`.
      * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
      *  new size for the images.
@@ -1146,18 +1246,18 @@ public class ImageOps(
         size: Operand<TInt32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): ResizeBilinear = java.resizeBilinear(    
+    ): ResizeBilinear = java.resizeBilinear(
         images,
         size,
         *listOfNotNull(
-            alignCorners?.let{ org.tensorflow.op.image.ResizeBilinear.alignCorners(it) },
-            halfPixelCenters?.let{ org.tensorflow.op.image.ResizeBilinear.halfPixelCenters(it) }
+            alignCorners?.let { org.tensorflow.op.image.ResizeBilinear.alignCorners(it) },
+            halfPixelCenters?.let { org.tensorflow.op.image.ResizeBilinear.halfPixelCenters(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Resize `images` to `size` using nearest neighbor interpolation.
-     * 
+     *
      * @param T data type for ` resizedImages()` output
      * @param images 4-D with shape `&#91;batch, height, width, channels]`.
      * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
@@ -1175,28 +1275,28 @@ public class ImageOps(
         size: Operand<TInt32>,
         alignCorners: Boolean? = null,
         halfPixelCenters: Boolean? = null
-    ): ResizeNearestNeighbor<T> = java.resizeNearestNeighbor<T>(    
+    ): ResizeNearestNeighbor<T> = java.resizeNearestNeighbor<T>(
         images,
         size,
         *listOfNotNull(
-            alignCorners?.let{ org.tensorflow.op.image.ResizeNearestNeighbor.alignCorners(it) },
-            halfPixelCenters?.let{ org.tensorflow.op.image.ResizeNearestNeighbor.halfPixelCenters(it) }
+            alignCorners?.let { org.tensorflow.op.image.ResizeNearestNeighbor.alignCorners(it) },
+            halfPixelCenters?.let { org.tensorflow.op.image.ResizeNearestNeighbor.halfPixelCenters(it) }
         ).toTypedArray()
-        )
+    )
 
     /**
      * Converts one or more images from RGB to HSV.
-     *  
+     *
      *  Outputs a tensor of the same shape as the `images` tensor, containing the HSV
      *  value of the pixels. The output is only well defined if the value in `images`
      *  are in `&#91;0,1]`.
-     *  
+     *
      *  `output&#91;..., 0]` contains hue, `output&#91;..., 1]` contains saturation, and
      *  `output&#91;..., 2]` contains value. All HSV values are in `&#91;0,1]`. A hue of 0
      *  corresponds to pure red, hue 1/3 is pure green, and 2/3 is pure blue.
-     *  
+     *
      *  Usage Example:
-     *  
+     *
      *  >>> blue_image = tf.stack(&#91;
      *  ...    tf.zeros(&#91;5,5]),
      *  ...    tf.zeros(&#91;5,5]),
@@ -1205,57 +1305,57 @@ public class ImageOps(
      *  >>> blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
      *  >>> blue_hsv_image&#91;0,0].numpy()
      *  array(&#91;0.6666667, 1. , 1. ], dtype=float32)
-     * 
+     *
      * @param T data type for ` output()` output
      * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
      * @return a new instance of RgbToHsv
      * @see org.tensorflow.op.ImageOps.rgbToHsv
      */
-    public fun <T : TNumber> rgbToHsv(images: Operand<T>): RgbToHsv<T> = java.rgbToHsv<T>(    
+    public fun <T : TNumber> rgbToHsv(images: Operand<T>): RgbToHsv<T> = java.rgbToHsv<T>(
         images
-        )
+    )
 
     /**
      * Generate a single randomly distorted bounding box for an image.
-     *  
+     *
      *  Bounding box annotations are often supplied in addition to ground-truth labels
      *  in image recognition or object localization tasks. A common technique for
      *  training such a system is to randomly distort an image while preserving
      *  its content, i.e. <i>data augmentation</i>. This Op outputs a randomly distorted
      *  localization of an object, i.e. bounding box, given an `image_size`,
      *  `bounding_boxes` and a series of constraints.
-     *  
+     *
      *  The output of this Op is a single bounding box that may be used to crop the
      *  original image. The output is returned as 3 tensors: `begin`, `size` and
      *  `bboxes`. The first 2 tensors can be fed directly into `tf.slice` to crop the
      *  image. The latter may be supplied to `tf.image.draw_bounding_boxes` to visualize
      *  what the bounding box looks like.
-     *  
+     *
      *  Bounding boxes are supplied and returned as `&#91;y_min, x_min, y_max, x_max]`. The
      *  bounding box coordinates are floats in `&#91;0.0, 1.0]` relative to the width and
      *  height of the underlying image.
-     *  
+     *
      *  For example,
      *  ```
      *      # Generate a single distorted bounding box.
      *      begin, size, bbox_for_draw = tf.image.sample_distorted_bounding_box(
      *          tf.shape(image),
      *          bounding_boxes=bounding_boxes)
-     * 
+     *
      *      # Draw the bounding box in an image summary.
      *      image_with_box = tf.image.draw_bounding_boxes(tf.expand_dims(image, 0),
      *                                                    bbox_for_draw)
      *      tf.summary.image('images_with_box', image_with_box)
-     * 
+     *
      *      # Employ the bounding box to distort the image.
      *      distorted_image = tf.slice(image, begin, size)
      *  ```
-     * 
+     *
      *  Note that if no bounding box information is available, setting
      *  `use_image_if_no_bounding_boxes = true` will assume there is a single implicit
      *  bounding box covering the whole image. If `use_image_if_no_bounding_boxes` is
      *  false and no bounding boxes are supplied, an error is raised.
-     * 
+     *
      * @param T data type for ` begin()` output
      * @param imageSize 1-D, containing `&#91;height, width, channels]`.
      * @param boundingBoxes 3-D with shape `&#91;batch, N, 4]` describing the N bounding boxes
@@ -1292,24 +1392,26 @@ public class ImageOps(
         areaRange: List<Float>? = null,
         maxAttempts: Long? = null,
         useImageIfNoBoundingBoxes: Boolean? = null
-    ): SampleDistortedBoundingBox<T> = java.sampleDistortedBoundingBox<T>(    
+    ): SampleDistortedBoundingBox<T> = java.sampleDistortedBoundingBox<T>(
         imageSize,
         boundingBoxes,
         minObjectCovered,
         *listOfNotNull(
-            seed?.let{ org.tensorflow.op.image.SampleDistortedBoundingBox.seed(it) },
-            seed2?.let{ org.tensorflow.op.image.SampleDistortedBoundingBox.seed2(it) },
-            aspectRatioRange?.let{ org.tensorflow.op.image.SampleDistortedBoundingBox.aspectRatioRange(it)
+            seed?.let { org.tensorflow.op.image.SampleDistortedBoundingBox.seed(it) },
+            seed2?.let { org.tensorflow.op.image.SampleDistortedBoundingBox.seed2(it) },
+            aspectRatioRange?.let {
+                org.tensorflow.op.image.SampleDistortedBoundingBox.aspectRatioRange(it)
             },
-            areaRange?.let{ org.tensorflow.op.image.SampleDistortedBoundingBox.areaRange(it) },
-            maxAttempts?.let{ org.tensorflow.op.image.SampleDistortedBoundingBox.maxAttempts(it) },
-            useImageIfNoBoundingBoxes?.let{
-            org.tensorflow.op.image.SampleDistortedBoundingBox.useImageIfNoBoundingBoxes(it) }
+            areaRange?.let { org.tensorflow.op.image.SampleDistortedBoundingBox.areaRange(it) },
+            maxAttempts?.let { org.tensorflow.op.image.SampleDistortedBoundingBox.maxAttempts(it) },
+            useImageIfNoBoundingBoxes?.let {
+                org.tensorflow.op.image.SampleDistortedBoundingBox.useImageIfNoBoundingBoxes(it)
+            }
         ).toTypedArray()
-        )
+    )
 
     /**
-     * 
+     *
      * @param images
      * @param size
      * @param scale
@@ -1327,20 +1429,136 @@ public class ImageOps(
         translation: Operand<TFloat32>,
         kernelType: String? = null,
         antialias: Boolean? = null
-    ): ScaleAndTranslate = java.scaleAndTranslate(    
+    ): ScaleAndTranslate = java.scaleAndTranslate(
         images,
         size,
         scale,
         translation,
         *listOfNotNull(
-            kernelType?.let{ org.tensorflow.op.image.ScaleAndTranslate.kernelType(it) },
-            antialias?.let{ org.tensorflow.op.image.ScaleAndTranslate.antialias(it) }
+            kernelType?.let { org.tensorflow.op.image.ScaleAndTranslate.kernelType(it) },
+            antialias?.let { org.tensorflow.op.image.ScaleAndTranslate.antialias(it) }
         ).toTypedArray()
-        )
+    )
+
+    /**
+     * Generate a randomly distorted bounding box for an image deterministically.
+     *
+     *  Bounding box annotations are often supplied in addition to ground-truth labels
+     *  in image recognition or object localization tasks. A common technique for
+     *  training such a system is to randomly distort an image while preserving its
+     *  content, i.e. <i>data augmentation</i>. This Op, given the same `seed`,
+     *  deterministically outputs a randomly distorted localization of an object, i.e.
+     *  bounding box, given an `image_size`, `bounding_boxes` and a series of
+     *  constraints.
+     *
+     *  The output of this Op is a single bounding box that may be used to crop the
+     *  original image. The output is returned as 3 tensors: `begin`, `size` and
+     *  `bboxes`. The first 2 tensors can be fed directly into `tf.slice` to crop the
+     *  image. The latter may be supplied to `tf.image.draw_bounding_boxes` to visualize
+     *  what the bounding box looks like.
+     *
+     *  Bounding boxes are supplied and returned as `&#91;y_min, x_min, y_max, x_max]`. The
+     *  bounding box coordinates are floats in `&#91;0.0, 1.0]` relative to the width and
+     *  the height of the underlying image.
+     *
+     *  The output of this Op is guaranteed to be the same given the same `seed` and is
+     *  independent of how many times the function is called, and independent of global
+     *  seed settings (e.g. `tf.random.set_seed`).
+     *
+     *  Example usage:
+     *
+     *  >>> image = np.array(&#91;&#91;&#91;1], &#91;2], &#91;3]], &#91;&#91;4], &#91;5], &#91;6]],
+     * &#91;&#91;7], &#91;8], &#91;9]]])
+     *  >>> bbox = tf.constant(
+     *  ...   &#91;0.0, 0.0, 1.0, 1.0], dtype=tf.float32, shape=&#91;1, 1, 4])
+     *  >>> seed = (1, 2)
+     *  >>> # Generate a single distorted bounding box.
+     *  >>> bbox_begin, bbox_size, bbox_draw = (
+     *  ...   tf.image.stateless_sample_distorted_bounding_box(
+     *  ...     tf.shape(image), bounding_boxes=bbox, seed=seed))
+     *  >>> # Employ the bounding box to distort the image.
+     *  >>> tf.slice(image, bbox_begin, bbox_size)
+     *  <tf.Tensor: shape=(2, 2, 1), dtype=int64, numpy=
+     *  array(&#91;&#91;&#91;1],
+     *          &#91;2]],
+     *         &#91;&#91;4],
+     *          &#91;5]]])>
+     *  >>> # Draw the bounding box in an image summary.
+     *  >>> colors = np.array(&#91;&#91;1.0, 0.0, 0.0], &#91;0.0, 0.0, 1.0]])
+     *  >>> tf.image.draw_bounding_boxes(
+     *  ...   tf.expand_dims(tf.cast(image, tf.float32),0), bbox_draw, colors)
+     *  <tf.Tensor: shape=(1, 3, 3, 1), dtype=float32, numpy=
+     *  array(&#91;&#91;&#91;&#91;1.],
+     *           &#91;1.],
+     *           &#91;3.]],
+     *          &#91;&#91;1.],
+     *           &#91;1.],
+     *           &#91;6.]],
+     *          &#91;&#91;7.],
+     *           &#91;8.],
+     *           &#91;9.]]]], dtype=float32)>
+     *
+     *  Note that if no bounding box information is available, setting
+     *  `use_image_if_no_bounding_boxes = true` will assume there is a single implicit
+     *  bounding box covering the whole image. If `use_image_if_no_bounding_boxes` is
+     *  false and no bounding boxes are supplied, an error is raised.
+     *
+     * @param T data type for ` begin()` output
+     * @param imageSize 1-D, containing `&#91;height, width, channels]`.
+     * @param boundingBoxes 3-D with shape `&#91;batch, N, 4]` describing the N bounding boxes
+     *  associated with the image.
+     * @param minObjectCovered The cropped area of the image must contain at least this
+     *  fraction of any bounding box supplied. The value of this parameter should be
+     *  non-negative. In the case of 0, the cropped area does not need to overlap
+     *  any of the bounding boxes supplied.
+     * @param seed 1-D with shape `&#91;2]`. The seed to the random number generator. Must have
+     * dtype
+     *  `int32` or `int64`. (When using XLA, only `int32` is allowed.)
+     * @param options carries optional attributes values
+     * @return a new instance of StatelessSampleDistortedBoundingBox
+     * @see org.tensorflow.op.ImageOps.statelessSampleDistortedBoundingBox
+     * @param aspectRatioRange The cropped area of the image must have an aspect ratio =
+     *  width / height within this range.
+     * @param areaRange The cropped area of the image must contain a fraction of the
+     *  supplied image within this range.
+     * @param maxAttempts Number of attempts at generating a cropped region of the image
+     *  of the specified constraints. After `max_attempts` failures, return the entire
+     *  image.
+     * @param useImageIfNoBoundingBoxes Controls behavior if no bounding boxes supplied.
+     *  If true, assume an implicit bounding box covering the whole input. If false,
+     *  raise an error.
+     */
+    public fun <T : TNumber> statelessSampleDistortedBoundingBox(
+        imageSize: Operand<T>,
+        boundingBoxes: Operand<TFloat32>,
+        minObjectCovered: Operand<TFloat32>,
+        seed: Operand<out TNumber>,
+        aspectRatioRange: List<Float>? = null,
+        areaRange: List<Float>? = null,
+        maxAttempts: Long? = null,
+        useImageIfNoBoundingBoxes: Boolean? = null
+    ): StatelessSampleDistortedBoundingBox<T> = java.statelessSampleDistortedBoundingBox<T>(
+        imageSize,
+        boundingBoxes,
+        minObjectCovered,
+        seed,
+        *listOfNotNull(
+            aspectRatioRange?.let {
+                org.tensorflow.op.image.StatelessSampleDistortedBoundingBox.aspectRatioRange(it)
+            },
+            areaRange?.let { org.tensorflow.op.image.StatelessSampleDistortedBoundingBox.areaRange(it) },
+            maxAttempts?.let {
+                org.tensorflow.op.image.StatelessSampleDistortedBoundingBox.maxAttempts(it)
+            },
+            useImageIfNoBoundingBoxes?.let {
+                org.tensorflow.op.image.StatelessSampleDistortedBoundingBox.useImageIfNoBoundingBoxes(it)
+            }
+        ).toTypedArray()
+    )
 
     /**
      * Computes the gradient of the crop_and_resize op wrt the input image tensor.
-     * 
+     *
      * @param T data type for ` output()` output
      * @param grads A 4-D tensor of shape `&#91;num_boxes, crop_height, crop_width, depth]`.
      * @param boxes A 2-D tensor of shape `&#91;num_boxes, 4]`. The `i`-th row of the tensor
@@ -1372,15 +1590,58 @@ public class ImageOps(
         boxInd: Operand<TInt32>,
         imageSize: Operand<TInt32>,
         method: String? = null
-    ): CropAndResizeGradImage<T> = cropAndResizeGradImage<T>(grads, boxes, boxInd, imageSize,
-            T::class.java, method)
+    ): CropAndResizeGradImage<T> = cropAndResizeGradImage<T>(
+        grads, boxes, boxInd, imageSize,
+        T::class.java, method
+    )
+
+    /**
+     * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
+     *
+     *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
+     *  appropriate operation to convert the input bytes string into a Tensor of type
+     *  dtype.
+     *
+     *  <i>NOTE</i>: decode_gif returns a 4-D array &#91;num_frames, height, width, 3], as
+     *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
+     *  &#91;height, width, num_channels]. Make sure to take this into account when
+     *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
+     *  PNG files. Alternately, set the expand_animations argument of this function to
+     *  False, in which case the op will return 3-dimensional tensors and will truncate
+     *  animated GIF files to the first frame.
+     *
+     *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+     *  canvas (maximum frame width x maximum frame height), then it fills the
+     *  unoccupied areas (in the first frame) with zeros (black). For frames after the
+     *  first frame that does not occupy the entire canvas, it uses the previous
+     *  frame to fill the unoccupied areas.
+     *
+     * @param T data type for ` image()` output
+     * @param contents 0-D. The encoded image bytes.
+     * @param dtype The desired DType of the returned Tensor.
+     * @param options carries optional attributes values
+     * @return a new instance of DecodeImage
+     * @see org.tensorflow.op.ImageOps.decodeImage
+     * @param channels Number of color channels for the decoded image.
+     * @param expandAnimations Controls the output shape of the returned op. If True, the returned
+     * op will
+     *  produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
+     *  GIFs, whether animated or not. If, False, the returned op will produce a 3-D
+     *  tensor for all file types and will truncate animated GIFs to the first frame.
+     */
+    @JvmName("decodeImageReified")
+    public inline fun <reified T : TNumber> decodeImageTyped(
+        contents: Operand<TString>,
+        channels: Long? = null,
+        expandAnimations: Boolean? = null
+    ): DecodeImage<T> = decodeImage<T>(contents, T::class.java, channels, expandAnimations)
 
     /**
      * Decode a PNG-encoded image to a uint8 or uint16 tensor.
-     *  
+     *
      *  The attr `channels` indicates the desired number of color channels for the
      *  decoded image.
-     *  
+     *
      *  Accepted values are:
      *  <ul>
      *  <li>
@@ -1398,10 +1659,10 @@ public class ImageOps(
      *  </ul>
      *  If needed, the PNG-encoded image is transformed to match the requested number
      *  of color channels.
-     *  
+     *
      *  This op also supports decoding JPEGs and non-animated GIFs since the interface
      *  is the same, though it is cleaner to use `tf.io.decode_image`.
-     * 
+     *
      * @param T data type for ` image()` output
      * @param contents 0-D.  The PNG-encoded image.
      * @param dtype
@@ -1411,14 +1672,16 @@ public class ImageOps(
      * @param channels Number of color channels for the decoded image.
      */
     @JvmName("decodePngReified")
-    public inline fun <reified T : TNumber> decodePngTyped(contents: Operand<TString>,
-            channels: Long? = null): DecodePng<T> = decodePng<T>(contents, T::class.java, channels)
+    public inline fun <reified T : TNumber> decodePngTyped(
+        contents: Operand<TString>,
+        channels: Long? = null
+    ): DecodePng<T> = decodePng<T>(contents, T::class.java, channels)
 
     /**
      * Extract the shape information of a JPEG-encoded image.
-     *  
+     *
      *  This op only parses the image header, so it is much faster than DecodeJpeg.
-     * 
+     *
      * @param T data type for ` imageShape()` output
      * @param contents 0-D. The JPEG-encoded image.
      * @param outputType (Optional) The output type of the operation (int32 or int64).
@@ -1428,5 +1691,5 @@ public class ImageOps(
      */
     @JvmName("extractJpegShapeReified")
     public inline fun <reified T : TNumber> extractJpegShapeTyped(contents: Operand<TString>):
-            ExtractJpegShape<T> = extractJpegShape<T>(contents, T::class.java)
+        ExtractJpegShape<T> = extractJpegShape<T>(contents, T::class.java)
 }

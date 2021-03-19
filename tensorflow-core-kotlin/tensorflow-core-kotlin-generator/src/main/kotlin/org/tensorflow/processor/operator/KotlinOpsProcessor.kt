@@ -96,6 +96,22 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
             }
         }
 
+        // may not be corrected sometimes.  Can't compare to classes b/c java.lang.Boolean::class.asTypeName() is converted to kotlin.Boolean
+        when(type.toString().removeSuffix("?").removeSuffix("!")){
+            "java.lang.Boolean" -> return BOOLEAN.copy(nullable = type.isNullable)
+            "java.lang.Byte "-> return BYTE.copy(nullable = type.isNullable)
+            "java.lang.Short" -> return SHORT.copy(nullable = type.isNullable)
+            "java.lang.Integer" -> return INT.copy(nullable = type.isNullable)
+            "java.lang.Long" -> return LONG.copy(nullable = type.isNullable)
+            "java.lang.Character" -> return CHAR.copy(nullable = type.isNullable)
+            "java.lang.Float" -> return FLOAT.copy(nullable = type.isNullable)
+            "java.lang.Double" -> return DOUBLE.copy(nullable = type.isNullable)
+            "java.lang.String" -> return STRING.copy(nullable = type.isNullable)
+            else -> {
+
+            }
+        }
+
         return type
     }
 
@@ -228,7 +244,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
 
         val optionParams = if (optionsClass != null)
             ElementFilter.methodsIn(optionsClass.enclosedElements).map {
-                ParameterSpec.builder(it.simpleName.toString(), it.parameters.single().asType().asTypeName().copy(nullable = true))
+                ParameterSpec.builder(it.simpleName.toString(), adjustType(it.parameters.single().asType().asTypeName()).copy(nullable = true))
                     .addKdoc("%L", adjustJavadoc(parseJavadoc(it).toText()).trim().removePrefix("@param ${it.simpleName} "))
                     .defaultValue("null").build()
             }.toSet()
