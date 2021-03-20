@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
+import org.tensorflow.Names;
 
 /**
  * Holds type information for inputs, outputs, or attributes, and provides utilities.
@@ -200,12 +199,12 @@ final class ResolvedType {
   }
 
   /**
-   * Return the type argument if {@code javaType} is {@link Operand} or {@link Output}, or return {@code javaType}.
+   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return {@code javaType}.
    */
   TypeName unwrapArg() {
     if (javaType instanceof ParameterizedTypeName) {
       ParameterizedTypeName pType = (ParameterizedTypeName) javaType;
-      if (pType.rawType.equals(ClassName.get(Operand.class)) || pType.rawType.equals(ClassName.get(Output.class))) {
+      if (pType.rawType.equals(Names.Operand) || pType.rawType.equals(Names.Output)) {
         return pType.typeArguments.get(0);
       }
     }
