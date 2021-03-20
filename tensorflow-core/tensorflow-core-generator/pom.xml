@@ -10,8 +10,8 @@
   <artifactId>tensorflow-core-generator</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Core Annotation Processor</name>
-  <description>Annotation processor for TensorFlow Java client</description>
+  <name>TensorFlow Core Generators</name>
+  <description>Code generators for TensorFlow Java client</description>
 
   <properties>
     <java.module.name>org.tensorflow.core.generator</java.module.name>
@@ -65,6 +65,25 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
+          <arguments>
+            <argument>${project.basedir}/../tensorflow-core-api/src/gen/java</argument>
+            <argument>${project.basedir}/../tensorflow-core-api/src/gen/resources/org/tensorflow/op/ops.pb</argument>
+          </arguments>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
