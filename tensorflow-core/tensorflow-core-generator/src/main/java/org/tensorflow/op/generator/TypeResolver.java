@@ -46,7 +46,7 @@ final class TypeResolver {
    * Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one.
    */
   static TypeName forDataType(DataType dataType) {
-    switch (dataType){
+    switch (dataType) {
       case DT_STRING:
         return Names.TString;
       case DT_BOOL:
@@ -223,6 +223,7 @@ final class TypeResolver {
 
   /**
    * Get the type of an attribute
+   *
    * @param fromInput whether we're calculating input types and should add this attr to {@link #reachedFromInput}
    */
   private ResolvedType typeOf(AttrDef attr, boolean fromInput) {
