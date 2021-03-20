@@ -16,32 +16,32 @@
  */
 package org.tensorflow
 
-import org.junit.jupiter.api.Test
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.ndarray.get
 import org.tensorflow.op.kotlin.KotlinOps
 import org.tensorflow.op.kotlin.tf
 import org.tensorflow.op.kotlin.withSubScope
 import org.tensorflow.types.TFloat32
+import kotlin.test.Test
 
-public fun KotlinOps.DenseLayer(
+private fun KotlinOps.DenseLayer(
     name: String,
     x: Operand<TFloat32>,
     n: Int,
     activation: KotlinOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) }
 ): Operand<TFloat32> = tf.withSubScope(name) {
     val inputDims = x.shape()[1]
-    val W = tf.variable(tf.math.add(tf.zeros(tf.array(inputDims.toInt(), n), TFloat32::class.java), constant(1f)))
-    val b = tf.variable(tf.math.add(tf.zeros(tf.array(n), TFloat32::class.java), constant(1f)))
-    activation(tf.math.add(tf.linalg.matMul(x, W), b))
+    val W = tf.variable(tf.ones<TFloat32>(tf.array(inputDims.toInt(), n)))
+    val b = tf.variable(tf.ones<TFloat32>(tf.array(n)))
+    activation((x matMul W) + b)
 }
 
-public class Example {
+public class ExampleTest {
     @Test
     public fun mnistExample() {
         Graph {
             val input = tf.placeholderWithDefault(
-                tf.math.add(tf.zeros(tf.array(1, 28, 28, 3)), tf.constant(1f)),
+                tf.ones<TFloat32>(tf.array(1, 28, 28, 3)),
                 Shape.of(-1, 28, 28, 3)
             )
 
@@ -53,10 +53,11 @@ public class Example {
                 DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
             }
 
-//            useSession {
-//                val outputValue = it.run(fetches = listOf(output))[output]
-//                println(outputValue.data())
-//            }
+            useSession { session ->
+
+                val outputValue = session.runner().fetch(output).run()[0] as TFloat32
+                println(outputValue.getFloat(0))
+            }
         }
     }
 }

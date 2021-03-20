@@ -45,6 +45,7 @@ public fun KotlinOps.withSubScope(childScopeName: String): KotlinOps = KotlinOps
  *
  * @see org.tensorflow.op.Scope.withSubScope
  */
+// TODO should be a decorator too, when possible
 public inline fun <R> KotlinOps.withSubScope(childScopeName: String, block: KotlinOps.() -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return withSubScope(childScopeName).run(block)
