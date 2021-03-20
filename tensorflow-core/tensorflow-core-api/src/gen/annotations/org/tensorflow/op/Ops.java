@@ -358,9 +358,9 @@ public final class Ops {
 
   public final TpuOps tpu;
 
-  public final AudioOps audio;
-
   public final MathOps math;
+
+  public final AudioOps audio;
 
   public final SignalOps signal;
 
@@ -387,8 +387,8 @@ public final class Ops {
     sparse = new SparseOps(this);
     bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
-    audio = new AudioOps(this);
     math = new MathOps(this);
+    audio = new AudioOps(this);
     signal = new SignalOps(this);
     train = new TrainOps(this);
     quantization = new QuantizationOps(this);

@@ -36,6 +36,9 @@
   </modules>
 
   <properties>
+    <!-- Match version used by TensorFlow, in tensorflow/workspace.bzl -->
+    <protobuf.version>3.8.0</protobuf.version>
+
     <native.classifier>${javacpp.platform}${javacpp.platform.extension}</native.classifier>
     <javacpp.build.skip>false</javacpp.build.skip>       <!-- To skip execution of build.sh: -Djavacpp.build.skip=true -->
     <javacpp.parser.skip>false</javacpp.parser.skip>     <!-- To skip header file parsing phase: -Djavacpp.parser.skip=true  -->
