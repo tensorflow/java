@@ -42,14 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
-import org.tensorflow.Operand;
-import org.tensorflow.Operation;
-import org.tensorflow.OperationBuilder;
-import org.tensorflow.Output;
-import org.tensorflow.op.Operands;
-import org.tensorflow.op.RawOp;
-import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.Names;
 import org.tensorflow.proto.framework.ApiDef;
 import org.tensorflow.proto.framework.ApiDef.Endpoint;
 import org.tensorflow.proto.framework.ApiDef.Visibility;
@@ -57,7 +50,6 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
-import org.tensorflow.types.family.TType;
 
 /**
  * A generator to generate a op class
@@ -231,7 +223,7 @@ final class ClassGenerator {
    */
   void buildClass() {
     builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-    builder.superclass(ClassName.get(RawOp.class));
+    builder.superclass(Names.RawOp);
 
     // add class javadocs
     String summary = parseDocumentation(apiDef.getSummary());
@@ -250,8 +242,8 @@ final class ClassGenerator {
       TypeName type = rType.unwrapArg();
       boolean iterable = rType.iterable;
       TypeName operandTypeParam =
-          type instanceof WildcardTypeName ? TypeName.get(TType.class) : type;
-      TypeName operandType = ParameterizedTypeName.get(ClassName.get(Operand.class), operandTypeParam);
+          type instanceof WildcardTypeName ? Names.TType : type;
+      TypeName operandType = ParameterizedTypeName.get(Names.Operand, operandTypeParam);
 
       if (iterable) {
         mode = RenderMode.LIST_OPERAND;
@@ -292,7 +284,7 @@ final class ClassGenerator {
 
     // add the Operator annotation
     if (apiDef.getVisibility() != Visibility.HIDDEN) {
-      AnnotationSpec.Builder annotation = AnnotationSpec.builder(Operator.class);
+      AnnotationSpec.Builder annotation = AnnotationSpec.builder(Names.Operator);
       if (!group.equals("core")) {
         annotation.addMember("group", "$S", group);
       }
@@ -405,7 +397,7 @@ final class ClassGenerator {
 
     if (type.jniType.equals(ClassName.get(DataType.class))) {
       body.addStatement("opBuilder.setAttr($S, $T.$L($L))", attr.getName(),
-          Operands.class, type.iterable ? "toDataTypes" : "toDataType", varName);
+          Names.Operands, type.iterable ? "toDataTypes" : "toDataType", varName);
     } else {
       if (type.iterable) {
         String arrayName = javaizeMemberName(attr.getName()) + "Array";
@@ -439,7 +431,7 @@ final class ClassGenerator {
     factoryBuilder.returns(returnType);
 
     factoryBuilder.addAnnotation(
-        AnnotationSpec.builder(org.tensorflow.op.annotation.Endpoint.class).addMember("describeByClass", "true")
+        AnnotationSpec.builder(Names.Endpoint).addMember("describeByClass", "true")
             .build());
 
     factoryBuilder.addJavadoc("Factory method to create a class wrapping a new $L operation.\n", op.getName());
@@ -448,12 +440,12 @@ final class ClassGenerator {
     CodeBlock.Builder body = CodeBlock.builder();
 
     factoryBuilder
-        .addParameter(ParameterSpec.builder(ClassName.get(Scope.class), "scope").addJavadoc("current scope\n").build());
+        .addParameter(ParameterSpec.builder(Names.Scope, "scope").addJavadoc("current scope\n").build());
 
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
     body.addStatement("$T opBuilder = scope.env().opBuilder($S, scope.makeOpName($S))",
-        OperationBuilder.class, op.getName(),
+        Names.OperationBuilder, op.getName(),
         className);
 
     // add the inputs as parameters, and add them to the op builder
@@ -469,7 +461,7 @@ final class ClassGenerator {
       typeVars.addAll(type.findGenerics());
 
       if (type.iterable) {
-        body.addStatement("opBuilder.addInputList($T.asOutputs($L))", Operands.class, name);
+        body.addStatement("opBuilder.addInputList($T.asOutputs($L))", Names.Operands, name);
       } else {
         body.addStatement("opBuilder.addInput($L.asOutput())", name);
       }
@@ -500,7 +492,7 @@ final class ClassGenerator {
       // we only add defaults for type variable arguments
       if (attr.hasDefaultValue() && type.shouldWrapInClass()) {
         TypeName defaultType = TypeResolver.forDataType(attr.getDefaultValue().getType());
-        if (!(defaultType instanceof WildcardTypeName) && defaultType != ClassName.get(TType.class)) {
+        if (!(defaultType instanceof WildcardTypeName) && defaultType != Names.TType) {
           defaultTypes.put(attr, defaultType);
           defaultTypeVars.put(((TypeVariableName) type.javaType).name, defaultType);
         }
@@ -636,10 +628,10 @@ final class ClassGenerator {
     TypeName type = resolver.typeOf(output).unwrapArg();
 
     boolean uncheckedCast = type instanceof WildcardTypeName;
-    TypeName outputTType = uncheckedCast ? TypeName.get(TType.class) : type;
+    TypeName outputTType = uncheckedCast ? Names.TType : type;
 
     if (mode == RenderMode.OPERAND) {
-      TypeName outputType = ParameterizedTypeName.get(ClassName.get(Output.class), outputTType);
+      TypeName outputType = ParameterizedTypeName.get(Names.Output, outputTType);
       MethodSpec.Builder asOutput = MethodSpec.methodBuilder("asOutput")
           .addModifiers(Modifier.PUBLIC)
           .returns(outputType)
@@ -656,7 +648,7 @@ final class ClassGenerator {
       builder.addMethod(asOutput
           .build());
     } else {
-      TypeName operandType = ParameterizedTypeName.get(ClassName.get(Operand.class), outputTType);
+      TypeName operandType = ParameterizedTypeName.get(Names.Operand, outputTType);
       TypeName returnType = ParameterizedTypeName.get(ClassName.get(Iterator.class), operandType);
 
       MethodSpec.Builder iterator = MethodSpec.methodBuilder("iterator")
@@ -679,7 +671,7 @@ final class ClassGenerator {
   private void buildConstructor() {
     MethodSpec.Builder ctor = MethodSpec.constructorBuilder();
 
-    ctor.addParameter(ClassName.get(Operation.class), "operation");
+    ctor.addParameter(Names.Operation, "operation");
 
     for (ArgDef output : op.getOutputArgList()) {
       ResolvedType type = resolver.typeOf(output);

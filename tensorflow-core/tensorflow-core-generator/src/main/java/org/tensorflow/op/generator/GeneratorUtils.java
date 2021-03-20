@@ -36,7 +36,7 @@ final class GeneratorUtils {
    *
    * Not valid for class names, meant for fields and methods.
    *
-   * Genrally you should use {@link ClassGenerator#getJavaName(ArgDef)}.
+   * Generally you should use {@link ClassGenerator#getJavaName(ArgDef)}.
    */
   static String javaizeMemberName(String name) {
     StringBuilder result = new StringBuilder();

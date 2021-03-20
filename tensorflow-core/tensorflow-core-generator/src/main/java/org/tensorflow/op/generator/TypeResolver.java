@@ -26,19 +26,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.tensorflow.ConcreteFunction;
-import org.tensorflow.Operand;
-import org.tensorflow.Output;
-import org.tensorflow.Tensor;
-import org.tensorflow.internal.types.registry.TensorTypeRegistry;
-import org.tensorflow.ndarray.Shape;
+import org.tensorflow.Names;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
-import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * A utility class to handle type calculations for a {@link ClassGenerator}.  Should be one to one with {@link
@@ -50,13 +43,30 @@ final class TypeResolver {
   static TypeName STRING = TypeName.get(java.lang.String.class);
 
   /**
-   * Get the {@link TType} type for a datatype, or {@code ? extends TType} if there isn't one.
+   * Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one.
    */
   static TypeName forDataType(DataType dataType) {
-    try {
-      return TypeName.get(TensorTypeRegistry.find(dataType).type());
-    } catch (IllegalArgumentException ignored) {
-      return WildcardTypeName.subtypeOf(TypeName.get(TType.class));
+    switch (dataType){
+      case DT_STRING:
+        return Names.TString;
+      case DT_BOOL:
+        return Names.TBool;
+      case DT_BFLOAT16:
+        return Names.TBfloat16;
+      case DT_HALF:
+        return Names.TFloat16;
+      case DT_FLOAT:
+        return Names.TFloat32;
+      case DT_DOUBLE:
+        return Names.TFloat64;
+      case DT_UINT8:
+        return Names.TUint8;
+      case DT_INT32:
+        return Names.TInt32;
+      case DT_INT64:
+        return Names.TInt64;
+      default:
+        return WildcardTypeName.subtypeOf(Names.TType);
     }
   }
 
@@ -122,9 +132,9 @@ final class TypeResolver {
       }
       ClassName baseClass;
       if (outputs.contains(entry.getKey())) {
-        baseClass = ClassName.get(Output.class);
+        baseClass = Names.Output;
       } else {
-        baseClass = ClassName.get(Operand.class);
+        baseClass = Names.Operand;
       }
 
       entry.setValue(
@@ -194,14 +204,14 @@ final class TypeResolver {
   }
 
   /**
-   * Get the family {@link TType} of an attribute, i.e. {@link TNumber}
+   * Get the family {@code TType} of an attribute, i.e. {@code TNumber}
    */
   private TypeName typeFamily(AttrDef attr) {
     if (isRealNumberTyped(attr.getAllowedValues())) {
-      return TypeName.get(TNumber.class);
+      return Names.TNumber;
     }
 
-    return TypeName.get(TType.class);
+    return Names.TType;
   }
 
   /**
@@ -243,10 +253,10 @@ final class TypeResolver {
         types = new ResolvedType(TypeName.BOOLEAN);
         break;
       case "shape":
-        types = new ResolvedType(Shape.class);
+        types = new ResolvedType(Names.Shape);
         break;
       case "tensor":
-        types = new ResolvedType(Tensor.class);
+        types = new ResolvedType(Names.Tensor);
         break;
       case "type":
         TypeName family = typeFamily(attr);
@@ -254,7 +264,7 @@ final class TypeResolver {
         types = new ResolvedType(type, TypeName.get(DataType.class));
         break;
       case "func":
-        types = new ResolvedType(ConcreteFunction.class);
+        types = new ResolvedType(Names.ConcreteFunction);
         break;
       default:
         throw new IllegalArgumentException("No Java type for " + typeName);

@@ -95,6 +95,7 @@ $BAZEL_BIN/java_op_exporter \
     $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
 
 
+PROTO_DIR=src/gen/protoc
 # Copy generated Java protos from source jars
 
 cd $GEN_SRCS_DIR
