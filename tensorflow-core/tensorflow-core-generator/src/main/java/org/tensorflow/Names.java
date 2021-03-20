@@ -22,47 +22,51 @@ import com.squareup.javapoet.TypeName;
 
 public class Names {
 
-  public static final ClassName Operator = ClassName.get("org.tensorflow.op.annotation", "Operator");
-  public static final ClassName Endpoint = ClassName.get("org.tensorflow.op.annotation", "Endpoint");
+  public static final String TensorflowPackage = "org.tensorflow";
+  public static final String OpPackage = TensorflowPackage + ".op";
+  public static final String TypesPackage = TensorflowPackage + ".types";
 
-  public static final ClassName TType = ClassName.get("org.tensorflow.types.family", "TType");
-  public static final ClassName TString = ClassName.get("org.tensorflow.types", "TString");
-  public static final ClassName TBool = ClassName.get("org.tensorflow.types", "TBool");
+  public static final ClassName Operator = ClassName.get(OpPackage + ".annotation", "Operator");
+  public static final ClassName Endpoint = ClassName.get(OpPackage + ".annotation", "Endpoint");
 
-  public static final ClassName TNumber = ClassName.get("org.tensorflow.types.family", "TNumber");
+  public static final ClassName TType = ClassName.get(TypesPackage + ".family", "TType");
+  public static final ClassName TString = ClassName.get(TypesPackage, "TString");
+  public static final ClassName TBool = ClassName.get(TypesPackage, "TBool");
 
-  public static final ClassName TFloating = ClassName.get("org.tensorflow.types.family", "TFloating");
-  public static final ClassName TBfloat16 = ClassName.get("org.tensorflow.types", "TBfloat16");
-  public static final ClassName TFloat16 = ClassName.get("org.tensorflow.types", "TFloat16");
-  public static final ClassName TFloat32 = ClassName.get("org.tensorflow.types", "TFloat32");
-  public static final ClassName TFloat64 = ClassName.get("org.tensorflow.types", "TFloat64");
+  public static final ClassName TNumber = ClassName.get(TypesPackage + ".family", "TNumber");
 
-  public static final ClassName TIntegral = ClassName.get("org.tensorflow.types.family", "TIntegral");
-  public static final ClassName TUint8 = ClassName.get("org.tensorflow.types", "TUint8");
-  public static final ClassName TInt32 = ClassName.get("org.tensorflow.types", "TInt32");
-  public static final ClassName TInt64 = ClassName.get("org.tensorflow.types", "TInt64");
+  public static final ClassName TFloating = ClassName.get(TypesPackage + ".family", "TFloating");
+  public static final ClassName TBfloat16 = ClassName.get(TypesPackage, "TBfloat16");
+  public static final ClassName TFloat16 = ClassName.get(TypesPackage, "TFloat16");
+  public static final ClassName TFloat32 = ClassName.get(TypesPackage, "TFloat32");
+  public static final ClassName TFloat64 = ClassName.get(TypesPackage, "TFloat64");
 
-  public static final TypeName Op = ClassName.get("org.tensorflow.op", "Op");
-  public static final ClassName RawOp = ClassName.get("org.tensorflow.op", "RawOp");
-  public static final ClassName Operation = ClassName.get("org.tensorflow", "Operation");
-  public static final ClassName Operands = ClassName.get("org.tensorflow.op", "Operands");
-  public static final ClassName OperationBuilder = ClassName.get("org.tensorflow", "OperationBuilder");
+  public static final ClassName TIntegral = ClassName.get(TypesPackage + ".family", "TIntegral");
+  public static final ClassName TUint8 = ClassName.get(TypesPackage, "TUint8");
+  public static final ClassName TInt32 = ClassName.get(TypesPackage, "TInt32");
+  public static final ClassName TInt64 = ClassName.get(TypesPackage, "TInt64");
+
+  public static final TypeName Op = ClassName.get(OpPackage, "Op");
+  public static final ClassName RawOp = ClassName.get(OpPackage, "RawOp");
+  public static final ClassName Operation = ClassName.get(TensorflowPackage, "Operation");
+  public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
+  public static final ClassName OperationBuilder = ClassName.get(TensorflowPackage, "OperationBuilder");
   public static final TypeName IterableOp = ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
 
-  public static final ClassName Operand = ClassName.get("org.tensorflow", "Operand");
-  public static final ClassName Output = ClassName.get("org.tensorflow", "Output");
+  public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
+  public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
 
-  public static final ClassName Shape = ClassName.get("org.tensorflow.ndarray", "Shape");
-  public static final ClassName Tensor = ClassName.get("org.tensorflow", "Tensor");
-  public static final ClassName ConcreteFunction = ClassName.get("org.tensorflow", "ConcreteFunction");
+  public static final ClassName Shape = ClassName.get(TensorflowPackage + ".ndarray", "Shape");
+  public static final ClassName Tensor = ClassName.get(TensorflowPackage, "Tensor");
+  public static final ClassName ConcreteFunction = ClassName.get(TensorflowPackage, "ConcreteFunction");
 
-  public static final ClassName Scope = ClassName.get("org.tensorflow.op", "Scope");
-  public static final TypeName DeviceSpec = ClassName.get("org.tensorflow", "DeviceSpec");
-  public static final ClassName Ops = ClassName.get("org.tensorflow.op", "Ops");
+  public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
+  public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
+  public static final ClassName Ops = ClassName.get(OpPackage, "Ops");
 
   public static final TypeName ExecutionEnvironment =
-      ClassName.get("org.tensorflow", "ExecutionEnvironment");
-  public static final TypeName EagerSession = ClassName.get("org.tensorflow", "EagerSession");
+      ClassName.get(TensorflowPackage, "ExecutionEnvironment");
+  public static final TypeName EagerSession = ClassName.get(TensorflowPackage, "EagerSession");
 
   public static final TypeName String = ClassName.get(String.class);
 
