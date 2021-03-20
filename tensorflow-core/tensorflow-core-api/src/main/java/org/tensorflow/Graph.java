@@ -52,6 +52,7 @@ import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.NoOp;
@@ -390,6 +391,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+  @Override
+  public synchronized Scope baseScope() {
+    if(baseScope == null){
+      baseScope = new Scope(this);
+    }
+
+    return baseScope;
+  }
+
   /**
    * Import a representation of a TensorFlow graph.
    *
@@ -692,6 +702,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private TF_Graph nativeHandle;
   private int refcount = 0;
   private SaverDef saverDef;
+  private Scope baseScope = null;
 
   private final List<Op> initializers = new ArrayList<>();
 

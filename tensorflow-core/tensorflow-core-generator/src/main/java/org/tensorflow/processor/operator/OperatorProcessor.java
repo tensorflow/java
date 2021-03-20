@@ -462,8 +462,8 @@ public final class OperatorProcessor extends AbstractProcessor {
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PRIVATE)
             .addParameter(Names.Scope, "scope")
+            .addModifiers(Modifier.PRIVATE)
             .addStatement("this.scope = scope", Names.Scope);
 
     TypeSpec.Builder opsBuilder =
@@ -570,7 +570,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addParameter(Names.ExecutionEnvironment, "env")
             .returns(Names.Ops)
-            .addStatement("return new Ops(new $T(env))", Names.Scope)
+            .addStatement("return new Ops(env.baseScope())", Names.Scope)
             .addJavadoc(
                 "Creates an API for building operations in the provided execution environment\n")
             .build());
@@ -579,7 +579,7 @@ public final class OperatorProcessor extends AbstractProcessor {
         MethodSpec.methodBuilder("create")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .returns(Names.Ops)
-            .addStatement("return new Ops(new $T($T.getDefault()))", Names.Scope, Names.EagerSession)
+            .addStatement("return create($T.getDefault())", Names.EagerSession)
             .addJavadoc(
                 "Creates an API for building operations in the default eager execution environment\n\n"
                     + "<p>Invoking this method is equivalent to {@code Ops.create(EagerSession.getDefault())}.\n")

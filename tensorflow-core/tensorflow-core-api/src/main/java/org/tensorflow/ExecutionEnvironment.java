@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Scope;
 
 /**
  * Defines an environment for creating and executing TensorFlow {@link Operation}s.
@@ -71,4 +72,9 @@ public interface ExecutionEnvironment {
   default boolean isGraph() {
     return environmentType() == Types.GRAPH;
   }
+
+  /**
+   * Get the top level scope for this execution environment.  Is cached, which is necessary to prevent name collisions.
+   */
+  Scope baseScope();
 }

@@ -79,6 +79,8 @@ public final class Scope {
 
   /**
    * Create a new top-level scope.
+   * <p>
+   * <b>For internal use only</b>, use {@link ExecutionEnvironment#baseScope()} if you need a base level scope.
    *
    * @param env The execution environment used by the scope.
    */

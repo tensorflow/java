@@ -29,6 +29,8 @@ import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
@@ -306,6 +308,15 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
+  @Override
+  public synchronized Scope baseScope() {
+    if(baseScope == null){
+      baseScope = new Scope(this);
+    }
+
+    return baseScope;
+  }
+
   TFE_Context nativeHandle() {
     checkSession();
     return nativeHandle;
@@ -361,6 +372,8 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
+
+  private Scope baseScope = null;
 
   private EagerSession(Options options) {
     this.nativeResources = new WeakPointerScope();
