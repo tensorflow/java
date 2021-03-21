@@ -604,8 +604,7 @@ public class MetricsHelper {
     Operand<T> labelAndPred = cast(tf, tf.math.logicalAnd(labels, predictions), type);
 
     if (weights != null) {
-      Operand<T> lWeights = cast(tf, weights, type);
-      labelAndPred = tf.math.mul(labelAndPred, lWeights);
+      labelAndPred = tf.math.mul(labelAndPred, weights);
     }
     Operand<T> valueSum = tf.reduceSum(labelAndPred, tf.constant(1));
     Operand<T> assignAdd;
