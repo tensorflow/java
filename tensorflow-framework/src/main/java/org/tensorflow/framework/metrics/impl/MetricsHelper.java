@@ -664,7 +664,9 @@ public class MetricsHelper {
   private static <T extends TNumber> Operand<T> filterTopK(Ops tf, Operand<T> x, int topK) {
     Class<T> type = x.type();
     Shape xShape = x.shape();
+    // top has the same rank as x; the last dimension becomes indices of the topK features.
     TopK<T> top = tf.nn.topK(x, tf.constant(topK), TopK.sorted(false));
+    // oneHot has an additional dimension: the one-hot representation of each topK index.
     OneHot<TInt32> oneHot =
         tf.oneHot(
             top.indices(),
@@ -672,6 +674,7 @@ public class MetricsHelper {
             tf.constant(1),
             tf.constant(0),
             OneHot.axis(-1L));
+    // Sum the one-hot representations along the last dimension of x.
     Operand<T> topKMask = cast(tf, tf.reduceSum(oneHot, tf.constant(-2)), type);
 
     // x * top_k_mask + NEG_INF * (1 - top_k_mask)
