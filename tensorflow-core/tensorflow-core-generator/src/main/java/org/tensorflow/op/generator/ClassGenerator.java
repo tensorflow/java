@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -304,6 +305,7 @@ final class ClassGenerator {
     // add op name field
     builder
         .addField(FieldSpec.builder(TypeResolver.STRING, "OP_NAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+            .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
             .initializer("$S", op.getName())
             .build());
 
@@ -323,7 +325,7 @@ final class ClassGenerator {
    */
   private void buildOptionsClass() {
 
-    if(optionalAttributes.isEmpty()){
+    if (optionalAttributes.isEmpty()) {
       return;
     }
 
@@ -384,6 +386,7 @@ final class ClassGenerator {
 
   /**
    * Write statements to set an attribute in an OperationBuilder.  Meant to be used in {@link #buildFactoryMethods()}
+   *
    * @param body the body to write to
    * @param attr the attribute to set
    * @param type the type of the attribute, or null to get it ourselves
@@ -439,8 +442,11 @@ final class ClassGenerator {
     // we're going to build the body as add arguments
     CodeBlock.Builder body = CodeBlock.builder();
 
+    Map<String, CodeBlock> paramTags = new LinkedHashMap<>();
+
     factoryBuilder
-        .addParameter(ParameterSpec.builder(Names.Scope, "scope").addJavadoc("current scope\n").build());
+        .addParameter(ParameterSpec.builder(Names.Scope, "scope").build());
+    paramTags.put("scope", CodeBlock.of("current scope\n"));
 
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
@@ -454,8 +460,8 @@ final class ClassGenerator {
       ResolvedType type = resolver.typeOf(input);
       String name = getJavaName(input);
 
-      ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name)
-          .addJavadoc("$L\n", argDef.getDescription());
+      ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name);
+      paramTags.put(name, CodeBlock.of("$L\n", argDef.getDescription()));
       factoryBuilder.addParameter(param.build());
 
       typeVars.addAll(type.findGenerics());
@@ -482,8 +488,8 @@ final class ClassGenerator {
       ApiDef.Attr apiAttr = attrApis.get(attr);
 
       ParameterSpec.Builder builder = ParameterSpec
-          .builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr))
-          .addJavadoc("$L\n", apiAttr.getDescription());
+          .builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr));
+      paramTags.put(getJavaName(attr), CodeBlock.of("$L\n", apiAttr.getDescription()));
 
       typeVars.addAll(type.findGenerics());
 
@@ -504,8 +510,8 @@ final class ClassGenerator {
     // add optional attributes
     if (optionsClass != null) {
       factoryBuilder.addParameter(
-          ParameterSpec.builder(ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options")
-              .addJavadoc("$L\n", "carries optional attribute values\n").build());
+          ParameterSpec.builder(ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options").build());
+      paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values\n"));
       factoryBuilder.varargs();
 
       body.beginControlFlow("if (options != null)");
@@ -528,6 +534,9 @@ final class ClassGenerator {
     body.addStatement("return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
 
     factoryBuilder.addCode(body.build());
+    paramTags.forEach((param, doc) -> {
+      factoryBuilder.addJavadoc("@param $L $L", param, doc);
+    });
     factoryBuilder.addJavadoc("\n@return a new instance of $L", className);
     factoryBuilder.addTypeVariables(typeVars);
 
@@ -535,7 +544,7 @@ final class ClassGenerator {
     builder.addMethod(method);
 
     if (!defaultTypes.isEmpty()) {
-      buildSecondaryFactory(defaultTypes, defaultTypeVars, method);
+      buildSecondaryFactory(defaultTypes, defaultTypeVars, method, paramTags);
     }
   }
 
@@ -543,7 +552,7 @@ final class ClassGenerator {
    * Add a secondary factory method with the provided default type maps
    */
   private void buildSecondaryFactory(Map<AttrDef, TypeName> defaultTypes, Map<String, TypeName> defaultTypeVars,
-      MethodSpec mainFactory) {
+      MethodSpec mainFactory, Map<String, CodeBlock> paramTags) {
     MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder(mainFactory.name)
         .addModifiers(mainFactory.modifiers)
         .returns(ParameterizedTypeName.get(ClassName.get(fullPackage, className), typeParams.stream()
@@ -573,6 +582,7 @@ final class ClassGenerator {
         body.add("$T.class", defaultTypes.get(attr));
       } else {
         factoryBuilder.addParameter(param);
+        factoryBuilder.addJavadoc("@param $L $L", param.name, paramTags.get(param.name));
         typeVars.addAll(new ResolvedType(param.type).findGenerics());
         body.add("$L", param.name);
       }
@@ -590,7 +600,7 @@ final class ClassGenerator {
 
   /**
    * Add getters for the outputs and setters/Options creators for the optional attributes.
-   * 
+   *
    * Needs to be called after {@link #buildOptionsClass()}
    */
   private void buildGettersAndSetters() {
@@ -669,7 +679,7 @@ final class ClassGenerator {
    * Add a constructor to get the outputs from an operation
    */
   private void buildConstructor() {
-    MethodSpec.Builder ctor = MethodSpec.constructorBuilder();
+    MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE);
 
     ctor.addParameter(Names.Operation, "operation");
 
