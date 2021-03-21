@@ -24,6 +24,7 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
@@ -781,64 +782,107 @@ public class AUC<T extends TNumber> extends Metric<T> {
   }
 
   /**
+   * Gets the input with all positive numbers. Negative numbers are set to 0.
+   *
+   * @param input the input
+   * @return the input with all positive numbers.
+   */
+  private Operand<T> positive(Operand<T> input) {
+    return getTF().math.maximum(input, cast(getTF(), getTF().constant(0), input.type()));
+  }
+
+  /**
+   * Gets an operand that determines whether the input consists of each value is greater than 0.
+   *
+   * @param input the input
+   * @return an operand that determines whether the input consists of all values greater than 0.
+   */
+  private Operand<TBool> isPositive(Operand<T> input) {
+    return getTF().math.greater(input, cast(getTF(), getTF().constant(0), input.type()));
+  }
+
+  /**
+   * Extracts a slice from the input.
+   *
+   * @param input the input
+   * @param begin the beginning location of the slice
+   * @param size the size of the slice
+   * @return the slice
+   */
+  private Operand<T> slice(Operand<T> input, int begin, int size) {
+    return getTF()
+        .slice(input, getTF().constant(new int[] {begin}), getTF().constant(new int[] {size}));
+  }
+
+  /**
    * Interpolation formula inspired by section 4 of Davis & Goadrich 2006.
    *
+   * <p>Note here we derive & use a closed formula not present in the paper as follows:
+   * <pre>
+   *     Precision = TP / (TP + FP) = TP / P
+   * </pre>
+   * <p>Modeling all of TP (true positive), FP (false positive) and their sum
+   *     P = TP + FP (predicted positive) as varying linearly within each interval
+   *     [A, B] between successive thresholds, we get</p>
+   * <pre>
+   *     Precision slope = dTP / dP
+   *                     = (TP_B - TP_A) / (P_B - P_A)
+   *                     = (TP - TP_A) / (P - P_A)
+   *     Precision = (TP_A + slope * (P - P_A)) / P
+   * </pre>
+   * <p>The area within the interval is (slope / total_pos_weight) times
+   * <pre>
+   *       int_A^B{Precision.dP} = int_A^B{(TP_A + slope * (P - P_A)) * dP / P}
+   *       int_A^B{Precision.dP} = int_A^B{slope * dP + intercept * dP / P}
+   * </pre>
+   *     where intercept = TP_A - slope * P_A = TP_B - slope * P_B, resulting in
+   * <pre>
+   *       int_A^B{Precision.dP} = TP_B - TP_A + intercept * log(P_B / P_A)
+   * </pre>
+   *     Bringing back the factor (slope / total_pos_weight) we'd put aside, we get
+   * <pre>
+   *       slope * [dTP + intercept *  log(P_B / P_A)] / total_pos_weight
+   * </pre>
+   *     where dTP == TP_B - TP_A.
+   *     Note that when P_A == 0 the above calculation simplifies into
+   * <pre>
+   *       int_A^B{Precision.dTP} = int_A^B{slope * dTP} = slope * (TP_B - TP_A)
+   * </pre>
+   *     which is really equivalent to imputing constant precision throughout the
+   *     first bucket having >0 true positives.
+   *
    * @return an approximation of the area under the P-R curve.
+   * @see <a href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The Relationship Between Precision-Recall and ROC Curves - Davis & Goadrich 2006</a>
    */
   private Operand<T> interpolatePRAuc() {
     // truePositives[:self.numThresholds - 1]
     Ops tf = getTF();
-    Operand<T> tp0 =
-        tf.slice(
-            truePositives,
-            tf.constant(new int[] {0}),
-            tf.constant(new int[] {getNumThresholds() - 1}));
+    Operand<T> tp0 = slice(truePositives, 0, getNumThresholds() - 1);
     // truePositives[1:]
-    Operand<T> tp1 =
-        tf.slice(truePositives, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
+    Operand<T> tp1 = slice(truePositives, 1, -1);
 
     Operand<T> dTP = tf.math.sub(tp0, tp1);
 
     Operand<T> p = tf.math.add(truePositives, falsePositives);
 
-    Operand<T> dP =
-        tf.math.sub(
-            tf.slice(
-                p, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1})),
-            tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})));
+    Operand<T> dP = tf.math.sub(slice(p, 0, getNumThresholds() - 1), slice(p, 1, -1));
 
     Operand<T> precisionSlope =
-        tf.math.divNoNan(dTP, tf.math.maximum(dP, tf.dtypes.cast(tf.constant(0), dP.type())));
+        tf.math.divNoNan(dTP, positive(dP));
 
     Operand<T> intercept =
-        tf.math.sub(
-            tf.slice(truePositives, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
-            tf.math.mul(
-                precisionSlope,
-                tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))));
+        tf.math.sub(slice(truePositives, 1, -1), tf.math.mul(precisionSlope, slice(p, 1, -1)));
 
     Operand<T> safePRatio =
         tf.select(
             tf.math.logicalAnd(
-                tf.math.greater(
-                    tf.slice(
-                        p,
-                        tf.constant(new int[] {0}),
-                        tf.constant(new int[] {getNumThresholds() - 1})),
-                    tf.dtypes.cast(tf.constant(0), p.type())),
-                tf.math.greater(
-                    tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
-                    tf.dtypes.cast(tf.constant(0), p.type()))),
+                isPositive(slice(p, 0, getNumThresholds() - 1)), isPositive(slice(p, 1, -1))),
             tf.math.divNoNan(
-                tf.slice(
-                    p, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1})),
-                tf.math.maximum(
-                    tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1})),
-                    tf.dtypes.cast(tf.constant(0), p.type()))),
-            tf.onesLike(tf.slice(p, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))));
+                slice(p, 0, getNumThresholds() - 1),
+                positive(slice(p, 1, -1))),
+            tf.onesLike(slice(p, 1, -1)));
 
-    Operand<T> fn1 =
-        tf.slice(falseNegatives, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
+    Operand<T> fn1 = slice(falseNegatives, 1, -1);
 
     Operand<T> aucTotalPos =
         tf.math.mul(
@@ -847,14 +891,15 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> prAucIncrement =
         tf.math.divNoNan(
             aucTotalPos,
-            tf.math.maximum(
-                tf.math.add(tp1, fn1), tf.dtypes.cast(tf.constant(0), truePositives.type())));
+            positive(tf.math.add(tp1, fn1)));
 
     if (isMultiLabel()) {
       Operand<T> byLabelAuc = tf.reduceSum(prAucIncrement, tf.constant(0));
       if (getLabelWeights() == null) {
+        //Evenly weighted average of the label AUCs.
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
+        // Weighted average of the label AUCs.
         return tf.math.divNoNan(
             tf.reduceSum(tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, byLabelAuc)),
             tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights())));
@@ -877,22 +922,27 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> y;
     Operand<T> recall = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
 
-    if (getCurve() == AUCCurve.ROC) {
-      x = tf.math.divNoNan(falsePositives, tf.math.add(falsePositives, trueNegatives));
-      y = recall;
-    } else { // AUCCurve.PR
-      y = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
-      x = recall;
+    switch (getCurve()) {
+      case ROC:
+        x = tf.math.divNoNan(falsePositives, tf.math.add(falsePositives, trueNegatives));
+        y = recall;
+        break;
+      case PR:
+        y = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
+        x = recall;
+        break;
+      default:
+        throw new IllegalArgumentException("Unexpected AUCCurve value: " + getCurve());
     }
 
     // Find the rectangle heights based on `summationMethod`.
     // y[:self.numThresholds - 1]
-    Operand<T> ySlice1 =
-        tf.slice(y, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
+    Operand<T> ySlice1 = slice(y, 0, getNumThresholds() - 1);
     // y[1:]
-    Operand<T> ySlice2 = tf.slice(y, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
+    Operand<T> ySlice2 = slice(y, 1, -1);
 
-    Operand<T> heights = null;
+
+    Operand<T> heights;
     switch (getSummationMethod()) {
       case INTERPOLATION:
         heights = tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
@@ -903,17 +953,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
       case MAJORING:
         heights = tf.math.maximum(ySlice1, ySlice2);
         break;
+      default:
+        throw new IllegalArgumentException("Unexpected AUCSummationMethod value: " + getSummationMethod());
     }
 
     if (isMultiLabel()) {
       Operand<T> riemannTerms =
           tf.math.mul(
               tf.math.sub(
-                  tf.slice(
-                      x,
-                      tf.constant(new int[] {0}),
-                      tf.constant(new int[] {getNumThresholds() - 1})),
-                  tf.slice(x, tf.constant(new int[] {1}), tf.constant(new int[] {-1}))),
+                      slice(x, 0, getNumThresholds() - 1),
+                      slice(x, 1, -1)),
               heights);
       Operand<T> byLabelAuc = tf.reduceSum(riemannTerms, tf.constant(0));
 
@@ -928,9 +977,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
       }
 
     } else {
-      Operand<T> slice1 =
-          tf.slice(x, tf.constant(new int[] {0}), tf.constant(new int[] {getNumThresholds() - 1}));
-      Operand<T> slice2 = tf.slice(x, tf.constant(new int[] {1}), tf.constant(new int[] {-1}));
+      Operand<T> slice1 = slice(x,0, getNumThresholds() - 1);
+      Operand<T> slice2 = slice(x, 1, -1);
       Operand<T> sub = tf.math.sub(slice1, slice2);
       Operand<T> operand = tf.math.mul(sub, heights);
       return tf.reduceSum(operand, allAxes(tf, operand));
