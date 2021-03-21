@@ -19,13 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.linalg.MatMul;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.GraphDef;
@@ -110,6 +115,46 @@ public class GraphTest {
       assertTrue(operations.remove(iterator.next()));
 
       assertFalse(iterator.hasNext());
+    }
+  }
+
+  @Test
+  public void completeSubgraph() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> control = tf.constant(0);
+      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
+      Operand<TInt32> b = tf.constant(2);
+      Operand<TInt32> c = tf.constant(3);
+
+      Operand<TInt32> d = tf.math.add(a, b);
+      Operand<TInt32> output = tf.math.mul(d, c);
+
+      Set<GraphOperation> subgraph = g
+          .completeSubgraph(new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output));
+
+      assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
+          subgraph);
+    }
+  }
+
+  @Test
+  public void completeSubgraphWithConstants() {
+    try (Graph g = new Graph()) {
+      Ops tf = Ops.create(g);
+      Operand<TInt32> control = tf.constant(0);
+      Operand<TInt32> a = tf.withControlDependencies(Collections.singletonList(control)).constant(1);
+      Operand<TInt32> b = tf.constant(2);
+      Operand<TInt32> c = tf.constant(3);
+
+      Operand<TInt32> d = tf.math.add(a, b);
+      Operand<TInt32> output = tf.math.mul(d, c);
+
+      Set<GraphOperation> subgraph = g
+          .completeSubgraph(Collections.emptySet(), Collections.singleton(output));
+
+      assertEquals(new LinkedHashSet<>(Arrays.asList(control.op(), a.op(), b.op(), c.op(), d.op(), output.op())),
+          subgraph);
     }
   }
 

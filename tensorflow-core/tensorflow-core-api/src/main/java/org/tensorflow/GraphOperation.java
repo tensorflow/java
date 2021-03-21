@@ -17,16 +17,30 @@ package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorNumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorShape;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationAllInputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInputListLength;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationName;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumControlInputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumControlOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOpType;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputConsumers;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputListLength;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputNumConsumers;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.c_api.TF_Graph;
+import org.tensorflow.internal.c_api.TF_Input;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
@@ -169,6 +183,153 @@ public final class GraphOperation extends AbstractOperation {
   Tensor tensor(int outputIdx) {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
   }
+
+  /**
+   * Get the number of inputs to the op, not including control inputs.
+   */
+  public int numInputs() {
+    return TF_OperationNumInputs(getUnsafeNativeHandle());
+  }
+
+  /**
+   * Get the op's inputs, not including control inputs.
+   */
+  public List<Operand<?>> inputs() {
+    try (PointerScope scope = new PointerScope()) {
+      int numInputs = numInputs();
+      TF_Output handles = new TF_Output(numInputs);
+
+      TF_OperationAllInputs(getUnsafeNativeHandle(), handles, numInputs);
+
+      List<Operand<?>> operands = new ArrayList<>(numInputs);
+      for (int i = 0; i < numInputs; i++) {
+        TF_Output atPos = handles.position(i);
+        TF_Operation op = atPos.oper();
+        int index = atPos.index();
+        String opName = TF_OperationName(op).getString();
+        operands.add(graph.operation(opName).output(index));
+      }
+      return operands;
+    }
+  }
+
+  /**
+   * Get the number of ops that use this op's designated output as an input, not including control dependencies.
+   *
+   * @param index the output to look for usages of
+   */
+  public int numConsumers(int index) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Output output = new TF_Output().oper(getUnsafeNativeHandle()).index(index);
+      return TF_OperationOutputNumConsumers(output);
+    }
+  }
+
+  /**
+   * Get the ops that use this op's designated output as an input, not including control dependencies.
+   *
+   * @param index the output to look for usages of
+   */
+  public Set<GraphOperation> consumers(int index) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Output output = new TF_Output().oper(getUnsafeNativeHandle()).index(index);
+      int numConsumers = numConsumers(index);
+      TF_Input handles = new TF_Input(numConsumers);
+
+      TF_OperationOutputConsumers(output, handles, numConsumers);
+
+      Set<GraphOperation> operands = new LinkedHashSet<>(numConsumers);
+      for (int i = 0; i < numConsumers; i++) {
+        TF_Input atPos = handles.position(i);
+        TF_Operation op = atPos.oper();
+        String opName = TF_OperationName(op).getString();
+        operands.add(graph.operation(opName));
+      }
+      return operands;
+    }
+  }
+
+  /**
+   * Get the number of ops that use any of this op's outputs as an input, not including control dependencies.
+   */
+  public int numConsumers() {
+    int all = 0;
+    for (int i = 0; i < numOutputs(); i++) {
+      all += numConsumers(i);
+    }
+    return all;
+  }
+
+
+  /**
+   * Get the ops that use any of this op's outputs as an input, not including control dependencies.
+   */
+  public Set<GraphOperation> consumers() {
+    Set<GraphOperation> all = new LinkedHashSet<>();
+    for (int i = 0; i < numOutputs(); i++) {
+      all.addAll(consumers(i));
+    }
+    return all;
+  }
+
+  /**
+   * Get the number of control inputs for this op.
+   */
+  public int numControlInputs() {
+    try (PointerScope scope = new PointerScope()) {
+      return TF_OperationNumControlInputs(getUnsafeNativeHandle());
+    }
+  }
+
+  /**
+   * Get the control inputs of this op.
+   */
+  public Set<GraphOperation> controlInputs() {
+    try (PointerScope scope = new PointerScope()) {
+      int numInputs = numControlInputs();
+      PointerPointer<TF_Operation> handles = new PointerPointer<>(numInputs);
+
+      TF_OperationGetControlInputs(getUnsafeNativeHandle(), handles, numInputs);
+
+      Set<GraphOperation> operands = new LinkedHashSet<>(numInputs);
+      for (int i = 0; i < numInputs; i++) {
+        TF_Operation op = handles.get(TF_Operation.class, i);
+        String opName = TF_OperationName(op).getString();
+        operands.add(graph.operation(opName));
+      }
+      return operands;
+    }
+  }
+
+  /**
+   * Get the number of ops with this op as a control dependency.
+   */
+  public int numControlConsumers() {
+    try (PointerScope scope = new PointerScope()) {
+      return TF_OperationNumControlOutputs(getUnsafeNativeHandle());
+    }
+  }
+
+  /**
+   * Get the ops with this op as a control dependency.
+   */
+  public Set<GraphOperation> controlConsumers() {
+    try (PointerScope scope = new PointerScope()) {
+      int numConsumers = numControlConsumers();
+      PointerPointer<TF_Operation> handles = new PointerPointer<>(numConsumers);
+
+      TF_OperationGetControlOutputs(getUnsafeNativeHandle(), handles, numConsumers);
+
+      Set<GraphOperation> operands = new LinkedHashSet<>(numConsumers);
+      for (int i = 0; i < numConsumers; i++) {
+        TF_Operation op = handles.get(TF_Operation.class, i);
+        String opName = TF_OperationName(op).getString();
+        operands.add(graph.operation(opName));
+      }
+      return operands;
+    }
+  }
+
 
   TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;

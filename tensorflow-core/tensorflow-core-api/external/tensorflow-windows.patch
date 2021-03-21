@@ -1,7 +1,8 @@
-diff -ruN tensorflow-1.14.0-rc1/third_party/mkl/mkl.BUILD tensorflow-1.14.0-rc1-windows/third_party/mkl/mkl.BUILD
---- tensorflow-1.14.0-rc1/third_party/mkl/mkl.BUILD	2019-06-08 11:23:20.000000000 +0900
-+++ tensorflow-1.14.0-rc1-windows/third_party/mkl/mkl.BUILD	2019-06-12 08:30:41.232683854 +0900
-@@ -35,11 +35,23 @@
+diff --git a/third_party/mkl/BUILD b/third_party/mkl/BUILD
+index aa65b585b85..4e6546eac34 100644
+--- a/third_party/mkl/BUILD
++++ b/third_party/mkl/BUILD
+@@ -91,10 +91,23 @@ cc_library(
      visibility = ["//visibility:public"],
  )
  
@@ -20,11 +21,24 @@ diff -ruN tensorflow-1.14.0-rc1/third_party/mkl/mkl.BUILD tensorflow-1.14.0-rc1-
  cc_library(
      name = "mkl_libs_windows",
 -    srcs = [
--        "lib/libiomp5md.lib",
--        "lib/mklml.lib",
+-        "@llvm_openmp//:libiomp5md.dll",
 +    deps = [
 +        "iomp5",
-+        "mklml",
++        "mklml"
      ],
-     linkopts = ["/FORCE:MULTIPLE"],
      visibility = ["//visibility:public"],
+ )
+diff --git a/third_party/llvm_openmp/BUILD b/third_party/llvm_openmp/BUILD
+index 099a84dcbaa..f7f9d44118f 100644
+--- a/third_party/llvm_openmp/BUILD
++++ b/third_party/llvm_openmp/BUILD
+@@ -71,7 +71,7 @@ omp_vars_linux = {
+
+ # Windows Cmake vars to expand.
+ omp_vars_win = {
+-    "MSVC": 1,
++    "MSVC": 0,
+ }
+
+ omp_all_cmake_vars = select({
+ 

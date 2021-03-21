@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - master
+      - staging
       - r[0-9]+.*
   pull_request:
     branches:
@@ -11,6 +12,7 @@ on:
 env:
   STAGING_PROFILE_ID: 46f80d0729c92d
   NATIVE_BUILD_PROJECTS: tensorflow-core/tensorflow-core-generator,tensorflow-core/tensorflow-core-api
+  GCP_CREDS: ${{ secrets.GCP_CREDS }}
 jobs:
   quick-build:
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -76,8 +78,9 @@ jobs:
           tar hxvf $HOME/nccl.txz --strip-components=1 -C /usr/local/cuda/
           mv /usr/local/cuda/lib/* /usr/local/cuda/lib64/
           echo Removing downloaded archives and unused libraries to avoid running out of disk space
-          rm -f *.rpm *.tgz *.txz *.tar.*
+          rm -f $HOME/*.rpm $HOME/*.tgz $HOME/*.txz $HOME/*.tar.*
           rm -f $(find /usr/local/cuda/ -name '*.a' -and -not -name libcudart_static.a -and -not -name libcudadevrt.a)
+          rm -rf /usr/local/cuda/doc* /usr/local/cuda/libnvvp* /usr/local/cuda/nsight* /usr/local/cuda/samples*
           fi
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -94,8 +97,14 @@ jobs:
           mkdir -p $HOME/.m2
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
+            printf '%s\n' "${GCP_CREDS}" > $HOME/gcp_creds.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
+          else
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
+          fi
           echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
           df -h
   macosx-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -123,9 +132,15 @@ jobs:
           mkdir -p $HOME/.m2
           [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
           echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
+          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
+            printf '%s\n' "${GCP_CREDS}" > $HOME/gcp_creds.json
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
+          else
+            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
+          fi
           df -h
           echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
           df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
@@ -133,7 +148,7 @@ jobs:
     needs: prepare
     strategy:
        matrix:
-         ext: ["", -mkl] # -gpu, -mkl-gpu]
+         ext: ["", -gpu, -mkl] #, -mkl-gpu]
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
@@ -154,16 +169,16 @@ jobs:
           mkdir C:\bazel
           curl.exe -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-windows-x86_64.exe -o C:/bazel/bazel.exe --retry 10
           set "EXT=${{ matrix.ext }}"
-          if "%EXT:~-4%"=="-gpu" (
-          echo Removing some unused stuff to avoid running out of disk space
-          rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
-          echo Installing CUDA
-          curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_451.82_win10.exe -o cuda.exe
-          curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-windows-x64-v8.0.3.33.zip -o cudnn.zip
-          cuda.exe -s
-          mkdir cuda
-          unzip.exe cudnn.zip
-          cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/"
+          if "%EXT:~-4%" == "-gpu" (
+            echo Removing some unused stuff to avoid running out of disk space
+            rm.exe -Rf "C:/Program Files (x86)/Android" "C:/Program Files/dotnet" "%CONDA%" "%GOROOT_1_10_X64%" "%GOROOT_1_11_X64%" "%GOROOT_1_12_X64%" "%GOROOT_1_13_X64%" "C:\hostedtoolcache\windows\Ruby" "C:\Rust"
+            echo Installing CUDA
+            curl.exe -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_451.82_win10.exe -o cuda.exe
+            curl.exe -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-windows-x64-v8.0.3.33.zip -o cudnn.zip
+            cuda.exe -s
+            mkdir cuda
+            unzip.exe cudnn.zip
+            cp.exe -a cuda/include cuda/lib cuda/bin "C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.0/"
           )
           echo %JAVA_HOME%
       - name: Checkout repository
@@ -187,12 +202,19 @@ jobs:
           call mvn -version
           bazel version
           mkdir %USERPROFILE%\.m2
-          if "${{ github.event_name }}"=="push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
+          if "${{ github.event_name }}" == "push" (set MAVEN_PHASE=deploy) else (set MAVEN_PHASE=install)
           echo ^<settings^>^<servers^>^<server^>^<id^>ossrh^</id^>^<username^>${{ secrets.CI_DEPLOY_USERNAME }}^</username^>^<password^>${{ secrets.CI_DEPLOY_PASSWORD }}^</password^>^</server^>^</servers^>^</settings^> > %USERPROFILE%\.m2\settings.xml
+          set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
+          if "${{ github.event_name }}" == "push" (
+            if "${{ github.repository }}" == "tensorflow/java" (
+              printenv GCP_CREDS > %USERPROFILE%\gcp_creds.json
+              set "BAZEL_CACHE=--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=%USERPROFILE%\gcp_creds.json"      
+            )
+          )          
           df -h
           wmic pagefile list /format:list
           echo Executing Maven %MAVEN_PHASE%
-          call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }}
+          call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=%BAZEL_CACHE%"
           if ERRORLEVEL 1 exit /b
           df -h
           wmic pagefile list /format:list
