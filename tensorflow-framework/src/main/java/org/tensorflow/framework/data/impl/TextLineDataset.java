@@ -17,15 +17,24 @@ package org.tensorflow.framework.data.impl;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
-import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 import java.util.Collections;
 
+/** A Dataset comprising lines from one or more text files. */
 public class TextLineDataset extends Dataset {
 
+  /**
+   * Creates a Dataset comprising lines from one or more text files.
+   *
+   * @param tf the TensorFlow Ops
+   * @param filenames the names of one or more files containing the text lines
+   * @param compressionType the compression type, either "" (no compression), "ZLIB", or "GZIP"
+   * @param bufferSize the number of bytes in the read buffer
+   */
   public TextLineDataset(
       Ops tf,
       Operand<TString> filenames,

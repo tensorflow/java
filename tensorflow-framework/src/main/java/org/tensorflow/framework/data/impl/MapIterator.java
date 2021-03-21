@@ -18,27 +18,32 @@ package org.tensorflow.framework.data.impl;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.DatasetIterator;
 import org.tensorflow.framework.data.DatasetOptional;
-import org.tensorflow.op.Ops;
 
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 
+/** A dataset iterator that applies mapper operands across the elements of a dataset. */
 public class MapIterator extends DatasetIterator {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
-  public MapIterator(
-      DatasetIterator source,
-      Function<List<Operand<?>>, List<Operand<?>>> mapper) {
+  /**
+   * Creates a MapIterator
+   *
+   * @param source the data source iterator to apply the mapper operands
+   * @param mapper the mapper operands
+   */
+  public MapIterator(DatasetIterator source, Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     super(source);
     this.mapper = mapper;
   }
 
+  /** {@inheritDoc} */
   @Override
   public List<Operand<?>> getNext() {
     return mapper.apply(super.getNext());
   }
 
+  /** {@inheritDoc} */
   @Override
   public DatasetOptional getNextAsOptional() {
     DatasetOptional optional = super.getNextAsOptional();

@@ -23,16 +23,16 @@ import org.tensorflow.framework.data.impl.TFRecordDataset;
 import org.tensorflow.framework.data.impl.TakeDataset;
 import org.tensorflow.framework.data.impl.TensorSliceDataset;
 import org.tensorflow.framework.data.impl.TextLineDataset;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.ndarray.Shape;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
-import org.tensorflow.types.family.TType;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and
@@ -40,12 +40,25 @@ import org.tensorflow.types.family.TType;
  */
 public abstract class Dataset implements Iterable<List<Operand<?>>> {
   protected Ops tf;
-  private Operand<?> variant;
-  private List<Class<? extends TType>> outputTypes;
-  private List<Shape> outputShapes;
+  private final Operand<?> variant;
+  private final List<Class<? extends TType>> outputTypes;
+  private final List<Shape> outputShapes;
 
+  /**
+   * Creates a Dataset
+   *
+   * @param tf The TensorFlow Ops
+   * @param variant the Operand that represents the dataset.
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of a
+   *     dataset element.
+   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
+   *     a dataset element.
+   */
   public Dataset(
-      Ops tf, Operand<?> variant, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      Ops tf,
+      Operand<?> variant,
+      List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
     if (tf == null) {
       throw new IllegalArgumentException("Ops accessor cannot be null.");
     }
@@ -61,11 +74,63 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
     this.outputShapes = outputShapes;
   }
 
+  /**
+   * Creates a dataset from another dataset
+   *
+   * @param other the other dataset
+   */
   protected Dataset(Dataset other) {
     this.tf = other.tf;
     this.variant = other.variant;
     this.outputTypes = other.outputTypes;
     this.outputShapes = other.outputShapes;
+  }
+
+  /**
+   * Creates an in-memory `Dataset` whose elements are slices of the given tensors. Each element of
+   * this dataset will be a {@code List<Operand<?>>}, representing slices (e.g. batches) of the
+   * provided tensors.
+   *
+   * @param tf Ops Accessor
+   * @param tensors A list of {@code Operand<?>} representing components of this dataset (e.g.
+   *     features, labels)
+   * @param outputTypes A list of tensor type classes representing the data type of each component
+   *     of this dataset.
+   * @return A new `Dataset`
+   */
+  public static Dataset fromTensorSlices(
+      Ops tf, List<Operand<?>> tensors, List<Class<? extends TType>> outputTypes) {
+    return new TensorSliceDataset(tf, tensors, outputTypes);
+  }
+
+  /**
+   * Creates a Dataset comprising records from one or more TFRecord files.
+   *
+   * @param tf the TensorFlow Ops
+   * @param filename the name of the file containing the TFRecords
+   * @param compressionType the compression type, either "" (no compression), "ZLIB", or "GZIP"
+   * @param bufferSize the number of bytes in the read buffer
+   * @return A Dataset comprising records from a TFRecord file.
+   */
+  public static Dataset tfRecordDataset(
+      Ops tf, String filename, String compressionType, long bufferSize) {
+    return new TFRecordDataset(
+        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
+  }
+
+  /**
+   * Creates a Dataset comprising lines from one or more text files.
+   *
+   * @param tf the TensorFlow Ops
+   * @param filename the name of the file containing the text linea
+   * @param compressionType the compression type, either "" (no compression), "ZLIB", or "GZIP"
+   * @param bufferSize the number of bytes in the read buffer
+   * @return A Dataset comprising lines from a text file.
+   */
+  public static Dataset textLineDataset(
+      Ops tf, String filename, String compressionType, long bufferSize) {
+    return new TextLineDataset(
+        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
   }
 
   /**
@@ -127,11 +192,12 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * Returns a new Dataset which maps a function across all elements from this dataset, on a single
    * component of each element.
    *
-   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components: (features,
-   * labels).
+   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components:
+   * (features, labels).
    *
-   * <p>Calling {@code dataset.mapOneComponent(0, features -> tf.math.mul(features, tf.constant(2)))} will
-   * map the function over the `features` component of each element, multiplying each by 2.
+   * <p>Calling {@code dataset.mapOneComponent(0, features -> tf.math.mul(features,
+   * tf.constant(2)))} will map the function over the `features` component of each element,
+   * multiplying each by 2.
    *
    * @param index The index of the component to transform.
    * @param mapper The function to apply to the target component.
@@ -150,8 +216,8 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * Returns a new Dataset which maps a function across all elements from this dataset, on all
    * components of each element.
    *
-   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components: (features,
-   * labels).
+   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components:
+   * (features, labels).
    *
    * <p>Calling {@code dataset.mapAllComponents(component -> tf.math.mul(component,
    * tf.constant(2)))} will map the function over the both the `features` and `labels` components of
@@ -172,8 +238,8 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   /**
    * Returns a new Dataset which maps a function over all elements returned by this dataset.
    *
-   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components: (features,
-   * labels).
+   * <p>For example, suppose each element is a {@code List<Operand<?>>} with 2 components:
+   * (features, labels).
    *
    * <p>Calling
    *
@@ -254,53 +320,42 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
   }
 
   /**
-   * Creates an in-memory `Dataset` whose elements are slices of the given tensors. Each element of
-   * this dataset will be a {@code List<Operand<?>>}, representing slices (e.g. batches) of the
-   * provided tensors.
+   * Gets the variant tensor representing this dataset.
    *
-   * @param tf Ops Accessor
-   * @param tensors A list of {@code Operand<?>} representing components of this dataset (e.g.
-   *     features, labels)
-   * @param outputTypes A list of tensor type classes representing the data type of each component of
-   *     this dataset.
-   * @return A new `Dataset`
+   * @return the variant tensor representing this dataset.
    */
-  public static Dataset fromTensorSlices(
-      Ops tf, List<Operand<?>> tensors, List<Class<? extends TType>> outputTypes) {
-    return new TensorSliceDataset(tf, tensors, outputTypes);
-  }
-
-  public static Dataset tfRecordDataset(
-      Ops tf, String filename, String compressionType, long bufferSize) {
-    return new TFRecordDataset(
-        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
-  }
-
-  public static Dataset textLineDataset(
-      Ops tf, String filename, String compressionType, long bufferSize) {
-    return new TextLineDataset(
-        tf, tf.constant(filename), tf.constant(compressionType), tf.constant(bufferSize));
-  }
-
-  /** Get the variant tensor representing this dataset. */
   public Operand<?> getVariant() {
     return variant;
   }
 
-  /** Get a list of output types for each component of this dataset. */
+  /**
+   * Gets a list of output types for each component of this dataset.
+   *
+   * @return the list of output types for each component of this dataset.
+   */
   public List<Class<? extends TType>> getOutputTypes() {
     return this.outputTypes;
   }
 
-  /** Get a list of shapes for each component of this dataset. */
+  /**
+   * Gets a list of shapes for each component of this dataset.
+   *
+   * @return the list of shapes for each component of this dataset.
+   */
   public List<Shape> getOutputShapes() {
     return this.outputShapes;
   }
 
+  /**
+   * Gets the TensorFlow Ops Instance
+   *
+   * @return the TensorFlow Ops Instance
+   */
   public Ops getOpsInstance() {
     return this.tf;
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Dataset{"

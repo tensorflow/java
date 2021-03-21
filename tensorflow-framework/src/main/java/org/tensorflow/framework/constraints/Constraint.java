@@ -42,6 +42,7 @@ public abstract class Constraint {
    *
    * @param weights the weights
    * @return the constrained weights
+   * @param <T> the date type for the weights and return value
    */
   public abstract <T extends TNumber> Operand<T> call(Operand<T> weights);
 

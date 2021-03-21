@@ -22,19 +22,28 @@ import org.tensorflow.framework.data.DatasetIterator;
 import java.util.List;
 import java.util.function.Function;
 
+/** Maps the elements in one dataset to another using mapper Operands. */
 public class MapDataset extends Dataset {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
+  /**
+   * Creates a MapDataset from another dataset based on the mapper operations
+   *
+   * @param other the other dataset
+   * @param mapper the mapper operations
+   */
   public MapDataset(Dataset other, Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     super(other);
     this.mapper = mapper;
   }
 
+  /** {@inheritDoc} */
   @Override
   public DatasetIterator makeOneShotIterator() {
     return new MapIterator(super.makeOneShotIterator(), mapper);
   }
 
+  /** {@inheritDoc} */
   @Override
   public DatasetIterator makeInitializeableIterator() {
     return new MapIterator(super.makeInitializeableIterator(), mapper);

@@ -16,13 +16,13 @@
 package org.tensorflow.framework.data;
 
 import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.tensorflow.types.family.TType;
 
 /**
  * An optional represents the result of a dataset getNext operation that may fail, when the end of
@@ -30,23 +30,35 @@ import org.tensorflow.types.family.TType;
  */
 public class DatasetOptional {
   protected Ops tf;
-
-  public Operand<?> getOptionalVariant() {
-    return optionalVariant;
-  }
-
-  private Operand<?> optionalVariant;
-  private List<Class<? extends TType>> outputTypes;
-  private List<Shape> outputShapes;
-
+  private final Operand<?> optionalVariant;
+  private final List<Class<? extends TType>> outputTypes;
+  private final List<Shape> outputShapes;
+  /**
+   * Creates a DatasetOptional
+   *
+   * @param tf the TensorFlow Ops
+   * @param optionalVariant the optional Operand that represents the dataset.
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of a
+   *     dataset element.
+   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
+   *     a dataset element.
+   */
   public DatasetOptional(
-      Ops tf, Operand<?> optionalVariant, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+      Ops tf,
+      Operand<?> optionalVariant,
+      List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
     this.tf = tf;
     this.optionalVariant = optionalVariant;
     this.outputTypes = outputTypes;
     this.outputShapes = outputShapes;
   }
 
+  /**
+   * Creates a DatasetOptional from another DatasetOptional
+   *
+   * @param other the other DatasetOptional
+   */
   protected DatasetOptional(DatasetOptional other) {
     this.tf = other.tf;
     this.optionalVariant = other.optionalVariant;
@@ -54,14 +66,44 @@ public class DatasetOptional {
     this.outputShapes = other.outputShapes;
   }
 
+  /**
+   * Creates a DatasetOptional from a list of components
+   *
+   * @param tf the TensorFlow Ops
+   * @param components the components
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of a
+   *     dataset element.
+   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
+   *     a dataset element.
+   * @return a DatasetOptional initialized with the components
+   */
+  public static DatasetOptional fromComponents(
+      Ops tf,
+      List<Operand<?>> components,
+      List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    Operand<?> optionalVariant = tf.data.optionalFromValue(components);
+    return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
+  }
 
+  public Operand<?> getOptionalVariant() {
+    return optionalVariant;
+  }
 
-  /** Whether this optional has a value. */
+  /**
+   * Gets the operand indicating whether this optional has a value.
+   *
+   * @return the operand indicating whether this optional has a value.
+   */
   public Operand<TBool> hasValue() {
     return tf.data.optionalHasValue(optionalVariant).hasValue();
   }
 
-  /** Returns the value of the dataset element represented by this optional, if it exists. */
+  /**
+   * Gets the value of the dataset element represented by this optional, if it exists.
+   *
+   * @return the value of the dataset element represented by this optional, if it exists.
+   */
   public List<Operand<?>> getValue() {
     List<Operand<?>> components = new ArrayList<>();
     tf.data
@@ -70,15 +112,6 @@ public class DatasetOptional {
         .forEachRemaining(components::add);
 
     return components;
-  }
-
-  public static DatasetOptional fromComponents(
-      Ops tf,
-      List<Operand<?>> components,
-      List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
-    Operand<?> optionalVariant = tf.data.optionalFromValue(components);
-    return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
   }
 
   public Ops getOpsInstance() {

@@ -21,14 +21,24 @@ import org.tensorflow.framework.data.DatasetOptional;
 import java.util.List;
 import java.util.function.Function;
 
+/**
+ * An optional represents the result of a MapDataset getNext operation that may fail, when the end
+ * of the dataset has been reached.
+ */
 public class MapOptional extends DatasetOptional {
   private final Function<List<Operand<?>>, List<Operand<?>>> mapper;
 
+  /**
+   * Creates a MapOptional
+   *
+   * @param optional The source dataset optional
+   * @param mapper the mapper Operands
+   */
   MapOptional(DatasetOptional optional, Function<List<Operand<?>>, List<Operand<?>>> mapper) {
     super(optional);
     this.mapper = mapper;
   }
-
+  /** {@inheritDoc} */
   @Override
   public List<Operand<?>> getValue() {
     return mapper.apply(super.getValue());

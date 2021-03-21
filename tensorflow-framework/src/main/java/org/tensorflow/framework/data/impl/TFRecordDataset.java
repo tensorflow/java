@@ -17,15 +17,24 @@ package org.tensorflow.framework.data.impl;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
-import org.tensorflow.op.Ops;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 
 import java.util.Collections;
 
+/** A Dataset comprising records from one or more TFRecord files. */
 public class TFRecordDataset extends Dataset {
 
+  /**
+   * Creates a Dataset comprising records from one or more TFRecord files.
+   *
+   * @param tf the TensorFlow Ops
+   * @param filenames the names of one or more files containing TFRecords
+   * @param compressionType the compression type, either "" (no compression), "ZLIB", or "GZIP"
+   * @param bufferSize the number of bytes in the read buffer
+   */
   public TFRecordDataset(
       Ops tf,
       Operand<TString> filenames,
