@@ -89,14 +89,15 @@ $BAZEL_BIN/java_op_generator \
 GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
 mkdir -p $GEN_RESOURCE_DIR
 
-# Generate Java operator wrappers
+# Export op defs
 $BAZEL_BIN/java_op_exporter \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
     $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
 
 
-PROTO_DIR=src/gen/protoc
 # Copy generated Java protos from source jars
+PROTO_DIR=src/gen/protoc
+
 
 cd $GEN_SRCS_DIR
 find $TENSORFLOW_BIN/core -name \*-speed-src.jar -exec jar xf {} \;
