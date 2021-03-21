@@ -27,7 +27,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Metric that calculates how often predictions matches one-hot labels.
  *
- * <p>You can provide <code>logits</code> of classes as <code>predictions</code>y_pred, since argmax
+ * <p>You can provide <code>logits</code> of classes as <code>predictions</code>, since argmax
  * of <code>logits</code> and probabilities are same.
  *
  * <p>This metric creates two local variables, <code>total</code> and <code>count</code> that are
