@@ -20,9 +20,9 @@ public enum ConfusionMatrixEnum {
   TRUE_POSITIVES("tp"),
   /** These are cases in which the prediction is true, and reality is false. */
   FALSE_POSITIVES("fp"),
-  /** These are cases in which the prediction is false, and reality is true. */
-  TRUE_NEGATIVES("tn"),
   /** These are cases in which the prediction is false, and reality is false. */
+  TRUE_NEGATIVES("tn"),
+  /** These are cases in which the prediction is false, and reality is true. */
   FALSE_NEGATIVES("fn");
 
   private final String abbrev;
