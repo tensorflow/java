@@ -27,7 +27,6 @@ import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.math.Softplus;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -338,7 +337,6 @@ public class Losses {
    */
   public static <T extends TNumber> Operand<T> cosineSimilarity(
       Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, int[] axis) {
-    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
@@ -521,7 +519,6 @@ public class Losses {
       boolean fromLogits,
       int axis) {
     Class<T> predictionType = predictions.type();
-    FrameworkOps fop = FrameworkOps.create(tf);
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
