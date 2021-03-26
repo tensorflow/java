@@ -28,7 +28,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
-import org.tensorflow.framework.utils.SparseTensor;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -48,6 +48,17 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * These are helper methods for Metrics and will be module private when Java modularity is applied
  * to TensorFlow Java. These methods should not be used outside of the metrics packages.
@@ -58,7 +69,8 @@ public class MetricsHelper {
       "weights can not be broadcast to values.";
 
   /**
-   * Asserts that the {@code sampleWeights} can be broadcast to the same shape as {@code values }
+   * Asserts that the {@code sampleWeights} can be broadcast to the same shape as {@code values
+   * }
    *
    * <p>In losses and metrics, limited weight broadcasting is supported. Weights must be either
    * scalar, or the same rank as the target values, with each dimension either 1, or the same as the
@@ -67,8 +79,8 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param sampleWeights the sample weights.
    * @param values the values to which weights are applied.
-   * @return {@code Operation} with control dependencies to ensure {@code sampleWeight} can be
-   *     broadcast to {@code values}
+   * @return {@code Operation} with control dependencies to ensure {@code sampleWeight}
+   *     can be broadcast to {@code values}
    * @param <T> the type of Operand
    * @throws NotBroadcastableException If static checks determine {@code sampleWeights} has an
    *     incorrect shape that prohibit broadcasting to {@code values}
@@ -112,7 +124,10 @@ public class MetricsHelper {
           throw new NotBroadcastableException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
-                  ASSERT_BROADCAST_ERROR_PREFIX, i, valuesShapeStatic, weightsShapeStatic));
+                  ASSERT_BROADCAST_ERROR_PREFIX,
+                  i,
+                  valuesShapeStatic,
+                  weightsShapeStatic));
         }
       }
       return tf.withSubScope("staticDimsCheckSuccess")
@@ -185,12 +200,13 @@ public class MetricsHelper {
   private static <T extends TNumber> Operand<TBool> canBroadcastDims(
       Ops tf, Operand<T> weightsShape, Operand<T> valuesShape) {
     tf = tf.withSubScope("canBroadcastDims");
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
     Operand<T> validDims =
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<T> weightsShape2D = tf.expandDims(weightsShape, tf.constant(-1));
 
-    Operand<T> diffResult = SetsOps.difference(tf, weightsShape2D, validDims);
+    Operand<T> diffResult = fops.sets.difference(weightsShape2D, validDims);
     Operand<TInt32> numInvalidDims = tf.size(diffResult);
     return tf.math.equal(tf.constant(0), numInvalidDims);
   }
