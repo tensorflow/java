@@ -1,4 +1,4 @@
-package org.tensorflow.op.nn;
+package org.tensorflow.framework.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
@@ -8,11 +8,17 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Select;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.op.dtypes.Cast;
-import org.tensorflow.op.math.*;
+import org.tensorflow.op.math.Add;
+import org.tensorflow.op.math.Exp;
+import org.tensorflow.op.math.GreaterEqual;
+import org.tensorflow.op.math.Log1p;
+import org.tensorflow.op.math.Mul;
+import org.tensorflow.op.math.Neg;
+import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-@Operator(group = "nn")
+//@Operator(group = "nn")
 public class SigmoidCrossEntropyWithLogits {
 
   /**
@@ -60,7 +66,7 @@ public class SigmoidCrossEntropyWithLogits {
    * @return the component-wise logistic losses.
    * @throws IllegalArgumentException if logits' and labels' do not have the same shape
    */
-  @Endpoint(name = "sigmoidCrossEntropyWithLogits")
+  //@Endpoint(name = "sigmoidCrossEntropyWithLogits")
   public static <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<T> logits) {
     if (!isCompatible(labels.shape(), logits.shape())) {
