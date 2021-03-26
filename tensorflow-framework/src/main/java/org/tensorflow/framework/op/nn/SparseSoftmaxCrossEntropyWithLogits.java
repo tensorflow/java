@@ -64,8 +64,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    *     probabilities.
    * @param <T> the data type for the labels
    * @param <U> the data tyoe for the loss and logits.
-   * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type as
-   *     <code>logits</code> with the softmax cross entropy loss.
+   * @return the loss
    * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
    *     of the labels is not equal to the rank of the logits minus one.
    */
