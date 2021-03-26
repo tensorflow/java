@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.nn.raw;
+package org.tensorflow.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -30,30 +30,34 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes softmax cross entropy cost and gradients to backpropagate.
  * <p>
+ * Unlike `SoftmaxCrossEntropyWithLogits`, this operation does not accept
+ * a matrix of label probabilities, but rather a single label per row
+ * of features.  This label is considered to have probability 1.0 for the
+ * given row.
+ * <p>
  * Inputs are the logits, not probabilities.
  * 
  * @param <T> data type for {@code loss()} output
  */
-@Operator(group = "nn.raw")
-public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawOp {
+@Operator(group = "nn")
+public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawOp {
   
   /**
-   * Factory method to create a class wrapping a new SoftmaxCrossEntropyWithLogits operation.
+   * Factory method to create a class wrapping a new SparseSoftmaxCrossEntropyWithLogits operation.
    * 
    * @param scope current scope
    * @param features batch_size x num_classes matrix
-   * @param labels batch_size x num_classes matrix
-   * The caller must ensure that each batch of labels represents a valid
-   * probability distribution.
-   * @return a new instance of SoftmaxCrossEntropyWithLogits
+   * @param labels batch_size vector with values in [0, num_classes).
+   * This is the label for the given minibatch entry.
+   * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
    */
   @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<T> labels) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SoftmaxCrossEntropyWithLogits", scope.makeOpName("SoftmaxCrossEntropyWithLogits"));
+  public static <T extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope, Operand<T> features, Operand<? extends TNumber> labels) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SoftmaxCrossEntropyWithLogits<T>(opBuilder.build());
+    return new SparseSoftmaxCrossEntropyWithLogits<>(opBuilder.build());
   }
   
   /**
@@ -71,15 +75,15 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
   }
   
   /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SoftmaxCrossEntropyWithLogits";
+  public static final String OP_NAME = "SparseSoftmaxCrossEntropyWithLogits";
   
   private Output<T> loss;
   private Output<T> backprop;
   
-  private SoftmaxCrossEntropyWithLogits(Operation operation) {
+  private SparseSoftmaxCrossEntropyWithLogits(Operation operation) {
     super(operation);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
-    backprop = operation.output(outputIdx++);
+    backprop = operation.output(outputIdx);
   }
 }

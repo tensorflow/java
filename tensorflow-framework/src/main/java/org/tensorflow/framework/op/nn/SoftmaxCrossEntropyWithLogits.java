@@ -1,11 +1,15 @@
-package org.tensorflow.op.nn;
+package org.tensorflow.framework.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.op.core.*;
+import org.tensorflow.op.core.Concat;
+import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.Range;
+import org.tensorflow.op.core.Rank;
+import org.tensorflow.op.core.Reshape;
+import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.linalg.Transpose;
 import org.tensorflow.op.math.Sub;
@@ -14,12 +18,11 @@ import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Operator(group = "nn")
+// @Operator(group = "nn")
 public class SoftmaxCrossEntropyWithLogits {
 
   /**
@@ -68,6 +71,7 @@ public class SoftmaxCrossEntropyWithLogits {
    *     shape is the same as <code>labels</code> except that it does not have the last dimension of
    *     <code>labels</code>.
    */
+  @SuppressWarnings("unchecked")
   @Endpoint(name = "softmaxCrossEntropyWithLogits")
   public static <T extends TNumber, U extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
       Scope scope, Operand<U> labels, Operand<T> logits, int axis) {
@@ -78,7 +82,9 @@ public class SoftmaxCrossEntropyWithLogits {
     }
 
     if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
-      Operand<TFloat32> result =  softmaxCrossEntropyWithLogits(scope,
+      Operand<TFloat32> result =
+          softmaxCrossEntropyWithLogits(
+              scope,
               Cast.create(scope, labels, TFloat32.class),
               Cast.create(scope, logits, TFloat32.class),
               axis);
@@ -86,10 +92,8 @@ public class SoftmaxCrossEntropyWithLogits {
     }
 
     if (logits.asOutput().type() != labels.asOutput().type()) {
-      return softmaxCrossEntropyWithLogits(scope,
-              Cast.create(scope, labels, logits.asOutput().type()),
-              logits,
-              axis);
+      return softmaxCrossEntropyWithLogits(
+          scope, Cast.create(scope, labels, logits.asOutput().type()), logits, axis);
     }
 
     Operand<TInt64> inputRank = Cast.create(scope, Rank.create(scope, logits), TInt64.class);
@@ -101,13 +105,20 @@ public class SoftmaxCrossEntropyWithLogits {
       labels = moveDimToEnd(scope, labels, axis, inputRank);
     }
 
+    Operand<T> tLabels;
+    if (labels.type() != logits.type()) {
+      tLabels = Cast.create(scope, labels, logits.type());
+    } else {
+      // Unchecked warning checked in if statement.
+      tLabels = (Operand<T>) labels;
+    }
+
     Shape inputShape = logits.shape();
     logits = flattenOuterDims(scope, logits);
-    labels = flattenOuterDims(scope, labels);
+    tLabels = flattenOuterDims(scope, tLabels);
 
-    org.tensorflow.op.nn.raw.SoftmaxCrossEntropyWithLogits<T> smax =
-        org.tensorflow.op.nn.raw.SoftmaxCrossEntropyWithLogits.create(
-            scope, logits, (Operand<T>)labels);
+    org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits<T> smax =
+        org.tensorflow.op.nn.SoftmaxCrossEntropyWithLogits.create(scope, logits, tLabels);
     /* cannot use generic on cost, because cost may be recast later. */
     Operand<T> cost = smax.loss();
     Operand<TInt64> outputShape =
@@ -119,6 +130,9 @@ public class SoftmaxCrossEntropyWithLogits {
     cost = Reshape.create(scope, cost, outputShape);
     if (scope.env().isGraph() && !shape.hasUnknownDimension()) {
       long[] array = shape.asArray();
+      if (array == null) {
+        array = new long[0];
+      }
       long[] newArray = new long[array.length - 1];
       if (axis < 0) {
         axis = shape.numDimensions() + axis;
@@ -153,7 +167,7 @@ public class SoftmaxCrossEntropyWithLogits {
       boolean productValid = true;
       for (int i = ndims - 2; i >= 0; i--) {
         long d = shape.size(i);
-        if (d == org.tensorflow.ndarray.Shape.UNKNOWN_SIZE) {
+        if (d == Shape.UNKNOWN_SIZE) {
           productValid = false;
           break;
         }

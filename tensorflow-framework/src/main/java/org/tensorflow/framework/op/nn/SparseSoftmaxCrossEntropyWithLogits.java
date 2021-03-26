@@ -1,11 +1,10 @@
-package org.tensorflow.op.nn;
+package org.tensorflow.framework.op.nn;
 
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.AssertThat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Reshape;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Operator(group = "nn")
+// @Operator(group = "nn")
 public class SparseSoftmaxCrossEntropyWithLogits {
 
   /**
@@ -63,19 +62,24 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    *     d_{r-1}, numClasses]</code> and dataType of <code>TFloat16</code>, <code>TFloat32</code>,
    *     or <code>TFloat64</code>. These activation energies are interpreted as unnormalized log
    *     probabilities.
+   * @param <T> the data type for the labels
+   * @param <U> the data tyoe for the loss and logits.
    * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type as
    *     <code>logits</code> with the softmax cross entropy loss.
    * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
    *     of the labels is not equal to the rank of the logits minus one.
    */
+  @SuppressWarnings("unchecked")
   @Endpoint(name = "sparseSoftmaxCrossEntropyWithLogits")
-  public static <T extends TNumber, U extends TNumber> Operand sparseSoftmaxCrossEntropyWithLogits(
-      Scope scope, Operand<T> labels, Operand<U> logits) {
+  public static <T extends TNumber, U extends TNumber>
+      Operand<U> sparseSoftmaxCrossEntropyWithLogits(
+          Scope scope, Operand<T> labels, Operand<U> logits) {
     scope = scope.withSubScope("SparseSoftmaxCrossEntropyWithLogits");
-    /** cannot use generics on preciseLogits as it may be recast later */
-    Operand preciseLogits = logits;
+    Operand<? extends TNumber> preciseLogits;
     if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
       preciseLogits = Cast.create(scope, logits, TFloat32.class);
+    } else {
+      preciseLogits = logits;
     }
     Shape labelsStaticShape = labels.shape();
     org.tensorflow.op.core.Shape<TInt32> labelsShape =
@@ -108,14 +112,16 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     }
     // Check if no reshapes are required.
     if (logitsShape.numDimensions() == 2) {
-      org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits smax =
-          org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits.create(
+      org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits<? extends TNumber> smax =
+          org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits.create(
               scope, preciseLogits, labels);
-      Operand loss = smax.loss();
-      if (logits.asOutput().type() == TFloat16.class) {
-        loss = Cast.create(scope, loss, TFloat16.class);
+      Operand<? extends TNumber> cost = smax.loss();
+      if (cost.type() != logits.type()) {
+        return Cast.create(scope, cost, logits.type());
+      } else {
+        // Unchecked cast already checked with previous if
+        return (Operand<U>) cost;
       }
-      return loss;
     }
 
     List<Op> shapeChecks = new ArrayList<>();
@@ -145,14 +151,17 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     preciseLogits = Reshape.create(scope, preciseLogits, Constant.arrayOf(scope, -1L, numClassses));
     labels = Reshape.create(scope, labels, Constant.scalarOf(scope, -1));
     scope.withControlDependencies(shapeChecks);
-    org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits smax =
-        org.tensorflow.op.nn.raw.SparseSoftmaxCrossEntropyWithLogits.create(
+    // call raw op
+    org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits<? extends TNumber> smax =
+        org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits.create(
             scope, preciseLogits, labels);
-    Operand cost = smax.loss();
+    Operand<? extends TNumber> cost = smax.loss();
     cost = Reshape.create(scope, cost, labelsShape);
-    if (logits.asOutput().type() == TFloat16.class) {
-      cost = Cast.create(scope, cost, TFloat16.class);
+    if (cost.type() != logits.type()) {
+      return Cast.create(scope, cost, logits.type());
+    } else {
+      // Unchecked cast already checked with previous if
+      return (Operand<U>) cost;
     }
-    return cost;
   }
 }
