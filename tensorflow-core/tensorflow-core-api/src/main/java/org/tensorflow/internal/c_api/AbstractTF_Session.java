@@ -25,6 +25,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
+import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
@@ -33,11 +34,14 @@ public abstract class AbstractTF_Session extends Pointer {
         DeleteDeallocator(TF_Session s) { super(s); }
         @Override public void deallocate() {
             if (!isNull()) {
-                TF_Status status = TF_Status.newStatus();
-                TF_CloseSession(this, status);
-                // Result of close is ignored, delete anyway.
-                TF_DeleteSession(this, status);
-                setNull();
+                try (PointerScope scope = new PointerScope()) {
+                    TF_Status status = TF_Status.newStatus();
+                    TF_CloseSession(this, status);
+                    // Result of close is ignored, delete anyway.
+                    TF_DeleteSession(this, status);
+                    status.throwExceptionIfNotOK();
+                    setNull();
+                }
             }
         }
     }

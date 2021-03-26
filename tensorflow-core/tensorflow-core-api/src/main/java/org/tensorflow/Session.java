@@ -574,23 +574,16 @@ public final class Session implements AutoCloseable {
         status.throwExceptionIfNotOK();
       }
 
-      TF_Session session = TF_NewSession(graphHandle, opts, status);
+      TF_Session session = TF_Session.newSession(graphHandle, opts, status);
       status.throwExceptionIfNotOK();
 
-      return session;
+      return session.retainReference();
     }
   }
 
   private static void delete(TF_Session handle) {
     requireHandle(handle);
-
-    try (PointerScope scope = new PointerScope()) {
-      TF_Status status = TF_Status.newStatus();
-      TF_CloseSession(handle, status);
-      // Result of close is ignored, delete anyway.
-      TF_DeleteSession(handle, status);
-      status.throwExceptionIfNotOK();
-    }
+    handle.releaseReference();
   }
 
   /**
