@@ -16,6 +16,7 @@ package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.exceptions.NotBroadcastableException;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -174,12 +175,13 @@ public class MetricsHelper {
   private static <T extends TNumber> Operand<TBool> canBroadcastDims(
       Ops tf, Operand<T> weightsShape, Operand<T> valuesShape) {
     tf = tf.withSubScope("canBroadcastDims");
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
     Operand<T> validDims =
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<T> weightsShape2D = tf.expandDims(weightsShape, tf.constant(-1));
 
-    Operand<T> diffResult = SetsOps.difference(tf, weightsShape2D, validDims);
+    Operand<T> diffResult = fops.sets.difference(weightsShape2D, validDims);
     Operand<TInt32> numInvalidDims = tf.size(diffResult);
     return tf.math.equal(tf.constant(0), numInvalidDims);
   }

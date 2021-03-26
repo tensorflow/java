@@ -12,18 +12,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.framework.metrics.impl;
+package org.tensorflow.framework.op;
 
 import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
+import org.tensorflow.op.Scope;
 import org.tensorflow.op.SparseOps;
+import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.dtypes.Cast;
 import org.tensorflow.op.sparse.DenseToDenseSetOperation;
+import org.tensorflow.op.sparse.SparseToDense;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Implementation of set operations */
 public class SetsOps {
+
+  private final Scope scope;
+
+  private final FrameworkOps frameworkOps;
+
+  /**
+   * Creates Framework {@code nn} Operations
+   *
+   * @param frameworkOps the TensorFLow framework Ops
+   */
+  SetsOps(FrameworkOps frameworkOps) {
+    this.scope = frameworkOps.scope();
+    this.frameworkOps = frameworkOps;
+  }
 
   /**
    * Computes set difference of elements in last dimension of <code>a</code> and <code>b</code> with
@@ -31,7 +46,6 @@ public class SetsOps {
    *
    * <p>All but the last dimension of <code>a</code> and <code>b</code> must match
    *
-   * @param tf the TensorFlow Ops
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -39,8 +53,8 @@ public class SetsOps {
    *     last dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
-  public static <T extends TNumber> Operand<T> difference(Ops tf, Operand<T> a, Operand<T> b) {
-    return difference(tf, a, b, true);
+  public <T extends TNumber> Operand<T> difference(Operand<T> a, Operand<T> b) {
+    return difference(a, b, true);
   }
 
   /**
@@ -48,7 +62,6 @@ public class SetsOps {
    *
    * <p>All but the last dimension of <code>a</code> and <code>b</code> must match
    *
-   * @param tf the TensorFlow Ops
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param aMinusB whether to subtract b from a, vs vice versa.
@@ -57,15 +70,13 @@ public class SetsOps {
    *     last dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
-  public static <T extends TNumber> Operand<T> difference(
-      Ops tf, Operand<T> a, Operand<T> b, boolean aMinusB) {
-    return setOperation(tf, a, b, aMinusB ? Operation.A_MINUS_B : Operation.B_MINUS_A);
+  public <T extends TNumber> Operand<T> difference(Operand<T> a, Operand<T> b, boolean aMinusB) {
+    return setOperation(a, b, aMinusB ? Operation.A_MINUS_B : Operation.B_MINUS_A);
   }
 
   /**
    * Computes set union of elements in last dimension of <code>a</code> and <code>b</code>.
    *
-   * @param tf the TensorFlow Ops
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -73,14 +84,13 @@ public class SetsOps {
    *     last dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
-  public static <T extends TNumber> Operand<T> union(Ops tf, Operand<T> a, Operand<T> b) {
-    return setOperation(tf, a, b, Operation.UNION);
+  public <T extends TNumber> Operand<T> union(Operand<T> a, Operand<T> b) {
+    return setOperation(a, b, Operation.UNION);
   }
 
   /**
    * Computes set intersection of elements in last dimension of <code>a</code> and <code>b</code>.
    *
-   * @param tf the TensorFlow Ops
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -88,14 +98,13 @@ public class SetsOps {
    *     last dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
-  public static <T extends TNumber> Operand<T> intersection(Ops tf, Operand<T> a, Operand<T> b) {
-    return setOperation(tf, a, b, Operation.INTERSECTION);
+  public <T extends TNumber> Operand<T> intersection(Operand<T> a, Operand<T> b) {
+    return setOperation(a, b, Operation.INTERSECTION);
   }
 
   /**
    * Compute set operation of elements in last dimension of <code>a</code> and <code>b</code>.
    *
-   * @param tf the TensorFlow Ops
    * @param a The first set operation operand
    * @param b The other et operation operand
    * @param setOperation The set operation to perform, {@link Operation}.
@@ -104,18 +113,23 @@ public class SetsOps {
    *     last dimension the same. Elements along the last dimension contain the results of the set
    *     operation.
    */
-  public static <T extends TNumber> Operand<T> setOperation(
-      Ops tf, Operand<T> a, Operand<T> b, Operation setOperation) {
+  public <T extends TNumber> Operand<T> setOperation(
+      Operand<T> a, Operand<T> b, Operation setOperation) {
 
     DenseToDenseSetOperation<T> setOperationResult =
-        tf.sparse.denseToDenseSetOperation(
-            a, b, setOperation.getSetOperation(), DenseToDenseSetOperation.validateIndices(true));
+        DenseToDenseSetOperation.create(
+            scope,
+            a,
+            b,
+            setOperation.getSetOperation(),
+            DenseToDenseSetOperation.validateIndices(true));
 
-    return tf.sparse.sparseToDense(
+    return SparseToDense.create(
+        scope,
         setOperationResult.resultIndices(),
         setOperationResult.resultShape(),
         setOperationResult.resultValues(),
-        cast(tf, tf.constant(0), a.type()));
+        Cast.create(scope, Constant.scalarOf(scope, 0), a.type()));
   }
 
   /**
