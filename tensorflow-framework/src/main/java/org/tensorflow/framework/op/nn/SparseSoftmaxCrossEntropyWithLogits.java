@@ -14,11 +14,7 @@ import org.tensorflow.op.math.Equal;
 import org.tensorflow.types.TBfloat16;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TIntegral;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.ArrayList;
@@ -29,7 +25,7 @@ import java.util.List;
 public class SparseSoftmaxCrossEntropyWithLogits {
 
   /**
-   * Computes sparse softmax cross entropy between {@code logits} and {@code labels}.
+   * Computes sparse softmax cross entropy between <code>logits</code> and <code>labels</code>.
    *
    * <p>Measures the probability error in discrete classification tasks in which the classes are
    * mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
@@ -38,61 +34,56 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    * <p><b>NOTE:</b>
    *
    * <p>For this operation, the probability of a given label is considered exclusive. That is, soft
-   * classes are not allowed, and the {@code labels} vector must provide a single specific index for
-   * the true class for each row of {@code logits} (each minibatch entry). For soft softmax
-   * classification with a probability distribution for each entry, {@link
+   * classes are not allowed, and the <code>labels</code> vector must provide a single specific
+   * index for the true class for each row of <code>logits</code> (each minibatch entry). For soft
+   * softmax classification with a probability distribution for each entry, {@link
    * org.tensorflow.op.NnOps#softmaxCrossEntropyWithLogits}.
    *
    * <p><b>WARNING:</b>
    *
-   * <p>This op expects unscaled logits, since it performs a {@code softmax} on {@code logits }
-   * internally for efficiency. Do not call this op with the output of {@code softmax}, as it will
-   * produce incorrect results.
+   * <p>This op expects unscaled logits, since it performs a <code>softmax</code> on <code>logits
+   * </code> internally for efficiency. Do not call this op with the output of <code>softmax</code>,
+   * as it will produce incorrect results.
    *
-   * <p>A common use case is to have logits of shape {@code [batchSize, numClasses]} and have labels
-   * of shape {@code [batchSize]}, but higher dimensions are supported, in which case the {@code
-   * dim}-th dimension is assumed to be of size {@code numClasses}. {@code logits} must have the
-   * {@code dataType} of {@code TFloat16}, {@code TFloat32} , or {@code TFloat64}, and {@code
-   * labels} must have the dtype of {@code TInt32} or {@code TInt64}.
+   * <p>A common use case is to have logits of shape <code>[batchSize, numClasses]</code> and have
+   * labels of shape <code>[batchSize]</code>, but higher dimensions are supported, in which case
+   * the <code>dim</code>-th dimension is assumed to be of size <code>numClasses</code>. <code>
+   * logits</code> must have the <cod>dataType</cod> of <code>TFloat16</code>, <code>TFloat32</code>
+   * , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of <code>TInt32</code>
+   * or <code>TInt64</code>.
    *
    * @param scope current scope
-   * @param labels {@code Tensor} of shape {@code [d_0, d_1, ..., d_{r-1}]} (where {@code r } is
-   *     rank of {@code labels} and result) and the dataType is {@code TInt32} or {@code TInt64}.
-   *     Each entry in {@code labels} must be an index in {@code [0, numClasses)}. Other values will
-   *     raise an exception when this op is run on CPU, and return {@code NaN} for corresponding
-   *     loss and gradient rows on GPU.
-   * @param logits Per-label activations (typically a linear output) of shape {@code [d_0, d_1, ...,
-   *     d_{r-1}, numClasses]} and dataType of {@code TFloat16}, {@code TFloat32}, or {@code
-   *     TFloat64}. These activation energies are interpreted as unnormalized log probabilities.
-   * @param <U> the data type for the labels
-   * @param <T> the data tyoe for the loss and logits.
-   * @return the loss
-   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if
-   *     the rank of the labels is not equal to the rank of the logits minus one.
+   * @param labels <code>Tensor</code> of shape <code>[d_0, d_1, ..., d_{r-1}]</code> (where <code>r
+   *     </code> is rank of <code>labels</code> and result) and the dataType is <code>TInt32</code>
+   *     or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,
+   *     numClasses)</code>. Other values will raise an exception when this op is run on CPU, and
+   *     return <code>NaN</code> for corresponding loss and gradient rows on GPU.
+   * @param logits Per-label activations (typically a linear output) of shape <code>[d_0, d_1, ...,
+   *     d_{r-1}, numClasses]</code> and dataType of <code>TFloat16</code>, <code>TFloat32</code>,
+   *     or <code>TFloat64</code>. These activation energies are interpreted as unnormalized log
+   *     probabilities.
+   * @param <T> the data type for the labels
+   * @param <U> the data tyoe for the loss and logits.
+   * @return A <code>Tensor</code> of the same shape as <code>labels</code> and of the same type as
+   *     <code>logits</code> with the softmax cross entropy loss.
+   * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
+   *     of the labels is not equal to the rank of the logits minus one.
    */
   @SuppressWarnings("unchecked")
   @Endpoint(name = "sparseSoftmaxCrossEntropyWithLogits")
   public static <T extends TNumber, U extends TNumber>
-      Operand<T> sparseSoftmaxCrossEntropyWithLogits(
-          Scope scope, Operand<U> labels, Operand<T> logits) {
+      Operand<U> sparseSoftmaxCrossEntropyWithLogits(
+          Scope scope, Operand<T> labels, Operand<U> logits) {
     scope = scope.withSubScope("SparseSoftmaxCrossEntropyWithLogits");
-    Operand<? extends TFloating> preciseLogits;
+    Operand<? extends TNumber> preciseLogits;
     if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
       preciseLogits = Cast.create(scope, logits, TFloat32.class);
-    } else if (TFloating.class.isAssignableFrom(logits.type())) {
-      preciseLogits = (Operand<? extends TFloating>) logits;
     } else {
-      preciseLogits = Cast.create(scope, logits, TFloat64.class);
+      preciseLogits = logits;
     }
-    Operand<? extends TIntegral> iLabels;
-    if (TIntegral.class.isAssignableFrom(labels.type())) {
-      iLabels = (Operand<? extends TIntegral>) labels;
-    } else {
-      iLabels = Cast.create(scope, labels, TInt64.class);
-    }
-    Shape labelsStaticShape = iLabels.shape();
+    Shape labelsStaticShape = labels.shape();
     org.tensorflow.op.core.Shape<TInt32> labelsShape =
-        org.tensorflow.op.core.Shape.create(scope, iLabels);
+        org.tensorflow.op.core.Shape.create(scope, labels);
     Shape logitsShape = logits.shape();
     Shape logitsShortened = logitsShape.take(logitsShape.numDimensions() - 1);
 
@@ -123,13 +114,13 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     if (logitsShape.numDimensions() == 2) {
       org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits<? extends TNumber> smax =
           org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits.create(
-              scope, preciseLogits, iLabels);
+              scope, preciseLogits, labels);
       Operand<? extends TNumber> cost = smax.loss();
       if (cost.type() != logits.type()) {
         return Cast.create(scope, cost, logits.type());
       } else {
         // Unchecked cast already checked with previous if
-        return (Operand<T>) cost;
+        return (Operand<U>) cost;
       }
     }
 
@@ -141,7 +132,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
               scope,
               Equal.create(
                   scope,
-                  org.tensorflow.op.core.Shape.create(scope, iLabels),
+                  org.tensorflow.op.core.Shape.create(scope, labels),
                   Shapes.take(
                       scope,
                       org.tensorflow.op.core.Shape.create(scope, logits),
@@ -158,19 +149,19 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     long numClassses = logitsShape.size(-1);
 
     preciseLogits = Reshape.create(scope, preciseLogits, Constant.arrayOf(scope, -1L, numClassses));
-    iLabels = Reshape.create(scope, iLabels, Constant.scalarOf(scope, -1));
+    labels = Reshape.create(scope, labels, Constant.scalarOf(scope, -1));
     scope.withControlDependencies(shapeChecks);
     // call raw op
     org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits<? extends TNumber> smax =
         org.tensorflow.op.nn.SparseSoftmaxCrossEntropyWithLogits.create(
-            scope, preciseLogits, iLabels);
+            scope, preciseLogits, labels);
     Operand<? extends TNumber> cost = smax.loss();
     cost = Reshape.create(scope, cost, labelsShape);
     if (cost.type() != logits.type()) {
       return Cast.create(scope, cost, logits.type());
     } else {
       // Unchecked cast already checked with previous if
-      return (Operand<T>) cost;
+      return (Operand<U>) cost;
     }
   }
 }
