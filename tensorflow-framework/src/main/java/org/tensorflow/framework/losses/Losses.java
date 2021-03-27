@@ -337,13 +337,14 @@ public class Losses {
    */
   public static <T extends TNumber> Operand<T> cosineSimilarity(
       Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, int[] axis) {
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
 
-    tLabels = l2Normalize(tf, tLabels, axis);
-    predictions = l2Normalize(tf, predictions, axis);
+    tLabels = fops.math.l2Normalize(tLabels, axis);
+    predictions = fops.math.l2Normalize(predictions, axis);
     Operand<T> mathMul = tf.math.mul(tLabels, predictions);
     return tf.reduceSum(mathMul, tf.constant(axis), ReduceSum.keepDims(Boolean.FALSE));
   }
@@ -651,23 +652,7 @@ public class Losses {
     return tf.math.add(tf.math.mul(labels, oneMinusSmoothing), tf.math.div(smoothing, numClasses));
   }
 
-  // TODO this was tf.math.l2_normalize in TF Python
-  /**
-   * Normalizes along dimension axis using an L2 norm.
-   *
-   * @param tf The TensorFlow Ops
-   * @param x the input
-   * @param axis Dimension along which to normalize.
-   * @param <T> the data type for the input and the result
-   * @return the normalized values based on L2 norm
-   */
-  public static <T extends TNumber> Operand<T> l2Normalize(Ops tf, Operand<T> x, int[] axis) {
-    Operand<T> squareSum =
-        tf.reduceSum(tf.math.square(x), tf.constant(axis), ReduceSum.keepDims(Boolean.TRUE));
-    Operand<T> invNorm =
-        tf.math.rsqrt(tf.math.maximum(squareSum, cast(tf, tf.constant(1e-12F), x.type())));
-    return tf.math.mul(x, invNorm);
-  }
+
 
   /**
    * Converts binary labels into -1/1.
