@@ -572,7 +572,7 @@ public class Losses {
               tf.constant(
                   new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
     }
-    
+
     Operand<T> loss = fop.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
     if (updateShape && predictionsRank >= 3) {
       Shape newShape = predictionsShape.take(predictionsShape.numDimensions() - 1);
