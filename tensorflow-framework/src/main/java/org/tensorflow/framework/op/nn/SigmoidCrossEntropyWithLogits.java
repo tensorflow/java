@@ -3,8 +3,6 @@ package org.tensorflow.framework.op.nn;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Select;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.op.dtypes.Cast;
@@ -18,17 +16,17 @@ import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-//@Operator(group = "nn")
+// @Operator(group = "nn")
 public class SigmoidCrossEntropyWithLogits {
 
   /**
-   * Computes sigmoid cross entropy given <code>logits</code>.
+   * Computes sigmoid cross entropy given {@code logits}.
    *
    * <p>Measures the probability error in discrete classification tasks in which each class is
    * independent and not mutually exclusive. For instance, one could perform multilabel
    * classification where a picture can contain both an elephant and a dog at the same time.
    *
-   * <p>For brevity, let <code>x = logits</code>, <code>z = labels</code>. The logistic loss in
+   * <p>For brevity, let {@code x = logits}, {@code z = labels}. The logistic loss in
    * pseudo-code is
    *
    * <pre>
@@ -40,7 +38,7 @@ public class SigmoidCrossEntropyWithLogits {
    *  = x - x * z + log(1 + exp(-x))
    * </pre>
    *
-   * <p>For <code>x < 0</code>, to avoid overflow in <code>exp(-x)</code>, we reformulate the above
+   * <p>For {@code x < 0}, to avoid overflow in {@code exp(-x)}, we reformulate the above
    *
    * <pre>
    * x - x * z + log(1 + exp(-x))
@@ -55,7 +53,7 @@ public class SigmoidCrossEntropyWithLogits {
    *   max(x, 0) - x * z + log(1 + exp(-abs(x)))
    * </pre>
    *
-   * <p></ode>logits</code> and <code>labels</code> must have the same type and shape.
+   * <p>{@code logits} and {@code labels} must have the same type and shape.
    *
    * <p>
    *
@@ -66,7 +64,7 @@ public class SigmoidCrossEntropyWithLogits {
    * @return the component-wise logistic losses.
    * @throws IllegalArgumentException if logits' and labels' do not have the same shape
    */
-  //@Endpoint(name = "sigmoidCrossEntropyWithLogits")
+  // @Endpoint(name = "sigmoidCrossEntropyWithLogits")
   public static <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<T> logits) {
     if (!isCompatible(labels.shape(), logits.shape())) {

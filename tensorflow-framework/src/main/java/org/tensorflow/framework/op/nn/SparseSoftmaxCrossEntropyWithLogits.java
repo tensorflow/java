@@ -25,7 +25,7 @@ import java.util.List;
 public class SparseSoftmaxCrossEntropyWithLogits {
 
   /**
-   * Computes sparse softmax cross entropy between <code>logits</code> and <code>labels</code>.
+   * Computes sparse softmax cross entropy between {@code logits} and {@code labels}.
    *
    * <p>Measures the probability error in discrete classification tasks in which the classes are
    * mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
@@ -34,45 +34,45 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    * <p><b>NOTE:</b>
    *
    * <p>For this operation, the probability of a given label is considered exclusive. That is, soft
-   * classes are not allowed, and the <code>labels</code> vector must provide a single specific
-   * index for the true class for each row of <code>logits</code> (each minibatch entry). For soft
+   * classes are not allowed, and the {@code labels} vector must provide a single specific
+   * index for the true class for each row of {@code logits} (each minibatch entry). For soft
    * softmax classification with a probability distribution for each entry, {@link
    * org.tensorflow.op.NnOps#softmaxCrossEntropyWithLogits}.
    *
    * <p><b>WARNING:</b>
    *
-   * <p>This op expects unscaled logits, since it performs a <code>softmax</code> on <code>logits
-   * </code> internally for efficiency. Do not call this op with the output of <code>softmax</code>,
+   * <p>This op expects unscaled logits, since it performs a {@code softmax} on {@code logits
+   * } internally for efficiency. Do not call this op with the output of {@code softmax},
    * as it will produce incorrect results.
    *
-   * <p>A common use case is to have logits of shape <code>[batchSize, numClasses]</code> and have
-   * labels of shape <code>[batchSize]</code>, but higher dimensions are supported, in which case
-   * the <code>dim</code>-th dimension is assumed to be of size <code>numClasses</code>. <code>
-   * logits</code> must have the <cod>dataType</cod> of <code>TFloat16</code>, <code>TFloat32</code>
-   * , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of <code>TInt32</code>
-   * or <code>TInt64</code>.
+   * <p>A common use case is to have logits of shape {@code [batchSize, numClasses]} and have
+   * labels of shape {@code [batchSize]}, but higher dimensions are supported, in which case
+   * the {@code dim}-th dimension is assumed to be of size {@code numClasses}. {@code 
+   * logits} must have the {@code dataType} of {@code TFloat16}, {@code TFloat32}
+   * , or {@code TFloat64}, and {@code labels} must have the dtype of {@code TInt32}
+   * or {@code TInt64}.
    *
    * @param scope current scope
-   * @param labels <code>Tensor</code> of shape <code>[d_0, d_1, ..., d_{r-1}]</code> (where <code>r
-   *     </code> is rank of <code>labels</code> and result) and the dataType is <code>TInt32</code>
-   *     or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,
-   *     numClasses)</code>. Other values will raise an exception when this op is run on CPU, and
-   *     return <code>NaN</code> for corresponding loss and gradient rows on GPU.
-   * @param logits Per-label activations (typically a linear output) of shape <code>[d_0, d_1, ...,
-   *     d_{r-1}, numClasses]</code> and dataType of <code>TFloat16</code>, <code>TFloat32</code>,
-   *     or <code>TFloat64</code>. These activation energies are interpreted as unnormalized log
+   * @param labels {@code Tensor} of shape {@code [d_0, d_1, ..., d_{r-1}]} (where {@code r
+   *     } is rank of {@code labels} and result) and the dataType is {@code TInt32}
+   *     or {@code TInt64}. Each entry in {@code labels} must be an index in {@code [0,
+   *     numClasses)}. Other values will raise an exception when this op is run on CPU, and
+   *     return {@code NaN} for corresponding loss and gradient rows on GPU.
+   * @param logits Per-label activations (typically a linear output) of shape {@code [d_0, d_1, ...,
+   *     d_{r-1}, numClasses]} and dataType of {@code TFloat16}, {@code TFloat32},
+   *     or {@code TFloat64}. These activation energies are interpreted as unnormalized log
    *     probabilities.
-   * @param <T> the data type for the labels
-   * @param <U> the data tyoe for the loss and logits.
+   * @param <U> the data type for the labels
+   * @param <T> the data tyoe for the loss and logits.
    * @return the loss
-   * @throws IllegalArgumentException If logits are scalars (need to have rank >= 1) or if the rank
+   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if the rank
    *     of the labels is not equal to the rank of the logits minus one.
    */
   @SuppressWarnings("unchecked")
   @Endpoint(name = "sparseSoftmaxCrossEntropyWithLogits")
   public static <T extends TNumber, U extends TNumber>
-      Operand<U> sparseSoftmaxCrossEntropyWithLogits(
-          Scope scope, Operand<T> labels, Operand<U> logits) {
+      Operand<T> sparseSoftmaxCrossEntropyWithLogits(
+          Scope scope, Operand<U> labels, Operand<T> logits) {
     scope = scope.withSubScope("SparseSoftmaxCrossEntropyWithLogits");
     Operand<? extends TNumber> preciseLogits;
     if (logits.asOutput().type() == TFloat16.class || logits.asOutput().type() == TBfloat16.class) {
@@ -119,7 +119,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
         return Cast.create(scope, cost, logits.type());
       } else {
         // Unchecked cast already checked with previous if
-        return (Operand<U>) cost;
+        return (Operand<T>) cost;
       }
     }
 
@@ -160,7 +160,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
       return Cast.create(scope, cost, logits.type());
     } else {
       // Unchecked cast already checked with previous if
-      return (Operand<U>) cost;
+      return (Operand<T>) cost;
     }
   }
 }

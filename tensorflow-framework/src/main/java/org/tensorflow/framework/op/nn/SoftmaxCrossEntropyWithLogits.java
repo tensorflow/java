@@ -66,7 +66,8 @@ public class SoftmaxCrossEntropyWithLogits {
    * @param logits Per-label activations, typically a linear output. These activation energies are
    *     interpreted as unnormalized log probabilities.
    * @param axis The class dimension. -1 is the last dimension.
-   * @param <T> the number type of the operands
+   * @param <T> the data type for the logits and return operand
+   * @param <U> the data type for the labels
    * @return the softmax cross entropy loss. Its type is the same as <code>logits</code> and its
    *     shape is the same as <code>labels</code> except that it does not have the last dimension of
    *     <code>labels</code>.
