@@ -34,6 +34,7 @@ public class FrameworkOps {
 
   public final NnOps nn;
   public final SetsOps sets;
+  public final MathOps math;
 
   /**
    * Creates a FrameworkOps instance with the provided scope
@@ -45,6 +46,7 @@ public class FrameworkOps {
     this.scope = scope;
     nn = new NnOps(this);
     sets = new SetsOps(this);
+    math = new MathOps(this);
   }
 
   /**
@@ -57,6 +59,7 @@ public class FrameworkOps {
     this.scope = coreOps.scope();
     nn = new NnOps(this);
     sets = new SetsOps(this);
+    math = new MathOps(this);
   }
 
 
