@@ -118,9 +118,6 @@ public class FrameworkOps {
    * Returns an API that builds operations with the provided name prefix.
    *
    * <p>@link Scope#withSubScope(String)}
-   *
-   * @param childScopeName the name of the child scope
-   * @return the FrameworkOps
    */
   public FrameworkOps withSubScope(String childScopeName) {
     return new FrameworkOps(scope.withSubScope(childScopeName));
@@ -130,9 +127,6 @@ public class FrameworkOps {
    * Returns an API that uses the provided name for an op.
    *
    * <p>{@link Scope#withName(String)}
-   *
-   * @param opName the name of the scope
-   * @return the FrameworkOps
    */
   public FrameworkOps withName(String opName) {
     return new FrameworkOps(scope.withName(opName));

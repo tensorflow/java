@@ -337,6 +337,7 @@ public class Losses {
    */
   public static <T extends TNumber> Operand<T> cosineSimilarity(
       Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, int[] axis) {
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
