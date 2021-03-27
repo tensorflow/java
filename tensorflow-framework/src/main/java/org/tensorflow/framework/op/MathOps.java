@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.op;
 
 import org.tensorflow.Operand;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ReduceSum;
@@ -26,42 +25,41 @@ import org.tensorflow.op.math.Rsqrt;
 import org.tensorflow.op.math.Square;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 public class MathOps {
-    private final Scope scope;
+  private final Scope scope;
 
-    private final FrameworkOps frameworkOps;
+  private final FrameworkOps frameworkOps;
 
-    /**
-     * Creates Framework {@code nn} Operations
-     *
-     * @param frameworkOps the TensorFLow framework Ops
-     */
-    MathOps(FrameworkOps frameworkOps) {
-        this.scope = frameworkOps.scope();
-        this.frameworkOps = frameworkOps;
-    }
+  /**
+   * Creates Framework {@code nn} Operations
+   *
+   * @param frameworkOps the TensorFLow framework Ops
+   */
+  MathOps(FrameworkOps frameworkOps) {
+    this.scope = frameworkOps.scope();
+    this.frameworkOps = frameworkOps;
+  }
 
-    /**
-     * Normalizes along dimension axis using an L2 norm.
-     *
-     * @param x the input
-     * @param axis Dimension along which to normalize.
-     * @param <T> the data type for the input and the result
-     * @return the normalized values based on L2 norm
-     */
-    public  <T extends TNumber> Operand<T> l2Normalize(Operand<T> x, int[] axis) {
-        Operand<T> squareSum =
-                ReduceSum.create(scope,
-                        Square.create(scope, x),
-                        Constant.vectorOf(scope, axis),
-                        ReduceSum.keepDims(Boolean.TRUE));
-        Operand<T> invNorm =
-                Rsqrt.create(scope,
-                        Maximum.create(scope, squareSum,
-                                Cast.create(scope,
-                                        Constant.scalarOf(scope, 1e-12F), x.type())));
-        return Mul.create(scope, x, invNorm);
-    }
+  /**
+   * Normalizes along dimension axis using an L2 norm.
+   *
+   * @param x the input
+   * @param axis Dimension along which to normalize.
+   * @param <T> the data type for the input and the result
+   * @return the normalized values based on L2 norm
+   */
+  public <T extends TNumber> Operand<T> l2Normalize(Operand<T> x, int[] axis) {
+    Operand<T> squareSum =
+        ReduceSum.create(
+            scope,
+            Square.create(scope, x),
+            Constant.vectorOf(scope, axis),
+            ReduceSum.keepDims(Boolean.TRUE));
+    Operand<T> invNorm =
+        Rsqrt.create(
+            scope,
+            Maximum.create(
+                scope, squareSum, Cast.create(scope, Constant.scalarOf(scope, 1e-12F), x.type())));
+    return Mul.create(scope, x, invNorm);
+  }
 }
