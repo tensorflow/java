@@ -97,7 +97,6 @@ $BAZEL_BIN/java_op_exporter \
 
 # Copy generated Java protos from source jars
 
-
 cd $GEN_SRCS_DIR
 find $TENSORFLOW_BIN/core -name \*-speed-src.jar -exec jar xf {} \;
 rm -rf META-INF
