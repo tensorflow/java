@@ -136,7 +136,6 @@
             <configuration>
               <sources>
                 <source>${project.basedir}/src/gen/java</source>
-                <source>${project.basedir}/src/gen/protoc</source>
               </sources>
             </configuration>
           </execution>
