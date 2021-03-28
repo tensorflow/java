@@ -96,7 +96,6 @@ $BAZEL_BIN/java_op_exporter \
 
 
 # Copy generated Java protos from source jars
-PROTO_DIR=src/gen/protoc
 
 
 cd $GEN_SRCS_DIR

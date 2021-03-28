@@ -60,7 +60,7 @@
             </goals>
             <configuration>
               <sources>
-                <source>${project.basedir}/../tensorflow-core-api/src/gen/protoc</source>
+                <source>${project.basedir}/src/gen/protoc</source>
               </sources>
             </configuration>
           </execution>
