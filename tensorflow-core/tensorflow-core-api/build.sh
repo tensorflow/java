@@ -38,6 +38,7 @@ bazel build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
     :java_op_generator \
+    :java_op_exporter \
     :java_api_import \
     :custom_ops_test
 
@@ -85,7 +86,17 @@ $BAZEL_BIN/java_op_generator \
     --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
     $TENSORFLOW_LIB
 
+GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
+mkdir -p $GEN_RESOURCE_DIR
+
+# Generate Java operator wrappers
+$BAZEL_BIN/java_op_exporter \
+    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
+    $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+
+
 # Copy generated Java protos from source jars
+
 cd $GEN_SRCS_DIR
 find $TENSORFLOW_BIN/core -name \*-speed-src.jar -exec jar xf {} \;
 rm -rf META-INF

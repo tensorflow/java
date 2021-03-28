@@ -15,8 +15,6 @@
   <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
 
   <properties>
-    <!-- Match version used by TensorFlow, in tensorflow/workspace.bzl -->
-    <protobuf.version>3.8.0</protobuf.version>
     <native.build.skip>false</native.build.skip>
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
