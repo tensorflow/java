@@ -607,6 +607,7 @@ final class ClassGenerator {
     if (optionsClass != null) {
       optionsClass.methodSpecs.stream().filter(x -> !x.isConstructor()).forEach(method -> {
         String argName = method.parameters.get(0).name;
+
         builder.addMethod(MethodSpec.methodBuilder(method.name)
             .addParameter(method.parameters.get(0))
             .addJavadoc(method.javadoc)

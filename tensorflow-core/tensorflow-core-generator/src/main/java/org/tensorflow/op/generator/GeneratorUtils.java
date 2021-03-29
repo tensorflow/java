@@ -16,18 +16,17 @@
  */
 package org.tensorflow.op.generator;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringJoiner;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.tensorflow.op.generator.javadoc.JavaDocRenderer;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 
 /**
  * Utilities for op generation
  */
 final class GeneratorUtils {
+
+  private static final Parser parser = Parser.builder().build();
 
   /**
    * Convert a Python style name to a Java style name.
@@ -72,107 +71,10 @@ final class GeneratorUtils {
    * Convert markdown descriptions to JavaDocs.
    */
   static String parseDocumentation(String docs) {
-    StringBuilder javadoc = new StringBuilder();
-    List<String> markdownExprs = Arrays
-        .asList("\n+\\*\\s+", "\n{2,}", "`{3,}\\s*[^\\s\n]*\\s*\n", "`+", "\\*{1,2}\\b", "\\[");
-    StringJoiner joiner = new StringJoiner("|", "(", ")");
-    markdownExprs.forEach(joiner::add);
-    Pattern markupExpr = Pattern.compile(joiner.toString());
-
-    Pattern codeBlock = Pattern.compile("(```\\s*\n*)");
-
-    boolean inList = false;
-    String input = docs;
-    while (true) {
-      Matcher m = markupExpr.matcher(input);
-      if (m.find()) {
-        MatchResult result = m.toMatchResult();
-
-        String text = input.substring(0, result.start());
-        input = input.substring(result.end());
-        String markup = result.group();
-
-        javadoc.append(text);
-
-        if (markup.startsWith("\n")) {
-          javadoc.append("\n");
-          if (markup.contains("*")) {
-            javadoc.append(inList ? "<li>\n" : "<ul>\n");
-            javadoc.append("<li>\n");
-            inList = true;
-          } else if (inList) {
-            javadoc.append("<li>\n<ul>\n");
-            inList = false;
-          } else if (!input.startsWith("```")) {
-            javadoc.append("<p>\n");
-          }
-        } else if (markup.startsWith("```")) {
-          Matcher cb = codeBlock.matcher(input);
-          if (cb.find()) {
-            result = cb.toMatchResult();
-            text = input.substring(0, result.start());
-            input = input.substring(result.end());
-            javadoc.append("<pre>{@code\n").append(text).append("}</pre>\n");
-          } else {
-            javadoc.append(markup);
-          }
-        } else if (markup.startsWith("`")) {
-          Matcher cb = Pattern.compile(markup).matcher(input);
-          if (cb.find()) {
-            result = cb.toMatchResult();
-            text = input.substring(0, result.start());
-            input = input.substring(result.end());
-            javadoc.append("{@code ").append(text).append("}");
-          } else {
-            javadoc.append(markup);
-          }
-        } else if (markup.equals("**")) {
-          Matcher cb = Pattern.compile("(\\b\\*{2})").matcher(input);
-          if (cb.find()) {
-            result = cb.toMatchResult();
-            text = input.substring(0, result.start());
-            input = input.substring(result.end());
-            javadoc.append("<b>").append(text).append("</b>");
-          } else {
-            javadoc.append(markup);
-          }
-        } else if (markup.equals("*")) {
-          Matcher cb = Pattern.compile("(\\b\\*{1})").matcher(input);
-          if (cb.find()) {
-            result = cb.toMatchResult();
-            text = input.substring(0, result.start());
-            input = input.substring(result.end());
-            javadoc.append("<i>").append(text).append("</i>");
-          } else {
-            javadoc.append(markup);
-          }
-        } else if (markup.startsWith("[")) {
-          //TODO this seems incorrect, there's a "](" between link and label
-          Matcher cb = Pattern.compile("([^\\[]+)\\]\\((http.+)\\)", Pattern.DOTALL).matcher(input);
-          if (cb.find()) {
-            result = cb.toMatchResult();
-            String label = result.group(1);
-            String link = result.group(2);
-            if (input.startsWith(label + "](" + link)) {
-              input = input.substring(label.length() + link.length() + 2);
-              javadoc.append("<a href=\"").append(link).append("\">")
-                  .append(parseDocumentation(label)).append("</a>");
-            } else {
-              javadoc.append(markup);
-            }
-          } else {
-            javadoc.append(markup);
-          }
-        } else {
-          javadoc.append(markup);
-        }
-
-      } else {
-        javadoc.append(input);
-        break;
-      }
-    }
-
-    return javadoc.toString();
+    Node document = parser.parse(docs);
+    JavaDocRenderer renderer = JavaDocRenderer.builder().build();
+    return renderer.render(document);
   }
+
+
 }
