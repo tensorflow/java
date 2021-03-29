@@ -461,7 +461,7 @@ final class ClassGenerator {
       String name = getJavaName(input);
 
       ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name);
-      paramTags.put(name, CodeBlock.of("$L\n", argDef.getDescription()));
+      paramTags.put(name, CodeBlock.of("$L\n", parseDocumentation(argDef.getDescription())));
       factoryBuilder.addParameter(param.build());
 
       typeVars.addAll(type.findGenerics());
@@ -489,7 +489,7 @@ final class ClassGenerator {
 
       ParameterSpec.Builder builder = ParameterSpec
           .builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr));
-      paramTags.put(getJavaName(attr), CodeBlock.of("$L\n", apiAttr.getDescription()));
+      paramTags.put(getJavaName(attr), CodeBlock.of("$L\n", parseDocumentation(apiAttr.getDescription())));
 
       typeVars.addAll(type.findGenerics());
 
@@ -623,7 +623,7 @@ final class ClassGenerator {
       builder.addMethod(MethodSpec.methodBuilder(name)
           .addModifiers(Modifier.PUBLIC)
           .returns(resolver.typeOf(output).listIfIterable().javaType)
-          .addJavadoc("$L", argDef.getDescription())
+          .addJavadoc("$L", parseDocumentation(argDef.getDescription()))
           .addCode("return $L;", name)
           .build());
     }
