@@ -74,8 +74,10 @@ public class JavaDocWriter {
 
   private String escapeHtml(String s) {
     s = Escaping.escapeHtml(s);
-    if (s.contains("@compatibility") || s.contains("@end_compatibility")) {
-      s = s.replace("@", "{@literal @}");
+    if (s.contains("@compatibility")) {
+      s = s.replace("@", "{@literal @}") + "<br>";
+    } else if (s.contains("@end_compatibility")) {
+      s = "<br>" + s.replace("@", "{@literal @}");
     }
     return s;
 
