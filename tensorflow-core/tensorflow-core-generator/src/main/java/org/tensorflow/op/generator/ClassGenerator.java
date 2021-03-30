@@ -341,14 +341,22 @@ final class ClassGenerator {
 
       ApiDef.Attr apiAttr = attrApis.get(attr);
 
-      // add the setter method, adding one with varargs and one with List if the attribute is iterable
+      String description =
+          apiAttr.getDescription().isEmpty()
+              ? String.format("the %s option", name)
+              : apiAttr.getDescription();
+
+      // add the setter method, adding one with varargs and one with List if the attribute is
+      // iterable
       if (type.iterable) {
         optionsBuilder.addMethod(
             MethodSpec.methodBuilder(name)
                 .returns(optionsClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().listIfIterable().javaType, name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(apiAttr.getDescription()))
+                .addJavadoc("Sets the $L option.\n", name)
+                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
+                .addJavadoc("@return this Options instance.\n")
                 .addCode("this.$L = $L;\nreturn this;\n", name, name)
                 .build());
 
@@ -357,7 +365,9 @@ final class ClassGenerator {
                 .returns(optionsClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().arrayIfIterable().javaType, name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(apiAttr.getDescription()))
+                .addJavadoc("Sets the $L option.\n", name)
+                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
+                .addJavadoc("@return this Options instance.\n")
                 .addCode("this.$L = $T.asList($L);\nreturn this;\n", name, Arrays.class, name)
                 .varargs()
                 .build());
@@ -368,7 +378,9 @@ final class ClassGenerator {
                 .returns(optionsClassName)
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().javaType, name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(apiAttr.getDescription()))
+                .addJavadoc("Sets the $L option.\n", name)
+                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
+                .addJavadoc("@return this Options instance.\n")
                 .addCode("this.$L = $L;\nreturn this;\n", name, name)
                 .build());
       }
@@ -534,12 +546,27 @@ final class ClassGenerator {
     body.addStatement("return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
 
     factoryBuilder.addCode(body.build());
-    paramTags.forEach((param, doc) -> {
-      factoryBuilder.addJavadoc("@param $L $L", param, doc);
-    });
-    factoryBuilder.addJavadoc("\n@return a new instance of $L", className);
-    factoryBuilder.addTypeVariables(typeVars);
+    paramTags.forEach(
+        (param, doc) -> {
+          String description = doc.toString();
+          if (description.isEmpty() || description.equals("\n")) {
+            factoryBuilder.addJavadoc(
+                "@param $L $L", param, String.format("the %s property", param));
+          } else {
+            factoryBuilder.addJavadoc("@param $L $L", param, doc);
+          }
+        });
+    for (TypeVariableName typeVar : typeVars) {
+      factoryBuilder.addJavadoc(
+          "\n@param <"
+              + typeVar.name
+              + "> data type for {@code "
+              + op.getName()
+              + "} output and operands\n");
+    }
 
+    factoryBuilder.addTypeVariables(typeVars);
+    factoryBuilder.addJavadoc("\n@return a new instance of $L\n", className);
     MethodSpec method = factoryBuilder.build();
     builder.addMethod(method);
 
@@ -594,6 +621,14 @@ final class ClassGenerator {
     factoryBuilder.addJavadoc("\n@return a new instance of $L, with default output types", className);
     factoryBuilder.addCode(body.build());
     factoryBuilder.addTypeVariables(typeVars);
+    for (TypeVariableName typeVar : typeVars) {
+      factoryBuilder.addJavadoc(
+          "\n@param <"
+              + typeVar.name
+              + "> data type for {@code "
+              + op.getName()
+              + "} output and operands\n");
+    }
 
     builder.addMethod(factoryBuilder.build());
   }
@@ -601,32 +636,39 @@ final class ClassGenerator {
   /**
    * Add getters for the outputs and setters/Options creators for the optional attributes.
    *
-   * Needs to be called after {@link #buildOptionsClass()}
+   * <p>Needs to be called after {@link #buildOptionsClass()}
    */
   private void buildGettersAndSetters() {
     if (optionsClass != null) {
-      optionsClass.methodSpecs.stream().filter(x -> !x.isConstructor()).forEach(method -> {
-        String argName = method.parameters.get(0).name;
-
-        builder.addMethod(MethodSpec.methodBuilder(method.name)
-            .addParameter(method.parameters.get(0))
-            .addJavadoc(method.javadoc)
-            .returns(ClassName.get(fullPackage, className, "Options"))
-            .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-            .addCode("return new Options().$L($L);", method.name, argName)
-            .build());
-      });
+      optionsClass.methodSpecs.stream()
+          .filter(x -> !x.isConstructor())
+          .forEach(
+              method -> {
+                String argName = method.parameters.get(0).name;
+                builder.addMethod(
+                    MethodSpec.methodBuilder(method.name)
+                        .addParameter(method.parameters.get(0))
+                        .addJavadoc("Sets the $L property.", method.name)
+                        .addJavadoc(method.javadoc)
+                        .returns(ClassName.get(fullPackage, className, "Options"))
+                        .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                        .addCode("return new Options().$L($L);", method.name, argName)
+                        .build());
+              });
     }
 
     for (ArgDef output : op.getOutputArgList()) {
       String name = getJavaName(output);
       ApiDef.Arg argDef = argApis.get(output);
-      builder.addMethod(MethodSpec.methodBuilder(name)
-          .addModifiers(Modifier.PUBLIC)
-          .returns(resolver.typeOf(output).listIfIterable().javaType)
-          .addJavadoc("$L", parseDocumentation(argDef.getDescription()))
-          .addCode("return $L;", name)
-          .build());
+      builder.addMethod(
+          MethodSpec.methodBuilder(name)
+              .addModifiers(Modifier.PUBLIC)
+              .returns(resolver.typeOf(output).listIfIterable().javaType)
+              .addJavadoc("Gets $L.\n", name)
+              .addJavadoc("$L", parseDocumentation(argDef.getDescription()))
+              .addJavadoc("@return $L.\n", name)
+              .addCode("return $L;", name)
+              .build());
     }
 
   }
