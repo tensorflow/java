@@ -303,8 +303,8 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
     if (url.contains("api_docs/python")) {
       int startIndex = 0;
       int endIndex = url.indexOf("#");
-      String opClass = null;
-      String method = null;
+      String opClass;
+      String method;
       if (endIndex == -1) {
         String key = url.substring(startIndex);
         opClass = urlLinkConversion.get(key);
@@ -464,16 +464,15 @@ public class CoreJavaDocNodeRenderer extends AbstractVisitor implements NodeRend
     }
   }
 
+  @SuppressWarnings("unused") // "attributes"
   private void renderCodeBlock(String literal, Node node, Map<String, String> attributes) {
     writer.line();
     // skip empty <pre> block
     if (!literal.isEmpty()) {
       writer.tag("pre", getAttrs(node, "pre"));
-      // writer.tag("code", getAttrs(node, "code", attributes));
       writer.line();
       writer.text(literal);
       writer.line();
-      // writer.tag("/code");
       writer.tag("/pre");
       writer.line();
     }
