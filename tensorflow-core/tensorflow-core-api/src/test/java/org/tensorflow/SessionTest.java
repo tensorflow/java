@@ -20,15 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
-
 import org.junit.jupiter.api.Test;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
@@ -39,13 +39,12 @@ import org.tensorflow.op.math.Add;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.proto.framework.RunOptions;
-import org.tensorflow.ndarray.Shape;
-import org.tensorflow.ndarray.NdArrays;
-import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/** Unit tests for {@link org.tensorflow.Session}. */
+/**
+ * Unit tests for {@link org.tensorflow.Session}.
+ */
 public class SessionTest {
 
   @Test
@@ -53,12 +52,12 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
           AutoCloseableList<Tensor> outputs =
               new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
         assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
+        assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
       }
     }
   }
@@ -68,14 +67,14 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
           AutoCloseableList<Tensor> outputs =
               new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
         assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
+        assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
       }
     }
   }
@@ -89,18 +88,18 @@ public class SessionTest {
       tf.math.add(split.output().get(0), split.output().get(1));
 
       // Fetch using colon separated names.
-      try (TInt32 fetched = (TInt32)s.runner().fetch("Split:1").run().get(0)) {
+      try (TInt32 fetched = (TInt32) s.runner().fetch("Split:1").run().get(0)) {
         assertEquals(3, fetched.getInt(0));
         assertEquals(4, fetched.getInt(1));
       }
       // Feed using colon separated names.
       try (TInt32 fed = TInt32.vectorOf(4, 3, 2, 1);
           TInt32 fetched = (TInt32) s.runner()
-                  .feed("Split:0", fed)
-                  .feed("Split:1", fed)
-                  .fetch("Add")
-                  .run()
-                  .get(0)) {
+              .feed("Split:0", fed)
+              .feed("Split:1", fed)
+              .fetch("Add")
+              .run()
+              .get(0)) {
         assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched);
       }
     }
@@ -111,17 +110,17 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][] {{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
+      transpose_A_times_X(tf, new int[][]{{2}, {3}});
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}))) {
         Session.Run result = s.runner()
-                .feed("X", x)
-                .fetch("Y")
-                .setOptions(fullTraceRunOptions())
-                .runAndFetchMetadata();
+            .feed("X", x)
+            .fetch("Y")
+            .setOptions(fullTraceRunOptions())
+            .runAndFetchMetadata();
         // Sanity check on outputs.
         AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(result.outputs);
         assertEquals(1, outputs.size());
-        assertEquals(31, ((TInt32)outputs.get(0)).getInt(0, 0));
+        assertEquals(31, ((TInt32) outputs.get(0)).getInt(0, 0));
         // Sanity check on metadata
         assertNotNull(result.metadata);
         assertTrue(result.metadata.hasStepStats(), result.metadata.toString());
@@ -140,8 +139,8 @@ public class SessionTest {
       AutoCloseableList<Tensor> outputs =
           new AutoCloseableList<>(s.runner().fetch("c2").fetch("c1").run());
       assertEquals(2, outputs.size());
-      assertEquals(31415, ((TInt32)outputs.get(0)).getInt());
-      assertEquals(2718, ((TInt32)outputs.get(1)).getInt());
+      assertEquals(31415, ((TInt32) outputs.get(0)).getInt());
+      assertEquals(2718, ((TInt32) outputs.get(1)).getInt());
       outputs.close();
     }
   }
@@ -163,7 +162,8 @@ public class SessionTest {
   @Test
   public void createWithConfigProto() {
     try (Graph g = new Graph();
-        Session s = new Session(g, singleThreadConfigProto())) {}
+        Session s = new Session(g, singleThreadConfigProto())) {
+    }
   }
 
   @Test
@@ -214,12 +214,14 @@ public class SessionTest {
   }
 
   @Test
-  public void saveAndRestore() throws IOException  {
+  public void saveAndRestore() throws IOException {
     Path testFolder = Files.createTempDirectory("tf-session-save-restore-test");
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Variable<TFloat32> x = tf.withName("x").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
-      Variable<TFloat32> y = tf.withName("y").variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> x = tf.withName("x")
+          .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> y = tf.withName("y")
+          .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
 
       try (Session s = new Session(g)) {
@@ -232,9 +234,10 @@ public class SessionTest {
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
             try (AutoCloseableList<Tensor> oldList = new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
-                 AutoCloseableList<Tensor> newList = new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())){
-              assertEquals(oldList.get(0),newList.get(0));
-              assertEquals(oldList.get(1),newList.get(1));
+                AutoCloseableList<Tensor> newList = new AutoCloseableList<>(
+                    restoredSession.runner().fetch("x").fetch("y").run())) {
+              assertEquals(oldList.get(0), newList.get(0));
+              assertEquals(oldList.get(1), newList.get(1));
             }
           }
         }
@@ -245,20 +248,20 @@ public class SessionTest {
 
     // Cleanup test dir
     Files.walk(testFolder)
-            .sorted(Comparator.reverseOrder())
-            .map(Path::toFile)
-            .forEach(File::delete);
+        .sorted(Comparator.reverseOrder())
+        .map(Path::toFile)
+        .forEach(File::delete);
   }
 
   @Test
-  public static void testFetchVariable(){
-    try(Graph g = new Graph();
-        Session s = new Session(g)){
+  public static void testFetchVariable() {
+    try (Graph g = new Graph();
+        Session s = new Session(g)) {
       Ops tf = Ops.create(g);
       Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
       Op assign = tf.assignVariableOp(variable, tf.constant(2));
 
-      try(TInt32 value = (TInt32) s.runner().addTarget(assign).fetchVariable(variable, TInt32.class).run().get(0)){
+      try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetchVariable(variable, TInt32.class).run().get(0)) {
         assertEquals(2, value.getInt());
       }
 
@@ -266,31 +269,31 @@ public class SessionTest {
   }
 
   @Test
-  public static void testFetchVariableException(){
-    try(Graph g = new Graph();
-        Session s = new Session(g)){
+  public static void testFetchVariableException() {
+    try (Graph g = new Graph();
+        Session s = new Session(g)) {
       Ops tf = Ops.create(g);
       Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
       Op assign = tf.assignVariableOp(variable, tf.constant(2));
 
-      try(TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)){
+      try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)) {
         fail();
-      } catch (IllegalStateException e){
+      } catch (IllegalStateException e) {
         assertTrue(e.getMessage().contains("is a resource variable"));
       }
     }
   }
 
   @Test
-  public static void testFetchVariableNonVariableException(){
-    try(Graph g = new Graph();
-        Session s = new Session(g)){
+  public static void testFetchVariableNonVariableException() {
+    try (Graph g = new Graph();
+        Session s = new Session(g)) {
       Ops tf = Ops.create(g);
       Operand<?> constant = tf.constant(2);
 
-      try(TInt32 value = (TInt32) s.runner().fetchVariable(constant, TInt32.class).run().get(0)){
+      try (TInt32 value = (TInt32) s.runner().fetchVariable(constant, TInt32.class).run().get(0)) {
         fail();
-      } catch (IllegalStateException e){
+      } catch (IllegalStateException e) {
         assertTrue(e.getMessage().contains("is not a resource variable"));
       }
     }
