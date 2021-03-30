@@ -1,19 +1,19 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow.op.generator;
 
 import com.squareup.javapoet.ClassName;
@@ -21,11 +21,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import org.tensorflow.Names;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
@@ -33,18 +28,63 @@ import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * A utility class to handle type calculations for a {@link ClassGenerator}.  Should be one to one with {@link
- * ClassGenerator} instances.
+ * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one
+ * with {@link ClassGenerator} instances.
  */
 final class TypeResolver {
 
   static TypeName WILDCARD = WildcardTypeName.subtypeOf(TypeName.OBJECT);
   static TypeName STRING = TypeName.get(java.lang.String.class);
+  /** Data types that are real numbers. */
+  private static final Set<DataType> realNumberTypes = new HashSet<>();
 
+  static {
+    realNumberTypes.add(DataType.DT_FLOAT);
+    realNumberTypes.add(DataType.DT_DOUBLE);
+    realNumberTypes.add(DataType.DT_INT32);
+    realNumberTypes.add(DataType.DT_UINT8);
+    realNumberTypes.add(DataType.DT_INT16);
+    realNumberTypes.add(DataType.DT_INT8);
+    realNumberTypes.add(DataType.DT_INT64);
+    realNumberTypes.add(DataType.DT_QINT8);
+    realNumberTypes.add(DataType.DT_QUINT8);
+    realNumberTypes.add(DataType.DT_QINT32);
+    realNumberTypes.add(DataType.DT_BFLOAT16);
+    realNumberTypes.add(DataType.DT_QINT16);
+    realNumberTypes.add(DataType.DT_QUINT16);
+    realNumberTypes.add(DataType.DT_UINT16);
+    realNumberTypes.add(DataType.DT_HALF);
+    realNumberTypes.add(DataType.DT_UINT32);
+    realNumberTypes.add(DataType.DT_UINT64);
+  }
+
+  /** The op def to get types for. */
+  private final OpDef op;
+  /** The processed argument types. */
+  private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
+  /** Known types. Not simply a cache. */
+  private final Map<String, ResolvedType> known = new HashMap<>();
   /**
-   * Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one.
+   * Attributes that were reached while getting the types of inputs.
+   *
+   * <p>These are excluded from factory methods.
    */
+  private final Set<String> reachedFromInput = new HashSet<>();
+  private char nextGenericLetter = 'T';
+
+  TypeResolver(OpDef op) {
+    this.op = op;
+    calculateArgTypes();
+  }
+
+  /** Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one. */
   static TypeName forDataType(DataType dataType) {
     switch (dataType) {
       case DT_STRING:
@@ -71,36 +111,9 @@ final class TypeResolver {
   }
 
   /**
-   * The op def to get types for.
-   */
-  private final OpDef op;
-
-  /**
-   * Known types.  Not simply a cache.
-   */
-  private Map<String, ResolvedType> known = new HashMap<>();
-
-  /**
-   * Attributes that were reached while getting the types of inputs.
-   *
-   * These are excluded from factory methods.
-   */
-  private Set<String> reachedFromInput = new HashSet<>();
-
-  /**
-   * The processed argument types.
-   */
-  private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
-
-  TypeResolver(OpDef op) {
-    this.op = op;
-    calculateArgTypes();
-  }
-
-  /**
    * Calculate the types of the arguments.
-   * <p>
-   * Removes extraneous generics and wraps in Operand/Output.
+   *
+   * <p>Removes extraneous generics and wraps in Operand/Output.
    */
   private void calculateArgTypes() {
     Map<String, Integer> genericCounts = new HashMap<>();
@@ -127,7 +140,9 @@ final class TypeResolver {
       if (entry.getValue().javaType instanceof TypeVariableName) {
         TypeVariableName type = (TypeVariableName) entry.getValue().javaType;
         if (genericCounts.get(type.name) <= 1 && type.bounds.size() == 1) {
-          entry.setValue(new ResolvedType(WildcardTypeName.subtypeOf(type.bounds.get(0)), entry.getValue().iterable));
+          entry.setValue(
+              new ResolvedType(
+                  WildcardTypeName.subtypeOf(type.bounds.get(0)), entry.getValue().iterable));
         }
       }
       ClassName baseClass;
@@ -138,23 +153,21 @@ final class TypeResolver {
       }
 
       entry.setValue(
-          new ResolvedType(ParameterizedTypeName.get(baseClass, entry.getValue().javaType), entry.getValue().iterable));
+          new ResolvedType(
+              ParameterizedTypeName.get(baseClass, entry.getValue().javaType),
+              entry.getValue().iterable));
     }
-
   }
 
   /**
-   * Returns true if the attribute with name {@code attrName} was reached while calculating input types.
+   * Returns true if the attribute with name {@code attrName} was reached while calculating input
+   * types.
    */
   boolean partOfInput(String attrName) {
     return reachedFromInput.contains(attrName);
   }
 
-  private char nextGenericLetter = 'T';
-
-  /**
-   * Get a new generic letter.
-   */
+  /** Get a new generic letter. */
   private TypeVariableName nextGeneric() {
     char letter = nextGenericLetter++;
     if (nextGenericLetter > 'Z') {
@@ -163,34 +176,7 @@ final class TypeResolver {
     return TypeVariableName.get(String.valueOf(letter));
   }
 
-  /**
-   * Data types that are real numbers.
-   */
-  private static Set<DataType> realNumberTypes = new HashSet<>();
-
-  static {
-    realNumberTypes.add(DataType.DT_FLOAT);
-    realNumberTypes.add(DataType.DT_DOUBLE);
-    realNumberTypes.add(DataType.DT_INT32);
-    realNumberTypes.add(DataType.DT_UINT8);
-    realNumberTypes.add(DataType.DT_INT16);
-    realNumberTypes.add(DataType.DT_INT8);
-    realNumberTypes.add(DataType.DT_INT64);
-    realNumberTypes.add(DataType.DT_QINT8);
-    realNumberTypes.add(DataType.DT_QUINT8);
-    realNumberTypes.add(DataType.DT_QINT32);
-    realNumberTypes.add(DataType.DT_BFLOAT16);
-    realNumberTypes.add(DataType.DT_QINT16);
-    realNumberTypes.add(DataType.DT_QUINT16);
-    realNumberTypes.add(DataType.DT_UINT16);
-    realNumberTypes.add(DataType.DT_HALF);
-    realNumberTypes.add(DataType.DT_UINT32);
-    realNumberTypes.add(DataType.DT_UINT64);
-  }
-
-  /**
-   * Returns true if the attribute is a real number type or is limited to real number types.
-   */
+  /** Returns true if the attribute is a real number type or is limited to real number types. */
   private boolean isRealNumberTyped(AttrValue value) {
     if (!value.hasList()) {
       return realNumberTypes.contains(value.getType());
@@ -203,9 +189,7 @@ final class TypeResolver {
     return true;
   }
 
-  /**
-   * Get the family {@code TType} of an attribute, i.e. {@code TNumber}
-   */
+  /** Get the family {@code TType} of an attribute, i.e. {@code TNumber} */
   private TypeName typeFamily(AttrDef attr) {
     if (isRealNumberTyped(attr.getAllowedValues())) {
       return Names.TNumber;
@@ -214,9 +198,7 @@ final class TypeResolver {
     return Names.TType;
   }
 
-  /**
-   * Get the type of an attribute.
-   */
+  /** Get the type of an attribute. */
   ResolvedType typeOf(AttrDef attr) {
     return typeOf(attr, false);
   }
@@ -224,7 +206,8 @@ final class TypeResolver {
   /**
    * Get the type of an attribute
    *
-   * @param fromInput whether we're calculating input types and should add this attr to {@link #reachedFromInput}
+   * @param fromInput whether we're calculating input types and should add this attr to {@link
+   *     #reachedFromInput}
    */
   private ResolvedType typeOf(AttrDef attr, boolean fromInput) {
     if (known.containsKey(attr.getName())) {
@@ -261,7 +244,8 @@ final class TypeResolver {
         break;
       case "type":
         TypeName family = typeFamily(attr);
-        TypeName type = iterable ? WildcardTypeName.subtypeOf(family) : nextGeneric().withBounds(family);
+        TypeName type =
+            iterable ? WildcardTypeName.subtypeOf(family) : nextGeneric().withBounds(family);
         types = new ResolvedType(type, TypeName.get(DataType.class));
         break;
       case "func":
@@ -279,17 +263,15 @@ final class TypeResolver {
     return types;
   }
 
-  /**
-   * Get the type of an argument (calculated in the constructor)
-   */
+  /** Get the type of an argument (calculated in the constructor) */
   ResolvedType typeOf(ArgDef arg) {
     return argTypes.get(arg);
   }
 
   /**
-   * Calculate the type of an argument.  Should only be used when creating {@link #argTypes}.
+   * Calculate the type of an argument. Should only be used when creating {@link #argTypes}.
    *
-   * Will add to {@link #reachedFromInput} if {@code arg} is an input of the op.
+   * <p>Will add to {@link #reachedFromInput} if {@code arg} is an input of the op.
    */
   private ResolvedType calculateTypeOf(ArgDef arg) {
 
@@ -304,7 +286,8 @@ final class TypeResolver {
       if (known.containsKey(typeAttr)) {
         type = known.get(typeAttr);
       } else {
-        AttrDef attr = op.getAttrList().stream().filter(x -> x.getName().equals(typeAttr)).findFirst().get();
+        AttrDef attr =
+            op.getAttrList().stream().filter(x -> x.getName().equals(typeAttr)).findFirst().get();
         type = typeOf(attr, isInput);
       }
     } else if (!arg.getTypeListAttr().isEmpty()) {
@@ -327,5 +310,4 @@ final class TypeResolver {
 
     return type;
   }
-
 }

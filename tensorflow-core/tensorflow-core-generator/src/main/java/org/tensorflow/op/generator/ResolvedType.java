@@ -1,19 +1,19 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow.op.generator;
 
 import com.squareup.javapoet.ArrayTypeName;
@@ -22,34 +22,28 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import org.tensorflow.Names;
+
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
-import org.tensorflow.Names;
 
-/**
- * Holds type information for inputs, outputs, or attributes, and provides utilities.
- */
+/** Holds type information for inputs, outputs, or attributes, and provides utilities. */
 final class ResolvedType {
 
-  /**
-   * The java level type.
-   */
+  /** The java level type. */
   final TypeName javaType;
 
-  /**
-   * The type for jni/attribute setting use.
-   */
+  /** The type for jni/attribute setting use. */
   final TypeName jniType;
 
   /**
    * Whether this type should be made iterable when used.
-   * <p>
    *
-   * See {@link #arrayIfIterable()}, {@link #listIfIterable()}, {@link #iterableIfIterable()}.
+   * <p>See {@link #arrayIfIterable()}, {@link #listIfIterable()}, {@link #iterableIfIterable()}.
    */
   final boolean iterable;
 
@@ -105,16 +99,12 @@ final class ResolvedType {
     this(type, false);
   }
 
-  /**
-   * Returns a copy of this type with the specified {@code iterable} value.
-   */
+  /** Returns a copy of this type with the specified {@code iterable} value. */
   ResolvedType withIterable(boolean iterable) {
     return new ResolvedType(javaType, jniType, iterable);
   }
 
-  /**
-   * Get the unboxed version of {@code javaType} if it is a boxed primitive.
-   */
+  /** Get the unboxed version of {@code javaType} if it is a boxed primitive. */
   TypeName unboxed() {
     if (javaType.isBoxedPrimitive()) {
       return javaType.unbox();
@@ -123,9 +113,7 @@ final class ResolvedType {
     }
   }
 
-  /**
-   * Return a copy, wrapping {@code javaType} in an array if this type is iterable.
-   */
+  /** Return a copy, wrapping {@code javaType} in an array if this type is iterable. */
   ResolvedType arrayIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -136,9 +124,7 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
-  /**
-   * Return a copy, wrapping {@code javaType} in {@link Iterable} if this type is iterable.
-   */
+  /** Return a copy, wrapping {@code javaType} in {@link Iterable} if this type is iterable. */
   ResolvedType iterableIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -149,9 +135,7 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
-  /**
-   * Return a copy, wrapping {@code javaType} in {@link List} if this type is iterable.
-   */
+  /** Return a copy, wrapping {@code javaType} in {@link List} if this type is iterable. */
   ResolvedType listIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -162,15 +146,14 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
-  /**
-   * True if wrapping will be done by {@link #classIfGeneric()}
-   */
+  /** True if wrapping will be done by {@link #classIfGeneric()} */
   boolean shouldWrapInClass() {
     return javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName;
   }
 
   /**
-   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a wildcard.
+   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a
+   * wildcard.
    */
   ResolvedType classIfGeneric() {
     TypeName newJType;
@@ -182,9 +165,7 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, iterable);
   }
 
-  /**
-   * Recursively get all type variable names in {@code javaType}.
-   */
+  /** Recursively get all type variable names in {@code javaType}. */
   Set<TypeVariableName> findGenerics() {
     if (javaType instanceof TypeVariableName) {
       return Collections.singleton((TypeVariableName) javaType);
@@ -199,7 +180,8 @@ final class ResolvedType {
   }
 
   /**
-   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return {@code javaType}.
+   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return
+   * {@code javaType}.
    */
   TypeName unwrapArg() {
     if (javaType instanceof ParameterizedTypeName) {
@@ -220,8 +202,9 @@ final class ResolvedType {
       return false;
     }
     ResolvedType that = (ResolvedType) o;
-    return iterable == that.iterable && Objects.equals(javaType, that.javaType) && Objects
-        .equals(jniType, that.jniType);
+    return iterable == that.iterable
+        && Objects.equals(javaType, that.javaType)
+        && Objects.equals(jniType, that.jniType);
   }
 
   @Override
