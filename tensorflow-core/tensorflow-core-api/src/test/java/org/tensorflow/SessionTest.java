@@ -15,6 +15,7 @@ limitations under the License.
 
 package org.tensorflow;
 
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,6 +26,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Spliterators;
+import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -261,41 +265,40 @@ public class SessionTest {
       Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
       Op assign = tf.assignVariableOp(variable, tf.constant(2));
 
-      try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetchVariable(variable, TInt32.class).run().get(0)) {
+      try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)) {
         assertEquals(2, value.getInt());
       }
 
     }
   }
 
+  private static int numOperations(Graph g){
+    int numOperations = 0;
+    for (Iterator<Operation> it = g.operations(); it.hasNext(); ) {
+      Operation o = it.next();
+      numOperations++;
+    }
+    return numOperations;
+  }
+
   @Test
-  public static void testFetchVariableException() {
+  public static void testFetchVariableReusingRead() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
       Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
       Op assign = tf.assignVariableOp(variable, tf.constant(2));
 
+      Operand<TInt32> read = tf.readVariableOp(variable, TInt32.class);
+
+      int ops = numOperations(g);
+
       try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)) {
-        fail();
-      } catch (IllegalStateException e) {
-        assertTrue(e.getMessage().contains("is a resource variable"));
+        assertEquals(2, value.getInt());
       }
-    }
-  }
 
-  @Test
-  public static void testFetchVariableNonVariableException() {
-    try (Graph g = new Graph();
-        Session s = new Session(g)) {
-      Ops tf = Ops.create(g);
-      Operand<?> constant = tf.constant(2);
+      assertEquals(0, numOperations(g) - ops);
 
-      try (TInt32 value = (TInt32) s.runner().fetchVariable(constant, TInt32.class).run().get(0)) {
-        fail();
-      } catch (IllegalStateException e) {
-        assertTrue(e.getMessage().contains("is not a resource variable"));
-      }
     }
   }
 
