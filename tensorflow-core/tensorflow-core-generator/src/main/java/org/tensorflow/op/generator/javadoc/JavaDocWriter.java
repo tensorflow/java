@@ -74,14 +74,16 @@ public class JavaDocWriter {
 
   private String escapeHtml(String s) {
     s = Escaping.escapeHtml(s);
+    // handle oddities from tensorflow python markup that don't work well in JavaDoc.
     if (s.contains("@compatibility")) {
       s = s.replace("@", "{@literal @}") + "<br>";
     } else if (s.contains("@end_compatibility")) {
       s = "<br>" + s.replace("@", "{@literal @}");
+    } else if (s.contains("@tf.")) {
+      s = s.replace("@", "{@literal @}");
+    } else if (s.contains("<bytes>")) {
+      s = s.replace("<bytes>", "%lt;bytes&gt;");
     }
     return s;
-
   }
-
-
 }
