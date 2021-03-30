@@ -194,7 +194,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner feed(Operand<?> operand, Tensor t) {
-      if(operand.env() != graph){
+      if (operand.env() != graph) {
         throw new IllegalStateException("Can't feed value to operand " + operand + ", it is from a different graph.");
       }
 
@@ -247,7 +247,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(Output<?> output) {
-      if(output.env() != graph){
+      if (output.env() != graph) {
         throw new IllegalStateException("Can't fetch output " + output + ", it is from a different graph.");
       }
 
@@ -256,7 +256,7 @@ public final class Session implements AutoCloseable {
 
         GraphOperation graphOp = (GraphOperation) output.op();
 
-        try(PointerScope scope = new PointerScope()) {
+        try (PointerScope scope = new PointerScope()) {
           TF_Status status = TF_Status.newStatus();
           TF_OperationGetAttrType(graphOp.getUnsafeNativeHandle(), "dtype", rawDt, status);
           status.throwExceptionIfNotOK();
@@ -265,14 +265,15 @@ public final class Session implements AutoCloseable {
         DataType valueDt = DataType.forNumber(rawDt[0]);
 
         Operand<?> read = null;
-        for(GraphOperation op : graphOp.consumers()){
-          if(op.dtype(0) == valueDt && op.type().equals(ReadVariableOp.OP_NAME)){
+        for (GraphOperation op : graphOp.consumers()) {
+          if (op.dtype(0) == valueDt && op.type().equals(ReadVariableOp.OP_NAME)) {
             read = op.output(0);
           }
         }
 
-        if(read == null){
-          read = Ops.create(graph).withSubScope("session_reads").withName(output.op().name() + "_read").readVariableOp(output, TensorTypeRegistry.find(valueDt).type());
+        if (read == null) {
+          read = Ops.create(graph).withSubScope("session_reads").withName(output.op().name() + "_read")
+              .readVariableOp(output, TensorTypeRegistry.find(valueDt).type());
         }
 
         outputs.add(read.asOutput());
@@ -314,7 +315,7 @@ public final class Session implements AutoCloseable {
      * @throws IllegalStateException if the operation is not from the session's graph.
      */
     public Runner addTarget(Operation operation) {
-      if(operation.env() != graph){
+      if (operation.env() != graph) {
         throw new IllegalStateException("Can't fetch operation " + operation + ", it is from a different graph.");
       }
       targets.add((GraphOperation) operation);

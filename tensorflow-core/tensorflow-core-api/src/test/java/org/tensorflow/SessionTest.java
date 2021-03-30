@@ -15,7 +15,6 @@ limitations under the License.
 
 package org.tensorflow;
 
-import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -27,8 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.Spliterators;
-import java.util.stream.StreamSupport;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
@@ -272,7 +269,7 @@ public class SessionTest {
     }
   }
 
-  private static int numOperations(Graph g){
+  private static int numOperations(Graph g) {
     int numOperations = 0;
     for (Iterator<Operation> it = g.operations(); it.hasNext(); ) {
       Operation o = it.next();
