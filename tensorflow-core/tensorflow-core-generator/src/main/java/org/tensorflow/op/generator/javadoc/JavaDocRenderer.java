@@ -115,13 +115,13 @@ public class JavaDocRenderer implements Renderer {
    */
   public static class Builder {
 
+    private final List<AttributeProviderFactory> attributeProviderFactories = new ArrayList<>();
+    private final List<JavaDocNodeRendererFactory> nodeRendererFactories = new ArrayList<>();
     private String softbreak = "\n";
     private boolean escapeJavaDoc = false;
     private boolean sanitizeUrls = false;
     private UrlSanitizer urlSanitizer = new DefaultUrlSanitizer();
     private boolean percentEncodeUrls = false;
-    private final List<AttributeProviderFactory> attributeProviderFactories = new ArrayList<>();
-    private final List<JavaDocNodeRendererFactory> nodeRendererFactories = new ArrayList<>();
 
     /**
      * @return the configured {@link JavaDocRenderer}
