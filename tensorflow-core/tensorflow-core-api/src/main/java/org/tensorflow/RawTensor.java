@@ -155,6 +155,23 @@ public final class RawTensor implements Tensor {
   }
 
   /**
+   * Create a Tensor object from a handle to the C TF_Tensor object.
+   * <b>DOES NOT SET THE TYPE INFO, should only be passed directly to a {@link OperationBuilder#setAttr(String, Tensor)}.</b>
+   * Will likely NPE otherwise.
+   *
+   * <p>Takes ownership of the handle.
+   */
+  static RawTensor dangerousUntypedRawTensorFromHandle(TF_Tensor handle) {
+    RawTensor t = new RawTensor(null, Shape.of(shape(handle)));
+    try (PointerScope scope = new PointerScope()) {
+      scope.attach(handle);
+      t.tensorHandle = handle;
+      t.tensorScope = scope.extend();
+    }
+    return t;
+  }
+
+  /**
    * Create an eager Tensor object from a handle to the C TF_Tensor object.
    *
    * <p>Takes ownership of the handle.

@@ -24,7 +24,10 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -39,11 +42,15 @@ import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.Constant;
 import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.RunMetadata;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Driver for {@link Graph} execution.
@@ -225,8 +232,7 @@ public final class Session implements AutoCloseable {
      */
     public Runner fetch(String operation, int index) {
       Operation op = graph.operationOrThrow(operation);
-      outputs.add(op.output(index));
-      return this;
+      return fetch(op.output(index));
     }
 
     /**
@@ -236,6 +242,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(Output<?> output) {
+      if(output.dataType() == DataType.DT_RESOURCE){
+        throw new IllegalArgumentException("Output " + output + " is a resource variable, fetch using fetchVariable(), not fetch().");
+      }
       outputs.add(output);
       return this;
     }
@@ -248,6 +257,63 @@ public final class Session implements AutoCloseable {
      */
     public Runner fetch(Operand<?> operand) {
       return fetch(operand.asOutput());
+    }
+
+    /**
+     * Make {@link #run()} return the value of the output of {@code operation}, which should be a resource variable.
+     *
+     * @param operation Is either the string name of the operation, in which case this method is a shorthand for {@code
+     * fetch(operation, 0)}, or it is a string of the form
+     * <tt>operation_name:output_index</tt> , in which case this method acts like {@code
+     * fetch(operation_name, output_index)}. These colon-separated names are commonly used in the {@code SignatureDef}
+     * protocol buffer messages that are included in {@link SavedModelBundle#metaGraphDef()}.
+     * @return this session runner
+     * @throws IllegalArgumentException if no output exists with the provided name
+     */
+    public Runner fetchVariable(String operation, Class<? extends TType> type) {
+      return fetchVariable(graph.outputOrThrow(operation), type);
+    }
+
+    /**
+     * Make {@link #run()} return the value of the {@code index}-th output of {@code operation} which should be a resource variable.
+     *
+     * <p>Operations in a {@link Graph} can have multiple outputs, {@code index} identifies which
+     * one to return.
+     *
+     * @param operation the string name of the operation
+     * @return this session runner
+     * @throws IllegalArgumentException if no operation exists with the provided name
+     * @throws IndexOutOfBoundsException if the operation has no output with the given index
+     */
+    public Runner fetchVariable(String operation, int index, Class<? extends TType> type) {
+      Operation op = graph.operationOrThrow(operation);
+      return fetchVariable(op.output(index), type);
+    }
+
+    /**
+     * Makes {@link #run()} return the value of the resource variable referred to by {@code output}.
+     *
+     * @param output the node to fetch the tensor from
+     * @return this session runner
+     */
+    public Runner fetchVariable(Output<?> output, Class<? extends TType> type) {
+      if(output.dataType() != DataType.DT_RESOURCE){
+        throw new IllegalArgumentException("Output " + output + " is not a resource variable, fetch using fetch(), not fetchVariable().");
+      }
+      outputs.add(output);
+      variableTypes.put(this.outputs.size() - 1, type);
+      return this;
+    }
+
+    /**
+     * Makes {@link #run()} return the value of the resource variable referred to by the output of {@code operand}.
+     *
+     * @param operand the node to fetch the tensor from, as an operand
+     * @return this session runner
+     */
+    public Runner fetchVariable(Operand<?> operand, Class<? extends TType> type) {
+      fetchVariable(operand.asOutput(),  type);
+      return this;
     }
 
     /**
@@ -375,6 +441,7 @@ public final class Session implements AutoCloseable {
             Session.run(
                 nativeHandle,
                 runOptions,
+                variableTypes,
                 inputTensorHandles,
                 inputOpHandles,
                 inputOpIndices,
@@ -426,6 +493,7 @@ public final class Session implements AutoCloseable {
     private final ArrayList<Tensor> inputTensors = new ArrayList<>();
     private final ArrayList<Output<?>> outputs = new ArrayList<>();
     private final ArrayList<GraphOperation> targets = new ArrayList<>();
+    private final HashMap<Integer, Class<? extends TType>> variableTypes = new HashMap<>();
     private RunOptions runOptions = null;
   }
 
@@ -614,6 +682,7 @@ public final class Session implements AutoCloseable {
   private static RunMetadata run(
       TF_Session handle,
       RunOptions runOptions,
+      Map<Integer, Class<? extends TType>> variableTypes,
       TF_Tensor[] inputTensorHandles,
       TF_Operation[] inputOpHandles,
       int[] inputOpIndices,
@@ -659,9 +728,41 @@ public final class Session implements AutoCloseable {
           status);
       status.throwExceptionIfNotOK();
 
-      for (int i = 0; i < noutputs; ++i) {
-        TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
-        outputTensors.add(RawTensor.fromHandle(h).asTypedTensor());
+      Ops reader = null;
+      EagerSession eagerSession = null;
+      if(!variableTypes.isEmpty()){
+        eagerSession = EagerSession.create();
+        reader = Ops.create(eagerSession);
+      }
+
+      try {
+        for (int i = 0; i < noutputs; ++i) {
+          TF_Tensor h = outputValues.get(TF_Tensor.class, i).withDeallocator();
+          Tensor value;
+          if (variableTypes.containsKey(i)) {
+            RawTensor variable = RawTensor.dangerousUntypedRawTensorFromHandle(h);
+
+            OperationBuilder builder = reader.scope()
+                .env()
+                .opBuilder(Constant.OP_NAME, reader.scope().makeOpName(Constant.OP_NAME))
+                .setAttr("value", variable)
+                .setAttr("dtype", DataType.DT_RESOURCE);
+
+            reader.scope().apply(builder);
+
+            Operation constant = builder.build();
+
+            Operand<?> read = reader.readVariableOp(constant.output(0), variableTypes.get(i));
+            value = read.asTensor();
+          } else {
+            value = RawTensor.fromHandle(h).asTypedTensor();
+          }
+          outputTensors.add(value);
+        }
+      } finally {
+        if(eagerSession != null){
+          eagerSession.close();
+        }
       }
       try {
         return runMetadata != null ? RunMetadata.parseFrom(runMetadata.dataAsByteBuffer()) : null;

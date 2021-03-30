@@ -29,6 +29,7 @@ import java.nio.file.Path;
 import java.util.Comparator;
 
 import org.junit.jupiter.api.Test;
+import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
@@ -247,6 +248,52 @@ public class SessionTest {
             .sorted(Comparator.reverseOrder())
             .map(Path::toFile)
             .forEach(File::delete);
+  }
+
+  @Test
+  public static void testFetchVariable(){
+    try(Graph g = new Graph();
+        Session s = new Session(g)){
+      Ops tf = Ops.create(g);
+      Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
+      Op assign = tf.assignVariableOp(variable, tf.constant(2));
+
+      try(TInt32 value = (TInt32) s.runner().addTarget(assign).fetchVariable(variable, TInt32.class).run().get(0)){
+        assertEquals(2, value.getInt());
+      }
+
+    }
+  }
+
+  @Test
+  public static void testFetchVariableException(){
+    try(Graph g = new Graph();
+        Session s = new Session(g)){
+      Ops tf = Ops.create(g);
+      Operand<?> variable = tf.varHandleOp(TInt32.class, Shape.scalar());
+      Op assign = tf.assignVariableOp(variable, tf.constant(2));
+
+      try(TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)){
+        fail();
+      } catch (IllegalStateException e){
+        assertTrue(e.getMessage().contains("is a resource variable"));
+      }
+    }
+  }
+
+  @Test
+  public static void testFetchVariableNonVariableException(){
+    try(Graph g = new Graph();
+        Session s = new Session(g)){
+      Ops tf = Ops.create(g);
+      Operand<?> constant = tf.constant(2);
+
+      try(TInt32 value = (TInt32) s.runner().fetchVariable(constant, TInt32.class).run().get(0)){
+        fail();
+      } catch (IllegalStateException e){
+        assertTrue(e.getMessage().contains("is not a resource variable"));
+      }
+    }
   }
 
   private static RunOptions fullTraceRunOptions() {
