@@ -16,16 +16,12 @@ limitations under the License.
 package org.tensorflow;
 
 import static org.tensorflow.Graph.resolveOutputs;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_CloseSession;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteSession;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewSession;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SessionRun;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.bytedeco.javacpp.BytePointer;
@@ -242,8 +238,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetch(Output<?> output) {
-      if(output.dataType() == DataType.DT_RESOURCE){
-        throw new IllegalArgumentException("Output " + output + " is a resource variable, fetch using fetchVariable(), not fetch().");
+      if (output.dataType() == DataType.DT_RESOURCE) {
+        throw new IllegalArgumentException(
+            "Output " + output + " is a resource variable, fetch using fetchVariable(), not fetch().");
       }
       outputs.add(output);
       return this;
@@ -275,7 +272,8 @@ public final class Session implements AutoCloseable {
     }
 
     /**
-     * Make {@link #run()} return the value of the {@code index}-th output of {@code operation} which should be a resource variable.
+     * Make {@link #run()} return the value of the {@code index}-th output of {@code operation} which should be a
+     * resource variable.
      *
      * <p>Operations in a {@link Graph} can have multiple outputs, {@code index} identifies which
      * one to return.
@@ -297,8 +295,9 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetchVariable(Output<?> output, Class<? extends TType> type) {
-      if(output.dataType() != DataType.DT_RESOURCE){
-        throw new IllegalArgumentException("Output " + output + " is not a resource variable, fetch using fetch(), not fetchVariable().");
+      if (output.dataType() != DataType.DT_RESOURCE) {
+        throw new IllegalArgumentException(
+            "Output " + output + " is not a resource variable, fetch using fetch(), not fetchVariable().");
       }
       outputs.add(output);
       variableTypes.put(this.outputs.size() - 1, type);
@@ -312,7 +311,7 @@ public final class Session implements AutoCloseable {
      * @return this session runner
      */
     public Runner fetchVariable(Operand<?> operand, Class<? extends TType> type) {
-      fetchVariable(operand.asOutput(),  type);
+      fetchVariable(operand.asOutput(), type);
       return this;
     }
 
@@ -730,7 +729,7 @@ public final class Session implements AutoCloseable {
 
       Ops reader = null;
       EagerSession eagerSession = null;
-      if(!variableTypes.isEmpty()){
+      if (!variableTypes.isEmpty()) {
         eagerSession = EagerSession.create();
         reader = Ops.create(eagerSession);
       }
@@ -760,7 +759,7 @@ public final class Session implements AutoCloseable {
           outputTensors.add(value);
         }
       } finally {
-        if(eagerSession != null){
+        if (eagerSession != null) {
           eagerSession.close();
         }
       }
