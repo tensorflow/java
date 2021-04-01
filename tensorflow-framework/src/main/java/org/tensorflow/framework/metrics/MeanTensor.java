@@ -103,14 +103,19 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates statistics for computing the element-wise mean.
+   *
+   * @param values Per-example value. Input values must always have the same shape for all
+   *     invocations of updateStateList.
+   * @param sampleWeights Optional weighting of each example. Defaults to 1 if null.
+   */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
     Ops tf = getTF();
     Operand<T> tValues = cast(tf, values, type);
-    Operand<T> tSampleWeights = null;
-    if (sampleWeights != null) tSampleWeights = cast(tf, sampleWeights, type);
+    Operand<T> tSampleWeights = sampleWeights == null ? null : cast(tf, sampleWeights, type);
 
     boolean needsInitialization = init(values.shape());
 
@@ -123,13 +128,17 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
 
     Operand<T> numValues = tf.onesLike(tValues);
     if (tSampleWeights != null) {
+      //Update dimensions of weights to match with values if possible.
       LossTuple<T> tuple =
           LossesHelper.squeezeOrExpandDimensions(tf, null, tValues, tSampleWeights);
       tValues = tuple.getTarget();
       tSampleWeights = tuple.getSampleWeights();
       try {
+        // Broadcast weights if possible.
         tSampleWeights = WeightsBroadcastOps.broadcastWeights(tf, tSampleWeights, tValues);
       } catch (IllegalArgumentException ex) {
+        // sampleWeights cannot be broadcast to values
+        //  Reduce values to same ndim as weight array
         int ndim = values.shape().numDimensions();
         int weightNdim = tSampleWeights.asOutput().shape().numDimensions();
         int[] range = new int[ndim - weightNdim];
