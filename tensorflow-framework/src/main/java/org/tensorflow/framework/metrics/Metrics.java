@@ -23,7 +23,7 @@ import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/** Helper class with built-in metrics functions. */
+/** Static methods for computing metrics. */
 public class Metrics {
 
   /**
@@ -84,6 +84,7 @@ public class Metrics {
       Ops tf, Operand<U> labels, Operand<T> predictions, int k) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
 
+    // Flatten predictions to (batch_size, num_samples) and labels to (num_samples,)
 
     int predictionsRank = predictions.shape().numDimensions();
     int labelsRank = tLabels.shape().numDimensions();
@@ -91,10 +92,13 @@ public class Metrics {
     Operand<TFloat32> castPredictions = cast(tf, predictions, TFloat32.class);
     if (predictionsRank != Shape.UNKNOWN_SIZE && labelsRank != Shape.UNKNOWN_SIZE) {
       if (predictionsRank > 2) {
-        castPredictions = tf.shape.reduceDims(castPredictions, tf.constant(1));
+        //y_pred = array_ops.reshape(y_pred, [-1, y_pred.shape[-1]])
+        castPredictions = tf.reshape(castPredictions,
+                tf.constant(castPredictions.shape().takeLast(1).prepend(Shape.UNKNOWN_SIZE)));
       }
       if (labelsRank > 1) {
-        tLabels = tf.shape.flatten(tLabels);
+        //y_true = array_ops.reshape(y_true, [-1])
+        tLabels = tf.reshape(tLabels, tf.constant(Shape.of(Shape.UNKNOWN_SIZE)));
       }
     }
     return cast(
