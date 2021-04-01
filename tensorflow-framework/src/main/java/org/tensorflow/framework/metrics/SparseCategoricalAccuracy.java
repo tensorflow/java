@@ -94,7 +94,13 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
     super.setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Calculates how often predictions matches integer labels.
+   *
+   * @param labels Integer ground truth values.
+   * @param predictions the predictions
+   * @return Sparse categorical accuracy values.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
@@ -106,6 +112,7 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
     long predictionsRank = predShape.numDimensions();
     long labelsRank = labelsShape.numDimensions();
 
+    // If the shape of labels is (num_samples, 1), squeeze to (num_samples,)
     if (predictionsRank != Shape.UNKNOWN_SIZE
         && labelsRank != Shape.UNKNOWN_SIZE
         && labelsShape.size((int) labelsRank - 1) == 1) {

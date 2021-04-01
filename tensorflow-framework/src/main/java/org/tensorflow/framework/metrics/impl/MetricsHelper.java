@@ -22,7 +22,6 @@ import org.tensorflow.framework.utils.SparseTensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Rank;
@@ -30,7 +29,6 @@ import org.tensorflow.op.core.Stack;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
 import org.tensorflow.op.nn.TopK;
-
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
@@ -269,7 +267,8 @@ public class MetricsHelper {
                     Operand<TInt64> size = dict.get(s);
                     if (size == null) {
                       // save size for later checks
-                      size = tf.shape.size( symbol.getOperand(), tf.constant(ll.get()), TInt64.class);
+                      size =
+                          tf.shape.size(symbol.getOperand(), tf.constant(ll.get()), TInt64.class);
                       dict.put(s, size);
                     }
                     Op assertion =
@@ -280,7 +279,7 @@ public class MetricsHelper {
                                         symbol.getOperand(),
                                         tf.constant(ll.getAndIncrement()),
                                         TInt64.class),
-                                        size),
+                                    size),
                                 Collections.singletonList(tf.constant(message)));
                     updateOperations.add(assertion);
                   });
@@ -305,47 +304,48 @@ public class MetricsHelper {
    * will repeat the same for every threshold.
    *
    * <p>For estimation of these metrics over a stream of data, the function creates an `update_op`
-   * operation that updates the given variables.</p>
+   * operation that updates the given variables.
    *
    * <p><code>labels</code>, <code>predictions</code>, and <code>sampleWeight</code> tensors are
-   * aligned by {@link LossesHelper#removeSqueezableDimensions(Ops, Operand, Operand)}.
-   * <code>sampleWeight</code> is then broadcast to the shape of <code>predictions</code>.</p>
+   * aligned by {@link LossesHelper#removeSqueezableDimensions(Ops, Operand, Operand)}. <code>
+   * sampleWeight</code> is then broadcast to the shape of <code>predictions</code>.
    *
    * @param tf the TensorFlow Ops
    * @param variablesToUpdate map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding variables to update as values. If <code>multiLabel</code>, then the
-   *     variable shapes are (T, D), where T is the number of thresholds and D is the number of
-   *     classes (after slicing by <code>classIndex</code>, if provided).
-   *     If <code>multiLabels</code>, then the variable shapes are (T).
+   *     corresponding variables to update as values. If <code>multiLabel</code>, then the variable
+   *     shapes are (T, D), where T is the number of thresholds and D is the number of classes
+   *     (after slicing by <code>classIndex</code>, if provided). If <code>multiLabels</code>, then
+   *     the variable shapes are (T).
    * @param varInitializers map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding initializer Operands to for <code>variablesToUpdate</code>.
    * @param labels the labels. Will be cast to {@link TBool}. Shape (N, Cx, L1?), where N is the
    *     number of examples, Cx is zero or more class dimensions, and L1 is a potential extra
    *     dimension of size 1 that would be squeezed.
    * @param predictions the predictions shape (N, Cx, P1?)
-   * @param thresholds thresholds in the range <code>[0, 1]</code>, or {@link #NEG_INF} is used
-   *     when topK is set
-   * @param topK optional, indicates that only the top k predictions should be considered.
-   *     Applied before possibly slicing by <code>classIndex</code>.
-   * @param classIndex optional, limits the prediction and labels to the specified class.
-   *     This is an integer index into the first dimension of Cx.
-   * @param sampleWeight optional <code>Tensor</code> that is aligned with labels and predictions
-   *     as explained above. Use weights of 0 to mask values.
+   * @param thresholds thresholds in the range <code>[0, 1]</code>, or {@link #NEG_INF} is used when
+   *     topK is set
+   * @param topK optional, indicates that only the top k predictions should be considered. Applied
+   *     before possibly slicing by <code>classIndex</code>.
+   * @param classIndex optional, limits the prediction and labels to the specified class. This is an
+   *     integer index into the first dimension of Cx.
+   * @param sampleWeight optional <code>Tensor</code> that is aligned with labels and predictions as
+   *     explained above. Use weights of 0 to mask values.
    * @param multiLabel indicates whether multidimensional prediction/labels should be treated as
    *     multilabel responses, or flattened into a single label. When true, the values of <code>
    *     variablesToUpdate</code> must have a second dimension equal to the number of labels and
    *     predictions per example, and those tensors must not be RaggedTensors.
    * @param labelWeights tensor of non-negative weights for multilabel data. The weights are applied
    *     when calculating TRUE_POSITIVES, FALSE_POSITIVES, TRUE_NEGATIVES, and FALSE_NEGATIVES
-   *     without explicit multilabel handling (i.e. when the data is to be flattened).
-   *     Must have shape (Dx), which is the same as (Cx) referenced above, except that if
-   *     <code>classIndex</code> is provided, then the final dimension of Dx is 1. These weights
-   *     will be broadcast across the 0th dimension (the examples dimension) of
-   *     <code>predictions</code>. May be null. Must be null if <code>multiLabel</code>.
+   *     without explicit multilabel handling (i.e. when the data is to be flattened). Must have
+   *     shape (Dx), which is the same as (Cx) referenced above, except that if <code>classIndex
+   *     </code> is provided, then the final dimension of Dx is 1. These weights will be broadcast
+   *     across the 0th dimension (the examples dimension) of <code>predictions</code>. May be null.
+   *     Must be null if <code>multiLabel</code>.
    * @param <T> the data type for the variables
    * @throws IllegalArgumentException If <code>predictions</code> and <code>labels</code> have
    *     mismatched shapes, or if <code>sampleWeight</code> is not <code>null</code>and its shape
-   *     doesn't match <code>predictions</code>, or if <code>multiLabel && labelWeights != null</code>.
+   *     doesn't match <code>predictions</code>, or if <code>multiLabel && labelWeights != null
+   *     </code>.
    * @return an op to update the given confusion matrix variables.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})

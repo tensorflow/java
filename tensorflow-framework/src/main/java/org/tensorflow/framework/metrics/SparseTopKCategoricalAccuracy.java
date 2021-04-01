@@ -24,8 +24,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes how often integer targets are in the top `K` predictions.
+ *
  * @param <T> The data type for the metric result
- * */
+ */
 public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
   public static final int DEFAULT_K = 5;
@@ -33,7 +34,8 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
   private final int k;
 
   /**
-   * Creates a SparseTopKCategoricalAccuracy metric using {@link #DEFAULT_K} for the number of top elements.
+   * Creates a SparseTopKCategoricalAccuracy metric using {@link #DEFAULT_K} for the number of top
+   * elements.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -61,7 +63,13 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes how often integer targets are in the top {@code K} predictions.
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions
+   * @return Sparse top K categorical accuracy value.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

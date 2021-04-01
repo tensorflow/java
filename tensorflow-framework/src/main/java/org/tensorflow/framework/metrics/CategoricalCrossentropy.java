@@ -99,7 +99,13 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
     this.axis = axis;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the crossentropy loss between the labels and predictions.
+   *
+   * @param labels the truth values or labels, of one-hot true targets, same shape as predictions
+   * @param predictions the predictions
+   * @return Categorical crossentropy loss value.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

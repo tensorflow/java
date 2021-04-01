@@ -10,7 +10,11 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -111,6 +115,11 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     }
   }
 
+  /**
+   * Gets a control dependency Op to initialize all the variables
+   *
+   * @return a control dependency Op to initialize all the variables
+   */
   public Op initializeVariables() {
     List<Op> varInitializers = new ArrayList<>();
 
@@ -130,7 +139,15 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     return getTF().withControlDependencies(varInitializers).noOp();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates confusion matrix statistics.
+   *
+   * @param labels The ground truth values.
+   * @param predictions the predictions
+   * @param sampleWeights Optional weighting of each example. Defaults to 1. Rank is either 0, or
+   *     the same rank as labels, and must be broadcastable to labels.
+   * @return a List of Operations to update the metric state.
+   */
   @Override
   @SuppressWarnings("unchecked")
   public List<Op> updateStateList(

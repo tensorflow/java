@@ -21,8 +21,10 @@ package org.tensorflow.framework.metrics;
  * @see <a href="https://en.wikipedia.org/wiki/Riemann_sum">Riemann summation method</a>
  */
 public enum AUCSummationMethod {
-  /** Apply mid-point summation scheme for {@link AUCCurve#ROC}. For {@link AUCCurve#PR}, interpolates (true/false) positives but not the ratio that
-   * is precision */
+  /**
+   * Apply mid-point summation scheme for {@link AUCCurve#ROC}. For {@link AUCCurve#PR},
+   * interpolates (true/false) positives but not the ratio that is precision
+   */
   INTERPOLATION,
   /** Apply right summation for increasing intervals and left summation for decreasing intervals */
   MAJORING,

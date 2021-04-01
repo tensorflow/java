@@ -22,9 +22,14 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -290,7 +295,16 @@ public class Precision<T extends TNumber> extends Metric<T> {
     }
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates true positive and false positive statistics.
+   *
+   * @param labels the labels The ground truth values, with the same dimensions as predictions. Will
+   *     be cast to {@link TBool}.
+   * @param predictions the predictions, each element must be in the range {@code [0, 1]}.
+   * @param sampleWeights Optional weighting of each example. Defaults to 1. Rank is either 0, or *
+   *     the same rank as labels, and must be broadcastable to labels.
+   * @return a List of Operations to update the metric state.
+   */
   @Override
   @SuppressWarnings("unchecked")
   public List<Op> updateStateList(

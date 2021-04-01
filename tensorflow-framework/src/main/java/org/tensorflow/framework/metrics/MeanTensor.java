@@ -109,6 +109,8 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    * @param values Per-example value. Input values must always have the same shape for all
    *     invocations of updateStateList.
    * @param sampleWeights Optional weighting of each example. Defaults to 1 if null.
+   * @throws IllegalArgumentException if the shape of {@code values} in each subsequent call is not
+   *     the same shape as {@code values} set during the first call
    */
   @Override
   public List<Op> updateStateList(
@@ -117,6 +119,7 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
     Operand<T> tValues = cast(tf, values, type);
     Operand<T> tSampleWeights = sampleWeights == null ? null : cast(tf, sampleWeights, type);
 
+    // update the shape if it is the first call.
     boolean needsInitialization = init(values.shape());
 
     if (!this.shape.equals(values.shape())) {
@@ -128,7 +131,7 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
 
     Operand<T> numValues = tf.onesLike(tValues);
     if (tSampleWeights != null) {
-      //Update dimensions of weights to match with values if possible.
+      // Update dimensions of weights to match with values if possible.
       LossTuple<T> tuple =
           LossesHelper.squeezeOrExpandDimensions(tf, null, tValues, tSampleWeights);
       tValues = tuple.getTarget();

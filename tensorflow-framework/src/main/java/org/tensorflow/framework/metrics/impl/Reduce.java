@@ -106,11 +106,11 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Updates the metric variables based on the inputs. At least one input arg required for <code>
-   * values</code>, an optional additional input for the <code>sampleWeights</code>
+   * Updates the metric variables based on the inputs. At least one input arg required for {@}code
+   * values}, an optional additional input for the <code>sampleWeights</code>
    *
    * @param values the inputs to be passed to update state, this may not be null
-   * @param sampleWeights sample weights to be applied to values, may be null.
+   * @param sampleWeights sample weights to be applied to values, will default to 1 if null.
    * @return the result with a control dependency on update state Operands
    * @throws IllegalArgumentException if values is null
    */
@@ -129,13 +129,16 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
 
     if (sampleWeights != null) {
       tSampleWeights = cast(getTF(), sampleWeights, getResultType());
+      // Update dimensions of weights to match with values if possible.
       LossTuple<T> tuple =
           LossesHelper.squeezeOrExpandDimensions(getTF(), null, tValues, tSampleWeights);
       tValues = tuple.getTarget();
       tSampleWeights = tuple.getSampleWeights();
       try {
+        // Broadcast weights if possible
         tSampleWeights = MetricsHelper.broadcastWeights(getTF(), tSampleWeights, tValues);
       } catch (IllegalArgumentException ex) {
+        // reduce values to same ndim as weight array
         // if we get here we have static shapes with either
         // different ranks or different dimension sizes.
         // first, reduce the values down to the rank of the samples
@@ -162,7 +165,9 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
         getTF().assignAdd(total, cast(getTF(), weightedValueSum, total.type()));
     updateOperations.add(totalUpdate);
     Operand<T> numValues;
+    // Exit early if the reduction doesn't have a denominator.
     if (reduction != MetricReduction.SUM) {
+      // Update `count` for reductions that require a denominator.
       switch (reduction) {
         case SUM_OVER_BATCH_SIZE:
           numValues = cast(getTF(), getTF().constant(tValues.shape().size()), resultType);
@@ -183,6 +188,7 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
           throw new UnsupportedOperationException(
               String.format("reduction [%s] not implemented", reduction));
       }
+
       Operand<T> totalCount = getTF().assignAdd(this.count, numValues);
 
       updateOperations.add(totalCount);

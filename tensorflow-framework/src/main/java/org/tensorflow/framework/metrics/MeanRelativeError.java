@@ -33,8 +33,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * ultimately returned as mean relative error: an idempotent operation that simply divides total by
  * count.
  *
- * <p>If {@code sampleWeight} is <code>null</code>, weights default to 1. Use  {@code sampleWeight} of
- * 0 to mask values.
+ * <p>If {@code sampleWeight} is <code>null</code>, weights default to 1. Use {@code sampleWeight}
+ * of 0 to mask values.
  *
  * @param <T> The data type for the metric result
  */
@@ -129,9 +129,9 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
    *
    * @param labels The ground truth values.
    * @param predictions The predicted values. Must be the same shape as the normalizer.
-   * @param sampleWeights Optional weighting of each example. A null value defaults to 1. Can be an {@code Operand}
-   *     whose rank is either 0, or the same rank as {@code labels}, and must be broadcastable to
-   *     {@code labels}.
+   * @param sampleWeights Optional weighting of each example. A null value defaults to 1. Can be an
+   *     {@code Operand} whose rank is either 0, or the same rank as {@code labels}, and must be
+   *     broadcastable to {@code labels}.
    * @return a List of Operations to update the metric state
    */
   @Override
@@ -142,7 +142,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     Operand<T> tSampleWeights =
-            sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
+        sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
 
     LossTuple<T> tuple = LossesHelper.squeezeOrExpandDimensions(getTF(), tLabels, tPredictions);
     tPredictions = tuple.getTarget();

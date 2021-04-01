@@ -44,7 +44,13 @@ public class Hinge<T extends TNumber> extends MeanMetricWrapper<T> implements Lo
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the hinge loss between labels and predictions.
+   *
+   * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
+   * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @return the hinge loss between labels and predictions.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

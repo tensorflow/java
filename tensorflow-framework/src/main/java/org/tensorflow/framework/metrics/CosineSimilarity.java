@@ -26,7 +26,17 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * A metric that computes the cosine similarity metric between labels and predictions.
  *
+ * <p>Note that it is a number between -1 and 1. When it is a negative number between -1 and 0, 0
+ * indicates orthogonality and values closer to -1 indicate greater similarity. The values closer to
+ * 1 indicate greater dissimilarity. This makes it usable as a loss function in a setting where you
+ * try to maximize the proximity between predictions and targets. If either labels and predictions
+ * is a zero vector, cosine similarity will be 0 regardless of the proximity between predictions and
+ * targets.
+ *
+ * <pre>{@code loss = -sum(l2_norm(y_true) * l2_norm(y_pred))}</pre>
+ *
  * @param <T> The data type for the metric result.
+ * @see <a href="https://en.wikipedia.org/wiki/Cosine_similarity">Cosine Similarity</a>
  */
 public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
@@ -76,7 +86,13 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the cosine similarity loss between labels and predictions.
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions
+   * @return the cosine similarity loss
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

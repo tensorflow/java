@@ -116,7 +116,15 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
     return initializer;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates the confusion matrix statistics.
+   *
+   * @param labels the labels
+   * @param predictions the predictions
+   * @param sampleWeights Optional weighting of each example. Defaults to 1, if null. Rank is either
+   *     0, or the same rank as labels, and must be broadcastable to labels.
+   * @return the Operands that updates totalConfusionMatrix variable
+   */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> labels,
@@ -130,12 +138,13 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
     Operand<T> tPredictions = cast(getTF(), predictions, type);
     if (tPredictions.shape().numDimensions() > 1) {
       tPredictions = getTF().shape.flatten(tPredictions);
-      }
+    }
     Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
     if (tSampleWeights != null && tSampleWeights.shape().numDimensions() > 1) {
       tSampleWeights = getTF().shape.flatten(tSampleWeights);
-      }
+    }
 
+    // Accumulate the prediction to current confusion matrix.
     Operand<T> currentCM =
         MetricsHelper.confusionMatrix(
             getTF(), tLabels, tPredictions, getTF().constant(numClasses), tSampleWeights, type);

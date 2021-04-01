@@ -63,7 +63,13 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes how often targets are in the top {@code K} predictions.
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions
+   * @return Top K categorical accuracy value.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
