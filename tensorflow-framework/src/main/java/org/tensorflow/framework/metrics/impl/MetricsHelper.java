@@ -58,8 +58,8 @@ public class MetricsHelper {
       "weights can not be broadcast to values.";
 
   /**
-   * Asserts that the <code>sampleWeights</code> can be broadcast to the same shape as <code>values
-   * </code>
+   * Asserts that the {@code sampleWeights} can be broadcast to the same shape as {@code values
+   * }
    *
    * <p>In losses and metrics, limited weight broadcasting is supported. Weights must be either
    * scalar, or the same rank as the target values, with each dimension either 1, or the same as the
@@ -68,11 +68,11 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param sampleWeights the sample weights.
    * @param values the values to which weights are applied.
-   * @return <code>Operation</code> with control dependencies to ensure <code>sampleWeight</code>
-   *     can be broadcast to <code>values</code>
+   * @return {@code Operation} with control dependencies to ensure {@code sampleWeight}
+   *     can be broadcast to {@code values}
    * @param <T> the type of Operand
-   * @throws NotBroadcastableException If static checks determine <code>sampleWeights</code> has an
-   *     incorrect shape that prohibit broadcasting to <code>values</code>
+   * @throws NotBroadcastableException If static checks determine {@code sampleWeights} has an
+   *     incorrect shape that prohibit broadcasting to {@code values}
    */
   @SuppressWarnings("unchecked")
   public static <T extends TNumber> Op assertBroadcastable(
@@ -200,13 +200,13 @@ public class MetricsHelper {
   }
 
   /**
-   * Broadcast <code>weights</code> to the same shape as <code>values</code>.
+   * Broadcast {@code weights} to the same shape as {@code values}.
    *
    * @param tf the TensorFlow ops
-   * @param weights Operand whose shape is broadcastable to <code>values</code>.
+   * @param weights Operand whose shape is broadcastable to {@code values}.
    * @param values Operand of any shape
    * @param <T> the type of Operands
-   * @return <code>weights</code> broadcast to <code>values</code> shape
+   * @return {@code weights} broadcast to {@code values} shape
    */
   public static <T extends TNumber> Operand<T> broadcastWeights(
       Ops tf, Operand<T> weights, Operand<T> values) {
@@ -291,13 +291,13 @@ public class MetricsHelper {
   /**
    * Returns an op to update the given confusion matrix variables.
    *
-   * <p>For every pair of values in <code>labels</code> and <code>predictions</code>:
+   * <p>For every pair of values in {@code labels} and {@code predictions}:
    *
    * <pre>
-   * TRUE_POSITIVES:  <code>labels</code> == true and <code>predictions</code> &gt; thresholds
-   * FALSE_POSITIVES: <code>labels</code> == true and <code>predictions</code> &lt;= thresholds
-   * TRUE_NEGATIVES:  <code>labels</code> == false and <code>predictions</code> &lt;= thresholds
-   * FALSE_NEGATIVE:  <code>labels</code> == false and <code>predictions</code> &gt; thresholds
+   * TRUE_POSITIVES:  {@code labels} == true and {@code predictions} &gt; thresholds
+   * FALSE_POSITIVES: {@code labels} == true and {@code predictions} &lt;= thresholds
+   * TRUE_NEGATIVES:  {@code labels} == false and {@code predictions} &lt;= thresholds
+   * FALSE_NEGATIVE:  {@code labels} == false and {@code predictions} &gt; thresholds
    * </pre>
    *
    * <p>The results will be weighted and added together. When multiple thresholds are provided, we
@@ -306,46 +306,45 @@ public class MetricsHelper {
    * <p>For estimation of these metrics over a stream of data, the function creates an `update_op`
    * operation that updates the given variables.
    *
-   * <p><code>labels</code>, <code>predictions</code>, and <code>sampleWeight</code> tensors are
-   * aligned by {@link LossesHelper#removeSqueezableDimensions(Ops, Operand, Operand)}. <code>
-   * sampleWeight</code> is then broadcast to the shape of <code>predictions</code>.
+   * <p>{@code labels}, {@code predictions}, and {@code sampleWeight} tensors are
+   * aligned by {@link LossesHelper#removeSqueezableDimensions(Ops, Operand, Operand)}. {@code
+   * sampleWeight} is then broadcast to the shape of {@code predictions}.
    *
    * @param tf the TensorFlow Ops
    * @param variablesToUpdate map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding variables to update as values. If <code>multiLabel</code>, then the variable
+   *     corresponding variables to update as values. If {@code multiLabel}, then the variable
    *     shapes are (T, D), where T is the number of thresholds and D is the number of classes
-   *     (after slicing by <code>classIndex</code>, if provided). If <code>multiLabels</code>, then
+   *     (after slicing by {@code classIndex}, if provided). If {@code multiLabels}, then
    *     the variable shapes are (T).
    * @param varInitializers map with {@link ConfusionMatrixEnum} values as valid keys and
-   *     corresponding initializer Operands to for <code>variablesToUpdate</code>.
+   *     corresponding initializer Operands to for {@code variablesToUpdate}.
    * @param labels the labels. Will be cast to {@link TBool}. Shape (N, Cx, L1?), where N is the
    *     number of examples, Cx is zero or more class dimensions, and L1 is a potential extra
    *     dimension of size 1 that would be squeezed.
    * @param predictions the predictions shape (N, Cx, P1?)
-   * @param thresholds thresholds in the range <code>[0, 1]</code>, or {@link #NEG_INF} is used when
+   * @param thresholds thresholds in the range {@code [0, 1]}, or {@link #NEG_INF} is used when
    *     topK is set
    * @param topK optional, indicates that only the top k predictions should be considered. Applied
-   *     before possibly slicing by <code>classIndex</code>.
+   *     before possibly slicing by {@code classIndex}.
    * @param classIndex optional, limits the prediction and labels to the specified class. This is an
    *     integer index into the first dimension of Cx.
-   * @param sampleWeight optional <code>Tensor</code> that is aligned with labels and predictions as
+   * @param sampleWeight optional {@code Tensor} that is aligned with labels and predictions as
    *     explained above. Use weights of 0 to mask values.
    * @param multiLabel indicates whether multidimensional prediction/labels should be treated as
-   *     multilabel responses, or flattened into a single label. When true, the values of <code>
-   *     variablesToUpdate</code> must have a second dimension equal to the number of labels and
+   *     multilabel responses, or flattened into a single label. When true, the values of {@code
+   *     variablesToUpdate} must have a second dimension equal to the number of labels and
    *     predictions per example, and those tensors must not be RaggedTensors.
    * @param labelWeights tensor of non-negative weights for multilabel data. The weights are applied
    *     when calculating TRUE_POSITIVES, FALSE_POSITIVES, TRUE_NEGATIVES, and FALSE_NEGATIVES
    *     without explicit multilabel handling (i.e. when the data is to be flattened). Must have
-   *     shape (Dx), which is the same as (Cx) referenced above, except that if <code>classIndex
-   *     </code> is provided, then the final dimension of Dx is 1. These weights will be broadcast
-   *     across the 0th dimension (the examples dimension) of <code>predictions</code>. May be null.
-   *     Must be null if <code>multiLabel</code>.
+   *     shape (Dx), which is the same as (Cx) referenced above, except that if {@code classIndex
+   *     } is provided, then the final dimension of Dx is 1. These weights will be broadcast
+   *     across the 0th dimension (the examples dimension) of {@code predictions}. May be null.
+   *     Must be null if {@code multiLabel}.
    * @param <T> the data type for the variables
-   * @throws IllegalArgumentException If <code>predictions</code> and <code>labels</code> have
-   *     mismatched shapes, or if <code>sampleWeight</code> is not <code>null</code>and its shape
-   *     doesn't match <code>predictions</code>, or if <code>multiLabel && labelWeights != null
-   *     </code>.
+   * @throws IllegalArgumentException If {@code predictions} and {@code labels} have
+   *     mismatched shapes, or if {@code sampleWeight} is not null and its shape
+   *     doesn't match {@code predictions}, or if {@code multiLabel && labelWeights != null}..
    * @return an op to update the given confusion matrix variables.
    */
   @SuppressWarnings({"unchecked", "rawtypes"})
@@ -689,8 +688,8 @@ public class MetricsHelper {
   // alias for mean
 
   /**
-   * Calculate the mean of the operand, along all axes and <code>keepDims</code> is <code>false
-   * </code>
+   * Calculate the mean of the operand, along all axes and {@code keepDims} is {@code false
+   * }
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
@@ -702,8 +701,8 @@ public class MetricsHelper {
   }
 
   /**
-   * Calculate the mean of the operand, alongside the specified axis with <code>keepDims</code> is
-   * <code>false</code>
+   * Calculate the mean of the operand, alongside the specified axis with {@code keepDims} is
+   * {@code false}
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
@@ -721,12 +720,12 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
-   * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
-   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
-   *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is
+   *     {@code false}, the rank of the tensor is reduced by 1 for each entry in {@code axes
+   *     }. If {@code keepdims} is {@code true}, the reduced dimensions are retained
    *     with length 1.
    * @param <T> the type of the operand
-   * @return the mean of elements of <code>x</code>.
+   * @return the mean of elements of {@code x}.
    */
   public static <T extends TNumber> Operand<T> mean(Ops tf, Operand<T> x, boolean keepDims) {
     return mean(tf, x, null, keepDims);
@@ -738,12 +737,12 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
    * @param axes Axes to compute the mean.
-   * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
-   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
-   *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is
+   *     {@code false}, the rank of the tensor is reduced by 1 for each entry in {@code axes
+   *     }. If {@code keepdims} is {@code true}, the reduced dimensions are retained
    *     with length 1.
    * @param <T> the data type of the Operand
-   * @return the mean of elements of <code>x</code>.
+   * @return the mean of elements of {@code x}.
    */
   public static <T extends TNumber> Operand<T> mean(
       Ops tf, Operand<T> x, Operand<? extends TIntegral> axes, boolean keepDims) {
@@ -778,16 +777,16 @@ public class MetricsHelper {
    *
    * <p>For example:
    *
-   * <pre>
+   * <pre>{@code
    *     confusion_matrix([1, 2, 4], [2, 2, 4]) ==>
    *          [[0 0 0 0 0]
    *           [0 0 1 0 0]
    *           [0 0 1 0 0]
    *           [0 0 0 0 0]
    *           [0 0 0 0 1]]
-   * </pre>
+   * }</pre>
    *
-   * Note that the possible labels are assumed to be {@copde [0, 1, 2, 3,4]}, resulting in a 5x5
+   * Note that the possible labels are assumed to be {@code [0, 1, 2, 3,4]}, resulting in a 5x5
    * confusion matrix.
    *
    * @param tf the TensorFlow Ops
@@ -798,12 +797,12 @@ public class MetricsHelper {
    * @param weights optional weights to be applied to the confusion matrix
    * @param type Data type of the confusion matrix.
    * @param <T> the type of Operands
-   * @return A <code>Operand</code> of type <code>type</code> with shape <code>[n, n]</code>
-   *     representing the confusion matrix, where <code>n</code> is the number of possible labels in
+   * @return A {@code Operand} of type {@code type} with shape {@code [n, n]}
+   *     representing the confusion matrix, where {@code n} is the number of possible labels in
    *     the classification task.
-   * @throws IllegalArgumentException If both <code>predictions</code> and <code>labels</code> do
-   *     not have compatible shapes, or if <code>weights</code> is not<code>null</code> and its
-   *     shape is not compatible with <code>predictions</code>.
+   * @throws IllegalArgumentException If both {@code predictions} and {@code labels} do
+   *     not have compatible shapes, or if {@code weights} is not{@code null} and its
+   *     shape is not compatible with {@code predictions}.
    */
   // TODO should this be moved to FramnworkOps under math.
   public static <T extends TNumber> Operand<T> confusionMatrix(
@@ -879,8 +878,8 @@ public class MetricsHelper {
   }
 
   /**
-   * Calculate the mean of the operand, along all axes and <code>keepDims</code> is <code>false
-   * </code>
+   * Calculate the mean of the operand, along all axes and {@code keepDims} is {@code false
+   * }
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
@@ -891,8 +890,8 @@ public class MetricsHelper {
   }
 
   /**
-   * Calculate the mean of the operand, alongside the specified axis with <code>keepDims</code> is
-   * <code>false</code>
+   * Calculate the mean of the operand, alongside the specified axis with {@code keepDims} is
+   * {@code false}
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
@@ -909,11 +908,11 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param x the boolean Operand used to calculate the mean
-   * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
-   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
-   *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is
+   *     {@code false}, the rank of the tensor is reduced by 1 for each entry in {@code axes
+   *     }. If {@code keepdims} is {@code true}, the reduced dimensions are retained
    *     with length 1.
-   * @return the mean of elements of <code>x</code> containing floating point numbers
+   * @return the mean of elements of {@code x} containing floating point numbers
    */
   public static Operand<TFloat64> booleanMean(Ops tf, Operand<TBool> x, boolean keepDims) {
     return booleanMean(tf, x, null, keepDims);
@@ -925,11 +924,11 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param x the boolean Operand used to calculate the mean
    * @param axes Axes to compute the mean.
-   * @param keepDims Indicates whether to keep the dimensions or not. If <code>keepdims</code> is
-   *     <code>false</code>, the rank of the tensor is reduced by 1 for each entry in <code>axes
-   *     </code>. If <code>keepdims</code> is <code>true</code>, the reduced dimensions are retained
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is
+   *     {@code false}, the rank of the tensor is reduced by 1 for each entry in {@code axes
+   *     }. If {@code keepdims} is {@code true}, the reduced dimensions are retained
    *     with length 1.
-   * @return the mean of elements of <code>x</code> containing floating point numbers
+   * @return the mean of elements of {@code x} containing floating point numbers
    */
   public static Operand<TFloat64> booleanMean(
       Ops tf, Operand<TBool> x, Operand<? extends TIntegral> axes, boolean keepDims) {

@@ -28,12 +28,12 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Computes the mean relative error by normalizing with the given values.
  *
- * <p>This metric creates two local variables, <code>total</code> and <code>count</code> that are
- * used to compute the mean relative error. This is weighted by <code>sampleWeight</code>, and it is
+ * <p>This metric creates two local variables, {@code total} and {@code count} that are
+ * used to compute the mean relative error. This is weighted by {@code sampleWeight}, and it is
  * ultimately returned as mean relative error: an idempotent operation that simply divides total by
  * count.
  *
- * <p>If {@code sampleWeight} is <code>null</code>, weights default to 1. Use {@code sampleWeight}
+ * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use {@code sampleWeight}
  * of 0 to mask values.
  *
  * @param <T> The data type for the metric result

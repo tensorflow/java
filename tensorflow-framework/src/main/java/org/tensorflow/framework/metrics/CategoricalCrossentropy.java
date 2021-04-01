@@ -28,9 +28,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * labels.
  *
  * <p>This is the crossentropy metric class to be used when there are multiple label classes (2 or
- * more). The labels should be given as a one_hot representation. eg., When labels values are <code>
- * [2, 0, 1]</code>, the labels Operand contains = <code>[[0, 0, 1], [1, 0, 0], [0, 1, 0]]
- * </code>.
+ * more). The labels should be given as a one_hot representation. eg., When labels values are {@code
+ * [2, 0, 1]}, the labels Operand contains = {@code [[0, 0, 1], [1, 0, 0], [0, 1, 0]]
+ * }.
  *
  * @param <T> The data type for the metric result
  */
@@ -52,9 +52,9 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
    * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to
    *     a probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code>
-   *     means that we will use a value of <code>0.1</code> for label <code>0</code> and <code>0.9
-   *     </code> for label <code>1</code>
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2}
+   *     means that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9
+   *     } for label {@code 1}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
@@ -73,13 +73,13 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
    *     probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2</code>
-   *     means that we will use a value of <code>0.1</code> for label <code>0</code> and <code>0.9
-   *     </code> for label <code>1</code>
-   * @param axis Int specifying the channels axis. <code>axis={@link Losses#CHANNELS_LAST}</code>
-   *     corresponds to data format <code>channels_last</code>, and <code>
-   *     axis={@link Losses#CHANNELS_FIRST}</code> corresponds to data format <code>
-   *     channels_first</code>.
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2}
+   *     means that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9
+   *     } for label {@code 1}
+   * @param axis Int specifying the channels axis. {@code axis={@link Losses#CHANNELS_LAST}}
+   *     corresponds to data format {@code channels_last}, and {@code
+   *     axis={@link Losses#CHANNELS_FIRST}} corresponds to data format {@code
+   *     channels_first}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result

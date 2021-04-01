@@ -22,12 +22,12 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Metric that calculates the number of true negatives.
  *
- * <p>If <code>sampleWeights</code> is given, calculates the sum of the weights of true negatives.
- * This metric creates one local variable, <code>accumulator</code> that is used to keep track of
+ * <p>If {@code sampleWeights} is given, calculates the sum of the weights of true negatives.
+ * This metric creates one local variable, {@code accumulator} that is used to keep track of
  * the number of true negatives.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use <code>
- * sampleWeights</code> of 0 to mask values.
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use {@code
+ * sampleWeights} of 0 to mask values.
  *
  * @param <T> The data type for the metric result
  */
@@ -50,9 +50,9 @@ public class TrueNegatives<T extends TNumber> extends ConfusionMatrixConditionCo
    * Creates a TrueNegatives metric, using {@link Class#getSimpleName()} for the metric name
    *
    * @param tf the TensorFlow Ops
-   * @param threshold a threshold value in the range <code>[0, 1]</code>. A threshold is compared
+   * @param threshold a threshold value in the range {@code [0, 1]}. A threshold is compared
    *     with prediction values to determine the truth value of predictions (i.e., above the
-   *     threshold is <code>true</code>, below is <code>false</code>). One metric value is generated
+   *     threshold is {@code true}, below is {@code false}). One metric value is generated
    *     for each threshold value
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -66,9 +66,9 @@ public class TrueNegatives<T extends TNumber> extends ConfusionMatrixConditionCo
    * Creates a TrueNegatives metric, using {@link Class#getSimpleName()} for the metric name
    *
    * @param tf the TensorFlow Ops
-   * @param thresholds threshold values in the range <code>[0, 1]</code>. A threshold is compared
+   * @param thresholds threshold values in the range {@code [0, 1]}. A threshold is compared
    *     with prediction values to determine the truth value of predictions (i.e., above the
-   *     threshold is <code>true</code>, below is <code>false</code>). One metric value is generated
+   *     threshold is {@code true}, below is {@code false}). One metric value is generated
    *     for each threshold value
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -96,9 +96,9 @@ public class TrueNegatives<T extends TNumber> extends ConfusionMatrixConditionCo
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
-   * @param threshold a threshold value in the range <code>[0, 1]</code>. A threshold is compared
+   * @param threshold a threshold value in the range {@code [0, 1]}. A threshold is compared
    *     with prediction values to determine the truth value of predictions (i.e., above the
-   *     threshold is <code>true</code>, below is <code>false</code>). One metric value is generated
+   *     threshold is {@code true}, below is {@code false}). One metric value is generated
    *     for each threshold value
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -113,9 +113,9 @@ public class TrueNegatives<T extends TNumber> extends ConfusionMatrixConditionCo
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
-   * @param thresholds threshold values in the range <code>[0, 1]</code>. A threshold is compared
+   * @param thresholds threshold values in the range {@code [0, 1]}. A threshold is compared
    *     with prediction values to determine the truth value of predictions (i.e., above the
-   *     threshold is <code>true</code>, below is <code>false</code>). One metric value is generated
+   *     threshold is {@code true}, below is {@code false}). One metric value is generated
    *     for each threshold value
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.

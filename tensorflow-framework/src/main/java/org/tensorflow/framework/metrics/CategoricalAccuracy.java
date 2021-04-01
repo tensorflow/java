@@ -27,18 +27,18 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Metric that calculates how often predictions matches one-hot labels.
  *
- * <p>You can provide <code>logits</code> of classes as <code>predictions</code>, since argmax of
- * <code>logits</code> and probabilities are same.
+ * <p>You can provide {@code logits} of classes as {@code predictions}, since argmax of
+ * {@code logits} and probabilities are same.
  *
- * <p>This metric creates two local variables, <code>total</code> and <code>count</code> that are
- * used to compute the frequency with which <code>predictions</code> matches <code>labels</code>.
+ * <p>This metric creates two local variables, {@code total} and {@code count} that are
+ * used to compute the frequency with which {@code predictions} matches {@code labels}.
  * This frequency is ultimately returned as categorical accuracy: an idempotent operation that
  * simply divides total by count.
  *
- * <p><code>predictions</code> and <code>labels</code> should be passed in as vectors of
+ * <p>{@code predictions} and {@code labels} should be passed in as vectors of
  * probabilities, rather than as labels. If necessary, use {@link
  * org.tensorflow.op.Ops#oneHot(Operand, Operand, Operand, Operand, OneHot.Options...)} to expand
- * <code>labels</code> as a vector.
+ * {@code labels} as a vector.
  *
  * <p>If sample_weight is None, weights default to 1. Use sample_weight of 0 to mask values.
  *
@@ -77,7 +77,7 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * Computes the categorical crossentropy loss.
    *
    * <p>{@code predictions} and {@code labels} should be passed in as vectors of probabilities,
-   * rather than as labels. If necessary, use {@line Ops#oneHot} to expand {@code labels} as a
+   * rather than as labels. If necessary, use {@link Ops#oneHot} to expand {@code labels} as a
    * vector.
    *
    * @param labels One-hot ground truth values.

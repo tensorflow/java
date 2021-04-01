@@ -31,11 +31,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Calculates how often predictions matches integer labels.
  *
- * <p>You can provide logits of classes as <code>predictions</code>, since argmax of logits and
+ * <p>You can provide logits of classes as {@code predictions}, since argmax of logits and
  * probabilities are same.
  *
  * <p>This metric creates two local variables, `total` and `count` that are used to compute the
- * frequency with which <code>predictions</code> matches <code>labels</code>. This frequency is
+ * frequency with which {@code predictions} matches {@code labels}. This frequency is
  * ultimately returned as `sparse categorical accuracy`: an idempotent operation that simply divides
  * `total` by `count`.
  *

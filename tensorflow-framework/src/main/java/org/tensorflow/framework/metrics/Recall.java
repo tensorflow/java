@@ -36,20 +36,20 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Computes the recall of the predictions with respect to the labels.
  *
- * <p>This metric creates two local variables, <code>truePositives</code> and <code>falseNegatives
- * </code>, that are used to compute the recall. This value is ultimately returned as recall, an
- * idempotent operation that simply divides <code>truePositives</code> by the sum of <code>
- * truePositives</code> and <code>falseNegatives</code>.
+ * <p>This metric creates two local variables, {@code truePositives} and {@code falseNegatives
+ * }, that are used to compute the recall. This value is ultimately returned as recall, an
+ * idempotent operation that simply divides {@code truePositives} by the sum of {@code
+ * truePositives} and {@code falseNegatives}.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sampleWeights of
  * 0 to mask values.
  *
- * <p>If <code>topK</code> is set, the metric calculates recall as how often on average a class
+ * <p>If {@code topK} is set, the metric calculates recall as how often on average a class
  * among the labels of a batch entry is in the top-k predictions.
  *
- * <p>If <code>classId</code> is specified, the metric calculates recall by considering only the
- * entries in the batch for which <code>classId</code> is in the label, and computing the fraction
- * of them for which <code>classId</code> is above the threshold and/or in the top-k predictions.
+ * <p>If {@code classId} is specified, the metric calculates recall by considering only the
+ * entries in the batch for which {@code classId} is in the label, and computing the fraction
+ * of them for which {@code classId} is above the threshold and/or in the top-k predictions.
  *
  * @param <T> The data type for the metric result
  */

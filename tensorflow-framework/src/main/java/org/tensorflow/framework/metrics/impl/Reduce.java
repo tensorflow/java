@@ -106,8 +106,8 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Updates the metric variables based on the inputs. At least one input arg required for {@}code
-   * values}, an optional additional input for the <code>sampleWeights</code>
+   * Updates the metric variables based on the inputs. At least one input arg required for {@code
+   * values}, an optional additional input for the {@code sampleWeights}
    *
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, will default to 1 if null.

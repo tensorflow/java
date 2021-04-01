@@ -25,7 +25,7 @@ import org.tensorflow.types.family.TNumber;
 public interface LossMetric<T extends TNumber> {
 
   /**
-   * Calculates the weighted loss between <code>labels</code> and <code>predictions</code>
+   * Calculates the weighted loss between {@code labels} and {@code predictions}
    *
    * @param labels the truth values or labels
    * @param predictions the predictions

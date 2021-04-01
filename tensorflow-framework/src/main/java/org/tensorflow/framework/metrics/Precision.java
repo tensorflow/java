@@ -36,22 +36,22 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Computes the precision of the predictions with respect to the labels.
  *
- * <p>The metric creates two local variables, <code>truePositives</code> and <code>falsePositives
- * </code> that are used to compute the precision. This value is ultimately returned as precision,
- * an idempotent operation that simply divides <code>truePositives</code> by the sum of <code>
- * truePositives</code> and <code>falsePositives</code>.
+ * <p>The metric creates two local variables, {@code truePositives} and {@code falsePositives
+ * } that are used to compute the precision. This value is ultimately returned as precision,
+ * an idempotent operation that simply divides {@code truePositives} by the sum of {@code
+ * truePositives} and {@code falsePositives}.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sampleWeights of
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sampleWeights of
  * 0 to mask values.
  *
- * <p>If <code>topK</code> is set, the metric calculates precision as how often on average a class
+ * <p>If {@code topK} is set, the metric calculates precision as how often on average a class
  * among the top-k classes with the highest predicted values of a batch entry is correct and can be
  * found in the label for that entry.
  *
- * <p>If <code>classId</code> is specified, the metric calculates precision by considering only the
- * entries in the batch for which <code>classId</code> is above the <code>thresholds</code> and/or
- * in the top-k highest predictions, and computing the fraction of them for which <code>classId
- * </code> is indeed a correct label.
+ * <p>If {@code classId} is specified, the metric calculates precision by considering only the
+ * entries in the batch for which {@code classId} is above the {@code thresholds} and/or
+ * in the top-k highest predictions, and computing the fraction of them for which {@code classId
+ * } is indeed a correct label.
  *
  * @param <T> The data type for the metric result
  */
@@ -103,7 +103,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * values.
    *
    * @param tf the TensorFlow Ops
-   * @param threshold Optional threshold value in the range <code>[0, 1]</code>. A threshold is
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -120,7 +120,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * values.
    *
    * @param tf the TensorFlow Ops
-   * @param thresholds Optional threshold values in the range <code>[0, 1]</code>. A threshold is
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -138,7 +138,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
    *     Class#getSimpleName()}.
-   * @param threshold Optional threshold value in the range <code>[0, 1]</code>. A threshold is
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -156,7 +156,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
    *     Class#getSimpleName()}.
-   * @param thresholds Optional threshold values in the range <code>[0, 1]</code>. A threshold is
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -172,7 +172,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * Creates a Precision Metric with a name of {@link Class#getSimpleName()}
    *
    * @param tf the TensorFlow Ops
-   * @param threshold Optional threshold value in the range <code>[0, 1]</code>. A threshold is
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -193,7 +193,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * Creates a Precision Metric with a name of {@link Class#getSimpleName()}
    *
    * @param tf the TensorFlow Ops
-   * @param thresholds Optional threshold values in the range <code>[0, 1]</code>. A threshold is
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -216,7 +216,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
    *     Class#getSimpleName()}.
-   * @param threshold Optional threshold value in the range <code>[0, 1]</code>. A threshold is
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
@@ -245,7 +245,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
    * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
    *     Class#getSimpleName()}.
-   * @param thresholds Optional threshold values in the range <code>[0, 1]</code>. A threshold is
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
    *     compared with prediction values to determine the truth value of predictions (i.e., above
    *     the threshold is true, below is false). One metric value is generated for each threshold
    *     value.
