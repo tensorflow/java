@@ -792,10 +792,10 @@ public class AUC<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Gets an operand that determines whether the input consists of each value is greater than 0.
+   * Gets the truth value of whether {@code input > 0}, element-wise.
    *
    * @param input the input
-   * @return an operand that determines whether the input consists of all values greater than 0.
+   * @return  the truth value of whether {@code input > 0}, element-wise.
    */
   private Operand<TBool> isPositive(Operand<T> input) {
     return getTF().math.greater(input, cast(getTF(), getTF().constant(0), input.type()));
@@ -864,23 +864,25 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> dTP = tf.math.sub(tp0, tp1);
 
     Operand<T> p = tf.math.add(truePositives, falsePositives);
+    Operand<T> p0= slice(p, 0, getNumThresholds() - 1);
+    Operand<T> p1= slice(p, 1, -1);
 
-    Operand<T> dP = tf.math.sub(slice(p, 0, getNumThresholds() - 1), slice(p, 1, -1));
+    Operand<T> dP = tf.math.sub(p0,p1);
 
     Operand<T> precisionSlope =
         tf.math.divNoNan(dTP, positive(dP));
 
     Operand<T> intercept =
-        tf.math.sub(slice(truePositives, 1, -1), tf.math.mul(precisionSlope, slice(p, 1, -1)));
+        tf.math.sub(tp1, tf.math.mul(precisionSlope, p1));
 
     Operand<T> safePRatio =
         tf.select(
             tf.math.logicalAnd(
-                isPositive(slice(p, 0, getNumThresholds() - 1)), isPositive(slice(p, 1, -1))),
+                isPositive(p0), isPositive(p1)),
             tf.math.divNoNan(
-                slice(p, 0, getNumThresholds() - 1),
-                positive(slice(p, 1, -1))),
-            tf.onesLike(slice(p, 1, -1)));
+                p0,
+                positive(p1)),
+            tf.onesLike(p1));
 
     Operand<T> fn1 = slice(falseNegatives, 1, -1);
 

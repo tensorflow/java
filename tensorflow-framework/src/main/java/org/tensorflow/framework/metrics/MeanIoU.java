@@ -124,13 +124,17 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
       Operand<? extends TNumber> sampleWeights) {
 
     Operand<T> tLabels = cast(getTF(), labels, type);
-    if (tLabels.shape().numDimensions() > 1) tLabels = getTF().shape.flatten(tLabels);
+    if (tLabels.shape().numDimensions() > 1) {
+      tLabels = getTF().shape.flatten(tLabels);
+    }
     Operand<T> tPredictions = cast(getTF(), predictions, type);
-    if (tPredictions.shape().numDimensions() > 1)
+    if (tPredictions.shape().numDimensions() > 1) {
       tPredictions = getTF().shape.flatten(tPredictions);
+      }
     Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
-    if (tSampleWeights != null && tSampleWeights.shape().numDimensions() > 1)
+    if (tSampleWeights != null && tSampleWeights.shape().numDimensions() > 1) {
       tSampleWeights = getTF().shape.flatten(tSampleWeights);
+      }
 
     Operand<T> currentCM =
         MetricsHelper.confusionMatrix(
@@ -149,6 +153,10 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
             totalConfusionMatrix,
             tf.constant(0),
             cast(tf, tf.constant(0), totalConfusionMatrix.type()));
+    // for each class, the total predictions + total labels - true positives
+    // Observe that total predictions = tp + fp
+    //              total labels = tp + fn
+    // So this is 2*tp + fp + fn - tp = tp + fp + fn
     Operand<T> denominator = tf.math.add(sumOverRow, tf.math.sub(sumOverCol, truePositives));
     Operand<T> numValidEntries =
         tf.reduceSum(
