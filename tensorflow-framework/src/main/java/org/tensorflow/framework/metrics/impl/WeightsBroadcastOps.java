@@ -151,17 +151,17 @@ public class WeightsBroadcastOps {
   /**
    * Broadcast `weights` to the same shape as `values`.
    *
-   * <p>This returns a version of <code>weights</code> following the same broadcast rules as <code>
+   * <p>This returns a version of {@code weights} following the same broadcast rules as {@code
    * mul(weights,
-   * values)</code>, but limited to the weights shapes allowed by <code>assertBroadcastable</code>
-   * When computing a weighted average, use this function to broadcast <code>weights</code> before
-   * summing them; e.g., <code>reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))</code>.
+   * values)}, but limited to the weights shapes allowed by {@code assertBroadcastable}
+   * When computing a weighted average, use this function to broadcast {@code weights} before
+   * summing them; e.g., {@code reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))}.
    *
    * @param tf the TensorFlow ops
    * @param weights `Tensor` whose shape is able to be broadcast to `values`
    * @param values Tensor` of any shape
    * @param <T> the type of Operand
-   * @return <code>weights</code> broadcast to <code>values</code> shape
+   * @return {@code weights} broadcast to {@code values} shape
    */
   public static <T extends TNumber> Operand<T> broadcastWeights(
       Ops tf, Operand<T> weights, Operand<T> values) {

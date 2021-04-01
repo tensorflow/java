@@ -27,7 +27,7 @@ import java.util.List;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
- * Computes root mean squared error metric between <code>labels</code> and <code>predictions</code>
+ * Computes root mean squared error metric between {@code labels} and {@code predictions}
  * .
  *
  * @param <T> The data type for the metric result

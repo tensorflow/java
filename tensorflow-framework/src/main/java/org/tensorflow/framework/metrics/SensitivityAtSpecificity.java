@@ -25,18 +25,18 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Computes best sensitivity where sensitivity is &gt;= specified value.
  *
- * <p><code>Sensitivity</code> measures the proportion of actual positives that are correctly
- * identified as such <code>(tp / (tp + fn))</code>.
+ * <p>{@code Sensitivity} measures the proportion of actual positives that are correctly
+ * identified as such {@code (tp / (tp + fn))}.
  *
- * <p><code>Specificity</code> measures the proportion of actual negatives that are correctly
- * identified as such <code>(tn / (tn + fp))</code>.
+ * <p>{@code Specificity} measures the proportion of actual negatives that are correctly
+ * identified as such {@code (tn / (tn + fp))}.
  *
- * <p>This metric creates four local variables, <code>truePositives</code>, <code>trueNegatives
- * </code>, <code>falsePositives</code> and <code>falseNegatives</code> that are used to compute the
+ * <p>This metric creates four local variables, {@code truePositives}, {@code trueNegatives
+ * }, {@code falsePositives} and {@code falseNegatives} that are used to compute the
  * sensitivity at the given specificity. The threshold for the given specificity value is computed
  * and used to evaluate the corresponding sensitivity.
  *
- * <p>If <code>sampleWeights</code> is <code>null</code>, weights default to 1. Use sample_weight of
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sample_weight of
  * 0 to mask values.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Additional information

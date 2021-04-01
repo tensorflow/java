@@ -26,11 +26,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * Metric that calculates how often predictions matches binary labels.
  *
  * <p>This metric creates two local variables, total and count that are used to compute the
- * frequency with which <code>predictions</code> matches <code>labels</code>. This frequency is
+ * frequency with which {@code predictions} matches {@code labels}. This frequency is
  * ultimately returned as binary accuracy: an idempotent operation that simply divides total by
  * count.
  *
- * <p>If sampleWeights is <code>null</code>, weights default to 1. Use sampleWeights of 0 to mask
+ * <p>If sampleWeights is {@code null}, weights default to 1. Use sampleWeights of 0 to mask
  * values.
  *
  * @param <T> The data type for the metric result

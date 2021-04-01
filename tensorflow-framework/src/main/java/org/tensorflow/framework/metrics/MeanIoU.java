@@ -35,11 +35,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <p>Mean Intersection-Over-Union is a common evaluation metric for semantic image segmentation,
  * which first computes the IOU for each semantic class and then computes the average over classes.
- * IOU is defined as follows: <code>IOU = true_positive
- * / (true_positive + false_positive + false_negative)</code>. The predictions are accumulated in a
+ * IOU is defined as follows: {@code IOU = true_positive
+ * / (true_positive + false_positive + false_negative)}. The predictions are accumulated in a
  * confusion matrix, weighted by sample_weight and the metric is then calculated from it.
  *
- * <p>If <code>sampleWeight</code> is <code>null</code>, weights default to 1. Use sample_weight of
+ * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use sample_weight of
  * 0 to mask values.
  *
  * @param <T> The data type for the metric result
