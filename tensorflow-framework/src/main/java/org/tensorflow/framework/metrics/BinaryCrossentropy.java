@@ -60,7 +60,14 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
     this.labelSmoothing = labelSmoothing;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the binary crossentropy loss between labels and predictions.
+   *
+   * @param labels the truth values or labels, has the same shape as predictions and shape = {@code
+   *     [batch_size, d0, .. dN]}.
+   * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @return Binary crossentropy loss value. shape = {@code [batch_size, d0, .. dN-1]}.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

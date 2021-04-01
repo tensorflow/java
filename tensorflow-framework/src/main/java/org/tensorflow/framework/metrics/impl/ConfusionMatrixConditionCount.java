@@ -114,6 +114,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
     init();
   }
 
+  /** Initialize the metric */
   private void init() {
     Shape variableShape = Shape.of(this.thresholds.length);
 
@@ -134,7 +135,15 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
     return initializer;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates the metric statistics.
+   *
+   * @param labels The ground truth values.
+   * @param predictions the predictions
+   * @param sampleWeights Optional weighting of each example. Defaults to 1. Rank is either 0, or
+   *     the same rank as labels, and must be broadcastable to labels.
+   * @return a List of Operations to update the metric state.
+   */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> labels,

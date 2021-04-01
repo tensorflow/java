@@ -45,7 +45,13 @@ public class MeanAbsolutePercentageError<T extends TNumber> extends MeanMetricWr
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the mean absolute percentage error loss between labels and predictions.
+   *
+   * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
+   * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @return Mean absolute percentage error values, shape = {@code [batch_size, d0, .. dN-1]}.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

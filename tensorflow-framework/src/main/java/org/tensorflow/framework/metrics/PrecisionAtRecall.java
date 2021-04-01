@@ -110,6 +110,7 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
     this.recall = recall;
   }
 
+  /** {@inheritDoc} */
   @Override
   public Operand<T> result() {
     Ops tf = getTF();

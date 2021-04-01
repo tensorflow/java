@@ -19,6 +19,7 @@ import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.framework.metrics.impl.MetricsHelper;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
@@ -65,7 +66,15 @@ public class Accuracy<T extends TNumber> extends MeanMetricWrapper<T> implements
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Calculates how often predictions equals labels. {@code labels} and {@code predictions} must
+   * have compatible shapes, see {@link Shape @isCompatibleWith}.
+   *
+   * @param labels the truth values or labels
+   * @param predictions the predictions
+   * @throws IllegalArgumentException if predictions and labels shapes are not compatible.
+   * @return the loss
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

@@ -26,6 +26,19 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * A metric that computes the mean of absolute difference between labels and predictions.
  *
+ * <p>The {@code MeanSquaredError} class creates two local variables, {@code total} and {@code
+ * count} that are used to compute the mean squared error. This average is weighted by {@code
+ * weights}, and it is ultimately returned as the mean squared error: an idempotent operation that
+ * simply divides {@code total} by {@code count}.
+ *
+ * <p>For estimation of the metric over a stream of data, the function creates an update operation
+ * that updates these variables. Internally, a squared error operation computes the element-wise
+ * square of the difference between {@code predictions} and {@code labels}. Then the update
+ * operation increments {@code total} with the reduced sum of the product of {@code weights} and the
+ * squared error, and it increments {@code count} with the reduced sum of {@code weights}.
+ *
+ * <p>If {@code weights} is null, weights default to 1. Use weights of 0 to mask values.
+ *
  * @param <T> The data type for the metric result.
  */
 public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
@@ -45,7 +58,13 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the mean squared error between the labels and predictions.
+   *
+   * @param labels the truth values or labels. Must be the same shape as predictions.
+   * @param predictions the predictions
+   * @return Computes the mean squared error between the labels and predictions.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

@@ -60,7 +60,15 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
     super(tf, name, seed, type);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates root mean squared error statistics.
+   *
+   * @param labels the labels
+   * @param predictions the predictions
+   * @param sampleWeights Optional weighting of each example. Defaults to 1. Rank is either 0, or *
+   *     the same rank as labels, and must be broadcastable to labels.
+   * @return a List of Operations to update the metric state.
+   */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> labels,

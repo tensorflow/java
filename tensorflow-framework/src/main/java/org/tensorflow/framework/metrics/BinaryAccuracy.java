@@ -85,7 +85,13 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Calculates how often predictions match binary labels.
+   *
+   * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
+   * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @return Binary accuracy values. shape = {@code [batch_size, d0, .. dN-1]}
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

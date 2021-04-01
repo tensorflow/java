@@ -92,12 +92,14 @@ public class Metrics {
     Operand<TFloat32> castPredictions = cast(tf, predictions, TFloat32.class);
     if (predictionsRank != Shape.UNKNOWN_SIZE && labelsRank != Shape.UNKNOWN_SIZE) {
       if (predictionsRank > 2) {
-        //y_pred = array_ops.reshape(y_pred, [-1, y_pred.shape[-1]])
-        castPredictions = tf.reshape(castPredictions,
+        // y_pred = array_ops.reshape(y_pred, [-1, y_pred.shape[-1]])
+        castPredictions =
+            tf.reshape(
+                castPredictions,
                 tf.constant(castPredictions.shape().takeLast(1).prepend(Shape.UNKNOWN_SIZE)));
       }
       if (labelsRank > 1) {
-        //y_true = array_ops.reshape(y_true, [-1])
+        // y_true = array_ops.reshape(y_true, [-1])
         tLabels = tf.reshape(tLabels, tf.constant(Shape.of(Shape.UNKNOWN_SIZE)));
       }
     }

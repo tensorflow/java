@@ -715,11 +715,11 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param labels shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more class
    *     dimensions, and L1 is a potential extra dimension of size 1 that would be squeezed. Will be
-   *     cast to <code>T</code>. If {@link #multiLabel} or if {@link #labelWeights} <code>!= null
+   *     cast to {@code <T>}. If {@link #multiLabel} or if {@link #labelWeights} <code>!= null
    *     </code>, then Cx must be a single dimension.
    * @param predictions the predictions shape (N, Cx, P1?). Will be cast to <code>T</code>.
    * @param sampleWeights sample weights to be applied to values, may be null. Will be cast to
-   *     <code>T</code>.
+   *     {@code <T>}.
    * @return a List of Operations to update the metric state
    */
   @Override
@@ -795,7 +795,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * Gets the truth value of whether {@code input > 0}, element-wise.
    *
    * @param input the input
-   * @return  the truth value of whether {@code input > 0}, element-wise.
+   * @return the truth value of whether {@code input > 0}, element-wise.
    */
   private Operand<TBool> isPositive(Operand<T> input) {
     return getTF().math.greater(input, cast(getTF(), getTF().constant(0), input.type()));
@@ -818,41 +818,52 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * Interpolation formula inspired by section 4 of Davis & Goadrich 2006.
    *
    * <p>Note here we derive & use a closed formula not present in the paper as follows:
+   *
    * <pre>
    *     Precision = TP / (TP + FP) = TP / P
    * </pre>
-   * <p>Modeling all of TP (true positive), FP (false positive) and their sum
-   *     P = TP + FP (predicted positive) as varying linearly within each interval
-   *     [A, B] between successive thresholds, we get</p>
+   *
+   * <p>Modeling all of TP (true positive), FP (false positive) and their sum P = TP + FP (predicted
+   * positive) as varying linearly within each interval [A, B] between successive thresholds, we get
+   *
    * <pre>
    *     Precision slope = dTP / dP
    *                     = (TP_B - TP_A) / (P_B - P_A)
    *                     = (TP - TP_A) / (P - P_A)
    *     Precision = (TP_A + slope * (P - P_A)) / P
    * </pre>
+   *
    * <p>The area within the interval is (slope / total_pos_weight) times
+   *
    * <pre>
    *       int_A^B{Precision.dP} = int_A^B{(TP_A + slope * (P - P_A)) * dP / P}
    *       int_A^B{Precision.dP} = int_A^B{slope * dP + intercept * dP / P}
    * </pre>
-   *     where intercept = TP_A - slope * P_A = TP_B - slope * P_B, resulting in
+   *
+   * where intercept = TP_A - slope * P_A = TP_B - slope * P_B, resulting in
+   *
    * <pre>
    *       int_A^B{Precision.dP} = TP_B - TP_A + intercept * log(P_B / P_A)
    * </pre>
-   *     Bringing back the factor (slope / total_pos_weight) we'd put aside, we get
+   *
+   * Bringing back the factor (slope / total_pos_weight) we'd put aside, we get
+   *
    * <pre>
    *       slope * [dTP + intercept *  log(P_B / P_A)] / total_pos_weight
    * </pre>
-   *     where dTP == TP_B - TP_A.
-   *     Note that when P_A == 0 the above calculation simplifies into
+   *
+   * where dTP == TP_B - TP_A. Note that when P_A == 0 the above calculation simplifies into
+   *
    * <pre>
    *       int_A^B{Precision.dTP} = int_A^B{slope * dTP} = slope * (TP_B - TP_A)
    * </pre>
-   *     which is really equivalent to imputing constant precision throughout the
-   *     first bucket having >0 true positives.
+   *
+   * which is really equivalent to imputing constant precision throughout the first bucket having >0
+   * true positives.
    *
    * @return an approximation of the area under the P-R curve.
-   * @see <a href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The Relationship Between Precision-Recall and ROC Curves - Davis & Goadrich 2006</a>
+   * @see <a href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The Relationship Between
+   *     Precision-Recall and ROC Curves - Davis & Goadrich 2006</a>
    */
   private Operand<T> interpolatePRAuc() {
     // truePositives[:self.numThresholds - 1]
@@ -864,24 +875,19 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> dTP = tf.math.sub(tp0, tp1);
 
     Operand<T> p = tf.math.add(truePositives, falsePositives);
-    Operand<T> p0= slice(p, 0, getNumThresholds() - 1);
-    Operand<T> p1= slice(p, 1, -1);
+    Operand<T> p0 = slice(p, 0, getNumThresholds() - 1);
+    Operand<T> p1 = slice(p, 1, -1);
 
-    Operand<T> dP = tf.math.sub(p0,p1);
+    Operand<T> dP = tf.math.sub(p0, p1);
 
-    Operand<T> precisionSlope =
-        tf.math.divNoNan(dTP, positive(dP));
+    Operand<T> precisionSlope = tf.math.divNoNan(dTP, positive(dP));
 
-    Operand<T> intercept =
-        tf.math.sub(tp1, tf.math.mul(precisionSlope, p1));
+    Operand<T> intercept = tf.math.sub(tp1, tf.math.mul(precisionSlope, p1));
 
     Operand<T> safePRatio =
         tf.select(
-            tf.math.logicalAnd(
-                isPositive(p0), isPositive(p1)),
-            tf.math.divNoNan(
-                p0,
-                positive(p1)),
+            tf.math.logicalAnd(isPositive(p0), isPositive(p1)),
+            tf.math.divNoNan(p0, positive(p1)),
             tf.onesLike(p1));
 
     Operand<T> fn1 = slice(falseNegatives, 1, -1);
@@ -890,15 +896,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
         tf.math.mul(
             precisionSlope, tf.math.add(dTP, tf.math.mul(intercept, tf.math.log(safePRatio))));
 
-    Operand<T> prAucIncrement =
-        tf.math.divNoNan(
-            aucTotalPos,
-            positive(tf.math.add(tp1, fn1)));
+    Operand<T> prAucIncrement = tf.math.divNoNan(aucTotalPos, positive(tf.math.add(tp1, fn1)));
 
     if (isMultiLabel()) {
       Operand<T> byLabelAuc = tf.reduceSum(prAucIncrement, tf.constant(0));
       if (getLabelWeights() == null) {
-        //Evenly weighted average of the label AUCs.
+        // Evenly weighted average of the label AUCs.
         return MetricsHelper.mean(tf, byLabelAuc);
       } else {
         // Weighted average of the label AUCs.
@@ -943,7 +946,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
     // y[1:]
     Operand<T> ySlice2 = slice(y, 1, -1);
 
-
     Operand<T> heights;
     switch (getSummationMethod()) {
       case INTERPOLATION:
@@ -956,16 +958,13 @@ public class AUC<T extends TNumber> extends Metric<T> {
         heights = tf.math.maximum(ySlice1, ySlice2);
         break;
       default:
-        throw new IllegalArgumentException("Unexpected AUCSummationMethod value: " + getSummationMethod());
+        throw new IllegalArgumentException(
+            "Unexpected AUCSummationMethod value: " + getSummationMethod());
     }
 
     if (isMultiLabel()) {
       Operand<T> riemannTerms =
-          tf.math.mul(
-              tf.math.sub(
-                      slice(x, 0, getNumThresholds() - 1),
-                      slice(x, 1, -1)),
-              heights);
+          tf.math.mul(tf.math.sub(slice(x, 0, getNumThresholds() - 1), slice(x, 1, -1)), heights);
       Operand<T> byLabelAuc = tf.reduceSum(riemannTerms, tf.constant(0));
 
       if (getLabelWeights() == null) {
@@ -979,7 +978,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       }
 
     } else {
-      Operand<T> slice1 = slice(x,0, getNumThresholds() - 1);
+      Operand<T> slice1 = slice(x, 0, getNumThresholds() - 1);
       Operand<T> slice2 = slice(x, 1, -1);
       Operand<T> sub = tf.math.sub(slice1, slice2);
       Operand<T> operand = tf.math.mul(sub, heights);

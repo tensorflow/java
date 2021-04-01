@@ -25,7 +25,10 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the sparse categorical cross-entropy loss between true labels and
- * predicted labels. \
+ * predicted labels.
+ *
+ * <p>You can provide logits of classes as predictions, since argmax of logits and probabilities are
+ * same.
  *
  * @param <T> The data type for the metric result.
  */
@@ -55,7 +58,13 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
     this.axis = axis;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Calculates how often predictions matches integer labels.
+   *
+   * @param labels Integer ground truth values.
+   * @param predictions the predictions
+   * @return Sparse categorical accuracy values.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

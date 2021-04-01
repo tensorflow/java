@@ -27,8 +27,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Metric that calculates how often predictions matches one-hot labels.
  *
- * <p>You can provide <code>logits</code> of classes as <code>predictions</code>, since argmax
- * of <code>logits</code> and probabilities are same.
+ * <p>You can provide <code>logits</code> of classes as <code>predictions</code>, since argmax of
+ * <code>logits</code> and probabilities are same.
  *
  * <p>This metric creates two local variables, <code>total</code> and <code>count</code> that are
  * used to compute the frequency with which <code>predictions</code> matches <code>labels</code>.
@@ -73,7 +73,17 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
     super.setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the categorical crossentropy loss.
+   *
+   * <p>{@code predictions} and {@code labels} should be passed in as vectors of probabilities,
+   * rather than as labels. If necessary, use {@line Ops#oneHot} to expand {@code labels} as a
+   * vector.
+   *
+   * @param labels One-hot ground truth values.
+   * @param predictions tThe prediction values.
+   * @return Categorical accuracy values.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
