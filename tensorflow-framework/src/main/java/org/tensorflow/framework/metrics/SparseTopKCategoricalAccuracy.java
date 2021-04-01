@@ -22,7 +22,10 @@ import org.tensorflow.types.family.TNumber;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-/** @param <T> The data type for the metric result */
+/**
+ * Computes how often integer targets are in the top `K` predictions.
+ * @param <T> The data type for the metric result
+ * */
 public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
   public static final int DEFAULT_K = 5;
@@ -30,8 +33,7 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
   private final int k;
 
   /**
-   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for <code>k</code>, Number of
-   * top elements to look at for computing accuracy.
+   * Creates a SparseTopKCategoricalAccuracy metric using {@link #DEFAULT_K} for the number of top elements.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -44,7 +46,7 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
   }
 
   /**
-   * Creates a TopKCategoricalAccuracy metric
+   * Creates a SparseTopKCategoricalAccuracy metric.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
