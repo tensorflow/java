@@ -33,8 +33,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * ultimately returned as mean relative error: an idempotent operation that simply divides total by
  * count.
  *
- * <p>If <code>sampleWeight</code> is <code>null</code>, weights default to 1. Use sample_weight of
- * 0 to mask * values.
+ * <p>If {@code sampleWeight} is <code>null</code>, weights default to 1. Use  {@code sampleWeight} of
+ * 0 to mask values.
  *
  * @param <T> The data type for the metric result
  */
@@ -124,27 +124,29 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
     this.normalizer = normalizer;
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Accumulates metric statistics.
+   *
+   * @param labels The ground truth values.
+   * @param predictions The predicted values. Must be the same shape as the normalizer.
+   * @param sampleWeights Optional weighting of each example. A null value defaults to 1. Can be an {@code Operand}
+   *     whose rank is either 0, or the same rank as {@code labels}, and must be broadcastable to
+   *     {@code labels}.
+   * @return a List of Operations to update the metric state
+   */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    if (tLabels.shape().numDimensions() > 1) tLabels = getTF().shape.flatten(tLabels);
-
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    if (tPredictions.shape().numDimensions() > 1)
-      tPredictions = getTF().shape.flatten(tPredictions);
+    Operand<T> tSampleWeights =
+            sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
 
     LossTuple<T> tuple = LossesHelper.squeezeOrExpandDimensions(getTF(), tLabels, tPredictions);
     tPredictions = tuple.getTarget();
     tLabels = tuple.getLabels();
-    Operand<T> tSampleWeights =
-        sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
-    if (tSampleWeights != null && tSampleWeights.shape().numDimensions() > 1) {
-      tSampleWeights = getTF().shape.flatten(tSampleWeights);
-    }
 
     tuple = LossesHelper.removeSqueezableDimensions(getTF(), normalizer, tPredictions);
     normalizer = tuple.getLabels();
