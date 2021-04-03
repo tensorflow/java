@@ -27,9 +27,9 @@ import org.tensorflow.types.family.TType;
  * A statically typed multi-dimensional array.
  *
  * <p>There are two categories of tensors in TensorFlow Java: {@link TType typed tensors} and
- * {@link RawTensor raw tensors}. The former maps the tensor native memory to an
- * n-dimensional typed data space, allowing direct I/O operations from the JVM, while the latter
- * is only a reference to a native tensor allowing basic operations and flat data access.</p>
+ * {@link RawTensor raw tensors}. The former maps the tensor native memory to an n-dimensional typed
+ * data space, allowing direct I/O operations from the JVM, while the latter is only a reference to
+ * a native tensor allowing basic operations and flat data access.</p>
  *
  * <p><b>WARNING:</b> Resources consumed by the Tensor object <b>must</b> be explicitly freed by
  * invoking the {@link #close()} method when the object is no longer needed. For example, using a
@@ -50,15 +50,15 @@ public interface Tensor extends Shaped, AutoCloseable {
    * <p>The amount of memory to allocate is derived from the datatype and the shape of the tensor,
    * and is left uninitialized.
    *
-   * @param <T> the tensor type
-   * @param type the tensor type class
+   * @param <T>   the tensor type
+   * @param type  the tensor type class
    * @param shape shape of the tensor
    * @return an allocated but uninitialized tensor
    * @throws IllegalArgumentException if elements of the given {@code type} are of variable length
    *                                  (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
-   * @throws IllegalStateException if tensor failed to be allocated
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *                                  Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException    if tensor failed to be allocated
    */
   static <T extends TType> T of(Class<T> type, Shape shape) {
     return of(type, shape, -1);
@@ -68,27 +68,27 @@ public interface Tensor extends Shaped, AutoCloseable {
    * Allocates a tensor of a given datatype, shape and size.
    *
    * <p>This method is identical to {@link #of(Class, Shape)}, except that the final size of the
-   * tensor can be explicitly set instead of computing it from the datatype and shape, which could be
-   * larger than the actual space required to store the data but not smaller.
+   * tensor can be explicitly set instead of computing it from the datatype and shape, which could
+   * be larger than the actual space required to store the data but not smaller.
    *
-   * @param <T> the tensor type
-   * @param type the tensor type class
+   * @param <T>   the tensor type
+   * @param type  the tensor type class
    * @param shape shape of the tensor
-   * @param size size in bytes of the tensor or -1 to compute the size from the shape
+   * @param size  size in bytes of the tensor or -1 to compute the size from the shape
    * @return an allocated but uninitialized tensor
-   * @see #of(Class, Shape)
    * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
    *                                  store the tensor data
-   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given
-   *                                  {@code type} are of variable length (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
-   * @throws IllegalStateException if tensor failed to be allocated
+   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given {@code
+   *                                  type} are of variable length (e.g. strings)
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *                                  Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException    if tensor failed to be allocated
+   * @see #of(Class, Shape)
    */
   static <T extends TType> T of(Class<T> type, Shape shape, long size) {
     RawTensor tensor = RawTensor.allocate(type, shape, size);
     try {
-      return (T)tensor.asTypedTensor();
+      return (T) tensor.asTypedTensor();
     } catch (Exception e) {
       tensor.close();
       throw e;
@@ -112,16 +112,17 @@ public interface Tensor extends Shaped, AutoCloseable {
    * <p>If {@code dataInitializer} fails and throws an exception, the allocated tensor will be
    * automatically released before rethrowing the same exception.
    *
-   * @param <T> the tensor type
-   * @param type the tensor type class
-   * @param shape shape of the tensor
-   * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
+   * @param <T>             the tensor type
+   * @param type            the tensor type class
+   * @param shape           shape of the tensor
+   * @param dataInitializer method receiving accessor to the allocated tensor data for
+   *                        initialization
    * @return an allocated and initialized tensor
    * @throws IllegalArgumentException if elements of the given {@code type} are of variable length
    *                                  (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
-   * @throws IllegalStateException if tensor failed to be allocated
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *                                  Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException    if tensor failed to be allocated
    */
   static <T extends TType> T of(Class<T> type, Shape shape, Consumer<T> dataInitializer) {
     return of(type, shape, -1, dataInitializer);
@@ -131,27 +132,31 @@ public interface Tensor extends Shaped, AutoCloseable {
    * Allocates a tensor of a given datatype, shape and size.
    *
    * <p>This method is identical to {@link #of(Class, Shape, Consumer)}, except that the final
-   * size for the tensor can be explicitly set instead of being computed from the datatype and shape.
+   * size for the tensor can be explicitly set instead of being computed from the datatype and
+   * shape.
    *
-   * <p>This could be useful for tensor types that stores data but also metadata in the tensor memory,
+   * <p>This could be useful for tensor types that stores data but also metadata in the tensor
+   * memory,
    * such as the lookup table in a tensor of strings.
    *
-   * @param <T> the tensor type
-   * @param type the tensor type class
-   * @param shape shape of the tensor
-   * @param size size in bytes of the tensor or -1 to compute the size from the shape
-   * @param dataInitializer method receiving accessor to the allocated tensor data for initialization
+   * @param <T>             the tensor type
+   * @param type            the tensor type class
+   * @param shape           shape of the tensor
+   * @param size            size in bytes of the tensor or -1 to compute the size from the shape
+   * @param dataInitializer method receiving accessor to the allocated tensor data for
+   *                        initialization
    * @return an allocated and initialized tensor
-   * @see #of(Class, Shape, long, Consumer)
    * @throws IllegalArgumentException if {@code size} is smaller than the minimum space required to
    *                                  store the tensor data
-   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given
-   *                                  {@code type} are of variable length (e.g. strings)
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
-   * @throws IllegalStateException if tensor failed to be allocated
+   * @throws IllegalArgumentException if {@code size} is set to -1 but elements of the given {@code
+   *                                  type} are of variable length (e.g. strings)
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *                                  Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException    if tensor failed to be allocated
+   * @see #of(Class, Shape, long, Consumer)
    */
-  static <T extends TType> T of(Class<T> type, Shape shape, long size, Consumer<T> dataInitializer) {
+  static <T extends TType> T of(Class<T> type, Shape shape, long size,
+      Consumer<T> dataInitializer) {
     T tensor = of(type, shape, size);
     try {
       dataInitializer.accept(tensor);
@@ -168,18 +173,19 @@ public interface Tensor extends Shaped, AutoCloseable {
    * <p>Data must have been encoded into {@code data} as per the specification of the TensorFlow <a
    * href="https://www.tensorflow.org/code/tensorflow/c/c_api.h">C API</a>.
    *
-   * @param <T> the tensor type
-   * @param type the tensor type class
-   * @param shape the tensor shape.
+   * @param <T>     the tensor type
+   * @param type    the tensor type class
+   * @param shape   the tensor shape.
    * @param rawData a buffer containing the tensor raw data.
    * @throws IllegalArgumentException if {@code rawData} is not large enough to contain the tensor
    *                                  data
-   * @throws IllegalArgumentException if {@code shape} is totally or partially
-   *                                  {@link Shape#hasUnknownDimension() unknown}
-   * @throws IllegalStateException if tensor failed to be allocated with the given parameters
+   * @throws IllegalArgumentException if {@code shape} is totally or partially {@link
+   *                                  Shape#hasUnknownDimension() unknown}
+   * @throws IllegalStateException    if tensor failed to be allocated with the given parameters
    */
   static <T extends TType> T of(Class<T> type, Shape shape, ByteDataBuffer rawData) {
-    return of(type, shape, rawData.size(), t -> rawData.copyTo(t.asRawTensor().data(), rawData.size()));
+    return of(type, shape, rawData.size(),
+        t -> rawData.copyTo(t.asRawTensor().data(), rawData.size()));
   }
 
   /**
@@ -212,10 +218,10 @@ public interface Tensor extends Shaped, AutoCloseable {
   }
 
   /**
-   * @param maxWidth the maximum width of the output ({@code null} if unlimited). This limit may
-   *                 surpassed if the first or last element are too long.
+   * @param maxWidth the maximum width of the output in characters ({@code null} if unlimited). This
+   *                 limit may surpassed if the first or last element are too long.
    */
-  public static ToStringOptions maxWidth(Integer maxWidth) {
+  static ToStringOptions maxWidth(Integer maxWidth) {
     return new ToStringOptions().maxWidth(maxWidth);
   }
 
@@ -244,10 +250,10 @@ public interface Tensor extends Shaped, AutoCloseable {
   public static class ToStringOptions {
 
     /**
-     * Sets the maximum width of the output.
+     * Sets the maximum width of the output in characters.
      *
-     * @param maxWidth the maximum width of the output ({@code null} if unlimited). This limit may
-     *                 surpassed if the first or last element are too long.
+     * @param maxWidth the maximum width of the output in characters ({@code null} if unlimited).
+     *                 This limit may surpassed if the first or last element are too long.
      */
     public ToStringOptions maxWidth(Integer maxWidth) {
       this.maxWidth = maxWidth;
