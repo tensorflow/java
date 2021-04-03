@@ -192,6 +192,33 @@ public interface Tensor extends Shaped, AutoCloseable {
   long numBytes();
 
   /**
+   * Returns the String representation of elements stored in the tensor.
+   *
+   * @param options overrides the default configuration
+   * @return the String representation of the tensor
+   * @throws IllegalStateException if this is an operand of a graph
+   */
+  default String dataToString(ToStringOptions... options) {
+    Integer maxWidth = null;
+    if (options != null) {
+      for (ToStringOptions opts : options) {
+        if (opts.maxWidth != null) {
+          maxWidth = opts.maxWidth;
+        }
+      }
+    }
+    return Tensors.toString(this, maxWidth);
+  }
+
+  /**
+   * @param maxWidth the maximum width of the output ({@code null} if unlimited). This limit may
+   *                 surpassed if the first or last element are too long.
+   */
+  public static ToStringOptions maxWidth(Integer maxWidth) {
+    return new ToStringOptions().maxWidth(maxWidth);
+  }
+
+  /**
    * Returns the shape of the tensor.
    */
   @Override
@@ -212,4 +239,23 @@ public interface Tensor extends Shaped, AutoCloseable {
    */
   @Override
   void close();
+
+  public static class ToStringOptions {
+
+    /**
+     * Sets the maximum width of the output.
+     *
+     * @param maxWidth the maximum width of the output ({@code null} if unlimited). This limit may
+     *                 surpassed if the first or last element are too long.
+     */
+    public ToStringOptions maxWidth(Integer maxWidth) {
+      this.maxWidth = maxWidth;
+      return this;
+    }
+
+    private Integer maxWidth;
+
+    private ToStringOptions() {
+    }
+  }
 }

@@ -340,7 +340,7 @@ public class TensorTest {
     }
 
     LongNdArray threeD = StdArrays.ndCopyOf(new long[][][]{
-      {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
+        {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
     });
     try (TInt64 t = TInt64.tensorOf(threeD)) {
       assertEquals(TInt64.class, t.type());
@@ -353,9 +353,9 @@ public class TensorTest {
     }
 
     BooleanNdArray fourD = StdArrays.ndCopyOf(new boolean[][][][]{
-      {{{false, false, false, true}, {false, false, true, false}}},
-      {{{false, false, true, true}, {false, true, false, false}}},
-      {{{false, true, false, true}, {false, true, true, false}}},
+        {{{false, false, false, true}, {false, false, true, false}}},
+        {{{false, false, true, true}, {false, true, false, false}}},
+        {{{false, true, false, true}, {false, true, true, false}}},
     });
     try (TBool t = TBool.tensorOf(fourD)) {
       assertEquals(TBool.class, t.type());
@@ -538,6 +538,33 @@ public class TensorTest {
       TUint8.tensorOf(StdArrays.ndCopyOf(array));
     } catch (IllegalStateException e) {
       // expected.
+    }
+  }
+
+  @Test
+  public void dataToString() {
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+      String actual = t.dataToString();
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+      String actual = t.dataToString(Tensor.maxWidth(5));
+      // Cannot remove first or last element
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+      String actual = t.dataToString(Tensor.maxWidth(6));
+      // Do not insert ellipses if it increases the length
+      assertEquals("[3, 0, 1]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2}))) {
+      String actual = t.dataToString(Tensor.maxWidth(11));
+      // Limit may be surpassed if first or last element are too long
+      assertEquals("[3, ..., 2]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2}))) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[3, 0, 1, 2]", actual);
     }
   }
 
