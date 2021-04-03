@@ -21,7 +21,7 @@ public final class Tensors {
 
   /**
    * @param tensor   a tensor
-   * @param maxWidth the maximum width of the output ({@code null} if absent)
+   * @param maxWidth the maximum width of the output ({@code null} if unlimited)
    * @return the String representation of the tensor
    */
   public static String toString(Tensor tensor, Integer maxWidth) {
@@ -43,7 +43,7 @@ public final class Tensors {
   /**
    * @param iterator  an iterator over the scalars
    * @param shape     the shape of the tensor
-   * @param maxWidth  the maximum width of the output ({@code null} if absent)
+   * @param maxWidth  the maximum width of the output ({@code null} if unlimited)
    * @param dimension the current dimension being processed
    * @return the String representation of the tensor data at {@code dimension}
    */
