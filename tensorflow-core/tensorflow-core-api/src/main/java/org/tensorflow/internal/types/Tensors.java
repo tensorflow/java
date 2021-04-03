@@ -20,6 +20,16 @@ public final class Tensors {
   }
 
   /**
+   * Equivalent to {@link #toString(Tensor, Integer) toString(tensor, null)}.
+   *
+   * @param tensor a tensor
+   * @return the String representation of the tensor
+   */
+  public static String toString(Tensor tensor) {
+    return toString(tensor, null);
+  }
+
+  /**
    * @param tensor   a tensor
    * @param maxWidth the maximum width of the output in characters ({@code null} if unlimited). This
    *                 limit may surpassed if the first or last element are too long.
@@ -70,7 +80,7 @@ public final class Tensors {
     }
     List<Integer> lengths = new ArrayList<>();
     StringJoiner joiner = new StringJoiner(", ", indent(dimension) + "[", "]");
-    int lengthBefore = joiner.length() - "]".length();
+    int lengthBefore = "]".length();
     for (long i = 0, size = shape.size(dimension); i < size; ++i) {
       String element = iterator.next().getObject().toString();
       joiner.add(element);
@@ -78,10 +88,20 @@ public final class Tensors {
       lengths.add(addedLength);
       lengthBefore += addedLength;
     }
-    if (joiner.length() <= maxWidth) {
-      return joiner.toString();
+    return truncateWidth(joiner.toString(), maxWidth, lengths);
+  }
+
+  /**
+   * @param input    the input to truncate
+   * @param maxWidth the maximum width of the output in characters
+   * @param lengths  the lengths of elements inside input
+   * @return the (potentially) truncated output
+   */
+  private static String truncateWidth(String input, int maxWidth, List<Integer> lengths) {
+    if (input.length() <= maxWidth) {
+      return input;
     }
-    StringBuilder result = new StringBuilder(joiner.toString());
+    StringBuilder output = new StringBuilder(input);
     int midPoint = (maxWidth / 2) - 1;
     int width = 0;
     int indexOfElementToRemove = lengths.size() - 1;
@@ -96,11 +116,11 @@ public final class Tensors {
     }
     if (indexOfElementToRemove == 0) {
       // Cannot remove first element
-      return joiner.toString();
+      return input;
     }
-    result.insert(widthBeforeElementToRemove, ", ...");
+    output.insert(widthBeforeElementToRemove, ", ...");
     widthBeforeElementToRemove += ", ...".length();
-    width = result.length();
+    width = output.length();
     while (width > maxWidth) {
       if (indexOfElementToRemove == 0) {
         // Cannot remove first element
@@ -111,14 +131,14 @@ public final class Tensors {
         continue;
       }
       Integer length = lengths.remove(indexOfElementToRemove);
-      result.delete(widthBeforeElementToRemove, widthBeforeElementToRemove + length);
-      width = result.length();
+      output.delete(widthBeforeElementToRemove, widthBeforeElementToRemove + length);
+      width = output.length();
     }
-    if (result.length() < joiner.length()) {
-      return result.toString();
+    if (output.length() < input.length()) {
+      return output.toString();
     }
     // Do not insert ellipses if it increases the length
-    return joiner.toString();
+    return input;
   }
 
   /**
