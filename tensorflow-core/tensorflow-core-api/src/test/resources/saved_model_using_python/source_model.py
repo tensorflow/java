@@ -28,6 +28,7 @@ class MyModel(tf.keras.Model):
     self.const_scalar = tf.constant(0.0)
     self.const_vector = tf.constant([0.0, 0.0, 0.0])
     self.const_matrix = tf.constant([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+    self.variable = tf.Variable(2.0)
 
   @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32, name='request')])
   def serve(self, x):
@@ -41,7 +42,8 @@ class MyModel(tf.keras.Model):
   def get_vector(self, x):
     return self.const_vector + x
 
-  @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32, name='input')])
+  @tf.function(input_signature=[
+    tf.TensorSpec(shape=None, dtype=tf.float32, name='input')])
   def get_matrix(self, x):
     return self.const_matrix + x
 
@@ -51,13 +53,18 @@ class MyModel(tf.keras.Model):
   def add(self, a, b):
     return a + b
 
+  @tf.function(input_signature=[])
+  def get_variable(self):
+    return self.variable
+
 model = MyModel()
 
 signatures = {
   "get_const_scalar": model.get_scalar,
   "get_const_vector": model.get_vector,
   "get_const_matrix": model.get_matrix,
-  "add": model.add
+  "add": model.add,
+  "get_variable": model.get_variable
 }
 
 tf.saved_model.save(obj=model, export_dir='model', signatures=signatures)

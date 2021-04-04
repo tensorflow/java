@@ -27,8 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
@@ -292,21 +292,29 @@ public class SavedModelBundleTest {
       ConcreteFunction add = bundle.function("add");
       Map<String, Tensor> args = new HashMap();
       try (TFloat32 a = TFloat32.scalarOf(10.0f);
-           TFloat32 b = TFloat32.scalarOf(15.5f)) {
+          TFloat32 b = TFloat32.scalarOf(15.5f)) {
         args.put("a", a);
         args.put("b", b);
         Map<String, Tensor> result = add.call(args);
         assertEquals(result.size(), 1);
-        try (TFloat32 c = (TFloat32)result.values().iterator().next()) {
+        try (TFloat32 c = (TFloat32) result.values().iterator().next()) {
           assertEquals(25.5f, c.getFloat());
         }
       }
+
+      // variable unwrapping happens in Session, which is used by ConcreteFunction.call
+      ConcreteFunction getVariable = bundle.function("get_variable");
+      try (TFloat32 v = (TFloat32) getVariable.call(new HashMap<>())
+          .get(getVariable.signature().outputNames().iterator().next())) {
+        assertEquals(2f, v.getFloat());
+      }
+
     }
   }
 
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
     Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
-    Variable<TFloat32> y = tf
+    Variable<TFloat32> y = tf.withName("variable")
         .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     Init init = tf.init();
