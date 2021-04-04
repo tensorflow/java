@@ -195,7 +195,8 @@ public final class Session implements AutoCloseable {
      */
     public Runner feed(Operand<?> operand, Tensor t) {
       if (operand.env() != graph) {
-        throw new IllegalStateException("Can't feed value to operand " + operand + ", it is from a different graph.");
+        throw new IllegalStateException("Can't feed value for operand " + operand + ", it is from " +
+            (operand.env().isEager() ? "an eager session" : "a different graph") + ".");
       }
 
       inputs.add(operand.asOutput());
@@ -248,7 +249,8 @@ public final class Session implements AutoCloseable {
      */
     public Runner fetch(Output<?> output) {
       if (output.env() != graph) {
-        throw new IllegalStateException("Can't fetch output " + output + ", it is from a different graph.");
+        throw new IllegalStateException("Can't fetch output " + output + ", it is from " +
+            (output.env().isEager() ? "an eager session" : "a different graph") + ".");
       }
 
       if (output.dataType() == DataType.DT_RESOURCE) {
@@ -268,6 +270,7 @@ public final class Session implements AutoCloseable {
         for (GraphOperation op : graphOp.consumers()) {
           if (op.dtype(0) == valueDt && op.type().equals(ReadVariableOp.OP_NAME)) {
             read = op.output(0);
+            break;
           }
         }
 
@@ -316,7 +319,8 @@ public final class Session implements AutoCloseable {
      */
     public Runner addTarget(Operation operation) {
       if (operation.env() != graph) {
-        throw new IllegalStateException("Can't fetch operation " + operation + ", it is from a different graph.");
+        throw new IllegalStateException("Can't target operation " + operation + ", it is from " +
+            (operation.env().isEager() ? "an eager session" : "a different graph") + ".");
       }
       targets.add((GraphOperation) operation);
       return this;
