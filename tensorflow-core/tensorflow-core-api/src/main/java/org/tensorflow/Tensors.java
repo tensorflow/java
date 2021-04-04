@@ -1,4 +1,4 @@
-package org.tensorflow.internal.types;
+package org.tensorflow;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +11,7 @@ import org.tensorflow.ndarray.Shape;
 /**
  * Tensor helper methods.
  */
-public final class Tensors {
+final class Tensors {
 
   /**
    * Prevent construction.
@@ -30,12 +30,20 @@ public final class Tensors {
   }
 
   /**
+   * Returns a String representation of a tensor's data. If the output is wider than {@code
+   * maxWidth} characters, it is truncated and "{@code ...}" is inserted in place of the removed
+   * data.
+   *
    * @param tensor   a tensor
    * @param maxWidth the maximum width of the output in characters ({@code null} if unlimited). This
    *                 limit may surpassed if the first or last element are too long.
    * @return the String representation of the tensor
    */
   public static String toString(Tensor tensor, Integer maxWidth) {
+    if (tensor instanceof RawTensor) {
+      System.out.println("Got rawTensor: " + tensor);
+      tensor = ((RawTensor) tensor).asTypedTensor();
+    }
     if (!(tensor instanceof NdArray)) {
       throw new AssertionError("Expected tensor to extend NdArray");
     }
@@ -92,6 +100,9 @@ public final class Tensors {
   }
 
   /**
+   * Truncates the width of a String if it's too long, inserting "{@code ...}" in place of the
+   * removed data.
+   *
    * @param input    the input to truncate
    * @param maxWidth the maximum width of the output in characters
    * @param lengths  the lengths of elements inside input

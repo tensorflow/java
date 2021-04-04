@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow;
 
 import java.util.function.Consumer;
-import org.tensorflow.internal.types.Tensors;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.Shaped;
 import org.tensorflow.ndarray.buffer.ByteDataBuffer;
@@ -136,8 +135,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * shape.
    *
    * <p>This could be useful for tensor types that stores data but also metadata in the tensor
-   * memory,
-   * such as the lookup table in a tensor of strings.
+   * memory, such as the lookup table in a tensor of strings.
    *
    * @param <T>             the tensor type
    * @param type            the tensor type class
@@ -202,7 +200,7 @@ public interface Tensor extends Shaped, AutoCloseable {
    * Returns the String representation of elements stored in the tensor.
    *
    * @param options overrides the default configuration
-   * @return the String representation of the tensor
+   * @return the String representation of the tensor elements
    * @throws IllegalStateException if this is an operand of a graph
    */
   default String dataToString(ToStringOptions... options) {

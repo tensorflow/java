@@ -514,7 +514,8 @@ public class TensorTest {
     // close() on both Tensors.
     final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
     try (TFloat32 src = TFloat32.tensorOf(matrix)) {
-      TFloat32 cpy = (TFloat32)RawTensor.fromHandle(src.asRawTensor().nativeHandle()).asTypedTensor();
+      TFloat32 cpy = (TFloat32) RawTensor.fromHandle(src.asRawTensor().nativeHandle())
+          .asTypedTensor();
       assertEquals(src.type(), cpy.type());
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());
@@ -563,6 +564,17 @@ public class TensorTest {
       assertEquals("[3, ..., 2]", actual);
     }
     try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2}))) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[3, 0, 1, 2]", actual);
+    }
+    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{1, 2, 3}, {3, 2, 1}}))) {
+      String actual = t.dataToString(Tensor.maxWidth(12));
+      assertEquals("[\n"
+          + "  [1, 2, 3]\n"
+          + "  [3, 2, 1]\n"
+          + "]", actual);
+    }
+    try (RawTensor t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2})).asRawTensor()) {
       String actual = t.dataToString(Tensor.maxWidth(12));
       assertEquals("[3, 0, 1, 2]", actual);
     }
