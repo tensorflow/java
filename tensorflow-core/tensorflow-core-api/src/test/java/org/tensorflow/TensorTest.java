@@ -570,7 +570,7 @@ public class TensorTest {
     try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{1, 2, 3}, {3, 2, 1}}))) {
       String actual = t.dataToString(Tensor.maxWidth(12));
       assertEquals("[\n"
-          + "  [1, 2, 3],\n"
+          + "  [1, 2, 3]\n"
           + "  [3, 2, 1]\n"
           + "]", actual);
     }

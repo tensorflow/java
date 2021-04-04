@@ -70,7 +70,7 @@ final class Tensors {
   private static String toString(Iterator<? extends NdArray<?>> iterator, Shape shape,
       int dimension, Integer maxWidth) {
     if (dimension < shape.numDimensions() - 1) {
-      StringJoiner joiner = new StringJoiner(",\n", indent(dimension) + "[\n",
+      StringJoiner joiner = new StringJoiner("\n", indent(dimension) + "[\n",
           "\n" + indent(dimension) + "]");
       for (long i = 0, size = shape.size(dimension); i < size; ++i) {
         String element = toString(iterator, shape, dimension + 1, maxWidth);
