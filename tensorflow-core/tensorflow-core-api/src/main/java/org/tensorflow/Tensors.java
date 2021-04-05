@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
-import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.DataType;
 
 /**
  * Tensor helper methods.
@@ -56,24 +56,39 @@ final class Tensors {
       }
       return String.valueOf(iterator.next().getObject());
     }
-    return toString(iterator, shape, 0, maxWidth);
+    return toString(iterator, tensor.dataType(), shape, 0, maxWidth);
   }
 
   /**
-   * @param iterator  an iterator over the scalars
-   * @param shape     the shape of the tensor
-   * @param maxWidth  the maximum width of the output in characters ({@code null} if unlimited).
-   *                  This limit may surpassed if the first or last element are too long.
+   * Convert an element of a tensor to string, in a way that may depend on the data type.
+   *
+   * @param dtype the tensor's data type
+   * @param data the element
+   * @return the element's string representation
+   */
+  private static String elementToString(DataType dtype, Object data) {
+    if (dtype == DataType.DT_STRING) {
+      return '"' + data.toString() + '"';
+    } else {
+      return data.toString();
+    }
+  }
+
+  /**
+   * @param iterator an iterator over the scalars
+   * @param shape the shape of the tensor
+   * @param maxWidth the maximum width of the output in characters ({@code null} if unlimited). This limit may surpassed
+   * if the first or last element are too long.
    * @param dimension the current dimension being processed
    * @return the String representation of the tensor data at {@code dimension}
    */
-  private static String toString(Iterator<? extends NdArray<?>> iterator, Shape shape,
+  private static String toString(Iterator<? extends NdArray<?>> iterator, DataType dtype, Shape shape,
       int dimension, Integer maxWidth) {
     if (dimension < shape.numDimensions() - 1) {
       StringJoiner joiner = new StringJoiner("\n", indent(dimension) + "[\n",
           "\n" + indent(dimension) + "]");
       for (long i = 0, size = shape.size(dimension); i < size; ++i) {
-        String element = toString(iterator, shape, dimension + 1, maxWidth);
+        String element = toString(iterator, dtype, shape, dimension + 1, maxWidth);
         joiner.add(element);
       }
       return joiner.toString();
@@ -81,8 +96,8 @@ final class Tensors {
     if (maxWidth == null) {
       StringJoiner joiner = new StringJoiner(", ", indent(dimension) + "[", "]");
       for (long i = 0, size = shape.size(dimension); i < size; ++i) {
-        String element = iterator.next().getObject().toString();
-        joiner.add(element);
+        Object element = iterator.next().getObject();
+        joiner.add(elementToString(dtype, element));
       }
       return joiner.toString();
     }
@@ -90,8 +105,8 @@ final class Tensors {
     StringJoiner joiner = new StringJoiner(", ", indent(dimension) + "[", "]");
     int lengthBefore = "]".length();
     for (long i = 0, size = shape.size(dimension); i < size; ++i) {
-      String element = iterator.next().getObject().toString();
-      joiner.add(element);
+      Object element = iterator.next().getObject();
+      joiner.add(elementToString(dtype, element));
       int addedLength = joiner.length() - lengthBefore;
       lengths.add(addedLength);
       lengthBefore += addedLength;

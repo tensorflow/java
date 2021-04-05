@@ -544,26 +544,26 @@ public class TensorTest {
 
   @Test
   public void dataToString() {
-    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
       String actual = t.dataToString();
       assertEquals("[3, 0, 1]", actual);
     }
-    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
       String actual = t.dataToString(Tensor.maxWidth(5));
       // Cannot remove first or last element
       assertEquals("[3, 0, 1]", actual);
     }
-    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1}))) {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1)) {
       String actual = t.dataToString(Tensor.maxWidth(6));
       // Do not insert ellipses if it increases the length
       assertEquals("[3, 0, 1]", actual);
     }
-    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2}))) {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1, 2)) {
       String actual = t.dataToString(Tensor.maxWidth(11));
       // Limit may be surpassed if first or last element are too long
       assertEquals("[3, ..., 2]", actual);
     }
-    try (TInt32 t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2}))) {
+    try (TInt32 t = TInt32.vectorOf(3, 0, 1, 2)) {
       String actual = t.dataToString(Tensor.maxWidth(12));
       assertEquals("[3, 0, 1, 2]", actual);
     }
@@ -574,9 +574,26 @@ public class TensorTest {
           + "  [3, 2, 1]\n"
           + "]", actual);
     }
-    try (RawTensor t = TInt32.tensorOf(StdArrays.ndCopyOf(new int[]{3, 0, 1, 2})).asRawTensor()) {
+    try (RawTensor t = TInt32.vectorOf(3, 0, 1, 2).asRawTensor()) {
       String actual = t.dataToString(Tensor.maxWidth(12));
       assertEquals("[3, 0, 1, 2]", actual);
+    }
+    // different data types
+    try (RawTensor t = TFloat32.vectorOf(3.0101f, 0, 1.5f, 2).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[3.0101, 0.0, 1.5, 2.0]", actual);
+    }
+    try (RawTensor t = TFloat64.vectorOf(3.0101, 0, 1.5, 2).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[3.0101, 0.0, 1.5, 2.0]", actual);
+    }
+    try (RawTensor t = TBool.vectorOf(true, true, false, true).asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[true, true, false, true]", actual);
+    }
+    try (RawTensor t = TString.vectorOf("a", "b", "c").asRawTensor()) {
+      String actual = t.dataToString();
+      assertEquals("[\"a\", \"b\", \"c\"]", actual);
     }
   }
 
