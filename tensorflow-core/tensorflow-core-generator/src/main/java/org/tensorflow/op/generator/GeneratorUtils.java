@@ -73,7 +73,7 @@ final class GeneratorUtils {
   static String parseDocumentation(String docs) {
     Node document = parser.parse(docs);
     JavaDocRenderer renderer = JavaDocRenderer.builder().build();
-    return renderer.render(document);
+    return renderer.render(document).trim();
   }
 
 

@@ -355,8 +355,8 @@ final class ClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().listIfIterable().javaType, name)
                 .addJavadoc("Sets the $L option.\n", name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
-                .addJavadoc("@return this Options instance.\n")
+                .addJavadoc("\n@param $L $L", name, parseDocumentation(description))
+                .addJavadoc("\n@return this Options instance.")
                 .addCode("this.$L = $L;\nreturn this;\n", name, name)
                 .build());
 
@@ -366,8 +366,8 @@ final class ClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().arrayIfIterable().javaType, name)
                 .addJavadoc("Sets the $L option.\n", name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
-                .addJavadoc("@return this Options instance.\n")
+                .addJavadoc("\n@param $L $L", name, parseDocumentation(description))
+                .addJavadoc("\n@return this Options instance.")
                 .addCode("this.$L = $T.asList($L);\nreturn this;\n", name, Arrays.class, name)
                 .varargs()
                 .build());
@@ -379,8 +379,8 @@ final class ClassGenerator {
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(type.classIfGeneric().javaType, name)
                 .addJavadoc("Sets the $L option.\n", name)
-                .addJavadoc("@param $L $L\n", name, parseDocumentation(description))
-                .addJavadoc("@return this Options instance.\n")
+                .addJavadoc("\n@param $L $L", name, parseDocumentation(description))
+                .addJavadoc("\n@return this Options instance.")
                 .addCode("this.$L = $L;\nreturn this;\n", name, name)
                 .build());
       }
@@ -458,7 +458,7 @@ final class ClassGenerator {
 
     factoryBuilder
         .addParameter(ParameterSpec.builder(Names.Scope, "scope").build());
-    paramTags.put("scope", CodeBlock.of("current scope\n"));
+    paramTags.put("scope", CodeBlock.of("current scope"));
 
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
@@ -473,7 +473,7 @@ final class ClassGenerator {
       String name = getJavaName(input);
 
       ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name);
-      paramTags.put(name, CodeBlock.of("$L\n", parseDocumentation(argDef.getDescription())));
+      paramTags.put(name, CodeBlock.of("$L", parseDocumentation(argDef.getDescription())));
       factoryBuilder.addParameter(param.build());
 
       typeVars.addAll(type.findGenerics());
@@ -501,7 +501,7 @@ final class ClassGenerator {
 
       ParameterSpec.Builder builder = ParameterSpec
           .builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr));
-      paramTags.put(getJavaName(attr), CodeBlock.of("$L\n", parseDocumentation(apiAttr.getDescription())));
+      paramTags.put(getJavaName(attr), CodeBlock.of("$L", parseDocumentation(apiAttr.getDescription())));
 
       typeVars.addAll(type.findGenerics());
 
@@ -523,7 +523,7 @@ final class ClassGenerator {
     if (optionsClass != null) {
       factoryBuilder.addParameter(
           ParameterSpec.builder(ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options").build());
-      paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values\n"));
+      paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values"));
       factoryBuilder.varargs();
 
       body.beginControlFlow("if (options != null)");
@@ -551,9 +551,9 @@ final class ClassGenerator {
           String description = doc.toString();
           if (description.isEmpty() || description.equals("\n")) {
             factoryBuilder.addJavadoc(
-                "@param $L $L", param, String.format("the %s property", param));
+                "\n@param $L the $L property", param, param);
           } else {
-            factoryBuilder.addJavadoc("@param $L $L", param, doc);
+            factoryBuilder.addJavadoc("\n@param $L $L", param, doc);
           }
         });
     for (TypeVariableName typeVar : typeVars) {
@@ -562,7 +562,7 @@ final class ClassGenerator {
               + typeVar.name
               + "> data type for {@code "
               + op.getName()
-              + "} output and operands\n");
+              + "} output and operands");
     }
 
     factoryBuilder.addTypeVariables(typeVars);
@@ -609,7 +609,7 @@ final class ClassGenerator {
         body.add("$T.class", defaultTypes.get(attr));
       } else {
         factoryBuilder.addParameter(param);
-        factoryBuilder.addJavadoc("@param $L $L", param.name, paramTags.get(param.name));
+        factoryBuilder.addJavadoc("\n@param $L $L", param.name, paramTags.get(param.name));
         typeVars.addAll(new ResolvedType(param.type).findGenerics());
         body.add("$L", param.name);
       }
@@ -618,17 +618,18 @@ final class ClassGenerator {
 
     body.add(");");
 
-    factoryBuilder.addJavadoc("\n@return a new instance of $L, with default output types", className);
-    factoryBuilder.addCode(body.build());
-    factoryBuilder.addTypeVariables(typeVars);
     for (TypeVariableName typeVar : typeVars) {
       factoryBuilder.addJavadoc(
           "\n@param <"
               + typeVar.name
               + "> data type for {@code "
               + op.getName()
-              + "} output and operands\n");
+              + "} output and operands");
     }
+
+    factoryBuilder.addJavadoc("\n@return a new instance of $L, with default output types", className);
+    factoryBuilder.addCode(body.build());
+    factoryBuilder.addTypeVariables(typeVars);
 
     builder.addMethod(factoryBuilder.build());
   }
@@ -648,7 +649,6 @@ final class ClassGenerator {
                 builder.addMethod(
                     MethodSpec.methodBuilder(method.name)
                         .addParameter(method.parameters.get(0))
-                        .addJavadoc("Sets the $L property.", method.name)
                         .addJavadoc(method.javadoc)
                         .returns(ClassName.get(fullPackage, className, "Options"))
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
@@ -666,7 +666,7 @@ final class ClassGenerator {
               .returns(resolver.typeOf(output).listIfIterable().javaType)
               .addJavadoc("Gets $L.\n", name)
               .addJavadoc("$L", parseDocumentation(argDef.getDescription()))
-              .addJavadoc("@return $L.\n", name)
+              .addJavadoc("\n@return $L.", name)
               .addCode("return $L;", name)
               .build());
     }
