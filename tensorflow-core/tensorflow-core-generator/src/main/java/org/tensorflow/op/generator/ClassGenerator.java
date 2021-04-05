@@ -230,6 +230,8 @@ final class ClassGenerator {
     String summary = parseDocumentation(apiDef.getSummary());
     if (!summary.isEmpty()) {
       builder.addJavadoc("$L", summary + "\n");
+    } else {
+      builder.addJavadoc("The $L operation\n", apiDef.getGraphOpName());
     }
     String desc = parseDocumentation(apiDef.getDescription());
     if (!desc.isEmpty()) {
@@ -264,8 +266,7 @@ final class ClassGenerator {
           typeParams.add(typeVar);
           builder.addTypeVariable(typeVar);
           builder.addJavadoc(
-              "\n@param <" + typeVar.name + "> data type for {@code " + output
-                  .getName() + "} output\n");
+              "\n@param <$L> data type for {@code $L} output\n", typeVar.name, output.getName());
         }
       }
     }
@@ -473,7 +474,11 @@ final class ClassGenerator {
       String name = getJavaName(input);
 
       ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name);
-      paramTags.put(name, CodeBlock.of("$L", parseDocumentation(argDef.getDescription())));
+      String description =
+          argDef.getDescription().isEmpty()
+              ? String.format("the %s value", name)
+              : argDef.getDescription();
+      paramTags.put(name, CodeBlock.of("$L", parseDocumentation(description)));
       factoryBuilder.addParameter(param.build());
 
       typeVars.addAll(type.findGenerics());
@@ -501,7 +506,13 @@ final class ClassGenerator {
 
       ParameterSpec.Builder builder = ParameterSpec
           .builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr));
-      paramTags.put(getJavaName(attr), CodeBlock.of("$L", parseDocumentation(apiAttr.getDescription())));
+
+      String javaName = getJavaName(attr);
+      String description =
+          apiAttr.getDescription().isEmpty()
+              ? String.format("the value of the %s property", javaName)
+              : apiAttr.getDescription();
+      paramTags.put(javaName, CodeBlock.of("$L", parseDocumentation(description)));
 
       typeVars.addAll(type.findGenerics());
 
