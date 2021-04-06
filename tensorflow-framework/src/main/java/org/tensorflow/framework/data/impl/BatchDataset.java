@@ -17,16 +17,31 @@ package org.tensorflow.framework.data.impl;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.Dataset;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.ndarray.Shape;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
-
-import java.util.List;
 import org.tensorflow.types.family.TType;
 
+import java.util.List;
+
+/** Combines consecutive elements of a dataset into batches. */
 public class BatchDataset extends Dataset {
+
+  /**
+   * Creates a batched dataset
+   *
+   * @param tf The TensorFlow Ops.
+   * @param variant the Operand that represents the dataset.
+   * @param batchSize The number of desired elements per batch
+   * @param dropRemainder Whether to leave out the final batch if it has fewer than `batchSize` *
+   *     elements.
+   * @param outputTypes A list of classes corresponding to the tensor type of each component of a
+   *     dataset element.
+   * @param outputShapes A list of `Shape` objects corresponding to the shapes of each component of
+   *     a dataset element.
+   */
   public BatchDataset(
       Ops tf,
       Operand<?> variant,
