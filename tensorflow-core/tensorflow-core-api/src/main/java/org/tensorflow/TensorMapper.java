@@ -26,7 +26,7 @@ import org.tensorflow.types.family.TType;
  * <p>Usage of this class is reserved for internal purposes only.
  *
  * @param <T> tensor type mapped by this object
- * @see {@link TType}
+ * @see TType
  */
 public abstract class TensorMapper<T extends TType> {
 

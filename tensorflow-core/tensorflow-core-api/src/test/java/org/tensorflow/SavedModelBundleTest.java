@@ -290,7 +290,7 @@ public class SavedModelBundleTest {
        *   Signature name used for saving 'add', argument names 'a' and 'b'
        */
       ConcreteFunction add = bundle.function("add");
-      Map<String, Tensor> args = new HashMap();
+      Map<String, Tensor> args = new HashMap<>();
       try (TFloat32 a = TFloat32.scalarOf(10.0f);
           TFloat32 b = TFloat32.scalarOf(15.5f)) {
         args.put("a", a);
@@ -301,14 +301,19 @@ public class SavedModelBundleTest {
           assertEquals(25.5f, c.getFloat());
         }
       }
+      args.clear();
 
       // variable unwrapping happens in Session, which is used by ConcreteFunction.call
       ConcreteFunction getVariable = bundle.function("get_variable");
-      try (TFloat32 v = (TFloat32) getVariable.call(new HashMap<>())
-          .get(getVariable.signature().outputNames().iterator().next())) {
-        assertEquals(2f, v.getFloat());
+      try (TFloat32 dummy = TFloat32.scalarOf(1.0f)) {
+        args.put("dummy",dummy);
+        // TF functions always require an input, so we supply a dummy one here
+        // This test actually checks that resource variables can be loaded correctly.
+        try (TFloat32 v = (TFloat32) getVariable.call(args)
+                    .get(getVariable.signature().outputNames().iterator().next())) {
+          assertEquals(2f, v.getFloat());
+        }
       }
-
     }
   }
 

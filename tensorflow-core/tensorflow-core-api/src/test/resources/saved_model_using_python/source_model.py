@@ -22,6 +22,7 @@
 
 import tensorflow as tf
 
+
 class MyModel(tf.keras.Model):
   def __init__(self):
     super(MyModel, self).__init__()
@@ -42,8 +43,7 @@ class MyModel(tf.keras.Model):
   def get_vector(self, x):
     return self.const_vector + x
 
-  @tf.function(input_signature=[
-    tf.TensorSpec(shape=None, dtype=tf.float32, name='input')])
+  @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32, name='input')])
   def get_matrix(self, x):
     return self.const_matrix + x
 
@@ -53,9 +53,13 @@ class MyModel(tf.keras.Model):
   def add(self, a, b):
     return a + b
 
-  @tf.function(input_signature=[])
-  def get_variable(self):
+  #TF functions always require an input
+  @tf.function(input_signature=[
+    tf.TensorSpec(shape=None, dtype=tf.float32, name='dummy')
+  ])
+  def get_variable(self, dummy):
     return self.variable
+
 
 model = MyModel()
 
