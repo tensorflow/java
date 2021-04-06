@@ -41,11 +41,13 @@ final class Tensors {
    */
   public static String toString(Tensor tensor, Integer maxWidth) {
     if (tensor instanceof RawTensor) {
-      System.out.println("Got rawTensor: " + tensor);
       tensor = ((RawTensor) tensor).asTypedTensor();
     }
     if (!(tensor instanceof NdArray)) {
-      throw new AssertionError("Expected tensor to extend NdArray");
+      throw new AssertionError("Expected tensor to extend NdArray.\n" +
+          "actual  : " + tensor + "\n" +
+          "dataType: " + tensor.dataType() + "\n" +
+          "class   : " + tensor.getClass());
     }
     NdArray<?> ndArray = (NdArray<?>) tensor;
     Iterator<? extends NdArray<?>> iterator = ndArray.scalars().iterator();

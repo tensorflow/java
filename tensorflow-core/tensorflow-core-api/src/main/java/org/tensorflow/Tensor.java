@@ -245,7 +245,7 @@ public interface Tensor extends Shaped, AutoCloseable {
   @Override
   void close();
 
-  public static class ToStringOptions {
+  class ToStringOptions {
 
     /**
      * Sets the maximum width of the output in characters.
