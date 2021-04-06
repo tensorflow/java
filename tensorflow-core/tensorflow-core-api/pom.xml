@@ -388,8 +388,10 @@
           </execution>
         </executions>
         <configuration>
-          <!-- Activate the use of TCP to transmit events to the plugin -->
-          <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+            <!-- Activate the use of TCP to transmit events to the plugin -->
+            <!-- disabled as it appears to cause intermittent test failures in GitHub Actions
+            <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+            -->
           <additionalClasspathElements>
             <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
             <!-- Note: the following path is not accessible in deploying profile, so other libraries like
