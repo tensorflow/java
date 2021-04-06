@@ -28,7 +28,7 @@ import org.tensorflow.proto.framework.DataType;
  *
  * <p>Subinterfaces of {@code TType} are propagated as a generic parameter to various entities of
  * TensorFlow to identify the type of the tensor they carry. For example, a
- * {@link org.tensorflow.Operand Operand<TFloat32>} is an operand which outputs a 32-bit floating
+ * {@link org.tensorflow.Operand Operand&lt;TFloat32&gt;} is an operand which outputs a 32-bit floating
  * point tensor. This parameter ensure type-compatibility between operands of a computation at
  * compile-time. For example:
  *

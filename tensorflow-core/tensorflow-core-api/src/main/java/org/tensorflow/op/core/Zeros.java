@@ -30,9 +30,9 @@ import org.tensorflow.types.family.TType;
  * An operator creating a constant initialized with zeros of the shape given by `dims`.
  * 
  * <p>For example, the following expression
- * <pre>{@code tf.zeros(tf.constant(shape), TFloat32.class)</pre>
+ * <pre>{@code tf.zeros(tf.constant(shape), TFloat32.class)}</pre>
  * is the equivalent of
- * <pre>{@code tf.fill(tf.constant(shape), tf.constant(0.0f))</pre>
+ * <pre>{@code tf.fill(tf.constant(shape), tf.constant(0.0f))}</pre>
  *
  * @param <T> constant type
  */
