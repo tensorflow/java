@@ -24,6 +24,8 @@ jobs:
         run: |
           git --version
           mvn -version
+          echo $JAVA_HOME
+          $JAVA_HOME/bin/javadoc -J-fullversion
           mvn clean install -Pdev -B -U -e
   prepare:
     runs-on: ubuntu-latest
