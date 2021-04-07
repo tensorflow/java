@@ -329,6 +329,36 @@
         </dependencies>
       </plugin>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>generate-ops</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <!--            <phase>generate-sources</phase>-->
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.tensorflow</groupId>
+            <artifactId>tensorflow-core-generator</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <includeProjectDependencies>false</includeProjectDependencies>
+          <includePluginDependencies>true</includePluginDependencies>
+          <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
+          <arguments>
+            <argument>${project.basedir}/src/gen/java</argument>
+            <argument>${project.basedir}/src/gen/resources/org/tensorflow/op/ops.pb</argument>
+          </arguments>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>

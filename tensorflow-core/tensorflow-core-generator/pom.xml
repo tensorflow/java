@@ -49,25 +49,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
-          <arguments>
-            <argument>${project.basedir}/../tensorflow-core-api/src/gen/java</argument>
-            <argument>${project.basedir}/../tensorflow-core-api/src/gen/resources/org/tensorflow/op/ops.pb</argument>
-          </arguments>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.2.0</version>
         <configuration>
