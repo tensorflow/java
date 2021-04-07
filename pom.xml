@@ -231,6 +231,7 @@
               <goal>jar</goal>
             </goals>
             <configuration>
+              <verbose>true</verbose>
               <quiet>true</quiet>
             </configuration>
           </execution>
