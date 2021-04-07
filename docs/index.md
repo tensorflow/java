@@ -1,5 +1,14 @@
 # TensorFlow for Java
 
+<table class="tfo-notebook-buttons" align="left">
+    <td>
+    <a target="_blank" href="https://www.tensorflow.org/jvm"><img src="https://www.tensorflow.org/images/tf_logo_32px.png" />View on TensorFlow.org</a>
+  </td>
+  <td>
+    <a target="_blank" href="https://github.com/tensorflow/java"><img src="https://www.tensorflow.org/images/GitHub-Mark-32px.png" />View GitHub repository</a>
+  </td>
+</table>
+
 TensorFlow for Java can run on any JVM for building, training and running machine learning models. It comes with 
 a series of utilities and frameworks that help achieve most of the tasks common to data scientists 
 and developers working in this domain. Java and other JVM languages, such as Scala or Kotlin, are 
@@ -7,12 +16,6 @@ frequently used in small-to-large enterprises all over the world, which makes Te
 choice for adopting machine learning at a large scale.
 
 ## The Repository
-
-<table class="tfo-notebook-buttons" align="left">
-  <td>
-    <a target="_blank" href="https://github.com/tensorflow/jvm"><img src="https://www.tensorflow.org/images/GitHub-Mark-32px.png" />View on GitHub</a>
-  </td>
-</table>
 
 In the early days, the Java language bindings for TensorFlow were hosted in the
 [main TensorFlow repository](https://github.com/tensorflow/tensorflow)
