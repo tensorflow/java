@@ -9,7 +9,7 @@
   </td>
 </table>
 
-TensorFlow for Java can run on any JVM for building, training and running machine learning models. It comes with 
+TensorFlow Java can run on any JVM for building, training and running machine learning models. It comes with 
 a series of utilities and frameworks that help achieve most of the tasks common to data scientists 
 and developers working in this domain. Java and other JVM languages, such as Scala or Kotlin, are 
 frequently used in small-to-large enterprises all over the world, which makes TensorFlow a strategic 
