@@ -146,7 +146,7 @@ the following
 *Note: Only official builds distributed by TensorFlow are supported by its
 maintainers and custom builds should be used at the user's risk.*
 
-# Example Program
+## Example Program
 
 This example shows how to build an Apache Maven project with TensorFlow. First,
 add the TensorFlow dependency to the project's `pom.xml` file:
