@@ -91,6 +91,7 @@ public final class TensorTypeRegistry {
 
   static {
     // TODO (karllessard) scan and registered automatically all annotated tensors types
+    // TODO use in generator?
     register(TBool.class);
     register(TFloat64.class);
     register(TFloat32.class);
