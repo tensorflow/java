@@ -107,25 +107,22 @@ public class TStringTest {
 
   @Test
   public void testNoLeaks() throws Exception {
-    System.gc();
-    Thread.sleep(100);
-
+    // warm up and try to get all JIT compilation done to stabilize memory usage...
     for (int i = 0; i < 1000; i++) {
       TString.scalarOf(A_LARGE_STRING).close();
+      System.gc();
     }
 
-    System.gc();
-    Thread.sleep(100);
     long bytesBefore = Pointer.physicalBytes();
 
     for (int i = 0; i < 1000; i++) {
       TString.scalarOf(A_LARGE_STRING).close();
+      System.gc();
     }
 
-    System.gc();
-    Thread.sleep(100);
     long bytesAfter = Pointer.physicalBytes();
 
+    // the difference should ideally be 0, but the JVM and TF Core may be holding onto some unrelated stuff...
     assertTrue(Math.abs(bytesAfter - bytesBefore) < 10_000_000);
   }
 
