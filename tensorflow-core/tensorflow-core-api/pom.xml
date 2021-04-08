@@ -329,6 +329,11 @@
         </dependencies>
       </plugin>
       <plugin>
+        <!--
+        An execution to execute the op class generator (which lives in tensorflow-core-generator).
+        Must be ran after build.sh, which generates the ops.pb file it reads.
+        Will be ran during the generate-sources phase.
+        -->
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>3.0.0</version>
