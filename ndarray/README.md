@@ -11,7 +11,7 @@ To import the NdArray library in your project, simply add the following dependen
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>ndarray</artifactId>
-  <version>0.3.0</version>
+  <version>0.3.1</version>
 </dependency>
 ```
 

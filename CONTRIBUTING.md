@@ -112,3 +112,14 @@ bazel-out/k8-opt/bin/external/org_tensorflow/tensorflow/libtensorflow_cc.so --ou
 ```
 
 (called in `tensorflow-core-api`).
+
+## Adding Gradients
+
+In some cases, a op supported by Tensorflow Java will not have a gradient defined, resulting in errors like this:
+```
+org.tensorflow.exceptions.TensorFlowException: No gradient defined for op: ReadVariableOp. Please see https://www.tensorflow.org/code/tensorflow/cc/gradients/README.md for instructions on how to add C++ gradients.
+	at org.tensorflow.internal.c_api.AbstractTF_Status.throwExceptionIfNotOK(AbstractTF_Status.java:101)
+	at org.tensorflow.Graph.addGradients(Graph.java:708)
+	at org.tensorflow.Graph.addGradients(Graph.java:291)
+```
+The description in the [linked file](https://www.tensorflow.org/code/tensorflow/cc/gradients/README.md) are accurate for adding C++ Graph gradients, which are used by our `Graph`.  Eexamples of doing that are [tensorflow/tensorflow#46115](https://github.com/tensorflow/tensorflow/pull/46115) and [tensorflow/tensorflow#47774](https://github.com/tensorflow/tensorflow/pull/47774).  However, Tensorflow Core is in the process of migrating gradient definitions to [`c/experimental/gradients`](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/c/experimental/gradients), which will be what our eager mode uses once it has gradient support. Anyone adding gradients is strongly encouraged to add one there as well, and eventually it should replace the legacy `cc/gradients` gradients.

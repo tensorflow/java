@@ -20,6 +20,12 @@ package org.tensorflow.internal.c_api;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AllocateTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteTensor;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_STRING;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Dealloc;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Init;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorData;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorElementCount;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.annotation.Properties;
@@ -28,7 +34,20 @@ import org.bytedeco.javacpp.annotation.Properties;
 public abstract class AbstractTF_Tensor extends Pointer {
     protected static class DeleteDeallocator extends TF_Tensor implements Pointer.Deallocator {
         DeleteDeallocator(TF_Tensor s) { super(s); }
-        @Override public void deallocate() { if (!isNull()) TF_DeleteTensor(this); setNull(); }
+        @Override public void deallocate() {
+            if (!isNull()) {
+                if (TF_TensorType(this) == TF_STRING) {
+                    // we need to deallocate the strings themselves before deallocating the tensor memory
+                    long n = TF_TensorElementCount(this);
+                    TF_TString data = new TF_TString(TF_TensorData(this));
+                    for (int i = 0; i < n; i++) {
+                        TF_TString_Dealloc(data.position(i));
+                    }
+                }
+                TF_DeleteTensor(this);
+            }
+            setNull();
+        }
     }
 
     /** TensorFlow crashes if we don't pass it a deallocator, so... */
@@ -61,6 +80,14 @@ public abstract class AbstractTF_Tensor extends Pointer {
     public static TF_Tensor allocateTensor(int dtype, long[] dims, long length) {
         TF_Tensor t = TF_AllocateTensor(dtype, dims, dims.length, length);
         if (t != null) {
+            if (TF_TensorType(t) == TF_STRING) {
+                // we need to initialize the strings themselves after allocating the tensor memory
+                long n = TF_TensorElementCount(t);
+                TF_TString data = new TF_TString(TF_TensorData(t));
+                for (int i = 0; i < n; i++) {
+                    TF_TString_Init(data.position(i));
+                }
+            }
             t.deallocator(new DeleteDeallocator(t));
         }
         return t;

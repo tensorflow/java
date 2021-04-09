@@ -36,6 +36,33 @@ cc_library(
     ],
 )
 
+tf_cc_binary(
+    name = "java_op_exporter",
+    linkopts = select({
+        "@org_tensorflow//tensorflow:windows": [],
+        "//conditions:default": ["-lm"],
+    }),
+    deps = [
+        ":java_op_export_lib",
+    ],
+)
+
+cc_library(
+    name = "java_op_export_lib",
+    srcs = [
+        "src/bazel/op_generator/op_export_main.cc",
+    ],
+    hdrs = [
+    ],
+    copts = tf_copts(),
+    deps = [
+        "@org_tensorflow//tensorflow/core:framework",
+        "@org_tensorflow//tensorflow/core:lib",
+        "@org_tensorflow//tensorflow/core:op_gen_lib",
+        "@org_tensorflow//tensorflow/core:protos_all_cc",
+    ],
+)
+
 filegroup(
     name = "java_api_def",
     srcs = glob(["src/bazel/api_def/*"])

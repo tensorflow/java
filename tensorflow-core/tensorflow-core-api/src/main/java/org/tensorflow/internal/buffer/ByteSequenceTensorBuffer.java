@@ -19,7 +19,6 @@ package org.tensorflow.internal.buffer;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Assign;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Copy;
-import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Init;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetDataPointer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_GetSize;
 
@@ -127,7 +126,6 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
     void writeNext(byte[] bytes) {
       try (PointerScope scope = new PointerScope()) {
         TF_TString tstring = data.getPointer(index++);
-        TF_TString_Init(tstring);
         TF_TString_Copy(tstring, new BytePointer(bytes), bytes.length);
       }
     }

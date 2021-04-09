@@ -22,12 +22,14 @@
 
 import tensorflow as tf
 
+
 class MyModel(tf.keras.Model):
   def __init__(self):
     super(MyModel, self).__init__()
     self.const_scalar = tf.constant(0.0)
     self.const_vector = tf.constant([0.0, 0.0, 0.0])
     self.const_matrix = tf.constant([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
+    self.variable = tf.Variable(2.0)
 
   @tf.function(input_signature=[tf.TensorSpec(shape=None, dtype=tf.float32, name='request')])
   def serve(self, x):
@@ -51,13 +53,22 @@ class MyModel(tf.keras.Model):
   def add(self, a, b):
     return a + b
 
+  #TF functions always require an input
+  @tf.function(input_signature=[
+    tf.TensorSpec(shape=None, dtype=tf.float32, name='dummy')
+  ])
+  def get_variable(self, dummy):
+    return self.variable
+
+
 model = MyModel()
 
 signatures = {
   "get_const_scalar": model.get_scalar,
   "get_const_vector": model.get_vector,
   "get_const_matrix": model.get_matrix,
-  "add": model.add
+  "add": model.add,
+  "get_variable": model.get_variable
 }
 
 tf.saved_model.save(obj=model, export_dir='model', signatures=signatures)
