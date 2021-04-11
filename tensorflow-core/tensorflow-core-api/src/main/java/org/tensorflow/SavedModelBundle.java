@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -224,6 +225,104 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
+   * A function loaded from a saved model.  It can be called using the saved model's session.
+   *
+   * All resources are owned by the SavedModel.
+   *
+   * TODO initializing the session
+   */
+  public final class SavedFunction {
+
+    private final Signature signature;
+
+    private SavedFunction(Signature signature) {
+      this.signature = signature;
+    }
+
+    /**
+     * The signature of the function.
+     */
+    public Signature signature() {
+      return signature;
+    }
+
+    /**
+     * The name of the function.
+     */
+    public String name() {
+      return signature.key();
+    }
+
+    /**
+     * Call this function using the SavedModel's session.
+     *
+     * <p>Caller is responsible for closing all returned Tensors.
+     *
+     * @throws IllegalArgumentException if an argument is missing, an argument is passed for an unknown parameter,
+     * or an argument has the wrong type
+     */
+    public Map<String, Tensor> call(Map<String, Tensor> arguments) {
+      Session.Runner runner = session.runner();
+      arguments.forEach((name, value) -> {
+        Signature.TensorDescription parameter = signature.getInputs().get(name);
+        if (parameter == null) {
+          throw new IllegalArgumentException("Function \"" + name() + "\" has no argument \"" + name + "\".");
+        }
+        if (value.dataType() != parameter.dataType) {
+          throw new IllegalArgumentException("Function \"" + name() + "\"'s argument \"" + name +
+              "\" has data type " + parameter.dataType + ", but a tensor of data type " + value.dataType()
+              + " was passed.");
+        }
+        runner.feed(parameter.name, value);
+      });
+
+      signature.inputNames().forEach((param) -> {
+        if (!arguments.containsKey(param)) {
+          throw new IllegalArgumentException(
+              "Function \"" + name() + "\" has a parameter \"" + param + "\", but no argument was passed for it.");
+        }
+      });
+
+      List<String> resultNames = new ArrayList<>(signature.getOutputs().size());
+      signature.getOutputs().forEach((name, desc) -> {
+        runner.fetch(desc.name);
+        resultNames.add(name);
+      });
+
+      List<Tensor> result = runner.run();
+      Map<String, Tensor> namedResults = new LinkedHashMap<>(result.size());
+
+      for (int i = 0; i < result.size(); i++) {
+        namedResults.put(resultNames.get(i), result.get(i));
+      }
+      return namedResults;
+    }
+
+
+    /**
+     * Call this single-argument single-result function using the SavedModel's session.
+     *
+     * <p>Caller is responsible for closing the returned Tensor.
+     *
+     * @throws IllegalStateException if this function does not have exactly one input and output.
+     */
+    public Tensor call(Tensor argument) {
+      if (signature.getInputs().size() != 1) {
+        throw new IllegalStateException("Can only use this call method on functions with exactly one input, function \""
+            + name() + "\" has " + signature.getInputs().size() + ".");
+      }
+      if (signature.getOutputs().size() != 1) {
+        throw new IllegalStateException("Can only use this call method on functions with exactly one input, function \""
+            + name() + "\" has " + signature.getInputs().size() + ".");
+      }
+      Map<String, Tensor> inputMap = new LinkedHashMap<>(1);
+      inputMap.put(signature.inputNames().iterator().next(), argument);
+      Map<String, Tensor> results = call(inputMap);
+      return results.get(signature.outputNames().iterator().next());
+    }
+  }
+
+  /**
    * Load a saved model from an export directory. The model that is being loaded should be created using the <a
    * href="https://www.tensorflow.org/api_docs/python/tf/saved_model">Saved Model API</a>.
    *
@@ -314,8 +413,8 @@ public class SavedModelBundle implements AutoCloseable {
    * @return object that can be used to make calls to a function
    * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
    */
-  public ConcreteFunction function(String signatureKey) {
-    ConcreteFunction function = functions.get(signatureKey);
+  public SavedFunction function(String signatureKey) {
+    SavedFunction function = functions.get(signatureKey);
     if (function == null) {
       throw new IllegalArgumentException(
           String.format("Function with signature [%s] not found", signatureKey));
@@ -326,7 +425,7 @@ public class SavedModelBundle implements AutoCloseable {
   /**
    * Get all functions in the bundle.
    */
-  public List<ConcreteFunction> functions() {
+  public List<SavedFunction> functions() {
     return new ArrayList<>(functions.values());
   }
 
@@ -347,7 +446,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @throws IllegalArgumentException if no function can be selected by default
    */
   public Map<String, Tensor> call(Map<String, Tensor> arguments) {
-    ConcreteFunction function = null;
+    SavedFunction function = null;
     if (functions.size() == 1) {
       function = functions.values().iterator().next();
     } else {
@@ -371,14 +470,15 @@ public class SavedModelBundle implements AutoCloseable {
   private final Graph graph;
   private final Session session;
   private final MetaGraphDef metaGraphDef;
-  private final Map<String, ConcreteFunction> functions;
+  private final Map<String, SavedFunction> functions;
 
   private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef,
-      Map<String, ConcreteFunction> functions) {
+      Map<String, Signature> signatures) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
-    this.functions = functions;
+    this.functions = signatures.entrySet().stream()
+        .collect(Collectors.toMap(Entry::getKey, e -> new SavedFunction(e.getValue())));
   }
 
   /**
@@ -397,14 +497,12 @@ public class SavedModelBundle implements AutoCloseable {
     // Note that the saved model will remain the owner of the graph and the session, meaning
     // that the functions do not need to be closed by the user and if it does, it should have
     // no effect.
-    final Map<String, ConcreteFunction> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
-    List<ConcreteFunction> graphFunctions = graph.getFunctions();
-    metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
+    final Map<String, Signature> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
 
-      // otherwise use the wrapper
+    metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
       if (!functions.containsKey(signatureName)) {
         Signature signature = new Signature(signatureName, signatureDef);
-        functions.put(signatureName, ConcreteFunction.create(signature, session));
+        functions.put(signatureName, signature);
       }
     });
     return new SavedModelBundle(graph, session, metaGraphDef, functions);

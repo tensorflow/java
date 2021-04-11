@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
+import org.tensorflow.SavedModelBundle.SavedFunction;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
@@ -128,7 +129,7 @@ public class SavedModelBundleTest {
       assertEquals(Signature.DEFAULT_KEY,
           savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
 
-      ConcreteFunction function = savedModel.function(Signature.DEFAULT_KEY);
+      SavedFunction function = savedModel.function(Signature.DEFAULT_KEY);
       assertNotNull(function);
 
       Signature signature = function.signature();
@@ -191,13 +192,13 @@ public class SavedModelBundleTest {
     }
     try (SavedModelBundle model = SavedModelBundle.load(testFolder.toString())) {
       assertEquals(2, model.signatures().size());
-      ConcreteFunction f1 = model.function(Signature.DEFAULT_KEY);
+      SavedFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
       try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
           TFloat32 t = (TFloat32)f1.call(x)) {
         assertEquals(reducedSum, t.getFloat(), EPSILON);
       }
-      ConcreteFunction f2 = model.function("identity");
+      SavedFunction f2 = model.function("identity");
       assertNotNull(f2);
       try (TFloat32 x = TFloat32.scalarOf(10.0f);
           TFloat32 t = (TFloat32)f2.call(x)) {
@@ -266,10 +267,11 @@ public class SavedModelBundleTest {
        * Test model was created in python
        *   Signature name used for saving 'add', argument names 'a' and 'b'
        */
-      ConcreteFunction add = bundle.function("add");
+      SavedFunction add = bundle.function("add");
       Map<String, Tensor> args = new HashMap<>();
       try (TFloat32 a = TFloat32.scalarOf(10.0f);
           TFloat32 b = TFloat32.scalarOf(15.5f)) {
+        System.out.println(add.signature());
         args.put("a", a);
         args.put("b", b);
         Map<String, Tensor> result = add.call(args);
