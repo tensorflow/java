@@ -28,46 +28,53 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 
 /**
- * Returns the truth value of `NOT x` element-wise.
+ * Returns the truth value of {@code NOT x} element-wise.
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class LogicalNot extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LogicalNot";
+
+  private Output<TBool> y;
+
+  private LogicalNot(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new LogicalNot operation.
-   * 
+   *
    * @param scope current scope
-   * @param x A `Tensor` of type `bool`.
+   * @param x A {@code Tensor} of type {@code bool}.
    * @return a new instance of LogicalNot
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static LogicalNot create(Scope scope, Operand<TBool> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalNot", scope.makeOpName("LogicalNot"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LogicalNot(opBuilder.build());
   }
-  
+
   /**
-   * A `Tensor` of type `bool` with the same shape as `x`. The logical negation of `x`.
+   * Gets y.
+   * A {@code Tensor} of type {@code bool} with the same shape as {@code x}. The logical negation of {@code x}.
+   * @return y.
    */
   public Output<TBool> y() {
     return y;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LogicalNot";
-  
-  private Output<TBool> y;
-  
-  private LogicalNot(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

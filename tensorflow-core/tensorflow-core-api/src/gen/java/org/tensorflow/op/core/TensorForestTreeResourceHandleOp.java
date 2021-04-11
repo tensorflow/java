@@ -24,50 +24,36 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a handle to a TensorForestTreeResource
  */
 public final class TensorForestTreeResourceHandleOp extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorForestTreeResourceHandleOp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorForestTreeResourceHandleOp";
+
+  private Output<? extends TType> resource;
+
+  @SuppressWarnings("unchecked")
+  private TensorForestTreeResourceHandleOp(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resource = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TensorForestTreeResourceHandleOp operation.
-   * 
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of TensorForestTreeResourceHandleOp
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TensorForestTreeResourceHandleOp create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeResourceHandleOp", scope.makeOpName("TensorForestTreeResourceHandleOp"));
     opBuilder = scope.apply(opBuilder);
@@ -83,41 +69,73 @@ public final class TensorForestTreeResourceHandleOp extends RawOp implements Ope
     }
     return new TensorForestTreeResourceHandleOp(opBuilder.build());
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets resource.
+   *
+   * @return resource.
    */
-  public Output<?> resource() {
+  public Output<? extends TType> resource() {
     return resource;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) resource;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestTreeResourceHandleOp";
-  
-  private Output<?> resource;
-  
-  private TensorForestTreeResourceHandleOp(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resource = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorForestTreeResourceHandleOp}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

@@ -31,66 +31,53 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random values from the Poisson distribution(s) described by rate.
- * <p>
- * This op uses two algorithms, depending on rate. If rate >= 10, then
+ * This op uses two algorithms, depending on rate. If rate &gt;= 10, then
  * the algorithm by Hormann is used to acquire samples via
  * transformation-rejection.
  * See http://www.sciencedirect.com/science/article/pii/0167668793909974.
- * <p>
- * Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
+ * <p>Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
  * random variables.
  * See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
  * Programming, Volume 2. Addison Wesley
- * 
- * @param <V> data type for {@code output()} output
+ *
+ * @param <V> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class RandomPoisson<V extends TNumber> extends RawOp implements Operand<V> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.random.RandomPoisson}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
-     * generator is seeded by the given seed.  Otherwise, it is seeded by a
-     * random seed.
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 A second seed to avoid seed collision.
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    private Long seed;
-    private Long seed2;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RandomPoissonV2";
+
+  private Output<V> output;
+
+  private RandomPoisson(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new RandomPoisson operation.
-   * 
+   * Factory method to create a class wrapping a new RandomPoissonV2 operation.
+   *
    * @param scope current scope
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    * distribution described by the shape parameters given in rate.
-   * @param rate A tensor in which each scalar is a "rate" parameter describing the
+   * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
    * associated poisson distribution.
-   * @param dtype 
-   * @param options carries optional attributes values
+   * @param dtype the value of the dtype property
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code RandomPoissonV2} output and operands
    * @return a new instance of RandomPoisson
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TNumber> RandomPoisson<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> rate, Class<V> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> RandomPoisson<V> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> rate, Class<V> dtype,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(rate.asOutput());
@@ -106,63 +93,99 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
         }
       }
     }
-    return new RandomPoisson<V>(opBuilder.build());
+    return new RandomPoisson<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new RandomPoisson operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new RandomPoissonV2 operation, with the default output types.
+   *
    * @param scope current scope
    * @param shape 1-D integer tensor. Shape of independent samples to draw from each
    * distribution described by the shape parameters given in rate.
-   * @param rate A tensor in which each scalar is a "rate" parameter describing the
+   * @param rate A tensor in which each scalar is a &quot;rate&quot; parameter describing the
    * associated poisson distribution.
-   * @param options carries optional attributes values
-   * @return a new instance of RandomPoisson
+   * @param options carries optional attribute values
+   * @return a new instance of RandomPoisson, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static RandomPoisson<TInt64> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> rate, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RandomPoisson<TInt64> create(Scope scope, Operand<? extends TNumber> shape,
+      Operand<? extends TNumber> rate, Options[] options) {
     return create(scope, shape, rate, TInt64.class, options);
   }
-  
+
   /**
-   * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+   * Sets the seed option.
+   *
+   * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
    * generator is seeded by the given seed.  Otherwise, it is seeded by a
    * random seed.
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
+   * Sets the seed2 option.
+   *
    * @param seed2 A second seed to avoid seed collision.
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
-   * A tensor with shape `shape + shape(rate)`. Each slice
-   * `[:, ..., :, i0, i1, ...iN]` contains the samples drawn for
-   * `rate[i0, i1, ...iN]`.
+   * Gets output.
+   * A tensor with shape {@code shape + shape(rate)}. Each slice
+   * {@code [:, ..., :, i0, i1, ...iN]} contains the samples drawn for
+   * {@code rate[i0, i1, ...iN]}.
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   @Override
   public Output<V> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RandomPoissonV2";
-  
-  private Output<V> output;
-  
-  private RandomPoisson(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.random.RandomPoisson}
+   */
+  public static class Options {
+    private Long seed;
+
+    private Long seed2;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 A second seed to avoid seed collision.
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
   }
 }

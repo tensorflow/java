@@ -30,54 +30,59 @@ import org.tensorflow.types.TString;
 
 /**
  * Merges summaries.
- * <p>
  * This op creates a
- * [`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto)
+ *  <a href="https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto">{@code Summary}</a> 
  * protocol buffer that contains the union of all the values in the input
  * summaries.
- * <p>
- * When the Op is run, it reports an `InvalidArgument` error if multiple values
+ * <p>When the Op is run, it reports an {@code InvalidArgument} error if multiple values
  * in the summaries to merge use the same tag.
  */
-@Operator(group = "summary")
+@Operator(
+    group = "summary"
+)
 public final class MergeSummary extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MergeSummary";
+
+  private Output<TString> summary;
+
+  private MergeSummary(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    summary = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new MergeSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputs Can be of any shape.  Each must contain serialized `Summary` protocol
+   * @param inputs Can be of any shape.  Each must contain serialized {@code Summary} protocol
    * buffers.
    * @return a new instance of MergeSummary
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static MergeSummary create(Scope scope, Iterable<Operand<TString>> inputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeSummary", scope.makeOpName("MergeSummary"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     return new MergeSummary(opBuilder.build());
   }
-  
+
   /**
-   * Scalar. Serialized `Summary` protocol buffer.
+   * Gets summary.
+   * Scalar. Serialized {@code Summary} protocol buffer.
+   * @return summary.
    */
   public Output<TString> summary() {
     return summary;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return summary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MergeSummary";
-  
-  private Output<TString> summary;
-  
-  private MergeSummary(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    summary = operation.output(outputIdx++);
   }
 }

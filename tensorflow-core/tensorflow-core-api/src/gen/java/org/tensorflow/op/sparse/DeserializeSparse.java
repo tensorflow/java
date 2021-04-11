@@ -30,103 +30,118 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Deserialize `SparseTensor` objects.
- * <p>
- * The input `serialized_sparse` must have the shape `[?, ?, ..., ?, 3]` where
- * the last dimension stores serialized `SparseTensor` objects and the other N
- * dimensions (N >= 0) correspond to a batch. The ranks of the original
- * `SparseTensor` objects must all match. When the final `SparseTensor` is
- * created, its rank is the rank of the incoming `SparseTensor` objects plus N;
+ * Deserialize {@code SparseTensor} objects.
+ * The input {@code serialized_sparse} must have the shape {@code [?, ?, ..., ?, 3]} where
+ * the last dimension stores serialized {@code SparseTensor} objects and the other N
+ * dimensions (N &gt;= 0) correspond to a batch. The ranks of the original
+ * {@code SparseTensor} objects must all match. When the final {@code SparseTensor} is
+ * created, its rank is the rank of the incoming {@code SparseTensor} objects plus N;
  * the sparse tensors have been concatenated along new dimensions, one for each
  * batch.
- * <p>
- * The output `SparseTensor` object's shape values for the original dimensions
- * are the max across the input `SparseTensor` objects' shape values for the
+ * <p>The output {@code SparseTensor} object's shape values for the original dimensions
+ * are the max across the input {@code SparseTensor} objects' shape values for the
  * corresponding dimensions. The new dimensions match the size of the batch.
- * <p>
- * The input `SparseTensor` objects' indices are assumed ordered in
+ * <p>The input {@code SparseTensor} objects' indices are assumed ordered in
  * standard lexicographic order.  If this is not the case, after this
- * step run `SparseReorder` to restore index ordering.
- * <p>
- * For example, if the serialized input is a `[2 x 3]` matrix representing two
- * original `SparseTensor` objects:
- * <p>
- *     index = [ 0]
- *             [10]
- *             [20]
- *     values = [1, 2, 3]
- *     shape = [50]
- * <p>
- * and
- * <p>
- *     index = [ 2]
- *             [10]
- *     values = [4, 5]
- *     shape = [30]
- * <p>
- * then the final deserialized `SparseTensor` will be:
- * <p>
- *     index = [0  0]
- *             [0 10]
- *             [0 20]
- *             [1  2]
- *             [1 10]
- *     values = [1, 2, 3, 4, 5]
- *     shape = [2 50]
- * 
- * @param <U> data type for {@code sparseValues()} output
+ * step run {@code SparseReorder} to restore index ordering.
+ * <p>For example, if the serialized input is a {@code [2 x 3]} matrix representing two
+ * original {@code SparseTensor} objects:
+ * <pre>
+ * index = [ 0]
+ *         [10]
+ *         [20]
+ * values = [1, 2, 3]
+ * shape = [50]
+ * </pre>
+ * <p>and
+ * <pre>
+ * index = [ 2]
+ *         [10]
+ * values = [4, 5]
+ * shape = [30]
+ * </pre>
+ * <p>then the final deserialized {@code SparseTensor} will be:
+ * <pre>
+ * index = [0  0]
+ *         [0 10]
+ *         [0 20]
+ *         [1  2]
+ *         [1 10]
+ * values = [1, 2, 3, 4, 5]
+ * shape = [2 50]
+ * </pre>
+ *
+ * @param <U> data type for {@code sparse_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class DeserializeSparse<U extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new DeserializeSparse operation.
-   * 
-   * @param scope current scope
-   * @param serializedSparse The serialized `SparseTensor` objects. The last dimension
-   * must have 3 columns.
-   * @param dtype The `dtype` of the serialized `SparseTensor` objects.
-   * @return a new instance of DeserializeSparse
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> DeserializeSparse<U> create(Scope scope, Operand<? extends TType> serializedSparse, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
-    opBuilder.addInput(serializedSparse.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new DeserializeSparse<U>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<TInt64> sparseIndices() {
-    return sparseIndices;
-  }
-  
-  /**
-   */
-  public Output<U> sparseValues() {
-    return sparseValues;
-  }
-  
-  /**
-   */
-  public Output<TInt64> sparseShape() {
-    return sparseShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DeserializeSparse";
-  
+
   private Output<TInt64> sparseIndices;
+
   private Output<U> sparseValues;
+
   private Output<TInt64> sparseShape;
-  
+
   private DeserializeSparse(Operation operation) {
     super(operation);
     int outputIdx = 0;
     sparseIndices = operation.output(outputIdx++);
     sparseValues = operation.output(outputIdx++);
     sparseShape = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DeserializeSparse operation.
+   *
+   * @param scope current scope
+   * @param serializedSparse The serialized {@code SparseTensor} objects. The last dimension
+   * must have 3 columns.
+   * @param dtype The {@code dtype} of the serialized {@code SparseTensor} objects.
+   * @param <U> data type for {@code DeserializeSparse} output and operands
+   * @return a new instance of DeserializeSparse
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> DeserializeSparse<U> create(Scope scope,
+      Operand<? extends TType> serializedSparse, Class<U> dtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DeserializeSparse", scope.makeOpName("DeserializeSparse"));
+    opBuilder.addInput(serializedSparse.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
+    return new DeserializeSparse<>(opBuilder.build());
+  }
+
+  /**
+   * Gets sparseIndices.
+   *
+   * @return sparseIndices.
+   */
+  public Output<TInt64> sparseIndices() {
+    return sparseIndices;
+  }
+
+  /**
+   * Gets sparseValues.
+   *
+   * @return sparseValues.
+   */
+  public Output<U> sparseValues() {
+    return sparseValues;
+  }
+
+  /**
+   * Gets sparseShape.
+   *
+   * @return sparseShape.
+   */
+  public Output<TInt64> sparseShape() {
+    return sparseShape;
   }
 }

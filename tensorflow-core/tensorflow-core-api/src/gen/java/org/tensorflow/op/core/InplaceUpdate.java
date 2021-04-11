@@ -30,56 +30,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Updates specified rows 'i' with values 'v'.
- * <p>
- * Computes `x[i, :] = v; return x`.
- * <p>
- * Originally this function is mutative however for compilation we make this
- * operation create / operate on a copy of `x`.
- * 
- * @param <T> data type for {@code y()} output
+ * Computes {@code x[i, :] = v; return x}.
+ * <p>Originally this function is mutative however for compilation we make this
+ * operation create / operate on a copy of {@code x}.
+ *
+ * @param <T> data type for {@code y} output
  */
 @Operator
 public final class InplaceUpdate<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "InplaceUpdate";
+
+  private Output<T> y;
+
+  private InplaceUpdate(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new InplaceUpdate operation.
-   * 
+   *
    * @param scope current scope
-   * @param x A tensor of type `T`.
-   * @param i A vector. Indices into the left-most dimension of `x`.
-   * @param v A `Tensor` of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
+   * @param x A tensor of type {@code T}.
+   * @param i A vector. Indices into the left-most dimension of {@code x}.
+   * @param v A {@code Tensor} of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
+   * @param <T> data type for {@code InplaceUpdate} output and operands
    * @return a new instance of InplaceUpdate
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> InplaceUpdate<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> InplaceUpdate<T> create(Scope scope, Operand<T> x,
+      Operand<TInt32> i, Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceUpdate", scope.makeOpName("InplaceUpdate"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new InplaceUpdate<T>(opBuilder.build());
+    return new InplaceUpdate<>(opBuilder.build());
   }
-  
+
   /**
-   * A `Tensor` of type T. An alias of `x`. The content of `y` is undefined if there are duplicates in `i`.
+   * Gets y.
+   * A {@code Tensor} of type T. An alias of {@code x}. The content of {@code y} is undefined if there are duplicates in {@code i}.
+   * @return y.
    */
   public Output<T> y() {
     return y;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InplaceUpdate";
-  
-  private Output<T> y;
-  
-  private InplaceUpdate(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

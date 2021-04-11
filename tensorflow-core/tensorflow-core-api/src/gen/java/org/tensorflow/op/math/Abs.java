@@ -29,50 +29,58 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the absolute value of a tensor.
- * <p>
- * Given a tensor `x`, this operation returns a tensor containing the absolute
- * value of each element in `x`. For example, if x is an input element and y is
- * an output element, this operation computes \\(y = |x|\\).
- * 
- * @param <T> data type for {@code y()} output
+ * Given a tensor {@code x}, this operation returns a tensor containing the absolute
+ * value of each element in {@code x}. For example, if x is an input element and y is
+ * an output element, this operation computes \(y = |x|\).
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Abs<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Abs operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Abs
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Abs<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Abs", scope.makeOpName("Abs"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Abs<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Abs";
-  
+
   private Output<T> y;
-  
+
   private Abs(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Abs operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Abs} output and operands
+   * @return a new instance of Abs
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Abs<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Abs", scope.makeOpName("Abs"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Abs<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

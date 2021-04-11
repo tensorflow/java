@@ -23,40 +23,43 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes a serialized proto summary.
- * <p>
- * Writes `tensor`, a serialized proto at `step` using summary `writer`.
+ * Writes {@code tensor}, a serialized proto at {@code step} using summary {@code writer}.
  */
 public final class WriteRawProtoSummary extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WriteRawProtoSummary";
+
+  private WriteRawProtoSummary(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new WriteRawProtoSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tensor 
+   * @param writer the writer value
+   * @param step the step value
+   * @param tensor the tensor value
    * @return a new instance of WriteRawProtoSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteRawProtoSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tensor) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteRawProtoSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<TString> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteRawProtoSummary", scope.makeOpName("WriteRawProtoSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WriteRawProtoSummary(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteRawProtoSummary";
-  
-  private WriteRawProtoSummary(Operation operation) {
-    super(operation);
   }
 }

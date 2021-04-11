@@ -29,66 +29,69 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the diagonal part of the tensor.
- * <p>
- * This operation returns a tensor with the `diagonal` part
- * of the `input`. The `diagonal` part is computed as follows:
- * <p>
- * Assume `input` has dimensions `[D1,..., Dk, D1,..., Dk]`, then the output is a
- * tensor of rank `k` with dimensions `[D1,..., Dk]` where:
- * <p>
- * `diagonal[i1,..., ik] = input[i1, ..., ik, i1,..., ik]`.
- * <p>
- * For example:
- * <pre>{@code
+ * This operation returns a tensor with the {@code diagonal} part
+ * of the {@code input}. The {@code diagonal} part is computed as follows:
+ * <p>Assume {@code input} has dimensions {@code [D1,..., Dk, D1,..., Dk]}, then the output is a
+ * tensor of rank {@code k} with dimensions {@code [D1,..., Dk]} where:
+ * <p>{@code diagonal[i1,..., ik] = input[i1, ..., ik, i1,..., ik]}.
+ * <p>For example:
+ * <pre>
  * # 'input' is [[1, 0, 0, 0]
  *               [0, 2, 0, 0]
  *               [0, 0, 3, 0]
  *               [0, 0, 0, 4]]
- * 
- * tf.diag_part(input) ==> [1, 2, 3, 4]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code diagonal()} output
+ *
+ * tf.diag_part(input) ==&gt; [1, 2, 3, 4]
+ * </pre>
+ *
+ * @param <T> data type for {@code diagonal} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class TensorDiagPart<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorDiagPart operation.
-   * 
-   * @param scope current scope
-   * @param input Rank k tensor where k is even and not zero.
-   * @return a new instance of TensorDiagPart
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DiagPart", scope.makeOpName("TensorDiagPart"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new TensorDiagPart<T>(opBuilder.build());
-  }
-  
-  /**
-   * The extracted diagonal.
-   */
-  public Output<T> diagonal() {
-    return diagonal;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return diagonal;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DiagPart";
-  
+
   private Output<T> diagonal;
-  
+
   private TensorDiagPart(Operation operation) {
     super(operation);
     int outputIdx = 0;
     diagonal = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DiagPart operation.
+   *
+   * @param scope current scope
+   * @param input Rank k tensor where k is even and not zero.
+   * @param <T> data type for {@code DiagPart} output and operands
+   * @return a new instance of TensorDiagPart
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DiagPart", scope.makeOpName("TensorDiagPart"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new TensorDiagPart<>(opBuilder.build());
+  }
+
+  /**
+   * Gets diagonal.
+   * The extracted diagonal.
+   * @return diagonal.
+   */
+  public Output<T> diagonal() {
+    return diagonal;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return diagonal;
   }
 }

@@ -29,64 +29,68 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a diagonal tensor with a given diagonal values.
- * <p>
- * Given a `diagonal`, this operation returns a tensor with the `diagonal` and
+ * Given a {@code diagonal}, this operation returns a tensor with the {@code diagonal} and
  * everything else padded with zeros. The diagonal is computed as follows:
- * <p>
- * Assume `diagonal` has dimensions [D1,..., Dk], then the output is a tensor of
+ * <p>Assume {@code diagonal} has dimensions [D1,..., Dk], then the output is a tensor of
  * rank 2k with dimensions [D1,..., Dk, D1,..., Dk] where:
- * <p>
- * `output[i1,..., ik, i1,..., ik] = diagonal[i1, ..., ik]` and 0 everywhere else.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>{@code output[i1,..., ik, i1,..., ik] = diagonal[i1, ..., ik]} and 0 everywhere else.
+ * <p>For example:
+ * <pre>
  * # 'diagonal' is [1, 2, 3, 4]
- * tf.diag(diagonal) ==> [[1, 0, 0, 0]
+ * tf.diag(diagonal) ==&gt; [[1, 0, 0, 0]
  *                        [0, 2, 0, 0]
  *                        [0, 0, 3, 0]
  *                        [0, 0, 0, 4]]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class TensorDiag<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorDiag operation.
-   * 
-   * @param scope current scope
-   * @param diagonal Rank k tensor where k is at most 1.
-   * @return a new instance of TensorDiag
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
-    opBuilder.addInput(diagonal.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new TensorDiag<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Diag";
-  
+
   private Output<T> output;
-  
+
   private TensorDiag(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Diag operation.
+   *
+   * @param scope current scope
+   * @param diagonal Rank k tensor where k is at most 1.
+   * @param <T> data type for {@code Diag} output and operands
+   * @return a new instance of TensorDiag
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Diag", scope.makeOpName("TensorDiag"));
+    opBuilder.addInput(diagonal.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new TensorDiag<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -23,43 +23,34 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * An op which enqueues prelinearized buffer into TPU infeed.
  */
 public final class InfeedEnqueuePrelinearizedBuffer extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.InfeedEnqueuePrelinearizedBuffer}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op is running on a TPU device
-     * and = 0 when the Op is running on the CPU device.
-     */
-    public Options deviceOrdinal(Long deviceOrdinal) {
-      this.deviceOrdinal = deviceOrdinal;
-      return this;
-    }
-    
-    private Long deviceOrdinal;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "InfeedEnqueuePrelinearizedBuffer";
+
+  private InfeedEnqueuePrelinearizedBuffer(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new InfeedEnqueuePrelinearizedBuffer operation.
-   * 
+   *
    * @param scope current scope
    * @param input A variant tensor representing linearized output.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of InfeedEnqueuePrelinearizedBuffer
    */
-  @Endpoint(describeByClass = true)
-  public static InfeedEnqueuePrelinearizedBuffer create(Scope scope, Operand<?> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static InfeedEnqueuePrelinearizedBuffer create(Scope scope, Operand<? extends TType> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueuePrelinearizedBuffer", scope.makeOpName("InfeedEnqueuePrelinearizedBuffer"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -72,19 +63,37 @@ public final class InfeedEnqueuePrelinearizedBuffer extends RawOp {
     }
     return new InfeedEnqueuePrelinearizedBuffer(opBuilder.build());
   }
-  
+
   /**
+   * Sets the deviceOrdinal option.
+   *
    * @param deviceOrdinal The TPU device to use. This should be -1 when the Op is running on a TPU device
    * and = 0 when the Op is running on the CPU device.
+   * @return this Options instance.
    */
   public static Options deviceOrdinal(Long deviceOrdinal) {
     return new Options().deviceOrdinal(deviceOrdinal);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InfeedEnqueuePrelinearizedBuffer";
-  
-  private InfeedEnqueuePrelinearizedBuffer(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.InfeedEnqueuePrelinearizedBuffer}
+   */
+  public static class Options {
+    private Long deviceOrdinal;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the deviceOrdinal option.
+     *
+     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op is running on a TPU device
+     * and = 0 when the Op is running on the CPU device.
+     * @return this Options instance.
+     */
+    public Options deviceOrdinal(Long deviceOrdinal) {
+      this.deviceOrdinal = deviceOrdinal;
+      return this;
+    }
   }
 }

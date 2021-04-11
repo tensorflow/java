@@ -24,53 +24,57 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Exits the current frame to its parent frame.
- * <p>
- * Exit makes its input `data` available to the parent frame.
- * 
- * @param <T> data type for {@code output()} output
+ * Exit makes its input {@code data} available to the parent frame.
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class Exit<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Exit operation.
-   * 
-   * @param scope current scope
-   * @param data The tensor to be made available to the parent frame.
-   * @return a new instance of Exit
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Exit<T> create(Scope scope, Operand<T> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Exit", scope.makeOpName("Exit"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Exit<T>(opBuilder.build());
-  }
-  
-  /**
-   * The same tensor as `data`.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Exit";
-  
+
   private Output<T> output;
-  
+
   private Exit(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Exit operation.
+   *
+   * @param scope current scope
+   * @param data The tensor to be made available to the parent frame.
+   * @param <T> data type for {@code Exit} output and operands
+   * @return a new instance of Exit
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Exit<T> create(Scope scope, Operand<T> data) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Exit", scope.makeOpName("Exit"));
+    opBuilder.addInput(data.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Exit<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * The same tensor as {@code data}.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

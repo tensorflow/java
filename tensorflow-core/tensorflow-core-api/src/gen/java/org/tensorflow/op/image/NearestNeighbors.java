@@ -24,22 +24,35 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
  * Selects the k nearest centers for each point.
- * <p>
  * Rows of points are assumed to be input points. Rows of centers are assumed to be
  * the list of candidate centers. For each point, the k centers that have least L2
  * distance to it are computed.
  */
 public final class NearestNeighbors extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "NearestNeighbors";
+
+  private Output<TInt64> nearestCenterIndices;
+
+  private Output<TFloat32> nearestCenterDistances;
+
+  private NearestNeighbors(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    nearestCenterIndices = operation.output(outputIdx++);
+    nearestCenterDistances = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new NearestNeighbors operation.
-   * 
+   *
    * @param scope current scope
    * @param points Matrix of shape (n, d). Rows are assumed to be input points.
    * @param centers Matrix of shape (m, d). Rows are assumed to be centers.
@@ -47,8 +60,11 @@ public final class NearestNeighbors extends RawOp {
    * only m centers are returned.
    * @return a new instance of NearestNeighbors
    */
-  @Endpoint(describeByClass = true)
-  public static NearestNeighbors create(Scope scope, Operand<TFloat32> points, Operand<TFloat32> centers, Operand<TInt64> k) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static NearestNeighbors create(Scope scope, Operand<TFloat32> points,
+      Operand<TFloat32> centers, Operand<TInt64> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("NearestNeighbors", scope.makeOpName("NearestNeighbors"));
     opBuilder.addInput(points.asOutput());
     opBuilder.addInput(centers.asOutput());
@@ -56,33 +72,24 @@ public final class NearestNeighbors extends RawOp {
     opBuilder = scope.apply(opBuilder);
     return new NearestNeighbors(opBuilder.build());
   }
-  
+
   /**
+   * Gets nearestCenterIndices.
    * Matrix of shape (n, min(m, k)). Each row contains the indices of the centers
    * closest to the corresponding point, ordered by increasing distance.
+   * @return nearestCenterIndices.
    */
   public Output<TInt64> nearestCenterIndices() {
     return nearestCenterIndices;
   }
-  
+
   /**
+   * Gets nearestCenterDistances.
    * Matrix of shape (n, min(m, k)). Each row contains the squared L2 distance to the
    * corresponding center in nearest_center_indices.
+   * @return nearestCenterDistances.
    */
   public Output<TFloat32> nearestCenterDistances() {
     return nearestCenterDistances;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "NearestNeighbors";
-  
-  private Output<TInt64> nearestCenterIndices;
-  private Output<TFloat32> nearestCenterDistances;
-  
-  private NearestNeighbors(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    nearestCenterIndices = operation.output(outputIdx++);
-    nearestCenterDistances = operation.output(outputIdx++);
   }
 }

@@ -30,59 +30,71 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Sort operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
+ * https://www.tensorflow.org/performance/xla/operation_semantics#sort
  * .
- * <p>
- * Sorts a tensor. Currently only sorts in ascending order are supported.
- * 
- * @param <T> data type for {@code sortedKeys()} output
- * @param <U> data type for {@code sortedValues()} output
+ * <p>Sorts a tensor. Currently only sorts in ascending order are supported.
+ *
+ * @param <T> data type for {@code sorted_keys} output
+ *
+ * @param <U> data type for {@code sorted_values} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class KeyValueSort<T extends TNumber, U extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new KeyValueSort operation.
-   * 
-   * @param scope current scope
-   * @param keys A `Tensor` of type K.
-   * @param values A `Tensor` of type V.
-   * @return a new instance of KeyValueSort
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> KeyValueSort<T, U> create(Scope scope, Operand<T> keys, Operand<U> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaKeyValueSort", scope.makeOpName("KeyValueSort"));
-    opBuilder.addInput(keys.asOutput());
-    opBuilder.addInput(values.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new KeyValueSort<T, U>(opBuilder.build());
-  }
-  
-  /**
-   * A `Tensor` of type K.
-   */
-  public Output<T> sortedKeys() {
-    return sortedKeys;
-  }
-  
-  /**
-   * A `Tensor` of type V.
-   */
-  public Output<U> sortedValues() {
-    return sortedValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "XlaKeyValueSort";
-  
+
   private Output<T> sortedKeys;
+
   private Output<U> sortedValues;
-  
+
   private KeyValueSort(Operation operation) {
     super(operation);
     int outputIdx = 0;
     sortedKeys = operation.output(outputIdx++);
     sortedValues = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaKeyValueSort operation.
+   *
+   * @param scope current scope
+   * @param keys A {@code Tensor} of type K.
+   * @param values A {@code Tensor} of type V.
+   * @param <T> data type for {@code XlaKeyValueSort} output and operands
+   * @param <U> data type for {@code XlaKeyValueSort} output and operands
+   * @return a new instance of KeyValueSort
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber, U extends TType> KeyValueSort<T, U> create(Scope scope,
+      Operand<T> keys, Operand<U> values) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaKeyValueSort", scope.makeOpName("KeyValueSort"));
+    opBuilder.addInput(keys.asOutput());
+    opBuilder.addInput(values.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new KeyValueSort<>(opBuilder.build());
+  }
+
+  /**
+   * Gets sortedKeys.
+   * A {@code Tensor} of type K.
+   * @return sortedKeys.
+   */
+  public Output<T> sortedKeys() {
+    return sortedKeys;
+  }
+
+  /**
+   * Gets sortedValues.
+   * A {@code Tensor} of type V.
+   * @return sortedValues.
+   */
+  public Output<U> sortedValues() {
+    return sortedValues;
   }
 }

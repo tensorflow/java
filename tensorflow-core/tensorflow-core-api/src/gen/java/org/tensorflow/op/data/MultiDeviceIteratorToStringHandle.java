@@ -24,49 +24,55 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produces a string handle for the given MultiDeviceIterator.
  */
 public final class MultiDeviceIteratorToStringHandle extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MultiDeviceIteratorToStringHandle";
+
+  private Output<TString> stringHandle;
+
+  private MultiDeviceIteratorToStringHandle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    stringHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorToStringHandle operation.
-   * 
+   *
    * @param scope current scope
    * @param multiDeviceIterator A MultiDeviceIterator resource.
    * @return a new instance of MultiDeviceIteratorToStringHandle
    */
-  @Endpoint(describeByClass = true)
-  public static MultiDeviceIteratorToStringHandle create(Scope scope, Operand<?> multiDeviceIterator) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MultiDeviceIteratorToStringHandle create(Scope scope,
+      Operand<? extends TType> multiDeviceIterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorToStringHandle", scope.makeOpName("MultiDeviceIteratorToStringHandle"));
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new MultiDeviceIteratorToStringHandle(opBuilder.build());
   }
-  
+
   /**
+   * Gets stringHandle.
    * A string representing the resource.
+   * @return stringHandle.
    */
   public Output<TString> stringHandle() {
     return stringHandle;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return stringHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MultiDeviceIteratorToStringHandle";
-  
-  private Output<TString> stringHandle;
-  
-  private MultiDeviceIteratorToStringHandle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    stringHandle = operation.output(outputIdx++);
   }
 }

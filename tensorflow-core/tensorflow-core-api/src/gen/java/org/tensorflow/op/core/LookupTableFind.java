@@ -29,58 +29,64 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Looks up keys in a table, outputs the corresponding values.
- * <p>
- * The tensor `keys` must of the same type as the keys of the table.
- * The output `values` is of the type of the table values.
- * <p>
- * The scalar `default_value` is the value output for keys not present in the
+ * The tensor {@code keys} must of the same type as the keys of the table.
+ * The output {@code values} is of the type of the table values.
+ * <p>The scalar {@code default_value} is the value output for keys not present in the
  * table. It must also be of the same type as the table values.
- * 
- * @param <U> data type for {@code values()} output
+ *
+ * @param <U> data type for {@code values} output
  */
 @Operator
 public final class LookupTableFind<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new LookupTableFind operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LookupTableFindV2";
+
+  private Output<U> values;
+
+  private LookupTableFind(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    values = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LookupTableFindV2 operation.
+   *
    * @param scope current scope
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
-   * @param defaultValue 
+   * @param defaultValue the defaultValue value
+   * @param <U> data type for {@code LookupTableFindV2} output and operands
    * @return a new instance of LookupTableFind
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> LookupTableFind<U> create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<U> defaultValue) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> LookupTableFind<U> create(Scope scope,
+      Operand<? extends TType> tableHandle, Operand<? extends TType> keys,
+      Operand<U> defaultValue) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new LookupTableFind<U>(opBuilder.build());
+    return new LookupTableFind<>(opBuilder.build());
   }
-  
+
   /**
-   * Same shape as `keys`.  Values found in the table, or `default_values`
+   * Gets values.
+   * Same shape as {@code keys}.  Values found in the table, or {@code default_values}
    * for missing keys.
+   * @return values.
    */
   public Output<U> values() {
     return values;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return values;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LookupTableFindV2";
-  
-  private Output<U> values;
-  
-  private LookupTableFind(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    values = operation.output(outputIdx++);
   }
 }

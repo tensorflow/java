@@ -30,42 +30,40 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op that groups a list of partitioned inputs together. This op
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "tpu")
+@Operator(
+    group = "tpu"
+)
 public final class PartitionedInput<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.PartitionedInput}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param partitionDim An integer describles which dimension is partitioned. -1 means
-     * those inputs are replicated.
-     */
-    public Options partitionDim(Long partitionDim) {
-      this.partitionDim = partitionDim;
-      return this;
-    }
-    
-    private Long partitionDim;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TPUPartitionedInput";
+
+  private Output<T> output;
+
+  private PartitionedInput(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new PartitionedInput operation.
-   * 
+   * Factory method to create a class wrapping a new TPUPartitionedInput operation.
+   *
    * @param scope current scope
    * @param inputs A list of partitioned inputs which must have the same shape.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TPUPartitionedInput} output and operands
    * @return a new instance of PartitionedInput
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> PartitionedInput<T> create(Scope scope, Iterable<Operand<T>> inputs, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> PartitionedInput<T> create(Scope scope,
+      Iterable<Operand<T>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUPartitionedInput", scope.makeOpName("PartitionedInput"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
@@ -76,37 +74,53 @@ public final class PartitionedInput<T extends TType> extends RawOp implements Op
         }
       }
     }
-    return new PartitionedInput<T>(opBuilder.build());
+    return new PartitionedInput<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the partitionDim option.
+   *
    * @param partitionDim An integer describles which dimension is partitioned. -1 means
    * those inputs are replicated.
+   * @return this Options instance.
    */
   public static Options partitionDim(Long partitionDim) {
     return new Options().partitionDim(partitionDim);
   }
-  
+
   /**
+   * Gets output.
    * A handle which represents the full shape of partitioned tensors.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUPartitionedInput";
-  
-  private Output<T> output;
-  
-  private PartitionedInput(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.PartitionedInput}
+   */
+  public static class Options {
+    private Long partitionDim;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the partitionDim option.
+     *
+     * @param partitionDim An integer describles which dimension is partitioned. -1 means
+     * those inputs are replicated.
+     * @return this Options instance.
+     */
+    public Options partitionDim(Long partitionDim) {
+      this.partitionDim = partitionDim;
+      return this;
+    }
   }
 }

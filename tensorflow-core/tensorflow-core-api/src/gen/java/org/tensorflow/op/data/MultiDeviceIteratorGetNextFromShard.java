@@ -29,7 +29,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -38,10 +37,25 @@ import org.tensorflow.types.family.TType;
  * Gets next element for the provided shard number.
  */
 public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements Iterable<Operand<TType>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MultiDeviceIteratorGetNextFromShard";
+
+  private List<Output<?>> components;
+
+  @SuppressWarnings("unchecked")
+  private MultiDeviceIteratorGetNextFromShard(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int componentsLength = operation.outputListLength("components");
+    components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
+    outputIdx += componentsLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorGetNextFromShard operation.
-   * 
+   *
    * @param scope current scope
    * @param multiDeviceIterator A MultiDeviceIterator resource.
    * @param shardNum Integer representing which shard to fetch data for.
@@ -50,8 +64,13 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIteratorGetNextFromShard
    */
-  @Endpoint(describeByClass = true)
-  public static MultiDeviceIteratorGetNextFromShard create(Scope scope, Operand<?> multiDeviceIterator, Operand<TInt32> shardNum, Operand<TInt64> incarnationId, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MultiDeviceIteratorGetNextFromShard create(Scope scope,
+      Operand<? extends TType> multiDeviceIterator, Operand<TInt32> shardNum,
+      Operand<TInt64> incarnationId, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorGetNextFromShard", scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(shardNum.asOutput());
@@ -59,36 +78,25 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new MultiDeviceIteratorGetNextFromShard(opBuilder.build());
   }
-  
+
   /**
+   * Gets components.
    * Result of the get_next on the dataset.
+   * @return components.
    */
   public List<Output<?>> components() {
     return components;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) components.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MultiDeviceIteratorGetNextFromShard";
-  
-  private List<Output<?>> components;
-  
-  private MultiDeviceIteratorGetNextFromShard(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int componentsLength = operation.outputListLength("components");
-    components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
-    outputIdx += componentsLength;
   }
 }

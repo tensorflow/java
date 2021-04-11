@@ -28,40 +28,44 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code e()} output
+ * The BatchSelfAdjointEigV2 operation
+ *
+ * @param <T> data type for {@code e} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.BatchSelfAdjointEig}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param computeV 
-     */
-    public Options computeV(Boolean computeV) {
-      this.computeV = computeV;
-      return this;
-    }
-    
-    private Boolean computeV;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchSelfAdjointEigV2";
+
+  private Output<T> e;
+
+  private Output<T> v;
+
+  private BatchSelfAdjointEig(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    e = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new BatchSelfAdjointEig operation.
-   * 
+   * Factory method to create a class wrapping a new BatchSelfAdjointEigV2 operation.
+   *
    * @param scope current scope
-   * @param input 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchSelfAdjointEigV2} output and operands
    * @return a new instance of BatchSelfAdjointEig
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchSelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BatchSelfAdjointEig<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSelfAdjointEigV2", scope.makeOpName("BatchSelfAdjointEig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -72,38 +76,55 @@ public final class BatchSelfAdjointEig<T extends TNumber> extends RawOp {
         }
       }
     }
-    return new BatchSelfAdjointEig<T>(opBuilder.build());
+    return new BatchSelfAdjointEig<>(opBuilder.build());
   }
-  
+
   /**
-   * @param computeV 
+   * Sets the computeV option.
+   *
+   * @param computeV the computeV option
+   * @return this Options instance.
    */
   public static Options computeV(Boolean computeV) {
     return new Options().computeV(computeV);
   }
-  
+
   /**
+   * Gets e.
+   *
+   * @return e.
    */
   public Output<T> e() {
     return e;
   }
-  
+
   /**
+   * Gets v.
+   *
+   * @return v.
    */
   public Output<T> v() {
     return v;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchSelfAdjointEigV2";
-  
-  private Output<T> e;
-  private Output<T> v;
-  
-  private BatchSelfAdjointEig(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    e = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.BatchSelfAdjointEig}
+   */
+  public static class Options {
+    private Boolean computeV;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the computeV option.
+     *
+     * @param computeV the computeV option
+     * @return this Options instance.
+     */
+    public Options computeV(Boolean computeV) {
+      this.computeV = computeV;
+      return this;
+    }
   }
 }

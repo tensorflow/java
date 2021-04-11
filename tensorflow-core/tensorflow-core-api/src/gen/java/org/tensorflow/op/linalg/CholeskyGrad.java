@@ -29,56 +29,64 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the reverse mode backpropagated gradient of the Cholesky algorithm.
- * <p>
- * For an explanation see "Differentiation of the Cholesky algorithm" by
+ * For an explanation see &quot;Differentiation of the Cholesky algorithm&quot; by
  * Iain Murray http://arxiv.org/abs/1602.07527.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class CholeskyGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new CholeskyGrad operation.
-   * 
-   * @param scope current scope
-   * @param l Output of batch Cholesky algorithm l = cholesky(A). Shape is `[..., M, M]`.
-   * Algorithm depends only on lower triangular part of the innermost matrices of
-   * this tensor.
-   * @param grad df/dl where f is some scalar function. Shape is `[..., M, M]`.
-   * Algorithm depends only on lower triangular part of the innermost matrices of
-   * this tensor.
-   * @return a new instance of CholeskyGrad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CholeskyGrad", scope.makeOpName("CholeskyGrad"));
-    opBuilder.addInput(l.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new CholeskyGrad<T>(opBuilder.build());
-  }
-  
-  /**
-   * Symmetrized version of df/dA . Shape is `[..., M, M]`
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CholeskyGrad";
-  
+
   private Output<T> output;
-  
+
   private CholeskyGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CholeskyGrad operation.
+   *
+   * @param scope current scope
+   * @param l Output of batch Cholesky algorithm l = cholesky(A). Shape is {@code [..., M, M]}.
+   * Algorithm depends only on lower triangular part of the innermost matrices of
+   * this tensor.
+   * @param grad df/dl where f is some scalar function. Shape is {@code [..., M, M]}.
+   * Algorithm depends only on lower triangular part of the innermost matrices of
+   * this tensor.
+   * @param <T> data type for {@code CholeskyGrad} output and operands
+   * @return a new instance of CholeskyGrad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CholeskyGrad<T> create(Scope scope, Operand<T> l,
+      Operand<T> grad) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CholeskyGrad", scope.makeOpName("CholeskyGrad"));
+    opBuilder.addInput(l.asOutput());
+    opBuilder.addInput(grad.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new CholeskyGrad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Symmetrized version of df/dA . Shape is {@code [..., M, M]}
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

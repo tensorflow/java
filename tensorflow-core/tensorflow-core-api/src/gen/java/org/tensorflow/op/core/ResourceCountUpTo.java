@@ -27,56 +27,64 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Increments variable pointed to by 'resource' until it reaches 'limit'.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ResourceCountUpTo";
+
+  private Output<T> output;
+
+  private ResourceCountUpTo(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ResourceCountUpTo operation.
-   * 
+   *
    * @param scope current scope
-   * @param resource Should be from a scalar `Variable` node.
+   * @param resource Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    * 'OutOfRange' error.
-   * @param T 
+   * @param T the value of the T property
+   * @param <T> data type for {@code ResourceCountUpTo} output and operands
    * @return a new instance of ResourceCountUpTo
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope, Operand<?> resource, Long limit, Class<T> T) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope,
+      Operand<? extends TType> resource, Long limit, Class<T> T) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceCountUpTo", scope.makeOpName("ResourceCountUpTo"));
     opBuilder.addInput(resource.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
     opBuilder.setAttr("T", Operands.toDataType(T));
-    return new ResourceCountUpTo<T>(opBuilder.build());
+    return new ResourceCountUpTo<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * A copy of the input before increment. If nothing else modifies the
    * input, the values produced will all be distinct.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceCountUpTo";
-  
-  private Output<T> output;
-  
-  private ResourceCountUpTo(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

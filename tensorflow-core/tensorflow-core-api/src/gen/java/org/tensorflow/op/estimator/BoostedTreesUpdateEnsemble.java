@@ -24,20 +24,27 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Updates the tree ensemble by either adding a layer to the last tree being grown
- * <p>
  * or by starting a new tree.
  */
 public final class BoostedTreesUpdateEnsemble extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesUpdateEnsemble";
+
+  private BoostedTreesUpdateEnsemble(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesUpdateEnsemble operation.
-   * 
+   *
    * @param scope current scope
    * @param treeEnsembleHandle Handle to the ensemble variable.
    * @param featureIds Rank 1 tensor with ids for each feature. This is the real id of
@@ -59,8 +66,15 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
    * @param pruningMode 0-No pruning, 1-Pre-pruning, 2-Post-pruning.
    * @return a new instance of BoostedTreesUpdateEnsemble
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesUpdateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> featureIds, Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains, Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs, Operand<TInt32> maxDepth, Operand<TFloat32> learningRate, Long pruningMode) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesUpdateEnsemble create(Scope scope,
+      Operand<? extends TType> treeEnsembleHandle, Operand<TInt32> featureIds,
+      Iterable<Operand<TInt32>> nodeIds, Iterable<Operand<TFloat32>> gains,
+      Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs,
+      Iterable<Operand<TFloat32>> rightNodeContribs, Operand<TInt32> maxDepth,
+      Operand<TFloat32> learningRate, Long pruningMode) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsemble", scope.makeOpName("BoostedTreesUpdateEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(featureIds.asOutput());
@@ -74,12 +88,5 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("pruning_mode", pruningMode);
     return new BoostedTreesUpdateEnsemble(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesUpdateEnsemble";
-  
-  private BoostedTreesUpdateEnsemble(Operation operation) {
-    super(operation);
   }
 }

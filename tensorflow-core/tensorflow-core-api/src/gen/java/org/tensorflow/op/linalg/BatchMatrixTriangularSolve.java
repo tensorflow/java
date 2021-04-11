@@ -28,50 +28,42 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The BatchMatrixTriangularSolve operation
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixTriangularSolve}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param lower 
-     */
-    public Options lower(Boolean lower) {
-      this.lower = lower;
-      return this;
-    }
-    
-    /**
-     * @param adjoint 
-     */
-    public Options adjoint(Boolean adjoint) {
-      this.adjoint = adjoint;
-      return this;
-    }
-    
-    private Boolean lower;
-    private Boolean adjoint;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchMatrixTriangularSolve";
+
+  private Output<T> output;
+
+  private BatchMatrixTriangularSolve(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BatchMatrixTriangularSolve operation.
-   * 
+   *
    * @param scope current scope
-   * @param matrix 
-   * @param rhs 
-   * @param options carries optional attributes values
+   * @param matrix the matrix value
+   * @param rhs the rhs value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchMatrixTriangularSolve} output and operands
    * @return a new instance of BatchMatrixTriangularSolve
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchMatrixTriangularSolve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BatchMatrixTriangularSolve<T> create(Scope scope,
+      Operand<T> matrix, Operand<T> rhs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixTriangularSolve", scope.makeOpName("BatchMatrixTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -86,42 +78,74 @@ public final class BatchMatrixTriangularSolve<T extends TNumber> extends RawOp i
         }
       }
     }
-    return new BatchMatrixTriangularSolve<T>(opBuilder.build());
+    return new BatchMatrixTriangularSolve<>(opBuilder.build());
   }
-  
+
   /**
-   * @param lower 
+   * Sets the lower option.
+   *
+   * @param lower the lower option
+   * @return this Options instance.
    */
   public static Options lower(Boolean lower) {
     return new Options().lower(lower);
   }
-  
+
   /**
-   * @param adjoint 
+   * Sets the adjoint option.
+   *
+   * @param adjoint the adjoint option
+   * @return this Options instance.
    */
   public static Options adjoint(Boolean adjoint) {
     return new Options().adjoint(adjoint);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchMatrixTriangularSolve";
-  
-  private Output<T> output;
-  
-  private BatchMatrixTriangularSolve(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixTriangularSolve}
+   */
+  public static class Options {
+    private Boolean lower;
+
+    private Boolean adjoint;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the lower option.
+     *
+     * @param lower the lower option
+     * @return this Options instance.
+     */
+    public Options lower(Boolean lower) {
+      this.lower = lower;
+      return this;
+    }
+
+    /**
+     * Sets the adjoint option.
+     *
+     * @param adjoint the adjoint option
+     * @return this Options instance.
+     */
+    public Options adjoint(Boolean adjoint) {
+      this.adjoint = adjoint;
+      return this;
+    }
   }
 }

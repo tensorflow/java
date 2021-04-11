@@ -30,59 +30,48 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * PNG-encode an image.
- * <p>
- * `image` is a 3-D uint8 or uint16 Tensor of shape `[height, width, channels]`
- * where `channels` is:
+ * {@code image} is a 3-D uint8 or uint16 Tensor of shape {@code [height, width, channels]}
+ * where {@code channels} is:
  * <ul>
- * <li>
- * 1: for grayscale.
- * </li>
- * <li>
- * 2: for grayscale + alpha.
- * </li>
- * <li>
- * 3: for RGB.
- * </li>
- * <li>
- * 4: for RGBA.
- * </li>
+ * <li>1: for grayscale.</li>
+ * <li>2: for grayscale + alpha.</li>
+ * <li>3: for RGB.</li>
+ * <li>4: for RGBA.</li>
  * </ul>
- * The ZLIB compression level, `compression`, can be -1 for the PNG-encoder
+ * <p>The ZLIB compression level, {@code compression}, can be -1 for the PNG-encoder
  * default or a value from 0 to 9.  9 is the highest compression level, generating
  * the smallest output, but is slower.
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class EncodePng extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.EncodePng}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param compression Compression level.
-     */
-    public Options compression(Long compression) {
-      this.compression = compression;
-      return this;
-    }
-    
-    private Long compression;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "EncodePng";
+
+  private Output<TString> contents;
+
+  private EncodePng(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    contents = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new EncodePng operation.
-   * 
+   *
    * @param scope current scope
-   * @param image 3-D with shape `[height, width, channels]`.
-   * @param options carries optional attributes values
+   * @param image 3-D with shape {@code [height, width, channels]}.
+   * @param options carries optional attribute values
    * @return a new instance of EncodePng
    */
-  @Endpoint(describeByClass = true)
-  public static EncodePng create(Scope scope, Operand<? extends TNumber> image, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static EncodePng create(Scope scope, Operand<? extends TNumber> image,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodePng", scope.makeOpName("EncodePng"));
     opBuilder.addInput(image.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -95,34 +84,49 @@ public final class EncodePng extends RawOp implements Operand<TString> {
     }
     return new EncodePng(opBuilder.build());
   }
-  
+
   /**
+   * Sets the compression option.
+   *
    * @param compression Compression level.
+   * @return this Options instance.
    */
   public static Options compression(Long compression) {
     return new Options().compression(compression);
   }
-  
+
   /**
+   * Gets contents.
    * 0-D. PNG-encoded image.
+   * @return contents.
    */
   public Output<TString> contents() {
     return contents;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return contents;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "EncodePng";
-  
-  private Output<TString> contents;
-  
-  private EncodePng(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    contents = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.EncodePng}
+   */
+  public static class Options {
+    private Long compression;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the compression option.
+     *
+     * @param compression Compression level.
+     * @return this Options instance.
+     */
+    public Options compression(Long compression) {
+      this.compression = compression;
+      return this;
+    }
   }
 }

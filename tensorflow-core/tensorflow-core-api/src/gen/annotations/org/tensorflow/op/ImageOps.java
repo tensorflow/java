@@ -76,20 +76,18 @@ public final class ImageOps {
 
   /**
    * Adjust the contrast of one or more images.
-   *  <p>
-   *  `images` is a tensor of at least 3 dimensions.  The last 3 dimensions are
-   *  interpreted as `[height, width, channels]`.  The other dimensions only
-   *  represent a collection of images, such as `[batch, height, width, channels].`
-   *  <p>
-   *  Contrast is adjusted independently for each channel of each image.
-   *  <p>
-   *  For each channel, the Op first computes the mean of the image pixels in the
+   *  {@code images} is a tensor of at least 3 dimensions.  The last 3 dimensions are
+   *  interpreted as {@code [height, width, channels]}.  The other dimensions only
+   *  represent a collection of images, such as {@code [batch, height, width, channels].}
+   *  <p>Contrast is adjusted independently for each channel of each image.
+   *  <p>For each channel, the Op first computes the mean of the image pixels in the
    *  channel and then adjusts each component of each pixel to
-   *  `(x - mean) * contrast_factor + mean`.
+   *  {@code (x - mean) * contrast_factor + mean}.
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param contrastFactor A float multiplier for adjusting contrast.
+   * @param <T> data type for {@code AdjustContrastv2} output and operands
    * @return a new instance of AdjustContrast
    */
   public <T extends TNumber> AdjustContrast<T> adjustContrast(Operand<T> images,
@@ -99,17 +97,16 @@ public final class ImageOps {
 
   /**
    * Adjust the hue of one or more images.
-   *  <p>
-   *  `images` is a tensor of at least 3 dimensions.  The last dimension is
+   *  {@code images} is a tensor of at least 3 dimensions.  The last dimension is
    *  interpreted as channels, and must be three.
-   *  <p>
-   *  The input image is considered in the RGB colorspace. Conceptually, the RGB
+   *  <p>The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A delta is then applied all the hue values,
    *  and then remapped back to RGB colorspace.
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param delta A float delta to add to the hue.
+   * @param <T> data type for {@code AdjustHue} output and operands
    * @return a new instance of AdjustHue
    */
   public <T extends TNumber> AdjustHue<T> adjustHue(Operand<T> images, Operand<TFloat32> delta) {
@@ -118,17 +115,16 @@ public final class ImageOps {
 
   /**
    * Adjust the saturation of one or more images.
-   *  <p>
-   *  `images` is a tensor of at least 3 dimensions.  The last dimension is
+   *  {@code images} is a tensor of at least 3 dimensions.  The last dimension is
    *  interpreted as channels, and must be three.
-   *  <p>
-   *  The input image is considered in the RGB colorspace. Conceptually, the RGB
+   *  <p>The input image is considered in the RGB colorspace. Conceptually, the RGB
    *  colors are first mapped into HSV. A scale is then applied all the saturation
    *  values, and then remapped back to RGB colorspace.
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param images Images to adjust.  At least 3-D.
    * @param scale A float scale to add to the saturation.
+   * @param <T> data type for {@code AdjustSaturation} output and operands
    * @return a new instance of AdjustSaturation
    */
   public <T extends TNumber> AdjustSaturation<T> adjustSaturation(Operand<T> images,
@@ -138,7 +134,6 @@ public final class ImageOps {
 
   /**
    * Greedily selects a subset of bounding boxes in descending order of score,
-   *  <p>
    *  This operation performs non_max_suppression on the inputs per batch, across
    *  all classes.
    *  Prunes away boxes that have high intersection-over-union (IOU) overlap
@@ -153,10 +148,10 @@ public final class ImageOps {
    *  The output of this operation is the final boxes, scores and classes tensor
    *  returned after performing non_max_suppression.
    *
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then
-   *  same boxes are used for all classes otherwise, if `q` is equal to number of
+   * @param boxes A 4-D float tensor of shape {@code [batch_size, num_boxes, q, 4]}. If {@code q} is 1 then
+   *  same boxes are used for all classes otherwise, if {@code q} is equal to number of
    *  classes, class-specific boxes are used.
-   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
+   * @param scores A 3-D float tensor of shape {@code [batch_size, num_boxes, num_classes]}
    *  representing a single score corresponding to each box (each row of boxes).
    * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of
    *  boxes to be selected by non max suppression per class
@@ -165,7 +160,7 @@ public final class ImageOps {
    *  boxes overlap too much with respect to IOU.
    * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
    *  boxes based on score.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of CombinedNonMaxSuppression
    */
   public CombinedNonMaxSuppression combinedNonMaxSuppression(Operand<TFloat32> boxes,
@@ -177,42 +172,40 @@ public final class ImageOps {
 
   /**
    * Extracts crops from the input image tensor and resizes them.
-   *  <p>
    *  Extracts crops from the input image tensor and resizes them using bilinear
    *  sampling or nearest neighbor sampling (possibly with aspect ratio change) to a
-   *  common output size specified by `crop_size`. This is more general than the
-   *  `crop_to_bounding_box` op which extracts a fixed size slice from the input image
+   *  common output size specified by {@code crop_size}. This is more general than the
+   *  {@code crop_to_bounding_box} op which extracts a fixed size slice from the input image
    *  and does not allow resizing or aspect ratio change.
-   *  <p>
-   *  Returns a tensor with `crops` from the input `image` at positions defined at the
-   *  bounding box locations in `boxes`. The cropped boxes are all resized (with
+   *  <p>Returns a tensor with {@code crops} from the input {@code image} at positions defined at the
+   *  bounding box locations in {@code boxes}. The cropped boxes are all resized (with
    *  bilinear or nearest neighbor interpolation) to a fixed
-   *  `size = [crop_height, crop_width]`. The result is a 4-D tensor
-   *  `[num_boxes, crop_height, crop_width, depth]`. The resizing is corner aligned.
-   *  In particular, if `boxes = [[0, 0, 1, 1]]`, the method will give identical
-   *  results to using `tf.image.resize_bilinear()` or
-   *  `tf.image.resize_nearest_neighbor()`(depends on the `method` argument) with
-   *  `align_corners=True`.
+   *  {@code size = [crop_height, crop_width]}. The result is a 4-D tensor
+   *  {@code [num_boxes, crop_height, crop_width, depth]}. The resizing is corner aligned.
+   *  In particular, if {@code boxes = [[0, 0, 1, 1]]}, the method will give identical
+   *  results to using {@code tf.image.resize_bilinear()} or
+   *  {@code tf.image.resize_nearest_neighbor()}(depends on the {@code method} argument) with
+   *  {@code align_corners=True}.
    *
-   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
-   *  Both `image_height` and `image_width` need to be positive.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   *  specifies the coordinates of a box in the `box_ind[i]` image and is specified
-   *  in normalized coordinates `[y1, x1, y2, x2]`. A normalized coordinate value of
-   *  `y` is mapped to the image coordinate at `y * (image_height - 1)`, so as the
-   *  `[0, 1]` interval of normalized image height is mapped to
-   *  `[0, image_height - 1]` in image height coordinates. We do allow `y1` > `y2`, in
+   * @param image A 4-D tensor of shape {@code [batch, image_height, image_width, depth]}.
+   *  Both {@code image_height} and {@code image_width} need to be positive.
+   * @param boxes A 2-D tensor of shape {@code [num_boxes, 4]}. The {@code i}-th row of the tensor
+   *  specifies the coordinates of a box in the {@code box_ind[i]} image and is specified
+   *  in normalized coordinates {@code [y1, x1, y2, x2]}. A normalized coordinate value of
+   *  {@code y} is mapped to the image coordinate at {@code y * (image_height - 1)}, so as the
+   *  {@code [0, 1]} interval of normalized image height is mapped to
+   *  {@code [0, image_height - 1]} in image height coordinates. We do allow {@code y1} &gt; {@code y2}, in
    *  which case the sampled crop is an up-down flipped version of the original
    *  image. The width dimension is treated similarly. Normalized coordinates
-   *  outside the `[0, 1]` range are allowed, in which case we use
-   *  `extrapolation_value` to extrapolate the input image values.
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   *  The value of `box_ind[i]` specifies the image that the `i`-th box refers to.
-   * @param cropSize A 1-D tensor of 2 elements, `size = [crop_height, crop_width]`. All
+   *  outside the {@code [0, 1]} range are allowed, in which case we use
+   *  {@code extrapolation_value} to extrapolate the input image values.
+   * @param boxInd A 1-D tensor of shape {@code [num_boxes]} with int32 values in {@code [0, batch)}.
+   *  The value of {@code box_ind[i]} specifies the image that the {@code i}-th box refers to.
+   * @param cropSize A 1-D tensor of 2 elements, {@code size = [crop_height, crop_width]}. All
    *  cropped image patches are resized to this size. The aspect ratio of the image
-   *  content is not preserved. Both `crop_height` and `crop_width` need to be
+   *  content is not preserved. Both {@code crop_height} and {@code crop_width} need to be
    *  positive.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of CropAndResize
    */
   public CropAndResize cropAndResize(Operand<? extends TNumber> image, Operand<TFloat32> boxes,
@@ -223,22 +216,18 @@ public final class ImageOps {
   /**
    * Computes the gradient of the crop_and_resize op wrt the input boxes tensor.
    *
-   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
-   * @param image A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
-   *  Both `image_height` and `image_width` need to be positive.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   *  specifies the coordinates of a box in the `box_ind[i]` image and is specified
-   *  in normalized coordinates `[y1, x1, y2, x2]`. A normalized coordinate value of
-   *  `y` is mapped to the image coordinate at `y * (image_height - 1)`, so as the
-   *  `[0, 1]` interval of normalized image height is mapped to
-   *  `[0, image_height - 1] in image height coordinates. We do allow y1 > y2, in
-   *  which case the sampled crop is an up-down flipped version of the original
-   *  image. The width dimension is treated similarly. Normalized coordinates
-   *  outside the `[0, 1]` range are allowed, in which case we use
-   *  `extrapolation_value` to extrapolate the input image values.
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   *  The value of `box_ind[i]` specifies the image that the `i`-th box refers to.
-   * @param options carries optional attributes values
+   * @param grads A 4-D tensor of shape {@code [num_boxes, crop_height, crop_width, depth]}.
+   * @param image A 4-D tensor of shape {@code [batch, image_height, image_width, depth]}.
+   *  Both {@code image_height} and {@code image_width} need to be positive.
+   * @param boxes A 2-D tensor of shape {@code [num_boxes, 4]}. The {@code i}-th row of the tensor
+   *  specifies the coordinates of a box in the {@code box_ind[i]} image and is specified
+   *  in normalized coordinates {@code [y1, x1, y2, x2]}. A normalized coordinate value of
+   *  {@code y} is mapped to the image coordinate at {@code y * (image_height - 1)}, so as the
+   *  {@code [0, 1]} interval of normalized image height is mapped to
+   *  {@code [0, image_height - 1] in image height coordinates. We do allow y1 > y2, in which case the sampled crop is an up-down flipped version of the original image. The width dimension is treated similarly. Normalized coordinates outside the }[0, 1]{@code range are allowed, in which case we use}extrapolation_value` to extrapolate the input image values.
+   * @param boxInd A 1-D tensor of shape {@code [num_boxes]} with int32 values in {@code [0, batch)}.
+   *  The value of {@code box_ind[i]} specifies the image that the {@code i}-th box refers to.
+   * @param options carries optional attribute values
    * @return a new instance of CropAndResizeGradBoxes
    */
   public CropAndResizeGradBoxes cropAndResizeGradBoxes(Operand<TFloat32> grads,
@@ -250,25 +239,22 @@ public final class ImageOps {
   /**
    * Computes the gradient of the crop_and_resize op wrt the input image tensor.
    *
-   * @param <T> data type for {@code output()} output
-   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   *  specifies the coordinates of a box in the `box_ind[i]` image and is specified
-   *  in normalized coordinates `[y1, x1, y2, x2]`. A normalized coordinate value of
-   *  `y` is mapped to the image coordinate at `y * (image_height - 1)`, so as the
-   *  `[0, 1]` interval of normalized image height is mapped to
-   *  `[0, image_height - 1] in image height coordinates. We do allow y1 > y2, in
-   *  which case the sampled crop is an up-down flipped version of the original
-   *  image. The width dimension is treated similarly. Normalized coordinates
-   *  outside the `[0, 1]` range are allowed, in which case we use
-   *  `extrapolation_value` to extrapolate the input image values.
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   *  The value of `box_ind[i]` specifies the image that the `i`-th box refers to.
-   * @param imageSize A 1-D tensor with value `[batch, image_height, image_width, depth]`
-   *  containing the original image size. Both `image_height` and `image_width` need
+   * @param <T> data type for {@code output} output
+   * @param grads A 4-D tensor of shape {@code [num_boxes, crop_height, crop_width, depth]}.
+   * @param boxes A 2-D tensor of shape {@code [num_boxes, 4]}. The {@code i}-th row of the tensor
+   *  specifies the coordinates of a box in the {@code box_ind[i]} image and is specified
+   *  in normalized coordinates {@code [y1, x1, y2, x2]}. A normalized coordinate value of
+   *  {@code y} is mapped to the image coordinate at {@code y * (image_height - 1)}, so as the
+   *  {@code [0, 1]} interval of normalized image height is mapped to
+   *  {@code [0, image_height - 1] in image height coordinates. We do allow y1 > y2, in which case the sampled crop is an up-down flipped version of the original image. The width dimension is treated similarly. Normalized coordinates outside the }[0, 1]{@code range are allowed, in which case we use}extrapolation_value` to extrapolate the input image values.
+   * @param boxInd A 1-D tensor of shape {@code [num_boxes]} with int32 values in {@code [0, batch)}.
+   *  The value of {@code box_ind[i]} specifies the image that the {@code i}-th box refers to.
+   * @param imageSize A 1-D tensor with value {@code [batch, image_height, image_width, depth]}
+   *  containing the original image size. Both {@code image_height} and {@code image_width} need
    *  to be positive.
-   * @param T
-   * @param options carries optional attributes values
+   * @param T the value of the T property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CropAndResizeGradImage} output and operands
    * @return a new instance of CropAndResizeGradImage
    */
   public <T extends TNumber> CropAndResizeGradImage<T> cropAndResizeGradImage(
@@ -279,35 +265,25 @@ public final class ImageOps {
 
   /**
    * Decode and Crop a JPEG-encoded image to a uint8 tensor.
-   *  <p>
-   *  The attr `channels` indicates the desired number of color channels for the
+   *  The attr {@code channels} indicates the desired number of color channels for the
    *  decoded image.
-   *  <p>
-   *  Accepted values are:
+   *  <p>Accepted values are:
    *  <ul>
-   *  <li>
-   *  0: Use the number of channels in the JPEG-encoded image.
-   *  </li>
-   *  <li>
-   *  1: output a grayscale image.
-   *  </li>
-   *  <li>
-   *  3: output an RGB image.
-   *  </li>
+   *  <li>0: Use the number of channels in the JPEG-encoded image.</li>
+   *  <li>1: output a grayscale image.</li>
+   *  <li>3: output an RGB image.</li>
    *  </ul>
-   *  If needed, the JPEG-encoded image is transformed to match the requested number
+   *  <p>If needed, the JPEG-encoded image is transformed to match the requested number
    *  of color channels.
-   *  <p>
-   *  The attr `ratio` allows downscaling the image by an integer factor during
+   *  <p>The attr {@code ratio} allows downscaling the image by an integer factor during
    *  decoding.  Allowed values are: 1, 2, 4, and 8.  This is much faster than
    *  downscaling the image later.
-   *  <p>
-   *  It is equivalent to a combination of decode and crop, but much faster by only
+   *  <p>It is equivalent to a combination of decode and crop, but much faster by only
    *  decoding partial jpeg image.
    *
    * @param contents 0-D.  The JPEG-encoded image.
    * @param cropWindow 1-D.  The crop window: [crop_y, crop_x, crop_height, crop_width].
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeAndCropJpeg
    */
   public DecodeAndCropJpeg decodeAndCropJpeg(Operand<TString> contents, Operand<TInt32> cropWindow,
@@ -317,23 +293,17 @@ public final class ImageOps {
 
   /**
    * Decode the first frame of a BMP-encoded image to a uint8 tensor.
-   *  <p>
-   *  The attr `channels` indicates the desired number of color channels for the
+   *  The attr {@code channels} indicates the desired number of color channels for the
    *  decoded image.
-   *  <p>
-   *  Accepted values are:
+   *  <p>Accepted values are:
    *  <ul>
-   *  <li>
-   *  0: Use the number of channels in the BMP-encoded image.
-   *  </li>
-   *  <li>
-   *  3: output an RGB image.
-   *  </li>
-   *  <li>
-   *  4: output an RGBA image.
+   *  <li>0: Use the number of channels in the BMP-encoded image.</li>
+   *  <li>3: output an RGB image.</li>
+   *  <li>4: output an RGBA image.</li>
+   *  </ul>
    *
    * @param contents 0-D.  The BMP-encoded image.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeBmp
    */
   public DecodeBmp decodeBmp(Operand<TString> contents, DecodeBmp.Options... options) {
@@ -342,15 +312,14 @@ public final class ImageOps {
 
   /**
    * Decode the frame(s) of a GIF-encoded image to a uint8 tensor.
-   *  <p>
    *  GIF images with frame or transparency compression are not supported.
    *  On Linux and MacOS systems, convert animated GIFs from compressed to
    *  uncompressed by running:
-   *  <p>
-   *      convert $src.gif -coalesce $dst.gif
-   *  <p>
-   *  This op also supports decoding JPEGs and PNGs, though it is cleaner to use
-   *  `tf.io.decode_image`.
+   *  <pre>
+   *  convert $src.gif -coalesce $dst.gif
+   *  </pre>
+   *  <p>This op also supports decoding JPEGs and PNGs, though it is cleaner to use
+   *  {@code tf.io.decode_image}.
    *
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
@@ -361,60 +330,54 @@ public final class ImageOps {
 
   /**
    * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
-   *  <p>
    *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
    *  appropriate operation to convert the input bytes string into a Tensor of type
    *  dtype.
-   *  <p>
-   *  <i>NOTE</i>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
+   *  <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
    *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
    *  [height, width, num_channels]. Make sure to take this into account when
    *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
    *  PNG files. Alternately, set the expand_animations argument of this function to
    *  False, in which case the op will return 3-dimensional tensors and will truncate
    *  animated GIF files to the first frame.
-   *  <p>
-   *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+   *  <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
    *  canvas (maximum frame width x maximum frame height), then it fills the
    *  unoccupied areas (in the first frame) with zeros (black). For frames after the
    *  first frame that does not occupy the entire canvas, it uses the previous
    *  frame to fill the unoccupied areas.
    *
-   * @param <T> data type for {@code image()} output
+   * @param <T> data type for {@code image} output
    * @param contents 0-D. The encoded image bytes.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodeImage
+   * @param options carries optional attribute values
+   * @return a new instance of DecodeImage, with default output types
    */
-  public DecodeImage<TUint8> decodeImage(Operand<TString> contents,
-      DecodeImage.Options... options) {
+  public DecodeImage<TUint8> decodeImage(Operand<TString> contents, DecodeImage.Options[] options) {
     return DecodeImage.create(scope, contents, options);
   }
 
   /**
    * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
-   *  <p>
    *  Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
    *  appropriate operation to convert the input bytes string into a Tensor of type
    *  dtype.
-   *  <p>
-   *  <i>NOTE</i>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
+   *  <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
    *  opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
    *  [height, width, num_channels]. Make sure to take this into account when
    *  constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
    *  PNG files. Alternately, set the expand_animations argument of this function to
    *  False, in which case the op will return 3-dimensional tensors and will truncate
    *  animated GIF files to the first frame.
-   *  <p>
-   *  <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+   *  <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
    *  canvas (maximum frame width x maximum frame height), then it fills the
    *  unoccupied areas (in the first frame) with zeros (black). For frames after the
    *  first frame that does not occupy the entire canvas, it uses the previous
    *  frame to fill the unoccupied areas.
    *
-   * @param <T> data type for {@code image()} output
+   * @param <T> data type for {@code image} output
    * @param contents 0-D. The encoded image bytes.
    * @param dtype The desired DType of the returned Tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodeImage} output and operands
    * @return a new instance of DecodeImage
    */
   public <T extends TNumber> DecodeImage<T> decodeImage(Operand<TString> contents, Class<T> dtype,
@@ -424,34 +387,24 @@ public final class ImageOps {
 
   /**
    * Decode a JPEG-encoded image to a uint8 tensor.
-   *  <p>
-   *  The attr `channels` indicates the desired number of color channels for the
+   *  The attr {@code channels} indicates the desired number of color channels for the
    *  decoded image.
-   *  <p>
-   *  Accepted values are:
+   *  <p>Accepted values are:
    *  <ul>
-   *  <li>
-   *  0: Use the number of channels in the JPEG-encoded image.
-   *  </li>
-   *  <li>
-   *  1: output a grayscale image.
-   *  </li>
-   *  <li>
-   *  3: output an RGB image.
-   *  </li>
+   *  <li>0: Use the number of channels in the JPEG-encoded image.</li>
+   *  <li>1: output a grayscale image.</li>
+   *  <li>3: output an RGB image.</li>
    *  </ul>
-   *  If needed, the JPEG-encoded image is transformed to match the requested number
+   *  <p>If needed, the JPEG-encoded image is transformed to match the requested number
    *  of color channels.
-   *  <p>
-   *  The attr `ratio` allows downscaling the image by an integer factor during
+   *  <p>The attr {@code ratio} allows downscaling the image by an integer factor during
    *  decoding.  Allowed values are: 1, 2, 4, and 8.  This is much faster than
    *  downscaling the image later.
-   *  <p>
-   *  This op also supports decoding PNGs and non-animated GIFs since the interface is
-   *  the same, though it is cleaner to use `tf.io.decode_image`.
+   *  <p>This op also supports decoding PNGs and non-animated GIFs since the interface is
+   *  the same, though it is cleaner to use {@code tf.io.decode_image}.
    *
    * @param contents 0-D.  The JPEG-encoded image.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeJpeg
    */
   public DecodeJpeg decodeJpeg(Operand<TString> contents, DecodeJpeg.Options... options) {
@@ -460,71 +413,50 @@ public final class ImageOps {
 
   /**
    * Decode a PNG-encoded image to a uint8 or uint16 tensor.
-   *  <p>
-   *  The attr `channels` indicates the desired number of color channels for the
+   *  The attr {@code channels} indicates the desired number of color channels for the
    *  decoded image.
-   *  <p>
-   *  Accepted values are:
+   *  <p>Accepted values are:
    *  <ul>
-   *  <li>
-   *  0: Use the number of channels in the PNG-encoded image.
-   *  </li>
-   *  <li>
-   *  1: output a grayscale image.
-   *  </li>
-   *  <li>
-   *  3: output an RGB image.
-   *  </li>
-   *  <li>
-   *  4: output an RGBA image.
-   *  </li>
+   *  <li>0: Use the number of channels in the PNG-encoded image.</li>
+   *  <li>1: output a grayscale image.</li>
+   *  <li>3: output an RGB image.</li>
+   *  <li>4: output an RGBA image.</li>
    *  </ul>
-   *  If needed, the PNG-encoded image is transformed to match the requested number
+   *  <p>If needed, the PNG-encoded image is transformed to match the requested number
    *  of color channels.
-   *  <p>
-   *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.io.decode_image`.
+   *  <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
+   *  is the same, though it is cleaner to use {@code tf.io.decode_image}.
    *
-   * @param <T> data type for {@code image()} output
+   * @param <T> data type for {@code image} output
    * @param contents 0-D.  The PNG-encoded image.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodePng
+   * @param options carries optional attribute values
+   * @return a new instance of DecodePng, with default output types
    */
-  public DecodePng<TUint8> decodePng(Operand<TString> contents, DecodePng.Options... options) {
+  public DecodePng<TUint8> decodePng(Operand<TString> contents, DecodePng.Options[] options) {
     return DecodePng.create(scope, contents, options);
   }
 
   /**
    * Decode a PNG-encoded image to a uint8 or uint16 tensor.
-   *  <p>
-   *  The attr `channels` indicates the desired number of color channels for the
+   *  The attr {@code channels} indicates the desired number of color channels for the
    *  decoded image.
-   *  <p>
-   *  Accepted values are:
+   *  <p>Accepted values are:
    *  <ul>
-   *  <li>
-   *  0: Use the number of channels in the PNG-encoded image.
-   *  </li>
-   *  <li>
-   *  1: output a grayscale image.
-   *  </li>
-   *  <li>
-   *  3: output an RGB image.
-   *  </li>
-   *  <li>
-   *  4: output an RGBA image.
-   *  </li>
+   *  <li>0: Use the number of channels in the PNG-encoded image.</li>
+   *  <li>1: output a grayscale image.</li>
+   *  <li>3: output an RGB image.</li>
+   *  <li>4: output an RGBA image.</li>
    *  </ul>
-   *  If needed, the PNG-encoded image is transformed to match the requested number
+   *  <p>If needed, the PNG-encoded image is transformed to match the requested number
    *  of color channels.
-   *  <p>
-   *  This op also supports decoding JPEGs and non-animated GIFs since the interface
-   *  is the same, though it is cleaner to use `tf.io.decode_image`.
+   *  <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
+   *  is the same, though it is cleaner to use {@code tf.io.decode_image}.
    *
-   * @param <T> data type for {@code image()} output
+   * @param <T> data type for {@code image} output
    * @param contents 0-D.  The PNG-encoded image.
-   * @param dtype
-   * @param options carries optional attributes values
+   * @param dtype the value of the dtype property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodePng} output and operands
    * @return a new instance of DecodePng
    */
   public <T extends TNumber> DecodePng<T> decodePng(Operand<TString> contents, Class<T> dtype,
@@ -534,24 +466,22 @@ public final class ImageOps {
 
   /**
    * Draw bounding boxes on a batch of images.
-   *  <p>
-   *  Outputs a copy of `images` but draws on top of the pixels zero or more bounding
-   *  boxes specified by the locations in `boxes`. The coordinates of the each
-   *  bounding box in `boxes` are encoded as `[y_min, x_min, y_max, x_max]`. The
-   *  bounding box coordinates are floats in `[0.0, 1.0]` relative to the width and
+   *  Outputs a copy of {@code images} but draws on top of the pixels zero or more bounding
+   *  boxes specified by the locations in {@code boxes}. The coordinates of the each
+   *  bounding box in {@code boxes} are encoded as {@code [y_min, x_min, y_max, x_max]}. The
+   *  bounding box coordinates are floats in {@code [0.0, 1.0]} relative to the width and
    *  height of the underlying image.
-   *  <p>
-   *  For example, if an image is 100 x 200 pixels (height x width) and the bounding
-   *  box is `[0.1, 0.2, 0.5, 0.9]`, the upper-left and bottom-right coordinates of
-   *  the bounding box will be `(40, 10)` to `(100, 50)` (in (x,y) coordinates).
-   *  <p>
-   *  Parts of the bounding box may fall outside the image.
+   *  <p>For example, if an image is 100 x 200 pixels (height x width) and the bounding
+   *  box is {@code [0.1, 0.2, 0.5, 0.9]}, the upper-left and bottom-right coordinates of
+   *  the bounding box will be {@code (40, 10)} to {@code (100, 50)} (in (x,y) coordinates).
+   *  <p>Parts of the bounding box may fall outside the image.
    *
-   * @param <T> data type for {@code output()} output
-   * @param images 4-D with shape `[batch, height, width, depth]`. A batch of images.
-   * @param boxes 3-D with shape `[batch, num_bounding_boxes, 4]` containing bounding
+   * @param <T> data type for {@code output} output
+   * @param images 4-D with shape {@code [batch, height, width, depth]}. A batch of images.
+   * @param boxes 3-D with shape {@code [batch, num_bounding_boxes, 4]} containing bounding
    *  boxes.
    * @param colors 2-D. A list of RGBA colors to cycle through for the boxes.
+   * @param <T> data type for {@code DrawBoundingBoxesV2} output and operands
    * @return a new instance of DrawBoundingBoxes
    */
   public <T extends TNumber> DrawBoundingBoxes<T> drawBoundingBoxes(Operand<T> images,
@@ -561,35 +491,25 @@ public final class ImageOps {
 
   /**
    * JPEG-encode an image.
-   *  <p>
-   *  `image` is a 3-D uint8 Tensor of shape `[height, width, channels]`.
-   *  <p>
-   *  The attr `format` can be used to override the color format of the encoded
+   *  {@code image} is a 3-D uint8 Tensor of shape {@code [height, width, channels]}.
+   *  <p>The attr {@code format} can be used to override the color format of the encoded
    *  output.  Values can be:
    *  <ul>
-   *  <li>
-   *  `''`: Use a default format based on the number of channels in the image.
-   *  </li>
-   *  <li>
-   *  `grayscale`: Output a grayscale JPEG image.  The `channels` dimension
-   *      of `image` must be 1.
-   *  </li>
-   *  <li>
-   *  `rgb`: Output an RGB JPEG image. The `channels` dimension
-   *      of `image` must be 3.
-   *  </li>
+   *  <li>{@code ''}: Use a default format based on the number of channels in the image.</li>
+   *  <li>{@code grayscale}: Output a grayscale JPEG image.  The {@code channels} dimension
+   *  of {@code image} must be 1.</li>
+   *  <li>{@code rgb}: Output an RGB JPEG image. The {@code channels} dimension
+   *  of {@code image} must be 3.</li>
    *  </ul>
-   *  If `format` is not specified or is the empty string, a default format is picked
-   *  in function of the number of channels in `image`:
+   *  <p>If {@code format} is not specified or is the empty string, a default format is picked
+   *  in function of the number of channels in {@code image}:
    *  <ul>
-   *  <li>
-   *  1: Output a grayscale image.
-   *  </li>
-   *  <li>
-   *  3: Output an RGB image.
+   *  <li>1: Output a grayscale image.</li>
+   *  <li>3: Output an RGB image.</li>
+   *  </ul>
    *
-   * @param image 3-D with shape `[height, width, channels]`.
-   * @param options carries optional attributes values
+   * @param image 3-D with shape {@code [height, width, channels]}.
+   * @param options carries optional attribute values
    * @return a new instance of EncodeJpeg
    */
   public EncodeJpeg encodeJpeg(Operand<TUint8> image, EncodeJpeg.Options... options) {
@@ -598,9 +518,8 @@ public final class ImageOps {
 
   /**
    * JPEG encode input image with provided compression quality.
-   *  <p>
-   *  `image` is a 3-D uint8 Tensor of shape `[height, width, channels]`.
-   *  `quality` is an int32 jpeg compression quality value between 0 and 100.
+   *  {@code image} is a 3-D uint8 Tensor of shape {@code [height, width, channels]}.
+   *  {@code quality} is an int32 jpeg compression quality value between 0 and 100.
    *
    * @param images Images to adjust.  At least 3-D.
    * @param quality An int quality to encode to.
@@ -613,29 +532,20 @@ public final class ImageOps {
 
   /**
    * PNG-encode an image.
-   *  <p>
-   *  `image` is a 3-D uint8 or uint16 Tensor of shape `[height, width, channels]`
-   *  where `channels` is:
+   *  {@code image} is a 3-D uint8 or uint16 Tensor of shape {@code [height, width, channels]}
+   *  where {@code channels} is:
    *  <ul>
-   *  <li>
-   *  1: for grayscale.
-   *  </li>
-   *  <li>
-   *  2: for grayscale + alpha.
-   *  </li>
-   *  <li>
-   *  3: for RGB.
-   *  </li>
-   *  <li>
-   *  4: for RGBA.
-   *  </li>
+   *  <li>1: for grayscale.</li>
+   *  <li>2: for grayscale + alpha.</li>
+   *  <li>3: for RGB.</li>
+   *  <li>4: for RGBA.</li>
    *  </ul>
-   *  The ZLIB compression level, `compression`, can be -1 for the PNG-encoder
+   *  <p>The ZLIB compression level, {@code compression}, can be -1 for the PNG-encoder
    *  default or a value from 0 to 9.  9 is the highest compression level, generating
    *  the smallest output, but is slower.
    *
-   * @param image 3-D with shape `[height, width, channels]`.
-   * @param options carries optional attributes values
+   * @param image 3-D with shape {@code [height, width, channels]}.
+   * @param options carries optional attribute values
    * @return a new instance of EncodePng
    */
   public EncodePng encodePng(Operand<? extends TNumber> image, EncodePng.Options... options) {
@@ -643,20 +553,21 @@ public final class ImageOps {
   }
 
   /**
-   * Extract `patches` from `images` and put them in the "depth" output dimension.
+   * Extract {@code patches} from {@code images} and put them in the &quot;depth&quot; output dimension.
    *
-   * @param <T> data type for {@code patches()} output
-   * @param images 4-D Tensor with shape `[batch, in_rows, in_cols, depth]`.
-   * @param ksizes The size of the sliding window for each dimension of `images`.
+   * @param <T> data type for {@code patches} output
+   * @param images 4-D Tensor with shape {@code [batch, in_rows, in_cols, depth]}.
+   * @param ksizes The size of the sliding window for each dimension of {@code images}.
    * @param strides How far the centers of two consecutive patches are in
-   *  the images. Must be: `[1, stride_rows, stride_cols, 1]`.
-   * @param rates Must be: `[1, rate_rows, rate_cols, 1]`. This is the
+   *  the images. Must be: {@code [1, stride_rows, stride_cols, 1]}.
+   * @param rates Must be: {@code [1, rate_rows, rate_cols, 1]}. This is the
    *  input stride, specifying how far two consecutive patch samples are in the
    *  input. Equivalent to extracting patches with
-   *  `patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)`, followed by
-   *  subsampling them spatially by a factor of `rates`. This is equivalent to
-   *  `rate` in dilated (a.k.a. Atrous) convolutions.
+   *  {@code patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)}, followed by
+   *  subsampling them spatially by a factor of {@code rates}. This is equivalent to
+   *  {@code rate} in dilated (a.k.a. Atrous) convolutions.
    * @param padding The type of padding algorithm to use.
+   * @param <T> data type for {@code ExtractImagePatches} output and operands
    * @return a new instance of ExtractImagePatches
    */
   public <T extends TType> ExtractImagePatches<T> extractImagePatches(Operand<T> images,
@@ -666,12 +577,11 @@ public final class ImageOps {
 
   /**
    * Extract the shape information of a JPEG-encoded image.
-   *  <p>
    *  This op only parses the image header, so it is much faster than DecodeJpeg.
    *
-   * @param <T> data type for {@code imageShape()} output
+   * @param <T> data type for {@code image_shape} output
    * @param contents 0-D. The JPEG-encoded image.
-   * @return a new instance of ExtractJpegShape
+   * @return a new instance of ExtractJpegShape, with default output types
    */
   public ExtractJpegShape<TInt32> extractJpegShape(Operand<TString> contents) {
     return ExtractJpegShape.create(scope, contents);
@@ -679,13 +589,13 @@ public final class ImageOps {
 
   /**
    * Extract the shape information of a JPEG-encoded image.
-   *  <p>
    *  This op only parses the image header, so it is much faster than DecodeJpeg.
    *
-   * @param <T> data type for {@code imageShape()} output
+   * @param <T> data type for {@code image_shape} output
    * @param contents 0-D. The JPEG-encoded image.
    * @param outputType (Optional) The output type of the operation (int32 or int64).
    *  Defaults to int32.
+   * @param <T> data type for {@code ExtractJpegShape} output and operands
    * @return a new instance of ExtractJpegShape
    */
   public <T extends TNumber> ExtractJpegShape<T> extractJpegShape(Operand<TString> contents,
@@ -695,15 +605,14 @@ public final class ImageOps {
 
   /**
    * Convert one or more images from HSV to RGB.
-   *  <p>
-   *  Outputs a tensor of the same shape as the `images` tensor, containing the RGB
-   *  value of the pixels. The output is only well defined if the value in `images`
-   *  are in `[0,1]`.
-   *  <p>
-   *  See `rgb_to_hsv` for a description of the HSV encoding.
+   *  Outputs a tensor of the same shape as the {@code images} tensor, containing the RGB
+   *  value of the pixels. The output is only well defined if the value in {@code images}
+   *  are in {@code [0,1]}.
+   *  <p>See {@code rgb_to_hsv} for a description of the HSV encoding.
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param images 1-D or higher rank. HSV data to convert. Last dimension must be size 3.
+   * @param <T> data type for {@code HSVToRGB} output and operands
    * @return a new instance of HsvToRgb
    */
   public <T extends TNumber> HsvToRgb<T> hsvToRgb(Operand<T> images) {
@@ -712,10 +621,9 @@ public final class ImageOps {
 
   /**
    * Greedily selects a subset of bounding boxes in descending order of score,
-   *  <p>
    *  pruning away boxes that have high intersection-over-union (IOU) overlap
    *  with previously selected boxes.  Bounding boxes with score less than
-   *  `score_threshold` are removed.  Bounding boxes are supplied as
+   *  {@code score_threshold} are removed.  Bounding boxes are supplied as
    *  [y1, x1, y2, x2], where (y1, x1) and (y2, x2) are the coordinates of any
    *  diagonal pair of box corners and the coordinates can be provided as normalized
    *  (i.e., lying in the interval [0, 1]) or absolute.  Note that this algorithm
@@ -726,19 +634,19 @@ public final class ImageOps {
    *  The output of this operation is a set of integers indexing into the input
    *  collection of bounding boxes representing the selected boxes.  The bounding
    *  box coordinates corresponding to the selected indices can then be obtained
-   *  using the `tf.gather operation`.  For example:
-   *    selected_indices = tf.image.non_max_suppression_v2(
-   *        boxes, scores, max_output_size, iou_threshold, score_threshold)
-   *    selected_boxes = tf.gather(boxes, selected_indices)
+   *  using the {@code tf.gather operation}.  For example:
+   *  selected_indices = tf.image.non_max_suppression_v2(
+   *  boxes, scores, max_output_size, iou_threshold, score_threshold)
+   *  selected_boxes = tf.gather(boxes, selected_indices)
    *  This op also supports a Soft-NMS (with Gaussian weighting) mode (c.f.
    *  Bodla et al, https://arxiv.org/abs/1704.04503) where boxes reduce the score
    *  of other overlapping boxes instead of directly causing them to be pruned.
-   *  To enable this Soft-NMS mode, set the `soft_nms_sigma` parameter to be
+   *  To enable this Soft-NMS mode, set the {@code soft_nms_sigma} parameter to be
    *  larger than 0.
    *
-   * @param <T> data type for {@code selectedScores()} output
-   * @param boxes A 2-D float tensor of shape `[num_boxes, 4]`.
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
+   * @param <T> data type for {@code selected_scores} output
+   * @param boxes A 2-D float tensor of shape {@code [num_boxes, 4]}.
+   * @param scores A 1-D float tensor of shape {@code [num_boxes]} representing a single
    *  score corresponding to each box (each row of boxes).
    * @param maxOutputSize A scalar integer tensor representing the maximum number of
    *  boxes to be selected by non max suppression.
@@ -747,9 +655,10 @@ public final class ImageOps {
    * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
    *  boxes based on score.
    * @param softNmsSigma A 0-D float tensor representing the sigma parameter for Soft NMS; see Bodla et
-   *  al (c.f. https://arxiv.org/abs/1704.04503).  When `soft_nms_sigma=0.0` (which
+   *  al (c.f. https://arxiv.org/abs/1704.04503).  When {@code soft_nms_sigma=0.0} (which
    *  is default), we fall back to standard (hard) NMS.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code NonMaxSuppressionV5} output and operands
    * @return a new instance of NonMaxSuppression
    */
   public <T extends TNumber> NonMaxSuppression<T> nonMaxSuppression(Operand<T> boxes,
@@ -760,25 +669,22 @@ public final class ImageOps {
 
   /**
    * Greedily selects a subset of bounding boxes in descending order of score,
-   *  <p>
    *  pruning away boxes that have high overlaps
    *  with previously selected boxes.  Bounding boxes with score less than
-   *  `score_threshold` are removed. N-by-n overlap values are supplied as square matrix,
+   *  {@code score_threshold} are removed. N-by-n overlap values are supplied as square matrix,
    *  which allows for defining a custom overlap criterium (eg. intersection over union,
    *  intersection over area, etc.).
-   *  <p>
-   *  The output of this operation is a set of integers indexing into the input
+   *  <p>The output of this operation is a set of integers indexing into the input
    *  collection of bounding boxes representing the selected boxes.  The bounding
    *  box coordinates corresponding to the selected indices can then be obtained
-   *  using the `tf.gather operation`.  For example:
-   *  <p>
-   *    selected_indices = tf.image.non_max_suppression_with_overlaps(
-   *        overlaps, scores, max_output_size, overlap_threshold, score_threshold)
-   *    selected_boxes = tf.gather(boxes, selected_indices)
+   *  using the {@code tf.gather operation}.  For example:
+   *  <p>selected_indices = tf.image.non_max_suppression_with_overlaps(
+   *  overlaps, scores, max_output_size, overlap_threshold, score_threshold)
+   *  selected_boxes = tf.gather(boxes, selected_indices)
    *
-   * @param overlaps A 2-D float tensor of shape `[num_boxes, num_boxes]` representing
+   * @param overlaps A 2-D float tensor of shape {@code [num_boxes, num_boxes]} representing
    *  the n-by-n box overlap values.
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
+   * @param scores A 1-D float tensor of shape {@code [num_boxes]} representing a single
    *  score corresponding to each box (each row of boxes).
    * @param maxOutputSize A scalar integer tensor representing the maximum number of
    *  boxes to be selected by non max suppression.
@@ -795,143 +701,141 @@ public final class ImageOps {
   }
 
   /**
-   * Resize quantized `images` to `size` using quantized bilinear interpolation.
-   *  <p>
+   * Resize quantized {@code images} to {@code size} using quantized bilinear interpolation.
    *  Input images and output images must be quantized types.
    *
-   * @param <T> data type for {@code resizedImages()} output
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param <T> data type for {@code resized_images} output
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param min
-   * @param max
-   * @param options carries optional attributes values
+   * @param min the min value
+   * @param max the max value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code QuantizedResizeBilinear} output and operands
    * @return a new instance of QuantizedResizeBilinear
    */
-  public <T extends TType> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
-      Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max,
+  public <T extends TNumber> QuantizedResizeBilinear<T> quantizedResizeBilinear(Operand<T> images,
+      Operand<TInt32> sizeOutput, Operand<TFloat32> min, Operand<TFloat32> max,
       QuantizedResizeBilinear.Options... options) {
-    return QuantizedResizeBilinear.create(scope, images, size, min, max, options);
+    return QuantizedResizeBilinear.create(scope, images, sizeOutput, min, max, options);
   }
 
   /**
-   * Randomly crop `image`.
-   *  <p>
-   *  `size` is a 1-D int64 tensor with 2 elements representing the crop height and
+   * Randomly crop {@code image}.
+   *  {@code size} is a 1-D int64 tensor with 2 elements representing the crop height and
    *  width.  The values must be non negative.
-   *  <p>
-   *  This Op picks a random location in `image` and crops a `height` by `width`
+   *  <p>This Op picks a random location in {@code image} and crops a {@code height} by {@code width}
    *  rectangle from that location.  The random location is picked so the cropped
    *  area will fit inside the original image.
    *
-   * @param <T> data type for {@code output()} output
-   * @param image 3-D of shape `[height, width, channels]`.
-   * @param size 1-D of length 2 containing: `crop_height`, `crop_width`..
-   * @param options carries optional attributes values
+   * @param <T> data type for {@code output} output
+   * @param image 3-D of shape {@code [height, width, channels]}.
+   * @param sizeOutput 1-D of length 2 containing: {@code crop_height}, {@code crop_width}..
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code RandomCrop} output and operands
    * @return a new instance of RandomCrop
    */
-  public <T extends TNumber> RandomCrop<T> randomCrop(Operand<T> image, Operand<TInt64> size,
+  public <T extends TNumber> RandomCrop<T> randomCrop(Operand<T> image, Operand<TInt64> sizeOutput,
       RandomCrop.Options... options) {
-    return RandomCrop.create(scope, image, size, options);
+    return RandomCrop.create(scope, image, sizeOutput, options);
   }
 
   /**
-   * Resize `images` to `size` using area interpolation.
-   *  <p>
+   * Resize {@code images} to {@code size} using area interpolation.
    *  Input images can be of different types but output images are always float.
-   *  <p>
-   *  The range of pixel values for the output image might be slightly different
+   *  <p>The range of pixel values for the output image might be slightly different
    *  from the range for the input image because of limited numerical precision.
-   *  To guarantee an output range, for example `[0.0, 1.0]`, apply
-   *  `tf.clip_by_value` to the output.
-   *  <p>
-   *  Each output pixel is computed by first transforming the pixel's footprint into
+   *  To guarantee an output range, for example {@code [0.0, 1.0]}, apply
+   *  {@code tf.clip_by_value} to the output.
+   *  <p>Each output pixel is computed by first transforming the pixel's footprint into
    *  the input tensor and then averaging the pixels that intersect the footprint. An
    *  input pixel's contribution to the average is weighted by the fraction of its
    *  area that intersects the footprint.  This is the same as OpenCV's INTER_AREA.
    *
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ResizeArea
    */
-  public ResizeArea resizeArea(Operand<? extends TNumber> images, Operand<TInt32> size,
+  public ResizeArea resizeArea(Operand<? extends TNumber> images, Operand<TInt32> sizeOutput,
       ResizeArea.Options... options) {
-    return ResizeArea.create(scope, images, size, options);
+    return ResizeArea.create(scope, images, sizeOutput, options);
   }
 
   /**
-   * Resize `images` to `size` using bicubic interpolation.
-   *  <p>
+   * Resize {@code images} to {@code size} using bicubic interpolation.
    *  Input images can be of different types but output images are always float.
    *
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ResizeBicubic
    */
-  public ResizeBicubic resizeBicubic(Operand<? extends TNumber> images, Operand<TInt32> size,
+  public ResizeBicubic resizeBicubic(Operand<? extends TNumber> images, Operand<TInt32> sizeOutput,
       ResizeBicubic.Options... options) {
-    return ResizeBicubic.create(scope, images, size, options);
+    return ResizeBicubic.create(scope, images, sizeOutput, options);
   }
 
   /**
-   * Resize `images` to `size` using bilinear interpolation.
-   *  <p>
+   * Resize {@code images} to {@code size} using bilinear interpolation.
    *  Input images can be of different types but output images are always float.
    *
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ResizeBilinear
    */
-  public ResizeBilinear resizeBilinear(Operand<? extends TNumber> images, Operand<TInt32> size,
-      ResizeBilinear.Options... options) {
-    return ResizeBilinear.create(scope, images, size, options);
+  public ResizeBilinear resizeBilinear(Operand<? extends TNumber> images,
+      Operand<TInt32> sizeOutput, ResizeBilinear.Options... options) {
+    return ResizeBilinear.create(scope, images, sizeOutput, options);
   }
 
   /**
-   * Resize `images` to `size` using nearest neighbor interpolation.
+   * Resize {@code images} to {@code size} using nearest neighbor interpolation.
    *
-   * @param <T> data type for {@code resizedImages()} output
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param <T> data type for {@code resized_images} output
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    *  new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeNearestNeighbor} output and operands
    * @return a new instance of ResizeNearestNeighbor
    */
   public <T extends TNumber> ResizeNearestNeighbor<T> resizeNearestNeighbor(Operand<T> images,
-      Operand<TInt32> size, ResizeNearestNeighbor.Options... options) {
-    return ResizeNearestNeighbor.create(scope, images, size, options);
+      Operand<TInt32> sizeOutput, ResizeNearestNeighbor.Options... options) {
+    return ResizeNearestNeighbor.create(scope, images, sizeOutput, options);
   }
 
   /**
    * Converts one or more images from RGB to HSV.
-   *  <p>
-   *  Outputs a tensor of the same shape as the `images` tensor, containing the HSV
-   *  value of the pixels. The output is only well defined if the value in `images`
-   *  are in `[0,1]`.
-   *  <p>
-   *  `output[..., 0]` contains hue, `output[..., 1]` contains saturation, and
-   *  `output[..., 2]` contains value. All HSV values are in `[0,1]`. A hue of 0
+   *  Outputs a tensor of the same shape as the {@code images} tensor, containing the HSV
+   *  value of the pixels. The output is only well defined if the value in {@code images}
+   *  are in {@code [0,1]}.
+   *  <p>{@code output[..., 0]} contains hue, {@code output[..., 1]} contains saturation, and
+   *  {@code output[..., 2]} contains value. All HSV values are in {@code [0,1]}. A hue of 0
    *  corresponds to pure red, hue 1/3 is pure green, and 2/3 is pure blue.
-   *  <p>
-   *  Usage Example:
-   *  <p>
-   *  >>> blue_image = tf.stack([
+   *  <p>Usage Example:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>blue_image = tf.stack([
    *  ...    tf.zeros([5,5]),
    *  ...    tf.zeros([5,5]),
    *  ...    tf.ones([5,5])],
    *  ...    axis=-1)
-   *  >>> blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
-   *  >>> blue_hsv_image[0,0].numpy()
+   *  blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
+   *  blue_hsv_image[0,0].numpy()
    *  array([0.6666667, 1. , 1. ], dtype=float32)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
+   * @param <T> data type for {@code RGBToHSV} output and operands
    * @return a new instance of RgbToHsv
    */
   public <T extends TNumber> RgbToHsv<T> rgbToHsv(Operand<T> images) {
@@ -940,26 +844,22 @@ public final class ImageOps {
 
   /**
    * Generate a single randomly distorted bounding box for an image.
-   *  <p>
    *  Bounding box annotations are often supplied in addition to ground-truth labels
    *  in image recognition or object localization tasks. A common technique for
    *  training such a system is to randomly distort an image while preserving
-   *  its content, i.e. <i>data augmentation</i>. This Op outputs a randomly distorted
-   *  localization of an object, i.e. bounding box, given an `image_size`,
-   *  `bounding_boxes` and a series of constraints.
-   *  <p>
-   *  The output of this Op is a single bounding box that may be used to crop the
-   *  original image. The output is returned as 3 tensors: `begin`, `size` and
-   *  `bboxes`. The first 2 tensors can be fed directly into `tf.slice` to crop the
-   *  image. The latter may be supplied to `tf.image.draw_bounding_boxes` to visualize
+   *  its content, i.e. <em>data augmentation</em>. This Op outputs a randomly distorted
+   *  localization of an object, i.e. bounding box, given an {@code image_size},
+   *  {@code bounding_boxes} and a series of constraints.
+   *  <p>The output of this Op is a single bounding box that may be used to crop the
+   *  original image. The output is returned as 3 tensors: {@code begin}, {@code size} and
+   *  {@code bboxes}. The first 2 tensors can be fed directly into {@code tf.slice} to crop the
+   *  image. The latter may be supplied to {@code tf.image.draw_bounding_boxes} to visualize
    *  what the bounding box looks like.
-   *  <p>
-   *  Bounding boxes are supplied and returned as `[y_min, x_min, y_max, x_max]`. The
-   *  bounding box coordinates are floats in `[0.0, 1.0]` relative to the width and
+   *  <p>Bounding boxes are supplied and returned as {@code [y_min, x_min, y_max, x_max]}. The
+   *  bounding box coordinates are floats in {@code [0.0, 1.0]} relative to the width and
    *  height of the underlying image.
-   *  <p>
-   *  For example,
-   *  <pre>{@code
+   *  <p>For example,
+   *  <pre>
    *      # Generate a single distorted bounding box.
    *      begin, size, bbox_for_draw = tf.image.sample_distorted_bounding_box(
    *          tf.shape(image),
@@ -972,21 +872,22 @@ public final class ImageOps {
    *
    *      # Employ the bounding box to distort the image.
    *      distorted_image = tf.slice(image, begin, size)
-   *  }</pre>
-   *  Note that if no bounding box information is available, setting
-   *  `use_image_if_no_bounding_boxes = true` will assume there is a single implicit
-   *  bounding box covering the whole image. If `use_image_if_no_bounding_boxes` is
+   *  </pre>
+   *  <p>Note that if no bounding box information is available, setting
+   *  {@code use_image_if_no_bounding_boxes = true} will assume there is a single implicit
+   *  bounding box covering the whole image. If {@code use_image_if_no_bounding_boxes} is
    *  false and no bounding boxes are supplied, an error is raised.
    *
-   * @param <T> data type for {@code begin()} output
-   * @param imageSize 1-D, containing `[height, width, channels]`.
-   * @param boundingBoxes 3-D with shape `[batch, N, 4]` describing the N bounding boxes
+   * @param <T> data type for {@code begin} output
+   * @param imageSize 1-D, containing {@code [height, width, channels]}.
+   * @param boundingBoxes 3-D with shape {@code [batch, N, 4]} describing the N bounding boxes
    *  associated with the image.
    * @param minObjectCovered The cropped area of the image must contain at least this
    *  fraction of any bounding box supplied. The value of this parameter should be
    *  non-negative. In the case of 0, the cropped area does not need to overlap
    *  any of the bounding boxes supplied.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SampleDistortedBoundingBoxV2} output and operands
    * @return a new instance of SampleDistortedBoundingBox
    */
   public <T extends TNumber> SampleDistortedBoundingBox<T> sampleDistortedBoundingBox(
@@ -996,93 +897,94 @@ public final class ImageOps {
   }
 
   /**
+   * The ScaleAndTranslate operation
    *
-   * @param images
-   * @param size
-   * @param scale
-   * @param translation
-   * @param options carries optional attributes values
+   * @param images the images value
+   * @param sizeOutput the sizeOutput value
+   * @param scale the scale value
+   * @param translation the translation value
+   * @param options carries optional attribute values
    * @return a new instance of ScaleAndTranslate
    */
   public ScaleAndTranslate scaleAndTranslate(Operand<? extends TNumber> images,
-      Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation,
+      Operand<TInt32> sizeOutput, Operand<TFloat32> scale, Operand<TFloat32> translation,
       ScaleAndTranslate.Options... options) {
-    return ScaleAndTranslate.create(scope, images, size, scale, translation, options);
+    return ScaleAndTranslate.create(scope, images, sizeOutput, scale, translation, options);
   }
 
   /**
    * Generate a randomly distorted bounding box for an image deterministically.
-   *  <p>
    *  Bounding box annotations are often supplied in addition to ground-truth labels
    *  in image recognition or object localization tasks. A common technique for
    *  training such a system is to randomly distort an image while preserving its
-   *  content, i.e. <i>data augmentation</i>. This Op, given the same `seed`,
+   *  content, i.e. <em>data augmentation</em>. This Op, given the same {@code seed},
    *  deterministically outputs a randomly distorted localization of an object, i.e.
-   *  bounding box, given an `image_size`, `bounding_boxes` and a series of
+   *  bounding box, given an {@code image_size}, {@code bounding_boxes} and a series of
    *  constraints.
-   *  <p>
-   *  The output of this Op is a single bounding box that may be used to crop the
-   *  original image. The output is returned as 3 tensors: `begin`, `size` and
-   *  `bboxes`. The first 2 tensors can be fed directly into `tf.slice` to crop the
-   *  image. The latter may be supplied to `tf.image.draw_bounding_boxes` to visualize
+   *  <p>The output of this Op is a single bounding box that may be used to crop the
+   *  original image. The output is returned as 3 tensors: {@code begin}, {@code size} and
+   *  {@code bboxes}. The first 2 tensors can be fed directly into {@code tf.slice} to crop the
+   *  image. The latter may be supplied to {@code tf.image.draw_bounding_boxes} to visualize
    *  what the bounding box looks like.
-   *  <p>
-   *  Bounding boxes are supplied and returned as `[y_min, x_min, y_max, x_max]`. The
-   *  bounding box coordinates are floats in `[0.0, 1.0]` relative to the width and
+   *  <p>Bounding boxes are supplied and returned as {@code [y_min, x_min, y_max, x_max]}. The
+   *  bounding box coordinates are floats in {@code [0.0, 1.0]} relative to the width and
    *  the height of the underlying image.
-   *  <p>
-   *  The output of this Op is guaranteed to be the same given the same `seed` and is
+   *  <p>The output of this Op is guaranteed to be the same given the same {@code seed} and is
    *  independent of how many times the function is called, and independent of global
-   *  seed settings (e.g. `tf.random.set_seed`).
-   *  <p>
-   *  Example usage:
-   *  <p>
-   *  >>> image = np.array([[[1], [2], [3]], [[4], [5], [6]], [[7], [8], [9]]])
-   *  >>> bbox = tf.constant(
+   *  seed settings (e.g. {@code tf.random.set_seed}).
+   *  <p>Example usage:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>image = np.array([[[1], [2], [3]], [[4], [5], [6]], [[7], [8], [9]]])
+   *  bbox = tf.constant(
    *  ...   [0.0, 0.0, 1.0, 1.0], dtype=tf.float32, shape=[1, 1, 4])
-   *  >>> seed = (1, 2)
-   *  >>> # Generate a single distorted bounding box.
-   *  >>> bbox_begin, bbox_size, bbox_draw = (
+   *  seed = (1, 2)
+   *  <strong>Generate a single distorted bounding box.</strong><br>
+   *  <p>bbox_begin, bbox_size, bbox_draw = (
    *  ...   tf.image.stateless_sample_distorted_bounding_box(
    *  ...     tf.shape(image), bounding_boxes=bbox, seed=seed))
-   *  >>> # Employ the bounding box to distort the image.
-   *  >>> tf.slice(image, bbox_begin, bbox_size)
-   *  <tf.Tensor: shape=(2, 2, 1), dtype=int64, numpy=
+   *  <strong>Employ the bounding box to distort the image.</strong><br>
+   *  <p>tf.slice(image, bbox_begin, bbox_size)
+   *  &lt;tf.Tensor: shape=(2, 2, 1), dtype=int64, numpy=
    *  array([[[1],
-   *          [2]],
-   *         [[4],
-   *          [5]]])>
-   *  >>> # Draw the bounding box in an image summary.
-   *  >>> colors = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
-   *  >>> tf.image.draw_bounding_boxes(
+   *  [2]],
+   *  [[4],
+   *  [5]]])&gt;
+   *  <strong>Draw the bounding box in an image summary.</strong><br>
+   *  <p>colors = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+   *  tf.image.draw_bounding_boxes(
    *  ...   tf.expand_dims(tf.cast(image, tf.float32),0), bbox_draw, colors)
-   *  <tf.Tensor: shape=(1, 3, 3, 1), dtype=float32, numpy=
+   *  &lt;tf.Tensor: shape=(1, 3, 3, 1), dtype=float32, numpy=
    *  array([[[[1.],
-   *           [1.],
-   *           [3.]],
-   *          [[1.],
-   *           [1.],
-   *           [6.]],
-   *          [[7.],
-   *           [8.],
-   *           [9.]]]], dtype=float32)>
-   *  <p>
-   *  Note that if no bounding box information is available, setting
-   *  `use_image_if_no_bounding_boxes = true` will assume there is a single implicit
-   *  bounding box covering the whole image. If `use_image_if_no_bounding_boxes` is
+   *  [1.],
+   *  [3.]],
+   *  [[1.],
+   *  [1.],
+   *  [6.]],
+   *  [[7.],
+   *  [8.],
+   *  [9.]]]], dtype=float32)&gt;
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
+   *  <p>Note that if no bounding box information is available, setting
+   *  {@code use_image_if_no_bounding_boxes = true} will assume there is a single implicit
+   *  bounding box covering the whole image. If {@code use_image_if_no_bounding_boxes} is
    *  false and no bounding boxes are supplied, an error is raised.
    *
-   * @param <T> data type for {@code begin()} output
-   * @param imageSize 1-D, containing `[height, width, channels]`.
-   * @param boundingBoxes 3-D with shape `[batch, N, 4]` describing the N bounding boxes
+   * @param <T> data type for {@code begin} output
+   * @param imageSize 1-D, containing {@code [height, width, channels]}.
+   * @param boundingBoxes 3-D with shape {@code [batch, N, 4]} describing the N bounding boxes
    *  associated with the image.
    * @param minObjectCovered The cropped area of the image must contain at least this
    *  fraction of any bounding box supplied. The value of this parameter should be
    *  non-negative. In the case of 0, the cropped area does not need to overlap
    *  any of the bounding boxes supplied.
-   * @param seed 1-D with shape `[2]`. The seed to the random number generator. Must have dtype
-   *  `int32` or `int64`. (When using XLA, only `int32` is allowed.)
-   * @param options carries optional attributes values
+   * @param seed 1-D with shape {@code [2]}. The seed to the random number generator. Must have dtype
+   *  {@code int32} or {@code int64}. (When using XLA, only {@code int32} is allowed.)
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code StatelessSampleDistortedBoundingBox} output and operands
    * @return a new instance of StatelessSampleDistortedBoundingBox
    */
   public <T extends TNumber> StatelessSampleDistortedBoundingBox<T> statelessSampleDistortedBoundingBox(

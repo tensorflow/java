@@ -29,49 +29,47 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' as FOBOS algorithm with fixed learning rate.
- * <p>
- * prox_v = var - alpha <i> delta
- * var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}
- * 
- * @param <T> data type for {@code out()} output
+ * prox_v = var - alpha * delta
+ * var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ApplyProximalGradientDescent<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ApplyProximalGradientDescent}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, the subtraction will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApplyProximalGradientDescent";
+
+  private Output<T> out;
+
+  private ApplyProximalGradientDescent(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ApplyProximalGradientDescent operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 regularization. Must be a scalar.
    * @param delta The change.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyProximalGradientDescent} output and operands
    * @return a new instance of ApplyProximalGradientDescent
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyProximalGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApplyProximalGradientDescent<T> create(Scope scope,
+      Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> delta,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalGradientDescent", scope.makeOpName("ApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
@@ -86,37 +84,53 @@ public final class ApplyProximalGradientDescent<T extends TType> extends RawOp i
         }
       }
     }
-    return new ApplyProximalGradientDescent<T>(opBuilder.build());
+    return new ApplyProximalGradientDescent<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, the subtraction will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApplyProximalGradientDescent";
-  
-  private Output<T> out;
-  
-  private ApplyProximalGradientDescent(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ApplyProximalGradientDescent}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

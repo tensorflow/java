@@ -28,49 +28,47 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code s()} output
+ * The BatchSvd operation
+ *
+ * @param <T> data type for {@code s} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchSvd<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.BatchSvd}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param computeUv 
-     */
-    public Options computeUv(Boolean computeUv) {
-      this.computeUv = computeUv;
-      return this;
-    }
-    
-    /**
-     * @param fullMatrices 
-     */
-    public Options fullMatrices(Boolean fullMatrices) {
-      this.fullMatrices = fullMatrices;
-      return this;
-    }
-    
-    private Boolean computeUv;
-    private Boolean fullMatrices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchSvd";
+
+  private Output<T> s;
+
+  private Output<T> u;
+
+  private Output<T> v;
+
+  private BatchSvd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    s = operation.output(outputIdx++);
+    u = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BatchSvd operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchSvd} output and operands
    * @return a new instance of BatchSvd
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchSvd<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchSvd", scope.makeOpName("BatchSvd"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -84,53 +82,87 @@ public final class BatchSvd<T extends TType> extends RawOp {
         }
       }
     }
-    return new BatchSvd<T>(opBuilder.build());
+    return new BatchSvd<>(opBuilder.build());
   }
-  
+
   /**
-   * @param computeUv 
+   * Sets the computeUv option.
+   *
+   * @param computeUv the computeUv option
+   * @return this Options instance.
    */
   public static Options computeUv(Boolean computeUv) {
     return new Options().computeUv(computeUv);
   }
-  
+
   /**
-   * @param fullMatrices 
+   * Sets the fullMatrices option.
+   *
+   * @param fullMatrices the fullMatrices option
+   * @return this Options instance.
    */
   public static Options fullMatrices(Boolean fullMatrices) {
     return new Options().fullMatrices(fullMatrices);
   }
-  
+
   /**
+   * Gets s.
+   *
+   * @return s.
    */
   public Output<T> s() {
     return s;
   }
-  
+
   /**
+   * Gets u.
+   *
+   * @return u.
    */
   public Output<T> u() {
     return u;
   }
-  
+
   /**
+   * Gets v.
+   *
+   * @return v.
    */
   public Output<T> v() {
     return v;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchSvd";
-  
-  private Output<T> s;
-  private Output<T> u;
-  private Output<T> v;
-  
-  private BatchSvd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    s = operation.output(outputIdx++);
-    u = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.BatchSvd}
+   */
+  public static class Options {
+    private Boolean computeUv;
+
+    private Boolean fullMatrices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the computeUv option.
+     *
+     * @param computeUv the computeUv option
+     * @return this Options instance.
+     */
+    public Options computeUv(Boolean computeUv) {
+      this.computeUv = computeUv;
+      return this;
+    }
+
+    /**
+     * Sets the fullMatrices option.
+     *
+     * @param fullMatrices the fullMatrices option
+     * @return this Options instance.
+     */
+    public Options fullMatrices(Boolean fullMatrices) {
+      this.fullMatrices = fullMatrices;
+      return this;
+    }
   }
 }

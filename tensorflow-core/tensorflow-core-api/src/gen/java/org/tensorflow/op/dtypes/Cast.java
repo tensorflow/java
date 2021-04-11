@@ -30,42 +30,41 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Cast x of type SrcT to y of DstT.
- * 
- * @param <U> data type for {@code y()} output
+ *
+ * @param <U> data type for {@code y} output
  */
-@Operator(group = "dtypes")
+@Operator(
+    group = "dtypes"
+)
 public final class Cast<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.dtypes.Cast}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param Truncate 
-     */
-    public Options Truncate(Boolean Truncate) {
-      this.Truncate = Truncate;
-      return this;
-    }
-    
-    private Boolean Truncate;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Cast";
+
+  private Output<U> y;
+
+  private Cast(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Cast operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param DstT 
-   * @param options carries optional attributes values
+   * @param x the x value
+   * @param DstT the value of the DstT property
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code Cast} output and operands
    * @return a new instance of Cast
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> Cast<U> create(Scope scope, Operand<? extends TType> x, Class<U> DstT, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> Cast<U> create(Scope scope, Operand<? extends TType> x,
+      Class<U> DstT, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cast", scope.makeOpName("Cast"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -77,35 +76,51 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
         }
       }
     }
-    return new Cast<U>(opBuilder.build());
+    return new Cast<>(opBuilder.build());
   }
-  
+
   /**
-   * @param Truncate 
+   * Sets the Truncate option.
+   *
+   * @param Truncate the Truncate option
+   * @return this Options instance.
    */
   public static Options Truncate(Boolean Truncate) {
     return new Options().Truncate(Truncate);
   }
-  
+
   /**
+   * Gets y.
+   *
+   * @return y.
    */
   public Output<U> y() {
     return y;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return y;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Cast";
-  
-  private Output<U> y;
-  
-  private Cast(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.dtypes.Cast}
+   */
+  public static class Options {
+    private Boolean Truncate;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the Truncate option.
+     *
+     * @param Truncate the Truncate option
+     * @return this Options instance.
+     */
+    public Options Truncate(Boolean Truncate) {
+      this.Truncate = Truncate;
+      return this;
+    }
   }
 }

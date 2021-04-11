@@ -28,36 +28,39 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Updates the table to associates keys with values.
- * <p>
- * The tensor `keys` must be of the same type as the keys of the table.
- * The tensor `values` must be of the type of the table values.
+ * The tensor {@code keys} must be of the same type as the keys of the table.
+ * The tensor {@code values} must be of the type of the table values.
  */
 @Operator
 public final class LookupTableInsert extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new LookupTableInsert operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LookupTableInsertV2";
+
+  private LookupTableInsert(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LookupTableInsertV2 operation.
+   *
    * @param scope current scope
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
    * @param values Values to associate with keys.
    * @return a new instance of LookupTableInsert
    */
-  @Endpoint(describeByClass = true)
-  public static LookupTableInsert create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<? extends TType> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LookupTableInsert create(Scope scope, Operand<? extends TType> tableHandle,
+      Operand<? extends TType> keys, Operand<? extends TType> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableInsertV2", scope.makeOpName("LookupTableInsert"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LookupTableInsert(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LookupTableInsertV2";
-  
-  private LookupTableInsert(Operation operation) {
-    super(operation);
   }
 }

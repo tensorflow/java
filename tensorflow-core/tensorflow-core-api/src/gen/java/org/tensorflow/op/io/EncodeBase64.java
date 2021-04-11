@@ -29,45 +29,40 @@ import org.tensorflow.types.TString;
 
 /**
  * Encode strings into web-safe base64 format.
- * <p>
  * Refer to the following article for more information on base64 format:
  * en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
  * end so that the encoded has length multiple of 4. See Padding section of the
  * link above.
- * <p>
- * Web-safe means that the encoder uses - and _ instead of + and /.
+ * <p>Web-safe means that the encoder uses - and _ instead of + and /.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class EncodeBase64 extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.EncodeBase64}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param pad Bool whether padding is applied at the ends.
-     */
-    public Options pad(Boolean pad) {
-      this.pad = pad;
-      return this;
-    }
-    
-    private Boolean pad;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "EncodeBase64";
+
+  private Output<TString> output;
+
+  private EncodeBase64(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new EncodeBase64 operation.
-   * 
+   *
    * @param scope current scope
    * @param input Strings to be encoded.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of EncodeBase64
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static EncodeBase64 create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeBase64", scope.makeOpName("EncodeBase64"));
     opBuilder.addInput(input.asOutput());
@@ -81,34 +76,49 @@ public final class EncodeBase64 extends RawOp implements Operand<TString> {
     }
     return new EncodeBase64(opBuilder.build());
   }
-  
+
   /**
+   * Sets the pad option.
+   *
    * @param pad Bool whether padding is applied at the ends.
+   * @return this Options instance.
    */
   public static Options pad(Boolean pad) {
     return new Options().pad(pad);
   }
-  
+
   /**
+   * Gets output.
    * Input strings encoded in base64.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "EncodeBase64";
-  
-  private Output<TString> output;
-  
-  private EncodeBase64(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.EncodeBase64}
+   */
+  public static class Options {
+    private Boolean pad;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the pad option.
+     *
+     * @param pad Bool whether padding is applied at the ends.
+     * @return this Options instance.
+     */
+    public Options pad(Boolean pad) {
+      this.pad = pad;
+      return this;
+    }
   }
 }

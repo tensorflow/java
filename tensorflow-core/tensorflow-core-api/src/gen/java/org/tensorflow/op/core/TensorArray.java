@@ -33,92 +33,44 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An array of Tensors of given size.
- * <p>
  * Write data via Write and read via Read or Pack.
  */
 @Operator
 public final class TensorArray extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorArray}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param elementShape The expected shape of an element, if known. Used to
-     * validate the shapes of TensorArray elements. If this shape is not
-     * fully specified, gathering zero-size TensorArrays is an error.
-     */
-    public Options elementShape(Shape elementShape) {
-      this.elementShape = elementShape;
-      return this;
-    }
-    
-    /**
-     * @param dynamicSize A boolean that determines whether writes to the TensorArray
-     * are allowed to grow the size.  By default, this is not allowed.
-     */
-    public Options dynamicSize(Boolean dynamicSize) {
-      this.dynamicSize = dynamicSize;
-      return this;
-    }
-    
-    /**
-     * @param clearAfterRead If true (default), Tensors in the TensorArray are cleared
-     * after being read.  This disables multiple read semantics but allows early
-     * release of memory.
-     */
-    public Options clearAfterRead(Boolean clearAfterRead) {
-      this.clearAfterRead = clearAfterRead;
-      return this;
-    }
-    
-    /**
-     * @param identicalElementShapes If true (default is false), then all
-     * elements in the TensorArray will be expected to have have identical shapes.
-     * This allows certain behaviors, like dynamically checking for
-     * consistent shapes on write, and being able to fill in properly
-     * shaped zero tensors on stack -- even if the element_shape attribute
-     * is not fully defined.
-     */
-    public Options identicalElementShapes(Boolean identicalElementShapes) {
-      this.identicalElementShapes = identicalElementShapes;
-      return this;
-    }
-    
-    /**
-     * @param tensorArrayName Overrides the name used for the temporary tensor_array
-     * resource. Default value is the name of the 'TensorArray' op (which
-     * is guaranteed unique).
-     */
-    public Options tensorArrayName(String tensorArrayName) {
-      this.tensorArrayName = tensorArrayName;
-      return this;
-    }
-    
-    private Shape elementShape;
-    private Boolean dynamicSize;
-    private Boolean clearAfterRead;
-    private Boolean identicalElementShapes;
-    private String tensorArrayName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorArrayV3";
+
+  private Output<? extends TType> handle;
+
+  private Output<TFloat32> flow;
+
+  @SuppressWarnings("unchecked")
+  private TensorArray(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+    flow = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new TensorArray operation.
-   * 
+   * Factory method to create a class wrapping a new TensorArrayV3 operation.
+   *
    * @param scope current scope
-   * @param size The size of the array.
+   * @param sizeOutput The size of the array.
    * @param dtype The type of the elements on the tensor_array.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TensorArrayV3} output and operands
    * @return a new instance of TensorArray
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> size, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> sizeOutput,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayV3", scope.makeOpName("TensorArray"));
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
@@ -142,78 +94,169 @@ public final class TensorArray extends RawOp {
     }
     return new TensorArray(opBuilder.build());
   }
-  
+
   /**
+   * Sets the elementShape option.
+   *
    * @param elementShape The expected shape of an element, if known. Used to
    * validate the shapes of TensorArray elements. If this shape is not
    * fully specified, gathering zero-size TensorArrays is an error.
+   * @return this Options instance.
    */
   public static Options elementShape(Shape elementShape) {
     return new Options().elementShape(elementShape);
   }
-  
+
   /**
+   * Sets the dynamicSize option.
+   *
    * @param dynamicSize A boolean that determines whether writes to the TensorArray
    * are allowed to grow the size.  By default, this is not allowed.
+   * @return this Options instance.
    */
   public static Options dynamicSize(Boolean dynamicSize) {
     return new Options().dynamicSize(dynamicSize);
   }
-  
+
   /**
+   * Sets the clearAfterRead option.
+   *
    * @param clearAfterRead If true (default), Tensors in the TensorArray are cleared
    * after being read.  This disables multiple read semantics but allows early
    * release of memory.
+   * @return this Options instance.
    */
   public static Options clearAfterRead(Boolean clearAfterRead) {
     return new Options().clearAfterRead(clearAfterRead);
   }
-  
+
   /**
+   * Sets the identicalElementShapes option.
+   *
    * @param identicalElementShapes If true (default is false), then all
    * elements in the TensorArray will be expected to have have identical shapes.
    * This allows certain behaviors, like dynamically checking for
    * consistent shapes on write, and being able to fill in properly
    * shaped zero tensors on stack -- even if the element_shape attribute
    * is not fully defined.
+   * @return this Options instance.
    */
   public static Options identicalElementShapes(Boolean identicalElementShapes) {
     return new Options().identicalElementShapes(identicalElementShapes);
   }
-  
+
   /**
+   * Sets the tensorArrayName option.
+   *
    * @param tensorArrayName Overrides the name used for the temporary tensor_array
    * resource. Default value is the name of the 'TensorArray' op (which
    * is guaranteed unique).
+   * @return this Options instance.
    */
   public static Options tensorArrayName(String tensorArrayName) {
     return new Options().tensorArrayName(tensorArrayName);
   }
-  
+
   /**
+   * Gets handle.
    * The handle to the TensorArray.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   /**
+   * Gets flow.
    * A scalar used to control gradient flow.
+   * @return flow.
    */
   public Output<TFloat32> flow() {
     return flow;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayV3";
-  
-  private Output<?> handle;
-  private Output<TFloat32> flow;
-  
-  private TensorArray(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
-    flow = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorArray}
+   */
+  public static class Options {
+    private Shape elementShape;
+
+    private Boolean dynamicSize;
+
+    private Boolean clearAfterRead;
+
+    private Boolean identicalElementShapes;
+
+    private String tensorArrayName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the elementShape option.
+     *
+     * @param elementShape The expected shape of an element, if known. Used to
+     * validate the shapes of TensorArray elements. If this shape is not
+     * fully specified, gathering zero-size TensorArrays is an error.
+     * @return this Options instance.
+     */
+    public Options elementShape(Shape elementShape) {
+      this.elementShape = elementShape;
+      return this;
+    }
+
+    /**
+     * Sets the dynamicSize option.
+     *
+     * @param dynamicSize A boolean that determines whether writes to the TensorArray
+     * are allowed to grow the size.  By default, this is not allowed.
+     * @return this Options instance.
+     */
+    public Options dynamicSize(Boolean dynamicSize) {
+      this.dynamicSize = dynamicSize;
+      return this;
+    }
+
+    /**
+     * Sets the clearAfterRead option.
+     *
+     * @param clearAfterRead If true (default), Tensors in the TensorArray are cleared
+     * after being read.  This disables multiple read semantics but allows early
+     * release of memory.
+     * @return this Options instance.
+     */
+    public Options clearAfterRead(Boolean clearAfterRead) {
+      this.clearAfterRead = clearAfterRead;
+      return this;
+    }
+
+    /**
+     * Sets the identicalElementShapes option.
+     *
+     * @param identicalElementShapes If true (default is false), then all
+     * elements in the TensorArray will be expected to have have identical shapes.
+     * This allows certain behaviors, like dynamically checking for
+     * consistent shapes on write, and being able to fill in properly
+     * shaped zero tensors on stack -- even if the element_shape attribute
+     * is not fully defined.
+     * @return this Options instance.
+     */
+    public Options identicalElementShapes(Boolean identicalElementShapes) {
+      this.identicalElementShapes = identicalElementShapes;
+      return this;
+    }
+
+    /**
+     * Sets the tensorArrayName option.
+     *
+     * @param tensorArrayName Overrides the name used for the temporary tensor_array
+     * resource. Default value is the name of the 'TensorArray' op (which
+     * is guaranteed unique).
+     * @return this Options instance.
+     */
+    public Options tensorArrayName(String tensorArrayName) {
+      this.tensorArrayName = tensorArrayName;
+      return this;
+    }
   }
 }

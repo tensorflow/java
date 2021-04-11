@@ -30,16 +30,25 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Applies a sparse gradient to a given accumulator.
- * <p>
  * Does not add if local_step is smaller than the accumulator's
  * global_step.
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseAccumulatorApplyGradient extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseAccumulatorApplyGradient";
+
+  private SparseAccumulatorApplyGradient(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseAccumulatorApplyGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a accumulator.
    * @param localStep The local_step value at which the sparse gradient was computed.
@@ -53,8 +62,13 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
    * case the input is ignored during validation.
    * @return a new instance of SparseAccumulatorApplyGradient
    */
-  @Endpoint(describeByClass = true)
-  public static SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<TInt64> gradientIndices, Operand<? extends TType> gradientValues, Operand<TInt64> gradientShape, Boolean hasKnownShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SparseAccumulatorApplyGradient create(Scope scope, Operand<TString> handle,
+      Operand<TInt64> localStep, Operand<TInt64> gradientIndices,
+      Operand<? extends TType> gradientValues, Operand<TInt64> gradientShape,
+      Boolean hasKnownShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorApplyGradient", scope.makeOpName("SparseAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
@@ -64,12 +78,5 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("has_known_shape", hasKnownShape);
     return new SparseAccumulatorApplyGradient(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseAccumulatorApplyGradient";
-  
-  private SparseAccumulatorApplyGradient(Operation operation) {
-    super(operation);
   }
 }

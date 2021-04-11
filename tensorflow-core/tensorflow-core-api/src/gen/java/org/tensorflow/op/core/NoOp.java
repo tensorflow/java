@@ -29,24 +29,27 @@ import org.tensorflow.op.annotation.Operator;
  */
 @Operator
 public final class NoOp extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "NoOp";
+
+  private NoOp(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new NoOp operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of NoOp
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static NoOp create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("NoOp", scope.makeOpName("NoOp"));
     opBuilder = scope.apply(opBuilder);
     return new NoOp(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "NoOp";
-  
-  private NoOp(Operation operation) {
-    super(operation);
   }
 }

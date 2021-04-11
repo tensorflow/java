@@ -29,48 +29,54 @@ import org.tensorflow.types.TString;
 
 /**
  * Decode web-safe base64-encoded strings.
- * <p>
  * Input may or may not have padding at the end. See EncodeBase64 for padding.
  * Web-safe means that input must use - and _ instead of + and /.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class DecodeBase64 extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DecodeBase64";
+
+  private Output<TString> output;
+
+  private DecodeBase64(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DecodeBase64 operation.
-   * 
+   *
    * @param scope current scope
    * @param input Base64 strings to decode.
    * @return a new instance of DecodeBase64
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeBase64 create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBase64", scope.makeOpName("DecodeBase64"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DecodeBase64(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Decoded strings.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeBase64";
-  
-  private Output<TString> output;
-  
-  private DecodeBase64(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

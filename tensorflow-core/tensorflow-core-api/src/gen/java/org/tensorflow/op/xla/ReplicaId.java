@@ -30,41 +30,49 @@ import org.tensorflow.types.TInt32;
 /**
  * Replica ID.
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class ReplicaId extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Factory method to create a class wrapping a new ReplicaId operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaReplicaId";
+
+  private Output<TInt32> id;
+
+  private ReplicaId(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    id = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaReplicaId operation.
+   *
    * @param scope current scope
    * @return a new instance of ReplicaId
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ReplicaId create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaReplicaId", scope.makeOpName("ReplicaId"));
     opBuilder = scope.apply(opBuilder);
     return new ReplicaId(opBuilder.build());
   }
-  
+
   /**
+   * Gets id.
+   *
+   * @return id.
    */
   public Output<TInt32> id() {
     return id;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return id;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaReplicaId";
-  
-  private Output<TInt32> id;
-  
-  private ReplicaId(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    id = operation.output(outputIdx++);
   }
 }

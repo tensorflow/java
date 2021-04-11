@@ -30,56 +30,34 @@ import org.tensorflow.types.family.TType;
 /**
  * A Reader that outputs the lines of a file delimited by '\n'.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class TextLineReader extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.TextLineReader}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param skipHeaderLines Number of lines to skip from the beginning of every file.
-     */
-    public Options skipHeaderLines(Long skipHeaderLines) {
-      this.skipHeaderLines = skipHeaderLines;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this reader is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this reader is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long skipHeaderLines;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TextLineReaderV2";
+
+  private Output<? extends TType> readerHandle;
+
+  @SuppressWarnings("unchecked")
+  private TextLineReader(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    readerHandle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new TextLineReader operation.
-   * 
+   * Factory method to create a class wrapping a new TextLineReaderV2 operation.
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of TextLineReader
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TextLineReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TextLineReaderV2", scope.makeOpName("TextLineReader"));
     opBuilder = scope.apply(opBuilder);
@@ -98,51 +76,100 @@ public final class TextLineReader extends RawOp implements Operand<TType> {
     }
     return new TextLineReader(opBuilder.build());
   }
-  
+
   /**
+   * Sets the skipHeaderLines option.
+   *
    * @param skipHeaderLines Number of lines to skip from the beginning of every file.
+   * @return this Options instance.
    */
   public static Options skipHeaderLines(Long skipHeaderLines) {
     return new Options().skipHeaderLines(skipHeaderLines);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this reader is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this reader is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets readerHandle.
    * The handle to reference the Reader.
+   * @return readerHandle.
    */
-  public Output<?> readerHandle() {
+  public Output<? extends TType> readerHandle() {
     return readerHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) readerHandle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TextLineReaderV2";
-  
-  private Output<?> readerHandle;
-  
-  private TextLineReader(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    readerHandle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.TextLineReader}
+   */
+  public static class Options {
+    private Long skipHeaderLines;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the skipHeaderLines option.
+     *
+     * @param skipHeaderLines Number of lines to skip from the beginning of every file.
+     * @return this Options instance.
+     */
+    public Options skipHeaderLines(Long skipHeaderLines) {
+      this.skipHeaderLines = skipHeaderLines;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

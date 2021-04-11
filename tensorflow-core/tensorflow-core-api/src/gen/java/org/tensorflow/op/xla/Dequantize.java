@@ -26,29 +26,46 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.family.TType;
 
 /**
  * Takes the packed uint32 input and unpacks the input to uint8 to do
- * <p>
  * Dequantization on device.
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Dequantize extends RawOp implements Operand<TBfloat16> {
-  
   /**
-   * Factory method to create a class wrapping a new Dequantize operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaDequantize";
+
+  private Output<TBfloat16> output;
+
+  private Dequantize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaDequantize operation.
+   *
    * @param scope current scope
    * @param input Input tensors whose types is uint32, shape is [d0, ..., dn].
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
-   * @param mode String to determine the dequantize mode in {"MIN_COMBINED", "MIN_FIRST", "SCALED"}.
+   * @param mode String to determine the dequantize mode in {&quot;MIN_COMBINED&quot;, &quot;MIN_FIRST&quot;, &quot;SCALED&quot;}.
    * @param transposeOutput Boolean to determine if output is transposed. transpose_output
    * is faster when input is large and rank of input is higher than 1.
    * @return a new instance of Dequantize
    */
-  @Endpoint(describeByClass = true)
-  public static Dequantize create(Scope scope, Operand<?> input, Float minRange, Float maxRange, String mode, Boolean transposeOutput) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Dequantize create(Scope scope, Operand<? extends TType> input, Float minRange,
+      Float maxRange, String mode, Boolean transposeOutput) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -58,29 +75,20 @@ public final class Dequantize extends RawOp implements Operand<TBfloat16> {
     opBuilder.setAttr("transpose_output", transposeOutput);
     return new Dequantize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Output tensors whose types is bloat16. If transpose_output is true,
    * output shape is [dn * 4, dn-1, ..., d1, d0]. If transpose_output
    * is false, output shape is [d0,..., dn * 4].
+   * @return output.
    */
   public Output<TBfloat16> output() {
     return output;
   }
-  
+
   @Override
   public Output<TBfloat16> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaDequantize";
-  
-  private Output<TBfloat16> output;
-  
-  private Dequantize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

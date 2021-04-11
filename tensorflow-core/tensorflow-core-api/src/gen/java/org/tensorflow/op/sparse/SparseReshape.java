@@ -29,38 +29,54 @@ import org.tensorflow.types.TInt64;
 
 /**
  * Reshapes a SparseTensor to represent values in a new dense shape.
- * <p>
  * This operation has the same semantics as reshape on the represented dense
- * tensor.  The `input_indices` are recomputed based on the requested `new_shape`.
- * <p>
- * If one component of `new_shape` is the special value -1, the size of that
+ * tensor.  The {@code input_indices} are recomputed based on the requested {@code new_shape}.
+ * <p>If one component of {@code new_shape} is the special value -1, the size of that
  * dimension is computed so that the total dense size remains constant.  At
- * most one component of `new_shape` can be -1.  The number of dense elements
- * implied by `new_shape` must be the same as the number of dense elements
- * originally implied by `input_shape`.
- * <p>
- * Reshaping does not affect the order of values in the SparseTensor.
- * <p>
- * If the input tensor has rank `R_in` and `N` non-empty values, and `new_shape`
- * has length `R_out`, then `input_indices` has shape `[N, R_in]`,
- * `input_shape` has length `R_in`, `output_indices` has shape `[N, R_out]`, and
- * `output_shape` has length `R_out`.
+ * most one component of {@code new_shape} can be -1.  The number of dense elements
+ * implied by {@code new_shape} must be the same as the number of dense elements
+ * originally implied by {@code input_shape}.
+ * <p>Reshaping does not affect the order of values in the SparseTensor.
+ * <p>If the input tensor has rank {@code R_in} and {@code N} non-empty values, and {@code new_shape}
+ * has length {@code R_out}, then {@code input_indices} has shape {@code [N, R_in]},
+ * {@code input_shape} has length {@code R_in}, {@code output_indices} has shape {@code [N, R_out]}, and
+ * {@code output_shape} has length {@code R_out}.
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseReshape extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseReshape";
+
+  private Output<TInt64> outputIndices;
+
+  private Output<TInt64> outputShape;
+
+  private SparseReshape(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputIndices = operation.output(outputIdx++);
+    outputShape = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseReshape operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputIndices 2-D.  `N x R_in` matrix with the indices of non-empty values in a
+   * @param inputIndices 2-D.  {@code N x R_in} matrix with the indices of non-empty values in a
    * SparseTensor.
-   * @param inputShape 1-D.  `R_in` vector with the input SparseTensor's dense shape.
-   * @param newShape 1-D.  `R_out` vector with the requested new dense shape.
+   * @param inputShape 1-D.  {@code R_in} vector with the input SparseTensor's dense shape.
+   * @param newShape 1-D.  {@code R_out} vector with the requested new dense shape.
    * @return a new instance of SparseReshape
    */
-  @Endpoint(describeByClass = true)
-  public static SparseReshape create(Scope scope, Operand<TInt64> inputIndices, Operand<TInt64> inputShape, Operand<TInt64> newShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SparseReshape create(Scope scope, Operand<TInt64> inputIndices,
+      Operand<TInt64> inputShape, Operand<TInt64> newShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReshape", scope.makeOpName("SparseReshape"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputShape.asOutput());
@@ -68,34 +84,25 @@ public final class SparseReshape extends RawOp {
     opBuilder = scope.apply(opBuilder);
     return new SparseReshape(opBuilder.build());
   }
-  
+
   /**
-   * 2-D.  `N x R_out` matrix with the updated indices of non-empty
+   * Gets outputIndices.
+   * 2-D.  {@code N x R_out} matrix with the updated indices of non-empty
    * values in the output SparseTensor.
+   * @return outputIndices.
    */
   public Output<TInt64> outputIndices() {
     return outputIndices;
   }
-  
+
   /**
-   * 1-D.  `R_out` vector with the full dense shape of the output
-   * SparseTensor.  This is the same as `new_shape` but with any -1 dimensions
+   * Gets outputShape.
+   * 1-D.  {@code R_out} vector with the full dense shape of the output
+   * SparseTensor.  This is the same as {@code new_shape} but with any -1 dimensions
    * filled in.
+   * @return outputShape.
    */
   public Output<TInt64> outputShape() {
     return outputShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseReshape";
-  
-  private Output<TInt64> outputIndices;
-  private Output<TInt64> outputShape;
-  
-  private SparseReshape(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputIndices = operation.output(outputIdx++);
-    outputShape = operation.output(outputIdx++);
   }
 }

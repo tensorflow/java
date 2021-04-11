@@ -30,56 +30,43 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs random values from a uniform distribution.
- * <p>
- * The generated values follow a uniform distribution in the range `[0, 1)`. The
+ * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class RandomUniform<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.random.RandomUniform}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
-     * generator is seeded by the given seed.  Otherwise, it is seeded by a
-     * random seed.
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 A second seed to avoid seed collision.
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    private Long seed;
-    private Long seed2;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RandomUniform";
+
+  private Output<U> output;
+
+  private RandomUniform(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RandomUniform operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code RandomUniform} output and operands
    * @return a new instance of RandomUniform
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> RandomUniform<U> create(Scope scope, Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> RandomUniform<U> create(Scope scope,
+      Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomUniform", scope.makeOpName("RandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -94,45 +81,78 @@ public final class RandomUniform<U extends TNumber> extends RawOp implements Ope
         }
       }
     }
-    return new RandomUniform<U>(opBuilder.build());
+    return new RandomUniform<>(opBuilder.build());
   }
-  
+
   /**
-   * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+   * Sets the seed option.
+   *
+   * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
    * generator is seeded by the given seed.  Otherwise, it is seeded by a
    * random seed.
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
+   * Sets the seed2 option.
+   *
    * @param seed2 A second seed to avoid seed collision.
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
+   * Gets output.
    * A tensor of the specified shape filled with uniform random values.
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RandomUniform";
-  
-  private Output<U> output;
-  
-  private RandomUniform(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.random.RandomUniform}
+   */
+  public static class Options {
+    private Long seed;
+
+    private Long seed2;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 A second seed to avoid seed collision.
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
   }
 }

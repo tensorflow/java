@@ -24,34 +24,41 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class DeleteIterator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeleteIterator";
+
+  private DeleteIterator(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeleteIterator operation.
-   * 
+   *
    * @param scope current scope
    * @param handle A handle to the iterator to delete.
    * @param deleter A variant deleter.
    * @return a new instance of DeleteIterator
    */
-  @Endpoint(describeByClass = true)
-  public static DeleteIterator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DeleteIterator create(Scope scope, Operand<? extends TType> handle,
+      Operand<? extends TType> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteIterator", scope.makeOpName("DeleteIterator"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeleteIterator(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeleteIterator";
-  
-  private DeleteIterator(Operation operation) {
-    super(operation);
   }
 }

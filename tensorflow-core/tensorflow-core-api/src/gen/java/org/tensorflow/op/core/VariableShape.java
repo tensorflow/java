@@ -28,72 +28,80 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
- * Returns the shape of the variable pointed to by `resource`.
- * <p>
- * This operation returns a 1-D integer tensor representing the shape of `input`.
- * <p>
- * For example:
- * <pre>{@code
+ * Returns the shape of the variable pointed to by {@code resource}.
+ * This operation returns a 1-D integer tensor representing the shape of {@code input}.
+ * <p>For example:
+ * <pre>
  * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
- * shape(t) ==> [2, 2, 3]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * shape(t) ==&gt; [2, 2, 3]
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class VariableShape<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new VariableShape operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param outType 
-   * @return a new instance of VariableShape
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> VariableShape<T> create(Scope scope, Operand<?> input, Class<T> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", Operands.toDataType(outType));
-    return new VariableShape<T>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new VariableShape operation using default output types.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of VariableShape
-   */
-  @Endpoint(describeByClass = true)
-  public static VariableShape<TInt32> create(Scope scope, Operand<?> input) {
-    return create(scope, input, TInt32.class);
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "VariableShape";
-  
+
   private Output<T> output;
-  
+
   private VariableShape(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new VariableShape operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param outType the value of the outType property
+   * @param <T> data type for {@code VariableShape} output and operands
+   * @return a new instance of VariableShape
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> VariableShape<T> create(Scope scope,
+      Operand<? extends TType> input, Class<T> outType) {
+    OperationBuilder opBuilder = scope.env().opBuilder("VariableShape", scope.makeOpName("VariableShape"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
+    return new VariableShape<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new VariableShape operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @return a new instance of VariableShape, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static VariableShape<TInt32> create(Scope scope, Operand<? extends TType> input) {
+    return create(scope, input, TInt32.class);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

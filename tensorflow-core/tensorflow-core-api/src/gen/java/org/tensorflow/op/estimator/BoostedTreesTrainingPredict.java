@@ -25,24 +25,41 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Runs multiple additive regression ensemble predictors on input instances and
- * <p>
  * computes the update to cached logits. It is designed to be used during training.
  * It traverses the trees starting from cached tree id and cached node id and
  * calculates the updates to be pushed to the cache.
  */
 public final class BoostedTreesTrainingPredict extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesTrainingPredict";
+
+  private Output<TFloat32> partialLogits;
+
+  private Output<TInt32> treeIds;
+
+  private Output<TInt32> nodeIds;
+
+  private BoostedTreesTrainingPredict(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    partialLogits = operation.output(outputIdx++);
+    treeIds = operation.output(outputIdx++);
+    nodeIds = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesTrainingPredict operation.
-   * 
+   *
    * @param scope current scope
-   * @param treeEnsembleHandle 
+   * @param treeEnsembleHandle the treeEnsembleHandle value
    * @param cachedTreeIds Rank 1 Tensor containing cached tree ids which is the starting
    * tree of prediction.
    * @param cachedNodeIds Rank 1 Tensor containing cached node id which is the starting
@@ -53,8 +70,13 @@ public final class BoostedTreesTrainingPredict extends RawOp {
    * shape.
    * @return a new instance of BoostedTreesTrainingPredict
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesTrainingPredict create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt32> cachedTreeIds, Operand<TInt32> cachedNodeIds, Iterable<Operand<TInt32>> bucketizedFeatures, Long logitsDimension) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesTrainingPredict create(Scope scope,
+      Operand<? extends TType> treeEnsembleHandle, Operand<TInt32> cachedTreeIds,
+      Operand<TInt32> cachedNodeIds, Iterable<Operand<TInt32>> bucketizedFeatures,
+      Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesTrainingPredict", scope.makeOpName("BoostedTreesTrainingPredict"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(cachedTreeIds.asOutput());
@@ -64,41 +86,32 @@ public final class BoostedTreesTrainingPredict extends RawOp {
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new BoostedTreesTrainingPredict(opBuilder.build());
   }
-  
+
   /**
+   * Gets partialLogits.
    * Rank 2 Tensor containing logits update (with respect to cached
    * values stored) for each example.
+   * @return partialLogits.
    */
   public Output<TFloat32> partialLogits() {
     return partialLogits;
   }
-  
+
   /**
+   * Gets treeIds.
    * Rank 1 Tensor containing new tree ids for each example.
+   * @return treeIds.
    */
   public Output<TInt32> treeIds() {
     return treeIds;
   }
-  
+
   /**
+   * Gets nodeIds.
    * Rank 1 Tensor containing new node ids in the new tree_ids.
+   * @return nodeIds.
    */
   public Output<TInt32> nodeIds() {
     return nodeIds;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesTrainingPredict";
-  
-  private Output<TFloat32> partialLogits;
-  private Output<TInt32> treeIds;
-  private Output<TInt32> nodeIds;
-  
-  private BoostedTreesTrainingPredict(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    partialLogits = operation.output(outputIdx++);
-    treeIds = operation.output(outputIdx++);
-    nodeIds = operation.output(outputIdx++);
   }
 }

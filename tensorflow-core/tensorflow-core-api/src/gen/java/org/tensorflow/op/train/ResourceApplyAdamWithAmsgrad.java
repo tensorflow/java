@@ -28,40 +28,28 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Adam algorithm.
- * <p>
- * $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
- * $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+ * $$\text{lr}<em>t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+ * $$m_t := \beta_1 * m</em>{t-1} + (1 - \beta_1) * g$$
  * $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
- * $$\hat{v}_t := max{\hat{v}_{t-1}, v_t}$$
+ * $$\hat{v}<em>t := max{\hat{v}</em>{t-1}, v_t}$$
  * $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{\hat{v}_t} + \epsilon)$$
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyAdamWithAmsgrad extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyAdamWithAmsgrad";
+
+  private ResourceApplyAdamWithAmsgrad(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceApplyAdamWithAmsgrad operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -74,11 +62,17 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
    * @param beta2 Momentum factor. Must be a scalar.
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAdamWithAmsgrad} output and operands
    * @return a new instance of ResourceApplyAdamWithAmsgrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAdamWithAmsgrad create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<?> vhat, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyAdamWithAmsgrad create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> m, Operand<? extends TType> v,
+      Operand<? extends TType> vhat, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr,
+      Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdamWithAmsgrad", scope.makeOpName("ResourceApplyAdamWithAmsgrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -101,20 +95,39 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
     }
     return new ResourceApplyAdamWithAmsgrad(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyAdamWithAmsgrad";
-  
-  private ResourceApplyAdamWithAmsgrad(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

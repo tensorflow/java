@@ -29,46 +29,41 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update 'ref' by subtracting 'value' from it.
- * <p>
- * This operation outputs "ref" after the update is done.
+ * This operation outputs &quot;ref&quot; after the update is done.
  * This makes it easier to chain operations that need to use the reset value.
- * 
- * @param <T> data type for {@code outputRef()} output
+ *
+ * @param <T> data type for {@code output_ref} output
  */
 @Operator
 public final class AssignSub<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.AssignSub}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, the subtraction will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "AssignSub";
+
+  private Output<T> outputRef;
+
+  private AssignSub(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputRef = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new AssignSub operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref Should be from a `Variable` node.
+   * @param ref Should be from a {@code Variable} node.
    * @param value The value to be subtracted to the variable.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code AssignSub} output and operands
    * @return a new instance of AssignSub
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSub", scope.makeOpName("AssignSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -80,38 +75,54 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
         }
       }
     }
-    return new AssignSub<T>(opBuilder.build());
+    return new AssignSub<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, the subtraction will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * = Same as "ref".  Returned as a convenience for operations that want
+   * Gets outputRef.
+   * = Same as &quot;ref&quot;.  Returned as a convenience for operations that want
    * to use the new value after the variable has been updated.
+   * @return outputRef.
    */
   public Output<T> outputRef() {
     return outputRef;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return outputRef;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AssignSub";
-  
-  private Output<T> outputRef;
-  
-  private AssignSub(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputRef = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.AssignSub}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

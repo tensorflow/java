@@ -31,54 +31,62 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Read an element from the TensorArray into output `value`.
- * 
- * @param <T> data type for {@code value()} output
+ * Read an element from the TensorArray into output {@code value}.
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class TensorArrayRead<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorArrayRead operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArrayReadV3";
+
+  private Output<T> value;
+
+  private TensorArrayRead(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    value = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorArrayReadV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
-   * @param index 
+   * @param index the index value
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
+   * @param <T> data type for {@code TensorArrayReadV3} output and operands
    * @return a new instance of TensorArrayRead
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayRead<T> create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<TFloat32> flowIn, Class<T> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorArrayRead<T> create(Scope scope,
+      Operand<? extends TType> handle, Operand<TInt32> index, Operand<TFloat32> flowIn,
+      Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayReadV3", scope.makeOpName("TensorArrayRead"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new TensorArrayRead<T>(opBuilder.build());
+    return new TensorArrayRead<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets value.
    * The tensor that is read from the TensorArray.
+   * @return value.
    */
   public Output<T> value() {
     return value;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayReadV3";
-  
-  private Output<T> value;
-  
-  private TensorArrayRead(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    value = operation.output(outputIdx++);
   }
 }

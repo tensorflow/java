@@ -28,54 +28,55 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Adds sparse updates to the variable referenced by `resource`.
- * <p>
+ * Adds sparse updates to the variable referenced by {@code resource}.
  * This operation computes
- * <p>
- *     # Scalar indices
- *     ref[indices, ...] += updates[...]
- * <p>
- *     # Vector indices (for each i)
- *     ref[indices[i], ...] += updates[i, ...]
- * <p>
- *     # High rank indices (for each i, ..., j)
- *     ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
- * <p>
- * Duplicate entries are handled correctly: if multiple `indices` reference
+ * <pre>
+ * # Scalar indices
+ * ref[indices, ...] += updates[...]
+ *
+ * # Vector indices (for each i)
+ * ref[indices[i], ...] += updates[i, ...]
+ *
+ * # High rank indices (for each i, ..., j)
+ * ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
+ * </pre>
+ * <p>Duplicate entries are handled correctly: if multiple {@code indices} reference
  * the same location, their contributions add.
- * <p>
- * Requires `updates.shape = indices.shape + ref.shape[1:]` or `updates.shape = []`.
- * <p>
+ * <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
  * </div>
  */
 @Operator
 public final class ResourceScatterAdd extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ResourceScatterAdd";
+
+  private ResourceScatterAdd(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ResourceScatterAdd operation.
-   * 
+   *
    * @param scope current scope
-   * @param resource Should be from a `Variable` node.
-   * @param indices A tensor of indices into the first dimension of `ref`.
-   * @param updates A tensor of updated values to add to `ref`.
+   * @param resource Should be from a {@code Variable} node.
+   * @param indices A tensor of indices into the first dimension of {@code ref}.
+   * @param updates A tensor of updated values to add to {@code ref}.
    * @return a new instance of ResourceScatterAdd
    */
-  @Endpoint(describeByClass = true)
-  public static ResourceScatterAdd create(Scope scope, Operand<?> resource, Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ResourceScatterAdd create(Scope scope, Operand<? extends TType> resource,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterAdd", scope.makeOpName("ResourceScatterAdd"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ResourceScatterAdd(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceScatterAdd";
-  
-  private ResourceScatterAdd(Operation operation) {
-    super(operation);
   }
 }

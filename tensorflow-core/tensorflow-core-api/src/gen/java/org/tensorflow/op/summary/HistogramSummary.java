@@ -29,54 +29,60 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Outputs a `Summary` protocol buffer with a histogram.
- * <p>
+ * Outputs a {@code Summary} protocol buffer with a histogram.
  * The generated
- * [`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto)
- * has one summary value containing a histogram for `values`.
- * <p>
- * This op reports an `InvalidArgument` error if any value is not finite.
+ *  <a href="https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto">{@code Summary}</a> 
+ * has one summary value containing a histogram for {@code values}.
+ * <p>This op reports an {@code InvalidArgument} error if any value is not finite.
  */
-@Operator(group = "summary")
+@Operator(
+    group = "summary"
+)
 public final class HistogramSummary extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "HistogramSummary";
+
+  private Output<TString> summary;
+
+  private HistogramSummary(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    summary = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new HistogramSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param tag Scalar.  Tag to use for the `Summary.Value`.
+   * @param tag Scalar.  Tag to use for the {@code Summary.Value}.
    * @param values Any shape. Values to use to build the histogram.
    * @return a new instance of HistogramSummary
    */
-  @Endpoint(describeByClass = true)
-  public static HistogramSummary create(Scope scope, Operand<TString> tag, Operand<? extends TNumber> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static HistogramSummary create(Scope scope, Operand<TString> tag,
+      Operand<? extends TNumber> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("HistogramSummary", scope.makeOpName("HistogramSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new HistogramSummary(opBuilder.build());
   }
-  
+
   /**
-   * Scalar. Serialized `Summary` protocol buffer.
+   * Gets summary.
+   * Scalar. Serialized {@code Summary} protocol buffer.
+   * @return summary.
    */
   public Output<TString> summary() {
     return summary;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return summary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "HistogramSummary";
-  
-  private Output<TString> summary;
-  
-  private HistogramSummary(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    summary = operation.output(outputIdx++);
   }
 }

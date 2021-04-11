@@ -30,18 +30,31 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA ConvGeneralDilated operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+ * https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
  * .
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Conv<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Conv operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaConv";
+
+  private Output<T> output;
+
+  private Conv(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaConv operation.
+   *
    * @param scope current scope
    * @param lhs the input tensor
    * @param rhs the kernel tensor
@@ -52,10 +65,17 @@ public final class Conv<T extends TType> extends RawOp implements Operand<T> {
    * @param featureGroupCount number of feature groups for grouped convolution.
    * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param <T> data type for {@code XlaConv} output and operands
+   * @param <U> data type for {@code XlaConv} output and operands
    * @return a new instance of Conv
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Conv<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation, Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers, String precisionConfig) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> Conv<T> create(Scope scope, Operand<T> lhs,
+      Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation,
+      Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers,
+      String precisionConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaConv", scope.makeOpName("Conv"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -67,28 +87,20 @@ public final class Conv<T extends TType> extends RawOp implements Operand<T> {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
-    return new Conv<T>(opBuilder.build());
+    return new Conv<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaConv";
-  
-  private Output<T> output;
-  
-  private Conv(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

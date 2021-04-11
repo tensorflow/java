@@ -24,62 +24,69 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
  * Converts a tensor to a scalar predicate.
- * <p>
  * Converts a tensor to a scalar predicate with the following rules:
- * <p>
- * - For 0D tensors, truthiness is determined by comparing against a "zero"
- *   value. For numerical types it is the obvious zero. For strings it is the
- *   empty string.
- * <p>
- * - For >0D tensors, truthiness is determined by looking at the number of
- *   elements. If has zero elements, then the result is false. Otherwise the
- *   result is true.
- * <p>
- * This matches the behavior of If and While for determining if a tensor counts
+ * <ul>
+ * <li>
+ * <p>For 0D tensors, truthiness is determined by comparing against a &quot;zero&quot;
+ * value. For numerical types it is the obvious zero. For strings it is the
+ * empty string.
+ * </li>
+ * <li>
+ * <p>For &gt;0D tensors, truthiness is determined by looking at the number of
+ * elements. If has zero elements, then the result is false. Otherwise the
+ * result is true.
+ * </li>
+ * </ul>
+ * <p>This matches the behavior of If and While for determining if a tensor counts
  * as true/false for a branch condition.
  */
 public final class ToBool extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ToBool";
+
+  private Output<TBool> output;
+
+  private ToBool(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ToBool operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @return a new instance of ToBool
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ToBool create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("ToBool", scope.makeOpName("ToBool"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ToBool(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TBool> output() {
     return output;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ToBool";
-  
-  private Output<TBool> output;
-  
-  private ToBool(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

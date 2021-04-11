@@ -24,24 +24,34 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Outputs deterministic pseudorandom random integers from a uniform distribution.
- * <p>
- * The generated values follow a uniform distribution in the range `[minval, maxval)`.
- * <p>
- * The outputs are a deterministic function of `shape`, `key`, `counter`, `alg`, `minval` and `maxval`.
- * 
- * @param <U> data type for {@code output()} output
+ * The generated values follow a uniform distribution in the range {@code [minval, maxval)}.
+ * <p>The outputs are a deterministic function of {@code shape}, {@code key}, {@code counter}, {@code alg}, {@code minval} and {@code maxval}.
+ *
+ * @param <U> data type for {@code output} output
  */
 public final class StatelessRandomUniformIntV2<U extends TNumber> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatelessRandomUniformIntV2";
+
+  private Output<U> output;
+
+  private StatelessRandomUniformIntV2(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatelessRandomUniformIntV2 operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param key Key for the counter-based RNG algorithm (shape uint64[1]).
@@ -49,10 +59,15 @@ public final class StatelessRandomUniformIntV2<U extends TNumber> extends RawOp 
    * @param alg The RNG algorithm (shape int32[]).
    * @param minval Minimum value (inclusive, scalar).
    * @param maxval Maximum value (exclusive, scalar).
+   * @param <U> data type for {@code StatelessRandomUniformIntV2} output and operands
    * @return a new instance of StatelessRandomUniformIntV2
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> StatelessRandomUniformIntV2<U> create(Scope scope, Operand<? extends TNumber> shape, Operand<?> key, Operand<?> counter, Operand<TInt32> alg, Operand<U> minval, Operand<U> maxval) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> StatelessRandomUniformIntV2<U> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TType> key,
+      Operand<? extends TType> counter, Operand<TInt32> alg, Operand<U> minval, Operand<U> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniformIntV2", scope.makeOpName("StatelessRandomUniformIntV2"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(key.asOutput());
@@ -61,29 +76,20 @@ public final class StatelessRandomUniformIntV2<U extends TNumber> extends RawOp 
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new StatelessRandomUniformIntV2<U>(opBuilder.build());
+    return new StatelessRandomUniformIntV2<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatelessRandomUniformIntV2";
-  
-  private Output<U> output;
-  
-  private StatelessRandomUniformIntV2(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

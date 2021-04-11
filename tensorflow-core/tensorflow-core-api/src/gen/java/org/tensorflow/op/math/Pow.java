@@ -29,57 +29,64 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the power of one value to another.
- * <p>
- * Given a tensor `x` and a tensor `y`, this operation computes \\(x^y\\) for
- * corresponding elements in `x` and `y`. For example:
- * <pre>{@code
+ * Given a tensor {@code x} and a tensor {@code y}, this operation computes \(x^y\) for
+ * corresponding elements in {@code x} and {@code y}. For example:
+ * <pre>
  * # tensor 'x' is [[2, 2]], [3, 3]]
  * # tensor 'y' is [[8, 16], [2, 3]]
- * tf.pow(x, y) ==> [[256, 65536], [9, 27]]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code z()} output
+ * tf.pow(x, y) ==&gt; [[256, 65536], [9, 27]]
+ * </pre>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Pow<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Pow";
+
+  private Output<T> z;
+
+  private Pow(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Pow operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Pow} output and operands
    * @return a new instance of Pow
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Pow<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Pow", scope.makeOpName("Pow"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Pow<T>(opBuilder.build());
+    return new Pow<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Pow";
-  
-  private Output<T> z;
-  
-  private Pow(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

@@ -30,7 +30,6 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Returns the TopK unique values in the array in sorted order. The
- * <p>
  * running time is proportional to the product of K and the input
  * size. Sorting the whole array is more efficient for sufficiently large
  * values of K. The median-of-medians algorithm is probably faster, but
@@ -46,16 +45,33 @@ import org.tensorflow.types.TInt32;
  */
 @Operator
 public final class TopKUnique extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TopKUnique";
+
+  private Output<TFloat32> topk;
+
+  private Output<TInt32> topkIndices;
+
+  private TopKUnique(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    topk = operation.output(outputIdx++);
+    topkIndices = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TopKUnique operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param k 
+   * @param input the input value
+   * @param k the value of the k property
    * @return a new instance of TopKUnique
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TopKUnique create(Scope scope, Operand<TFloat32> input, Long k) {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKUnique", scope.makeOpName("TopKUnique"));
     opBuilder.addInput(input.asOutput());
@@ -63,29 +79,22 @@ public final class TopKUnique extends RawOp {
     opBuilder.setAttr("k", k);
     return new TopKUnique(opBuilder.build());
   }
-  
+
   /**
+   * Gets topk.
+   *
+   * @return topk.
    */
   public Output<TFloat32> topk() {
     return topk;
   }
-  
+
   /**
+   * Gets topkIndices.
+   *
+   * @return topkIndices.
    */
   public Output<TInt32> topkIndices() {
     return topkIndices;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TopKUnique";
-  
-  private Output<TFloat32> topk;
-  private Output<TInt32> topkIndices;
-  
-  private TopKUnique(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    topk = operation.output(outputIdx++);
-    topkIndices = operation.output(outputIdx++);
   }
 }

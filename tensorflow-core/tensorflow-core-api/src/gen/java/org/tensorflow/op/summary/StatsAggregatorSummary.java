@@ -24,48 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produces a summary of any statistics recorded by the given statistics manager.
  */
 public final class StatsAggregatorSummary extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatsAggregatorSummary";
+
+  private Output<TString> summary;
+
+  private StatsAggregatorSummary(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    summary = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatsAggregatorSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param iterator 
+   * @param iterator the iterator value
    * @return a new instance of StatsAggregatorSummary
    */
-  @Endpoint(describeByClass = true)
-  public static StatsAggregatorSummary create(Scope scope, Operand<?> iterator) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatsAggregatorSummary create(Scope scope, Operand<? extends TType> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSummary", scope.makeOpName("StatsAggregatorSummary"));
     opBuilder.addInput(iterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new StatsAggregatorSummary(opBuilder.build());
   }
-  
+
   /**
+   * Gets summary.
+   *
+   * @return summary.
    */
   public Output<TString> summary() {
     return summary;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return summary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatsAggregatorSummary";
-  
-  private Output<TString> summary;
-  
-  private StatsAggregatorSummary(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    summary = operation.output(outputIdx++);
   }
 }

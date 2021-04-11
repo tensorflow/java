@@ -24,60 +24,64 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a gamma distribution.
- * <p>
  * Outputs random values from a gamma distribution.
- * <p>
- * The outputs are a deterministic function of `shape`, `seed`, and `alpha`.
- * 
- * @param <V> data type for {@code output()} output
+ * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, and {@code alpha}.
+ *
+ * @param <V> data type for {@code output} output
  */
 public final class StatelessRandomGamma<V extends TNumber> extends RawOp implements Operand<V> {
-  
   /**
-   * Factory method to create a class wrapping a new StatelessRandomGamma operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatelessRandomGammaV2";
+
+  private Output<V> output;
+
+  private StatelessRandomGamma(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new StatelessRandomGammaV2 operation.
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param alpha The concentration of the gamma distribution. Shape must match the rightmost
-   * dimensions of `shape`.
+   * dimensions of {@code shape}.
+   * @param <V> data type for {@code StatelessRandomGammaV2} output and operands
    * @return a new instance of StatelessRandomGamma
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TNumber> StatelessRandomGamma<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> alpha) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> StatelessRandomGamma<V> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> alpha) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGammaV2", scope.makeOpName("StatelessRandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new StatelessRandomGamma<V>(opBuilder.build());
+    return new StatelessRandomGamma<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   @Override
   public Output<V> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatelessRandomGammaV2";
-  
-  private Output<V> output;
-  
-  private StatelessRandomGamma(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

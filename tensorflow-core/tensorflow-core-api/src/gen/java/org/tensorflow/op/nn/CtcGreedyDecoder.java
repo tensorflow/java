@@ -31,52 +31,58 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs greedy decoding on the logits given in inputs.
- * <p>
  * A note about the attribute merge_repeated: if enabled, when
  * consecutive logits' maximum indices are the same, only the first of
- * these is emitted.  Labeling the blank '*', the sequence "A B B * B B"
- * becomes "A B B" if merge_repeated = True and "A B B B B" if
+ * these is emitted.  Labeling the blank '*', the sequence &quot;A B B * B B&quot;
+ * becomes &quot;A B B&quot; if merge_repeated = True and &quot;A B B B B&quot; if
  * merge_repeated = False.
- * <p>
- * Regardless of the value of merge_repeated, if the maximum index of a given
- * time and batch corresponds to the blank, index `(num_classes - 1)`, no new
+ * <p>Regardless of the value of merge_repeated, if the maximum index of a given
+ * time and batch corresponds to the blank, index {@code (num_classes - 1)}, no new
  * element is emitted.
- * 
- * @param <T> data type for {@code logProbability()} output
+ *
+ * @param <T> data type for {@code log_probability} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.CtcGreedyDecoder}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param mergeRepeated If True, merge repeated classes in output.
-     */
-    public Options mergeRepeated(Boolean mergeRepeated) {
-      this.mergeRepeated = mergeRepeated;
-      return this;
-    }
-    
-    private Boolean mergeRepeated;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CTCGreedyDecoder";
+
+  private Output<TInt64> decodedIndices;
+
+  private Output<TInt64> decodedValues;
+
+  private Output<TInt64> decodedShape;
+
+  private Output<T> logProbability;
+
+  private CtcGreedyDecoder(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    decodedIndices = operation.output(outputIdx++);
+    decodedValues = operation.output(outputIdx++);
+    decodedShape = operation.output(outputIdx++);
+    logProbability = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new CtcGreedyDecoder operation.
-   * 
+   * Factory method to create a class wrapping a new CTCGreedyDecoder operation.
+   *
    * @param scope current scope
-   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
-   * @param sequenceLength A vector containing sequence lengths, size `(batch_size)`.
-   * @param options carries optional attributes values
+   * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
+   * @param sequenceLength A vector containing sequence lengths, size {@code (batch_size)}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CTCGreedyDecoder} output and operands
    * @return a new instance of CtcGreedyDecoder
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs,
+      Operand<TInt32> sequenceLength, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCGreedyDecoder", scope.makeOpName("CtcGreedyDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -88,62 +94,77 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
         }
       }
     }
-    return new CtcGreedyDecoder<T>(opBuilder.build());
+    return new CtcGreedyDecoder<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the mergeRepeated option.
+   *
    * @param mergeRepeated If True, merge repeated classes in output.
+   * @return this Options instance.
    */
   public static Options mergeRepeated(Boolean mergeRepeated) {
     return new Options().mergeRepeated(mergeRepeated);
   }
-  
+
   /**
-   * Indices matrix, size `(total_decoded_outputs x 2)`,
-   * of a `SparseTensor<int64, 2>`.  The rows store: [batch, time].
+   * Gets decodedIndices.
+   * Indices matrix, size {@code (total_decoded_outputs x 2)},
+   * of a {@code SparseTensor<int64, 2>}.  The rows store: [batch, time].
+   * @return decodedIndices.
    */
   public Output<TInt64> decodedIndices() {
     return decodedIndices;
   }
-  
+
   /**
-   * Values vector, size: `(total_decoded_outputs)`,
-   * of a `SparseTensor<int64, 2>`.  The vector stores the decoded classes.
+   * Gets decodedValues.
+   * Values vector, size: {@code (total_decoded_outputs)},
+   * of a {@code SparseTensor<int64, 2>}.  The vector stores the decoded classes.
+   * @return decodedValues.
    */
   public Output<TInt64> decodedValues() {
     return decodedValues;
   }
-  
+
   /**
-   * Shape vector, size `(2)`, of the decoded SparseTensor.
-   * Values are: `[batch_size, max_decoded_length]`.
+   * Gets decodedShape.
+   * Shape vector, size {@code (2)}, of the decoded SparseTensor.
+   * Values are: {@code [batch_size, max_decoded_length]}.
+   * @return decodedShape.
    */
   public Output<TInt64> decodedShape() {
     return decodedShape;
   }
-  
+
   /**
-   * Matrix, size `(batch_size x 1)`, containing sequence
+   * Gets logProbability.
+   * Matrix, size {@code (batch_size x 1)}, containing sequence
    * log-probabilities.
+   * @return logProbability.
    */
   public Output<T> logProbability() {
     return logProbability;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CTCGreedyDecoder";
-  
-  private Output<TInt64> decodedIndices;
-  private Output<TInt64> decodedValues;
-  private Output<TInt64> decodedShape;
-  private Output<T> logProbability;
-  
-  private CtcGreedyDecoder(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    decodedIndices = operation.output(outputIdx++);
-    decodedValues = operation.output(outputIdx++);
-    decodedShape = operation.output(outputIdx++);
-    logProbability = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.CtcGreedyDecoder}
+   */
+  public static class Options {
+    private Boolean mergeRepeated;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the mergeRepeated option.
+     *
+     * @param mergeRepeated If True, merge repeated classes in output.
+     * @return this Options instance.
+     */
+    public Options mergeRepeated(Boolean mergeRepeated) {
+      this.mergeRepeated = mergeRepeated;
+      return this;
+    }
   }
 }

@@ -30,47 +30,33 @@ import org.tensorflow.types.TString;
 /**
  * A Reader that outputs the records from a LMDB file.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class LmdbReader extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.LmdbReader}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container If non-empty, this reader is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this reader is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LMDBReader";
+
+  private Output<TString> readerHandle;
+
+  private LmdbReader(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    readerHandle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new LmdbReader operation.
-   * 
+   * Factory method to create a class wrapping a new LMDBReader operation.
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of LmdbReader
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static LmdbReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LMDBReader", scope.makeOpName("LmdbReader"));
     opBuilder = scope.apply(opBuilder);
@@ -86,43 +72,76 @@ public final class LmdbReader extends RawOp implements Operand<TString> {
     }
     return new LmdbReader(opBuilder.build());
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this reader is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this reader is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets readerHandle.
    * The handle to reference the Reader.
+   * @return readerHandle.
    */
   public Output<TString> readerHandle() {
     return readerHandle;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return readerHandle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LMDBReader";
-  
-  private Output<TString> readerHandle;
-  
-  private LmdbReader(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    readerHandle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.LmdbReader}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

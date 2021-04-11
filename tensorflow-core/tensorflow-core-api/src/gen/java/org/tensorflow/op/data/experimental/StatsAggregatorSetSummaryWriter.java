@@ -23,34 +23,38 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Set a summary_writer_interface to record statistics using given stats_aggregator.
  */
 public final class StatsAggregatorSetSummaryWriter extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatsAggregatorSetSummaryWriter";
+
+  private StatsAggregatorSetSummaryWriter(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatsAggregatorSetSummaryWriter operation.
-   * 
+   *
    * @param scope current scope
-   * @param statsAggregator 
-   * @param summary 
+   * @param statsAggregator the statsAggregator value
+   * @param summary the summary value
    * @return a new instance of StatsAggregatorSetSummaryWriter
    */
-  @Endpoint(describeByClass = true)
-  public static StatsAggregatorSetSummaryWriter create(Scope scope, Operand<?> statsAggregator, Operand<?> summary) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatsAggregatorSetSummaryWriter create(Scope scope,
+      Operand<? extends TType> statsAggregator, Operand<? extends TType> summary) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatsAggregatorSetSummaryWriter", scope.makeOpName("StatsAggregatorSetSummaryWriter"));
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(summary.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new StatsAggregatorSetSummaryWriter(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatsAggregatorSetSummaryWriter";
-  
-  private StatsAggregatorSetSummaryWriter(Operation operation) {
-    super(operation);
   }
 }

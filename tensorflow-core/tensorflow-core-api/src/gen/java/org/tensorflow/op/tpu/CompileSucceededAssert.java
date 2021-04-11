@@ -28,33 +28,36 @@ import org.tensorflow.types.TString;
 
 /**
  * Asserts that compilation succeeded. This op produces no output and closes the
- * <p>
  * device during failure to ensure all pending device interactions fail.
- * <p>
- * 'compilation_status' is a serialized CompilationResultProto.
+ * <p>'compilation_status' is a serialized CompilationResultProto.
  */
-@Operator(group = "tpu")
+@Operator(
+    group = "tpu"
+)
 public final class CompileSucceededAssert extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new CompileSucceededAssert operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TPUCompileSucceededAssert";
+
+  private CompileSucceededAssert(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TPUCompileSucceededAssert operation.
+   *
    * @param scope current scope
-   * @param compilationStatus 
+   * @param compilationStatus the compilationStatus value
    * @return a new instance of CompileSucceededAssert
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static CompileSucceededAssert create(Scope scope, Operand<TString> compilationStatus) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUCompileSucceededAssert", scope.makeOpName("CompileSucceededAssert"));
     opBuilder.addInput(compilationStatus.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new CompileSucceededAssert(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUCompileSucceededAssert";
-  
-  private CompileSucceededAssert(Operation operation) {
-    super(operation);
   }
 }

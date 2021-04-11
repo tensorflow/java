@@ -31,60 +31,71 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the last element of the input list as well as a list with all but that element.
- * <p>
  * Fails if the list is empty.
- * <p>
- * input_handle: the input list
+ * <p>input_handle: the input list
  * tensor: the withdrawn last element of the list
  * element_dtype: the type of elements in the list
  * element_shape: the shape of the output tensor
- * 
- * @param <T> data type for {@code tensor()} output
+ *
+ * @param <T> data type for {@code tensor} output
  */
 @Operator
 public final class TensorListPopBack<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new TensorListPopBack operation.
-   * 
-   * @param scope current scope
-   * @param inputHandle 
-   * @param elementShape 
-   * @param elementDtype 
-   * @return a new instance of TensorListPopBack
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListPopBack<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> elementShape, Class<T> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListPopBack", scope.makeOpName("TensorListPopBack"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
-    return new TensorListPopBack<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<?> outputHandle() {
-    return outputHandle;
-  }
-  
-  /**
-   */
-  public Output<T> tensor() {
-    return tensor;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "TensorListPopBack";
-  
-  private Output<?> outputHandle;
+
+  private Output<? extends TType> outputHandle;
+
   private Output<T> tensor;
-  
+
+  @SuppressWarnings("unchecked")
   private TensorListPopBack(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
     tensor = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorListPopBack operation.
+   *
+   * @param scope current scope
+   * @param inputHandle the inputHandle value
+   * @param elementShape the elementShape value
+   * @param elementDtype the value of the elementDtype property
+   * @param <T> data type for {@code TensorListPopBack} output and operands
+   * @return a new instance of TensorListPopBack
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorListPopBack<T> create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<TInt32> elementShape, Class<T> elementDtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TensorListPopBack", scope.makeOpName("TensorListPopBack"));
+    opBuilder.addInput(inputHandle.asOutput());
+    opBuilder.addInput(elementShape.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
+    return new TensorListPopBack<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
+   */
+  public Output<? extends TType> outputHandle() {
+    return outputHandle;
+  }
+
+  /**
+   * Gets tensor.
+   *
+   * @return tensor.
+   */
+  public Output<T> tensor() {
+    return tensor;
   }
 }

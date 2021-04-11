@@ -29,64 +29,50 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Randomly crop `image`.
- * <p>
- * `size` is a 1-D int64 tensor with 2 elements representing the crop height and
+ * Randomly crop {@code image}.
+ * {@code size} is a 1-D int64 tensor with 2 elements representing the crop height and
  * width.  The values must be non negative.
- * <p>
- * This Op picks a random location in `image` and crops a `height` by `width`
+ * <p>This Op picks a random location in {@code image} and crops a {@code height} by {@code width}
  * rectangle from that location.  The random location is picked so the cropped
  * area will fit inside the original image.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class RandomCrop<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.RandomCrop}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param seed If either seed or seed2 are set to be non-zero, the random number
-     * generator is seeded by the given seed.  Otherwise, it is seeded by a
-     * random seed.
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 An second seed to avoid seed collision.
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    private Long seed;
-    private Long seed2;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RandomCrop";
+
+  private Output<T> output;
+
+  private RandomCrop(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RandomCrop operation.
-   * 
+   *
    * @param scope current scope
-   * @param image 3-D of shape `[height, width, channels]`.
-   * @param size 1-D of length 2 containing: `crop_height`, `crop_width`..
-   * @param options carries optional attributes values
+   * @param image 3-D of shape {@code [height, width, channels]}.
+   * @param sizeOutput 1-D of length 2 containing: {@code crop_height}, {@code crop_width}..
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code RandomCrop} output and operands
    * @return a new instance of RandomCrop
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image, Operand<TInt64> size, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image,
+      Operand<TInt64> sizeOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -98,45 +84,78 @@ public final class RandomCrop<T extends TNumber> extends RawOp implements Operan
         }
       }
     }
-    return new RandomCrop<T>(opBuilder.build());
+    return new RandomCrop<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the seed option.
+   *
    * @param seed If either seed or seed2 are set to be non-zero, the random number
    * generator is seeded by the given seed.  Otherwise, it is seeded by a
    * random seed.
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
+   * Sets the seed2 option.
+   *
    * @param seed2 An second seed to avoid seed collision.
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
-   * 3-D of shape `[crop_height, crop_width, channels].`
+   * Gets output.
+   * 3-D of shape {@code [crop_height, crop_width, channels].}
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RandomCrop";
-  
-  private Output<T> output;
-  
-  private RandomCrop(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.RandomCrop}
+   */
+  public static class Options {
+    private Long seed;
+
+    private Long seed2;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 An second seed to avoid seed collision.
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
   }
 }

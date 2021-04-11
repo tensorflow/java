@@ -29,49 +29,59 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The SelectV2 operation
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Select<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Select operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SelectV2";
+
+  private Output<T> output;
+
+  private Select(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SelectV2 operation.
+   *
    * @param scope current scope
-   * @param condition 
-   * @param t 
-   * @param e 
+   * @param condition the condition value
+   * @param t the t value
+   * @param e the e value
+   * @param <T> data type for {@code SelectV2} output and operands
    * @return a new instance of Select
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Select<T> create(Scope scope, Operand<TBool> condition, Operand<T> t, Operand<T> e) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Select<T> create(Scope scope, Operand<TBool> condition,
+      Operand<T> t, Operand<T> e) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("Select"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(e.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Select<T>(opBuilder.build());
+    return new Select<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SelectV2";
-  
-  private Output<T> output;
-  
-  private Select(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

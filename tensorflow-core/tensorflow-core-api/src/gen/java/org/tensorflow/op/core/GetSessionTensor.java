@@ -31,49 +31,56 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Get the value of the tensor specified by its handle.
- * 
- * @param <T> data type for {@code value()} output
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class GetSessionTensor<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new GetSessionTensor operation.
-   * 
-   * @param scope current scope
-   * @param handle The handle for a tensor stored in the session state.
-   * @param dtype The type of the output value.
-   * @return a new instance of GetSessionTensor
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
-    opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new GetSessionTensor<T>(opBuilder.build());
-  }
-  
-  /**
-   * The tensor for the given handle.
-   */
-  public Output<T> value() {
-    return value;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "GetSessionTensor";
-  
+
   private Output<T> value;
-  
+
   private GetSessionTensor(Operation operation) {
     super(operation);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new GetSessionTensor operation.
+   *
+   * @param scope current scope
+   * @param handle The handle for a tensor stored in the session state.
+   * @param dtype The type of the output value.
+   * @param <T> data type for {@code GetSessionTensor} output and operands
+   * @return a new instance of GetSessionTensor
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle,
+      Class<T> dtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
+    opBuilder.addInput(handle.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
+    return new GetSessionTensor<>(opBuilder.build());
+  }
+
+  /**
+   * Gets value.
+   * The tensor for the given handle.
+   * @return value.
+   */
+  public Output<T> value() {
+    return value;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return value;
   }
 }

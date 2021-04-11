@@ -29,53 +29,57 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Gives a guarantee to the TF runtime that the input tensor is a constant.
- * <p>
  * The runtime is then free to make optimizations based on this.
- * <p>
- * Only accepts value typed tensors as inputs and rejects resource variable handles
+ * <p>Only accepts value typed tensors as inputs and rejects resource variable handles
  * as input.
- * <p>
- * Returns the input tensor without modification.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>Returns the input tensor without modification.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class GuaranteeConst<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new GuaranteeConst operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of GuaranteeConst
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GuaranteeConst", scope.makeOpName("GuaranteeConst"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new GuaranteeConst<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "GuaranteeConst";
-  
+
   private Output<T> output;
-  
+
   private GuaranteeConst(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new GuaranteeConst operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code GuaranteeConst} output and operands
+   * @return a new instance of GuaranteeConst
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("GuaranteeConst", scope.makeOpName("GuaranteeConst"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new GuaranteeConst<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

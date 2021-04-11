@@ -30,66 +30,75 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reorders a SparseTensor into the canonical, row-major ordering.
- * <p>
  * Note that by convention, all sparse ops preserve the canonical ordering along
  * increasing dimension number. The only time ordering can be violated is during
  * manual manipulation of the indices and values vectors to add entries.
- * <p>
- * Reordering does not affect the shape of the SparseTensor.
- * <p>
- * If the tensor has rank `R` and `N` non-empty values, `input_indices` has
- * shape `[N, R]`, input_values has length `N`, and input_shape has length `R`.
- * 
- * @param <T> data type for {@code outputValues()} output
+ * <p>Reordering does not affect the shape of the SparseTensor.
+ * <p>If the tensor has rank {@code R} and {@code N} non-empty values, {@code input_indices} has
+ * shape {@code [N, R]}, input_values has length {@code N}, and input_shape has length {@code R}.
+ *
+ * @param <T> data type for {@code output_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseReorder<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new SparseReorder operation.
-   * 
-   * @param scope current scope
-   * @param inputIndices 2-D.  `N x R` matrix with the indices of non-empty values in a
-   * SparseTensor, possibly not in canonical ordering.
-   * @param inputValues 1-D.  `N` non-empty values corresponding to `input_indices`.
-   * @param inputShape 1-D.  Shape of the input SparseTensor.
-   * @return a new instance of SparseReorder
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
-    opBuilder.addInput(inputIndices.asOutput());
-    opBuilder.addInput(inputValues.asOutput());
-    opBuilder.addInput(inputShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new SparseReorder<T>(opBuilder.build());
-  }
-  
-  /**
-   * 2-D.  `N x R` matrix with the same indices as input_indices, but
-   * in canonical row-major ordering.
-   */
-  public Output<TInt64> outputIndices() {
-    return outputIndices;
-  }
-  
-  /**
-   * 1-D.  `N` non-empty values corresponding to `output_indices`.
-   */
-  public Output<T> outputValues() {
-    return outputValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "SparseReorder";
-  
+
   private Output<TInt64> outputIndices;
+
   private Output<T> outputValues;
-  
+
   private SparseReorder(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SparseReorder operation.
+   *
+   * @param scope current scope
+   * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
+   * SparseTensor, possibly not in canonical ordering.
+   * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
+   * @param inputShape 1-D.  Shape of the input SparseTensor.
+   * @param <T> data type for {@code SparseReorder} output and operands
+   * @return a new instance of SparseReorder
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices,
+      Operand<T> inputValues, Operand<TInt64> inputShape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SparseReorder", scope.makeOpName("SparseReorder"));
+    opBuilder.addInput(inputIndices.asOutput());
+    opBuilder.addInput(inputValues.asOutput());
+    opBuilder.addInput(inputShape.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new SparseReorder<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputIndices.
+   * 2-D.  {@code N x R} matrix with the same indices as input_indices, but
+   * in canonical row-major ordering.
+   * @return outputIndices.
+   */
+  public Output<TInt64> outputIndices() {
+    return outputIndices;
+  }
+
+  /**
+   * Gets outputValues.
+   * 1-D.  {@code N} non-empty values corresponding to {@code output_indices}.
+   * @return outputValues.
+   */
+  public Output<T> outputValues() {
+    return outputValues;
   }
 }

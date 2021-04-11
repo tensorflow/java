@@ -23,33 +23,38 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The DeleteMemoryCache operation
  */
 public final class DeleteMemoryCache extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeleteMemoryCache";
+
+  private DeleteMemoryCache(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeleteMemoryCache operation.
-   * 
+   *
    * @param scope current scope
-   * @param handle 
-   * @param deleter 
+   * @param handle the handle value
+   * @param deleter the deleter value
    * @return a new instance of DeleteMemoryCache
    */
-  @Endpoint(describeByClass = true)
-  public static DeleteMemoryCache create(Scope scope, Operand<?> handle, Operand<?> deleter) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DeleteMemoryCache create(Scope scope, Operand<? extends TType> handle,
+      Operand<? extends TType> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMemoryCache", scope.makeOpName("DeleteMemoryCache"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeleteMemoryCache(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeleteMemoryCache";
-  
-  private DeleteMemoryCache(Operation operation) {
-    super(operation);
   }
 }

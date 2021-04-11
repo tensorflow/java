@@ -31,44 +31,51 @@ import org.tensorflow.types.TString;
 /**
  * Returns the number of gradients aggregated in the given accumulators.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class AccumulatorNumAccumulated extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AccumulatorNumAccumulated";
+
+  private Output<TInt32> numAccumulated;
+
+  private AccumulatorNumAccumulated(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    numAccumulated = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new AccumulatorNumAccumulated operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to an accumulator.
    * @return a new instance of AccumulatorNumAccumulated
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static AccumulatorNumAccumulated create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorNumAccumulated", scope.makeOpName("AccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new AccumulatorNumAccumulated(opBuilder.build());
   }
-  
+
   /**
+   * Gets numAccumulated.
    * The number of gradients aggregated in the given accumulator.
+   * @return numAccumulated.
    */
   public Output<TInt32> numAccumulated() {
     return numAccumulated;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return numAccumulated;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AccumulatorNumAccumulated";
-  
-  private Output<TInt32> numAccumulated;
-  
-  private AccumulatorNumAccumulated(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    numAccumulated = operation.output(outputIdx++);
   }
 }

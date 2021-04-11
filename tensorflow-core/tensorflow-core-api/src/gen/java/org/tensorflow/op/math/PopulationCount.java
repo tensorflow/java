@@ -30,51 +30,57 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes element-wise population count (a.k.a. popcount, bitsum, bitcount).
- * <p>
- * For each entry in `x`, calculates the number of `1` (on) bits in the binary
+ * For each entry in {@code x}, calculates the number of {@code 1} (on) bits in the binary
  * representation of that entry.
- * <p>
- * <b>NOTE</b>: It is more efficient to first `tf.bitcast` your tensors into
- * `int32` or `int64` and perform the bitcount on the result, than to feed in
+ * <p><strong>NOTE</strong>: It is more efficient to first {@code tf.bitcast} your tensors into
+ * {@code int32} or {@code int64} and perform the bitcount on the result, than to feed in
  * 8- or 16-bit inputs and then aggregate the resulting counts.
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class PopulationCount extends RawOp implements Operand<TUint8> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "PopulationCount";
+
+  private Output<TUint8> y;
+
+  private PopulationCount(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new PopulationCount operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
+   * @param x the x value
    * @return a new instance of PopulationCount
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static PopulationCount create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("PopulationCount", scope.makeOpName("PopulationCount"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new PopulationCount(opBuilder.build());
   }
-  
+
   /**
+   * Gets y.
+   *
+   * @return y.
    */
   public Output<TUint8> y() {
     return y;
   }
-  
+
   @Override
   public Output<TUint8> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PopulationCount";
-  
-  private Output<TUint8> y;
-  
-  private PopulationCount(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

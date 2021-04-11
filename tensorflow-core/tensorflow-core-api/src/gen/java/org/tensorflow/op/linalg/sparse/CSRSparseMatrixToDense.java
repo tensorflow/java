@@ -25,53 +25,59 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Convert a (possibly batched) CSRSparseMatrix to dense.
- * 
- * @param <T> data type for {@code denseOutput()} output
+ *
+ * @param <T> data type for {@code dense_output} output
  */
 public final class CSRSparseMatrixToDense<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new CSRSparseMatrixToDense operation.
-   * 
-   * @param scope current scope
-   * @param sparseInput A batched CSRSparseMatrix.
-   * @param type 
-   * @return a new instance of CSRSparseMatrixToDense
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope, Operand<?> sparseInput, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToDense", scope.makeOpName("CSRSparseMatrixToDense"));
-    opBuilder.addInput(sparseInput.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", Operands.toDataType(type));
-    return new CSRSparseMatrixToDense<T>(opBuilder.build());
-  }
-  
-  /**
-   * A dense tensor.
-   */
-  public Output<T> denseOutput() {
-    return denseOutput;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return denseOutput;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CSRSparseMatrixToDense";
-  
+
   private Output<T> denseOutput;
-  
+
   private CSRSparseMatrixToDense(Operation operation) {
     super(operation);
     int outputIdx = 0;
     denseOutput = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CSRSparseMatrixToDense operation.
+   *
+   * @param scope current scope
+   * @param sparseInput A batched CSRSparseMatrix.
+   * @param type the value of the type property
+   * @param <T> data type for {@code CSRSparseMatrixToDense} output and operands
+   * @return a new instance of CSRSparseMatrixToDense
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope,
+      Operand<? extends TType> sparseInput, Class<T> type) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToDense", scope.makeOpName("CSRSparseMatrixToDense"));
+    opBuilder.addInput(sparseInput.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("type", Operands.toDataType(type));
+    return new CSRSparseMatrixToDense<>(opBuilder.build());
+  }
+
+  /**
+   * Gets denseOutput.
+   * A dense tensor.
+   * @return denseOutput.
+   */
+  public Output<T> denseOutput() {
+    return denseOutput;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return denseOutput;
   }
 }

@@ -35,63 +35,32 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class StageSize extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.StageSize}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity 
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param memoryLimit 
-     */
-    public Options memoryLimit(Long memoryLimit) {
-      this.memoryLimit = memoryLimit;
-      return this;
-    }
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private Long memoryLimit;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StageSize";
+
+  private Output<TInt32> output;
+
+  private StageSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new StageSize operation.
-   * 
+   *
    * @param scope current scope
-   * @param dtypes 
-   * @param options carries optional attributes values
+   * @param dtypes the value of the dtypes property
+   * @param options carries optional attribute values
    * @return a new instance of StageSize
    */
-  @Endpoint(describeByClass = true)
-  public static StageSize create(Scope scope, List<Class<? extends TType>> dtypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StageSize create(Scope scope, List<Class<? extends TType>> dtypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StageSize", scope.makeOpName("StageSize"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
@@ -113,54 +82,118 @@ public final class StageSize extends RawOp implements Operand<TInt32> {
     }
     return new StageSize(opBuilder.build());
   }
-  
+
   /**
-   * @param capacity 
+   * Sets the capacity option.
+   *
+   * @param capacity the capacity option
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
-   * @param memoryLimit 
+   * Sets the memoryLimit option.
+   *
+   * @param memoryLimit the memoryLimit option
+   * @return this Options instance.
    */
   public static Options memoryLimit(Long memoryLimit) {
     return new Options().memoryLimit(memoryLimit);
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StageSize";
-  
-  private Output<TInt32> output;
-  
-  private StageSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.StageSize}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private Long memoryLimit;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity the capacity option
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the memoryLimit option.
+     *
+     * @param memoryLimit the memoryLimit option
+     * @return this Options instance.
+     */
+    public Options memoryLimit(Long memoryLimit) {
+      this.memoryLimit = memoryLimit;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

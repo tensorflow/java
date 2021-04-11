@@ -33,63 +33,67 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a list of tensors with the same shapes and contents as the input
- * <p>
  * tensors.
- * <p>
- * This op can be used to override the gradient for complicated functions. For
+ * <p>This op can be used to override the gradient for complicated functions. For
  * example, suppose y = f(x) and we wish to apply a custom function g for backprop
  * such that dx = g(dy). In Python,
- * <pre>{@code
+ * <pre>
  * with tf.get_default_graph().gradient_override_map(
  *     {'IdentityN': 'OverrideGradientWithG'}):
  *   y, _ = identity_n([f(x), x])
- * 
- * @tf.RegisterGradient('OverrideGradientWithG')
+ *
+ * {@literal @}tf.RegisterGradient('OverrideGradientWithG')
  * def ApplyG(op, dy, _):
  *   return [None, g(dy)]  # Do not backprop to f(x).
- * }</pre>
- * 
+ * </pre>
  */
 @Operator
 public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new IdentityN operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of IdentityN
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IdentityN", scope.makeOpName("IdentityN"));
-    opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
-    return new IdentityN(opBuilder.build());
-  }
-  
-  /**
-   */
-  public List<Output<?>> output() {
-    return output;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) output.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IdentityN";
-  
+
   private List<Output<?>> output;
-  
+
+  @SuppressWarnings("unchecked")
   private IdentityN(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
     output = Arrays.asList(operation.outputList(outputIdx, outputLength));
     outputIdx += outputLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IdentityN operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @return a new instance of IdentityN
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IdentityN", scope.makeOpName("IdentityN"));
+    opBuilder.addInputList(Operands.asOutputs(input));
+    opBuilder = scope.apply(opBuilder);
+    return new IdentityN(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public List<Output<?>> output() {
+    return output;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) output.iterator();
   }
 }

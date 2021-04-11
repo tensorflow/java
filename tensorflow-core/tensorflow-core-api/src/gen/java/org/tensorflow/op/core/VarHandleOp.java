@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -35,57 +36,36 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class VarHandleOp extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.VarHandleOp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container the container this variable is placed in.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName the name by which this variable is referred to.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    /**
-     * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
-     * output ResourceHandle represents a per-replica/partitioned resource variable.
-     */
-    public Options allowedDevices(List<String> allowedDevices) {
-      this.allowedDevices = allowedDevices;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    private List<String> allowedDevices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "VarHandleOp";
+
+  private Output<? extends TType> resource;
+
+  @SuppressWarnings("unchecked")
+  private VarHandleOp(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resource = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new VarHandleOp operation.
-   * 
+   *
    * @param scope current scope
    * @param dtype the type of this variable. Must agree with the dtypes
    * of all ops using this variable.
    * @param shape The (possibly partially specified) shape of this variable.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code VarHandleOp} output and operands
    * @return a new instance of VarHandleOp
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> VarHandleOp create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> VarHandleOp create(Scope scope, Class<T> dtype, Shape shape,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("VarHandleOp", scope.makeOpName("VarHandleOp"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
@@ -100,7 +80,7 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
         }
         if (opts.allowedDevices != null) {
           String[] allowedDevicesArray = new String[opts.allowedDevices.size()];
-          for (int i = 0; i < allowedDevicesArray.length; ++i) {
+          for (int i = 0 ; i < allowedDevicesArray.length ; i++) {
             allowedDevicesArray[i] = opts.allowedDevices.get(i);
           }
           opBuilder.setAttr("allowed_devices", allowedDevicesArray);
@@ -109,49 +89,121 @@ public final class VarHandleOp extends RawOp implements Operand<TType> {
     }
     return new VarHandleOp(opBuilder.build());
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container the container this variable is placed in.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName the name by which this variable is referred to.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Sets the allowedDevices option.
+   *
    * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
    * output ResourceHandle represents a per-replica/partitioned resource variable.
+   * @return this Options instance.
    */
   public static Options allowedDevices(List<String> allowedDevices) {
     return new Options().allowedDevices(allowedDevices);
   }
-  
+
   /**
+   * Sets the allowedDevices option.
+   *
+   * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
+   * output ResourceHandle represents a per-replica/partitioned resource variable.
+   * @return this Options instance.
    */
-  public Output<?> resource() {
+  public static Options allowedDevices(String[] allowedDevices) {
+    return new Options().allowedDevices(allowedDevices);
+  }
+
+  /**
+   * Gets resource.
+   *
+   * @return resource.
+   */
+  public Output<? extends TType> resource() {
     return resource;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) resource;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "VarHandleOp";
-  
-  private Output<?> resource;
-  
-  private VarHandleOp(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resource = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.VarHandleOp}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private List<String> allowedDevices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container this variable is placed in.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the name by which this variable is referred to.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
+
+    /**
+     * Sets the allowedDevices option.
+     *
+     * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
+     * output ResourceHandle represents a per-replica/partitioned resource variable.
+     * @return this Options instance.
+     */
+    public Options allowedDevices(List<String> allowedDevices) {
+      this.allowedDevices = allowedDevices;
+      return this;
+    }
+
+    /**
+     * Sets the allowedDevices option.
+     *
+     * @param allowedDevices DEPRECATED. The allowed devices containing the resource variable. Set when the
+     * output ResourceHandle represents a per-replica/partitioned resource variable.
+     * @return this Options instance.
+     */
+    public Options allowedDevices(String... allowedDevices) {
+      this.allowedDevices = Arrays.asList(allowedDevices);
+      return this;
+    }
   }
 }

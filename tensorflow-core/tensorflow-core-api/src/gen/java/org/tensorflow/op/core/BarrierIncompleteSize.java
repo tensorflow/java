@@ -33,43 +33,48 @@ import org.tensorflow.types.TString;
  */
 @Operator
 public final class BarrierIncompleteSize extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BarrierIncompleteSize";
+
+  private Output<TInt32> output;
+
+  private BarrierIncompleteSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BarrierIncompleteSize operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierIncompleteSize
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static BarrierIncompleteSize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierIncompleteSize", scope.makeOpName("BarrierIncompleteSize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new BarrierIncompleteSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * The number of incomplete elements (i.e. those with some of their value
    * components not set) in the barrier.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BarrierIncompleteSize";
-  
-  private Output<TInt32> output;
-  
-  private BarrierIncompleteSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

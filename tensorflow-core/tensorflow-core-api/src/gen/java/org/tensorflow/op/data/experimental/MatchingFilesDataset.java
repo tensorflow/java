@@ -24,49 +24,56 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The ExperimentalMatchingFilesDataset operation
  */
 public final class MatchingFilesDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new MatchingFilesDataset operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ExperimentalMatchingFilesDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private MatchingFilesDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExperimentalMatchingFilesDataset operation.
+   *
    * @param scope current scope
-   * @param patterns 
+   * @param patterns the patterns value
    * @return a new instance of MatchingFilesDataset
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalMatchingFilesDataset", scope.makeOpName("MatchingFilesDataset"));
     opBuilder.addInput(patterns.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new MatchingFilesDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ExperimentalMatchingFilesDataset";
-  
-  private Output<?> handle;
-  
-  private MatchingFilesDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

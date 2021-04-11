@@ -29,44 +29,44 @@ import org.tensorflow.types.TString;
 
 /**
  * Converts all uppercase characters into their respective lowercase replacements.
- * <p>
  * Example:
- * <p>
- * >>> tf.strings.lower("CamelCase string and ALL CAPS")
- * <tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'>
- * 
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.strings.lower(&quot;CamelCase string and ALL CAPS&quot;)
+ * &lt;tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class Lower extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.Lower}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param encoding 
-     */
-    public Options encoding(String encoding) {
-      this.encoding = encoding;
-      return this;
-    }
-    
-    private String encoding;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StringLower";
+
+  private Output<TString> output;
+
+  private Lower(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Lower operation.
-   * 
+   * Factory method to create a class wrapping a new StringLower operation.
+   *
    * @param scope current scope
-   * @param input 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param options carries optional attribute values
    * @return a new instance of Lower
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Lower create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLower", scope.makeOpName("Lower"));
     opBuilder.addInput(input.asOutput());
@@ -80,33 +80,49 @@ public final class Lower extends RawOp implements Operand<TString> {
     }
     return new Lower(opBuilder.build());
   }
-  
+
   /**
-   * @param encoding 
+   * Sets the encoding option.
+   *
+   * @param encoding the encoding option
+   * @return this Options instance.
    */
   public static Options encoding(String encoding) {
     return new Options().encoding(encoding);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringLower";
-  
-  private Output<TString> output;
-  
-  private Lower(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.Lower}
+   */
+  public static class Options {
+    private String encoding;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the encoding option.
+     *
+     * @param encoding the encoding option
+     * @return this Options instance.
+     */
+    public Options encoding(String encoding) {
+      this.encoding = encoding;
+      return this;
+    }
   }
 }

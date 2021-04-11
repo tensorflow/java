@@ -27,58 +27,63 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Generate the bucket boundaries for each feature based on accumulated summaries.
- * <p>
  * An op that returns a list of float tensors for a quantile stream resource. Each
  * tensor is Rank 1 containing bucket boundaries for a single feature.
  */
 public final class BoostedTreesQuantileStreamResourceGetBucketBoundaries extends RawOp implements Iterable<Operand<TFloat32>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceGetBucketBoundaries";
+
+  private List<Output<TFloat32>> bucketBoundaries;
+
+  @SuppressWarnings("unchecked")
+  private BoostedTreesQuantileStreamResourceGetBucketBoundaries(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int bucketBoundariesLength = operation.outputListLength("bucket_boundaries");
+    bucketBoundaries = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, bucketBoundariesLength));
+    outputIdx += bucketBoundariesLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesQuantileStreamResourceGetBucketBoundaries operation.
-   * 
+   *
    * @param scope current scope
    * @param quantileStreamResourceHandle resource handle referring to a QuantileStreamResource.
    * @param numFeatures inferred int; number of features to get bucket boundaries for.
    * @return a new instance of BoostedTreesQuantileStreamResourceGetBucketBoundaries
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesQuantileStreamResourceGetBucketBoundaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesQuantileStreamResourceGetBucketBoundaries create(Scope scope,
+      Operand<? extends TType> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceGetBucketBoundaries", scope.makeOpName("BoostedTreesQuantileStreamResourceGetBucketBoundaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_features", numFeatures);
     return new BoostedTreesQuantileStreamResourceGetBucketBoundaries(opBuilder.build());
   }
-  
+
   /**
+   * Gets bucketBoundaries.
    * float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
+   * @return bucketBoundaries.
    */
   public List<Output<TFloat32>> bucketBoundaries() {
     return bucketBoundaries;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) bucketBoundaries.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceGetBucketBoundaries";
-  
-  private List<Output<TFloat32>> bucketBoundaries;
-  
-  @SuppressWarnings("unchecked")
-  private BoostedTreesQuantileStreamResourceGetBucketBoundaries(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int bucketBoundariesLength = operation.outputListLength("bucket_boundaries");
-    bucketBoundaries = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, bucketBoundariesLength));
-    outputIdx += bucketBoundariesLength;
   }
 }

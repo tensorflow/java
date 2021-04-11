@@ -25,55 +25,69 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes rectified linear: `max(features, 0)`.
- * <p>
+ * Computes rectified linear: {@code max(features, 0)}.
  * See: https://en.wikipedia.org/wiki/Rectifier_(neural_networks)
  * Example usage:
- * >>> tf.nn.relu([-2., 0., -0., 3.]).numpy()
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.nn.relu([-2., 0., -0., 3.]).numpy()
  * array([ 0.,  0., -0.,  3.], dtype=float32)
- * 
- * @param <T> data type for {@code activations()} output
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "nn")
-public final class Relu<T extends TType> extends RawOp implements Operand<T> {
-  
+@Operator(
+    group = "nn"
+)
+public final class Relu<T extends TNumber> extends RawOp implements Operand<T> {
   /**
-   * Factory method to create a class wrapping a new Relu operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @return a new instance of Relu
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Relu<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Relu<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> activations() {
-    return activations;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return activations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Relu";
-  
+
   private Output<T> activations;
-  
+
   private Relu(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Relu operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param <T> data type for {@code Relu} output and operands
+   * @return a new instance of Relu
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Relu<T> create(Scope scope, Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Relu", scope.makeOpName("Relu"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Relu<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   *
+   * @return activations.
+   */
+  public Output<T> activations() {
+    return activations;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return activations;
   }
 }

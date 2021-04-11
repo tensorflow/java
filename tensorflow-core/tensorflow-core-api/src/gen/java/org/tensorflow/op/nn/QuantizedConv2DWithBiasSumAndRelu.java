@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -26,63 +27,61 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <V> data type for {@code output()} output
+ * The QuantizedConv2DWithBiasSumAndRelu operation
+ *
+ * @param <V> data type for {@code output} output
  */
-public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends RawOp {
-  
+public final class QuantizedConv2DWithBiasSumAndRelu<V extends TNumber> extends RawOp {
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2DWithBiasSumAndRelu}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dilations 
-     */
-    public Options dilations(List<Long> dilations) {
-      this.dilations = dilations;
-      return this;
-    }
-    
-    /**
-     * @param paddingList 
-     */
-    public Options paddingList(List<Long> paddingList) {
-      this.paddingList = paddingList;
-      return this;
-    }
-    
-    private List<Long> dilations;
-    private List<Long> paddingList;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QuantizedConv2DWithBiasSumAndRelu";
+
+  private Output<V> output;
+
+  private Output<TFloat32> minOutput;
+
+  private Output<TFloat32> maxOutput;
+
+  private QuantizedConv2DWithBiasSumAndRelu(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+    minOutput = operation.output(outputIdx++);
+    maxOutput = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new QuantizedConv2DWithBiasSumAndRelu operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param filter 
-   * @param bias 
-   * @param minInput 
-   * @param maxInput 
-   * @param minFilter 
-   * @param maxFilter 
-   * @param summand 
-   * @param outType 
-   * @param strides 
-   * @param padding 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param filter the filter value
+   * @param bias the bias value
+   * @param minInput the minInput value
+   * @param maxInput the maxInput value
+   * @param minFilter the minFilter value
+   * @param maxFilter the maxFilter value
+   * @param summand the summand value
+   * @param outType the value of the outType property
+   * @param strides the value of the strides property
+   * @param padding the value of the padding property
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2DWithBiasSumAndRelu} output and operands
    * @return a new instance of QuantizedConv2DWithBiasSumAndRelu
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TType> QuantizedConv2DWithBiasSumAndRelu<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<TFloat32> bias, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> summand, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> QuantizedConv2DWithBiasSumAndRelu<V> create(Scope scope,
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter, Operand<TFloat32> bias,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Operand<TFloat32> summand, Class<V> outType, List<Long> strides,
+      String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasSumAndRelu", scope.makeOpName("QuantizedConv2DWithBiasSumAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -95,7 +94,7 @@ public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends Ra
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -104,67 +103,143 @@ public final class QuantizedConv2DWithBiasSumAndRelu<V extends TType> extends Ra
       for (Options opts : options) {
         if (opts.dilations != null) {
           long[] dilationsArray = new long[opts.dilations.size()];
-          for (int i = 0; i < dilationsArray.length; ++i) {
+          for (int i = 0 ; i < dilationsArray.length ; i++) {
             dilationsArray[i] = opts.dilations.get(i);
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
         if (opts.paddingList != null) {
           long[] paddingListArray = new long[opts.paddingList.size()];
-          for (int i = 0; i < paddingListArray.length; ++i) {
+          for (int i = 0 ; i < paddingListArray.length ; i++) {
             paddingListArray[i] = opts.paddingList.get(i);
           }
           opBuilder.setAttr("padding_list", paddingListArray);
         }
       }
     }
-    return new QuantizedConv2DWithBiasSumAndRelu<V>(opBuilder.build());
+    return new QuantizedConv2DWithBiasSumAndRelu<>(opBuilder.build());
   }
-  
+
   /**
-   * @param dilations 
+   * Sets the dilations option.
+   *
+   * @param dilations the dilations option
+   * @return this Options instance.
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
   }
-  
+
   /**
-   * @param paddingList 
+   * Sets the dilations option.
+   *
+   * @param dilations the dilations option
+   * @return this Options instance.
+   */
+  public static Options dilations(Long[] dilations) {
+    return new Options().dilations(dilations);
+  }
+
+  /**
+   * Sets the paddingList option.
+   *
+   * @param paddingList the paddingList option
+   * @return this Options instance.
    */
   public static Options paddingList(List<Long> paddingList) {
     return new Options().paddingList(paddingList);
   }
-  
+
   /**
+   * Sets the paddingList option.
+   *
+   * @param paddingList the paddingList option
+   * @return this Options instance.
+   */
+  public static Options paddingList(Long[] paddingList) {
+    return new Options().paddingList(paddingList);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   /**
+   * Gets minOutput.
+   *
+   * @return minOutput.
    */
   public Output<TFloat32> minOutput() {
     return minOutput;
   }
-  
+
   /**
+   * Gets maxOutput.
+   *
+   * @return maxOutput.
    */
   public Output<TFloat32> maxOutput() {
     return maxOutput;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedConv2DWithBiasSumAndRelu";
-  
-  private Output<V> output;
-  private Output<TFloat32> minOutput;
-  private Output<TFloat32> maxOutput;
-  
-  private QuantizedConv2DWithBiasSumAndRelu(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
-    minOutput = operation.output(outputIdx++);
-    maxOutput = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2DWithBiasSumAndRelu}
+   */
+  public static class Options {
+    private List<Long> dilations;
+
+    private List<Long> paddingList;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations the dilations option
+     * @return this Options instance.
+     */
+    public Options dilations(List<Long> dilations) {
+      this.dilations = dilations;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations the dilations option
+     * @return this Options instance.
+     */
+    public Options dilations(Long... dilations) {
+      this.dilations = Arrays.asList(dilations);
+      return this;
+    }
+
+    /**
+     * Sets the paddingList option.
+     *
+     * @param paddingList the paddingList option
+     * @return this Options instance.
+     */
+    public Options paddingList(List<Long> paddingList) {
+      this.paddingList = paddingList;
+      return this;
+    }
+
+    /**
+     * Sets the paddingList option.
+     *
+     * @param paddingList the paddingList option
+     * @return this Options instance.
+     */
+    public Options paddingList(Long... paddingList) {
+      this.paddingList = Arrays.asList(paddingList);
+      return this;
+    }
   }
 }

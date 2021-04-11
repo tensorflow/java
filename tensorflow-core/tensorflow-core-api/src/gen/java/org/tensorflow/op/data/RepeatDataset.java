@@ -32,57 +32,67 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that emits the outputs of `input_dataset` `count` times.
+ * Creates a dataset that emits the outputs of {@code input_dataset} {@code count} times.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class RepeatDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RepeatDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private RepeatDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RepeatDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDataset 
-   * @param count A scalar representing the number of times that `input_dataset` should
-   * be repeated. A value of `-1` indicates that it should be repeated infinitely.
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param inputDataset the inputDataset value
+   * @param count A scalar representing the number of times that {@code input_dataset} should
+   * be repeated. A value of {@code -1} indicates that it should be repeated infinitely.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of RepeatDataset
    */
-  @Endpoint(describeByClass = true)
-  public static RepeatDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RepeatDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RepeatDataset", scope.makeOpName("RepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(count.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new RepeatDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RepeatDataset";
-  
-  private Output<?> handle;
-  
-  private RepeatDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

@@ -23,38 +23,43 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a tree ensemble model and returns a handle to it.
  */
 public final class BoostedTreesCreateEnsemble extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesCreateEnsemble";
+
+  private BoostedTreesCreateEnsemble(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesCreateEnsemble operation.
-   * 
+   *
    * @param scope current scope
    * @param treeEnsembleHandle Handle to the tree ensemble resource to be created.
    * @param stampToken Token to use as the initial value of the resource stamp.
    * @param treeEnsembleSerialized Serialized proto of the tree ensemble.
    * @return a new instance of BoostedTreesCreateEnsemble
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesCreateEnsemble create(Scope scope, Operand<?> treeEnsembleHandle, Operand<TInt64> stampToken, Operand<TString> treeEnsembleSerialized) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesCreateEnsemble create(Scope scope,
+      Operand<? extends TType> treeEnsembleHandle, Operand<TInt64> stampToken,
+      Operand<TString> treeEnsembleSerialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCreateEnsemble", scope.makeOpName("BoostedTreesCreateEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(stampToken.asOutput());
     opBuilder.addInput(treeEnsembleSerialized.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new BoostedTreesCreateEnsemble(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesCreateEnsemble";
-  
-  private BoostedTreesCreateEnsemble(Operation operation) {
-    super(operation);
   }
 }

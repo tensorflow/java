@@ -27,17 +27,29 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a MultiDeviceIterator resource.
  */
 public final class MultiDeviceIterator extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MultiDeviceIterator";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private MultiDeviceIterator(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new MultiDeviceIterator operation.
-   * 
+   *
    * @param scope current scope
    * @param devices A list of devices the iterator works across.
    * @param sharedName If non-empty, this resource will be shared under the given name
@@ -48,12 +60,15 @@ public final class MultiDeviceIterator extends RawOp implements Operand<TType> {
    * @param outputShapes The list of shapes being produced.
    * @return a new instance of MultiDeviceIterator
    */
-  @Endpoint(describeByClass = true)
-  public static MultiDeviceIterator create(Scope scope, List<String> devices, String sharedName, String container, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MultiDeviceIterator create(Scope scope, List<String> devices, String sharedName,
+      String container, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIterator", scope.makeOpName("MultiDeviceIterator"));
     opBuilder = scope.apply(opBuilder);
     String[] devicesArray = new String[devices.size()];
-    for (int i = 0; i < devicesArray.length; ++i) {
+    for (int i = 0 ; i < devicesArray.length ; i++) {
       devicesArray[i] = devices.get(i);
     }
     opBuilder.setAttr("devices", devicesArray);
@@ -61,34 +76,25 @@ public final class MultiDeviceIterator extends RawOp implements Operand<TType> {
     opBuilder.setAttr("container", container);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new MultiDeviceIterator(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
    * Handle to the resource created.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MultiDeviceIterator";
-  
-  private Output<?> handle;
-  
-  private MultiDeviceIterator(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

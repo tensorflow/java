@@ -27,10 +27,10 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorArray for storing multiple gradients of values in the given handle.
- * <p>
  * Similar to TensorArrayGradV3. However it creates an accumulator with an
  * expanded shape compared to the input TensorArray whose gradient is being
  * computed. This enables multiple gradients for the same TensorArray to be
@@ -38,10 +38,26 @@ import org.tensorflow.types.TInt32;
  */
 @Operator
 public final class TensorArrayGradWithShape extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArrayGradWithShape";
+
+  private Output<? extends TType> gradHandle;
+
+  private Output<TFloat32> flowOut;
+
+  @SuppressWarnings("unchecked")
+  private TensorArrayGradWithShape(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    gradHandle = operation.output(outputIdx++);
+    flowOut = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorArrayGradWithShape operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to the forward TensorArray.
    * @param flowIn A float scalar that enforces proper chaining of operations.
@@ -52,8 +68,11 @@ public final class TensorArrayGradWithShape extends RawOp {
    * to return.
    * @return a new instance of TensorArrayGradWithShape
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArrayGradWithShape create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArrayGradWithShape create(Scope scope, Operand<? extends TType> handle,
+      Operand<TFloat32> flowIn, Operand<TInt32> shapeToPrepend, String source) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGradWithShape", scope.makeOpName("TensorArrayGradWithShape"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -62,29 +81,22 @@ public final class TensorArrayGradWithShape extends RawOp {
     opBuilder.setAttr("source", source);
     return new TensorArrayGradWithShape(opBuilder.build());
   }
-  
+
   /**
+   * Gets gradHandle.
+   *
+   * @return gradHandle.
    */
-  public Output<?> gradHandle() {
+  public Output<? extends TType> gradHandle() {
     return gradHandle;
   }
-  
+
   /**
+   * Gets flowOut.
+   *
+   * @return flowOut.
    */
   public Output<TFloat32> flowOut() {
     return flowOut;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayGradWithShape";
-  
-  private Output<?> gradHandle;
-  private Output<TFloat32> flowOut;
-  
-  private TensorArrayGradWithShape(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    gradHandle = operation.output(outputIdx++);
-    flowOut = operation.output(outputIdx++);
   }
 }

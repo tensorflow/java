@@ -30,23 +30,39 @@ import org.tensorflow.types.TString;
 
 /**
  * Generate a sharded filename. The filename is printf formatted as
- * <p>
- *    %s-%05d-of-%05d, basename, shard, num_shards.
+ * %s-%05d-of-%05d, basename, shard, num_shards.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ShardedFilename extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ShardedFilename";
+
+  private Output<TString> filename;
+
+  private ShardedFilename(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    filename = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ShardedFilename operation.
-   * 
+   *
    * @param scope current scope
-   * @param basename 
-   * @param shard 
-   * @param numShards 
+   * @param basename the basename value
+   * @param shard the shard value
+   * @param numShards the numShards value
    * @return a new instance of ShardedFilename
    */
-  @Endpoint(describeByClass = true)
-  public static ShardedFilename create(Scope scope, Operand<TString> basename, Operand<TInt32> shard, Operand<TInt32> numShards) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ShardedFilename create(Scope scope, Operand<TString> basename,
+      Operand<TInt32> shard, Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilename", scope.makeOpName("ShardedFilename"));
     opBuilder.addInput(basename.asOutput());
     opBuilder.addInput(shard.asOutput());
@@ -54,26 +70,18 @@ public final class ShardedFilename extends RawOp implements Operand<TString> {
     opBuilder = scope.apply(opBuilder);
     return new ShardedFilename(opBuilder.build());
   }
-  
+
   /**
+   * Gets filename.
+   *
+   * @return filename.
    */
   public Output<TString> filename() {
     return filename;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return filename;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShardedFilename";
-  
-  private Output<TString> filename;
-  
-  private ShardedFilename(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    filename = operation.output(outputIdx++);
   }
 }

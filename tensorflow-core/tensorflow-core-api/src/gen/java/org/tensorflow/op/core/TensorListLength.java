@@ -26,50 +26,56 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of tensors in the input tensor list.
- * <p>
  * input_handle: the input list
  * length: the number of tensors in the list
  */
 @Operator
 public final class TensorListLength extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListLength";
+
+  private Output<TInt32> length;
+
+  private TensorListLength(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    length = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListLength operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
+   * @param inputHandle the inputHandle value
    * @return a new instance of TensorListLength
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListLength create(Scope scope, Operand<?> inputHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListLength create(Scope scope, Operand<? extends TType> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListLength", scope.makeOpName("TensorListLength"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorListLength(opBuilder.build());
   }
-  
+
   /**
+   * Gets length.
+   *
+   * @return length.
    */
   public Output<TInt32> length() {
     return length;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return length;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListLength";
-  
-  private Output<TInt32> length;
-  
-  private TensorListLength(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    length = operation.output(outputIdx++);
   }
 }

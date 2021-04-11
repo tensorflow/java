@@ -31,46 +31,41 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A placeholder op for a value that will be fed into the computation.
- * <p>
  * N.B. This operation will fail with an error if it is executed. It is
  * intended as a way to represent a value that will always be fed, and to
  * provide attrs that enable the fed value to be checked at runtime.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Placeholder<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Placeholder}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param shape (Optional) The shape of the tensor. If the shape has 0 dimensions, the
-     * shape is unconstrained.
-     */
-    public Options shape(Shape shape) {
-      this.shape = shape;
-      return this;
-    }
-    
-    private Shape shape;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Placeholder";
+
+  private Output<T> output;
+
+  private Placeholder(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Placeholder operation.
-   * 
+   *
    * @param scope current scope
    * @param dtype The type of elements in the tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Placeholder} output and operands
    * @return a new instance of Placeholder
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Placeholder<T> create(Scope scope, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Placeholder<T> create(Scope scope, Class<T> dtype,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Placeholder", scope.makeOpName("Placeholder"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
@@ -81,37 +76,53 @@ public final class Placeholder<T extends TType> extends RawOp implements Operand
         }
       }
     }
-    return new Placeholder<T>(opBuilder.build());
+    return new Placeholder<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the shape option.
+   *
    * @param shape (Optional) The shape of the tensor. If the shape has 0 dimensions, the
    * shape is unconstrained.
+   * @return this Options instance.
    */
   public static Options shape(Shape shape) {
     return new Options().shape(shape);
   }
-  
+
   /**
+   * Gets output.
    * A placeholder tensor that must be replaced using the feed mechanism.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Placeholder";
-  
-  private Output<T> output;
-  
-  private Placeholder(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Placeholder}
+   */
+  public static class Options {
+    private Shape shape;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the shape option.
+     *
+     * @param shape (Optional) The shape of the tensor. If the shape has 0 dimensions, the
+     * shape is unconstrained.
+     * @return this Options instance.
+     */
+    public Options shape(Shape shape) {
+      this.shape = shape;
+      return this;
+    }
   }
 }

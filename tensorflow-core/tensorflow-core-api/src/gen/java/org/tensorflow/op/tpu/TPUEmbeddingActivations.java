@@ -24,23 +24,36 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * An op enabling differentiation of TPU Embeddings.
- * <p>
  * This op simply returns its first input, which is assumed to have been sliced
  * from the Tensors returned by TPUEmbeddingDequeueActivations. The presence of
  * this op, and its first argument being a trainable Variable, enables automatic
  * differentiation of graphs containing embeddings via the TPU Embedding Python
  * libraries.
+ *
+ * @deprecated use {@link org.tensorflow.op.tpu.EmbeddingActivations} instead
  */
+@Deprecated
 public final class TPUEmbeddingActivations extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TPUEmbeddingActivations";
+
+  private Output<TFloat32> output;
+
+  private TPUEmbeddingActivations(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TPUEmbeddingActivations operation.
-   * 
+   *
    * @param scope current scope
    * @param embeddingVariable A trainable variable, enabling optimizers to find this op.
    * @param slicedActivations The embedding activations Tensor to return.
@@ -50,8 +63,11 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
    * activations.
    * @return a new instance of TPUEmbeddingActivations
    */
-  @Endpoint(describeByClass = true)
-  public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable, Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable,
+      Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUEmbeddingActivations", scope.makeOpName("TPUEmbeddingActivations"));
     opBuilder.addInput(embeddingVariable.asOutput());
     opBuilder.addInput(slicedActivations.asOutput());
@@ -60,26 +76,18 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
     opBuilder.setAttr("lookup_id", lookupId);
     return new TPUEmbeddingActivations(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TFloat32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUEmbeddingActivations";
-  
-  private Output<TFloat32> output;
-  
-  private TPUEmbeddingActivations(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

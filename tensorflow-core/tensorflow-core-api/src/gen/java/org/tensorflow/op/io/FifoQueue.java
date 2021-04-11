@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -33,71 +34,37 @@ import org.tensorflow.types.family.TType;
 /**
  * A queue that produces elements in first-in first-out order.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class FifoQueue extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.FifoQueue}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param shapes The shape of each component in a value. The length of this attr must
-     * be either 0 or the same as the length of component_types. If the length of
-     * this attr is 0, the shapes of queue elements are not constrained, and
-     * only one element may be dequeued at a time.
-     */
-    public Options shapes(List<Shape> shapes) {
-      this.shapes = shapes;
-      return this;
-    }
-    
-    /**
-     * @param capacity The upper bound on the number of elements in this queue.
-     * Negative numbers mean no limit.
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this queue is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this queue will be shared under the given name
-     * across multiple sessions.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private List<Shape> shapes;
-    private Long capacity;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FIFOQueueV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private FifoQueue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new FifoQueue operation.
-   * 
+   * Factory method to create a class wrapping a new FIFOQueueV2 operation.
+   *
    * @param scope current scope
    * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of FifoQueue
    */
-  @Endpoint(describeByClass = true)
-  public static FifoQueue create(Scope scope, List<Class<? extends TType>> componentTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FifoQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FIFOQueueV2", scope.makeOpName("FifoQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
@@ -105,7 +72,7 @@ public final class FifoQueue extends RawOp implements Operand<TType> {
       for (Options opts : options) {
         if (opts.shapes != null) {
           Shape[] shapesArray = new Shape[opts.shapes.size()];
-          for (int i = 0; i < shapesArray.length; ++i) {
+          for (int i = 0 ; i < shapesArray.length ; i++) {
             shapesArray[i] = opts.shapes.get(i);
           }
           opBuilder.setAttr("shapes", shapesArray);
@@ -123,62 +90,158 @@ public final class FifoQueue extends RawOp implements Operand<TType> {
     }
     return new FifoQueue(opBuilder.build());
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
    * @param shapes The shape of each component in a value. The length of this attr must
    * be either 0 or the same as the length of component_types. If the length of
    * this attr is 0, the shapes of queue elements are not constrained, and
    * only one element may be dequeued at a time.
+   * @return this Options instance.
    */
   public static Options shapes(List<Shape> shapes) {
     return new Options().shapes(shapes);
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
+   * @param shapes The shape of each component in a value. The length of this attr must
+   * be either 0 or the same as the length of component_types. If the length of
+   * this attr is 0, the shapes of queue elements are not constrained, and
+   * only one element may be dequeued at a time.
+   * @return this Options instance.
+   */
+  public static Options shapes(Shape[] shapes) {
+    return new Options().shapes(shapes);
+  }
+
+  /**
+   * Sets the capacity option.
+   *
    * @param capacity The upper bound on the number of elements in this queue.
    * Negative numbers mean no limit.
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this queue is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this queue will be shared under the given name
    * across multiple sessions.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets handle.
    * The handle to the queue.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FIFOQueueV2";
-  
-  private Output<?> handle;
-  
-  private FifoQueue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.FifoQueue}
+   */
+  public static class Options {
+    private List<Shape> shapes;
+
+    private Long capacity;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. The length of this attr must
+     * be either 0 or the same as the length of component_types. If the length of
+     * this attr is 0, the shapes of queue elements are not constrained, and
+     * only one element may be dequeued at a time.
+     * @return this Options instance.
+     */
+    public Options shapes(List<Shape> shapes) {
+      this.shapes = shapes;
+      return this;
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. The length of this attr must
+     * be either 0 or the same as the length of component_types. If the length of
+     * this attr is 0, the shapes of queue elements are not constrained, and
+     * only one element may be dequeued at a time.
+     * @return this Options instance.
+     */
+    public Options shapes(Shape... shapes) {
+      this.shapes = Arrays.asList(shapes);
+      return this;
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity The upper bound on the number of elements in this queue.
+     * Negative numbers mean no limit.
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this queue is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this queue will be shared under the given name
+     * across multiple sessions.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

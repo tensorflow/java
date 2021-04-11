@@ -24,49 +24,42 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Closes the given queue.
- * <p>
  * This operation signals that no more elements will be enqueued in the
  * given queue. Subsequent Enqueue(Many) operations will fail.
  * Subsequent Dequeue(Many) operations will continue to succeed if
  * sufficient elements remain in the queue. Subsequent Dequeue(Many)
  * operations that would block will fail immediately.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class QueueClose extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.QueueClose}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param cancelPendingEnqueues If true, all pending enqueue requests that are
-     * blocked on the given queue will be canceled.
-     */
-    public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
-      this.cancelPendingEnqueues = cancelPendingEnqueues;
-      return this;
-    }
-    
-    private Boolean cancelPendingEnqueues;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QueueCloseV2";
+
+  private QueueClose(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new QueueClose operation.
-   * 
+   * Factory method to create a class wrapping a new QueueCloseV2 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a queue.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of QueueClose
    */
-  @Endpoint(describeByClass = true)
-  public static QueueClose create(Scope scope, Operand<?> handle, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static QueueClose create(Scope scope, Operand<? extends TType> handle,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueCloseV2", scope.makeOpName("QueueClose"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -79,19 +72,37 @@ public final class QueueClose extends RawOp {
     }
     return new QueueClose(opBuilder.build());
   }
-  
+
   /**
+   * Sets the cancelPendingEnqueues option.
+   *
    * @param cancelPendingEnqueues If true, all pending enqueue requests that are
    * blocked on the given queue will be canceled.
+   * @return this Options instance.
    */
   public static Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
     return new Options().cancelPendingEnqueues(cancelPendingEnqueues);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QueueCloseV2";
-  
-  private QueueClose(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.QueueClose}
+   */
+  public static class Options {
+    private Boolean cancelPendingEnqueues;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the cancelPendingEnqueues option.
+     *
+     * @param cancelPendingEnqueues If true, all pending enqueue requests that are
+     * blocked on the given queue will be canceled.
+     * @return this Options instance.
+     */
+    public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
+      this.cancelPendingEnqueues = cancelPendingEnqueues;
+      return this;
+    }
   }
 }

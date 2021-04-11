@@ -28,83 +28,88 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Elementwise computes the bitwise right-shift of `x` and `y`.
- * <p>
+ * Elementwise computes the bitwise right-shift of {@code x} and {@code y}.
  * Performs a logical shift for unsigned integer types, and an arithmetic shift
  * for signed integer types.
- * <p>
- * If `y` is negative, or greater than or equal to than the width of `x` in bits
+ * <p>If {@code y} is negative, or greater than or equal to than the width of {@code x} in bits
  * the result is implementation defined.
- * <p>
- * Example:
- * <pre>{@code
+ * <p>Example:
+ * <pre>
  * import tensorflow as tf
  * from tensorflow.python.ops import bitwise_ops
  * import numpy as np
  * dtype_list = [tf.int8, tf.int16, tf.int32, tf.int64]
- * 
+ *
  * for dtype in dtype_list:
  *   lhs = tf.constant([-1, -5, -3, -14], dtype=dtype)
  *   rhs = tf.constant([5, 0, 7, 11], dtype=dtype)
- * 
+ *
  *   right_shift_result = bitwise_ops.right_shift(lhs, rhs)
- * 
+ *
  *   print(right_shift_result)
- * 
+ *
  * # This will print:
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int8)
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int16)
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int32)
  * # tf.Tensor([-1 -5 -1 -1], shape=(4,), dtype=int64)
- * 
+ *
  * lhs = np.array([-2, 64, 101, 32], dtype=np.int8)
  * rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
  * bitwise_ops.right_shift(lhs, rhs)
- * # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code z()} output
+ * # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
+ * </pre>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "bitwise")
+@Operator(
+    group = "bitwise"
+)
 public final class RightShift<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RightShift";
+
+  private Output<T> z;
+
+  private RightShift(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RightShift operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code RightShift} output and operands
    * @return a new instance of RightShift
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> RightShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("RightShift", scope.makeOpName("RightShift"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new RightShift<T>(opBuilder.build());
+    return new RightShift<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RightShift";
-  
-  private Output<T> z;
-  
-  private RightShift(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

@@ -35,54 +35,64 @@ import org.tensorflow.types.family.TType;
 /**
  * Gets the next output from the given iterator .
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class IteratorGetNext extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new IteratorGetNext operation.
-   * 
-   * @param scope current scope
-   * @param iterator 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of IteratorGetNext
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static IteratorGetNext create(Scope scope, Operand<?> iterator, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNext", scope.makeOpName("IteratorGetNext"));
-    opBuilder.addInput(iterator.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new IteratorGetNext(opBuilder.build());
-  }
-  
-  /**
-   */
-  public List<Output<?>> components() {
-    return components;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) components.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IteratorGetNext";
-  
+
   private List<Output<?>> components;
-  
+
+  @SuppressWarnings("unchecked")
   private IteratorGetNext(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
     outputIdx += componentsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IteratorGetNext operation.
+   *
+   * @param scope current scope
+   * @param iterator the iterator value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of IteratorGetNext
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IteratorGetNext create(Scope scope, Operand<? extends TType> iterator,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNext", scope.makeOpName("IteratorGetNext"));
+    opBuilder.addInput(iterator.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
+    return new IteratorGetNext(opBuilder.build());
+  }
+
+  /**
+   * Gets components.
+   *
+   * @return components.
+   */
+  public List<Output<?>> components() {
+    return components;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) components.iterator();
   }
 }

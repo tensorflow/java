@@ -27,21 +27,41 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Produces the average pool of the input tensor for quantized types.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
-public final class QuantizedAvgPool<T extends TType> extends RawOp {
-  
+@Operator(
+    group = "nn"
+)
+public final class QuantizedAvgPool<T extends TNumber> extends RawOp {
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "QuantizedAvgPool";
+
+  private Output<T> output;
+
+  private Output<TFloat32> minOutput;
+
+  private Output<TFloat32> maxOutput;
+
+  private QuantizedAvgPool(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+    minOutput = operation.output(outputIdx++);
+    maxOutput = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new QuantizedAvgPool operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 4-D with shape `[batch, height, width, channels]`.
+   * @param input 4-D with shape {@code [batch, height, width, channels]}.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param ksize The size of the window for each dimension of the input tensor.
@@ -49,61 +69,58 @@ public final class QuantizedAvgPool<T extends TType> extends RawOp {
    * @param strides The stride of the sliding window for each dimension of the input
    * tensor.  The length must be 4 to match the number of dimensions of the input.
    * @param padding The type of padding algorithm to use.
+   * @param <T> data type for {@code QuantizedAvgPool} output and operands
    * @return a new instance of QuantizedAvgPool
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> QuantizedAvgPool<T> create(Scope scope, Operand<T> input, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides, String padding) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> QuantizedAvgPool<T> create(Scope scope, Operand<T> input,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides,
+      String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAvgPool", scope.makeOpName("QuantizedAvgPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
     opBuilder.addInput(maxInput.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
-    for (int i = 0; i < ksizeArray.length; ++i) {
+    for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);
     }
     opBuilder.setAttr("ksize", ksizeArray);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
     opBuilder.setAttr("padding", padding);
-    return new QuantizedAvgPool<T>(opBuilder.build());
+    return new QuantizedAvgPool<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   /**
+   * Gets minOutput.
    * The float value that the lowest quantized output value represents.
+   * @return minOutput.
    */
   public Output<TFloat32> minOutput() {
     return minOutput;
   }
-  
+
   /**
+   * Gets maxOutput.
    * The float value that the highest quantized output value represents.
+   * @return maxOutput.
    */
   public Output<TFloat32> maxOutput() {
     return maxOutput;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedAvgPool";
-  
-  private Output<T> output;
-  private Output<TFloat32> minOutput;
-  private Output<TFloat32> maxOutput;
-  
-  private QuantizedAvgPool(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
-    minOutput = operation.output(outputIdx++);
-    maxOutput = operation.output(outputIdx++);
   }
 }

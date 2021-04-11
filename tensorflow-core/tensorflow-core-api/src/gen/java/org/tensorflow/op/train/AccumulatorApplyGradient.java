@@ -30,35 +30,40 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Applies a gradient to a given accumulator.
- * <p>
  * Does not add if local_step is lesser than the accumulator's global_step.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class AccumulatorApplyGradient extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AccumulatorApplyGradient";
+
+  private AccumulatorApplyGradient(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new AccumulatorApplyGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a accumulator.
    * @param localStep The local_step value at which the gradient was computed.
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of AccumulatorApplyGradient
    */
-  @Endpoint(describeByClass = true)
-  public static AccumulatorApplyGradient create(Scope scope, Operand<TString> handle, Operand<TInt64> localStep, Operand<? extends TType> gradient) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AccumulatorApplyGradient create(Scope scope, Operand<TString> handle,
+      Operand<TInt64> localStep, Operand<? extends TType> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorApplyGradient", scope.makeOpName("AccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradient.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new AccumulatorApplyGradient(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AccumulatorApplyGradient";
-  
-  private AccumulatorApplyGradient(Operation operation) {
-    super(operation);
   }
 }

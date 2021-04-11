@@ -32,65 +32,76 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the complex absolute value of a tensor.
- * <p>
- * Given a tensor `x` of complex numbers, this operation returns a tensor of type
- * `float` or `double` that is the absolute value of each element in `x`. All
- * elements in `x` must be complex numbers of the form \\(a + bj\\). The absolute
- * value is computed as \\( \sqrt{a^2 + b^2}\\).
- * 
- * @param <U> data type for {@code y()} output
+ * Given a tensor {@code x} of complex numbers, this operation returns a tensor of type
+ * {@code float} or {@code double} that is the absolute value of each element in {@code x}. All
+ * elements in {@code x} must be complex numbers of the form \(a + bj\). The absolute
+ * value is computed as \( \sqrt{a^2 + b^2}\).
+ *
+ * @param <U> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class ComplexAbs<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new ComplexAbs operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @param Tout 
-   * @return a new instance of ComplexAbs
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> ComplexAbs<U> create(Scope scope, Operand<? extends TType> x, Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
-    return new ComplexAbs<U>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new ComplexAbs operation using default output types.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of ComplexAbs
-   */
-  @Endpoint(describeByClass = true)
-  public static ComplexAbs<TFloat32> create(Scope scope, Operand<? extends TType> x) {
-    return create(scope, x, TFloat32.class);
-  }
-  
-  /**
-   */
-  public Output<U> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<U> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ComplexAbs";
-  
+
   private Output<U> y;
-  
+
   private ComplexAbs(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ComplexAbs operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param Tout the value of the Tout property
+   * @param <U> data type for {@code ComplexAbs} output and operands
+   * @return a new instance of ComplexAbs
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> ComplexAbs<U> create(Scope scope, Operand<? extends TType> x,
+      Class<U> Tout) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ComplexAbs", scope.makeOpName("ComplexAbs"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
+    return new ComplexAbs<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ComplexAbs operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @return a new instance of ComplexAbs, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ComplexAbs<TFloat32> create(Scope scope, Operand<? extends TType> x) {
+    return create(scope, x, TFloat32.class);
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<U> y() {
+    return y;
+  }
+
+  @Override
+  public Output<U> asOutput() {
+    return y;
   }
 }

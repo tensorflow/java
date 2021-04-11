@@ -29,53 +29,50 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Finds values of the `n`-th order statistic for the last dimension.
- * <p>
+ * Finds values of the {@code n}-th order statistic for the last dimension.
  * If the input is a vector (rank-1), finds the entries which is the nth-smallest
  * value in the vector and outputs their values as scalar tensor.
- * <p>
- * For matrices (resp. higher rank input), computes the entries which is the
+ * <p>For matrices (resp. higher rank input), computes the entries which is the
  * nth-smallest value in each row (resp. vector along the last dimension). Thus,
- * <p>
- *     values.shape = input.shape[:-1]
- * 
- * @param <T> data type for {@code values()} output
+ * <pre>
+ * values.shape = input.shape[:-1]
+ * </pre>
+ *
+ * @param <T> data type for {@code values} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class NthElement<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.NthElement}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param reverse When set to True, find the nth-largest value in the vector and vice
-     * versa.
-     */
-    public Options reverse(Boolean reverse) {
-      this.reverse = reverse;
-      return this;
-    }
-    
-    private Boolean reverse;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "NthElement";
+
+  private Output<T> values;
+
+  private NthElement(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    values = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new NthElement operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 1-D or higher with last dimension at least `n+1`.
+   * @param input 1-D or higher with last dimension at least {@code n+1}.
    * @param n 0-D. Position of sorted vector to select along the last dimension (along
-   * each row for matrices). Valid range of n is `[0, input.shape[:-1])`
-   * @param options carries optional attributes values
+   * each row for matrices). Valid range of n is {@code [0, input.shape[:-1])}
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code NthElement} output and operands
    * @return a new instance of NthElement
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input, Operand<TInt32> n, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input,
+      Operand<TInt32> n, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("NthElement", scope.makeOpName("NthElement"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(n.asOutput());
@@ -87,37 +84,53 @@ public final class NthElement<T extends TNumber> extends RawOp implements Operan
         }
       }
     }
-    return new NthElement<T>(opBuilder.build());
+    return new NthElement<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the reverse option.
+   *
    * @param reverse When set to True, find the nth-largest value in the vector and vice
    * versa.
+   * @return this Options instance.
    */
   public static Options reverse(Boolean reverse) {
     return new Options().reverse(reverse);
   }
-  
+
   /**
-   * The `n`-th order statistic along each last dimensional slice.
+   * Gets values.
+   * The {@code n}-th order statistic along each last dimensional slice.
+   * @return values.
    */
   public Output<T> values() {
     return values;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return values;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "NthElement";
-  
-  private Output<T> values;
-  
-  private NthElement(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    values = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.NthElement}
+   */
+  public static class Options {
+    private Boolean reverse;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the reverse option.
+     *
+     * @param reverse When set to True, find the nth-largest value in the vector and vice
+     * versa.
+     * @return this Options instance.
+     */
+    public Options reverse(Boolean reverse) {
+      this.reverse = reverse;
+      return this;
+    }
   }
 }

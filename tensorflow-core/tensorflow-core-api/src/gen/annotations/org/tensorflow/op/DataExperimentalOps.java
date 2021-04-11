@@ -41,24 +41,25 @@ public final class DataExperimentalOps {
   }
 
   /**
+   * The DataServiceDataset operation
    *
-   * @param datasetId
-   * @param processingMode
-   * @param address
-   * @param protocol
-   * @param jobName
-   * @param maxOutstandingRequests
-   * @param iterationCounter
-   * @param outputTypes
-   * @param outputShapes
-   * @param options carries optional attributes values
+   * @param datasetId the datasetId value
+   * @param processingMode the processingMode value
+   * @param address the address value
+   * @param protocol the protocol value
+   * @param jobName the jobName value
+   * @param maxOutstandingRequests the maxOutstandingRequests value
+   * @param iterationCounter the iterationCounter value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of DataServiceDataset
    */
   public DataServiceDataset dataServiceDataset(Operand<TInt64> datasetId,
       Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
-      Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
-      DataServiceDataset.Options... options) {
+      Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests,
+      Operand<? extends TType> iterationCounter, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, DataServiceDataset.Options... options) {
     return DataServiceDataset.create(scope, datasetId, processingMode, address, protocol, jobName, maxOutstandingRequests, iterationCounter, outputTypes, outputShapes, options);
   }
 

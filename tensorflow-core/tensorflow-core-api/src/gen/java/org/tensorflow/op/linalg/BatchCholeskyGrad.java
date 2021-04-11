@@ -28,47 +28,59 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The BatchCholeskyGrad operation
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchCholeskyGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new BatchCholeskyGrad operation.
-   * 
-   * @param scope current scope
-   * @param l 
-   * @param grad 
-   * @return a new instance of BatchCholeskyGrad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l, Operand<T> grad) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchCholeskyGrad", scope.makeOpName("BatchCholeskyGrad"));
-    opBuilder.addInput(l.asOutput());
-    opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new BatchCholeskyGrad<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BatchCholeskyGrad";
-  
+
   private Output<T> output;
-  
+
   private BatchCholeskyGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BatchCholeskyGrad operation.
+   *
+   * @param scope current scope
+   * @param l the l value
+   * @param grad the grad value
+   * @param <T> data type for {@code BatchCholeskyGrad} output and operands
+   * @return a new instance of BatchCholeskyGrad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l,
+      Operand<T> grad) {
+    OperationBuilder opBuilder = scope.env().opBuilder("BatchCholeskyGrad", scope.makeOpName("BatchCholeskyGrad"));
+    opBuilder.addInput(l.asOutput());
+    opBuilder.addInput(grad.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new BatchCholeskyGrad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -30,80 +30,83 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum along segments of a tensor.
- * <p>
  * Read
- * [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
+ *  <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
  * for an explanation of segments.
- * <p>
- * Computes a tensor such that
- * \\(output[i] = \sum_{j...} data[j...]\\) where the sum is over tuples `j...` such
- * that `segment_ids[j...] == i`.  Unlike `SegmentSum`, `segment_ids`
+ * <p>Computes a tensor such that
+ * \(output[i] = \sum_{j...} data[j...]\) where the sum is over tuples {@code j...} such
+ * that {@code segment_ids[j...] == i}.  Unlike {@code SegmentSum}, {@code segment_ids}
  * need not be sorted and need not cover all values in the full
  * range of valid values.
- * <p>
- * If the sum is empty for a given segment ID `i`, `output[i] = 0`.
- * If the given segment ID `i` is negative, the value is dropped and will not be
+ * <p>If the sum is empty for a given segment ID {@code i}, {@code output[i] = 0}.
+ * If the given segment ID {@code i} is negative, the value is dropped and will not be
  * added to the sum of the segment.
- * <p>
- * `num_segments` should equal the number of distinct segment IDs.
- * <p>
+ * <p>{@code num_segments} should equal the number of distinct segment IDs.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/UnsortedSegmentSum.png" alt>
  * </div>
- * <pre>{@code
+ * <pre>
  * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
  * tf.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
- * # ==> [[ 5,  5, 5, 5],
+ * # ==&gt; [[ 5,  5, 5, 5],
  * #       [5,  6, 7, 8]]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class UnsortedSegmentSum<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "UnsortedSegmentSum";
+
+  private Output<T> output;
+
+  private UnsortedSegmentSum(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new UnsortedSegmentSum operation.
-   * 
+   *
    * @param scope current scope
-   * @param data 
-   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-   * @param numSegments 
+   * @param data the data value
+   * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   * @param numSegments the numSegments value
+   * @param <T> data type for {@code UnsortedSegmentSum} output and operands
    * @return a new instance of UnsortedSegmentSum
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentSum", scope.makeOpName("UnsortedSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new UnsortedSegmentSum<T>(opBuilder.build());
+    return new UnsortedSegmentSum<>(opBuilder.build());
   }
-  
+
   /**
-   * Has same shape as data, except for the first `segment_ids.rank`
+   * Gets output.
+   * Has same shape as data, except for the first {@code segment_ids.rank}
    * dimensions, which are replaced with a single dimension which has size
-   * `num_segments`.
+   * {@code num_segments}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "UnsortedSegmentSum";
-  
-  private Output<T> output;
-  
-  private UnsortedSegmentSum(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

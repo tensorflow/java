@@ -31,7 +31,6 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs a padding as a preprocess during a convolution.
- * <p>
  * Similar to FusedResizeAndPadConv2d, this op allows for an optimized
  * implementation where the spatial padding transformation stage is fused with the
  * im2col lookup, but in this case without the bilinear filtering required for
@@ -43,29 +42,48 @@ import org.tensorflow.types.family.TNumber;
  * Internally this op uses a single per-graph scratch buffer, which means that it
  * will block if multiple versions are being run in parallel. This is because this
  * operator is primarily an optimization to minimize memory usage.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new FusedPadConv2d operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "FusedPadConv2D";
+
+  private Output<T> output;
+
+  private FusedPadConv2d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new FusedPadConv2D operation.
+   *
    * @param scope current scope
-   * @param input 4-D with shape `[batch, in_height, in_width, in_channels]`.
+   * @param input 4-D with shape {@code [batch, in_height, in_width, in_channels]}.
    * @param paddings A two-column matrix specifying the padding sizes. The number of
-   * rows must be the same as the rank of `input`.
+   * rows must be the same as the rank of {@code input}.
    * @param filter 4-D with shape
-   * `[filter_height, filter_width, in_channels, out_channels]`.
-   * @param mode 
+   * {@code [filter_height, filter_width, in_channels, out_channels]}.
+   * @param mode the value of the mode property
    * @param strides 1-D of length 4.  The stride of the sliding window for each dimension
-   * of `input`. Must be in the same order as the dimension specified with format.
+   * of {@code input}. Must be in the same order as the dimension specified with format.
    * @param padding The type of padding algorithm to use.
+   * @param <T> data type for {@code FusedPadConv2D} output and operands
    * @return a new instance of FusedPadConv2d
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input, Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides, String padding) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input,
+      Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides,
+      String padding) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
@@ -73,33 +91,25 @@ public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Op
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("mode", mode);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
     opBuilder.setAttr("padding", padding);
-    return new FusedPadConv2d<T>(opBuilder.build());
+    return new FusedPadConv2d<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FusedPadConv2D";
-  
-  private Output<T> output;
-  
-  private FusedPadConv2d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

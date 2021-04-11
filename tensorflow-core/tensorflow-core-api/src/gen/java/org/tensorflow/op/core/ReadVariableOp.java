@@ -30,55 +30,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reads the value of a variable.
- * <p>
  * The tensor returned by this operation is immutable.
- * <p>
- * The value returned by this operation is guaranteed to be influenced by all the
+ * <p>The value returned by this operation is guaranteed to be influenced by all the
  * writes on which this operation depends directly or indirectly, and to not be
  * influenced by any of the writes which depend directly or indirectly on this
  * operation.
- * 
- * @param <T> data type for {@code value()} output
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class ReadVariableOp<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ReadVariableOp operation.
-   * 
-   * @param scope current scope
-   * @param resource handle to the resource in which to store the variable.
-   * @param dtype the dtype of the value.
-   * @return a new instance of ReadVariableOp
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ReadVariableOp<T> create(Scope scope, Operand<?> resource, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
-    opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new ReadVariableOp<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> value() {
-    return value;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ReadVariableOp";
-  
+
   private Output<T> value;
-  
+
   private ReadVariableOp(Operation operation) {
     super(operation);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReadVariableOp operation.
+   *
+   * @param scope current scope
+   * @param resource handle to the resource in which to store the variable.
+   * @param dtype the dtype of the value.
+   * @param <T> data type for {@code ReadVariableOp} output and operands
+   * @return a new instance of ReadVariableOp
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ReadVariableOp<T> create(Scope scope,
+      Operand<? extends TType> resource, Class<T> dtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ReadVariableOp", scope.makeOpName("ReadVariableOp"));
+    opBuilder.addInput(resource.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtype", Operands.toDataType(dtype));
+    return new ReadVariableOp<>(opBuilder.build());
+  }
+
+  /**
+   * Gets value.
+   *
+   * @return value.
+   */
+  public Output<T> value() {
+    return value;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return value;
   }
 }

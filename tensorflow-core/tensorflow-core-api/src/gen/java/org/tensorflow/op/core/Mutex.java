@@ -28,49 +28,34 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a Mutex resource that can be locked by `MutexLock`.
+ * Creates a Mutex resource that can be locked by {@code MutexLock}.
  */
 @Operator
 public final class Mutex extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Mutex}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container If non-empty, this variable is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this variable is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MutexV2";
+
+  private Output<? extends TType> resource;
+
+  @SuppressWarnings("unchecked")
+  private Mutex(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resource = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Mutex operation.
-   * 
+   * Factory method to create a class wrapping a new MutexV2 operation.
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Mutex
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Mutex create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MutexV2", scope.makeOpName("Mutex"));
     opBuilder = scope.apply(opBuilder);
@@ -86,44 +71,77 @@ public final class Mutex extends RawOp implements Operand<TType> {
     }
     return new Mutex(opBuilder.build());
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this variable is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this variable is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets resource.
    * The mutex resource.
+   * @return resource.
    */
-  public Output<?> resource() {
+  public Output<? extends TType> resource() {
     return resource;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) resource;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MutexV2";
-  
-  private Output<?> resource;
-  
-  private Mutex(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resource = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Mutex}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this variable is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this variable is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

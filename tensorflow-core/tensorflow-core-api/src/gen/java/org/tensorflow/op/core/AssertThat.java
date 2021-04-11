@@ -29,43 +29,34 @@ import org.tensorflow.types.TBool;
 
 /**
  * Asserts that the given condition is true.
- * <p>
- * If `condition` evaluates to false, print the list of tensors in `data`.
- * `summarize` determines how many entries of the tensors to print.
+ * If {@code condition} evaluates to false, print the list of tensors in {@code data}.
+ * {@code summarize} determines how many entries of the tensors to print.
  */
 @Operator
 public final class AssertThat extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.AssertThat}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param summarize Print this many entries of each tensor.
-     */
-    public Options summarize(Long summarize) {
-      this.summarize = summarize;
-      return this;
-    }
-    
-    private Long summarize;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Assert";
+
+  private AssertThat(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new AssertThat operation.
-   * 
+   * Factory method to create a class wrapping a new Assert operation.
+   *
    * @param scope current scope
    * @param condition The condition to evaluate.
    * @param data The tensors to print out when condition is false.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of AssertThat
    */
-  @Endpoint(describeByClass = true)
-  public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AssertThat create(Scope scope, Operand<TBool> condition, Iterable<Operand<?>> data,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Assert", scope.makeOpName("AssertThat"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInputList(Operands.asOutputs(data));
@@ -79,18 +70,35 @@ public final class AssertThat extends RawOp {
     }
     return new AssertThat(opBuilder.build());
   }
-  
+
   /**
+   * Sets the summarize option.
+   *
    * @param summarize Print this many entries of each tensor.
+   * @return this Options instance.
    */
   public static Options summarize(Long summarize) {
     return new Options().summarize(summarize);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Assert";
-  
-  private AssertThat(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.AssertThat}
+   */
+  public static class Options {
+    private Long summarize;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the summarize option.
+     *
+     * @param summarize Print this many entries of each tensor.
+     * @return this Options instance.
+     */
+    public Options summarize(Long summarize) {
+      this.summarize = summarize;
+      return this;
+    }
   }
 }

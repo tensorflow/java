@@ -27,73 +27,52 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that asynchronously prefetches elements from `input_dataset`.
+ * Creates a dataset that asynchronously prefetches elements from {@code input_dataset}.
  */
 public final class PrefetchDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.PrefetchDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param slackPeriod 
-     */
-    public Options slackPeriod(Long slackPeriod) {
-      this.slackPeriod = slackPeriod;
-      return this;
-    }
-    
-    /**
-     * @param legacyAutotune 
-     */
-    public Options legacyAutotune(Boolean legacyAutotune) {
-      this.legacyAutotune = legacyAutotune;
-      return this;
-    }
-    
-    /**
-     * @param bufferSizeMin 
-     */
-    public Options bufferSizeMin(Long bufferSizeMin) {
-      this.bufferSizeMin = bufferSizeMin;
-      return this;
-    }
-    
-    private Long slackPeriod;
-    private Boolean legacyAutotune;
-    private Long bufferSizeMin;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "PrefetchDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private PrefetchDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new PrefetchDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDataset 
+   * @param inputDataset the inputDataset value
    * @param bufferSize The maximum number of elements to buffer in an iterator over
    * this dataset.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of PrefetchDataset
    */
-  @Endpoint(describeByClass = true)
-  public static PrefetchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static PrefetchDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TInt64> bufferSize, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrefetchDataset", scope.makeOpName("PrefetchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -112,48 +91,96 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
     }
     return new PrefetchDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param slackPeriod 
+   * Sets the slackPeriod option.
+   *
+   * @param slackPeriod the slackPeriod option
+   * @return this Options instance.
    */
   public static Options slackPeriod(Long slackPeriod) {
     return new Options().slackPeriod(slackPeriod);
   }
-  
+
   /**
-   * @param legacyAutotune 
+   * Sets the legacyAutotune option.
+   *
+   * @param legacyAutotune the legacyAutotune option
+   * @return this Options instance.
    */
   public static Options legacyAutotune(Boolean legacyAutotune) {
     return new Options().legacyAutotune(legacyAutotune);
   }
-  
+
   /**
-   * @param bufferSizeMin 
+   * Sets the bufferSizeMin option.
+   *
+   * @param bufferSizeMin the bufferSizeMin option
+   * @return this Options instance.
    */
   public static Options bufferSizeMin(Long bufferSizeMin) {
     return new Options().bufferSizeMin(bufferSizeMin);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PrefetchDataset";
-  
-  private Output<?> handle;
-  
-  private PrefetchDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.PrefetchDataset}
+   */
+  public static class Options {
+    private Long slackPeriod;
+
+    private Boolean legacyAutotune;
+
+    private Long bufferSizeMin;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the slackPeriod option.
+     *
+     * @param slackPeriod the slackPeriod option
+     * @return this Options instance.
+     */
+    public Options slackPeriod(Long slackPeriod) {
+      this.slackPeriod = slackPeriod;
+      return this;
+    }
+
+    /**
+     * Sets the legacyAutotune option.
+     *
+     * @param legacyAutotune the legacyAutotune option
+     * @return this Options instance.
+     */
+    public Options legacyAutotune(Boolean legacyAutotune) {
+      this.legacyAutotune = legacyAutotune;
+      return this;
+    }
+
+    /**
+     * Sets the bufferSizeMin option.
+     *
+     * @param bufferSizeMin the bufferSizeMin option
+     * @return this Options instance.
+     */
+    public Options bufferSizeMin(Long bufferSizeMin) {
+      this.bufferSizeMin = bufferSizeMin;
+      return this;
+    }
   }
 }

@@ -30,74 +30,45 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Quantizes then dequantizes a tensor.
- * <p>
  * This is almost identical to QuantizeAndDequantizeV2, except that num_bits is a
  * tensor, so its value can change during training.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "quantization")
+@Operator(
+    group = "quantization"
+)
 public final class QuantizeAndDequantizeV3<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.QuantizeAndDequantizeV3}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param signedInput 
-     */
-    public Options signedInput(Boolean signedInput) {
-      this.signedInput = signedInput;
-      return this;
-    }
-    
-    /**
-     * @param rangeGiven 
-     */
-    public Options rangeGiven(Boolean rangeGiven) {
-      this.rangeGiven = rangeGiven;
-      return this;
-    }
-    
-    /**
-     * @param narrowRange 
-     */
-    public Options narrowRange(Boolean narrowRange) {
-      this.narrowRange = narrowRange;
-      return this;
-    }
-    
-    /**
-     * @param axis 
-     */
-    public Options axis(Long axis) {
-      this.axis = axis;
-      return this;
-    }
-    
-    private Boolean signedInput;
-    private Boolean rangeGiven;
-    private Boolean narrowRange;
-    private Long axis;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QuantizeAndDequantizeV3";
+
+  private Output<T> output;
+
+  private QuantizeAndDequantizeV3(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new QuantizeAndDequantizeV3 operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param inputMin 
-   * @param inputMax 
-   * @param numBits 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param inputMin the inputMin value
+   * @param inputMax the inputMax value
+   * @param numBits the numBits value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code QuantizeAndDequantizeV3} output and operands
    * @return a new instance of QuantizeAndDequantizeV3
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> QuantizeAndDequantizeV3<T> create(Scope scope, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> QuantizeAndDequantizeV3<T> create(Scope scope, Operand<T> input,
+      Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizeAndDequantizeV3", scope.makeOpName("QuantizeAndDequantizeV3"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -120,56 +91,120 @@ public final class QuantizeAndDequantizeV3<T extends TNumber> extends RawOp impl
         }
       }
     }
-    return new QuantizeAndDequantizeV3<T>(opBuilder.build());
+    return new QuantizeAndDequantizeV3<>(opBuilder.build());
   }
-  
+
   /**
-   * @param signedInput 
+   * Sets the signedInput option.
+   *
+   * @param signedInput the signedInput option
+   * @return this Options instance.
    */
   public static Options signedInput(Boolean signedInput) {
     return new Options().signedInput(signedInput);
   }
-  
+
   /**
-   * @param rangeGiven 
+   * Sets the rangeGiven option.
+   *
+   * @param rangeGiven the rangeGiven option
+   * @return this Options instance.
    */
   public static Options rangeGiven(Boolean rangeGiven) {
     return new Options().rangeGiven(rangeGiven);
   }
-  
+
   /**
-   * @param narrowRange 
+   * Sets the narrowRange option.
+   *
+   * @param narrowRange the narrowRange option
+   * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
   }
-  
+
   /**
-   * @param axis 
+   * Sets the axis option.
+   *
+   * @param axis the axis option
+   * @return this Options instance.
    */
   public static Options axis(Long axis) {
     return new Options().axis(axis);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizeAndDequantizeV3";
-  
-  private Output<T> output;
-  
-  private QuantizeAndDequantizeV3(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.QuantizeAndDequantizeV3}
+   */
+  public static class Options {
+    private Boolean signedInput;
+
+    private Boolean rangeGiven;
+
+    private Boolean narrowRange;
+
+    private Long axis;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the signedInput option.
+     *
+     * @param signedInput the signedInput option
+     * @return this Options instance.
+     */
+    public Options signedInput(Boolean signedInput) {
+      this.signedInput = signedInput;
+      return this;
+    }
+
+    /**
+     * Sets the rangeGiven option.
+     *
+     * @param rangeGiven the rangeGiven option
+     * @return this Options instance.
+     */
+    public Options rangeGiven(Boolean rangeGiven) {
+      this.rangeGiven = rangeGiven;
+      return this;
+    }
+
+    /**
+     * Sets the narrowRange option.
+     *
+     * @param narrowRange the narrowRange option
+     * @return this Options instance.
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
+
+    /**
+     * Sets the axis option.
+     *
+     * @param axis the axis option
+     * @return this Options instance.
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
   }
 }

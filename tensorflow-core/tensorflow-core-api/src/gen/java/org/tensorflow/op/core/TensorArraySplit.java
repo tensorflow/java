@@ -31,35 +31,34 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Split the data from the input value into TensorArray elements.
- * <p>
- * Assuming that `lengths` takes on values
- * <p>
- *   <pre>{@code
- * (n0, n1, ..., n(T-1))}</pre>
- * and that `value` has shape
- * <p>
- *   <pre>{@code
- * (n0 + n1 + ... + n(T-1) x d0 x d1 x ...)}</pre>
- * ,
- * <p>
- * this splits values into a TensorArray with T tensors.
- * <p>
- * TensorArray index t will be the subtensor of values with starting position
- * <p>
- *   <pre>{@code
- * (n0 + n1 + ... + n(t-1), 0, 0, ...)}</pre>
- * and having size
- * <p>
- *   <pre>{@code
- * nt x d0 x d1 x ...}</pre>
- * 
+ * Assuming that {@code lengths} takes on values
+ * <p>{@code (n0, n1, ..., n(T-1))}
+ * <p>and that {@code value} has shape
+ * <p>{@code (n0 + n1 + ... + n(T-1) x d0 x d1 x ...)},
+ * <p>this splits values into a TensorArray with T tensors.
+ * <p>TensorArray index t will be the subtensor of values with starting position
+ * <p>{@code (n0 + n1 + ... + n(t-1), 0, 0, ...)}
+ * <p>and having size
+ * <p>{@code nt x d0 x d1 x ...}
  */
 @Operator
 public final class TensorArraySplit extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorArraySplit operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArraySplitV3";
+
+  private Output<TFloat32> flowOut;
+
+  private TensorArraySplit(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    flowOut = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorArraySplitV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
    * @param value The concatenated tensor to write to the TensorArray.
@@ -68,8 +67,11 @@ public final class TensorArraySplit extends RawOp implements Operand<TFloat32> {
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySplit
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArraySplit create(Scope scope, Operand<?> handle, Operand<? extends TType> value, Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArraySplit create(Scope scope, Operand<? extends TType> handle,
+      Operand<? extends TType> value, Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySplitV3", scope.makeOpName("TensorArraySplit"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -78,27 +80,18 @@ public final class TensorArraySplit extends RawOp implements Operand<TFloat32> {
     opBuilder = scope.apply(opBuilder);
     return new TensorArraySplit(opBuilder.build());
   }
-  
+
   /**
+   * Gets flowOut.
    * A float scalar that enforces proper chaining of operations.
+   * @return flowOut.
    */
   public Output<TFloat32> flowOut() {
     return flowOut;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return flowOut;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArraySplitV3";
-  
-  private Output<TFloat32> flowOut;
-  
-  private TensorArraySplit(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    flowOut = operation.output(outputIdx++);
   }
 }

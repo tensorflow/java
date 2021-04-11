@@ -30,41 +30,49 @@ import org.tensorflow.types.TString;
 /**
  * Output a fact about factorials.
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Fact extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Fact";
+
+  private Output<TString> fact;
+
+  private Fact(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    fact = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Fact operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of Fact
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Fact create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("Fact", scope.makeOpName("Fact"));
     opBuilder = scope.apply(opBuilder);
     return new Fact(opBuilder.build());
   }
-  
+
   /**
+   * Gets fact.
+   *
+   * @return fact.
    */
   public Output<TString> fact() {
     return fact;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return fact;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Fact";
-  
-  private Output<TString> fact;
-  
-  private Fact(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    fact = operation.output(outputIdx++);
   }
 }

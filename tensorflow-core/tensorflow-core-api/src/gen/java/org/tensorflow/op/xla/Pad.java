@@ -30,28 +30,47 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Pad operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#pad
+ * https://www.tensorflow.org/performance/xla/operation_semantics#pad
  * .
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Pad<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Pad operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaPad";
+
+  private Output<T> output;
+
+  private Pad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaPad operation.
+   *
    * @param scope current scope
-   * @param input A `Tensor` of type T.
-   * @param paddingValue A scalar `Tensor` of type T.
+   * @param input A {@code Tensor} of type T.
+   * @param paddingValue A scalar {@code Tensor} of type T.
    * @param paddingLow the padding to apply at the start of each input dimensions
    * @param paddingHigh the padding to apply at the end of each input dimension.
    * @param paddingInterior the padding to apply between each input element.
+   * @param <T> data type for {@code XlaPad} output and operands
+   * @param <U> data type for {@code XlaPad} output and operands
    * @return a new instance of Pad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input, Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh, Operand<U> paddingInterior) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input,
+      Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh,
+      Operand<U> paddingInterior) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaPad", scope.makeOpName("Pad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
@@ -59,29 +78,20 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
     opBuilder.addInput(paddingHigh.asOutput());
     opBuilder.addInput(paddingInterior.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Pad<T>(opBuilder.build());
+    return new Pad<>(opBuilder.build());
   }
-  
+
   /**
-   * A `Tensor` of type T.
+   * Gets output.
+   * A {@code Tensor} of type T.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaPad";
-  
-  private Output<T> output;
-  
-  private Pad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -30,66 +30,77 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The gradient operator for the SparseAdd op.
- * <p>
  * The SparseAdd op calculates A + B, where A, B, and the sum are all represented
- * as `SparseTensor` objects.  This op takes in the upstream gradient w.r.t.
+ * as {@code SparseTensor} objects.  This op takes in the upstream gradient w.r.t.
  * non-empty values of the sum, and outputs the gradients w.r.t. the non-empty
  * values of A and B.
- * 
- * @param <T> data type for {@code aValGrad()} output
+ *
+ * @param <T> data type for {@code a_val_grad} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseAddGrad<T extends TType> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseAddGrad";
+
+  private Output<T> aValGrad;
+
+  private Output<T> bValGrad;
+
+  private SparseAddGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    aValGrad = operation.output(outputIdx++);
+    bValGrad = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseAddGrad operation.
-   * 
+   *
    * @param scope current scope
-   * @param backpropValGrad 1-D with shape `[nnz(sum)]`.  The gradient with respect to
+   * @param backpropValGrad 1-D with shape {@code [nnz(sum)]}.  The gradient with respect to
    * the non-empty values of the sum.
-   * @param aIndices 2-D.  The `indices` of the `SparseTensor` A, size `[nnz(A), ndims]`.
-   * @param bIndices 2-D.  The `indices` of the `SparseTensor` B, size `[nnz(B), ndims]`.
-   * @param sumIndices 2-D.  The `indices` of the sum `SparseTensor`, size
-   * `[nnz(sum), ndims]`.
+   * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor} A, size {@code [nnz(A), ndims]}.
+   * @param bIndices 2-D.  The {@code indices} of the {@code SparseTensor} B, size {@code [nnz(B), ndims]}.
+   * @param sumIndices 2-D.  The {@code indices} of the sum {@code SparseTensor}, size
+   * {@code [nnz(sum), ndims]}.
+   * @param <T> data type for {@code SparseAddGrad} output and operands
    * @return a new instance of SparseAddGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseAddGrad<T> create(Scope scope, Operand<T> backpropValGrad,
+      Operand<TInt64> aIndices, Operand<TInt64> bIndices, Operand<TInt64> sumIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseAddGrad", scope.makeOpName("SparseAddGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(sumIndices.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseAddGrad<T>(opBuilder.build());
+    return new SparseAddGrad<>(opBuilder.build());
   }
-  
+
   /**
-   * 1-D with shape `[nnz(A)]`. The gradient with respect to the
+   * Gets aValGrad.
+   * 1-D with shape {@code [nnz(A)]}. The gradient with respect to the
    * non-empty values of A.
+   * @return aValGrad.
    */
   public Output<T> aValGrad() {
     return aValGrad;
   }
-  
+
   /**
-   * 1-D with shape `[nnz(B)]`. The gradient with respect to the
+   * Gets bValGrad.
+   * 1-D with shape {@code [nnz(B)]}. The gradient with respect to the
    * non-empty values of B.
+   * @return bValGrad.
    */
   public Output<T> bValGrad() {
     return bValGrad;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseAddGrad";
-  
-  private Output<T> aValGrad;
-  private Output<T> bValGrad;
-  
-  private SparseAddGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    aValGrad = operation.output(outputIdx++);
-    bValGrad = operation.output(outputIdx++);
   }
 }

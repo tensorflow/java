@@ -23,52 +23,28 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
  * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
- * <p>
  * That is for rows we have grad for, we update var and accum as follows:
  * accum += grad * grad
  * var -= lr * grad * (1 / sqrt(accum))
  */
 public final class ResourceSparseApplyAdagradV2 extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdagradV2}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    /**
-     * @param updateSlots 
-     */
-    public Options updateSlots(Boolean updateSlots) {
-      this.updateSlots = updateSlots;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    private Boolean updateSlots;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceSparseApplyAdagradV2";
+
+  private ResourceSparseApplyAdagradV2(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceSparseApplyAdagradV2 operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -76,11 +52,16 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
    * @param epsilon Constant factor. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyAdagradV2} output and operands
    * @return a new instance of ResourceSparseApplyAdagradV2
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceSparseApplyAdagradV2 create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceSparseApplyAdagradV2 create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr,
+      Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdagradV2", scope.makeOpName("ResourceSparseApplyAdagradV2"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -101,27 +82,62 @@ public final class ResourceSparseApplyAdagradV2 extends RawOp {
     }
     return new ResourceSparseApplyAdagradV2(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and accum tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * @param updateSlots 
+   * Sets the updateSlots option.
+   *
+   * @param updateSlots the updateSlots option
+   * @return this Options instance.
    */
   public static Options updateSlots(Boolean updateSlots) {
     return new Options().updateSlots(updateSlots);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceSparseApplyAdagradV2";
-  
-  private ResourceSparseApplyAdagradV2(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdagradV2}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Boolean updateSlots;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the updateSlots option.
+     *
+     * @param updateSlots the updateSlots option
+     * @return this Options instance.
+     */
+    public Options updateSlots(Boolean updateSlots) {
+      this.updateSlots = updateSlots;
+      return this;
+    }
   }
 }

@@ -31,62 +31,49 @@ import org.tensorflow.types.TString;
 
 /**
  * Decode a 16-bit PCM WAV file to a float tensor.
- * <p>
  * The -32768 to 32767 signed 16-bit values will be scaled to -1.0 to 1.0 in float.
- * <p>
- * When desired_channels is set, if the input contains fewer channels than this
+ * <p>When desired_channels is set, if the input contains fewer channels than this
  * then the last channel will be duplicated to give the requested number, else if
  * the input has more channels than requested then the additional channels will be
  * ignored.
- * <p>
- * If desired_samples is set, then the audio will be cropped or padded with zeroes
+ * <p>If desired_samples is set, then the audio will be cropped or padded with zeroes
  * to the requested length.
- * <p>
- * The first output contains a Tensor with the content of the audio samples. The
+ * <p>The first output contains a Tensor with the content of the audio samples. The
  * lowest dimension will be the number of channels, and the second will be the
  * number of samples. For example, a ten-sample-long stereo WAV file should give an
  * output shape of [10, 2].
  */
-@Operator(group = "audio")
+@Operator(
+    group = "audio"
+)
 public final class DecodeWav extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.audio.DecodeWav}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param desiredChannels Number of sample channels wanted.
-     */
-    public Options desiredChannels(Long desiredChannels) {
-      this.desiredChannels = desiredChannels;
-      return this;
-    }
-    
-    /**
-     * @param desiredSamples Length of audio requested.
-     */
-    public Options desiredSamples(Long desiredSamples) {
-      this.desiredSamples = desiredSamples;
-      return this;
-    }
-    
-    private Long desiredChannels;
-    private Long desiredSamples;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeWav";
+
+  private Output<TFloat32> audio;
+
+  private Output<TInt32> sampleRate;
+
+  private DecodeWav(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    audio = operation.output(outputIdx++);
+    sampleRate = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodeWav operation.
-   * 
+   *
    * @param scope current scope
    * @param contents The WAV-encoded audio, usually from a file.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeWav
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeWav create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeWav", scope.makeOpName("DecodeWav"));
     opBuilder.addInput(contents.asOutput());
@@ -103,45 +90,76 @@ public final class DecodeWav extends RawOp {
     }
     return new DecodeWav(opBuilder.build());
   }
-  
+
   /**
+   * Sets the desiredChannels option.
+   *
    * @param desiredChannels Number of sample channels wanted.
+   * @return this Options instance.
    */
   public static Options desiredChannels(Long desiredChannels) {
     return new Options().desiredChannels(desiredChannels);
   }
-  
+
   /**
+   * Sets the desiredSamples option.
+   *
    * @param desiredSamples Length of audio requested.
+   * @return this Options instance.
    */
   public static Options desiredSamples(Long desiredSamples) {
     return new Options().desiredSamples(desiredSamples);
   }
-  
+
   /**
-   * 2-D with shape `[length, channels]`.
+   * Gets audio.
+   * 2-D with shape {@code [length, channels]}.
+   * @return audio.
    */
   public Output<TFloat32> audio() {
     return audio;
   }
-  
+
   /**
+   * Gets sampleRate.
    * Scalar holding the sample rate found in the WAV header.
+   * @return sampleRate.
    */
   public Output<TInt32> sampleRate() {
     return sampleRate;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeWav";
-  
-  private Output<TFloat32> audio;
-  private Output<TInt32> sampleRate;
-  
-  private DecodeWav(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    audio = operation.output(outputIdx++);
-    sampleRate = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.audio.DecodeWav}
+   */
+  public static class Options {
+    private Long desiredChannels;
+
+    private Long desiredSamples;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the desiredChannels option.
+     *
+     * @param desiredChannels Number of sample channels wanted.
+     * @return this Options instance.
+     */
+    public Options desiredChannels(Long desiredChannels) {
+      this.desiredChannels = desiredChannels;
+      return this;
+    }
+
+    /**
+     * Sets the desiredSamples option.
+     *
+     * @param desiredSamples Length of audio requested.
+     * @return this Options instance.
+     */
+    public Options desiredSamples(Long desiredSamples) {
+      this.desiredSamples = desiredSamples;
+      return this;
+    }
   }
 }

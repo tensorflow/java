@@ -30,152 +30,155 @@ import org.tensorflow.types.family.TType;
 
 /**
  * BatchToSpace for N-D tensors of type T.
- * <p>
- * This operation reshapes the "batch" dimension 0 into `M + 1` dimensions of shape
- * `block_shape + [batch]`, interleaves these blocks back into the grid defined by
- * the spatial dimensions `[1, ..., M]`, to obtain a result with the same rank as
+ * This operation reshapes the &quot;batch&quot; dimension 0 into {@code M + 1} dimensions of shape
+ * {@code block_shape + [batch]}, interleaves these blocks back into the grid defined by
+ * the spatial dimensions {@code [1, ..., M]}, to obtain a result with the same rank as
  * the input.  The spatial dimensions of this intermediate result are then
- * optionally cropped according to `crops` to produce the output.  This is the
+ * optionally cropped according to {@code crops} to produce the output.  This is the
  * reverse of SpaceToBatch.  See below for a precise description.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class BatchToSpaceNd<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new BatchToSpaceNd operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BatchToSpaceND";
+
+  private Output<T> output;
+
+  private BatchToSpaceNd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BatchToSpaceND operation.
+   *
    * @param scope current scope
-   * @param input N-D with shape `input_shape = [batch] + spatial_shape + remaining_shape`,
+   * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
    * where spatial_shape has M dimensions.
-   * @param blockShape 1-D with shape `[M]`, all values must be >= 1.
-   * @param crops 2-D with shape `[M, 2]`, all values must be >= 0.
-   *   `crops[i] = [crop_start, crop_end]` specifies the amount to crop from input
-   *   dimension `i + 1`, which corresponds to spatial dimension `i`.  It is
-   *   required that
-   *   `crop_start[i] + crop_end[i] <= block_shape[i] * input_shape[i + 1]`.
-   * <p>
-   * This operation is equivalent to the following steps:
-   * <p>
-   * 1. Reshape `input` to `reshaped` of shape:
-   *      [block_shape[0], ..., block_shape[M-1],
-   *       batch / prod(block_shape),
-   *       input_shape[1], ..., input_shape[N-1]]
-   * <p>
-   * 2. Permute dimensions of `reshaped` to produce `permuted` of shape
-   *      [batch / prod(block_shape),
-   * <p>
-   *       input_shape[1], block_shape[0],
-   *       ...,
-   *       input_shape[M], block_shape[M-1],
-   * <p>
-   *       input_shape[M+1], ..., input_shape[N-1]]
-   * <p>
-   * 3. Reshape `permuted` to produce `reshaped_permuted` of shape
-   *      [batch / prod(block_shape),
-   * <p>
-   *       input_shape[1] * block_shape[0],
-   *       ...,
-   *       input_shape[M] * block_shape[M-1],
-   * <p>
-   *       input_shape[M+1],
-   *       ...,
-   *       input_shape[N-1]]
-   * <p>
-   * 4. Crop the start and end of dimensions `[1, ..., M]` of
-   *    `reshaped_permuted` according to `crops` to produce the output of shape:
-   *      [batch / prod(block_shape),
-   * <p>
-   *       input_shape[1] * block_shape[0] - crops[0,0] - crops[0,1],
-   *       ...,
-   *       input_shape[M] * block_shape[M-1] - crops[M-1,0] - crops[M-1,1],
-   * <p>
-   *       input_shape[M+1], ..., input_shape[N-1]]
-   * <p>
-   * Some examples:
-   * <p>
-   * (1) For the following input of shape `[4, 1, 1, 1]`, `block_shape = [2, 2]`, and
-   *     `crops = [[0, 0], [0, 0]]`:
-   * <pre>{@code
+   * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
+   * @param crops 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
+   * {@code crops[i] = [crop_start, crop_end]} specifies the amount to crop from input
+   * dimension {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is
+   * required that
+   * {@code crop_start[i] + crop_end[i] <= block_shape[i] * input_shape[i + 1]}.
+   * <p>This operation is equivalent to the following steps:
+   * <ol>
+   * <li>
+   * <p>Reshape {@code input} to {@code reshaped} of shape:
+   * [block_shape[0], ..., block_shape[M-1],
+   * batch / prod(block_shape),
+   * input_shape[1], ..., input_shape[N-1]]
+   * </li>
+   * <li>
+   * <p>Permute dimensions of {@code reshaped} to produce {@code permuted} of shape
+   * [batch / prod(block_shape),
+   * <p>input_shape[1], block_shape[0],
+   * ...,
+   * input_shape[M], block_shape[M-1],
+   * <p>input_shape[M+1], ..., input_shape[N-1]]
+   * </li>
+   * <li>
+   * <p>Reshape {@code permuted} to produce {@code reshaped_permuted} of shape
+   * [batch / prod(block_shape),
+   * <p>input_shape[1] * block_shape[0],
+   * ...,
+   * input_shape[M] * block_shape[M-1],
+   * <p>input_shape[M+1],
+   * ...,
+   * input_shape[N-1]]
+   * </li>
+   * <li>
+   * <p>Crop the start and end of dimensions {@code [1, ..., M]} of
+   * {@code reshaped_permuted} according to {@code crops} to produce the output of shape:
+   * [batch / prod(block_shape),
+   * <p>input_shape[1] * block_shape[0] - crops[0,0] - crops[0,1],
+   * ...,
+   * input_shape[M] * block_shape[M-1] - crops[M-1,0] - crops[M-1,1],
+   * <p>input_shape[M+1], ..., input_shape[N-1]]
+   * </li>
+   * </ol>
+   * <p>Some examples:
+   * <p>(1) For the following input of shape {@code [4, 1, 1, 1]}, {@code block_shape = [2, 2]}, and
+   * {@code crops = [[0, 0], [0, 0]]}:
+   * <pre>
    * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-   * }</pre>
-   * The output tensor has shape `[1, 2, 2, 1]` and value:
-   * <pre>{@code
+   * </pre>
+   * <p>The output tensor has shape {@code [1, 2, 2, 1]} and value:
+   * <pre>
    * x = [[[[1], [2]], [[3], [4]]]]
-   * }</pre>
-   * (2) For the following input of shape `[4, 1, 1, 3]`, `block_shape = [2, 2]`, and
-   *     `crops = [[0, 0], [0, 0]]`:
-   * <pre>{@code
+   * </pre>
+   * <p>(2) For the following input of shape {@code [4, 1, 1, 3]}, {@code block_shape = [2, 2]}, and
+   * {@code crops = [[0, 0], [0, 0]]}:
+   * <pre>
    * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-   * }</pre>
-   * The output tensor has shape `[1, 2, 2, 3]` and value:
-   * <pre>{@code
+   * </pre>
+   * <p>The output tensor has shape {@code [1, 2, 2, 3]} and value:
+   * <pre>
    * x = [[[[1, 2, 3], [4, 5, 6]],
    *       [[7, 8, 9], [10, 11, 12]]]]
-   * }</pre>
-   * (3) For the following input of shape `[4, 2, 2, 1]`, `block_shape = [2, 2]`, and
-   *     `crops = [[0, 0], [0, 0]]`:
-   * <pre>{@code
+   * </pre>
+   * <p>(3) For the following input of shape {@code [4, 2, 2, 1]}, {@code block_shape = [2, 2]}, and
+   * {@code crops = [[0, 0], [0, 0]]}:
+   * <pre>
    * x = [[[[1], [3]], [[9], [11]]],
    *      [[[2], [4]], [[10], [12]]],
    *      [[[5], [7]], [[13], [15]]],
    *      [[[6], [8]], [[14], [16]]]]
-   * }</pre>
-   * The output tensor has shape `[1, 4, 4, 1]` and value:
-   * <pre>{@code
+   * </pre>
+   * <p>The output tensor has shape {@code [1, 4, 4, 1]} and value:
+   * <pre>
    * x = [[[[1],   [2],  [3],  [4]],
    *      [[5],   [6],  [7],  [8]],
    *      [[9],  [10], [11],  [12]],
    *      [[13], [14], [15],  [16]]]]
-   * }</pre>
-   * (4) For the following input of shape `[8, 1, 3, 1]`, `block_shape = [2, 2]`, and
-   *     `crops = [[0, 0], [2, 0]]`:
-   * <pre>{@code
+   * </pre>
+   * <p>(4) For the following input of shape {@code [8, 1, 3, 1]}, {@code block_shape = [2, 2]}, and
+   * {@code crops = [[0, 0], [2, 0]]}:
+   * <pre>
    * x = [[[[0], [1], [3]]], [[[0], [9], [11]]],
    *      [[[0], [2], [4]]], [[[0], [10], [12]]],
    *      [[[0], [5], [7]]], [[[0], [13], [15]]],
    *      [[[0], [6], [8]]], [[[0], [14], [16]]]]
-   * }</pre>
-   * The output tensor has shape `[2, 2, 4, 1]` and value:
-   * <pre>{@code
+   * </pre>
+   * <p>The output tensor has shape {@code [2, 2, 4, 1]} and value:
+   * <pre>
    * x = [[[[1],   [2],  [3],  [4]],
    *       [[5],   [6],  [7],  [8]]],
    *      [[[9],  [10], [11],  [12]],
    *       [[13], [14], [15],  [16]]]]
-   * }</pre>
-   * 
+   * </pre>
+   * @param <T> data type for {@code BatchToSpaceND} output and operands
    * @return a new instance of BatchToSpaceNd
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchToSpaceNd<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> blockShape, Operand<? extends TNumber> crops) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchToSpaceNd<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> blockShape, Operand<? extends TNumber> crops) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpaceND", scope.makeOpName("BatchToSpaceNd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());
     opBuilder.addInput(crops.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new BatchToSpaceNd<T>(opBuilder.build());
+    return new BatchToSpaceNd<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchToSpaceND";
-  
-  private Output<T> output;
-  
-  private BatchToSpaceNd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

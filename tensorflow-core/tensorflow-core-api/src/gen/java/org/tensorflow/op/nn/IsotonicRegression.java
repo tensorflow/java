@@ -25,71 +25,82 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Solves a batch of isotonic regression problems.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
 public final class IsotonicRegression<U extends TNumber> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new IsotonicRegression operation.
-   * 
-   * @param scope current scope
-   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
-   * @param outputDtype Dtype of output.
-   * @return a new instance of IsotonicRegression
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> IsotonicRegression<U> create(Scope scope, Operand<? extends TNumber> input, Class<U> outputDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IsotonicRegression", scope.makeOpName("IsotonicRegression"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_dtype", Operands.toDataType(outputDtype));
-    return new IsotonicRegression<U>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new IsotonicRegression operation using default output types.
-   * 
-   * @param scope current scope
-   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
-   * @return a new instance of IsotonicRegression
-   */
-  @Endpoint(describeByClass = true)
-  public static IsotonicRegression<TFloat32> create(Scope scope, Operand<? extends TNumber> input) {
-    return create(scope, input, TFloat32.class);
-  }
-  
-  /**
-   * A (batch_size, dim)-tensor holding the per-batch element solutions.
-   */
-  public Output<U> output() {
-    return output;
-  }
-  
-  /**
-   * An int32 (batch_size, dim)-tensor with the segments.
-   */
-  public Output<TInt32> segments() {
-    return segments;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IsotonicRegression";
-  
+
   private Output<U> output;
+
   private Output<TInt32> segments;
-  
+
   private IsotonicRegression(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     segments = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IsotonicRegression operation.
+   *
+   * @param scope current scope
+   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
+   * @param outputDtype Dtype of output.
+   * @param <U> data type for {@code IsotonicRegression} output and operands
+   * @return a new instance of IsotonicRegression
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> IsotonicRegression<U> create(Scope scope,
+      Operand<? extends TNumber> input, Class<U> outputDtype) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IsotonicRegression", scope.makeOpName("IsotonicRegression"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_dtype", Operands.toDataType(outputDtype));
+    return new IsotonicRegression<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IsotonicRegression operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param input A (batch_size, dim)-tensor holding a batch of inputs.
+   * @return a new instance of IsotonicRegression, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IsotonicRegression<TFloat32> create(Scope scope, Operand<? extends TNumber> input) {
+    return create(scope, input, TFloat32.class);
+  }
+
+  /**
+   * Gets output.
+   * A (batch_size, dim)-tensor holding the per-batch element solutions.
+   * @return output.
+   */
+  public Output<U> output() {
+    return output;
+  }
+
+  /**
+   * Gets segments.
+   * An int32 (batch_size, dim)-tensor with the segments.
+   * @return segments.
+   */
+  public Output<TInt32> segments() {
+    return segments;
   }
 }

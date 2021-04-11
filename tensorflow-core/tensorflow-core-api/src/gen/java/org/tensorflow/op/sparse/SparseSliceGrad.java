@@ -30,58 +30,66 @@ import org.tensorflow.types.family.TType;
 
 /**
  * The gradient operator for the SparseSlice op.
- * <p>
  * This op takes in the upstream gradient w.r.t. non-empty values of
- * the sliced `SparseTensor`, and outputs the gradients w.r.t.
- * the non-empty values of input `SparseTensor`.
- * 
- * @param <T> data type for {@code valGrad()} output
+ * the sliced {@code SparseTensor}, and outputs the gradients w.r.t.
+ * the non-empty values of input {@code SparseTensor}.
+ *
+ * @param <T> data type for {@code val_grad} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseSliceGrad<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseSliceGrad";
+
+  private Output<T> valGrad;
+
+  private SparseSliceGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    valGrad = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseSliceGrad operation.
-   * 
+   *
    * @param scope current scope
    * @param backpropValGrad 1-D. The gradient with respect to
-   * the non-empty values of the sliced `SparseTensor`.
-   * @param inputIndices 2-D.  The `indices` of the input `SparseTensor`.
+   * the non-empty values of the sliced {@code SparseTensor}.
+   * @param inputIndices 2-D.  The {@code indices} of the input {@code SparseTensor}.
    * @param inputStart 1-D. tensor represents the start of the slice.
-   * @param outputIndices 2-D.  The `indices` of the sliced `SparseTensor`.
+   * @param outputIndices 2-D.  The {@code indices} of the sliced {@code SparseTensor}.
+   * @param <T> data type for {@code SparseSliceGrad} output and operands
    * @return a new instance of SparseSliceGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad, Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad,
+      Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSliceGrad", scope.makeOpName("SparseSliceGrad"));
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputStart.asOutput());
     opBuilder.addInput(outputIndices.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseSliceGrad<T>(opBuilder.build());
+    return new SparseSliceGrad<>(opBuilder.build());
   }
-  
+
   /**
-   * 1-D. The gradient with respect to the non-empty values of input `SparseTensor`.
+   * Gets valGrad.
+   * 1-D. The gradient with respect to the non-empty values of input {@code SparseTensor}.
+   * @return valGrad.
    */
   public Output<T> valGrad() {
     return valGrad;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return valGrad;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSliceGrad";
-  
-  private Output<T> valGrad;
-  
-  private SparseSliceGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    valGrad = operation.output(outputIdx++);
   }
 }

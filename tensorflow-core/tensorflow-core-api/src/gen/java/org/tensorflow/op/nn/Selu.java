@@ -28,55 +28,61 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes scaled exponential linear: `scale * alpha * (exp(features) - 1)`
- * <p>
- * if < 0, `scale * features` otherwise.
- * <p>
- * To be used together with
- * `initializer = tf.variance_scaling_initializer(factor=1.0, mode='FAN_IN')`.
- * For correct dropout, use `tf.contrib.nn.alpha_dropout`.
- * <p>
- * See [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
- * 
- * @param <T> data type for {@code activations()} output
+ * Computes scaled exponential linear: {@code scale * alpha * (exp(features) - 1)}
+ * if &lt; 0, {@code scale * features} otherwise.
+ * <p>To be used together with
+ * {@code initializer = tf.variance_scaling_initializer(factor=1.0, mode='FAN_IN')}.
+ * For correct dropout, use {@code tf.contrib.nn.alpha_dropout}.
+ * <p>See  <a href="https://arxiv.org/abs/1706.02515">Self-Normalizing Neural Networks</a>
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Selu operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @return a new instance of Selu
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Selu<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> activations() {
-    return activations;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return activations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Selu";
-  
+
   private Output<T> activations;
-  
+
   private Selu(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Selu operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param <T> data type for {@code Selu} output and operands
+   * @return a new instance of Selu
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Selu<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   *
+   * @return activations.
+   */
+  public Output<T> activations() {
+    return activations;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return activations;
   }
 }

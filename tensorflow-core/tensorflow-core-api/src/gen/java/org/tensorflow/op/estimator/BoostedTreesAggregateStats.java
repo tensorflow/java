@@ -24,20 +24,30 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
  * Aggregates the summary of accumulated stats for the batch.
- * <p>
  * The summary stats contains gradients and hessians accumulated for each node, feature dimension id and bucket.
  */
 public final class BoostedTreesAggregateStats extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesAggregateStats";
+
+  private Output<TFloat32> statsSummary;
+
+  private BoostedTreesAggregateStats(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    statsSummary = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesAggregateStats operation.
-   * 
+   *
    * @param scope current scope
    * @param nodeIds int32; Rank 1 Tensor containing node ids for each example, shape [batch_size].
    * @param gradients float32; Rank 2 Tensor (shape=[batch_size, logits_dimension]) with gradients for each example.
@@ -47,8 +57,12 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
    * @param numBuckets int; equals to the maximum possible value of bucketized feature.
    * @return a new instance of BoostedTreesAggregateStats
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> feature, Long maxSplits, Long numBuckets) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesAggregateStats create(Scope scope, Operand<TInt32> nodeIds,
+      Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> feature,
+      Long maxSplits, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesAggregateStats", scope.makeOpName("BoostedTreesAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -59,28 +73,19 @@ public final class BoostedTreesAggregateStats extends RawOp implements Operand<T
     opBuilder.setAttr("num_buckets", numBuckets);
     return new BoostedTreesAggregateStats(opBuilder.build());
   }
-  
+
   /**
+   * Gets statsSummary.
    * output Rank 4 Tensor (shape=[splits, feature_dimension, buckets, logits_dimension + hessian_dimension])
    * containing accumulated stats for each node, feature dimension and bucket.
+   * @return statsSummary.
    */
   public Output<TFloat32> statsSummary() {
     return statsSummary;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return statsSummary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesAggregateStats";
-  
-  private Output<TFloat32> statsSummary;
-  
-  private BoostedTreesAggregateStats(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    statsSummary = operation.output(outputIdx++);
   }
 }

@@ -28,47 +28,59 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The BatchMatrixSetDiag operation
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixSetDiag<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new BatchMatrixSetDiag operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param diagonal 
-   * @return a new instance of BatchMatrixSetDiag
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input, Operand<T> diagonal) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSetDiag", scope.makeOpName("BatchMatrixSetDiag"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(diagonal.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new BatchMatrixSetDiag<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BatchMatrixSetDiag";
-  
+
   private Output<T> output;
-  
+
   private BatchMatrixSetDiag(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BatchMatrixSetDiag operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param diagonal the diagonal value
+   * @param <T> data type for {@code BatchMatrixSetDiag} output and operands
+   * @return a new instance of BatchMatrixSetDiag
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchMatrixSetDiag<T> create(Scope scope, Operand<T> input,
+      Operand<T> diagonal) {
+    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSetDiag", scope.makeOpName("BatchMatrixSetDiag"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(diagonal.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new BatchMatrixSetDiag<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

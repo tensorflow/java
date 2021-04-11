@@ -25,71 +25,60 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <W> data type for {@code out()} output
+ * The QuantizedMatMulWithBiasAndRequantize operation
+ *
+ * @param <W> data type for {@code out} output
  */
-public final class QuantizedMatMulWithBiasAndRequantize<W extends TType> extends RawOp {
-  
+public final class QuantizedMatMulWithBiasAndRequantize<W extends TNumber> extends RawOp {
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.QuantizedMatMulWithBiasAndRequantize}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param transposeA 
-     */
-    public Options transposeA(Boolean transposeA) {
-      this.transposeA = transposeA;
-      return this;
-    }
-    
-    /**
-     * @param transposeB 
-     */
-    public Options transposeB(Boolean transposeB) {
-      this.transposeB = transposeB;
-      return this;
-    }
-    
-    /**
-     * @param inputQuantMode 
-     */
-    public Options inputQuantMode(String inputQuantMode) {
-      this.inputQuantMode = inputQuantMode;
-      return this;
-    }
-    
-    private Boolean transposeA;
-    private Boolean transposeB;
-    private String inputQuantMode;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QuantizedMatMulWithBiasAndRequantize";
+
+  private Output<W> out;
+
+  private Output<TFloat32> minOut;
+
+  private Output<TFloat32> maxOut;
+
+  private QuantizedMatMulWithBiasAndRequantize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
+    minOut = operation.output(outputIdx++);
+    maxOut = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new QuantizedMatMulWithBiasAndRequantize operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param b 
-   * @param bias 
-   * @param minA 
-   * @param maxA 
-   * @param minB 
-   * @param maxB 
-   * @param minFreezedOutput 
-   * @param maxFreezedOutput 
-   * @param Toutput 
-   * @param options carries optional attributes values
+   * @param a the a value
+   * @param b the b value
+   * @param bias the bias value
+   * @param minA the minA value
+   * @param maxA the maxA value
+   * @param minB the minB value
+   * @param maxB the maxB value
+   * @param minFreezedOutput the minFreezedOutput value
+   * @param maxFreezedOutput the maxFreezedOutput value
+   * @param Toutput the value of the Toutput property
+   * @param options carries optional attribute values
+   * @param <W> data type for {@code QuantizedMatMulWithBiasAndRequantize} output and operands
    * @return a new instance of QuantizedMatMulWithBiasAndRequantize
    */
-  @Endpoint(describeByClass = true)
-  public static <W extends TType> QuantizedMatMulWithBiasAndRequantize<W> create(Scope scope, Operand<? extends TType> a, Operand<? extends TType> b, Operand<? extends TType> bias, Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput, Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <W extends TNumber> QuantizedMatMulWithBiasAndRequantize<W> create(Scope scope,
+      Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
+      Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
+      Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput,
+      Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndRequantize"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -115,60 +104,110 @@ public final class QuantizedMatMulWithBiasAndRequantize<W extends TType> extends
         }
       }
     }
-    return new QuantizedMatMulWithBiasAndRequantize<W>(opBuilder.build());
+    return new QuantizedMatMulWithBiasAndRequantize<>(opBuilder.build());
   }
-  
+
   /**
-   * @param transposeA 
+   * Sets the transposeA option.
+   *
+   * @param transposeA the transposeA option
+   * @return this Options instance.
    */
   public static Options transposeA(Boolean transposeA) {
     return new Options().transposeA(transposeA);
   }
-  
+
   /**
-   * @param transposeB 
+   * Sets the transposeB option.
+   *
+   * @param transposeB the transposeB option
+   * @return this Options instance.
    */
   public static Options transposeB(Boolean transposeB) {
     return new Options().transposeB(transposeB);
   }
-  
+
   /**
-   * @param inputQuantMode 
+   * Sets the inputQuantMode option.
+   *
+   * @param inputQuantMode the inputQuantMode option
+   * @return this Options instance.
    */
   public static Options inputQuantMode(String inputQuantMode) {
     return new Options().inputQuantMode(inputQuantMode);
   }
-  
+
   /**
+   * Gets out.
+   *
+   * @return out.
    */
   public Output<W> out() {
     return out;
   }
-  
+
   /**
+   * Gets minOut.
+   *
+   * @return minOut.
    */
   public Output<TFloat32> minOut() {
     return minOut;
   }
-  
+
   /**
+   * Gets maxOut.
+   *
+   * @return maxOut.
    */
   public Output<TFloat32> maxOut() {
     return maxOut;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedMatMulWithBiasAndRequantize";
-  
-  private Output<W> out;
-  private Output<TFloat32> minOut;
-  private Output<TFloat32> maxOut;
-  
-  private QuantizedMatMulWithBiasAndRequantize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
-    minOut = operation.output(outputIdx++);
-    maxOut = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.QuantizedMatMulWithBiasAndRequantize}
+   */
+  public static class Options {
+    private Boolean transposeA;
+
+    private Boolean transposeB;
+
+    private String inputQuantMode;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the transposeA option.
+     *
+     * @param transposeA the transposeA option
+     * @return this Options instance.
+     */
+    public Options transposeA(Boolean transposeA) {
+      this.transposeA = transposeA;
+      return this;
+    }
+
+    /**
+     * Sets the transposeB option.
+     *
+     * @param transposeB the transposeB option
+     * @return this Options instance.
+     */
+    public Options transposeB(Boolean transposeB) {
+      this.transposeB = transposeB;
+      return this;
+    }
+
+    /**
+     * Sets the inputQuantMode option.
+     *
+     * @param inputQuantMode the inputQuantMode option
+     * @return this Options instance.
+     */
+    public Options inputQuantMode(String inputQuantMode) {
+      this.inputQuantMode = inputQuantMode;
+      return this;
+    }
   }
 }

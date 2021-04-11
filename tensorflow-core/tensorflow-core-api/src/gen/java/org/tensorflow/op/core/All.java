@@ -29,47 +29,42 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the "logical and" of elements across dimensions of a tensor.
- * <p>
- * Reduces `input` along the dimensions given in `axis`. Unless
- * `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
- * `axis`. If `keep_dims` is true, the reduced dimensions are
+ * Computes the &quot;logical and&quot; of elements across dimensions of a tensor.
+ * Reduces {@code input} along the dimensions given in {@code axis}. Unless
+ * {@code keep_dims} is true, the rank of the tensor is reduced by 1 for each entry in
+ * {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
  * retained with length 1.
  */
 @Operator
 public final class All extends RawOp implements Operand<TBool> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.All}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param keepDims If true, retain reduced dimensions with length 1.
-     */
-    public Options keepDims(Boolean keepDims) {
-      this.keepDims = keepDims;
-      return this;
-    }
-    
-    private Boolean keepDims;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "All";
+
+  private Output<TBool> output;
+
+  private All(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new All operation.
-   * 
+   *
    * @param scope current scope
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
-   * `[-rank(input), rank(input))`.
-   * @param options carries optional attributes values
+   * {@code [-rank(input), rank(input))}.
+   * @param options carries optional attribute values
    * @return a new instance of All
    */
-  @Endpoint(describeByClass = true)
-  public static All create(Scope scope, Operand<TBool> input, Operand<? extends TNumber> axis, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static All create(Scope scope, Operand<TBool> input, Operand<? extends TNumber> axis,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("All", scope.makeOpName("All"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -83,34 +78,49 @@ public final class All extends RawOp implements Operand<TBool> {
     }
     return new All(opBuilder.build());
   }
-  
+
   /**
+   * Sets the keepDims option.
+   *
    * @param keepDims If true, retain reduced dimensions with length 1.
+   * @return this Options instance.
    */
   public static Options keepDims(Boolean keepDims) {
     return new Options().keepDims(keepDims);
   }
-  
+
   /**
+   * Gets output.
    * The reduced tensor.
+   * @return output.
    */
   public Output<TBool> output() {
     return output;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "All";
-  
-  private Output<TBool> output;
-  
-  private All(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.All}
+   */
+  public static class Options {
+    private Boolean keepDims;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the keepDims option.
+     *
+     * @param keepDims If true, retain reduced dimensions with length 1.
+     * @return this Options instance.
+     */
+    public Options keepDims(Boolean keepDims) {
+      this.keepDims = keepDims;
+      return this;
+    }
   }
 }

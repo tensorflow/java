@@ -24,61 +24,65 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
  * An Op to permute tensors across replicated TPU instances.
- * <p>
  * Each instance supplies its own input.
- * <p>
- * For example, suppose there are 4 TPU instances: `[A, B, C, D]`. Passing
- * source_target_pairs=`[[0,1],[1,2],[2,3],[3,0]]` gets the outputs:
- * `[D, A, B, C]`.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>For example, suppose there are 4 TPU instances: {@code [A, B, C, D]}. Passing
+ * source_target_pairs={@code [[0,1],[1,2],[2,3],[3,0]]} gets the outputs:
+ * {@code [D, A, B, C]}.
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class CollectivePermute<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new CollectivePermute operation.
-   * 
-   * @param scope current scope
-   * @param input The local input to be permuted. Currently only supports float and
-   * bfloat16.
-   * @param sourceTargetPairs A tensor with shape [num_pairs, 2].
-   * @return a new instance of CollectivePermute
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input, Operand<TInt32> sourceTargetPairs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(sourceTargetPairs.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new CollectivePermute<T>(opBuilder.build());
-  }
-  
-  /**
-   * The permuted input.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CollectivePermute";
-  
+
   private Output<T> output;
-  
+
   private CollectivePermute(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CollectivePermute operation.
+   *
+   * @param scope current scope
+   * @param input The local input to be permuted. Currently only supports float and
+   * bfloat16.
+   * @param sourceTargetPairs A tensor with shape [num_pairs, 2].
+   * @param <T> data type for {@code CollectivePermute} output and operands
+   * @return a new instance of CollectivePermute
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input,
+      Operand<TInt32> sourceTargetPairs) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(sourceTargetPairs.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new CollectivePermute<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * The permuted input.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -30,58 +30,45 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Gradient for batch normalization.
- * <p>
- * Note that the size of 4D Tensors are defined by either "NHWC" or "NCHW".
+ * Note that the size of 4D Tensors are defined by either &quot;NHWC&quot; or &quot;NCHW&quot;.
  * The size of 1D Tensors matches the dimension C of the 4D Tensors.
- * 
- * @param <T> data type for {@code xBackprop()} output
- * @param <U> data type for {@code scaleBackprop()} output
+ *
+ * @param <T> data type for {@code x_backprop} output
+ *
+ * @param <U> data type for {@code scale_backprop} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.FusedBatchNormGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param epsilon A small float number added to the variance of x.
-     */
-    public Options epsilon(Float epsilon) {
-      this.epsilon = epsilon;
-      return this;
-    }
-    
-    /**
-     * @param dataFormat The data format for y_backprop, x, x_backprop.
-     * Either "NHWC" (default) or "NCHW".
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    /**
-     * @param isTraining A bool value to indicate the operation is for training (default)
-     * or inference.
-     */
-    public Options isTraining(Boolean isTraining) {
-      this.isTraining = isTraining;
-      return this;
-    }
-    
-    private Float epsilon;
-    private String dataFormat;
-    private Boolean isTraining;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FusedBatchNormGradV3";
+
+  private Output<T> xBackprop;
+
+  private Output<U> scaleBackprop;
+
+  private Output<U> offsetBackprop;
+
+  private Output<U> reserveSpace4;
+
+  private Output<U> reserveSpace5;
+
+  private FusedBatchNormGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    xBackprop = operation.output(outputIdx++);
+    scaleBackprop = operation.output(outputIdx++);
+    offsetBackprop = operation.output(outputIdx++);
+    reserveSpace4 = operation.output(outputIdx++);
+    reserveSpace5 = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new FusedBatchNormGrad operation.
-   * 
+   * Factory method to create a class wrapping a new FusedBatchNormGradV3 operation.
+   *
    * @param scope current scope
    * @param yBackprop A 4D Tensor for the gradient with respect to y.
    * @param x A 4D Tensor for input data.
@@ -98,11 +85,17 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
    * @param reserveSpace3 When is_training is True, a 1D Tensor for some intermediate results to be reused
    * in gradient computation. When is_training is False, a dummy empty Tensor will be
    * created.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code FusedBatchNormGradV3} output and operands
+   * @param <U> data type for {@code FusedBatchNormGradV3} output and operands
    * @return a new instance of FusedBatchNormGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope, Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1, Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope,
+      Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1,
+      Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());
@@ -124,84 +117,133 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
         }
       }
     }
-    return new FusedBatchNormGrad<T, U>(opBuilder.build());
+    return new FusedBatchNormGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the epsilon option.
+   *
    * @param epsilon A small float number added to the variance of x.
+   * @return this Options instance.
    */
   public static Options epsilon(Float epsilon) {
     return new Options().epsilon(epsilon);
   }
-  
+
   /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat The data format for y_backprop, x, x_backprop.
-   * Either "NHWC" (default) or "NCHW".
+   * Either &quot;NHWC&quot; (default) or &quot;NCHW&quot;.
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
+   * Sets the isTraining option.
+   *
    * @param isTraining A bool value to indicate the operation is for training (default)
    * or inference.
+   * @return this Options instance.
    */
   public static Options isTraining(Boolean isTraining) {
     return new Options().isTraining(isTraining);
   }
-  
+
   /**
+   * Gets xBackprop.
    * A 4D Tensor for the gradient with respect to x.
+   * @return xBackprop.
    */
   public Output<T> xBackprop() {
     return xBackprop;
   }
-  
+
   /**
+   * Gets scaleBackprop.
    * A 1D Tensor for the gradient with respect to scale.
+   * @return scaleBackprop.
    */
   public Output<U> scaleBackprop() {
     return scaleBackprop;
   }
-  
+
   /**
+   * Gets offsetBackprop.
    * A 1D Tensor for the gradient with respect to offset.
+   * @return offsetBackprop.
    */
   public Output<U> offsetBackprop() {
     return offsetBackprop;
   }
-  
+
   /**
+   * Gets reserveSpace4.
    * Unused placeholder to match the mean input in FusedBatchNorm.
+   * @return reserveSpace4.
    */
   public Output<U> reserveSpace4() {
     return reserveSpace4;
   }
-  
+
   /**
+   * Gets reserveSpace5.
    * Unused placeholder to match the variance input
    * in FusedBatchNorm.
+   * @return reserveSpace5.
    */
   public Output<U> reserveSpace5() {
     return reserveSpace5;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FusedBatchNormGradV3";
-  
-  private Output<T> xBackprop;
-  private Output<U> scaleBackprop;
-  private Output<U> offsetBackprop;
-  private Output<U> reserveSpace4;
-  private Output<U> reserveSpace5;
-  
-  private FusedBatchNormGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    xBackprop = operation.output(outputIdx++);
-    scaleBackprop = operation.output(outputIdx++);
-    offsetBackprop = operation.output(outputIdx++);
-    reserveSpace4 = operation.output(outputIdx++);
-    reserveSpace5 = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.FusedBatchNormGrad}
+   */
+  public static class Options {
+    private Float epsilon;
+
+    private String dataFormat;
+
+    private Boolean isTraining;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the epsilon option.
+     *
+     * @param epsilon A small float number added to the variance of x.
+     * @return this Options instance.
+     */
+    public Options epsilon(Float epsilon) {
+      this.epsilon = epsilon;
+      return this;
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat The data format for y_backprop, x, x_backprop.
+     * Either &quot;NHWC&quot; (default) or &quot;NCHW&quot;.
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
+
+    /**
+     * Sets the isTraining option.
+     *
+     * @param isTraining A bool value to indicate the operation is for training (default)
+     * or inference.
+     * @return this Options instance.
+     */
+    public Options isTraining(Boolean isTraining) {
+      this.isTraining = isTraining;
+      return this;
+    }
   }
 }

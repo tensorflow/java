@@ -29,39 +29,28 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
- * <p>
  * That is for rows we have grad for, we update var and accum as follows:
- * accum += grad <i> grad
+ * accum += grad * grad
  * prox_v = var
- * prox_v -= lr </i> grad <i> (1 / sqrt(accum))
- * var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}
+ * prox_v -= lr * grad * (1 / sqrt(accum))
+ * var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceSparseApplyProximalAdagrad extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyProximalAdagrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceSparseApplyProximalAdagrad";
+
+  private ResourceSparseApplyProximalAdagrad(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceSparseApplyProximalAdagrad operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -70,11 +59,16 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
    * @param l2 L2 regularization. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyProximalAdagrad} output and operands
    * @return a new instance of ResourceSparseApplyProximalAdagrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceSparseApplyProximalAdagrad create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceSparseApplyProximalAdagrad create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> l1,
+      Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalAdagrad", scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -93,19 +87,37 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
     }
     return new ResourceSparseApplyProximalAdagrad(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceSparseApplyProximalAdagrad";
-  
-  private ResourceSparseApplyProximalAdagrad(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyProximalAdagrad}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

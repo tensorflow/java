@@ -30,60 +30,55 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs 3D max pooling on the input.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class MaxPool3d<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.MaxPool3d}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dataFormat The data format of the input and output data. With the
-     * default format "NDHWC", the data is stored in the order of:
-     *     [batch, in_depth, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCDHW", the data storage order is:
-     *     [batch, in_channels, in_depth, in_height, in_width].
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    private String dataFormat;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MaxPool3D";
+
+  private Output<T> output;
+
+  private MaxPool3d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new MaxPool3d operation.
-   * 
+   * Factory method to create a class wrapping a new MaxPool3D operation.
+   *
    * @param scope current scope
-   * @param input Shape `[batch, depth, rows, cols, channels]` tensor to pool over.
+   * @param input Shape {@code [batch, depth, rows, cols, channels]} tensor to pool over.
    * @param ksize 1-D tensor of length 5. The size of the window for each dimension of
-   * the input tensor. Must have `ksize[0] = ksize[4] = 1`.
+   * the input tensor. Must have {@code ksize[0] = ksize[4] = 1}.
    * @param strides 1-D tensor of length 5. The stride of the sliding window for each
-   * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+   * dimension of {@code input}. Must have {@code strides[0] = strides[4] = 1}.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPool3D} output and operands
    * @return a new instance of MaxPool3d
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> MaxPool3d<T> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> MaxPool3d<T> create(Scope scope, Operand<T> input,
+      List<Long> ksize, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPool3D", scope.makeOpName("MaxPool3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
-    for (int i = 0; i < ksizeArray.length; ++i) {
+    for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);
     }
     opBuilder.setAttr("ksize", ksizeArray);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -95,40 +90,59 @@ public final class MaxPool3d<T extends TNumber> extends RawOp implements Operand
         }
       }
     }
-    return new MaxPool3d<T>(opBuilder.build());
+    return new MaxPool3d<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat The data format of the input and output data. With the
-   * default format "NDHWC", the data is stored in the order of:
-   *     [batch, in_depth, in_height, in_width, in_channels].
-   * Alternatively, the format could be "NCDHW", the data storage order is:
-   *     [batch, in_channels, in_depth, in_height, in_width].
+   * default format &quot;NDHWC&quot;, the data is stored in the order of:
+   * [batch, in_depth, in_height, in_width, in_channels].
+   * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+   * [batch, in_channels, in_depth, in_height, in_width].
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
+   * Gets output.
    * The max pooled output tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MaxPool3D";
-  
-  private Output<T> output;
-  
-  private MaxPool3d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.MaxPool3d}
+   */
+  public static class Options {
+    private String dataFormat;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat The data format of the input and output data. With the
+     * default format &quot;NDHWC&quot;, the data is stored in the order of:
+     * [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+     * [batch, in_channels, in_depth, in_height, in_width].
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
   }
 }

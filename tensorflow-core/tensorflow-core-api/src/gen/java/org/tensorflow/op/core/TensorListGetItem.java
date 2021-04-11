@@ -30,51 +30,62 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code item()} output
+ * The TensorListGetItem operation
+ *
+ * @param <T> data type for {@code item} output
  */
 @Operator
 public final class TensorListGetItem<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListGetItem";
+
+  private Output<T> item;
+
+  private TensorListGetItem(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    item = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListGetItem operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param index 
-   * @param elementShape 
-   * @param elementDtype 
+   * @param inputHandle the inputHandle value
+   * @param index the index value
+   * @param elementShape the elementShape value
+   * @param elementDtype the value of the elementDtype property
+   * @param <T> data type for {@code TensorListGetItem} output and operands
    * @return a new instance of TensorListGetItem
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListGetItem<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape, Class<T> elementDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorListGetItem<T> create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<TInt32> index, Operand<TInt32> elementShape,
+      Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGetItem", scope.makeOpName("TensorListGetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
-    return new TensorListGetItem<T>(opBuilder.build());
+    return new TensorListGetItem<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets item.
+   *
+   * @return item.
    */
   public Output<T> item() {
     return item;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return item;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListGetItem";
-  
-  private Output<T> item;
-  
-  private TensorListGetItem(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    item = operation.output(outputIdx++);
   }
 }

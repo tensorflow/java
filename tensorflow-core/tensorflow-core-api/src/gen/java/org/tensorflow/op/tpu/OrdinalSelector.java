@@ -24,51 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
  * A TPU core selector Op.
- * <p>
  * This Op produces a set of TPU cores (for warm-up) or a single TPU core
  * (for regular inference) to execute the TPU program on. The output is
  * consumed by TPUPartitionedCall.
  */
 public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Factory method to create a class wrapping a new OrdinalSelector operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TPUOrdinalSelector";
+
+  private Output<TInt32> deviceOrdinals;
+
+  private OrdinalSelector(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    deviceOrdinals = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TPUOrdinalSelector operation.
+   *
    * @param scope current scope
    * @return a new instance of OrdinalSelector
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static OrdinalSelector create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUOrdinalSelector", scope.makeOpName("OrdinalSelector"));
     opBuilder = scope.apply(opBuilder);
     return new OrdinalSelector(opBuilder.build());
   }
-  
+
   /**
+   * Gets deviceOrdinals.
    * A vector 1 or more TPU cores.
+   * @return deviceOrdinals.
    */
   public Output<TInt32> deviceOrdinals() {
     return deviceOrdinals;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return deviceOrdinals;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUOrdinalSelector";
-  
-  private Output<TInt32> deviceOrdinals;
-  
-  private OrdinalSelector(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    deviceOrdinals = operation.output(outputIdx++);
   }
 }

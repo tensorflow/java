@@ -28,53 +28,60 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Compute the Hurwitz zeta function \\(\zeta(x, q)\\).
- * <p>
+ * Compute the Hurwitz zeta function \(\zeta(x, q)\).
  * The Hurwitz zeta function is defined as:
- * <p>
- * \\(\zeta(x, q) = \sum_{n=0}^{\infty} (q + n)^{-x}\\)
- * 
- * @param <T> data type for {@code z()} output
+ * <p>\(\zeta(x, q) = \sum_{n=0}^{\infty} (q + n)^{-x}\)
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Zeta<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Zeta";
+
+  private Output<T> z;
+
+  private Zeta(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Zeta operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param q 
+   * @param x the x value
+   * @param q the q value
+   * @param <T> data type for {@code Zeta} output and operands
    * @return a new instance of Zeta
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Zeta<T> create(Scope scope, Operand<T> x, Operand<T> q) {
     OperationBuilder opBuilder = scope.env().opBuilder("Zeta", scope.makeOpName("Zeta"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(q.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Zeta<T>(opBuilder.build());
+    return new Zeta<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Zeta";
-  
-  private Output<T> z;
-  
-  private Zeta(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

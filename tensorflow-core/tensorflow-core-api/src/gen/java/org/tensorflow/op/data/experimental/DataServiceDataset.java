@@ -33,47 +33,50 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The DataServiceDataset operation
  */
-@Operator(group = "data.experimental")
+@Operator(
+    group = "data.experimental"
+)
 public final class DataServiceDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.DataServiceDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param taskRefreshIntervalHintMs 
-     */
-    public Options taskRefreshIntervalHintMs(Long taskRefreshIntervalHintMs) {
-      this.taskRefreshIntervalHintMs = taskRefreshIntervalHintMs;
-      return this;
-    }
-    
-    private Long taskRefreshIntervalHintMs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DataServiceDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private DataServiceDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DataServiceDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param datasetId 
-   * @param processingMode 
-   * @param address 
-   * @param protocol 
-   * @param jobName 
-   * @param maxOutstandingRequests 
-   * @param iterationCounter 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param datasetId the datasetId value
+   * @param processingMode the processingMode value
+   * @param address the address value
+   * @param protocol the protocol value
+   * @param jobName the jobName value
+   * @param maxOutstandingRequests the maxOutstandingRequests value
+   * @param iterationCounter the iterationCounter value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of DataServiceDataset
    */
-  @Endpoint(describeByClass = true)
-  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId, Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol, Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests, Operand<?> iterationCounter, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DataServiceDataset create(Scope scope, Operand<TInt64> datasetId,
+      Operand<TString> processingMode, Operand<TString> address, Operand<TString> protocol,
+      Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests,
+      Operand<? extends TType> iterationCounter, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataServiceDataset", scope.makeOpName("DataServiceDataset"));
     opBuilder.addInput(datasetId.asOutput());
     opBuilder.addInput(processingMode.asOutput());
@@ -85,7 +88,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -98,34 +101,50 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
     }
     return new DataServiceDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param taskRefreshIntervalHintMs 
+   * Sets the taskRefreshIntervalHintMs option.
+   *
+   * @param taskRefreshIntervalHintMs the taskRefreshIntervalHintMs option
+   * @return this Options instance.
    */
   public static Options taskRefreshIntervalHintMs(Long taskRefreshIntervalHintMs) {
     return new Options().taskRefreshIntervalHintMs(taskRefreshIntervalHintMs);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DataServiceDataset";
-  
-  private Output<?> handle;
-  
-  private DataServiceDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.experimental.DataServiceDataset}
+   */
+  public static class Options {
+    private Long taskRefreshIntervalHintMs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the taskRefreshIntervalHintMs option.
+     *
+     * @param taskRefreshIntervalHintMs the taskRefreshIntervalHintMs option
+     * @return this Options instance.
+     */
+    public Options taskRefreshIntervalHintMs(Long taskRefreshIntervalHintMs) {
+      this.taskRefreshIntervalHintMs = taskRefreshIntervalHintMs;
+      return this;
+    }
   }
 }

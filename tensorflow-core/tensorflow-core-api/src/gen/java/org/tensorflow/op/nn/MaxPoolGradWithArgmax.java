@@ -25,64 +25,61 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of the maxpooling function.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGradWithArgmax}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param includeBatchInIndex Whether to include batch dimension in flattened index of `argmax`.
-     */
-    public Options includeBatchInIndex(Boolean includeBatchInIndex) {
-      this.includeBatchInIndex = includeBatchInIndex;
-      return this;
-    }
-    
-    private Boolean includeBatchInIndex;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MaxPoolGradWithArgmax";
+
+  private Output<T> output;
+
+  private MaxPoolGradWithArgmax(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MaxPoolGradWithArgmax operation.
-   * 
+   *
    * @param scope current scope
    * @param input The original input.
-   * @param grad 4-D with shape `[batch, height, width, channels]`.  Gradients w.r.t. the
-   * output of `max_pool`.
-   * @param argmax The indices of the maximum values chosen for each output of `max_pool`.
+   * @param grad 4-D with shape {@code [batch, height, width, channels]}.  Gradients w.r.t. the
+   * output of {@code max_pool}.
+   * @param argmax The indices of the maximum values chosen for each output of {@code max_pool}.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    * input tensor.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPoolGradWithArgmax} output and operands
    * @return a new instance of MaxPoolGradWithArgmax
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input, Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input,
+      Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize, List<Long> strides,
+      String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradWithArgmax", scope.makeOpName("MaxPoolGradWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(argmax.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
-    for (int i = 0; i < ksizeArray.length; ++i) {
+    for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);
     }
     opBuilder.setAttr("ksize", ksizeArray);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -94,36 +91,51 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implem
         }
       }
     }
-    return new MaxPoolGradWithArgmax<T>(opBuilder.build());
+    return new MaxPoolGradWithArgmax<>(opBuilder.build());
   }
-  
+
   /**
-   * @param includeBatchInIndex Whether to include batch dimension in flattened index of `argmax`.
+   * Sets the includeBatchInIndex option.
+   *
+   * @param includeBatchInIndex Whether to include batch dimension in flattened index of {@code argmax}.
+   * @return this Options instance.
    */
   public static Options includeBatchInIndex(Boolean includeBatchInIndex) {
     return new Options().includeBatchInIndex(includeBatchInIndex);
   }
-  
+
   /**
-   * Gradients w.r.t. the input of `max_pool`.
+   * Gets output.
+   * Gradients w.r.t. the input of {@code max_pool}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MaxPoolGradWithArgmax";
-  
-  private Output<T> output;
-  
-  private MaxPoolGradWithArgmax(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGradWithArgmax}
+   */
+  public static class Options {
+    private Boolean includeBatchInIndex;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the includeBatchInIndex option.
+     *
+     * @param includeBatchInIndex Whether to include batch dimension in flattened index of {@code argmax}.
+     * @return this Options instance.
+     */
+    public Options includeBatchInIndex(Boolean includeBatchInIndex) {
+      this.includeBatchInIndex = includeBatchInIndex;
+      return this;
+    }
   }
 }

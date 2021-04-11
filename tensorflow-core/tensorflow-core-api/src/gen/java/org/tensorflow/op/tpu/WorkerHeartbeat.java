@@ -24,52 +24,55 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Worker heartbeat op.
- * <p>
  * Heartbeats may be sent periodically to indicate the coordinator is still active,
  * to retrieve the current worker status and to expedite shutdown when necessary.
  */
 public final class WorkerHeartbeat extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WorkerHeartbeat";
+
+  private Output<TString> response;
+
+  private WorkerHeartbeat(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    response = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new WorkerHeartbeat operation.
-   * 
+   *
    * @param scope current scope
    * @param request A string tensor containing a serialized WorkerHeartbeatRequest
    * @return a new instance of WorkerHeartbeat
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static WorkerHeartbeat create(Scope scope, Operand<TString> request) {
     OperationBuilder opBuilder = scope.env().opBuilder("WorkerHeartbeat", scope.makeOpName("WorkerHeartbeat"));
     opBuilder.addInput(request.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WorkerHeartbeat(opBuilder.build());
   }
-  
+
   /**
+   * Gets response.
    * A string tensor containing a serialized WorkerHeartbeatResponse
+   * @return response.
    */
   public Output<TString> response() {
     return response;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return response;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WorkerHeartbeat";
-  
-  private Output<TString> response;
-  
-  private WorkerHeartbeat(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    response = operation.output(outputIdx++);
   }
 }

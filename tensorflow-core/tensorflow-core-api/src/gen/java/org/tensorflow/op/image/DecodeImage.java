@@ -32,72 +32,56 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Function for decode_bmp, decode_gif, decode_jpeg, and decode_png.
- * <p>
  * Detects whether an image is a BMP, GIF, JPEG, or PNG, and performs the
  * appropriate operation to convert the input bytes string into a Tensor of type
  * dtype.
- * <p>
- * <i>NOTE</i>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
+ * <p><em>NOTE</em>: decode_gif returns a 4-D array [num_frames, height, width, 3], as
  * opposed to decode_bmp, decode_jpeg and decode_png, which return 3-D arrays
  * [height, width, num_channels]. Make sure to take this into account when
  * constructing your graph if you are intermixing GIF files with BMP, JPEG, and/or
  * PNG files. Alternately, set the expand_animations argument of this function to
  * False, in which case the op will return 3-dimensional tensors and will truncate
  * animated GIF files to the first frame.
- * <p>
- * <i>NOTE</i>: If the first frame of an animated GIF does not occupy the entire
+ * <p><em>NOTE</em>: If the first frame of an animated GIF does not occupy the entire
  * canvas (maximum frame width x maximum frame height), then it fills the
  * unoccupied areas (in the first frame) with zeros (black). For frames after the
  * first frame that does not occupy the entire canvas, it uses the previous
  * frame to fill the unoccupied areas.
- * 
- * @param <T> data type for {@code image()} output
+ *
+ * @param <T> data type for {@code image} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class DecodeImage<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.DecodeImage}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param channels Number of color channels for the decoded image.
-     */
-    public Options channels(Long channels) {
-      this.channels = channels;
-      return this;
-    }
-    
-    /**
-     * @param expandAnimations Controls the output shape of the returned op. If True, the returned op will
-     * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
-     * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
-     * tensor for all file types and will truncate animated GIFs to the first frame.
-     */
-    public Options expandAnimations(Boolean expandAnimations) {
-      this.expandAnimations = expandAnimations;
-      return this;
-    }
-    
-    private Long channels;
-    private Boolean expandAnimations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeImage";
+
+  private Output<T> image;
+
+  private DecodeImage(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    image = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodeImage operation.
-   * 
+   *
    * @param scope current scope
    * @param contents 0-D. The encoded image bytes.
    * @param dtype The desired DType of the returned Tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodeImage} output and operands
    * @return a new instance of DecodeImage
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodeImage<T> create(Scope scope, Operand<TString> contents, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> DecodeImage<T> create(Scope scope, Operand<TString> contents,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeImage", scope.makeOpName("DecodeImage"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -112,60 +96,97 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
         }
       }
     }
-    return new DecodeImage<T>(opBuilder.build());
+    return new DecodeImage<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new DecodeImage operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new DecodeImage operation, with the default output types.
+   *
    * @param scope current scope
    * @param contents 0-D. The encoded image bytes.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodeImage
+   * @param options carries optional attribute values
+   * @return a new instance of DecodeImage, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static DecodeImage<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DecodeImage<TUint8> create(Scope scope, Operand<TString> contents,
+      Options[] options) {
     return create(scope, contents, TUint8.class, options);
   }
-  
+
   /**
+   * Sets the channels option.
+   *
    * @param channels Number of color channels for the decoded image.
+   * @return this Options instance.
    */
   public static Options channels(Long channels) {
     return new Options().channels(channels);
   }
-  
+
   /**
+   * Sets the expandAnimations option.
+   *
    * @param expandAnimations Controls the output shape of the returned op. If True, the returned op will
    * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
    * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
    * tensor for all file types and will truncate animated GIFs to the first frame.
+   * @return this Options instance.
    */
   public static Options expandAnimations(Boolean expandAnimations) {
     return new Options().expandAnimations(expandAnimations);
   }
-  
+
   /**
-   * 3-D with shape `[height, width, channels]` or 4-D with shape
-   * `[frame, height, width, channels]`..
+   * Gets image.
+   * 3-D with shape {@code [height, width, channels]} or 4-D with shape
+   * {@code [frame, height, width, channels]}..
+   * @return image.
    */
   public Output<T> image() {
     return image;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return image;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeImage";
-  
-  private Output<T> image;
-  
-  private DecodeImage(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    image = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.DecodeImage}
+   */
+  public static class Options {
+    private Long channels;
+
+    private Boolean expandAnimations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the channels option.
+     *
+     * @param channels Number of color channels for the decoded image.
+     * @return this Options instance.
+     */
+    public Options channels(Long channels) {
+      this.channels = channels;
+      return this;
+    }
+
+    /**
+     * Sets the expandAnimations option.
+     *
+     * @param expandAnimations Controls the output shape of the returned op. If True, the returned op will
+     * produce a 3-D tensor for PNG, JPEG, and BMP files; and a 4-D tensor for all
+     * GIFs, whether animated or not. If, False, the returned op will produce a 3-D
+     * tensor for all file types and will truncate animated GIFs to the first frame.
+     * @return this Options instance.
+     */
+    public Options expandAnimations(Boolean expandAnimations) {
+      this.expandAnimations = expandAnimations;
+      return this;
+    }
   }
 }

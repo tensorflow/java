@@ -30,27 +30,46 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Gather operator documented at
- * <p>
- *   https://www.tensorflow.org/xla/operation_semantics#gather
- * 
- * @param <T> data type for {@code output()} output
+ * https://www.tensorflow.org/xla/operation_semantics#gather
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Gather<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Gather operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaGather";
+
+  private Output<T> output;
+
+  private Gather(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaGather operation.
+   *
    * @param scope current scope
    * @param operand The array we're gathering from.
    * @param startIndices Array containing the starting indices of the slices we gather.
    * @param sliceSizes slice_sizes[i] is the bounds for the slice on dimension i.
    * @param dimensionNumbers A serialized xla::GatherDimensionNumbers proto.
    * @param indicesAreSorted Boolean indicating if the indices are sorted.
+   * @param <T> data type for {@code XlaGather} output and operands
+   * @param <U> data type for {@code XlaGather} output and operands
    * @return a new instance of Gather
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Gather<T> create(Scope scope, Operand<T> operand, Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers, Boolean indicesAreSorted) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> Gather<T> create(Scope scope,
+      Operand<T> operand, Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers,
+      Boolean indicesAreSorted) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaGather", scope.makeOpName("Gather"));
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(startIndices.asOutput());
@@ -58,28 +77,20 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("indices_are_sorted", indicesAreSorted);
-    return new Gather<T>(opBuilder.build());
+    return new Gather<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaGather";
-  
-  private Output<T> output;
-  
-  private Gather(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -28,51 +28,30 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Ftrl-proximal scheme.
- * <p>
  * grad_with_shrinkage = grad + 2 * l2_shrinkage * var
  * accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
  * linear += grad_with_shrinkage +
- *     (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+ * (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
  * quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
- * var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+ * var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
  * accum = accum_new
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyFtrl extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyFtrl}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    /**
-     * @param multiplyLinearByLr 
-     */
-    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
-      this.multiplyLinearByLr = multiplyLinearByLr;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    private Boolean multiplyLinearByLr;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyFtrlV2";
+
+  private ResourceApplyFtrl(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ResourceApplyFtrl operation.
-   * 
+   * Factory method to create a class wrapping a new ResourceApplyFtrlV2 operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -81,13 +60,19 @@ public final class ResourceApplyFtrl extends RawOp {
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage 
+   * @param l2Shrinkage the l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyFtrlV2} output and operands
    * @return a new instance of ResourceApplyFtrl
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyFtrl create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyFtrl create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> accum, Operand<? extends TType> linear,
+      Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage,
+      Operand<T> lrPower, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyFtrlV2", scope.makeOpName("ResourceApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -111,27 +96,62 @@ public final class ResourceApplyFtrl extends RawOp {
     }
     return new ResourceApplyFtrl(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and accum tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * @param multiplyLinearByLr 
+   * Sets the multiplyLinearByLr option.
+   *
+   * @param multiplyLinearByLr the multiplyLinearByLr option
+   * @return this Options instance.
    */
   public static Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
     return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyFtrlV2";
-  
-  private ResourceApplyFtrl(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyFtrl}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Boolean multiplyLinearByLr;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
+     */
+    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+      this.multiplyLinearByLr = multiplyLinearByLr;
+      return this;
+    }
   }
 }

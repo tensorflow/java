@@ -29,54 +29,57 @@ import org.tensorflow.types.TString;
 
 /**
  * Saves input tensors slices to disk.
- * <p>
- * This is like `Save` except that tensors can be listed in the saved file as being
- * a slice of a larger tensor.  `shapes_and_slices` specifies the shape of the
- * larger tensor and the slice that this tensor covers. `shapes_and_slices` must
- * have as many elements as `tensor_names`.
- * <p>
- * Elements of the `shapes_and_slices` input must either be:
+ * This is like {@code Save} except that tensors can be listed in the saved file as being
+ * a slice of a larger tensor.  {@code shapes_and_slices} specifies the shape of the
+ * larger tensor and the slice that this tensor covers. {@code shapes_and_slices} must
+ * have as many elements as {@code tensor_names}.
+ * <p>Elements of the {@code shapes_and_slices} input must either be:
  * <ul>
- * <li>
- * The empty string, in which case the corresponding tensor is
- *    saved normally.
- * </li>
- * <li>
- * A string of the form `dim0 dim1 ... dimN-1 slice-spec` where the
- *    `dimI` are the dimensions of the larger tensor and `slice-spec`
- *    specifies what part is covered by the tensor to save.
- * </li>
+ * <li>The empty string, in which case the corresponding tensor is
+ * saved normally.</li>
+ * <li>A string of the form {@code dim0 dim1 ... dimN-1 slice-spec} where the
+ * {@code dimI} are the dimensions of the larger tensor and {@code slice-spec}
+ * specifies what part is covered by the tensor to save.</li>
  * </ul>
- * `slice-spec` itself is a `:`-separated list: `slice0:slice1:...:sliceN-1`
- * where each `sliceI` is either:
+ * <p>{@code slice-spec} itself is a {@code :}-separated list: {@code slice0:slice1:...:sliceN-1}
+ * where each {@code sliceI} is either:
  * <ul>
- * <li>
- * The string `-` meaning that the slice covers all indices of this dimension
- * </li>
- * <li>
- * `start,length` where `start` and `length` are integers.  In that
- *    case the slice covers `length` indices starting at `start`.
- * </li>
+ * <li>The string {@code -} meaning that the slice covers all indices of this dimension</li>
+ * <li>{@code start,length} where {@code start} and {@code length} are integers.  In that
+ * case the slice covers {@code length} indices starting at {@code start}.</li>
  * </ul>
- * See also `Save`.
+ * <p>See also {@code Save}.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SaveSlices extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SaveSlices";
+
+  private SaveSlices(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new SaveSlices operation.
-   * 
+   *
    * @param scope current scope
    * @param filename Must have a single element. The name of the file to which we write the
    * tensor.
-   * @param tensorNames Shape `[N]`. The names of the tensors to be saved.
-   * @param shapesAndSlices Shape `[N]`.  The shapes and slice specifications to use when
+   * @param tensorNames Shape {@code [N]}. The names of the tensors to be saved.
+   * @param shapesAndSlices Shape {@code [N]}.  The shapes and slice specifications to use when
    * saving the tensors.
-   * @param data `N` tensors to save.
+   * @param data {@code N} tensors to save.
    * @return a new instance of SaveSlices
    */
-  @Endpoint(describeByClass = true)
-  public static SaveSlices create(Scope scope, Operand<TString> filename, Operand<TString> tensorNames, Operand<TString> shapesAndSlices, Iterable<Operand<?>> data) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SaveSlices create(Scope scope, Operand<TString> filename,
+      Operand<TString> tensorNames, Operand<TString> shapesAndSlices, Iterable<Operand<?>> data) {
     OperationBuilder opBuilder = scope.env().opBuilder("SaveSlices", scope.makeOpName("SaveSlices"));
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
@@ -84,12 +87,5 @@ public final class SaveSlices extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(data));
     opBuilder = scope.apply(opBuilder);
     return new SaveSlices(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SaveSlices";
-  
-  private SaveSlices(Operation operation) {
-    super(operation);
   }
 }

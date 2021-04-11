@@ -30,32 +30,43 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Greedily selects a subset of bounding boxes in descending order of score,
- * <p>
  * pruning away boxes that have high overlaps
  * with previously selected boxes.  Bounding boxes with score less than
- * `score_threshold` are removed. N-by-n overlap values are supplied as square matrix,
+ * {@code score_threshold} are removed. N-by-n overlap values are supplied as square matrix,
  * which allows for defining a custom overlap criterium (eg. intersection over union,
  * intersection over area, etc.).
- * <p>
- * The output of this operation is a set of integers indexing into the input
+ * <p>The output of this operation is a set of integers indexing into the input
  * collection of bounding boxes representing the selected boxes.  The bounding
  * box coordinates corresponding to the selected indices can then be obtained
- * using the `tf.gather operation`.  For example:
- * <p>
- *   selected_indices = tf.image.non_max_suppression_with_overlaps(
- *       overlaps, scores, max_output_size, overlap_threshold, score_threshold)
- *   selected_boxes = tf.gather(boxes, selected_indices)
+ * using the {@code tf.gather operation}.  For example:
+ * <p>selected_indices = tf.image.non_max_suppression_with_overlaps(
+ * overlaps, scores, max_output_size, overlap_threshold, score_threshold)
+ * selected_boxes = tf.gather(boxes, selected_indices)
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "NonMaxSuppressionWithOverlaps";
+
+  private Output<TInt32> selectedIndices;
+
+  private NonMaxSuppressionWithOverlaps(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    selectedIndices = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new NonMaxSuppressionWithOverlaps operation.
-   * 
+   *
    * @param scope current scope
-   * @param overlaps A 2-D float tensor of shape `[num_boxes, num_boxes]` representing
+   * @param overlaps A 2-D float tensor of shape {@code [num_boxes, num_boxes]} representing
    * the n-by-n box overlap values.
-   * @param scores A 1-D float tensor of shape `[num_boxes]` representing a single
+   * @param scores A 1-D float tensor of shape {@code [num_boxes]} representing a single
    * score corresponding to each box (each row of boxes).
    * @param maxOutputSize A scalar integer tensor representing the maximum number of
    * boxes to be selected by non max suppression.
@@ -65,8 +76,12 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
    * boxes based on score.
    * @return a new instance of NonMaxSuppressionWithOverlaps
    */
-  @Endpoint(describeByClass = true)
-  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat32> overlaps, Operand<TFloat32> scores, Operand<TInt32> maxOutputSize, Operand<TFloat32> overlapThreshold, Operand<TFloat32> scoreThreshold) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static NonMaxSuppressionWithOverlaps create(Scope scope, Operand<TFloat32> overlaps,
+      Operand<TFloat32> scores, Operand<TInt32> maxOutputSize, Operand<TFloat32> overlapThreshold,
+      Operand<TFloat32> scoreThreshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("NonMaxSuppressionWithOverlaps", scope.makeOpName("NonMaxSuppressionWithOverlaps"));
     opBuilder.addInput(overlaps.asOutput());
     opBuilder.addInput(scores.asOutput());
@@ -76,28 +91,19 @@ public final class NonMaxSuppressionWithOverlaps extends RawOp implements Operan
     opBuilder = scope.apply(opBuilder);
     return new NonMaxSuppressionWithOverlaps(opBuilder.build());
   }
-  
+
   /**
-   * A 1-D integer tensor of shape `[M]` representing the selected
-   * indices from the boxes tensor, where `M <= max_output_size`.
+   * Gets selectedIndices.
+   * A 1-D integer tensor of shape {@code [M]} representing the selected
+   * indices from the boxes tensor, where {@code M <= max_output_size}.
+   * @return selectedIndices.
    */
   public Output<TInt32> selectedIndices() {
     return selectedIndices;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return selectedIndices;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "NonMaxSuppressionWithOverlaps";
-  
-  private Output<TInt32> selectedIndices;
-  
-  private NonMaxSuppressionWithOverlaps(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    selectedIndices = operation.output(outputIdx++);
   }
 }

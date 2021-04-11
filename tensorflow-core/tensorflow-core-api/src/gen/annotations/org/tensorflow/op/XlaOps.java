@@ -61,15 +61,15 @@ public final class XlaOps {
 
   /**
    * Helper operator for performing XLA-style broadcasts
-   *  <p>
-   *  Broadcasts `lhs` and `rhs` to the same rank, by adding size 1 dimensions to
-   *  whichever of `lhs` and `rhs` has the lower rank, using XLA's broadcasting rules
+   *  Broadcasts {@code lhs} and {@code rhs} to the same rank, by adding size 1 dimensions to
+   *  whichever of {@code lhs} and {@code rhs} has the lower rank, using XLA's broadcasting rules
    *  for binary operators.
    *
-   * @param <T> data type for {@code lhsOutput()} output
+   * @param <T> data type for {@code lhs_output} output
    * @param lhs the LHS input tensor
    * @param rhs the RHS input tensor
    * @param broadcastDims an XLA-style broadcast dimension specification
+   * @param <T> data type for {@code XlaBroadcastHelper} output and operands
    * @return a new instance of BroadcastHelper
    */
   public <T extends TType> BroadcastHelper<T> broadcastHelper(Operand<T> lhs, Operand<T> rhs,
@@ -80,8 +80,9 @@ public final class XlaOps {
   /**
    * Operator that connects the output of an XLA computation to other consumer graph nodes.
    *
-   * @param <T> data type for {@code outputs()} output
-   * @param input
+   * @param <T> data type for {@code outputs} output
+   * @param input the input value
+   * @param <T> data type for {@code XlaClusterOutput} output and operands
    * @return a new instance of ClusterOutput
    */
   public <T extends TType> ClusterOutput<T> clusterOutput(Operand<T> input) {
@@ -90,11 +91,10 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA ConvGeneralDilated operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
    *  .
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param lhs the input tensor
    * @param rhs the kernel tensor
    * @param windowStrides the inter-window strides
@@ -104,6 +104,8 @@ public final class XlaOps {
    * @param featureGroupCount number of feature groups for grouped convolution.
    * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param <T> data type for {@code XlaConv} output and operands
+   * @param <U> data type for {@code XlaConv} output and operands
    * @return a new instance of Conv
    */
   public <T extends TType, U extends TNumber> Conv<T> conv(Operand<T> lhs, Operand<T> rhs,
@@ -114,33 +116,32 @@ public final class XlaOps {
 
   /**
    * Takes the packed uint32 input and unpacks the input to uint8 to do
-   *  <p>
    *  Dequantization on device.
    *
    * @param input Input tensors whose types is uint32, shape is [d0, ..., dn].
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
-   * @param mode String to determine the dequantize mode in {"MIN_COMBINED", "MIN_FIRST", "SCALED"}.
+   * @param mode String to determine the dequantize mode in {&quot;MIN_COMBINED&quot;, &quot;MIN_FIRST&quot;, &quot;SCALED&quot;}.
    * @param transposeOutput Boolean to determine if output is transposed. transpose_output
    *  is faster when input is large and rank of input is higher than 1.
    * @return a new instance of Dequantize
    */
-  public Dequantize dequantize(Operand<?> input, Float minRange, Float maxRange, String mode,
-      Boolean transposeOutput) {
+  public Dequantize dequantize(Operand<? extends TType> input, Float minRange, Float maxRange,
+      String mode, Boolean transposeOutput) {
     return Dequantize.create(scope, input, minRange, maxRange, mode, transposeOutput);
   }
 
   /**
    * Wraps the XLA DotGeneral operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
    *  .
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param lhs the LHS tensor
    * @param rhs the RHS tensor
    * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param <T> data type for {@code XlaDot} output and operands
    * @return a new instance of Dot
    */
   public <T extends TType> Dot<T> dot(Operand<T> lhs, Operand<T> rhs, String dimensionNumbers,
@@ -150,23 +151,23 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA DynamicSlice operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#dynamicslice
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#dynamicslice
    *  .
-   *  <p>
-   *  DynamicSlice extracts a sub-array from the input array at dynamic
+   *  <p>DynamicSlice extracts a sub-array from the input array at dynamic
    *  start_indices. The size of the slice in each dimension is passed in
    *  size_indices, which specify the end point of exclusive slice intervals in each
    *  dimension -- [start, start + size). The shape of start_indices must have rank 1,
    *  with dimension size equal to the rank of operand.
    *
-   * @param <T> data type for {@code output()} output
-   * @param input A `Tensor` of type T.
+   * @param <T> data type for {@code output} output
+   * @param input A {@code Tensor} of type T.
    * @param startIndices List of N integers containing the slice size for each
    *  dimension. Each value must be strictly greater than zero, and start + size
    *  must be less than or equal to the size of the dimension to avoid
    *  implementation defined behavior.
-   * @param sizeIndices
+   * @param sizeIndices the sizeIndices value
+   * @param <T> data type for {@code XlaDynamicSlice} output and operands
+   * @param <U> data type for {@code XlaDynamicSlice} output and operands
    * @return a new instance of DynamicSlice
    */
   public <T extends TType, U extends TNumber> DynamicSlice<T> dynamicSlice(Operand<T> input,
@@ -176,22 +177,20 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA DynamicUpdateSlice operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#dynamicupdateslice
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#dynamicupdateslice
    *  .
-   *  <p>
-   *  XlaDynamicUpdateSlice generates a result which is the value of the `input`
-   *  operand, with a slice update overwritten at `indices`. The shape of `update`
+   *  <p>XlaDynamicUpdateSlice generates a result which is the value of the {@code input}
+   *  operand, with a slice update overwritten at {@code indices}. The shape of {@code update}
    *  determines the shape of the sub-array of the result which is updated. The shape
-   *  of indices must be rank == 1, with dimension size equal to the rank of `input`.
-   *  <p>
-   *  Handling of out-of-bounds slice indices is implementation-defined.
+   *  of indices must be rank == 1, with dimension size equal to the rank of {@code input}.
+   *  <p>Handling of out-of-bounds slice indices is implementation-defined.
    *
-   * @param <T> data type for {@code output()} output
-   * @param input A `Tensor` of type T.
-   * @param update A `Tensor` of type T. Same rank as `input`.
-   * @param indices A vector of indices into `input`. Must have length equal to the rank of
-   *  `input`.
+   * @param <T> data type for {@code output} output
+   * @param input A {@code Tensor} of type T.
+   * @param update A {@code Tensor} of type T. Same rank as {@code input}.
+   * @param indices A vector of indices into {@code input}. Must have length equal to the rank of
+   *  {@code input}.
+   * @param <T> data type for {@code XlaDynamicUpdateSlice} output and operands
    * @return a new instance of DynamicUpdateSlice
    */
   public <T extends TType> DynamicUpdateSlice<T> dynamicUpdateSlice(Operand<T> input,
@@ -201,14 +200,14 @@ public final class XlaOps {
 
   /**
    * An op which supports basic einsum op with 2 inputs and 1 output.
-   *  <p>
    *  This op has better TPU performance since it doesn't have explicitly reshape and
    *  transpose operations as tf.einsum does.
    *
-   * @param <T> data type for {@code product()} output
-   * @param a
-   * @param b
-   * @param equation
+   * @param <T> data type for {@code product} output
+   * @param a the a value
+   * @param b the b value
+   * @param equation the value of the equation property
+   * @param <T> data type for {@code XlaEinsum} output and operands
    * @return a new instance of Einsum
    */
   public <T extends TType> Einsum<T> einsum(Operand<T> a, Operand<T> b, String equation) {
@@ -217,15 +216,16 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA Gather operator documented at
-   *  <p>
-   *    https://www.tensorflow.org/xla/operation_semantics#gather
+   *  https://www.tensorflow.org/xla/operation_semantics#gather
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param operand The array we're gathering from.
    * @param startIndices Array containing the starting indices of the slices we gather.
    * @param sliceSizes slice_sizes[i] is the bounds for the slice on dimension i.
    * @param dimensionNumbers A serialized xla::GatherDimensionNumbers proto.
    * @param indicesAreSorted Boolean indicating if the indices are sorted.
+   * @param <T> data type for {@code XlaGather} output and operands
+   * @param <U> data type for {@code XlaGather} output and operands
    * @return a new instance of Gather
    */
   public <T extends TType, U extends TNumber> Gather<T> gather(Operand<T> operand,
@@ -236,16 +236,16 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA Sort operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#sort
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
    *  .
-   *  <p>
-   *  Sorts a tensor. Currently only sorts in ascending order are supported.
+   *  <p>Sorts a tensor. Currently only sorts in ascending order are supported.
    *
-   * @param <T> data type for {@code sortedKeys()} output
-   * @param <U> data type for {@code sortedValues()} output
-   * @param keys A `Tensor` of type K.
-   * @param values A `Tensor` of type V.
+   * @param <T> data type for {@code sorted_keys} output
+   * @param <U> data type for {@code sorted_values} output
+   * @param keys A {@code Tensor} of type K.
+   * @param values A {@code Tensor} of type V.
+   * @param <T> data type for {@code XlaKeyValueSort} output and operands
+   * @param <U> data type for {@code XlaKeyValueSort} output and operands
    * @return a new instance of KeyValueSort
    */
   public <T extends TNumber, U extends TType> KeyValueSort<T, U> keyValueSort(Operand<T> keys,
@@ -255,16 +255,17 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA Pad operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#pad
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#pad
    *  .
    *
-   * @param <T> data type for {@code output()} output
-   * @param input A `Tensor` of type T.
-   * @param paddingValue A scalar `Tensor` of type T.
+   * @param <T> data type for {@code output} output
+   * @param input A {@code Tensor} of type T.
+   * @param paddingValue A scalar {@code Tensor} of type T.
    * @param paddingLow the padding to apply at the start of each input dimensions
    * @param paddingHigh the padding to apply at the end of each input dimension.
    * @param paddingInterior the padding to apply between each input element.
+   * @param <T> data type for {@code XlaPad} output and operands
+   * @param <U> data type for {@code XlaPad} output and operands
    * @return a new instance of Pad
    */
   public <T extends TType, U extends TNumber> Pad<T> pad(Operand<T> input, Operand<T> paddingValue,
@@ -274,14 +275,14 @@ public final class XlaOps {
 
   /**
    * Receives the named tensor from another XLA computation. Wraps the XLA Recv
-   *  <p>
    *  operator documented at
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#recv .
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#recv .
    *
-   * @param <T> data type for {@code tensor()} output
+   * @param <T> data type for {@code tensor} output
    * @param dtype The type of the tensor.
    * @param tensorName A string key that identifies the channel.
    * @param shape The shape of the tensor.
+   * @param <T> data type for {@code XlaRecv} output and operands
    * @return a new instance of Recv
    */
   public <T extends TType> Recv<T> recv(Class<T> dtype, String tensorName, Shape shape) {
@@ -299,22 +300,21 @@ public final class XlaOps {
 
   /**
    * Computes the eigen decomposition of a batch of self-adjoint matrices
-   *  <p>
    *  (Note: Only real inputs are supported).
-   *  <p>
-   *  Computes the eigenvalues and eigenvectors of the innermost N-by-N matrices in
+   *  <p>Computes the eigenvalues and eigenvectors of the innermost N-by-N matrices in
    *  tensor such that tensor[...,:,:] * v[..., :,i] = e[..., i] * v[...,:,i], for
    *  i=0...N-1.
    *
-   * @param <T> data type for {@code w()} output
+   * @param <T> data type for {@code w} output
    * @param a the input tensor.
    * @param lower a boolean specifies whether the calculation is done with the lower
    *  triangular part or the upper triangular part.
    * @param maxIter maximum number of sweep update, i.e., the whole lower triangular
    *  part or upper triangular part based on parameter lower. Heuristically, it has
-   *  been argued that approximately logN sweeps are needed in practice (Ref: Golub &
-   *  van Loan "Matrix Computation").
+   *  been argued that approximately logN sweeps are needed in practice (Ref: Golub &amp;
+   *  van Loan &quot;Matrix Computation&quot;).
    * @param epsilon the tolerance ratio.
+   * @param <T> data type for {@code XlaSelfAdjointEig} output and operands
    * @return a new instance of SelfAdjointEig
    */
   public <T extends TType> SelfAdjointEig<T> selfAdjointEig(Operand<T> a, Boolean lower,
@@ -324,9 +324,8 @@ public final class XlaOps {
 
   /**
    * Sends the named tensor to another XLA computation. Wraps the XLA Send operator
-   *  <p>
    *  documented at
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#send .
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#send .
    *
    * @param tensor The tensor to send.
    * @param tensorName A string key that identifies the channel.
@@ -339,8 +338,9 @@ public final class XlaOps {
   /**
    * An op which shards the input based on the given sharding attribute.
    *
-   * @param <T> data type for {@code output()} output
-   * @param input
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param <T> data type for {@code XlaSharding} output and operands
    * @return a new instance of Sharding
    */
   public <T extends TType> Sharding<T> sharding(Operand<T> input) {
@@ -349,14 +349,13 @@ public final class XlaOps {
 
   /**
    * Wraps the XLA Sort operator, documented at
-   *  <p>
-   *   https://www.tensorflow.org/performance/xla/operation_semantics#sort
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
    *  .
-   *  <p>
-   *  Sorts a tensor. Currently only sorts in ascending order are supported.
+   *  <p>Sorts a tensor. Currently only sorts in ascending order are supported.
    *
-   * @param <T> data type for {@code output()} output
-   * @param input A `Tensor` of type T.
+   * @param <T> data type for {@code output} output
+   * @param input A {@code Tensor} of type T.
+   * @param <T> data type for {@code XlaSort} output and operands
    * @return a new instance of Sort
    */
   public <T extends TType> Sort<T> sort(Operand<T> input) {
@@ -365,20 +364,19 @@ public final class XlaOps {
 
   /**
    * Computes the eigen decomposition of a batch of self-adjoint matrices
-   *  <p>
    *  (Note: Only real inputs are supported).
-   *  <p>
-   *  Computes the eigenvalues and eigenvectors of the innermost M-by-N matrices in
+   *  <p>Computes the eigenvalues and eigenvectors of the innermost M-by-N matrices in
    *  tensor such that tensor[...,:,:] = u[..., :, :] * Diag(s[..., :]) * Transpose(v[...,:,:]).
    *
-   * @param <T> data type for {@code s()} output
+   * @param <T> data type for {@code s} output
    * @param a the input tensor.
    * @param maxIter maximum number of sweep update, i.e., the whole lower triangular
    *  part or upper triangular part based on parameter lower. Heuristically, it has
    *  been argued that approximately log(min (M, N)) sweeps are needed in practice
-   *  (Ref: Golub & van Loan "Matrix Computation").
+   *  (Ref: Golub &amp; van Loan &quot;Matrix Computation&quot;).
    * @param epsilon the tolerance ratio.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param <T> data type for {@code XlaSvd} output and operands
    * @return a new instance of Svd
    */
   public <T extends TType> Svd<T> svd(Operand<T> a, Long maxIter, Float epsilon,
@@ -388,16 +386,16 @@ public final class XlaOps {
 
   /**
    * An op to receive a tensor from the host.
-   *  <p>
    *  output: the tensor that will be received from the host.
    *  Toutput: element type for output.
    *  shape: shape for output.
    *  key: A unique identifier for this region used to match up host transfers.
    *
-   * @param <T> data type for {@code output()} output
-   * @param Toutput
-   * @param shape
-   * @param key
+   * @param <T> data type for {@code output} output
+   * @param Toutput the value of the Toutput property
+   * @param shape the value of the shape property
+   * @param key the value of the key property
+   * @param <T> data type for {@code XlaRecvFromHost} output and operands
    * @return a new instance of XlaRecvFromHost
    */
   public <T extends TType> XlaRecvFromHost<T> xlaRecvFromHost(Class<T> Toutput, Shape shape,
@@ -407,13 +405,12 @@ public final class XlaOps {
 
   /**
    * An op to send a tensor to the host.
-   *  <p>
    *  input: the tensor that will be sent to the host.
    *  Tinput: element type for input.
    *  key: A unique identifier for this region used to match up host transfers.
    *
-   * @param input
-   * @param key
+   * @param input the input value
+   * @param key the value of the key property
    * @return a new instance of XlaSendToHost
    */
   public XlaSendToHost xlaSendToHost(Operand<? extends TType> input, String key) {
@@ -422,11 +419,12 @@ public final class XlaOps {
 
   /**
    * Set a bound for the given input value as a hint to Xla compiler,
-   *  <p>
-   *          returns the same value.
+   *  <pre>
+   *      returns the same value.
+   *  </pre>
    *
-   * @param input
-   * @param bound
+   * @param input the input value
+   * @param bound the bound value
    * @return a new instance of XlaSetBound
    */
   public XlaSetBound xlaSetBound(Operand<TInt32> input, Operand<TInt32> bound) {

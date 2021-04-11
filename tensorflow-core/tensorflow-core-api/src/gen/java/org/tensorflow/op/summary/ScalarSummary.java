@@ -29,51 +29,58 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Outputs a `Summary` protocol buffer with scalar values.
- * <p>
- * The input `tags` and `values` must have the same shape.  The generated summary
- * has a summary value for each tag-value pair in `tags` and `values`.
+ * Outputs a {@code Summary} protocol buffer with scalar values.
+ * The input {@code tags} and {@code values} must have the same shape.  The generated summary
+ * has a summary value for each tag-value pair in {@code tags} and {@code values}.
  */
-@Operator(group = "summary")
+@Operator(
+    group = "summary"
+)
 public final class ScalarSummary extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ScalarSummary";
+
+  private Output<TString> summary;
+
+  private ScalarSummary(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    summary = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ScalarSummary operation.
-   * 
+   *
    * @param scope current scope
    * @param tags Tags for the summary.
    * @param values Same shape as `tags.  Values for the summary.
    * @return a new instance of ScalarSummary
    */
-  @Endpoint(describeByClass = true)
-  public static ScalarSummary create(Scope scope, Operand<TString> tags, Operand<? extends TNumber> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ScalarSummary create(Scope scope, Operand<TString> tags,
+      Operand<? extends TNumber> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
     opBuilder.addInput(tags.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ScalarSummary(opBuilder.build());
   }
-  
+
   /**
-   * Scalar.  Serialized `Summary` protocol buffer.
+   * Gets summary.
+   * Scalar.  Serialized {@code Summary} protocol buffer.
+   * @return summary.
    */
   public Output<TString> summary() {
     return summary;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return summary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ScalarSummary";
-  
-  private Output<TString> summary;
-  
-  private ScalarSummary(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    summary = operation.output(outputIdx++);
   }
 }

@@ -32,58 +32,66 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Extracts the average gradient in the given ConditionalAccumulator.
- * <p>
  * The op blocks until sufficient (i.e., more than num_required)
  * gradients have been accumulated.  If the accumulator has already
  * aggregated more than num_required gradients, it returns the average of
  * the accumulated gradients.  Also automatically increments the recorded
  * global_step in the accumulator by 1, and resets the aggregate to 0.
- * 
- * @param <T> data type for {@code average()} output
+ *
+ * @param <T> data type for {@code average} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class AccumulatorTakeGradient<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AccumulatorTakeGradient";
+
+  private Output<T> average;
+
+  private AccumulatorTakeGradient(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    average = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new AccumulatorTakeGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to an accumulator.
    * @param numRequired Number of gradients required before we return an aggregate.
    * @param dtype The data type of accumulated gradients. Needs to correspond to the type
    * of the accumulator.
+   * @param <T> data type for {@code AccumulatorTakeGradient} output and operands
    * @return a new instance of AccumulatorTakeGradient
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> AccumulatorTakeGradient<T> create(Scope scope, Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> AccumulatorTakeGradient<T> create(Scope scope,
+      Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("AccumulatorTakeGradient", scope.makeOpName("AccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new AccumulatorTakeGradient<T>(opBuilder.build());
+    return new AccumulatorTakeGradient<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets average.
    * The average of the accumulated gradients.
+   * @return average.
    */
   public Output<T> average() {
     return average;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return average;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AccumulatorTakeGradient";
-  
-  private Output<T> average;
-  
-  private AccumulatorTakeGradient(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    average = operation.output(outputIdx++);
   }
 }

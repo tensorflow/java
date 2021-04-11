@@ -28,69 +28,75 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Elementwise computes the bitwise AND of `x` and `y`.
- * <p>
- * The result will have those bits set, that are set in both `x` and `y`. The
- * computation is performed on the underlying representations of `x` and `y`.
- * <p>
- * For example:
- * <pre>{@code
+ * Elementwise computes the bitwise AND of {@code x} and {@code y}.
+ * The result will have those bits set, that are set in both {@code x} and {@code y}. The
+ * computation is performed on the underlying representations of {@code x} and {@code y}.
+ * <p>For example:
+ * <pre>
  * import tensorflow as tf
  * from tensorflow.python.ops import bitwise_ops
  * dtype_list = [tf.int8, tf.int16, tf.int32, tf.int64,
  *               tf.uint8, tf.uint16, tf.uint32, tf.uint64]
- * 
+ *
  * for dtype in dtype_list:
  *   lhs = tf.constant([0, 5, 3, 14], dtype=dtype)
  *   rhs = tf.constant([5, 0, 7, 11], dtype=dtype)
  *   exp = tf.constant([0, 0, 3, 10], dtype=tf.float32)
- * 
+ *
  *   res = bitwise_ops.bitwise_and(lhs, rhs)
  *   tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code z()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "bitwise")
+@Operator(
+    group = "bitwise"
+)
 public final class BitwiseAnd<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BitwiseAnd";
+
+  private Output<T> z;
+
+  private BitwiseAnd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BitwiseAnd operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code BitwiseAnd} output and operands
    * @return a new instance of BitwiseAnd
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> BitwiseAnd<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("BitwiseAnd", scope.makeOpName("BitwiseAnd"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new BitwiseAnd<T>(opBuilder.build());
+    return new BitwiseAnd<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BitwiseAnd";
-  
-  private Output<T> z;
-  
-  private BitwiseAnd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

@@ -29,35 +29,49 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns the truth value of (x >= y) element-wise.
- * <p>
- * <i>NOTE</i>: `math.GreaterEqual` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * <p>
- * Example:
- * <pre>{@code
+ * Returns the truth value of (x &gt;= y) element-wise.
+ * <em>NOTE</em>: {@code math.GreaterEqual} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
+ * <p>Example:
+ * <pre>
  * x = tf.constant([5, 4, 6, 7])
  * y = tf.constant([5, 2, 5, 10])
- * tf.math.greater_equal(x, y) ==> [True, True, True, False]
- * 
+ * tf.math.greater_equal(x, y) ==&gt; [True, True, True, False]
+ *
  * x = tf.constant([5, 4, 6, 7])
  * y = tf.constant([5])
- * tf.math.greater_equal(x, y) ==> [True, False, True, True]
- * }</pre>
- * 
+ * tf.math.greater_equal(x, y) ==&gt; [True, False, True, True]
+ * </pre>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class GreaterEqual extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "GreaterEqual";
+
+  private Output<TBool> z;
+
+  private GreaterEqual(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new GreaterEqual operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code GreaterEqual} output and operands
    * @return a new instance of GreaterEqual
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> GreaterEqual create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("GreaterEqual", scope.makeOpName("GreaterEqual"));
     opBuilder.addInput(x.asOutput());
@@ -65,26 +79,18 @@ public final class GreaterEqual extends RawOp implements Operand<TBool> {
     opBuilder = scope.apply(opBuilder);
     return new GreaterEqual(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<TBool> z() {
     return z;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "GreaterEqual";
-  
-  private Output<TBool> z;
-  
-  private GreaterEqual(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

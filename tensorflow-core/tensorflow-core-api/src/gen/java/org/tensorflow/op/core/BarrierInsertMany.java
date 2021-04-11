@@ -29,7 +29,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * For each key, assigns the respective value to the specified component.
- * <p>
  * If a key is not found in the barrier, this operation will create a new
  * incomplete element. If a key is found in the barrier, and the element
  * already has a value at component_index, this operation will fail with
@@ -37,10 +36,18 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class BarrierInsertMany extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BarrierInsertMany";
+
+  private BarrierInsertMany(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new BarrierInsertMany operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a barrier.
    * @param keys A one-dimensional tensor of keys, with length n.
@@ -49,8 +56,11 @@ public final class BarrierInsertMany extends RawOp {
    * @param componentIndex The component of the barrier elements that is being assigned.
    * @return a new instance of BarrierInsertMany
    */
-  @Endpoint(describeByClass = true)
-  public static BarrierInsertMany create(Scope scope, Operand<TString> handle, Operand<TString> keys, Operand<? extends TType> values, Long componentIndex) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BarrierInsertMany create(Scope scope, Operand<TString> handle,
+      Operand<TString> keys, Operand<? extends TType> values, Long componentIndex) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierInsertMany", scope.makeOpName("BarrierInsertMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(keys.asOutput());
@@ -58,12 +68,5 @@ public final class BarrierInsertMany extends RawOp {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_index", componentIndex);
     return new BarrierInsertMany(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BarrierInsertMany";
-  
-  private BarrierInsertMany(Operation operation) {
-    super(operation);
   }
 }

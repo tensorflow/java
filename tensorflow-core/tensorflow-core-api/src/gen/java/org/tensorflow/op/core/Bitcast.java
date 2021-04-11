@@ -30,99 +30,114 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Bitcasts a tensor from one type to another without copying data.
- * <p>
- * Given a tensor `input`, this operation returns a tensor that has the same buffer
- * data as `input` with datatype `type`.
- * <p>
- * If the input datatype `T` is larger than the output datatype `type` then the
- * shape changes from [...] to [..., sizeof(`T`)/sizeof(`type`)].
- * <p>
- * If `T` is smaller than `type`, the operator requires that the rightmost
- * dimension be equal to sizeof(`type`)/sizeof(`T`). The shape then goes from
- * [..., sizeof(`type`)/sizeof(`T`)] to [...].
- * <p>
- * tf.bitcast() and tf.cast() work differently when real dtype is casted as a complex dtype
+ * Given a tensor {@code input}, this operation returns a tensor that has the same buffer
+ * data as {@code input} with datatype {@code type}.
+ * <p>If the input datatype {@code T} is larger than the output datatype {@code type} then the
+ * shape changes from [...] to [..., sizeof({@code T})/sizeof({@code type})].
+ * <p>If {@code T} is smaller than {@code type}, the operator requires that the rightmost
+ * dimension be equal to sizeof({@code type})/sizeof({@code T}). The shape then goes from
+ * [..., sizeof({@code type})/sizeof({@code T})] to [...].
+ * <p>tf.bitcast() and tf.cast() work differently when real dtype is casted as a complex dtype
  * (e.g. tf.complex64 or tf.complex128) as tf.cast() make imaginary part 0 while tf.bitcast()
  * gives module error.
  * For example,
- * <p>
- * Example 1:
- * <p>
- * >>> a = [1., 2., 3.]
- * >>> equality_bitcast = tf.bitcast(a, tf.complex128)
+ * <p>Example 1:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>a = [1., 2., 3.]
+ * equality_bitcast = tf.bitcast(a, tf.complex128)
  * Traceback (most recent call last):
  * ...
  * InvalidArgumentError: Cannot bitcast from 1 to 18 [Op:Bitcast]
- * >>> equality_cast = tf.cast(a, tf.complex128)
- * >>> print(equality_cast)
+ * equality_cast = tf.cast(a, tf.complex128)
+ * print(equality_cast)
  * tf.Tensor([1.+0.j 2.+0.j 3.+0.j], shape=(3,), dtype=complex128)
- * <p>
- * Example 2:
- * <p>
- * >>> tf.bitcast(tf.constant(0xffffffff, dtype=tf.uint32), tf.uint8)
- * <tf.Tensor: shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)>
- * <p>
- * Example 3:
- * <p>
- * >>> x = [1., 2., 3.]
- * >>> y = [0., 2., 3.]
- * >>> equality= tf.equal(x,y)
- * >>> equality_cast = tf.cast(equality,tf.float32)
- * >>> equality_bitcast = tf.bitcast(equality_cast,tf.uint8)
- * >>> print(equality)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ * <p>Example 2:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.bitcast(tf.constant(0xffffffff, dtype=tf.uint32), tf.uint8)
+ * &lt;tf.Tensor: shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ * <p>Example 3:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>x = [1., 2., 3.]
+ * y = [0., 2., 3.]
+ * equality= tf.equal(x,y)
+ * equality_cast = tf.cast(equality,tf.float32)
+ * equality_bitcast = tf.bitcast(equality_cast,tf.uint8)
+ * print(equality)
  * tf.Tensor([False True True], shape=(3,), dtype=bool)
- * >>> print(equality_cast)
+ * print(equality_cast)
  * tf.Tensor([0. 1. 1.], shape=(3,), dtype=float32)
- * >>> print(equality_bitcast)
+ * print(equality_bitcast)
  * tf.Tensor(
- *     [[  0   0   0   0]
- *      [  0   0 128  63]
- *      [  0   0 128  63]], shape=(3, 4), dtype=uint8)
- * <p>
- * <i>NOTE</i>: Bitcast is implemented as a low-level cast, so machines with different
+ * [[  0   0   0   0]
+ * [  0   0 128  63]
+ * [  0   0 128  63]], shape=(3, 4), dtype=uint8)
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ * <p><em>NOTE</em>: Bitcast is implemented as a low-level cast, so machines with different
  * endian orderings will give different results.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
 @Operator
 public final class Bitcast<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new Bitcast operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param type 
-   * @return a new instance of Bitcast
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> Bitcast<U> create(Scope scope, Operand<? extends TType> input, Class<U> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", Operands.toDataType(type));
-    return new Bitcast<U>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<U> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<U> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Bitcast";
-  
+
   private Output<U> output;
-  
+
   private Bitcast(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Bitcast operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param type the value of the type property
+   * @param <U> data type for {@code Bitcast} output and operands
+   * @return a new instance of Bitcast
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> Bitcast<U> create(Scope scope, Operand<? extends TType> input,
+      Class<U> type) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("type", Operands.toDataType(type));
+    return new Bitcast<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<U> output() {
+    return output;
+  }
+
+  @Override
+  public Output<U> asOutput() {
+    return output;
   }
 }

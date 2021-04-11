@@ -30,46 +30,51 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a tensor has been initialized.
- * <p>
  * Outputs boolean scalar indicating whether the tensor has been initialized.
  */
 @Operator
 public final class IsVariableInitialized extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IsVariableInitialized";
+
+  private Output<TBool> isInitialized;
+
+  private IsVariableInitialized(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    isInitialized = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IsVariableInitialized operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref Should be from a `Variable` node. May be uninitialized.
+   * @param ref Should be from a {@code Variable} node. May be uninitialized.
    * @return a new instance of IsVariableInitialized
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static IsVariableInitialized create(Scope scope, Operand<? extends TType> ref) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsVariableInitialized", scope.makeOpName("IsVariableInitialized"));
     opBuilder.addInput(ref.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IsVariableInitialized(opBuilder.build());
   }
-  
+
   /**
+   * Gets isInitialized.
+   *
+   * @return isInitialized.
    */
   public Output<TBool> isInitialized() {
     return isInitialized;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return isInitialized;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IsVariableInitialized";
-  
-  private Output<TBool> isInitialized;
-  
-  private IsVariableInitialized(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    isInitialized = operation.output(outputIdx++);
   }
 }

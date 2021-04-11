@@ -24,25 +24,45 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The AnonymousSeedGenerator operation
  */
 public final class AnonymousSeedGenerator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AnonymousSeedGenerator";
+
+  private Output<? extends TType> handle;
+
+  private Output<? extends TType> deleter;
+
+  @SuppressWarnings("unchecked")
+  private AnonymousSeedGenerator(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+    deleter = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new AnonymousSeedGenerator operation.
-   * 
+   *
    * @param scope current scope
-   * @param seed 
-   * @param seed2 
-   * @param reshuffle 
+   * @param seed the seed value
+   * @param seed2 the seed2 value
+   * @param reshuffle the reshuffle value
    * @return a new instance of AnonymousSeedGenerator
    */
-  @Endpoint(describeByClass = true)
-  public static AnonymousSeedGenerator create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<TBool> reshuffle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AnonymousSeedGenerator create(Scope scope, Operand<TInt64> seed,
+      Operand<TInt64> seed2, Operand<TBool> reshuffle) {
     OperationBuilder opBuilder = scope.env().opBuilder("AnonymousSeedGenerator", scope.makeOpName("AnonymousSeedGenerator"));
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
@@ -50,29 +70,22 @@ public final class AnonymousSeedGenerator extends RawOp {
     opBuilder = scope.apply(opBuilder);
     return new AnonymousSeedGenerator(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   /**
+   * Gets deleter.
+   *
+   * @return deleter.
    */
-  public Output<?> deleter() {
+  public Output<? extends TType> deleter() {
     return deleter;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AnonymousSeedGenerator";
-  
-  private Output<?> handle;
-  private Output<?> deleter;
-  
-  private AnonymousSeedGenerator(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
-    deleter = operation.output(outputIdx++);
   }
 }

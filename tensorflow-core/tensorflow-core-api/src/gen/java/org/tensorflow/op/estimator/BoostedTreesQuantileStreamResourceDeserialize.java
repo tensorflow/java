@@ -24,37 +24,41 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Deserialize bucket boundaries and ready flag into current QuantileAccumulator.
- * <p>
  * An op that deserializes bucket boundaries and are boundaries ready flag into current QuantileAccumulator.
  */
 public final class BoostedTreesQuantileStreamResourceDeserialize extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceDeserialize";
+
+  private BoostedTreesQuantileStreamResourceDeserialize(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesQuantileStreamResourceDeserialize operation.
-   * 
+   *
    * @param scope current scope
    * @param quantileStreamResourceHandle resource handle referring to a QuantileStreamResource.
    * @param bucketBoundaries float; List of Rank 1 Tensors each containing the bucket boundaries for a feature.
    * @return a new instance of BoostedTreesQuantileStreamResourceDeserialize
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesQuantileStreamResourceDeserialize create(Scope scope, Operand<?> quantileStreamResourceHandle, Iterable<Operand<TFloat32>> bucketBoundaries) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesQuantileStreamResourceDeserialize create(Scope scope,
+      Operand<? extends TType> quantileStreamResourceHandle,
+      Iterable<Operand<TFloat32>> bucketBoundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesQuantileStreamResourceDeserialize", scope.makeOpName("BoostedTreesQuantileStreamResourceDeserialize"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(bucketBoundaries));
     opBuilder = scope.apply(opBuilder);
     return new BoostedTreesQuantileStreamResourceDeserialize(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesQuantileStreamResourceDeserialize";
-  
-  private BoostedTreesQuantileStreamResourceDeserialize(Operation operation) {
-    super(operation);
   }
 }

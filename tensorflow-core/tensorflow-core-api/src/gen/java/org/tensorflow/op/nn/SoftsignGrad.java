@@ -24,53 +24,59 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softsign gradients for a softsign operation.
- * 
- * @param <T> data type for {@code backprops()} output
+ *
+ * @param <T> data type for {@code backprops} output
  */
 public final class SoftsignGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new SoftsignGrad operation.
-   * 
-   * @param scope current scope
-   * @param gradients The backpropagated gradients to the corresponding softsign operation.
-   * @param features The features passed as input to the corresponding softsign operation.
-   * @return a new instance of SoftsignGrad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SoftsignGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SoftsignGrad", scope.makeOpName("SoftsignGrad"));
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new SoftsignGrad<T>(opBuilder.build());
-  }
-  
-  /**
-   * The gradients: `gradients / (1 + abs(features)) ** 2`.
-   */
-  public Output<T> backprops() {
-    return backprops;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return backprops;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "SoftsignGrad";
-  
+
   private Output<T> backprops;
-  
+
   private SoftsignGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SoftsignGrad operation.
+   *
+   * @param scope current scope
+   * @param gradients The backpropagated gradients to the corresponding softsign operation.
+   * @param features The features passed as input to the corresponding softsign operation.
+   * @param <T> data type for {@code SoftsignGrad} output and operands
+   * @return a new instance of SoftsignGrad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> SoftsignGrad<T> create(Scope scope, Operand<T> gradients,
+      Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SoftsignGrad", scope.makeOpName("SoftsignGrad"));
+    opBuilder.addInput(gradients.asOutput());
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new SoftsignGrad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets backprops.
+   * The gradients: {@code gradients / (1 + abs(features)) ** 2}.
+   * @return backprops.
+   */
+  public Output<T> backprops() {
+    return backprops;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return backprops;
   }
 }

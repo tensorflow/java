@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -27,56 +28,52 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset by applying optimizations to `input_dataset`.
- * <p>
- * Creates a dataset by applying optimizations to `input_dataset`.
+ * Creates a dataset by applying optimizations to {@code input_dataset}.
+ * Creates a dataset by applying optimizations to {@code input_dataset}.
  */
 public final class OptimizeDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.OptimizeDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param optimizationConfigs 
-     */
-    public Options optimizationConfigs(List<String> optimizationConfigs) {
-      this.optimizationConfigs = optimizationConfigs;
-      return this;
-    }
-    
-    private List<String> optimizationConfigs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "OptimizeDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private OptimizeDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new OptimizeDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the input dataset.
-   * @param optimizations A `tf.string` vector `tf.Tensor` identifying optimizations to use.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param optimizations A {@code tf.string} vector {@code tf.Tensor} identifying optimizations to use.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of OptimizeDataset
    */
-  @Endpoint(describeByClass = true)
-  public static OptimizeDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> optimizations, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static OptimizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TString> optimizations, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptimizeDataset", scope.makeOpName("OptimizeDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(optimizations.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -84,7 +81,7 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
       for (Options opts : options) {
         if (opts.optimizationConfigs != null) {
           String[] optimizationConfigsArray = new String[opts.optimizationConfigs.size()];
-          for (int i = 0; i < optimizationConfigsArray.length; ++i) {
+          for (int i = 0 ; i < optimizationConfigsArray.length ; i++) {
             optimizationConfigsArray[i] = opts.optimizationConfigs.get(i);
           }
           opBuilder.setAttr("optimization_configs", optimizationConfigsArray);
@@ -93,34 +90,71 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
     }
     return new OptimizeDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param optimizationConfigs 
+   * Sets the optimizationConfigs option.
+   *
+   * @param optimizationConfigs the optimizationConfigs option
+   * @return this Options instance.
    */
   public static Options optimizationConfigs(List<String> optimizationConfigs) {
     return new Options().optimizationConfigs(optimizationConfigs);
   }
-  
+
   /**
+   * Sets the optimizationConfigs option.
+   *
+   * @param optimizationConfigs the optimizationConfigs option
+   * @return this Options instance.
    */
-  public Output<?> handle() {
+  public static Options optimizationConfigs(String[] optimizationConfigs) {
+    return new Options().optimizationConfigs(optimizationConfigs);
+  }
+
+  /**
+   * Gets handle.
+   *
+   * @return handle.
+   */
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OptimizeDataset";
-  
-  private Output<?> handle;
-  
-  private OptimizeDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.OptimizeDataset}
+   */
+  public static class Options {
+    private List<String> optimizationConfigs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the optimizationConfigs option.
+     *
+     * @param optimizationConfigs the optimizationConfigs option
+     * @return this Options instance.
+     */
+    public Options optimizationConfigs(List<String> optimizationConfigs) {
+      this.optimizationConfigs = optimizationConfigs;
+      return this;
+    }
+
+    /**
+     * Sets the optimizationConfigs option.
+     *
+     * @param optimizationConfigs the optimizationConfigs option
+     * @return this Options instance.
+     */
+    public Options optimizationConfigs(String... optimizationConfigs) {
+      this.optimizationConfigs = Arrays.asList(optimizationConfigs);
+      return this;
+    }
   }
 }

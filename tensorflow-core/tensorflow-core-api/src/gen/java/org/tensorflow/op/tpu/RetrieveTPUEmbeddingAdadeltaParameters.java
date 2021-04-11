@@ -23,67 +23,49 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Retrieve Adadelta embedding parameters.
- * <p>
  * An op that retrieves optimization parameters from embedding to host
  * memory. Must be preceded by a ConfigureTPUEmbeddingHost op that sets up
  * the correct embedding table configuration. For example, this op is
  * used to retrieve updated parameters before saving a checkpoint.
  */
 public final class RetrieveTPUEmbeddingAdadeltaParameters extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.RetrieveTPUEmbeddingAdadeltaParameters}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param tableId 
-     */
-    public Options tableId(Long tableId) {
-      this.tableId = tableId;
-      return this;
-    }
-    
-    /**
-     * @param tableName 
-     */
-    public Options tableName(String tableName) {
-      this.tableName = tableName;
-      return this;
-    }
-    
-    /**
-     * @param config 
-     */
-    public Options config(String config) {
-      this.config = config;
-      return this;
-    }
-    
-    private Long tableId;
-    private String tableName;
-    private String config;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RetrieveTPUEmbeddingAdadeltaParameters";
+
+  private Output<TFloat32> parameters;
+
+  private Output<TFloat32> accumulators;
+
+  private Output<TFloat32> updates;
+
+  private RetrieveTPUEmbeddingAdadeltaParameters(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    parameters = operation.output(outputIdx++);
+    accumulators = operation.output(outputIdx++);
+    updates = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RetrieveTPUEmbeddingAdadeltaParameters operation.
-   * 
+   *
    * @param scope current scope
-   * @param numShards 
-   * @param shardId 
-   * @param options carries optional attributes values
+   * @param numShards the value of the numShards property
+   * @param shardId the value of the shardId property
+   * @param options carries optional attribute values
    * @return a new instance of RetrieveTPUEmbeddingAdadeltaParameters
    */
-  @Endpoint(describeByClass = true)
-  public static RetrieveTPUEmbeddingAdadeltaParameters create(Scope scope, Long numShards, Long shardId, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RetrieveTPUEmbeddingAdadeltaParameters create(Scope scope, Long numShards,
+      Long shardId, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingAdadeltaParameters", scope.makeOpName("RetrieveTPUEmbeddingAdadeltaParameters"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
@@ -103,61 +85,108 @@ public final class RetrieveTPUEmbeddingAdadeltaParameters extends RawOp {
     }
     return new RetrieveTPUEmbeddingAdadeltaParameters(opBuilder.build());
   }
-  
+
   /**
-   * @param tableId 
+   * Sets the tableId option.
+   *
+   * @param tableId the tableId option
+   * @return this Options instance.
    */
   public static Options tableId(Long tableId) {
     return new Options().tableId(tableId);
   }
-  
+
   /**
-   * @param tableName 
+   * Sets the tableName option.
+   *
+   * @param tableName the tableName option
+   * @return this Options instance.
    */
   public static Options tableName(String tableName) {
     return new Options().tableName(tableName);
   }
-  
+
   /**
-   * @param config 
+   * Sets the config option.
+   *
+   * @param config the config option
+   * @return this Options instance.
    */
   public static Options config(String config) {
     return new Options().config(config);
   }
-  
+
   /**
+   * Gets parameters.
    * Parameter parameters updated by the Adadelta optimization algorithm.
+   * @return parameters.
    */
   public Output<TFloat32> parameters() {
     return parameters;
   }
-  
+
   /**
+   * Gets accumulators.
    * Parameter accumulators updated by the Adadelta optimization algorithm.
+   * @return accumulators.
    */
   public Output<TFloat32> accumulators() {
     return accumulators;
   }
-  
+
   /**
+   * Gets updates.
    * Parameter updates updated by the Adadelta optimization algorithm.
+   * @return updates.
    */
   public Output<TFloat32> updates() {
     return updates;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RetrieveTPUEmbeddingAdadeltaParameters";
-  
-  private Output<TFloat32> parameters;
-  private Output<TFloat32> accumulators;
-  private Output<TFloat32> updates;
-  
-  private RetrieveTPUEmbeddingAdadeltaParameters(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    parameters = operation.output(outputIdx++);
-    accumulators = operation.output(outputIdx++);
-    updates = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.RetrieveTPUEmbeddingAdadeltaParameters}
+   */
+  public static class Options {
+    private Long tableId;
+
+    private String tableName;
+
+    private String config;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the tableId option.
+     *
+     * @param tableId the tableId option
+     * @return this Options instance.
+     */
+    public Options tableId(Long tableId) {
+      this.tableId = tableId;
+      return this;
+    }
+
+    /**
+     * Sets the tableName option.
+     *
+     * @param tableName the tableName option
+     * @return this Options instance.
+     */
+    public Options tableName(String tableName) {
+      this.tableName = tableName;
+      return this;
+    }
+
+    /**
+     * Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     */
+    public Options config(String config) {
+      this.config = config;
+      return this;
+    }
   }
 }

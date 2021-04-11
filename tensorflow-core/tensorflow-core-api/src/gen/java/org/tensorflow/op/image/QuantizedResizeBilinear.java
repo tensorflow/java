@@ -27,64 +27,59 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Resize quantized `images` to `size` using quantized bilinear interpolation.
- * <p>
+ * Resize quantized {@code images} to {@code size} using quantized bilinear interpolation.
  * Input images and output images must be quantized types.
- * 
- * @param <T> data type for {@code resizedImages()} output
+ *
+ * @param <T> data type for {@code resized_images} output
  */
-@Operator(group = "image")
-public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
-  
+@Operator(
+    group = "image"
+)
+public final class QuantizedResizeBilinear<T extends TNumber> extends RawOp {
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.QuantizedResizeBilinear}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
-     * aligned, preserving the values at the corner pixels. Defaults to false.
-     */
-    public Options alignCorners(Boolean alignCorners) {
-      this.alignCorners = alignCorners;
-      return this;
-    }
-    
-    /**
-     * @param halfPixelCenters 
-     */
-    public Options halfPixelCenters(Boolean halfPixelCenters) {
-      this.halfPixelCenters = halfPixelCenters;
-      return this;
-    }
-    
-    private Boolean alignCorners;
-    private Boolean halfPixelCenters;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QuantizedResizeBilinear";
+
+  private Output<T> resizedImages;
+
+  private Output<TFloat32> outMin;
+
+  private Output<TFloat32> outMax;
+
+  private QuantizedResizeBilinear(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resizedImages = operation.output(outputIdx++);
+    outMin = operation.output(outputIdx++);
+    outMax = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new QuantizedResizeBilinear operation.
-   * 
+   *
    * @param scope current scope
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    * new size for the images.
-   * @param min 
-   * @param max 
-   * @param options carries optional attributes values
+   * @param min the min value
+   * @param max the max value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code QuantizedResizeBilinear} output and operands
    * @return a new instance of QuantizedResizeBilinear
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> QuantizedResizeBilinear<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> QuantizedResizeBilinear<T> create(Scope scope,
+      Operand<T> images, Operand<TInt32> sizeOutput, Operand<TFloat32> min, Operand<TFloat32> max,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -98,56 +93,90 @@ public final class QuantizedResizeBilinear<T extends TType> extends RawOp {
         }
       }
     }
-    return new QuantizedResizeBilinear<T>(opBuilder.build());
+    return new QuantizedResizeBilinear<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the alignCorners option.
+   *
    * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
    * aligned, preserving the values at the corner pixels. Defaults to false.
+   * @return this Options instance.
    */
   public static Options alignCorners(Boolean alignCorners) {
     return new Options().alignCorners(alignCorners);
   }
-  
+
   /**
-   * @param halfPixelCenters 
+   * Sets the halfPixelCenters option.
+   *
+   * @param halfPixelCenters the halfPixelCenters option
+   * @return this Options instance.
    */
   public static Options halfPixelCenters(Boolean halfPixelCenters) {
     return new Options().halfPixelCenters(halfPixelCenters);
   }
-  
+
   /**
+   * Gets resizedImages.
    * 4-D with shape
-   * `[batch, new_height, new_width, channels]`.
+   * {@code [batch, new_height, new_width, channels]}.
+   * @return resizedImages.
    */
   public Output<T> resizedImages() {
     return resizedImages;
   }
-  
+
   /**
+   * Gets outMin.
+   *
+   * @return outMin.
    */
   public Output<TFloat32> outMin() {
     return outMin;
   }
-  
+
   /**
+   * Gets outMax.
+   *
+   * @return outMax.
    */
   public Output<TFloat32> outMax() {
     return outMax;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedResizeBilinear";
-  
-  private Output<T> resizedImages;
-  private Output<TFloat32> outMin;
-  private Output<TFloat32> outMax;
-  
-  private QuantizedResizeBilinear(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resizedImages = operation.output(outputIdx++);
-    outMin = operation.output(outputIdx++);
-    outMax = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.QuantizedResizeBilinear}
+   */
+  public static class Options {
+    private Boolean alignCorners;
+
+    private Boolean halfPixelCenters;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alignCorners option.
+     *
+     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     * @return this Options instance.
+     */
+    public Options alignCorners(Boolean alignCorners) {
+      this.alignCorners = alignCorners;
+      return this;
+    }
+
+    /**
+     * Sets the halfPixelCenters option.
+     *
+     * @param halfPixelCenters the halfPixelCenters option
+     * @return this Options instance.
+     */
+    public Options halfPixelCenters(Boolean halfPixelCenters) {
+      this.halfPixelCenters = halfPixelCenters;
+      return this;
+    }
   }
 }

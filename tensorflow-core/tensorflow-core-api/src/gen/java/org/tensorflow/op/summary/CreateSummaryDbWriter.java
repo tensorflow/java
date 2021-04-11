@@ -23,26 +23,39 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The CreateSummaryDbWriter operation
  */
 public final class CreateSummaryDbWriter extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "CreateSummaryDbWriter";
+
+  private CreateSummaryDbWriter(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new CreateSummaryDbWriter operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param dbUri 
-   * @param experimentName 
-   * @param runName 
-   * @param userName 
+   * @param writer the writer value
+   * @param dbUri the dbUri value
+   * @param experimentName the experimentName value
+   * @param runName the runName value
+   * @param userName the userName value
    * @return a new instance of CreateSummaryDbWriter
    */
-  @Endpoint(describeByClass = true)
-  public static CreateSummaryDbWriter create(Scope scope, Operand<?> writer, Operand<TString> dbUri, Operand<TString> experimentName, Operand<TString> runName, Operand<TString> userName) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static CreateSummaryDbWriter create(Scope scope, Operand<? extends TType> writer,
+      Operand<TString> dbUri, Operand<TString> experimentName, Operand<TString> runName,
+      Operand<TString> userName) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryDbWriter", scope.makeOpName("CreateSummaryDbWriter"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(dbUri.asOutput());
@@ -51,12 +64,5 @@ public final class CreateSummaryDbWriter extends RawOp {
     opBuilder.addInput(userName.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new CreateSummaryDbWriter(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CreateSummaryDbWriter";
-  
-  private CreateSummaryDbWriter(Operation operation) {
-    super(operation);
   }
 }

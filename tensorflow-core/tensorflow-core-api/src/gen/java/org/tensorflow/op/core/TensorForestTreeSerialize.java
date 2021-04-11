@@ -24,49 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Serializes the tree handle to a proto
  */
 public final class TensorForestTreeSerialize extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorForestTreeSerialize";
+
+  private Output<TString> treeConfig;
+
+  private TensorForestTreeSerialize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    treeConfig = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorForestTreeSerialize operation.
-   * 
+   *
    * @param scope current scope
    * @param treeHandle Handle to the tree resource to be serialized.
    * @return a new instance of TensorForestTreeSerialize
    */
-  @Endpoint(describeByClass = true)
-  public static TensorForestTreeSerialize create(Scope scope, Operand<?> treeHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorForestTreeSerialize create(Scope scope, Operand<? extends TType> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSerialize", scope.makeOpName("TensorForestTreeSerialize"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorForestTreeSerialize(opBuilder.build());
   }
-  
+
   /**
+   * Gets treeConfig.
    * Serialied proto string of the tree resource.
+   * @return treeConfig.
    */
   public Output<TString> treeConfig() {
     return treeConfig;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return treeConfig;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestTreeSerialize";
-  
-  private Output<TString> treeConfig;
-  
-  private TensorForestTreeSerialize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    treeConfig = operation.output(outputIdx++);
   }
 }

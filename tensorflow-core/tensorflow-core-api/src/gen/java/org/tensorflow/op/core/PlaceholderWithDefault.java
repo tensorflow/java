@@ -29,50 +29,57 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * A placeholder op that passes through `input` when its output is not fed.
- * 
- * @param <T> data type for {@code output()} output
+ * A placeholder op that passes through {@code input} when its output is not fed.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class PlaceholderWithDefault<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new PlaceholderWithDefault operation.
-   * 
-   * @param scope current scope
-   * @param input The default value to produce when `output` is not fed.
-   * @param shape The (possibly partial) shape of the tensor.
-   * @return a new instance of PlaceholderWithDefault
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input, Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PlaceholderWithDefault", scope.makeOpName("PlaceholderWithDefault"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("shape", shape);
-    return new PlaceholderWithDefault<T>(opBuilder.build());
-  }
-  
-  /**
-   * A placeholder tensor that defaults to `input` if it is not fed.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "PlaceholderWithDefault";
-  
+
   private Output<T> output;
-  
+
   private PlaceholderWithDefault(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new PlaceholderWithDefault operation.
+   *
+   * @param scope current scope
+   * @param input The default value to produce when {@code output} is not fed.
+   * @param shape The (possibly partial) shape of the tensor.
+   * @param <T> data type for {@code PlaceholderWithDefault} output and operands
+   * @return a new instance of PlaceholderWithDefault
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input,
+      Shape shape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("PlaceholderWithDefault", scope.makeOpName("PlaceholderWithDefault"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("shape", shape);
+    return new PlaceholderWithDefault<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * A placeholder tensor that defaults to {@code input} if it is not fed.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -32,67 +32,70 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs max pooling on the input and outputs both max values and indices.
- * <p>
- * The indices in `argmax` are flattened, so that a maximum value at position
- * `[b, y, x, c]` becomes flattened index:
- * `(y * width + x) * channels + c` if `include_batch_in_index` is False;
- * `((b * height + y) * width + x) * channels + c` if `include_batch_in_index` is True.
- * <p>
- * The indices returned are always in `[0, height) x [0, width)` before flattening,
+ * The indices in {@code argmax} are flattened, so that a maximum value at position
+ * {@code [b, y, x, c]} becomes flattened index:
+ * {@code (y * width + x) * channels + c} if {@code include_batch_in_index} is False;
+ * {@code ((b * height + y) * width + x) * channels + c} if {@code include_batch_in_index} is True.
+ * <p>The indices returned are always in {@code [0, height) x [0, width)} before flattening,
  * even if padding is involved and the mathematically correct answer is outside
  * (either negative or too large).  This is a bug, but fixing it is difficult to do
  * in a safe backwards compatible way, especially due to flattening.
- * 
- * @param <T> data type for {@code output()} output
- * @param <U> data type for {@code argmax()} output
+ *
+ * @param <T> data type for {@code output} output
+ *
+ * @param <U> data type for {@code argmax} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolWithArgmax}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param includeBatchInIndex Whether to include batch dimension in flattened index of `argmax`.
-     */
-    public Options includeBatchInIndex(Boolean includeBatchInIndex) {
-      this.includeBatchInIndex = includeBatchInIndex;
-      return this;
-    }
-    
-    private Boolean includeBatchInIndex;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MaxPoolWithArgmax";
+
+  private Output<T> output;
+
+  private Output<U> argmax;
+
+  private MaxPoolWithArgmax(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+    argmax = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MaxPoolWithArgmax operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 4-D with shape `[batch, height, width, channels]`.  Input to pool over.
+   * @param input 4-D with shape {@code [batch, height, width, channels]}.  Input to pool over.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    * input tensor.
-   * @param Targmax 
+   * @param Targmax the value of the Targmax property
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPoolWithArgmax} output and operands
+   * @param <U> data type for {@code MaxPoolWithArgmax} output and operands
    * @return a new instance of MaxPoolWithArgmax
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope,
+      Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolWithArgmax", scope.makeOpName("MaxPoolWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
-    for (int i = 0; i < ksizeArray.length; ++i) {
+    for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);
     }
     opBuilder.setAttr("ksize", ksizeArray);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -105,57 +108,76 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
         }
       }
     }
-    return new MaxPoolWithArgmax<T, U>(opBuilder.build());
+    return new MaxPoolWithArgmax<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new MaxPoolWithArgmax operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new MaxPoolWithArgmax operation, with the default output types.
+   *
    * @param scope current scope
-   * @param input 4-D with shape `[batch, height, width, channels]`.  Input to pool over.
+   * @param input 4-D with shape {@code [batch, height, width, channels]}.  Input to pool over.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    * input tensor.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
-   * @return a new instance of MaxPoolWithArgmax
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPoolWithArgmax} output and operands
+   * @return a new instance of MaxPoolWithArgmax, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> MaxPoolWithArgmax<T, TInt64> create(Scope scope, Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> MaxPoolWithArgmax<T, TInt64> create(Scope scope,
+      Operand<T> input, List<Long> ksize, List<Long> strides, String padding, Options[] options) {
     return create(scope, input, ksize, strides, TInt64.class, padding, options);
   }
-  
+
   /**
-   * @param includeBatchInIndex Whether to include batch dimension in flattened index of `argmax`.
+   * Sets the includeBatchInIndex option.
+   *
+   * @param includeBatchInIndex Whether to include batch dimension in flattened index of {@code argmax}.
+   * @return this Options instance.
    */
   public static Options includeBatchInIndex(Boolean includeBatchInIndex) {
     return new Options().includeBatchInIndex(includeBatchInIndex);
   }
-  
+
   /**
+   * Gets output.
    * The max pooled output tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   /**
+   * Gets argmax.
    * 4-D.  The flattened indices of the max values chosen for each output.
+   * @return argmax.
    */
   public Output<U> argmax() {
     return argmax;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MaxPoolWithArgmax";
-  
-  private Output<T> output;
-  private Output<U> argmax;
-  
-  private MaxPoolWithArgmax(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
-    argmax = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolWithArgmax}
+   */
+  public static class Options {
+    private Boolean includeBatchInIndex;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the includeBatchInIndex option.
+     *
+     * @param includeBatchInIndex Whether to include batch dimension in flattened index of {@code argmax}.
+     * @return this Options instance.
+     */
+    public Options includeBatchInIndex(Boolean includeBatchInIndex) {
+      this.includeBatchInIndex = includeBatchInIndex;
+      return this;
+    }
   }
 }

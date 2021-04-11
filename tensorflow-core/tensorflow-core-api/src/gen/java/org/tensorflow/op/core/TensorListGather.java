@@ -31,59 +31,66 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Tensor by indexing into the TensorList.
- * <p>
  * Each row in the produced Tensor corresponds to the element in the TensorList
- * specified by the given index (see `tf.gather`).
- * <p>
- * input_handle: The input tensor list.
+ * specified by the given index (see {@code tf.gather}).
+ * <p>input_handle: The input tensor list.
  * indices: The indices used to index into the list.
  * values: The tensor.
- * 
- * @param <T> data type for {@code values()} output
+ *
+ * @param <T> data type for {@code values} output
  */
 @Operator
 public final class TensorListGather<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListGather";
+
+  private Output<T> values;
+
+  private TensorListGather(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    values = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListGather operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param indices 
-   * @param elementShape 
-   * @param elementDtype 
+   * @param inputHandle the inputHandle value
+   * @param indices the indices value
+   * @param elementShape the elementShape value
+   * @param elementDtype the value of the elementDtype property
+   * @param <T> data type for {@code TensorListGather} output and operands
    * @return a new instance of TensorListGather
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListGather<T> create(Scope scope, Operand<?> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape, Class<T> elementDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorListGather<T> create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape,
+      Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListGather", scope.makeOpName("TensorListGather"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
-    return new TensorListGather<T>(opBuilder.build());
+    return new TensorListGather<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets values.
+   *
+   * @return values.
    */
   public Output<T> values() {
     return values;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return values;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListGather";
-  
-  private Output<T> values;
-  
-  private TensorListGather(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    values = operation.output(outputIdx++);
   }
 }

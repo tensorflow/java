@@ -24,27 +24,42 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Registers a dataset with the tf.data service.
  */
 public final class RegisterDataset extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RegisterDataset";
+
+  private Output<TInt64> datasetId;
+
+  private RegisterDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    datasetId = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RegisterDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param dataset 
-   * @param address 
-   * @param protocol 
-   * @param externalStatePolicy 
+   * @param dataset the dataset value
+   * @param address the address value
+   * @param protocol the protocol value
+   * @param externalStatePolicy the value of the externalStatePolicy property
    * @return a new instance of RegisterDataset
    */
-  @Endpoint(describeByClass = true)
-  public static RegisterDataset create(Scope scope, Operand<?> dataset, Operand<TString> address, Operand<TString> protocol, Long externalStatePolicy) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RegisterDataset create(Scope scope, Operand<? extends TType> dataset,
+      Operand<TString> address, Operand<TString> protocol, Long externalStatePolicy) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegisterDataset", scope.makeOpName("RegisterDataset"));
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(address.asOutput());
@@ -53,26 +68,18 @@ public final class RegisterDataset extends RawOp implements Operand<TInt64> {
     opBuilder.setAttr("external_state_policy", externalStatePolicy);
     return new RegisterDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets datasetId.
+   *
+   * @return datasetId.
    */
   public Output<TInt64> datasetId() {
     return datasetId;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return datasetId;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RegisterDataset";
-  
-  private Output<TInt64> datasetId;
-  
-  private RegisterDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    datasetId = operation.output(outputIdx++);
   }
 }

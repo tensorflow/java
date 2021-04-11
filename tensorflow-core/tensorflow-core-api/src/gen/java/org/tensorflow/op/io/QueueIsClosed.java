@@ -26,50 +26,58 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns true if queue is closed.
- * <p>
  * This operation returns true if the queue is closed and false if the queue
  * is open.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class QueueIsClosed extends RawOp implements Operand<TBool> {
-  
   /**
-   * Factory method to create a class wrapping a new QueueIsClosed operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "QueueIsClosedV2";
+
+  private Output<TBool> isClosed;
+
+  private QueueIsClosed(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    isClosed = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new QueueIsClosedV2 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a queue.
    * @return a new instance of QueueIsClosed
    */
-  @Endpoint(describeByClass = true)
-  public static QueueIsClosed create(Scope scope, Operand<?> handle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static QueueIsClosed create(Scope scope, Operand<? extends TType> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueIsClosedV2", scope.makeOpName("QueueIsClosed"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new QueueIsClosed(opBuilder.build());
   }
-  
+
   /**
+   * Gets isClosed.
+   *
+   * @return isClosed.
    */
   public Output<TBool> isClosed() {
     return isClosed;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return isClosed;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QueueIsClosedV2";
-  
-  private Output<TBool> isClosed;
-  
-  private QueueIsClosed(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    isClosed = operation.output(outputIdx++);
   }
 }

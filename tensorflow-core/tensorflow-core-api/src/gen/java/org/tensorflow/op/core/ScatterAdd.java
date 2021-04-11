@@ -30,67 +30,59 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Adds sparse updates to a variable reference.
- * <p>
  * This operation computes
- * <p>
- *     # Scalar indices
- *     ref[indices, ...] += updates[...]
- * <p>
- *     # Vector indices (for each i)
- *     ref[indices[i], ...] += updates[i, ...]
- * <p>
- *     # High rank indices (for each i, ..., j)
- *     ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
- * <p>
- * This operation outputs `ref` after the update is done.
+ * <pre>
+ * # Scalar indices
+ * ref[indices, ...] += updates[...]
+ *
+ * # Vector indices (for each i)
+ * ref[indices[i], ...] += updates[i, ...]
+ *
+ * # High rank indices (for each i, ..., j)
+ * ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
+ * </pre>
+ * <p>This operation outputs {@code ref} after the update is done.
  * This makes it easier to chain operations that need to use the reset value.
- * <p>
- * Duplicate entries are handled correctly: if multiple `indices` reference
+ * <p>Duplicate entries are handled correctly: if multiple {@code indices} reference
  * the same location, their contributions add.
- * <p>
- * Requires `updates.shape = indices.shape + ref.shape[1:]` or `updates.shape = []`.
- * <p>
+ * <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
  * </div>
- * 
- * @param <T> data type for {@code outputRef()} output
+ *
+ * @param <T> data type for {@code output_ref} output
  */
 @Operator
 public final class ScatterAdd<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ScatterAdd}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, the addition will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ScatterAdd";
+
+  private Output<T> outputRef;
+
+  private ScatterAdd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputRef = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ScatterAdd operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref Should be from a `Variable` node.
-   * @param indices A tensor of indices into the first dimension of `ref`.
-   * @param updates A tensor of updated values to add to `ref`.
-   * @param options carries optional attributes values
+   * @param ref Should be from a {@code Variable} node.
+   * @param indices A tensor of indices into the first dimension of {@code ref}.
+   * @param updates A tensor of updated values to add to {@code ref}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScatterAdd} output and operands
    * @return a new instance of ScatterAdd
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ScatterAdd<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ScatterAdd<T> create(Scope scope, Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterAdd", scope.makeOpName("ScatterAdd"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -103,38 +95,54 @@ public final class ScatterAdd<T extends TType> extends RawOp implements Operand<
         }
       }
     }
-    return new ScatterAdd<T>(opBuilder.build());
+    return new ScatterAdd<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, the addition will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * = Same as `ref`.  Returned as a convenience for operations that want
+   * Gets outputRef.
+   * = Same as {@code ref}.  Returned as a convenience for operations that want
    * to use the updated values after the update is done.
+   * @return outputRef.
    */
   public Output<T> outputRef() {
     return outputRef;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return outputRef;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ScatterAdd";
-  
-  private Output<T> outputRef;
-  
-  private ScatterAdd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputRef = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ScatterAdd}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, the addition will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

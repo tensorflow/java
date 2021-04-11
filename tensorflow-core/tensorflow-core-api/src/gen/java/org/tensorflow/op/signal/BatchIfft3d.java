@@ -28,45 +28,55 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The BatchIFFT3D operation
  */
-@Operator(group = "signal")
+@Operator(
+    group = "signal"
+)
 public final class BatchIfft3d extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new BatchIfft3d operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BatchIFFT3D";
+
+  private Output<? extends TType> output;
+
+  @SuppressWarnings("unchecked")
+  private BatchIfft3d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BatchIFFT3D operation.
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @return a new instance of BatchIfft3d
    */
-  @Endpoint(describeByClass = true)
-  public static BatchIfft3d create(Scope scope, Operand<?> input) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BatchIfft3d create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchIFFT3D", scope.makeOpName("BatchIfft3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new BatchIfft3d(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
-  public Output<?> output() {
+  public Output<? extends TType> output() {
     return output;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchIFFT3D";
-  
-  private Output<?> output;
-  
-  private BatchIfft3d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

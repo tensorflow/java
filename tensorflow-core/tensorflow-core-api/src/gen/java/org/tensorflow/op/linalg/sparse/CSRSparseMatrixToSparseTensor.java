@@ -25,67 +25,79 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Converts a (possibly batched) CSRSparesMatrix to a SparseTensor.
- * 
- * @param <T> data type for {@code values()} output
+ *
+ * @param <T> data type for {@code values} output
  */
 public final class CSRSparseMatrixToSparseTensor<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new CSRSparseMatrixToSparseTensor operation.
-   * 
-   * @param scope current scope
-   * @param sparseMatrix A (possibly batched) CSRSparseMatrix.
-   * @param type 
-   * @return a new instance of CSRSparseMatrixToSparseTensor
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope, Operand<?> sparseMatrix, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
-    opBuilder.addInput(sparseMatrix.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", Operands.toDataType(type));
-    return new CSRSparseMatrixToSparseTensor<T>(opBuilder.build());
-  }
-  
-  /**
-   * SparseTensor indices.
-   */
-  public Output<TInt64> indices() {
-    return indices;
-  }
-  
-  /**
-   * SparseTensor values.
-   */
-  public Output<T> values() {
-    return values;
-  }
-  
-  /**
-   * SparseTensor dense shape.
-   */
-  public Output<TInt64> denseShape() {
-    return denseShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CSRSparseMatrixToSparseTensor";
-  
+
   private Output<TInt64> indices;
+
   private Output<T> values;
+
   private Output<TInt64> denseShape;
-  
+
   private CSRSparseMatrixToSparseTensor(Operation operation) {
     super(operation);
     int outputIdx = 0;
     indices = operation.output(outputIdx++);
     values = operation.output(outputIdx++);
     denseShape = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CSRSparseMatrixToSparseTensor operation.
+   *
+   * @param scope current scope
+   * @param sparseMatrix A (possibly batched) CSRSparseMatrix.
+   * @param type the value of the type property
+   * @param <T> data type for {@code CSRSparseMatrixToSparseTensor} output and operands
+   * @return a new instance of CSRSparseMatrixToSparseTensor
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> CSRSparseMatrixToSparseTensor<T> create(Scope scope,
+      Operand<? extends TType> sparseMatrix, Class<T> type) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToSparseTensor", scope.makeOpName("CSRSparseMatrixToSparseTensor"));
+    opBuilder.addInput(sparseMatrix.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("type", Operands.toDataType(type));
+    return new CSRSparseMatrixToSparseTensor<>(opBuilder.build());
+  }
+
+  /**
+   * Gets indices.
+   * SparseTensor indices.
+   * @return indices.
+   */
+  public Output<TInt64> indices() {
+    return indices;
+  }
+
+  /**
+   * Gets values.
+   * SparseTensor values.
+   * @return values.
+   */
+  public Output<T> values() {
+    return values;
+  }
+
+  /**
+   * Gets denseShape.
+   * SparseTensor dense shape.
+   * @return denseShape.
+   */
+  public Output<TInt64> denseShape() {
+    return denseShape;
   }
 }

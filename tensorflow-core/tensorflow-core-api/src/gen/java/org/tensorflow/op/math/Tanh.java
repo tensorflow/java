@@ -28,58 +28,70 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Computes hyperbolic tangent of `x` element-wise.
- * <p>
- *   Given an input tensor, this function computes hyperbolic tangent of every
- *   element in the tensor. Input range is `[-inf, inf]` and
- *   output range is `[-1,1]`.
- * <p>
- *   >>> x = tf.constant([-float("inf"), -5, -0.5, 1, 1.2, 2, 3, float("inf")])
- *   >>> tf.math.tanh(x)
- *   <tf.Tensor: shape=(8,), dtype=float32, numpy=
- *   array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
- *           0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Computes hyperbolic tangent of {@code x} element-wise.
+ * Given an input tensor, this function computes hyperbolic tangent of every
+ * element in the tensor. Input range is {@code [-inf, inf]} and
+ * output range is {@code [-1,1]}.
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>x = tf.constant([-float(&quot;inf&quot;), -5, -0.5, 1, 1.2, 2, 3, float(&quot;inf&quot;)])
+ * tf.math.tanh(x)
+ * &lt;tf.Tensor: shape=(8,), dtype=float32, numpy=
+ * array([-1.        , -0.99990916, -0.46211717,  0.7615942 ,  0.8336547 ,
+ * 0.9640276 ,  0.9950547 ,  1.        ], dtype=float32)&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Tanh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Tanh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Tanh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Tanh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Tanh", scope.makeOpName("Tanh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Tanh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Tanh";
-  
+
   private Output<T> y;
-  
+
   private Tanh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Tanh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Tanh} output and operands
+   * @return a new instance of Tanh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Tanh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Tanh", scope.makeOpName("Tanh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Tanh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

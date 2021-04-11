@@ -23,42 +23,27 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AdaMax algorithm.
- * <p>
- * m_t <- beta1 * m_{t-1} + (1 - beta1) * g
- * v_t <- max(beta2 * v_{t-1}, abs(g))
- * variable <- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
+ * m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+ * v_t &lt;- max(beta2 * v_{t-1}, abs(g))
+ * variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
  */
 public final class ResourceApplyAdaMax extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdaMax}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyAdaMax";
+
+  private ResourceApplyAdaMax(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceApplyAdaMax operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -69,11 +54,17 @@ public final class ResourceApplyAdaMax extends RawOp {
    * @param beta2 Momentum factor. Must be a scalar.
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAdaMax} output and operands
    * @return a new instance of ResourceApplyAdaMax
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAdaMax create(Scope scope, Operand<?> var, Operand<?> m, Operand<?> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyAdaMax create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> m, Operand<? extends TType> v,
+      Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon,
+      Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdaMax", scope.makeOpName("ResourceApplyAdaMax"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -94,20 +85,39 @@ public final class ResourceApplyAdaMax extends RawOp {
     }
     return new ResourceApplyAdaMax(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyAdaMax";
-  
-  private ResourceApplyAdaMax(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdaMax}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

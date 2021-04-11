@@ -28,34 +28,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Subtracts a value from the current value of a variable.
- * <p>
  * Any ReadVariableOp with a control dependency on this op is guaranteed to
  * see the decremented value or a subsequent newer one.
  */
 @Operator
 public final class AssignSubVariableOp extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AssignSubVariableOp";
+
+  private AssignSubVariableOp(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new AssignSubVariableOp operation.
-   * 
+   *
    * @param scope current scope
    * @param resource handle to the resource in which to store the variable.
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignSubVariableOp
    */
-  @Endpoint(describeByClass = true)
-  public static AssignSubVariableOp create(Scope scope, Operand<?> resource, Operand<? extends TType> value) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AssignSubVariableOp create(Scope scope, Operand<? extends TType> resource,
+      Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignSubVariableOp", scope.makeOpName("AssignSubVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new AssignSubVariableOp(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AssignSubVariableOp";
-  
-  private AssignSubVariableOp(Operation operation) {
-    super(operation);
   }
 }

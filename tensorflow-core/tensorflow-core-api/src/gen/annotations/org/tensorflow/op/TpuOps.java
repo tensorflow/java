@@ -44,12 +44,10 @@ public final class TpuOps {
 
   /**
    * Asserts that compilation succeeded. This op produces no output and closes the
-   *  <p>
    *  device during failure to ensure all pending device interactions fail.
-   *  <p>
-   *  'compilation_status' is a serialized CompilationResultProto.
+   *  <p>'compilation_status' is a serialized CompilationResultProto.
    *
-   * @param compilationStatus
+   * @param compilationStatus the compilationStatus value
    * @return a new instance of CompileSucceededAssert
    */
   public CompileSucceededAssert compileSucceededAssert(Operand<TString> compilationStatus) {
@@ -58,12 +56,11 @@ public final class TpuOps {
 
   /**
    * Op that loads and executes a TPU program on a TPU device.
-   *  <p>
    *  For the internal use of the distributed TPU compiler.
    *
-   * @param args
-   * @param key
-   * @param Tresults
+   * @param args the args value
+   * @param key the key value
+   * @param Tresults the value of the Tresults property
    * @return a new instance of Execute
    */
   public Execute execute(Iterable<Operand<?>> args, Operand<TString> key,
@@ -73,7 +70,6 @@ public final class TpuOps {
 
   /**
    * Op that executes a program with optional in-place variable updates.
-   *  <p>
    *  It (optionally) reads device variables, loads and executes a TPU program on a
    *  TPU device, and then (optionally) in-place updates variables using the program
    *  outputs, as specified in attributes device_var_reads_indices (program input
@@ -82,11 +78,11 @@ public final class TpuOps {
    *  program outputs are consumed by these variables will not appear in the op
    *  output. For the internal use of the distributed TPU compiler.
    *
-   * @param args
-   * @param key
-   * @param Tresults
-   * @param deviceVarReadsIndices
-   * @param deviceVarUpdatesIndices
+   * @param args the args value
+   * @param key the key value
+   * @param Tresults the value of the Tresults property
+   * @param deviceVarReadsIndices the value of the deviceVarReadsIndices property
+   * @param deviceVarUpdatesIndices the value of the deviceVarUpdatesIndices property
    * @return a new instance of ExecuteAndUpdateVariables
    */
   public ExecuteAndUpdateVariables executeAndUpdateVariables(Iterable<Operand<?>> args,
@@ -98,9 +94,10 @@ public final class TpuOps {
   /**
    * An op that groups a list of partitioned inputs together. This op
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param inputs A list of partitioned inputs which must have the same shape.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TPUPartitionedInput} output and operands
    * @return a new instance of PartitionedInput
    */
   public <T extends TType> PartitionedInput<T> partitionedInput(Iterable<Operand<T>> inputs,
@@ -110,13 +107,13 @@ public final class TpuOps {
 
   /**
    * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
-   *  <p>
    *  outputs outside the XLA computation.
    *
-   * @param <T> data type for {@code output()} output
+   * @param <T> data type for {@code output} output
    * @param inputs A tensor which represents the full shape of partitioned tensors.
-   * @param numSplits
-   * @param options carries optional attributes values
+   * @param numSplits the value of the numSplits property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TPUPartitionedOutput} output and operands
    * @return a new instance of PartitionedOutput
    */
   public <T extends TType> PartitionedOutput<T> partitionedOutput(Operand<T> inputs, Long numSplits,

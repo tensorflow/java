@@ -33,7 +33,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps an arbitrary MLIR computation expressed as a module with a main() function.
- * <p>
  * This operation does not have an associated kernel and is not intended to be
  * executed in a regular TensorFlow session. Instead it is intended to be used for
  * testing or for special case where a user intends to pass custom MLIR computation
@@ -45,39 +44,56 @@ import org.tensorflow.types.family.TType;
  * main() function and the returned values of the main function mapped to the
  * outputs.
  * Example usage:
- * <pre>{@code
+ * <pre>
  * import tensorflow as tf
  * from tensorflow.compiler.mlir.tensorflow.gen_mlir_passthrough_op import mlir_passthrough_op
- * 
+ *
  * mlir_module = '''python
- * func @main(%arg0 : tensor<10xf32>, %arg1 : tensor<10xf32>) -> tensor<10x10xf32> {
- *    %add = "magic.op"(%arg0, %arg1) : (tensor<10xf32>, tensor<10xf32>) -> tensor<10x10xf32>
- *    return %ret : tensor<10x10xf32>
+ * func {@literal @}main(%arg0 : tensor&lt;10xf32&gt;, %arg1 : tensor&lt;10xf32&gt;) -&gt; tensor&lt;10x10xf32&gt; {
+ *    %add = &quot;magic.op&quot;(%arg0, %arg1) : (tensor&lt;10xf32&gt;, tensor&lt;10xf32&gt;) -&gt; tensor&lt;10x10xf32&gt;
+ *    return %ret : tensor&lt;10x10xf32&gt;
  * }
  * '''
- * 
- * @tf.function
+ *
+ * {@literal @}tf.function
  * def foo(x, y):
  *   return mlir_passthrough_op([x, y], mlir_module, Toutputs=[tf.float32])
- * 
+ *
  * graph_def = foo.get_concrete_function(tf.TensorSpec([10], tf.float32), tf.TensorSpec([10], tf.float32)).graph.as_graph_def()
- * }</pre>
- * 
+ * </pre>
  */
 @Operator
 public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<TType>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MlirPassthroughOp";
+
+  private List<Output<?>> outputs;
+
+  @SuppressWarnings("unchecked")
+  private MlirPassthroughOp(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputsLength = operation.outputListLength("outputs");
+    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
+    outputIdx += outputsLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new MlirPassthroughOp operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputs 
-   * @param mlirModule 
-   * @param Toutputs 
+   * @param inputs the inputs value
+   * @param mlirModule the value of the mlirModule property
+   * @param Toutputs the value of the Toutputs property
    * @return a new instance of MlirPassthroughOp
    */
-  @Endpoint(describeByClass = true)
-  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs, String mlirModule, List<Class<? extends TType>> Toutputs) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs,
+      String mlirModule, List<Class<? extends TType>> Toutputs) {
     OperationBuilder opBuilder = scope.env().opBuilder("MlirPassthroughOp", scope.makeOpName("MlirPassthroughOp"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
@@ -85,29 +101,19 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
     opBuilder.setAttr("Toutputs", Operands.toDataTypes(Toutputs));
     return new MlirPassthroughOp(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputs.
+   *
+   * @return outputs.
    */
   public List<Output<?>> outputs() {
     return outputs;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MlirPassthroughOp";
-  
-  private List<Output<?>> outputs;
-  
-  private MlirPassthroughOp(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
-    outputIdx += outputsLength;
   }
 }

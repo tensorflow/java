@@ -29,56 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns x + y element-wise.
- * <p>
- * <i>NOTE</i>: `math.Add` supports broadcasting. `AddN` does not. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * <p>
- * Given two input tensors, the `tf.add` operation computes the sum for every element in the tensor.
- * <p>
- * Both input and output have a range `(-inf, inf)`.
- * 
- * 
- * @param <T> data type for {@code z()} output
+ * <em>NOTE</em>: {@code math.Add} supports broadcasting. {@code AddN} does not. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
+ * <p>Given two input tensors, the {@code tf.add} operation computes the sum for every element in the tensor.
+ * <p>Both input and output have a range {@code (-inf, inf)}.
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Add<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Add";
+
+  private Output<T> z;
+
+  private Add(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Add operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Add} output and operands
    * @return a new instance of Add
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Add<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Add", scope.makeOpName("Add"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Add<T>(opBuilder.build());
+    return new Add<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Add";
-  
-  private Output<T> z;
-  
-  private Add(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

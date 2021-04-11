@@ -30,43 +30,51 @@ import org.tensorflow.types.TString;
 /**
  * Reads and outputs the entire contents of the input filename.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReadFile extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReadFile";
+
+  private Output<TString> contents;
+
+  private ReadFile(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    contents = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ReadFile operation.
-   * 
+   *
    * @param scope current scope
-   * @param filename 
+   * @param filename the filename value
    * @return a new instance of ReadFile
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ReadFile create(Scope scope, Operand<TString> filename) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReadFile", scope.makeOpName("ReadFile"));
     opBuilder.addInput(filename.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReadFile(opBuilder.build());
   }
-  
+
   /**
+   * Gets contents.
+   *
+   * @return contents.
    */
   public Output<TString> contents() {
     return contents;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return contents;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReadFile";
-  
-  private Output<TString> contents;
-  
-  private ReadFile(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    contents = operation.output(outputIdx++);
   }
 }

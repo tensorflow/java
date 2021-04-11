@@ -34,60 +34,69 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Gets the next output from the given iterator.
- * <p>
  * This operation is a synchronous version IteratorGetNext. It should only be used
  * in situations where the iterator does not block the calling thread, or where
  * the calling thread is not a member of the thread pool used to execute parallel
  * operations (e.g. in eager mode).
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class IteratorGetNextSync extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new IteratorGetNextSync operation.
-   * 
-   * @param scope current scope
-   * @param iterator 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of IteratorGetNextSync
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static IteratorGetNextSync create(Scope scope, Operand<?> iterator, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
-    opBuilder.addInput(iterator.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new IteratorGetNextSync(opBuilder.build());
-  }
-  
-  /**
-   */
-  public List<Output<?>> components() {
-    return components;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) components.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IteratorGetNextSync";
-  
+
   private List<Output<?>> components;
-  
+
+  @SuppressWarnings("unchecked")
   private IteratorGetNextSync(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
     outputIdx += componentsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IteratorGetNextSync operation.
+   *
+   * @param scope current scope
+   * @param iterator the iterator value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of IteratorGetNextSync
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IteratorGetNextSync create(Scope scope, Operand<? extends TType> iterator,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
+    opBuilder.addInput(iterator.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
+    return new IteratorGetNextSync(opBuilder.build());
+  }
+
+  /**
+   * Gets components.
+   *
+   * @return components.
+   */
+  public List<Output<?>> components() {
+    return components;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) components.iterator();
   }
 }

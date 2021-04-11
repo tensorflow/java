@@ -30,115 +30,50 @@ import org.tensorflow.types.TUint8;
 
 /**
  * Decode a JPEG-encoded image to a uint8 tensor.
- * <p>
- * The attr `channels` indicates the desired number of color channels for the
+ * The attr {@code channels} indicates the desired number of color channels for the
  * decoded image.
- * <p>
- * Accepted values are:
+ * <p>Accepted values are:
  * <ul>
- * <li>
- * 0: Use the number of channels in the JPEG-encoded image.
- * </li>
- * <li>
- * 1: output a grayscale image.
- * </li>
- * <li>
- * 3: output an RGB image.
- * </li>
+ * <li>0: Use the number of channels in the JPEG-encoded image.</li>
+ * <li>1: output a grayscale image.</li>
+ * <li>3: output an RGB image.</li>
  * </ul>
- * If needed, the JPEG-encoded image is transformed to match the requested number
+ * <p>If needed, the JPEG-encoded image is transformed to match the requested number
  * of color channels.
- * <p>
- * The attr `ratio` allows downscaling the image by an integer factor during
+ * <p>The attr {@code ratio} allows downscaling the image by an integer factor during
  * decoding.  Allowed values are: 1, 2, 4, and 8.  This is much faster than
  * downscaling the image later.
- * <p>
- * This op also supports decoding PNGs and non-animated GIFs since the interface is
- * the same, though it is cleaner to use `tf.io.decode_image`.
+ * <p>This op also supports decoding PNGs and non-animated GIFs since the interface is
+ * the same, though it is cleaner to use {@code tf.io.decode_image}.
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.DecodeJpeg}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param channels Number of color channels for the decoded image.
-     */
-    public Options channels(Long channels) {
-      this.channels = channels;
-      return this;
-    }
-    
-    /**
-     * @param ratio Downscaling ratio.
-     */
-    public Options ratio(Long ratio) {
-      this.ratio = ratio;
-      return this;
-    }
-    
-    /**
-     * @param fancyUpscaling If true use a slower but nicer upscaling of the
-     * chroma planes (yuv420/422 only).
-     */
-    public Options fancyUpscaling(Boolean fancyUpscaling) {
-      this.fancyUpscaling = fancyUpscaling;
-      return this;
-    }
-    
-    /**
-     * @param tryRecoverTruncated If true try to recover an image from truncated input.
-     */
-    public Options tryRecoverTruncated(Boolean tryRecoverTruncated) {
-      this.tryRecoverTruncated = tryRecoverTruncated;
-      return this;
-    }
-    
-    /**
-     * @param acceptableFraction The minimum required fraction of lines before a truncated
-     * input is accepted.
-     */
-    public Options acceptableFraction(Float acceptableFraction) {
-      this.acceptableFraction = acceptableFraction;
-      return this;
-    }
-    
-    /**
-     * @param dctMethod string specifying a hint about the algorithm used for
-     * decompression.  Defaults to "" which maps to a system-specific
-     * default.  Currently valid values are ["INTEGER_FAST",
-     * "INTEGER_ACCURATE"].  The hint may be ignored (e.g., the internal
-     * jpeg library changes to a version that does not have that specific
-     * option.)
-     */
-    public Options dctMethod(String dctMethod) {
-      this.dctMethod = dctMethod;
-      return this;
-    }
-    
-    private Long channels;
-    private Long ratio;
-    private Boolean fancyUpscaling;
-    private Boolean tryRecoverTruncated;
-    private Float acceptableFraction;
-    private String dctMethod;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeJpeg";
+
+  private Output<TUint8> image;
+
+  private DecodeJpeg(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    image = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodeJpeg operation.
-   * 
+   *
    * @param scope current scope
    * @param contents 0-D.  The JPEG-encoded image.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeJpeg
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeJpeg create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJpeg", scope.makeOpName("DecodeJpeg"));
     opBuilder.addInput(contents.asOutput());
@@ -167,76 +102,178 @@ public final class DecodeJpeg extends RawOp implements Operand<TUint8> {
     }
     return new DecodeJpeg(opBuilder.build());
   }
-  
+
   /**
+   * Sets the channels option.
+   *
    * @param channels Number of color channels for the decoded image.
+   * @return this Options instance.
    */
   public static Options channels(Long channels) {
     return new Options().channels(channels);
   }
-  
+
   /**
+   * Sets the ratio option.
+   *
    * @param ratio Downscaling ratio.
+   * @return this Options instance.
    */
   public static Options ratio(Long ratio) {
     return new Options().ratio(ratio);
   }
-  
+
   /**
+   * Sets the fancyUpscaling option.
+   *
    * @param fancyUpscaling If true use a slower but nicer upscaling of the
    * chroma planes (yuv420/422 only).
+   * @return this Options instance.
    */
   public static Options fancyUpscaling(Boolean fancyUpscaling) {
     return new Options().fancyUpscaling(fancyUpscaling);
   }
-  
+
   /**
+   * Sets the tryRecoverTruncated option.
+   *
    * @param tryRecoverTruncated If true try to recover an image from truncated input.
+   * @return this Options instance.
    */
   public static Options tryRecoverTruncated(Boolean tryRecoverTruncated) {
     return new Options().tryRecoverTruncated(tryRecoverTruncated);
   }
-  
+
   /**
+   * Sets the acceptableFraction option.
+   *
    * @param acceptableFraction The minimum required fraction of lines before a truncated
    * input is accepted.
+   * @return this Options instance.
    */
   public static Options acceptableFraction(Float acceptableFraction) {
     return new Options().acceptableFraction(acceptableFraction);
   }
-  
+
   /**
+   * Sets the dctMethod option.
+   *
    * @param dctMethod string specifying a hint about the algorithm used for
-   * decompression.  Defaults to "" which maps to a system-specific
-   * default.  Currently valid values are ["INTEGER_FAST",
-   * "INTEGER_ACCURATE"].  The hint may be ignored (e.g., the internal
+   * decompression.  Defaults to &quot;&quot; which maps to a system-specific
+   * default.  Currently valid values are [&quot;INTEGER_FAST&quot;,
+   * &quot;INTEGER_ACCURATE&quot;].  The hint may be ignored (e.g., the internal
    * jpeg library changes to a version that does not have that specific
    * option.)
+   * @return this Options instance.
    */
   public static Options dctMethod(String dctMethod) {
     return new Options().dctMethod(dctMethod);
   }
-  
+
   /**
-   * 3-D with shape `[height, width, channels]`..
+   * Gets image.
+   * 3-D with shape {@code [height, width, channels]}..
+   * @return image.
    */
   public Output<TUint8> image() {
     return image;
   }
-  
+
   @Override
   public Output<TUint8> asOutput() {
     return image;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeJpeg";
-  
-  private Output<TUint8> image;
-  
-  private DecodeJpeg(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    image = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.DecodeJpeg}
+   */
+  public static class Options {
+    private Long channels;
+
+    private Long ratio;
+
+    private Boolean fancyUpscaling;
+
+    private Boolean tryRecoverTruncated;
+
+    private Float acceptableFraction;
+
+    private String dctMethod;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the channels option.
+     *
+     * @param channels Number of color channels for the decoded image.
+     * @return this Options instance.
+     */
+    public Options channels(Long channels) {
+      this.channels = channels;
+      return this;
+    }
+
+    /**
+     * Sets the ratio option.
+     *
+     * @param ratio Downscaling ratio.
+     * @return this Options instance.
+     */
+    public Options ratio(Long ratio) {
+      this.ratio = ratio;
+      return this;
+    }
+
+    /**
+     * Sets the fancyUpscaling option.
+     *
+     * @param fancyUpscaling If true use a slower but nicer upscaling of the
+     * chroma planes (yuv420/422 only).
+     * @return this Options instance.
+     */
+    public Options fancyUpscaling(Boolean fancyUpscaling) {
+      this.fancyUpscaling = fancyUpscaling;
+      return this;
+    }
+
+    /**
+     * Sets the tryRecoverTruncated option.
+     *
+     * @param tryRecoverTruncated If true try to recover an image from truncated input.
+     * @return this Options instance.
+     */
+    public Options tryRecoverTruncated(Boolean tryRecoverTruncated) {
+      this.tryRecoverTruncated = tryRecoverTruncated;
+      return this;
+    }
+
+    /**
+     * Sets the acceptableFraction option.
+     *
+     * @param acceptableFraction The minimum required fraction of lines before a truncated
+     * input is accepted.
+     * @return this Options instance.
+     */
+    public Options acceptableFraction(Float acceptableFraction) {
+      this.acceptableFraction = acceptableFraction;
+      return this;
+    }
+
+    /**
+     * Sets the dctMethod option.
+     *
+     * @param dctMethod string specifying a hint about the algorithm used for
+     * decompression.  Defaults to &quot;&quot; which maps to a system-specific
+     * default.  Currently valid values are [&quot;INTEGER_FAST&quot;,
+     * &quot;INTEGER_ACCURATE&quot;].  The hint may be ignored (e.g., the internal
+     * jpeg library changes to a version that does not have that specific
+     * option.)
+     * @return this Options instance.
+     */
+    public Options dctMethod(String dctMethod) {
+      this.dctMethod = dctMethod;
+      return this;
+    }
   }
 }

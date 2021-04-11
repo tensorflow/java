@@ -32,23 +32,41 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the records from one or more TFRecord files.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class TfRecordDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new TfRecordDataset operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TFRecordDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private TfRecordDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TFRecordDataset operation.
+   *
    * @param scope current scope
    * @param filenames A scalar or vector containing the name(s) of the file(s) to be
    * read.
    * @param compressionType A scalar containing either (i) the empty string (no
-   * compression), (ii) "ZLIB", or (iii) "GZIP".
+   * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar representing the number of bytes to buffer. A value of
    * 0 means no buffering will be performed.
    * @return a new instance of TfRecordDataset
    */
-  @Endpoint(describeByClass = true)
-  public static TfRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TfRecordDataset create(Scope scope, Operand<TString> filenames,
+      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordDataset", scope.makeOpName("TfRecordDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
@@ -56,27 +74,19 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TfRecordDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TFRecordDataset";
-  
-  private Output<?> handle;
-  
-  private TfRecordDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

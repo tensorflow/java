@@ -24,50 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Returns the result of a TPU compilation.
- * <p>
  * This operation returns the result of a TPU compilation as a serialized
  * CompilationResultProto, which holds a status and an error message if an error
  * occurred during compilation.
  */
 public final class CompilationResult extends RawOp implements Operand<TString> {
-  
   /**
-   * Factory method to create a class wrapping a new CompilationResult operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TPUCompilationResult";
+
+  private Output<TString> output;
+
+  private CompilationResult(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TPUCompilationResult operation.
+   *
    * @param scope current scope
    * @return a new instance of CompilationResult
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static CompilationResult create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUCompilationResult", scope.makeOpName("CompilationResult"));
     opBuilder = scope.apply(opBuilder);
     return new CompilationResult(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUCompilationResult";
-  
-  private Output<TString> output;
-  
-  private CompilationResult(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

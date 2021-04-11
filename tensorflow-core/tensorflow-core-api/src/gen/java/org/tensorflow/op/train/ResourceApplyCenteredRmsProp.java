@@ -28,53 +28,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the centered RMSProp algorithm.
- * <p>
  * The centered RMSProp algorithm uses an estimate of the centered second moment
  * (i.e., the variance) for normalization, as opposed to regular RMSProp, which
  * uses the (uncentered) second moment. This often helps with training, but is
  * slightly more expensive in terms of computation and memory.
- * <p>
- * Note that in dense implementation of this algorithm, mg, ms, and mom will
+ * <p>Note that in dense implementation of this algorithm, mg, ms, and mom will
  * update even if the grad is zero, but in this sparse implementation, mg, ms,
  * and mom will not update in iterations during which the grad is zero.
- * <p>
- * mean_square = decay * mean_square + (1-decay) * gradient ** 2
+ * <p>mean_square = decay * mean_square + (1-decay) * gradient ** 2
  * mean_grad = decay * mean_grad + (1-decay) * gradient
- * <p>
- * Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
- * <p>
- * mg <- rho * mg_{t-1} + (1-rho) * grad
- * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
- * mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
- * var <- var - mom
+ * <p>Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
+ * <p>mg &lt;- rho * mg_{t-1} + (1-rho) * grad
+ * ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+ * mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
+ * var &lt;- var - mom
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyCenteredRmsProp extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyCenteredRmsProp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
-     * protected by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyCenteredRMSProp";
+
+  private ResourceApplyCenteredRmsProp(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ResourceApplyCenteredRmsProp operation.
-   * 
+   * Factory method to create a class wrapping a new ResourceApplyCenteredRMSProp operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param mg Should be from a Variable().
@@ -85,11 +69,17 @@ public final class ResourceApplyCenteredRmsProp extends RawOp {
    * @param momentum Momentum Scale. Must be a scalar.
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyCenteredRMSProp} output and operands
    * @return a new instance of ResourceApplyCenteredRmsProp
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyCenteredRmsProp create(Scope scope, Operand<?> var, Operand<?> mg, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyCenteredRmsProp create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> mg, Operand<? extends TType> ms,
+      Operand<? extends TType> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum,
+      Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyCenteredRMSProp", scope.makeOpName("ResourceApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());
@@ -110,20 +100,39 @@ public final class ResourceApplyCenteredRmsProp extends RawOp {
     }
     return new ResourceApplyCenteredRmsProp(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var, mg, ms, and mom tensors is
    * protected by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyCenteredRMSProp";
-  
-  private ResourceApplyCenteredRmsProp(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyCenteredRmsProp}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var, mg, ms, and mom tensors is
+     * protected by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

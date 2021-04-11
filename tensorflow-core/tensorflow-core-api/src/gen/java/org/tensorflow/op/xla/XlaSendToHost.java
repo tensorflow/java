@@ -28,35 +28,39 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op to send a tensor to the host.
- * <p>
  * input: the tensor that will be sent to the host.
  * Tinput: element type for input.
  * key: A unique identifier for this region used to match up host transfers.
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class XlaSendToHost extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaSendToHost";
+
+  private XlaSendToHost(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new XlaSendToHost operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param key 
+   * @param input the input value
+   * @param key the value of the key property
    * @return a new instance of XlaSendToHost
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static XlaSendToHost create(Scope scope, Operand<? extends TType> input, String key) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSendToHost", scope.makeOpName("XlaSendToHost"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key", key);
     return new XlaSendToHost(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaSendToHost";
-  
-  private XlaSendToHost(Operation operation) {
-    super(operation);
   }
 }

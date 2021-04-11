@@ -28,57 +28,63 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns the next representable value of `x1` in the direction of `x2`, element-wise.
- * <p>
+ * Returns the next representable value of {@code x1} in the direction of {@code x2}, element-wise.
  * This operation returns the same result as the C++ std::nextafter function.
- * <p>
- * It can also return a subnormal number.
- * <p>
- * @compatibility(cpp)
+ * <p>It can also return a subnormal number.
+ * <p>{@literal @}compatibility(cpp)<br>
  * Equivalent to C++ std::nextafter function.
- * @end_compatibility
- * 
- * @param <T> data type for {@code output()} output
+ * <br>{@literal @}end_compatibility
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class NextAfter<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "NextAfter";
+
+  private Output<T> output;
+
+  private NextAfter(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new NextAfter operation.
-   * 
+   *
    * @param scope current scope
-   * @param x1 
-   * @param x2 
+   * @param x1 the x1 value
+   * @param x2 the x2 value
+   * @param <T> data type for {@code NextAfter} output and operands
    * @return a new instance of NextAfter
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
     OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
     opBuilder.addInput(x1.asOutput());
     opBuilder.addInput(x2.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new NextAfter<T>(opBuilder.build());
+    return new NextAfter<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "NextAfter";
-  
-  private Output<T> output;
-  
-  private NextAfter(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

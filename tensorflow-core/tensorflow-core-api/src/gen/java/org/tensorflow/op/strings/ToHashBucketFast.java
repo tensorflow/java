@@ -30,31 +30,50 @@ import org.tensorflow.types.TString;
 
 /**
  * Converts each string in the input Tensor to its hash mod by a number of buckets.
- * <p>
  * The hash function is deterministic on the content of the string within the
  * process and will never change. However, it is not suitable for cryptography.
  * This function may be used when CPU time is scarce and inputs are trusted or
  * unimportant. There is a risk of adversaries constructing inputs that all hash
  * to the same bucket. To prevent this problem, use a strong hash function with
- * `tf.string_to_hash_bucket_strong`.
- * <p>
- * Examples:
- * <p>
- * >>> tf.strings.to_hash_bucket_fast(["Hello", "TensorFlow", "2.x"], 3).numpy()
+ * {@code tf.string_to_hash_bucket_strong}.
+ * <p>Examples:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.strings.to_hash_bucket_fast([&quot;Hello&quot;, &quot;TensorFlow&quot;, &quot;2.x&quot;], 3).numpy()
  * array([0, 2, 2])
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class ToHashBucketFast extends RawOp implements Operand<TInt64> {
-  
   /**
-   * Factory method to create a class wrapping a new ToHashBucketFast operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StringToHashBucketFast";
+
+  private Output<TInt64> output;
+
+  private ToHashBucketFast(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new StringToHashBucketFast operation.
+   *
    * @param scope current scope
    * @param input The strings to assign a hash bucket.
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucketFast
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ToHashBucketFast create(Scope scope, Operand<TString> input, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketFast", scope.makeOpName("ToHashBucketFast"));
     opBuilder.addInput(input.asOutput());
@@ -62,27 +81,18 @@ public final class ToHashBucketFast extends RawOp implements Operand<TInt64> {
     opBuilder.setAttr("num_buckets", numBuckets);
     return new ToHashBucketFast(opBuilder.build());
   }
-  
+
   /**
-   * A Tensor of the same shape as the input `string_tensor`.
+   * Gets output.
+   * A Tensor of the same shape as the input {@code string_tensor}.
+   * @return output.
    */
   public Output<TInt64> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringToHashBucketFast";
-  
-  private Output<TInt64> output;
-  
-  private ToHashBucketFast(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -23,33 +23,35 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Enqueue a Tensor on the computation outfeed.
  */
 public final class OutfeedEnqueue extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "OutfeedEnqueue";
+
+  private OutfeedEnqueue(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new OutfeedEnqueue operation.
-   * 
+   *
    * @param scope current scope
    * @param input A tensor that will be inserted into the outfeed queue.
    * @return a new instance of OutfeedEnqueue
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static OutfeedEnqueue create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueue", scope.makeOpName("OutfeedEnqueue"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new OutfeedEnqueue(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OutfeedEnqueue";
-  
-  private OutfeedEnqueue(Operation operation) {
-    super(operation);
   }
 }

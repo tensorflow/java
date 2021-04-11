@@ -30,21 +30,37 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The TensorArrayUnpack operation
  */
 @Operator
 public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArrayUnpack";
+
+  private Output<TFloat32> flowOut;
+
+  private TensorArrayUnpack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    flowOut = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorArrayUnpack operation.
-   * 
+   *
    * @param scope current scope
-   * @param handle 
-   * @param value 
-   * @param flowIn 
+   * @param handle the handle value
+   * @param value the value value
+   * @param flowIn the flowIn value
    * @return a new instance of TensorArrayUnpack
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArrayUnpack create(Scope scope, Operand<TString> handle, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArrayUnpack create(Scope scope, Operand<TString> handle,
+      Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
@@ -52,26 +68,18 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
     opBuilder = scope.apply(opBuilder);
     return new TensorArrayUnpack(opBuilder.build());
   }
-  
+
   /**
+   * Gets flowOut.
+   *
+   * @return flowOut.
    */
   public Output<TFloat32> flowOut() {
     return flowOut;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return flowOut;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayUnpack";
-  
-  private Output<TFloat32> flowOut;
-  
-  private TensorArrayUnpack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    flowOut = operation.output(outputIdx++);
   }
 }
