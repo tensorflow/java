@@ -35,12 +35,12 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <p>Mean Intersection-Over-Union is a common evaluation metric for semantic image segmentation,
  * which first computes the IOU for each semantic class and then computes the average over classes.
- * IOU is defined as follows: {@code IOU = true_positive
- * / (true_positive + false_positive + false_negative)}. The predictions are accumulated in a
- * confusion matrix, weighted by sample_weight and the metric is then calculated from it.
+ * IOU is defined as follows: {@code IOU = true_positive / (true_positive + false_positive +
+ * false_negative)}. The predictions are accumulated in a confusion matrix, weighted by
+ * sample_weight and the metric is then calculated from it.
  *
- * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use sample_weight of
- * 0 to mask values.
+ * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use sample_weight of 0 to mask
+ * values.
  *
  * @param <T> The data type for the metric result
  */
@@ -124,12 +124,35 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
    * @param sampleWeights Optional weighting of each example. Defaults to 1, if null. Rank is either
    *     0, or the same rank as labels, and must be broadcastable to labels.
    * @return the Operands that updates totalConfusionMatrix variable
+   * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=} labels rank,
+   *     and if the predictions size is not equal to the labels size
    */
   @Override
   public List<Op> updateStateList(
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
+    if (sampleWeights != null) {
+      long weightsRank = sampleWeights.shape().numDimensions();
+      long labelsRank = labels.shape().numDimensions();
+      if (weightsRank != 0
+          && weightsRank != Shape.UNKNOWN_SIZE
+          && labelsRank != Shape.UNKNOWN_SIZE
+          && weightsRank != labelsRank) {
+        throw new IllegalArgumentException(
+            String.format(
+                "Weights must either have rank 0, or the same rank as labels, weights rank = %d, labels rank = %d",
+                weightsRank, labelsRank));
+      }
+    }
+    long labelsSize = labels.shape().size();
+    long predictionsSize = predictions.shape().size();
+    if (labelsSize != predictionsSize) {
+      throw new IllegalArgumentException(
+          String.format(
+              "labels and predictions must have the same size, labels size = %d, predictions size = %d",
+              labelsSize, predictionsSize));
+    }
 
     Operand<T> tLabels = cast(getTF(), labels, type);
     if (tLabels.shape().numDimensions() > 1) {
