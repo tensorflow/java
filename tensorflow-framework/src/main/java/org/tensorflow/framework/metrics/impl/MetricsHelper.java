@@ -25,6 +25,7 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Rank;
+import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.op.core.Stack;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Mean;
@@ -438,8 +439,12 @@ public class MetricsHelper {
 
     if (classIndex != null) {
       // Slice to new shapes (N, Dx)
-      tLabels = tf.gather(tLabels, tf.constant(new int[] {classIndex}), tf.constant(1));
-      tPredictions = tf.gather(tPredictions, tf.constant(new int[] {classIndex}), tf.constant(1));
+      tLabels = tf.squeeze(tf.gather(tLabels,
+              tf.constant(new int[] {classIndex}), tf.constant(-1)),
+              Squeeze.axis(Collections.singletonList(1L)));
+      tPredictions = tf.squeeze(tf.gather(tPredictions,
+              tf.constant(new int[] {classIndex}), tf.constant(-1)),
+              Squeeze.axis(Collections.singletonList(1L)));
     }
     org.tensorflow.op.core.Shape<TInt32> predShape = tf.shape(tPredictions);
 
