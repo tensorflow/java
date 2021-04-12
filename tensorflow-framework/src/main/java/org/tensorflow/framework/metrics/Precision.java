@@ -290,7 +290,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
     if (this.falsePositives == null) {
       this.falsePositives =
           tf.withName(falsePositivesName)
-              .variable(zeros.call(tf.constant(Shape.of(thresholds.length)), type));
+              .variable(zero);
       initializers.add(tf.assign(falsePositives, zero));
     }
   }
