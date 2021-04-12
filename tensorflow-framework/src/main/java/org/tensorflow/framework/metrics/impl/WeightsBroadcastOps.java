@@ -18,6 +18,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+import org.tensorflow.op.core.NoOp;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
@@ -28,21 +29,27 @@ import java.util.List;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+/**
+ * Weight broadcasting operations.
+ *
+ * <p>In {@link org.tensorflow.framework.losses} and `{@link org.tensorflow.framework.metrics}, we support limited weight broadcasting. This file includes
+ * operations for those broadcasting rules.
+ */
 public class WeightsBroadcastOps {
 
   private static final String ASSERT_BROADCASTABLE_ERROR_PREFIX =
       "weights can not be broadcast to values.";
 
   /**
-   * Asserts that `weights` can be broadcast to `values`
+   * Asserts that {@code weights} can be broadcast to {@code values}
    *
    * @param tf the TensorFlow Ops
-   * @param weights `Tensor` of weights.
-   * @param values `Tensor` of values to which weights are applied.
-   * @return `Operation` raising `InvalidArgumentError` if `weights` has incorrect shape. `no_op` if
-   *     static checks determine `weights` has correct shape.
+   * @param weights the weights Operand
+   * @param values Operand of values to which weights are applied.
+   * @return {@code Operation} raising a tensorflow InvalidArgumentError if {@code weights} has incorrect shape. {@link NoOp} if
+   *     static checks determine {@code weights}  has correct shape.
    * @param <T> the type of weights and values
-   * @throws IllegalArgumentException If static checks determine `weights` has incorrect shape.
+   * @throws IllegalArgumentException If static checks determine {@code weights}  has incorrect shape.
    */
   @SuppressWarnings("unchecked")
   public static <T extends TNumber> Op assertBroadcastable(
@@ -75,7 +82,7 @@ public class WeightsBroadcastOps {
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
-        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i)) {
+        if (weightsShapeStatic.size(i) != 1 && valuesShapeStatic.size(i) != weightsShapeStatic.size(i)) {
           throw new IllegalArgumentException(
               String.format(
                   "%s Mismatch at dim %s. values.shape=%s weights.shape=%s.",
@@ -90,7 +97,7 @@ public class WeightsBroadcastOps {
           .noOp();
     }
     // Dynamic checks.
-    Operand<TBool> is_scalar = tf.math.equal(weightsRank, tf.constant(0));
+    Operand<TBool> isScalar = tf.math.equal(weightsRank, tf.constant(0));
     List<Operand<?>> data =
         Arrays.asList(
             tf.constant(ASSERT_BROADCASTABLE_ERROR_PREFIX),
@@ -98,13 +105,13 @@ public class WeightsBroadcastOps {
             weightsShape,
             tf.constant("values.shape="),
             valuesShape,
-            tf.constant("is_scalar="),
-            is_scalar);
+            tf.constant("isScalar="),
+                isScalar);
 
     Operand<TBool> isValidShape =
         tf.select(
-            is_scalar,
-            is_scalar,
+                isScalar,
+                isScalar,
             hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape));
 
     return tf.assertThat(isValidShape, data);
@@ -134,7 +141,7 @@ public class WeightsBroadcastOps {
   }
 
   /**
-   * Checks that each dimension of the two shapes are the same
+   * Checks that each dimension of the two shapes are the same size, or that the weight dimension size is 1.
    *
    * @param tf the TensorFlow Ops
    * @param weightsShape the shape of the weights
@@ -144,12 +151,18 @@ public class WeightsBroadcastOps {
   private static Operand<TBool> hasValidDims(
       Ops tf, Operand<TInt32> weightsShape, Operand<TInt32> valuesShape) {
     tf = tf.withSubScope("hasInvalidDims");
-    Operand<TInt32> diff = tf.reduceSum(tf.math.sub(weightsShape, valuesShape), tf.constant(0));
-    return tf.math.equal(tf.constant(0), diff);
+
+    Operand<TInt32> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
+    Operand<TInt32> validDims = tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
+    Operand<TInt32> weightsShape2d = tf.expandDims(weightsShape, tf.constant(-1));
+
+    Operand<TInt32> invalidDims = SetsOps.difference(tf, weightsShape2d, validDims);
+    Operand<TInt32> numInvalidDims = tf.size(invalidDims, TInt32.class);
+    return tf.math.equal(tf.constant(0), numInvalidDims);
   }
 
   /**
-   * Broadcast `weights` to the same shape as `values`.
+   * Broadcast {@code weights} to the same shape as {@code values}.
    *
    * <p>This returns a version of {@code weights} following the same broadcast rules as {@code
    * mul(weights,
@@ -158,7 +171,7 @@ public class WeightsBroadcastOps {
    * summing them; e.g., {@code reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))}.
    *
    * @param tf the TensorFlow ops
-   * @param weights `Tensor` whose shape is able to be broadcast to `values`
+   * @param weights Operand whose shape is able to be broadcast to {@code values}
    * @param values Tensor` of any shape
    * @param <T> the type of Operand
    * @return {@code weights} broadcast to {@code values} shape
