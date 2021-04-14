@@ -20,8 +20,10 @@ package org.tensorflow.types;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
+import org.bytedeco.javacpp.Pointer;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -103,5 +105,27 @@ public class TStringTest {
     }
   }
 
+  @Test
+  public void testNoLeaks() throws Exception {
+    // warm up and try to get all JIT compilation done to stabilize memory usage...
+    for (int i = 0; i < 1000; i++) {
+      TString.scalarOf(A_LARGE_STRING).close();
+      System.gc();
+    }
+
+    long bytesBefore = Pointer.physicalBytes();
+
+    for (int i = 0; i < 1000; i++) {
+      TString.scalarOf(A_LARGE_STRING).close();
+      System.gc();
+    }
+
+    long bytesAfter = Pointer.physicalBytes();
+
+    // the difference should ideally be 0, but the JVM and TF Core may be holding onto some unrelated stuff...
+    assertTrue(Math.abs(bytesAfter - bytesBefore) < 10_000_000);
+  }
+
+  private static final String A_LARGE_STRING = new String(new byte[1_000_000]);
   private static final String BABY_CHICK = "\uD83D\uDC25";	  
 }

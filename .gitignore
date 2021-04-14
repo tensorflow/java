@@ -16,6 +16,7 @@ __pycache__
 cmake_build/
 tensorflow/contrib/cmake/_build/
 .idea/**
+.run
 /build/
 [Bb]uild/
 /tensorflow/core/util/version_info.cc
