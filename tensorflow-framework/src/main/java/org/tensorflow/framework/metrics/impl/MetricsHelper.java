@@ -104,8 +104,8 @@ public class MetricsHelper {
                 ASSERT_BROADCAST_ERROR_PREFIX,
                 valuesRankStatic,
                 weightsRankStatic,
-                valuesShapeStatic.toString(),
-                weightsShapeStatic.toString()));
+                valuesShapeStatic,
+                weightsShapeStatic));
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
@@ -116,8 +116,8 @@ public class MetricsHelper {
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",
                   ASSERT_BROADCAST_ERROR_PREFIX,
                   i,
-                  valuesShapeStatic.toString(),
-                  weightsShapeStatic.toString()));
+                  valuesShapeStatic,
+                  weightsShapeStatic));
         }
       }
       return tf.withSubScope("staticDimsCheckSuccess")
