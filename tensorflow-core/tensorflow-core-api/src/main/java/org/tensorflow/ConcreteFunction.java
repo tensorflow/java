@@ -20,6 +20,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -212,13 +213,27 @@ public class ConcreteFunction implements AutoCloseable {
     return signature.toString();
   }
 
+  //TODO migrate to the actual ops once they are generated
   public static final String CALL_OP = "PartitionedCall";
+  //TODO migrate to the actual ops once they are generated
   public static final String STATEFUL_CALL_OP = "StatefulPartitionedCall";
 
+
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param scope the scope to call the function in
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   */
   public Map<String, Operand<?>> call(Scope scope,
       Map<String, Operand<?>> arguments) {
     List<Operand<?>> inputList = new ArrayList<>();
 
+    Output<?>[] inputs = new Output<?>[signature().inputNames().size()];
+
+    int i = 0;
     for (String inputName : signature().inputNames()) {
       Operand<?> input = arguments.get(inputName);
       if (input == null) {
@@ -226,7 +241,8 @@ public class ConcreteFunction implements AutoCloseable {
             "Function " + signature().methodName() + " has parameter \"" + inputName
                 + "\", but no argument was passed for it.");
       }
-      inputList.add(input);
+      inputs[i] = input.asOutput();
+      i++;
     }
 
     scope.env().attachFunction(this);
@@ -237,11 +253,11 @@ public class ConcreteFunction implements AutoCloseable {
     OperationBuilder opBuilder = scope.env()
         .opBuilder(isStateful() ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
 
-    opBuilder.addInputList(inputList.stream().map(Operand::asOutput).toArray(Output[]::new));
+    opBuilder.addInputList(inputs);
 
     opBuilder.setAttr("f", this);
-    opBuilder.setAttr("Tin", inputList.stream().map(x -> x.asOutput().dataType()).toArray(DataType[]::new));
-    opBuilder.setAttr("Tout", signature().getOutputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new));
+    opBuilder.setAttr("Tin", inputDtypes);
+    opBuilder.setAttr("Tout", outputDtypes);
 
     opBuilder = scope.apply(opBuilder);
     Operation op = opBuilder.build();
@@ -249,14 +265,14 @@ public class ConcreteFunction implements AutoCloseable {
     int numOutputs1 = op.numOutputs();
     List<Operand<?>> outputList = new ArrayList<>(signature().outputNames().size());
 
-    for (int i = 0; i < numOutputs1; i++) {
+    for (i = 0; i < numOutputs1; i++) {
       outputList.add(op.output(i));
     }
 
     Map<String, Operand<?>> namedOutputs = new LinkedHashMap<>(signature().outputNames().size());
 
     List<String> outputNames = new ArrayList<>(signature().outputNames());
-    for (int i = 0; i < outputNames.size(); i++) {
+    for (i = 0; i < outputNames.size(); i++) {
       String outputName = outputNames.get(i);
 
       if (i > outputList.size()) {
@@ -378,28 +394,6 @@ public class ConcreteFunction implements AutoCloseable {
     SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
-  /**
-   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
-   * JIT is extremely non-obvious.
-   *
-   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
-   * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
-   */
-  private void makeJit() {
-    try (PointerScope scope = new PointerScope()) {
-      byte[] bytes = AttrValue.newBuilder().setB(true).build().toByteArray();
-      BytePointer trueValue = new BytePointer(bytes);
-
-      TF_Status status1 = TF_Status.newStatus();
-      TF_FunctionSetAttrValueProto(nativeHandle(), "_XlaMustCompile", trueValue, bytes.length, status1);
-      status1.throwExceptionIfNotOK();
-
-      TF_Status status2 = TF_Status.newStatus();
-      TF_FunctionSetAttrValueProto(nativeHandle(), "_noinline", trueValue, bytes.length, status2);
-      status2.throwExceptionIfNotOK();
-    }
-  }
-
   TF_Function nativeHandle() {
     if (nativeFunction.getNativeHandle().isNull()) {
       throw new IllegalStateException("Function has been closed");
@@ -407,82 +401,8 @@ public class ConcreteFunction implements AutoCloseable {
     return nativeFunction.getNativeHandle();
   }
 
-  private final Signature signature;
-  private final NativeFunction nativeFunction;
-  private final PointerScope scope;
-  private final Set<TF_Function> dependencies;
-
   ConcreteFunction(Signature signature, NativeFunction nativeFunction, Collection<NativeFunction> availableFunctions) {
     this(signature, nativeFunction, nativeFunction.getAllDependencies(availableFunctions));
-  }
-
-  private static boolean dataTypesMatch(List<DataType> a, List<DataType> b) {
-    if (a.size() != b.size()) {
-      return false;
-    }
-
-    for (int i = 0; i < a.size(); i++) {
-      DataType aType = a.get(i);
-      DataType bType = b.get(i);
-
-      if (aType != DataType.DT_INVALID && bType != DataType.DT_INVALID && !a.equals(b)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  private ConcreteFunction(Signature signature, NativeFunction nativeFunction, Set<TF_Function> dependencies) {
-    this.signature = signature;
-    this.nativeFunction = nativeFunction;
-    this.dependencies = Collections.unmodifiableSet(dependencies);
-
-    if (this.signature.getInputs().size() != nativeFunction.getFunctionDef().getSignature().getInputArgCount()) {
-      throw new IllegalArgumentException(
-          "Signature must have the same number of inputs as the native function.  Expected "
-              + nativeFunction.getFunctionDef().getSignature().getInputArgCount() + ", got "
-              + this.signature.getInputs().size());
-    }
-
-    if (this.signature.getOutputs().size() != nativeFunction.getFunctionDef().getSignature().getOutputArgCount()) {
-      throw new IllegalArgumentException(
-          "New signature must have the same number of outputs as the native function.  Expected "
-              + nativeFunction.getFunctionDef().getSignature().getOutputArgCount() + ", got "
-              + this.signature.getOutputs().size());
-    }
-
-    List<DataType> inputs = this.signature.getInputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-    List<DataType> nativeInputs = nativeFunction.getFunctionDef().getSignature().getInputArgList().stream()
-        .map(ArgDef::getType)
-        .collect(Collectors.toList());
-
-    if (!dataTypesMatch(inputs, nativeInputs)) {
-      throw new IllegalArgumentException(
-          "Data types of the signature's inputs must match the native function's (in order).  Expected "
-              + nativeInputs + ", got " + inputs);
-    }
-
-    List<DataType> outputs = this.signature.getOutputs().values().stream().map(x -> x.dataType)
-        .collect(Collectors.toList());
-    List<DataType> nativeOutputs = nativeFunction.getFunctionDef().getSignature().getOutputArgList().stream()
-        .map(ArgDef::getType)
-        .collect(Collectors.toList());
-
-    if (!dataTypesMatch(outputs, nativeOutputs)) {
-      throw new IllegalArgumentException(
-          "Data types of the signature's outputs must match the native function's (in order).  Expected "
-              + nativeOutputs + ", got "
-              + outputs);
-    }
-
-    try (PointerScope scope = new PointerScope()) {
-      this.scope = scope;
-      scope.extend();
-      this.nativeFunction.getNativeHandle().withDeallocatorInScope();
-      this.dependencies.forEach(TF_Function::withDeallocatorInScope);
-    }
   }
 
   /**
@@ -519,6 +439,107 @@ public class ConcreteFunction implements AutoCloseable {
         nativeFunction,
         availableFunctions
     );
+  }
+
+  private final Signature signature;
+  private final NativeFunction nativeFunction;
+  private final PointerScope scope;
+  private final Set<TF_Function> dependencies;
+  private final DataType[] inputDtypes;
+  private final DataType[] outputDtypes;
+
+  private ConcreteFunction(Signature signature, NativeFunction nativeFunction, Set<TF_Function> dependencies) {
+    this.signature = signature;
+    this.nativeFunction = nativeFunction;
+    this.dependencies = Collections.unmodifiableSet(dependencies);
+
+    if (this.signature.getInputs().size() != nativeFunction.getFunctionDef().getSignature().getInputArgCount()) {
+      throw new IllegalArgumentException(
+          "Signature must have the same number of inputs as the native function.  Expected "
+              + nativeFunction.getFunctionDef().getSignature().getInputArgCount() + ", got "
+              + this.signature.getInputs().size());
+    }
+
+    if (this.signature.getOutputs().size() != nativeFunction.getFunctionDef().getSignature().getOutputArgCount()) {
+      throw new IllegalArgumentException(
+          "New signature must have the same number of outputs as the native function.  Expected "
+              + nativeFunction.getFunctionDef().getSignature().getOutputArgCount() + ", got "
+              + this.signature.getOutputs().size());
+    }
+
+    inputDtypes = this.signature.getInputs().values().stream().map(x -> x.dataType)
+        .toArray(DataType[]::new);
+
+    List<DataType> inputs = Arrays.asList(inputDtypes);
+    List<DataType> nativeInputs = nativeFunction.getFunctionDef().getSignature().getInputArgList().stream()
+        .map(ArgDef::getType)
+        .collect(Collectors.toList());
+
+    if (!dataTypesMatch(inputs, nativeInputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the signature's inputs must match the native function's (in order).  Expected "
+              + nativeInputs + ", got " + inputs);
+    }
+
+    outputDtypes = signature().getOutputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new);
+
+    List<DataType> outputs = Arrays.asList(outputDtypes);
+    List<DataType> nativeOutputs = nativeFunction.getFunctionDef().getSignature().getOutputArgList().stream()
+        .map(ArgDef::getType)
+        .collect(Collectors.toList());
+
+    if (!dataTypesMatch(outputs, nativeOutputs)) {
+      throw new IllegalArgumentException(
+          "Data types of the signature's outputs must match the native function's (in order).  Expected "
+              + nativeOutputs + ", got "
+              + outputs);
+    }
+
+    try (PointerScope scope = new PointerScope()) {
+      this.scope = scope;
+      scope.extend();
+      this.nativeFunction.getNativeHandle().withDeallocatorInScope();
+      this.dependencies.forEach(TF_Function::withDeallocatorInScope);
+    }
+  }
+
+  /**
+   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
+   * JIT is extremely non-obvious.
+   *
+   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
+   * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
+   */
+  private void makeJit() {
+    try (PointerScope scope = new PointerScope()) {
+      byte[] bytes = AttrValue.newBuilder().setB(true).build().toByteArray();
+      BytePointer trueValue = new BytePointer(bytes);
+
+      TF_Status status1 = TF_Status.newStatus();
+      TF_FunctionSetAttrValueProto(nativeHandle(), "_XlaMustCompile", trueValue, bytes.length, status1);
+      status1.throwExceptionIfNotOK();
+
+      TF_Status status2 = TF_Status.newStatus();
+      TF_FunctionSetAttrValueProto(nativeHandle(), "_noinline", trueValue, bytes.length, status2);
+      status2.throwExceptionIfNotOK();
+    }
+  }
+
+  private static boolean dataTypesMatch(List<DataType> a, List<DataType> b) {
+    if (a.size() != b.size()) {
+      return false;
+    }
+
+    for (int i = 0; i < a.size(); i++) {
+      DataType aType = a.get(i);
+      DataType bType = b.get(i);
+
+      if (aType != DataType.DT_INVALID && bType != DataType.DT_INVALID && !a.equals(b)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
 
@@ -615,9 +636,5 @@ public class ConcreteFunction implements AutoCloseable {
       status.throwExceptionIfNotOK();
       return new ConcreteFunction(signature, new NativeFunction(handle), graph.getNativeFunctions());
     }
-  }
-
-  ConcreteFunction withNewSignature(Signature signature) {
-    return new ConcreteFunction(signature, nativeFunction, dependencies);
   }
 }

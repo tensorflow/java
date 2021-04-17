@@ -233,12 +233,6 @@ public class SavedModelBundle implements AutoCloseable {
    */
   public final class SavedFunction {
 
-    private final Signature signature;
-
-    private SavedFunction(Signature signature) {
-      this.signature = signature;
-    }
-
     /**
      * The signature of the function.
      */
@@ -319,6 +313,12 @@ public class SavedModelBundle implements AutoCloseable {
       inputMap.put(signature.inputNames().iterator().next(), argument);
       Map<String, Tensor> results = call(inputMap);
       return results.get(signature.outputNames().iterator().next());
+    }
+
+    private final Signature signature;
+
+    private SavedFunction(Signature signature) {
+      this.signature = signature;
     }
   }
 

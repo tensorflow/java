@@ -41,14 +41,6 @@ import org.tensorflow.proto.framework.NodeDef;
  * A class holding a native function handle and providing cached access to it's {@link FunctionDef}.
  */
 class NativeFunction {
-
-  private final TF_Function nativeHandle;
-
-  private FunctionDef functionDef = null;
-  private List<String> dependencies = null;
-  private Boolean stateful = null;
-  private String name = null;
-
   public NativeFunction(TF_Function nativeHandle) {
     this.nativeHandle = nativeHandle;
   }
@@ -159,4 +151,12 @@ class NativeFunction {
         .map(NativeFunction::getNativeHandle)
         .collect(Collectors.toSet());
   }
+
+  private final TF_Function nativeHandle;
+
+  private FunctionDef functionDef = null;
+  private List<String> dependencies = null;
+  private Boolean stateful = null;
+  private String name = null;
+
 }

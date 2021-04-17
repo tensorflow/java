@@ -50,7 +50,7 @@ public final class TensorFlow {
    * @return A <a href="https://www.tensorflow.org/code/tensorflow/core/framework/op_def.proto">OpList</a> protocol
    * buffer, which lists all the available TensorFlow operations.
    */
-  public static synchronized OpList registeredOpList() {
+  public static OpList registeredOpList() {
     TF_Buffer buf = TF_GetAllOpList();
     try {
       return OpList.parseFrom(buf.dataAsByteBuffer());

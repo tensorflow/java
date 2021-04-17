@@ -387,17 +387,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   public void attachFunction(ConcreteFunction function) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
-      attachNativeFunction(ref.nativeHandle(), function.nativeHandle());
-      function.getDependencies().forEach(x -> attachNativeFunction(ref.nativeHandle(), x));
+      TF_Status status = TF_Status.newStatus();
+      TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), null, status);
+      status.throwExceptionIfNotOK();
+
+      function.getDependencies().forEach(x -> {
+        TF_Status status2 = TF_Status.newStatus();
+        TF_GraphCopyFunction(ref.nativeHandle(), x, null, status2);
+        status2.throwExceptionIfNotOK();
+      });
     }
   }
 
-  private void attachNativeFunction(TF_Graph graph, TF_Function fn) {
-    TF_Status status = TF_Status.newStatus();
-    TF_GraphCopyFunction(graph, fn, null, status);
-    status.throwExceptionIfNotOK();
-  }
-
+  /**
+   * Get the graph's functions.  Deallocating the function pointers is the caller's responsibility.
+   */
   synchronized List<NativeFunction> getNativeFunctions() {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
@@ -435,17 +439,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       // will close unused functions when method ends
       funcs.forEach(x -> x.getNativeHandle().withDeallocatorInScope());
 
-      ConcreteFunction func = null;
+      for (NativeFunction f : funcs) {
 
-      for (int i = 0; i < funcs.size(); i++) {
-
-        if (funcs.get(i).getName().equals(key) && func == null) {
-          func = ConcreteFunction.fromNativeHandle(funcs.get(i), funcs);
+        if (f.getName().equals(key)) {
+          return ConcreteFunction.fromNativeHandle(f, funcs);
         }
       }
-
-      return func;
     }
+    return null;
   }
 
   /**

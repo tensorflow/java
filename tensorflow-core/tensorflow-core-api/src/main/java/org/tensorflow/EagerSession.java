@@ -28,7 +28,6 @@ import org.bytedeco.javacpp.PointerScope;
 import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
-import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
@@ -290,15 +289,16 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   public void attachFunction(ConcreteFunction function) {
     checkSession();
     try (PointerScope scope = new PointerScope()) {
-      attachNativeFunction(function.nativeHandle());
-      function.getDependencies().forEach(this::attachNativeFunction);
-    }
-  }
+      TF_Status status = TF_Status.newStatus();
+      TFE_ContextAddFunction(nativeHandle, function.nativeHandle(), status);
+      status.throwExceptionIfNotOK();
 
-  private void attachNativeFunction(TF_Function fn) {
-    TF_Status status = TF_Status.newStatus();
-    TFE_ContextAddFunction(nativeHandle, fn, status);
-    status.throwExceptionIfNotOK();
+      function.getDependencies().forEach(fn -> {
+        TF_Status status2 = TF_Status.newStatus();
+        TFE_ContextAddFunction(nativeHandle, fn, status2);
+        status2.throwExceptionIfNotOK();
+      });
+    }
   }
 
   @Override

@@ -19,6 +19,7 @@ package org.tensorflow.op.core;
 import java.util.Map;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -30,12 +31,31 @@ import org.tensorflow.op.annotation.Operator;
 @Operator(name = "call")
 public abstract class Function {
 
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param scope the scope to call the function in
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   * @see ConcreteFunction#call(Ops, Map)
+   */
   @Endpoint
   public static Map<String, Operand<?>> call(Scope scope, ConcreteFunction function,
       Map<String, Operand<?>> arguments) {
     return function.call(scope, arguments);
   }
 
+
+  /**
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
+   *
+   * @param scope the scope to call the function in
+   * @param argument the argument to the call
+   * @return the output of the function
+   * @see ConcreteFunction#call(Ops, Operand)
+   */
   @Endpoint
   public static Operand<?> call(Scope scope, ConcreteFunction function,
       Operand<?> argument) {
