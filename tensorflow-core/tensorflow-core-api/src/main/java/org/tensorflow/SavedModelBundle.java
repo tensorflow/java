@@ -229,7 +229,8 @@ public class SavedModelBundle implements AutoCloseable {
    *
    * All resources are owned by the SavedModel.
    *
-   * TODO initializing the session
+   * The session is not initialized in any way, you can use {@link Session#runInit()} on {@link SavedModelBundle#session()}
+   * if this is necessary.
    */
   public final class SavedFunction {
 

@@ -1120,14 +1120,26 @@ public final class Ops {
   }
 
   /**
-   * empty
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   *  works for functions with a single input and output.
+   *
+   * @param scope the scope to call the function in
+   * @param argument the argument to the call
+   * @return the output of the function
+   * @see ConcreteFunction#call(Ops, Operand)
    */
   public Operand<?> call(ConcreteFunction function, Operand<?> argument) {
     return Function.call(scope, function, argument);
   }
 
   /**
-   * empty
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   *  inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param scope the scope to call the function in
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   * @see ConcreteFunction#call(Ops, Map)
    */
   public Map<String, Operand<?>> call(ConcreteFunction function,
       Map<String, Operand<?>> arguments) {
