@@ -64,7 +64,7 @@ public class AUCTest {
   }
 
   @Test
-  public void testCummulative() {
+  public void testCumulative() {
 
     // expected variable values after each run.
     float[][] tp = {{2f, 1f, 0f}, {4f, 2f, 0f}, {6f, 3f, 0f}};
