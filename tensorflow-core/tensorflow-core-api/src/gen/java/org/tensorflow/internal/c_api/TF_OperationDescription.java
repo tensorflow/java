@@ -8,12 +8,14 @@ import org.bytedeco.javacpp.annotation.*;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.*;
 
-
-// Operation being built. The underlying graph must outlive this.
-@Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
+@NoOffset @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TF_OperationDescription extends Pointer {
-    /** Empty constructor. Calls {@code super((Pointer)null)}. */
-    public TF_OperationDescription() { super((Pointer)null); }
+    static { Loader.load(); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
     public TF_OperationDescription(Pointer p) { super(p); }
+
+
+  public native @ByRef NodeBuilder node_builder(); public native TF_OperationDescription node_builder(NodeBuilder setter);
+  public native TF_Graph graph(); public native TF_OperationDescription graph(TF_Graph setter);
+  
 }

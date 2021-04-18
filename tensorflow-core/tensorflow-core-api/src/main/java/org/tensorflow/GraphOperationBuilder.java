@@ -19,7 +19,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInput;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddInputList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperationLocked;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperationLocked;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloat;
@@ -67,12 +69,17 @@ import org.tensorflow.proto.framework.NameAttrList;
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  GraphOperationBuilder(Graph graph, String type, String name, Scope scope) {
+  GraphOperationBuilder(Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
     this.graph = graph;
     this.scope = scope;
+    this.dangerousGradientBuilder = dangerousGradientBuilder;
     Graph.Reference r = graph.ref();
     try {
-      this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
+      if (dangerousGradientBuilder) {
+        this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
+      } else {
+        this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
+      }
     } finally {
       r.close();
     }
@@ -86,14 +93,17 @@ public final class GraphOperationBuilder implements OperationBuilder {
   @Override
   public GraphOperation build() {
     scope.apply(this);
-    Graph.Reference r = graph.ref();
-    try {
-      GraphOperation op = new GraphOperation(graph, finish(unsafeNativeHandle));
+    try (Graph.Reference r = graph.ref()) {
+      TF_Operation built;
+      if (dangerousGradientBuilder) {
+        built = finishDangerousGradient(r.nativeHandle(), unsafeNativeHandle);
+      } else {
+        built = finish(unsafeNativeHandle);
+      }
+      GraphOperation op = new GraphOperation(graph, built);
       unsafeNativeHandle = null;
       scope.onOpCreated(op);
       return op;
-    } finally {
-      r.close();
     }
   }
 
@@ -391,6 +401,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   private TF_OperationDescription unsafeNativeHandle;
   private final Graph graph;
   private final Scope scope;
+  private final boolean dangerousGradientBuilder;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
@@ -419,6 +430,15 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return TF_NewOperation(graphHandle, type, name);
   }
 
+  private static TF_OperationDescription allocateDangerousGradient(TF_Graph graphHandle,
+      String type,
+      String name) {
+    if (graphHandle == null || graphHandle.isNull()) {
+      throw new IllegalStateException("close() has been called on the Graph");
+    }
+    return TF_NewOperationLocked(graphHandle, type, name);
+  }
+
   private static TF_Operation finish(TF_OperationDescription handle) {
     requireHandle(handle);
 
@@ -426,6 +446,18 @@ public final class GraphOperationBuilder implements OperationBuilder {
       TF_Status status = TF_Status.newStatus();
       TF_Operation op = TF_FinishOperation(handle, status);
       status.throwExceptionIfNotOK();
+      return op;
+    }
+  }
+
+  private static TF_Operation finishDangerousGradient(TF_Graph g, TF_OperationDescription handle) {
+    requireHandle(handle);
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_Operation op = TF_FinishOperationLocked(handle, status);
+      status.throwExceptionIfNotOK();
+//      g.name_map().put(TF_OperationName(op), null);
       return op;
     }
   }
@@ -440,7 +472,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void addInputList(
-      TF_OperationDescription handle, TF_Operation[] opHandles, int[] indices) {
+      TF_OperationDescription handle, TF_Operation[] opHandles,
+      int[] indices) {
     requireHandle(handle);
     if (indices.length != opHandles.length) {
       throw new IllegalArgumentException(
@@ -510,7 +543,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrBoolList(
-      TF_OperationDescription handle, String name, boolean[] value) {
+      TF_OperationDescription handle, String name,
+      boolean[] value) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_SetAttrBoolList(handle, name, new BytePointer(new BooleanPointer(value)), value.length);
@@ -528,7 +562,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrTensor(
-      TF_OperationDescription handle, String name, TF_Tensor tensorHandle) {
+      TF_OperationDescription handle, String name,
+      TF_Tensor tensorHandle) {
     requireHandle(handle);
     requireTensor(tensorHandle);
 
@@ -540,7 +575,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrTensorList(
-      TF_OperationDescription handle, String name, TF_Tensor[] tensorHandles) {
+      TF_OperationDescription handle, String name,
+      TF_Tensor[] tensorHandles) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {
@@ -552,13 +588,15 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
       TF_Status status = TF_Status.newStatus();
       TF_SetAttrTensorList(
-          handle, new BytePointer(name), tensors.position(0), tensorHandles.length, status);
+          handle, new BytePointer(name), tensors.position(0), tensorHandles.length,
+          status);
       status.throwExceptionIfNotOK();
     }
   }
 
   private static void setAttrShape(
-      TF_OperationDescription handle, String name, long[] shape, int numDims) {
+      TF_OperationDescription handle, String name, long[] shape,
+      int numDims) {
     requireHandle(handle);
 
     // num_dims and env->GetArrayLength(shape) are assumed to be consistent.
@@ -567,7 +605,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrShapeList(
-      TF_OperationDescription handle, String name, long[] shapes, int[] numDims) {
+      TF_OperationDescription handle, String name, long[] shapes,
+      int[] numDims) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {
@@ -578,12 +617,14 @@ public final class GraphOperationBuilder implements OperationBuilder {
         shapesPointer.position(shapesPointer.position() + numDims[i] * 8);
       }
       TF_SetAttrShapeList(
-          handle, new BytePointer(name), shapesPointers, new IntPointer(numDims), numDims.length);
+          handle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
+          numDims.length);
     }
   }
 
   private static void setAttrStringList(
-      TF_OperationDescription handle, String name, byte[][] value) {
+      TF_OperationDescription handle, String name,
+      byte[][] value) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {

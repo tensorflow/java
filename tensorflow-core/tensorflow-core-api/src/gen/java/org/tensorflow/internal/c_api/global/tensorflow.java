@@ -11,6 +11,10 @@ import org.bytedeco.javacpp.annotation.*;
 public class tensorflow extends org.tensorflow.internal.c_api.presets.tensorflow {
     static { Loader.load(); }
 
+// Targeting ../NativeOutputVector.java
+
+// Targeting ../NameMap.java
+
 // Parsed from tensorflow/core/platform/ctstring_internal.h
 
 /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
@@ -982,9 +986,15 @@ public static native void TF_SetConfig(TF_SessionOptions options,
 
 // Destroy an options object.
 public static native void TF_DeleteSessionOptions(TF_SessionOptions arg0);
-// Targeting ../TF_Graph.java
 
+// TODO(jeff,sanjay):
+// - export functions to set Config fields
 
+// --------------------------------------------------------------------------
+// The new graph construction API, still under development.
+
+// Represents a computation graph.  Graphs may be shared between sessions.
+// Graphs are thread-safe when used as directed below.
 
 // Return a new graph object.
 public static native TF_Graph TF_NewGraph();
@@ -992,9 +1002,8 @@ public static native TF_Graph TF_NewGraph();
 // Destroy an options object.  Graph will be deleted once no more
 // TFSession's are referencing it.
 public static native void TF_DeleteGraph(TF_Graph arg0);
-// Targeting ../TF_OperationDescription.java
 
-
+// Operation being built. The underlying graph must outlive this.
 // Targeting ../TF_Operation.java
 
 
@@ -4084,6 +4093,26 @@ public static native void TF_DeleteDimensionHandle(TF_DimensionHandle handle);
 // #endif  // TENSORFLOW_C_OPS_H_
 
 
+// Parsed from tensorflow_adapters.h
+
+/*
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
+
+// #include "absl/types/span.h"
+
+
+
 // Parsed from tensorflow/c/eager/c_api.h
 
 /* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
@@ -4744,6 +4773,694 @@ public static native void TFE_ContextEndStep(TFE_Context ctx);
 // #endif  // TENSORFLOW_C_EAGER_C_API_H_
 
 
+// Parsed from tensorflow/cc/framework/scope.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+// #define TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+
+// #include <memory>
+// #include <string>
+// #include <unordered_map>
+// #include <unordered_set>
+// #include <vector>
+
+// #include "absl/strings/str_cat.h"
+// #include "tensorflow/cc/framework/ops.h"
+// #include "tensorflow/core/common_runtime/graph_constructor.h"
+// #include "tensorflow/core/lib/core/status.h"
+// #include "tensorflow/core/lib/gtl/array_slice.h"
+// Targeting ../NativeGraphPointer.java
+
+
+// Targeting ../NodeBuilder.java
+
+
+// Targeting ../TF_Scope.java
+
+
+
+/** A helper struct to hold the scopes that would be used by a function
+ *  constructing a composite op. */
+
+// Creates a node of the given operation, with the given inputs, and assigns the
+// result to output. This does not support the ability to add additional
+// attributes.
+
+/** \} */
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_SCOPE_H_
+
+
+// Parsed from tensorflow/c/eager/c_api_experimental.h
+
+/* Copyright 2018 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+// #ifndef TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
+// #define TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
+
+// #include "tensorflow/c/c_api.h"
+// #include "tensorflow/c/eager/c_api.h"
+
+// #ifdef __cplusplus
+// #endif
+
+// Resets `op_to_reset` with `op_or_function_name` and `raw_device_name`. This
+// is for performance optimization by reusing an exiting unused op rather than
+// creating a new op every time. If `raw_device_name` is `NULL` or empty, it
+// does not set the device name. If it's not `NULL`, then it attempts to parse
+// and set the device name. It's effectively `TFE_OpSetDevice`, but it is faster
+// than separately calling it because if the existing op has the same
+// `raw_device_name`, it skips parsing and just leave as it is.
+public static native void TFE_OpReset(TFE_Op op_to_reset,
+                                       @Cast("const char*") BytePointer op_or_function_name,
+                                       @Cast("const char*") BytePointer raw_device_name,
+                                       TF_Status status);
+public static native void TFE_OpReset(TFE_Op op_to_reset,
+                                       String op_or_function_name,
+                                       String raw_device_name,
+                                       TF_Status status);
+
+// Enables only graph collection in RunMetadata on the functions executed from
+// this context.
+public static native void TFE_ContextEnableGraphCollection(TFE_Context ctx);
+
+// Disables only graph collection in RunMetadata on the functions executed from
+// this context.
+public static native void TFE_ContextDisableGraphCollection(TFE_Context ctx);
+// Targeting ../TFE_MonitoringCounterCell.java
+
+
+
+// Atomically increments the value of the cell. The value must be non-negative.
+public static native void TFE_MonitoringCounterCellIncrementBy(
+    TFE_MonitoringCounterCell cell, @Cast("int64_t") long value);
+
+// Retrieves the current value of the cell.
+public static native @Cast("int64_t") long TFE_MonitoringCounterCellValue(
+    TFE_MonitoringCounterCell cell);
+// Targeting ../TFE_MonitoringCounter0.java
+
+
+// Returns a new Counter metric object. The caller should manage lifetime of
+// the object. Using duplicate metric name will crash the program with fatal
+// error.
+public static native TFE_MonitoringCounter0 TFE_MonitoringNewCounter0(
+    @Cast("const char*") BytePointer name, TF_Status status, @Cast("const char*") BytePointer description);
+public static native TFE_MonitoringCounter0 TFE_MonitoringNewCounter0(
+    String name, TF_Status status, String description);
+// Deletes the Counter object.
+public static native void TFE_MonitoringDeleteCounter0(
+    TFE_MonitoringCounter0 counter);
+// Retrieves the cell from the Counter object. The Counter object will manage
+// lifetime of the cell.
+public static native TFE_MonitoringCounterCell TFE_MonitoringGetCellCounter0(
+    TFE_MonitoringCounter0 counter);
+// Targeting ../TFE_MonitoringCounter1.java
+
+
+public static native TFE_MonitoringCounter1 TFE_MonitoringNewCounter1(
+    @Cast("const char*") BytePointer name, TF_Status status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringCounter1 TFE_MonitoringNewCounter1(
+    String name, TF_Status status, String description,
+    String label1);
+public static native void TFE_MonitoringDeleteCounter1(
+    TFE_MonitoringCounter1 counter);
+public static native TFE_MonitoringCounterCell TFE_MonitoringGetCellCounter1(
+    TFE_MonitoringCounter1 counter, @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringCounterCell TFE_MonitoringGetCellCounter1(
+    TFE_MonitoringCounter1 counter, String label1);
+// Targeting ../TFE_MonitoringCounter2.java
+
+
+public static native TFE_MonitoringCounter2 TFE_MonitoringNewCounter2(
+    @Cast("const char*") BytePointer name, TF_Status status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringCounter2 TFE_MonitoringNewCounter2(
+    String name, TF_Status status, String description,
+    String label1, String label2);
+public static native void TFE_MonitoringDeleteCounter2(
+    TFE_MonitoringCounter2 counter);
+public static native TFE_MonitoringCounterCell TFE_MonitoringGetCellCounter2(
+    TFE_MonitoringCounter2 counter, @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringCounterCell TFE_MonitoringGetCellCounter2(
+    TFE_MonitoringCounter2 counter, String label1, String label2);
+// Targeting ../TFE_MonitoringIntGaugeCell.java
+
+
+
+// Atomically set the value of the cell.
+public static native void TFE_MonitoringIntGaugeCellSet(
+    TFE_MonitoringIntGaugeCell cell, @Cast("int64_t") long value);
+
+// Retrieves the current value of the cell.
+public static native @Cast("int64_t") long TFE_MonitoringIntGaugeCellValue(
+    TFE_MonitoringIntGaugeCell cell);
+// Targeting ../TFE_MonitoringIntGauge0.java
+
+
+public static native TFE_MonitoringIntGauge0 TFE_MonitoringNewIntGauge0(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description);
+public static native TFE_MonitoringIntGauge0 TFE_MonitoringNewIntGauge0(
+    String name, TF_Status out_status, String description);
+public static native void TFE_MonitoringDeleteIntGauge0(
+    TFE_MonitoringIntGauge0 gauge);
+public static native TFE_MonitoringIntGaugeCell TFE_MonitoringGetCellIntGauge0(TFE_MonitoringIntGauge0 gauge);
+// Targeting ../TFE_MonitoringIntGauge1.java
+
+
+public static native TFE_MonitoringIntGauge1 TFE_MonitoringNewIntGauge1(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringIntGauge1 TFE_MonitoringNewIntGauge1(
+    String name, TF_Status out_status, String description,
+    String label1);
+public static native void TFE_MonitoringDeleteIntGauge1(
+    TFE_MonitoringIntGauge1 gauge);
+public static native TFE_MonitoringIntGaugeCell TFE_MonitoringGetCellIntGauge1(TFE_MonitoringIntGauge1 gauge,
+                               @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringIntGaugeCell TFE_MonitoringGetCellIntGauge1(TFE_MonitoringIntGauge1 gauge,
+                               String label1);
+// Targeting ../TFE_MonitoringIntGauge2.java
+
+
+public static native TFE_MonitoringIntGauge2 TFE_MonitoringNewIntGauge2(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringIntGauge2 TFE_MonitoringNewIntGauge2(
+    String name, TF_Status out_status, String description,
+    String label1, String label2);
+public static native void TFE_MonitoringDeleteIntGauge2(
+    TFE_MonitoringIntGauge2 gauge);
+public static native TFE_MonitoringIntGaugeCell TFE_MonitoringGetCellIntGauge2(TFE_MonitoringIntGauge2 gauge,
+                               @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringIntGaugeCell TFE_MonitoringGetCellIntGauge2(TFE_MonitoringIntGauge2 gauge,
+                               String label1, String label2);
+// Targeting ../TFE_MonitoringStringGaugeCell.java
+
+
+public static native void TFE_MonitoringStringGaugeCellSet(
+    TFE_MonitoringStringGaugeCell cell, @Cast("const char*") BytePointer value);
+public static native void TFE_MonitoringStringGaugeCellSet(
+    TFE_MonitoringStringGaugeCell cell, String value);
+// Retrieves the string value and saves it in buffer.
+public static native void TFE_MonitoringStringGaugeCellValue(
+    TFE_MonitoringStringGaugeCell cell, TF_Buffer buf);
+// Targeting ../TFE_MonitoringStringGauge0.java
+
+
+public static native TFE_MonitoringStringGauge0 TFE_MonitoringNewStringGauge0(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description);
+public static native TFE_MonitoringStringGauge0 TFE_MonitoringNewStringGauge0(
+    String name, TF_Status out_status, String description);
+public static native void TFE_MonitoringDeleteStringGauge0(
+    TFE_MonitoringStringGauge0 gauge);
+public static native TFE_MonitoringStringGaugeCell TFE_MonitoringGetCellStringGauge0(TFE_MonitoringStringGauge0 gauge);
+// Targeting ../TFE_MonitoringStringGauge1.java
+
+
+public static native TFE_MonitoringStringGauge1 TFE_MonitoringNewStringGauge1(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringStringGauge1 TFE_MonitoringNewStringGauge1(
+    String name, TF_Status out_status, String description,
+    String label1);
+public static native void TFE_MonitoringDeleteStringGauge1(
+    TFE_MonitoringStringGauge1 gauge);
+public static native TFE_MonitoringStringGaugeCell TFE_MonitoringGetCellStringGauge1(TFE_MonitoringStringGauge1 gauge,
+                                  @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringStringGaugeCell TFE_MonitoringGetCellStringGauge1(TFE_MonitoringStringGauge1 gauge,
+                                  String label1);
+// Targeting ../TFE_MonitoringStringGauge2.java
+
+
+public static native TFE_MonitoringStringGauge2 TFE_MonitoringNewStringGauge2(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringStringGauge2 TFE_MonitoringNewStringGauge2(
+    String name, TF_Status out_status, String description,
+    String label1, String label2);
+public static native void TFE_MonitoringDeleteStringGauge2(
+    TFE_MonitoringStringGauge2 gauge);
+public static native TFE_MonitoringStringGaugeCell TFE_MonitoringGetCellStringGauge2(TFE_MonitoringStringGauge2 gauge,
+                                  @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringStringGaugeCell TFE_MonitoringGetCellStringGauge2(TFE_MonitoringStringGauge2 gauge,
+                                  String label1, String label2);
+// Targeting ../TFE_MonitoringBoolGaugeCell.java
+
+
+public static native void TFE_MonitoringBoolGaugeCellSet(
+    TFE_MonitoringBoolGaugeCell cell, @Cast("bool") boolean value);
+public static native @Cast("bool") boolean TFE_MonitoringBoolGaugeCellValue(
+    TFE_MonitoringBoolGaugeCell cell);
+// Targeting ../TFE_MonitoringBoolGauge0.java
+
+
+public static native TFE_MonitoringBoolGauge0 TFE_MonitoringNewBoolGauge0(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description);
+public static native TFE_MonitoringBoolGauge0 TFE_MonitoringNewBoolGauge0(
+    String name, TF_Status out_status, String description);
+public static native void TFE_MonitoringDeleteBoolGauge0(
+    TFE_MonitoringBoolGauge0 gauge);
+public static native TFE_MonitoringBoolGaugeCell TFE_MonitoringGetCellBoolGauge0(TFE_MonitoringBoolGauge0 gauge);
+// Targeting ../TFE_MonitoringBoolGauge1.java
+
+
+public static native TFE_MonitoringBoolGauge1 TFE_MonitoringNewBoolGauge1(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringBoolGauge1 TFE_MonitoringNewBoolGauge1(
+    String name, TF_Status out_status, String description,
+    String label1);
+public static native void TFE_MonitoringDeleteBoolGauge1(
+    TFE_MonitoringBoolGauge1 gauge);
+public static native TFE_MonitoringBoolGaugeCell TFE_MonitoringGetCellBoolGauge1(TFE_MonitoringBoolGauge1 gauge,
+                                @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringBoolGaugeCell TFE_MonitoringGetCellBoolGauge1(TFE_MonitoringBoolGauge1 gauge,
+                                String label1);
+// Targeting ../TFE_MonitoringBoolGauge2.java
+
+
+public static native TFE_MonitoringBoolGauge2 TFE_MonitoringNewBoolGauge2(
+    @Cast("const char*") BytePointer name, TF_Status out_status, @Cast("const char*") BytePointer description,
+    @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringBoolGauge2 TFE_MonitoringNewBoolGauge2(
+    String name, TF_Status out_status, String description,
+    String label1, String label2);
+public static native void TFE_MonitoringDeleteBoolGauge2(
+    TFE_MonitoringBoolGauge2 gauge);
+public static native TFE_MonitoringBoolGaugeCell TFE_MonitoringGetCellBoolGauge2(TFE_MonitoringBoolGauge2 gauge,
+                                @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringBoolGaugeCell TFE_MonitoringGetCellBoolGauge2(TFE_MonitoringBoolGauge2 gauge,
+                                String label1, String label2);
+// Targeting ../TFE_MonitoringSamplerCell.java
+
+
+
+// Atomically add the value of the cell.
+public static native void TFE_MonitoringSamplerCellAdd(
+    TFE_MonitoringSamplerCell cell, double value);
+
+// Retrieves the current value of the cell. The return value is a HistogramProto
+// saved in buffer.
+public static native void TFE_MonitoringSamplerCellValue(
+    TFE_MonitoringSamplerCell cell, TF_Buffer buf);
+
+// APIs for sampler buckets
+// Targeting ../TFE_MonitoringSampler0.java
+
+
+public static native void TFE_MonitoringDeleteSampler0(
+    TFE_MonitoringSampler0 sampler);
+public static native TFE_MonitoringSamplerCell TFE_MonitoringGetCellSampler0(
+    TFE_MonitoringSampler0 sampler);
+// Targeting ../TFE_MonitoringSampler1.java
+// Parsed from tensorflow/cc/framework/grad_op_registry.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+// #define TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+
+// #include <unordered_map>
+
+// #include "tensorflow/cc/framework/ops.h"
+// #include "tensorflow/cc/framework/scope.h"
+// Targeting ../GradFunc.java
+
+
+// Targeting ../GradOpRegistry.java
+
+
+
+  // namespace ops
+
+// Macros used to define gradient functions for ops.
+// #define REGISTER_GRADIENT_OP(name, fn)
+//   REGISTER_GRADIENT_OP_UNIQ_HELPER(__COUNTER__, name, fn)
+
+// #define REGISTER_NO_GRADIENT_OP(name)
+//   REGISTER_GRADIENT_OP_UNIQ_HELPER(__COUNTER__, name, nullptr)
+
+// #define REGISTER_GRADIENT_OP_UNIQ_HELPER(ctr, name, fn)
+//   REGISTER_GRADIENT_OP_UNIQ(ctr, name, fn)
+
+// #define REGISTER_GRADIENT_OP_UNIQ(ctr, name, fn)
+//   static bool unused_ret_val_##ctr =
+//       ::tensorflow::ops::GradOpRegistry::Global()->Register(name, fn)
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_GRAD_OP_REGISTRY_H_
+
+
+// Parsed from tensorflow/core/platform/status.h
+
+/* Copyright 2015 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CORE_PLATFORM_STATUS_H_
+// #define TENSORFLOW_CORE_PLATFORM_STATUS_H_
+
+// #include <functional>
+// #include <iosfwd>
+// #include <memory>
+// #include <string>
+
+// #include "tensorflow/core/platform/logging.h"
+// #include "tensorflow/core/platform/macros.h"
+// #include "tensorflow/core/platform/stringpiece.h"
+// #include "tensorflow/core/platform/types.h"
+// #include "tensorflow/core/protobuf/error_codes.pb.h"
+
+// A struct representing a frame in a stack trace.
+
+// #if defined(__clang__)
+// Only clang supports warn_unused_result as a type annotation.
+// Targeting ../NativeStatus.java
+
+
+
+// Helper class to manage multiple child status values.
+
+
+
+
+
+// #ifndef SWIG
+
+
+
+// #endif  // SWIG
+
+
+
+
+
+/** \ingroup core */
+@Namespace("tensorflow") public static native @Cast("std::ostream*") @ByRef @Name("operator <<") Pointer shiftLeft(@Cast("std::ostream*") @ByRef Pointer os, @Const @ByRef NativeStatus x);
+
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelperOutOfLine(
+    @Const @ByRef NativeStatus v, @Cast("const char*") BytePointer msg);
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelperOutOfLine(
+    @Const @ByRef NativeStatus v, String msg);
+
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelper(@ByVal NativeStatus v,
+                                           @Cast("const char*") BytePointer msg);
+@Namespace("tensorflow") public static native @StdString BytePointer TfCheckOpHelper(@ByVal NativeStatus v,
+                                           String msg);
+
+// #define TF_DO_CHECK_OK(val, level)
+//   while (auto _result = ::tensorflow::TfCheckOpHelper(val, #val))
+//   LOG(level) << *(_result)
+
+// #define TF_CHECK_OK(val) TF_DO_CHECK_OK(val, FATAL)
+// #define TF_QCHECK_OK(val) TF_DO_CHECK_OK(val, QFATAL)
+
+// DEBUG only version of TF_CHECK_OK.  Compiler still parses 'val' even in opt
+// mode.
+// #ifndef NDEBUG
+// #define TF_DCHECK_OK(val) TF_CHECK_OK(val)
+// #else
+// #define TF_DCHECK_OK(val)
+//   while (false && (::tensorflow::Status::OK() == (val))) LOG(FATAL)
+// #endif
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CORE_PLATFORM_STATUS_H_
+
+
+// Parsed from tensorflow/c/tf_status_helper.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_C_TF_STATUS_HELPER_H_
+// #define TENSORFLOW_C_TF_STATUS_HELPER_H_
+
+// #include "tensorflow/c/tf_status.h"
+// #include "tensorflow/core/platform/status.h"
+
+// Set the attribute of "tf_status" from the attributes of "status".
+@Namespace("tensorflow") public static native void Set_TF_Status_from_Status(TF_Status tf_status,
+                               @Const @ByRef NativeStatus status);
+
+// Returns a "status" from "tf_status".
+@Namespace("tensorflow") public static native @ByVal NativeStatus StatusFromTF_Status(@Const TF_Status tf_status);
+  // namespace internal
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_C_TF_STATUS_HELPER_H_
+
+
+// Targeting ../TF_Graph.java
+
+
+// Targeting ../TF_OperationDescription.java
+
+
+public static native void TFE_MonitoringDeleteSampler1(
+    TFE_MonitoringSampler1 sampler);
+public static native TFE_MonitoringSamplerCell TFE_MonitoringGetCellSampler1(
+    TFE_MonitoringSampler1 sampler, @Cast("const char*") BytePointer label1);
+public static native TFE_MonitoringSamplerCell TFE_MonitoringGetCellSampler1(
+    TFE_MonitoringSampler1 sampler, String label1);
+// Targeting ../TFE_MonitoringSampler2.java
+
+
+public static native void TFE_MonitoringDeleteSampler2(
+    TFE_MonitoringSampler2 sampler);
+public static native TFE_MonitoringSamplerCell TFE_MonitoringGetCellSampler2(
+    TFE_MonitoringSampler2 sampler, @Cast("const char*") BytePointer label1, @Cast("const char*") BytePointer label2);
+public static native TFE_MonitoringSamplerCell TFE_MonitoringGetCellSampler2(
+    TFE_MonitoringSampler2 sampler, String label1, String label2);
+
+// Sets whether to use TFRT
+public static native void TFE_ContextOptionsSetTfrt(TFE_ContextOptions arg0,
+                                                     @Cast("bool") boolean use_tfrt);
+
+// Returns the context_id from the EagerContext which is used by the
+// EagerService to maintain consistency between client and worker. The
+// context_id is initialized with a dummy value and is later set when the worker
+// is initialized (either locally or remotely). The context_id can change during
+// the process lifetime although this should cause the worker to be
+// reinitialized (e.g. cleared caches) as well.
+public static native @Cast("uint64_t") long TFE_GetContextId(TFE_Context ctx);
+// Targeting ../TFE_CancellationManager.java
+
+
+public static native TFE_CancellationManager TFE_NewCancellationManager();
+public static native @Cast("bool") boolean TFE_CancellationManagerIsCancelled(
+    TFE_CancellationManager arg0);
+public static native void TFE_CancellationManagerStartCancel(
+    TFE_CancellationManager arg0);
+public static native void TFE_DeleteCancellationManager(
+    TFE_CancellationManager arg0);
+
+// Associates the given `cancellation_manager` with `op`, so that invoking
+// `TFE_CancellationManagerStartCancel(cancellation_manager)` will cancel the
+// execution of `op`.
+public static native void TFE_OpSetCancellationManager(
+    TFE_Op op, TFE_CancellationManager cancellation_manager,
+    TF_Status status);
+// Targeting ../TFE_Executor.java
+
+
+
+// Creates a new eager Executor. Nodes in one executor are guaranteed to be
+// executed in sequence. Assigning nodes to different executors allows executing
+// nodes in parallel.
+public static native TFE_Executor TFE_NewExecutor(@Cast("bool") boolean is_async);
+
+// Deletes the eager Executor without waiting for enqueued nodes. Please call
+// TFE_ExecutorWaitForAllPendingNodes before calling this API if you want to
+// make sure all nodes are finished.
+public static native void TFE_DeleteExecutor(TFE_Executor arg0);
+
+// Returns true if the executor is in async mode.
+public static native @Cast("bool") boolean TFE_ExecutorIsAsync(TFE_Executor arg0);
+
+// Causes the calling thread to block till all ops dispatched in this executor
+// have been executed. Note that "execution" here refers to kernel execution /
+// scheduling of copies, etc. Similar to sync execution, it doesn't guarantee
+// that lower level device queues (like GPU streams) have been flushed.
+//
+// This call may not block for execution of ops enqueued concurrently with this
+// call.
+public static native void TFE_ExecutorWaitForAllPendingNodes(
+    TFE_Executor arg0, TF_Status status);
+
+// When an error happens, any pending operations are discarded and newly issued
+// ops return an error. This call clears the error state and re-enables
+// execution of newly issued ops.
+//
+// Note that outputs of discarded ops remain in a corrupt state and should not
+// be used for future calls.
+// TODO(agarwal): mark the affected handles and raise errors if they are used.
+public static native void TFE_ExecutorClearError(TFE_Executor arg0);
+
+// Sets a custom Executor for current thread. All nodes created by this thread
+// will be added to this Executor. It will override current executor.
+public static native void TFE_ContextSetExecutorForThread(TFE_Context arg0,
+                                                           TFE_Executor arg1);
+
+// Returns the Executor for current thread.
+public static native TFE_Executor TFE_ContextGetExecutorForThread(
+    TFE_Context arg0);
+
+// -----------------------------------------------------------------------------
+// Dynamic cluster API.
+
+// Update an existing context with a new set of servers defined in a ServerDef
+// proto. Servers can be added to and removed from the list of remote workers
+// in the context. New set of servers identified by the ServerDef must be up
+// when the context is updated.
+//
+// This API is for experimental usage and may be subject to change.
+public static native void TFE_ContextUpdateServerDef(TFE_Context ctx,
+                                                      int keep_alive_secs,
+                                                      @Const Pointer proto,
+                                                      @Cast("size_t") long proto_len,
+                                                      TF_Status status);
+
+// Checks whether a remote worker is alive or not. This will return true even if
+// the context doesn't exist on the remote worker.
+public static native @Cast("bool") boolean TFE_ContextCheckAlive(TFE_Context ctx,
+                                                 @Cast("const char*") BytePointer worker_name,
+                                                 TF_Status status);
+public static native @Cast("bool") boolean TFE_ContextCheckAlive(TFE_Context ctx,
+                                                 String worker_name,
+                                                 TF_Status status);
+
+// Sync pending nodes in local executors (including the context default executor
+// and thread executors) and streaming requests to remote executors, and get the
+// combined status.
+public static native void TFE_ContextAsyncWait(TFE_Context ctx,
+                                                TF_Status status);
+
+// This function will block till the operation that produces `h` has
+// completed. This is only valid on local TFE_TensorHandles. The pointer
+// returned will be on the device in which the TFE_TensorHandle resides (so e.g.
+// for a GPU tensor this will return a pointer to GPU memory). The pointer is
+// only guaranteed to be valid until TFE_DeleteTensorHandle is called on this
+// TensorHandle. Only supports POD data types.
+public static native Pointer TFE_TensorHandleDevicePointer(TFE_TensorHandle arg0,
+                                                          TF_Status arg1);
+
+// This function will block till the operation that produces `h` has
+// completed. This is only valid on local TFE_TensorHandles. Returns the size in
+// bytes of the memory pointed to by the device pointer returned above.
+public static native @Cast("size_t") long TFE_TensorHandleDeviceMemorySize(TFE_TensorHandle arg0,
+                                                              TF_Status arg1);
+
+// Creates a new TensorHandle from memory residing in the physical device
+// device_name. Takes ownership of the memory, and will call deleter to release
+// it after TF no longer needs it or in case of error.
+//
+// Custom devices must use TFE_NewCustomDeviceTensorHandle instead.
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, @Cast("const char*") BytePointer device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") LongPointer dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, String device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") LongBuffer dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, @Cast("const char*") BytePointer device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") long[] dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, String device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") LongPointer dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, @Cast("const char*") BytePointer device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") LongBuffer dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+public static native TFE_TensorHandle TFE_NewTensorHandleFromDeviceMemory(
+    TFE_Context ctx, String device_name, @Cast("TF_DataType") int arg2, @Cast("const int64_t*") long[] dims,
+    int num_dims, Pointer data, @Cast("size_t") long len,
+    Deallocator_Pointer_long_Pointer deallocator,
+    Pointer deallocator_arg, TF_Status status);
+
+// Retrieves the address space (i.e. job, replia, task) of the local host and
+// saves it in the buffer.
+public static native void TFE_HostAddressSpace(TFE_Context ctx,
+                                                TF_Buffer buf);
 // Targeting ../TFE_OpAttrs.java
 
 

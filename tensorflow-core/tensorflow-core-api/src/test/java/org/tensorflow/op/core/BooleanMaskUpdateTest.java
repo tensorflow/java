@@ -26,6 +26,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
@@ -36,9 +37,10 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateSlice() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+      Operand<TInt32> input = Constant
+          .tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
 
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
@@ -46,7 +48,8 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
-      Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
+      Operand<TInt32> bcastOutput = BooleanMaskUpdate
+          .create(scope, input, mask, Constant.scalarOf(scope, -1));
 
       List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
@@ -73,9 +76,10 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateSliceWithBroadcast() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant.tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+      Operand<TInt32> input = Constant
+          .tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
 
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
@@ -83,7 +87,8 @@ public class BooleanMaskUpdateTest {
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
-      Operand<TInt32> bcastOutput = BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
+      Operand<TInt32> bcastOutput = BooleanMaskUpdate
+          .create(scope, input, mask, Constant.scalarOf(scope, -1));
 
       List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
@@ -110,15 +115,18 @@ public class BooleanMaskUpdateTest {
   public void testBooleanMaskUpdateAxis() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant.tensorOf(scope, new int[][][]{{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});
+      Operand<TInt32> input = Constant
+          .tensorOf(scope, new int[][][]{{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});
 
-      Operand<TBool> mask = Constant.arrayOf(scope, true, true, false, false, true, true, true, false, false, false);
+      Operand<TBool> mask = Constant
+          .arrayOf(scope, true, true, false, false, true, true, true, false, false, false);
 
       Operand<TInt32> value = Constant.arrayOf(scope, -1, -1, -1, -1, -1);
 
-      Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value, BooleanMaskUpdate.axis(2));
+      Operand<TInt32> output = BooleanMaskUpdate
+          .create(scope, input, mask, value, BooleanMaskUpdate.axis(2));
 
       Operand<TInt32> bcastOutput = BooleanMaskUpdate
           .create(scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));

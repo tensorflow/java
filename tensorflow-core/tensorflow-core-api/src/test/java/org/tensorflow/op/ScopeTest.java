@@ -26,7 +26,9 @@ import org.tensorflow.Session;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
-/** Unit tests for {@link org.tensorflow.op.Scope}. */
+/**
+ * Unit tests for {@link org.tensorflow.op.Scope}.
+ */
 public class ScopeTest {
 
   @Test
@@ -50,7 +52,7 @@ public class ScopeTest {
   @Test
   public void basicNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       assertEquals("add", root.makeOpName("add"));
       assertEquals("add_1", root.makeOpName("add"));
       assertEquals("add_2", root.makeOpName("add"));
@@ -61,7 +63,7 @@ public class ScopeTest {
   @Test
   public void hierarchicalNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       Scope child = root.withSubScope("child");
       assertEquals("child/add", child.makeOpName("add"));
       assertEquals("child/add_1", child.makeOpName("add"));
@@ -87,7 +89,7 @@ public class ScopeTest {
   @Test
   public void scopeAndOpNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
 
       Scope child = root.withSubScope("child");
 
@@ -100,12 +102,12 @@ public class ScopeTest {
   @Test
   public void validateNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
 
       final String[] invalid_names = {
-        "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
-        null, "", "a$", // Invalid characters
-        "a/b", // slashes not allowed
+          "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
+          null, "", "a$", // Invalid characters
+          "a/b", // slashes not allowed
       };
 
       for (String name : invalid_names) {
@@ -137,7 +139,7 @@ public class ScopeTest {
   @Test
   public void basic() {
     try (Graph g = new Graph()) {
-      Scope s = new Scope(g);
+      Scope s = new JavaScope(g);
       Const<TInt32> c1 = Const.create(s, 42);
       assertEquals("Const", c1.output().op().name());
       Const<TInt32> c2 = Const.create(s, 7);
@@ -152,7 +154,7 @@ public class ScopeTest {
   @Test
   public void hierarchy() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       Scope child = root.withSubScope("child");
       assertEquals("child/Const", Const.create(child, 42).output().op().name());
       assertEquals("child/four", Const.create(child.withName("four"), 4).output().op().name());
@@ -163,9 +165,9 @@ public class ScopeTest {
   public void composite() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope s = new Scope(g);
+      Scope s = new JavaScope(g);
       Output<TInt32> data =
-          Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
+          Const.create(s.withName("data"), new int[]{600, 470, 170, 430, 300}).output();
 
       // Create a composite op with a customized name
       Variance<TInt32> var1 = Variance.create(s.withName("example"), data);
@@ -195,6 +197,7 @@ public class ScopeTest {
 
   // "handwritten" sample operator classes
   private static final class Const<T extends TType> {
+
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
@@ -224,6 +227,7 @@ public class ScopeTest {
   }
 
   private static final class Mean<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
@@ -241,6 +245,7 @@ public class ScopeTest {
   }
 
   private static final class SquaredDifference<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
@@ -262,6 +267,7 @@ public class ScopeTest {
   }
 
   private static final class Variance<T extends TType> {
+
     private final Output<T> output;
 
     static Variance<TInt32> create(Scope base, Output<TInt32> x) {
@@ -269,7 +275,7 @@ public class ScopeTest {
       Output<TInt32> zero = Const.create(base, TInt32.scalarOf(0)).output();
       Output<TInt32> sqdiff =
           SquaredDifference.create(
-                  s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
+              s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
               .output();
 
       return new Variance<>(Mean.create(s.withName("variance"), sqdiff, zero).output());

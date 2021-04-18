@@ -38,6 +38,7 @@ import org.tensorflow.ndarray.buffer.DoubleDataBuffer;
 import org.tensorflow.ndarray.buffer.FloatDataBuffer;
 import org.tensorflow.ndarray.buffer.IntDataBuffer;
 import org.tensorflow.ndarray.buffer.LongDataBuffer;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.TBfloat16;
@@ -62,7 +63,7 @@ public class ConstantTest {
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
       Constant<TInt32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt32> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor> t =
@@ -81,7 +82,7 @@ public class ConstantTest {
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
       Constant<TFloat32> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat32> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor> t =
@@ -100,7 +101,7 @@ public class ConstantTest {
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
       Constant<TFloat64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TFloat64> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor> t =
@@ -119,7 +120,7 @@ public class ConstantTest {
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
       Constant<TInt64> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TInt64> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor> t =
@@ -138,7 +139,7 @@ public class ConstantTest {
 
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope scope = new Scope(g);
+      Scope scope = new JavaScope(g);
       Constant<TString> op1 = Constant.tensorOf(scope, shape, buffer);
       Constant<TString> op2 = Constant.tensorOf(scope, array);
       try (AutoCloseableList<Tensor> t =

@@ -54,8 +54,9 @@ import org.tensorflow.OperationBuilder;
  *
  * <p><b>Scope hierarchy:</b>
  *
- * <p>A {@code Scope} provides various {@code with()} methods that create a new scope. The new scope
- * typically has one property changed while other properties are inherited from the parent scope.
+ * <p>A {@code Scope} provides various {@code with()} methods that create a new scope. The new
+ * scope typically has one property changed while other properties are inherited from the parent
+ * scope.
  *
  * <p>An example using {@code Constant} implemented as before:
  *
@@ -80,30 +81,17 @@ import org.tensorflow.OperationBuilder;
  *
  * <p>Scope objects are <b>not</b> thread-safe.
  */
-public final class Scope {
-
-  /**
-   * Create a new top-level scope.
-   *
-   * <p><b>For internal use only</b>, use {@link ExecutionEnvironment#baseScope()} if you need a
-   * base level scope.
-   *
-   * @param env The execution environment used by the scope.
-   */
-  public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build(), false);
-  }
+public interface Scope {
 
   /** Returns the execution environment used by this scope. */
-  public ExecutionEnvironment env() {
-    return env;
-  }
+  ExecutionEnvironment env();
 
   /**
    * Returns a new scope where added operations will have the provided name prefix.
    *
-   * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The actual
-   * name will be unique in the returned scope. All other properties are inherited from the current
+   * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The
+   * actual name will be unique in the returned scope. All other properties are inherited from the
+   * current
    * scope.
    *
    * <p>The child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
@@ -112,10 +100,7 @@ public final class Scope {
    * @return a new subscope
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withSubScope(String childScopeName) {
-    return new Scope(
-        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec, isInit);
-  }
+  Scope withSubScope(String childScopeName);
 
   /**
    * Return a new scope that uses the provided name for an op.
@@ -129,9 +114,7 @@ public final class Scope {
    * @return a new Scope that uses opName for operations.
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withName(String opName) {
-    return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec, isInit);
-  }
+  Scope withName(String opName);
 
   /**
    * Returns a new scope where added operations will be prefixed by this scope's op name (set by
@@ -149,14 +132,7 @@ public final class Scope {
    * @return a new subscope
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withNameAsSubScope(String defaultName) {
-    return new Scope(
-        env,
-        nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
-        controlDependencies,
-        deviceSpec,
-        isInit);
-  }
+  Scope withNameAsSubScope(String defaultName);
 
   /**
    * Return a new scope that uses the provided device specification for an op.
@@ -167,16 +143,7 @@ public final class Scope {
    * @param deviceSpec device specification for an operator in the returned scope
    * @return a new Scope that uses opName for operations.
    */
-  public Scope withDevice(DeviceSpec deviceSpec) {
-    return new Scope(env, nameScope, controlDependencies, deviceSpec, isInit);
-  }
-
-  // TODO stop gradient recording in init scopes (once we have gradient recording)
-
-  /** Get an extension of this scope that generates initialization ops. */
-  public Scope withInitScope() {
-    return new Scope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
-  }
+  Scope withDevice(DeviceSpec deviceSpec);
 
   /**
    * Create a unique name for an operator and reserves it, using a provided default if necessary.
@@ -190,69 +157,22 @@ public final class Scope {
    * scope.env().opBuilder("Const", scope.makeOpName("Const"))...
    * }</pre>
    *
-   * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates a
-   * set of related operations by calling other operator building code), the provided name will act
+   * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates
+   * a set of related operations by calling other operator building code), the provided name will
+   * act
    * as a subscope to all underlying operators.
    *
    * @param defaultName name for the underlying operator.
    * @return unique name for the operator.
    * @throws IllegalArgumentException if the default name is invalid.
    */
-  public String makeOpName(String defaultName) {
-    return nameScope.makeOpName(defaultName);
-  }
-
-  /** Makes a unique name from {@code id} and reserves it. */
-  public String makeUnique(String id) {
-    return nameScope.makeUnique(id);
-  }
-
-  /**
-   * Returns a builder to create a new {@link Operation}.
-   *
-   * <p>Note that {@code name} is automatically made unique.
-   *
-   * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope. Is uniquified.
-   * @return an {@link OperationBuilder} to create an Operation when {@link
-   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then some resources may leak.
-   */
-  public OperationBuilder opBuilder(String type, String name) {
-    return env.opBuilder(type, makeOpName(name), this);
-  }
-
-  public static boolean isValidOpName(String name) {
-    return NameScope.isValidName(name);
-  }
-
-  /**
-   * Refresh the used name list (used for uniquifying names) from the underlying graph.
-   *
-   * <p>Should be used if you made changes to the graph from non-{@code Scope} APIs.
-   */
-  public void refreshNames() {
-    nameScope.importIdsFrom(env);
-  }
-
-  private Scope(
-      ExecutionEnvironment env,
-      NameScope nameScope,
-      List<Operation> controlDependencies,
-      DeviceSpec deviceSpec,
-      boolean isInit) {
-    this.env = env;
-    this.nameScope = nameScope;
-    this.controlDependencies = controlDependencies;
-    this.deviceSpec = deviceSpec;
-    this.isInit = isInit;
-  }
+  String makeOpName(String defaultName);
 
   /**
    * Returns a new scope where added operations will have the provided control dependencies.
    *
-   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
-   * other properties are inherited from the current scope.
+   * <p>Ops created with this scope will have a control edge from each of the provided controls.
+   * All other properties are inherited from the current scope.
    *
    * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
    * during session initialization.
@@ -260,39 +180,7 @@ public final class Scope {
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
    */
-  public Scope withControlDependencies(Iterable<Op> controls) {
-    return withControlDependencyOps(
-        StreamSupport.stream(controls.spliterator(), false)
-            .map(Op::op)
-            .collect(Collectors.toList()));
-  }
-
-  /**
-   * Returns a new scope where added operations will have the provided control dependencies.
-   *
-   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
-   * other properties are inherited from the current scope.
-   *
-   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
-   * during session initialization.
-   *
-   * @param controls control dependencies for ops created with the returned scope
-   * @return a new scope with the provided control dependencies
-   */
-  public Scope withControlDependencyOps(Iterable<Operation> controls) {
-    ArrayList<Operation> toAdd = new ArrayList<>();
-    for (Operation control : controls) {
-      env.checkInput(control);
-      if (isInit && !env.isInitOp(control)) {
-        throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
-      }
-      if (isInit || !env.isInitOp(control)) {
-        toAdd.add(control);
-      }
-    }
-
-    return new Scope(env, nameScope, toAdd, deviceSpec, isInit);
-  }
+  Scope withControlDependencies(Iterable<Op> controls);
 
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
@@ -302,40 +190,5 @@ public final class Scope {
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
-  public OperationBuilder apply(OperationBuilder builder) {
-    builder.setDevice(deviceSpec.toString());
-    for (Operation control : controlDependencies) {
-      if (isInit || !env.isInitOp(control)) {
-        builder.addControlInput(control);
-      }
-    }
-    return builder;
-  }
-
-  /**
-   * Handle op creation, like registering it as an init op if the scope is init.
-   *
-   * <p><b>FOR INTERNAL USE ONLY</b>
-   */
-  public void onOpCreated(Operation op) {
-    if (isInit) {
-      env.registerInitOp(op);
-    }
-  }
-
-  /** Returns device string from the scope. */
-  public String getDeviceString() {
-    return deviceSpec.toString();
-  }
-
-  /** Get whether this scope is building init ops. */
-  public boolean isInit() {
-    return isInit;
-  }
-
-  private final ExecutionEnvironment env;
-  private final List<Operation> controlDependencies;
-  private final NameScope nameScope;
-  private final DeviceSpec deviceSpec;
-  private final boolean isInit;
+  OperationBuilder apply(OperationBuilder builder);
 }

@@ -373,7 +373,8 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-  TF_Operation getUnsafeNativeHandle() {
+
+  public TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
   }
 
