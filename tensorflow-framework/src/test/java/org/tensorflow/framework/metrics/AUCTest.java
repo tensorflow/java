@@ -23,6 +23,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,6 +64,52 @@ public class AUCTest {
   }
 
   @Test
+  public void testCummulative() {
+
+    // expected variable values after each run.
+    float[][] tp = {{2f, 1f, 0f}, {4f, 2f, 0f}, {6f, 3f, 0f}};
+    float[][] fp = {{2f, 0f, 0f}, {4f, 0f, 0f}, {6f, 0f, 0f}};
+    float[][] tn = {{0f, 2f, 2f}, {0f, 4f, 4f}, {0f, 6f, 6f}};
+    float[][] fn = {{0f, 1f, 2f}, {0f, 2f, 4f}, {0f, 3f, 6f}};
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Operand<TFloat32> yPred = tf.constant(predArray);
+      Operand<TInt32> yTrue = tf.constant(trueArray);
+      AUC<TFloat32> instance = new AUC<>(tf, numThresholds, 1001L, TFloat32.class);
+
+      session.run(tf.init());
+
+      assertNull(instance.getTruePositives());
+      assertNull(instance.getFalsePositives());
+      assertNull(instance.getTrueNegatives());
+      assertNull(instance.getFalseNegatives());
+
+
+
+
+      for (int i = 0; i < 3; i++) {
+        Op update = instance.updateState(yTrue, yPred, null);
+        session.run(update);
+        session.evaluate(tp[i], instance.getTruePositives());
+        session.evaluate(fp[i], instance.getFalsePositives());
+        session.evaluate(tn[i], instance.getTrueNegatives());
+        session.evaluate(fn[i], instance.getFalseNegatives());
+      }
+
+      // test reset
+      session.run(instance.resetStates());
+      for (int i = 0; i < 3; i++) {
+        Op update = instance.updateState(yTrue, yPred, null);
+        session.run(update);
+        session.evaluate(tp[i], instance.getTruePositives());
+        session.evaluate(fp[i], instance.getFalsePositives());
+        session.evaluate(tn[i], instance.getTrueNegatives());
+        session.evaluate(fn[i], instance.getFalseNegatives());
+      }
+    }
+  }
+
+  @Test
   public void basicTestSampleWeight() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
@@ -71,7 +118,7 @@ public class AUCTest {
       float[] expectedThresholds = new float[] {-1e-7f, 0.5f, 1 + 1e-7f};
       assertArrayEquals(expectedThresholds, instance.getThresholds(), epsilon);
 
-      instance.resetStates();
+
       Operand<TFloat32> yPred = tf.constant(new float[] {0, 0, 1, 1});
       Operand<TFloat32> yTrue = tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f});
       Operand<TFloat32> sampleWeights = tf.constant(new float[] {1, 0, 0, 1});
@@ -113,6 +160,11 @@ public class AUCTest {
 
       // float expectedResult = (0.75f * 1 + 0.25f * 0);
       session.evaluate(0.75f, result);
+
+      session.run(update);
+      result = instance.result();
+
+      session.print(result);
     }
   }
 
