@@ -51,7 +51,6 @@ public class WeightsBroadcastOps {
    * @param <T> the type of weights and values
    * @throws IllegalArgumentException If static checks determine {@code weights}  has incorrect shape.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends TNumber> Op assertBroadcastable(
       Ops tf, Operand<T> weights, Operand<T> values) {
     Operand<TInt32> weightsShape = tf.shape(weights);
@@ -67,7 +66,7 @@ public class WeightsBroadcastOps {
     if (weightsRankStatic != -1 && valuesRankStatic != -1) {
       if (weightsRankStatic == 0) {
         return tf.withSubScope("staticScalarCheckSuccess")
-            .withControlDependencies(Collections.EMPTY_LIST)
+            .withControlDependencies(Collections.emptyList())
             .noOp();
       }
       if (weightsRankStatic != valuesRankStatic) {
@@ -77,8 +76,8 @@ public class WeightsBroadcastOps {
                 ASSERT_BROADCASTABLE_ERROR_PREFIX,
                 valuesRankStatic,
                 weightsRankStatic,
-                valuesShapeStatic.toString(),
-                weightsShapeStatic.toString()));
+                valuesShapeStatic,
+                weightsShapeStatic));
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
@@ -88,12 +87,12 @@ public class WeightsBroadcastOps {
                   "%s Mismatch at dim %s. values.shape=%s weights.shape=%s.",
                   ASSERT_BROADCASTABLE_ERROR_PREFIX,
                   i,
-                  valuesShapeStatic.toString(),
-                  weightsShapeStatic.toString()));
+                  valuesShapeStatic,
+                  weightsShapeStatic));
         }
       }
       return tf.withSubScope("staticDimsCheckSuccess")
-          .withControlDependencies(Collections.EMPTY_LIST)
+          .withControlDependencies(Collections.emptyList())
           .noOp();
     }
     // Dynamic checks.
