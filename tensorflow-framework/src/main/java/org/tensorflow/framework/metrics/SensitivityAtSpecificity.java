@@ -115,7 +115,7 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    */
   public SensitivityAtSpecificity(
       Ops tf, String name, float specificity, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, specificity, numThresholds, seed, type);
+    super(tf, name, numThresholds, seed, type);
     if (specificity < 0f || specificity > 1f)
       throw new IllegalArgumentException("specificity must be in the range [0, 1].");
     this.specificity = specificity;
@@ -126,13 +126,13 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
   public Operand<T> result() {
     Ops tf = getTF();
     Operand<T> specificities =
-        tf.math.divNoNan(this.trueNegatives, tf.math.add(this.trueNegatives, this.falsePositives));
-    Operand<T> sub = tf.math.sub(specificities, cast(tf, tf.constant(this.getValue()), getType()));
+        tf.math.divNoNan(trueNegatives, tf.math.add(trueNegatives, falsePositives));
+    Operand<T> sub = tf.math.sub(specificities, cast(tf, tf.constant(specificity), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
     minIndex = tf.expandDims(minIndex, tf.constant(0));
 
-    Operand<T> trueSlice = tf.slice(this.truePositives, minIndex, tf.constant(new int[] {1}));
-    Operand<T> falseSlice = tf.slice(this.falseNegatives, minIndex, tf.constant(new int[] {1}));
+    Operand<T> trueSlice = tf.slice(truePositives, minIndex, tf.constant(new int[] {1}));
+    Operand<T> falseSlice = tf.slice(falseNegatives, minIndex, tf.constant(new int[] {1}));
     return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
   }
 

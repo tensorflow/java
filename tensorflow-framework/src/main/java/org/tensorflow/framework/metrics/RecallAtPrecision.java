@@ -109,7 +109,7 @@ public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificity
    */
   public RecallAtPrecision(
       Ops tf, String name, float precision, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, precision, numThresholds, seed, type);
+    super(tf, name, numThresholds, seed, type);
     if (precision < 0f || precision > 1f)
       throw new IllegalArgumentException("recall must be in the range [0, 1].");
     this.precision = precision;
@@ -121,11 +121,11 @@ public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificity
     Ops tf = getTF();
 
     Operand<T> precisions =
-        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falsePositives));
+        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
     Operand<T> recalls =
-        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
+        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
     Operand<TBool> isFeasible =
-        tf.math.greaterEqual(precisions, cast(tf, tf.constant(this.value), getType()));
+        tf.math.greaterEqual(precisions, cast(tf, tf.constant(precision), getType()));
     Where feasible = tf.where(isFeasible);
     Operand<TBool> feasibleExists = tf.math.greater(tf.size(feasible), tf.constant(0));
 

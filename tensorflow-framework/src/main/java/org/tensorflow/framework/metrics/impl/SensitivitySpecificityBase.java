@@ -32,7 +32,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   public static final String TRUE_NEGATIVES = "TRUE_NEGATIVES";
   public static final String FALSE_NEGATIVES = "FALSE_NEGATIVES";
   protected final int numThresholds;
-  protected final float value;
+
   protected final float[] thresholds;
   private final String truePositivesName;
   private final String falsePositivesName;
@@ -54,7 +54,6 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
    *
    * @param tf the TensorFlow Ops
    * @param name the name of the metric instance, if null then {@link Class#getSimpleName()} is used
-   * @param value A scalar value in range `[0, 1]`
    * @param numThresholds The number of thresholds to use for matching the given recall.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -62,7 +61,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
    * @throws IllegalArgumentException if numThresholds &lt;= 0.
    */
   protected SensitivitySpecificityBase(
-      Ops tf, String name, float value, int numThresholds, long seed, Class<T> type) {
+      Ops tf, String name, int numThresholds, long seed, Class<T> type) {
     super(tf, name, seed);
     if (numThresholds <= 0) throw new IllegalArgumentException("numThresholds must be > 0.");
     this.type = type;
@@ -71,7 +70,6 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     this.trueNegativesName = this.getVariableName(TRUE_NEGATIVES);
     this.falseNegativesName = this.getVariableName(FALSE_NEGATIVES);
 
-    this.value = value;
     this.numThresholds = numThresholds;
 
     if (this.numThresholds == 1) {
@@ -230,14 +228,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     return numThresholds;
   }
 
-  /**
-   * Gets the value
-   *
-   * @return the value
-   */
-  public float getValue() {
-    return value;
-  }
+
 
   /**
    * Gets the thresholds

@@ -104,7 +104,7 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    */
   public PrecisionAtRecall(
       Ops tf, String name, float recall, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, recall, numThresholds, seed, type);
+    super(tf, name, numThresholds, seed, type);
     if (recall < 0f || recall > 1f)
       throw new IllegalArgumentException("recall must be in the range [0, 1].");
     this.recall = recall;
@@ -115,14 +115,14 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
   public Operand<T> result() {
     Ops tf = getTF();
 
-    Operand<T> recall =
-        tf.math.divNoNan(this.truePositives, tf.math.add(this.truePositives, this.falseNegatives));
-    Operand<T> sub = tf.math.sub(recall, cast(tf, tf.constant(value), getType()));
+    Operand<T> div =
+        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
+    Operand<T> sub = tf.math.sub(div, cast(tf, tf.constant(recall), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
     minIndex = tf.expandDims(minIndex, tf.constant(0));
 
-    Operand<T> trueSlice = tf.slice(this.truePositives, minIndex, tf.constant(new int[] {1}));
-    Operand<T> falseSlice = tf.slice(this.falsePositives, minIndex, tf.constant(new int[] {1}));
+    Operand<T> trueSlice = tf.slice(truePositives, minIndex, tf.constant(new int[] {1}));
+    Operand<T> falseSlice = tf.slice(falsePositives, minIndex, tf.constant(new int[] {1}));
     return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
   }
 
