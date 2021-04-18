@@ -340,11 +340,12 @@ public class Precision<T extends TNumber> extends Metric<T> {
   public Operand<T> result() {
     Ops tf = getTF();
     Operand<T> result = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
-    return thresholds.length == 1
-        ? tf.slice(
+    return  thresholds.length == 1
+        ? tf.reshape(tf.slice(
             result,
             tf.expandDims(tf.constant(0), tf.constant(0)),
-            tf.expandDims(tf.constant(1), tf.constant(0)))
+            tf.expandDims(tf.constant(1), tf.constant(0))),
+            tf.constant(Shape.scalar()))
         : result;
   }
 
