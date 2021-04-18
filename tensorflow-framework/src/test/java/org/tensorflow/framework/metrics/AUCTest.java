@@ -160,11 +160,6 @@ public class AUCTest {
 
       // float expectedResult = (0.75f * 1 + 0.25f * 0);
       session.evaluate(0.75f, result);
-
-      session.run(update);
-      result = instance.result();
-
-      session.print(result);
     }
   }
 
