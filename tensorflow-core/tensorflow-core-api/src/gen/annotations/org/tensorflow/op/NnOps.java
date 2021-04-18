@@ -1833,7 +1833,6 @@ public final class NnOps {
    *
    *  <p>
    *
-   * @param scope The TensorFlow scope
    * @param labels the labels
    * @param logits the logits of type float32 or float64
    * @param <T> the type of labels and logits
@@ -1894,7 +1893,6 @@ public final class NnOps {
    *  disallow backpropagation into <code>labels</code>, pass label tensors through <code>
    *  tf.stopGradient</code> before feeding it to this function.
    *
-   * @param scope current scope
    * @param labels Each vector along the class dimension should hold a valid probability
    *      distribution e.g. for the case in which labels are of shape <code>[batch_size, num_classes]
    *      </code>, each row of <code>labels[i]</code> must be a valid probability distribution.
@@ -2127,7 +2125,6 @@ public final class NnOps {
    *  , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of <code>TInt32</code>
    *  or <code>TInt64</code>.
    *
-   * @param scope current scope
    * @param labels <code>Tensor</code> of shape <code>[d_0, d_1, ..., d_{r-1}]</code> (where <code>r
    *      </code> is rank of <code>labels</code> and result) and the dataType is <code>TInt32</code>
    *      or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,
