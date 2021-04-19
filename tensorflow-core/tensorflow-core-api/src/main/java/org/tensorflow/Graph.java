@@ -400,9 +400,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Get the graph's functions.  Deallocating the function pointers is the caller's responsibility.
+   * Get the graph's functions.
+   *
+   * @param outerScope the pointer scope to attach the functions to.
    */
-  synchronized List<NativeFunction> getNativeFunctions() {
+  synchronized List<NativeFunction> getNativeFunctions(PointerScope outerScope) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
@@ -418,6 +420,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       for (int i = 0; i < numFunctions; i++) {
         TF_Function function = output.get(TF_Function.class, i);
 
+        function.withDeallocator();
+        outerScope.attach(function);
+
         funcs.add(new NativeFunction(function));
       }
 
@@ -426,18 +431,17 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Get the function attached to the graph with the given native name.  Returns {@code null} if none found.
+   * Get the function attached to the graph with the given native name.  Returns {@code null} if
+   * none found.
    *
    * @param key the name of the native function.  Note that this may include an argument hash.
-   * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct name
+   * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct
+   * name
    */
   public synchronized ConcreteFunction getFunction(String key) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
-      List<NativeFunction> funcs = getNativeFunctions();
-
-      // will close unused functions when method ends
-      funcs.forEach(x -> x.getNativeHandle().withDeallocatorInScope());
+      List<NativeFunction> funcs = getNativeFunctions(scope);
 
       for (NativeFunction f : funcs) {
 
@@ -455,10 +459,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @return all functions attached to this graph.
    */
   public synchronized List<ConcreteFunction> getFunctions() {
-    try (Reference ref = ref()) {
-      List<NativeFunction> funcs = getNativeFunctions();
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      List<NativeFunction> funcs = getNativeFunctions(scope);
 
-      return funcs.stream().map(x -> ConcreteFunction.fromNativeHandle(x, funcs)).collect(Collectors.toList());
+      return funcs.stream().map(x -> ConcreteFunction.fromNativeHandle(x, funcs))
+          .collect(Collectors.toList());
     }
   }
 

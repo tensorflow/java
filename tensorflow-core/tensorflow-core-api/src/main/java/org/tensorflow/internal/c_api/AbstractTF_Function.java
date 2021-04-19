@@ -19,9 +19,7 @@ package org.tensorflow.internal.c_api;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteFunction;
 
-import java.util.Iterator;
 import org.bytedeco.javacpp.Pointer;
-import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.annotation.Properties;
 
 @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
@@ -46,30 +44,7 @@ public abstract class AbstractTF_Function extends Pointer {
     super(p);
   }
 
-
-  private boolean hasDeallocator = false;
-
-  /**
-   * Adds a deallocator if there isn't already one.  Attaches to the current scope regardless.
-   */
-  public TF_Function withDeallocatorInScope() {
-    if (hasDeallocator) {
-      Iterator<PointerScope> it = PointerScope.getScopeIterator();
-      if (it != null) {
-        while (it.hasNext()) {
-          try {
-            it.next().attach(this);
-          } catch (IllegalArgumentException e) {
-            // try the next scope down the stack
-            continue;
-          }
-          break;
-        }
-      }
-
-      return (TF_Function) this;
-    }
-    hasDeallocator = true;
+  public TF_Function withDeallocator() {
     return this.deallocator(new DeleteDeallocator((TF_Function) this));
   }
 
