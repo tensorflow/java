@@ -36,7 +36,10 @@ jobs:
           export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
-          mvn clean install -Pdev,jdk11 -B -U -e
+          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true
+      - name: Run lint checks
+        run: |
+          mvn compiler:compile -Pdev,jdk11 -B -U -e
   prepare:
     runs-on: ubuntu-latest
     outputs:
