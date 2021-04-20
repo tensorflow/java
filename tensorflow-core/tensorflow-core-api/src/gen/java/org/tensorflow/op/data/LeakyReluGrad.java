@@ -24,47 +24,43 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear gradients for a LeakyRelu operation.
- * 
- * @param <T> data type for {@code backprops()} output
+ *
+ * @param <T> data type for {@code backprops} output
  */
 public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.LeakyReluGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alpha 
-     */
-    public Options alpha(Float alpha) {
-      this.alpha = alpha;
-      return this;
-    }
-    
-    private Float alpha;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LeakyReluGrad";
+
+  private Output<T> backprops;
+
+  private LeakyReluGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    backprops = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new LeakyReluGrad operation.
-   * 
+   *
    * @param scope current scope
    * @param gradients The backpropagated gradients to the corresponding LeakyRelu operation.
    * @param features The features passed as input to the corresponding LeakyRelu operation,
    * OR the outputs of that operation (both work equivalently).
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LeakyReluGrad} output and operands
    * @return a new instance of LeakyReluGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients,
+      Operand<T> features, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyReluGrad", scope.makeOpName("LeakyReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
@@ -76,36 +72,51 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
         }
       }
     }
-    return new LeakyReluGrad<T>(opBuilder.build());
+    return new LeakyReluGrad<>(opBuilder.build());
   }
-  
+
   /**
-   * @param alpha 
+   * Sets the alpha option.
+   *
+   * @param alpha the alpha option
+   * @return this Options instance.
    */
   public static Options alpha(Float alpha) {
     return new Options().alpha(alpha);
   }
-  
+
   /**
-   * `gradients * (features > 0) + alpha * gradients * (features <= 0)`.
+   * Gets backprops.
+   * {@code gradients * (features > 0) + alpha * gradients * (features <= 0)}.
+   * @return backprops.
    */
   public Output<T> backprops() {
     return backprops;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return backprops;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LeakyReluGrad";
-  
-  private Output<T> backprops;
-  
-  private LeakyReluGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    backprops = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.LeakyReluGrad}
+   */
+  public static class Options {
+    private Float alpha;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alpha option.
+     *
+     * @param alpha the alpha option
+     * @return this Options instance.
+     */
+    public Options alpha(Float alpha) {
+      this.alpha = alpha;
+      return this;
+    }
   }
 }

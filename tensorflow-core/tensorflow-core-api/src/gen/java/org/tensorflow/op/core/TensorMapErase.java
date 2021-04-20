@@ -30,25 +30,41 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor map with item from given key erased.
- * <p>
  * input_handle: the original map
  * output_handle: the map with value from given key removed
  * key: the key of the value to be erased
  */
 @Operator
 public final class TensorMapErase extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorMapErase";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorMapErase(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorMapErase operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param key 
-   * @param valueDtype 
+   * @param inputHandle the inputHandle value
+   * @param key the key value
+   * @param valueDtype the value of the valueDtype property
+   * @param <U> data type for {@code TensorMapErase} output and operands
    * @return a new instance of TensorMapErase
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> TensorMapErase create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> TensorMapErase create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorMapErase", scope.makeOpName("TensorMapErase"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
@@ -56,27 +72,19 @@ public final class TensorMapErase extends RawOp implements Operand<TType> {
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));
     return new TensorMapErase(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorMapErase";
-  
-  private Output<?> outputHandle;
-  
-  private TensorMapErase(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

@@ -31,42 +31,34 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Restores a tensor from checkpoint files.
- * <p>
- * This is like `Restore` except that restored tensor can be listed as filling
- * only a slice of a larger tensor.  `shape_and_slice` specifies the shape of the
+ * This is like {@code Restore} except that restored tensor can be listed as filling
+ * only a slice of a larger tensor.  {@code shape_and_slice} specifies the shape of the
  * larger tensor and the slice that the restored tensor covers.
- * <p>
- * The `shape_and_slice` input has the same format as the
- * elements of the `shapes_and_slices` input of the `SaveSlices` op.
- * 
- * @param <T> data type for {@code tensor()} output
+ * <p>The {@code shape_and_slice} input has the same format as the
+ * elements of the {@code shapes_and_slices} input of the {@code SaveSlices} op.
+ *
+ * @param <T> data type for {@code tensor} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class RestoreSlice<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.RestoreSlice}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param preferredShard Index of file to open first if multiple files match
-     * `file_pattern`. See the documentation for `Restore`.
-     */
-    public Options preferredShard(Long preferredShard) {
-      this.preferredShard = preferredShard;
-      return this;
-    }
-    
-    private Long preferredShard;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RestoreSlice";
+
+  private Output<T> tensor;
+
+  private RestoreSlice(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    tensor = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RestoreSlice operation.
-   * 
+   *
    * @param scope current scope
    * @param filePattern Must have a single element. The pattern of the files from
    * which we read the tensor.
@@ -75,11 +67,16 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
    * @param shapeAndSlice Scalar. The shapes and slice specifications to use when
    * restoring a tensors.
    * @param dt The type of the tensor to be restored.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code RestoreSlice} output and operands
    * @return a new instance of RestoreSlice
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern, Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern,
+      Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreSlice", scope.makeOpName("RestoreSlice"));
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());
@@ -93,37 +90,53 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
         }
       }
     }
-    return new RestoreSlice<T>(opBuilder.build());
+    return new RestoreSlice<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the preferredShard option.
+   *
    * @param preferredShard Index of file to open first if multiple files match
-   * `file_pattern`. See the documentation for `Restore`.
+   * {@code file_pattern}. See the documentation for {@code Restore}.
+   * @return this Options instance.
    */
   public static Options preferredShard(Long preferredShard) {
     return new Options().preferredShard(preferredShard);
   }
-  
+
   /**
+   * Gets tensor.
    * The restored tensor.
+   * @return tensor.
    */
   public Output<T> tensor() {
     return tensor;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return tensor;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RestoreSlice";
-  
-  private Output<T> tensor;
-  
-  private RestoreSlice(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    tensor = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.RestoreSlice}
+   */
+  public static class Options {
+    private Long preferredShard;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the preferredShard option.
+     *
+     * @param preferredShard Index of file to open first if multiple files match
+     * {@code file_pattern}. See the documentation for {@code Restore}.
+     * @return this Options instance.
+     */
+    public Options preferredShard(Long preferredShard) {
+      this.preferredShard = preferredShard;
+      return this;
+    }
   }
 }

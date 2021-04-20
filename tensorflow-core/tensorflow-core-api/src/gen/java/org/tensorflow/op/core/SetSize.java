@@ -30,49 +30,43 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Number of unique elements along last dimension of input `set`.
- * <p>
- * Input `set` is a `SparseTensor` represented by `set_indices`, `set_values`,
- * and `set_shape`. The last dimension contains values in a set, duplicates are
+ * Number of unique elements along last dimension of input {@code set}.
+ * Input {@code set} is a {@code SparseTensor} represented by {@code set_indices}, {@code set_values},
+ * and {@code set_shape}. The last dimension contains values in a set, duplicates are
  * allowed but ignored.
- * <p>
- * If `validate_indices` is `True`, this op validates the order and range of `set`
+ * <p>If {@code validate_indices} is {@code True}, this op validates the order and range of {@code set}
  * indices.
  */
 @Operator
 public final class SetSize extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.SetSize}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param validateIndices 
-     */
-    public Options validateIndices(Boolean validateIndices) {
-      this.validateIndices = validateIndices;
-      return this;
-    }
-    
-    private Boolean validateIndices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SetSize";
+
+  private Output<TInt32> output;
+
+  private SetSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SetSize operation.
-   * 
+   *
    * @param scope current scope
-   * @param setIndices 2D `Tensor`, indices of a `SparseTensor`.
-   * @param setValues 1D `Tensor`, values of a `SparseTensor`.
-   * @param setShape 1D `Tensor`, shape of a `SparseTensor`.
-   * @param options carries optional attributes values
+   * @param setIndices 2D {@code Tensor}, indices of a {@code SparseTensor}.
+   * @param setValues 1D {@code Tensor}, values of a {@code SparseTensor}.
+   * @param setShape 1D {@code Tensor}, shape of a {@code SparseTensor}.
+   * @param options carries optional attribute values
    * @return a new instance of SetSize
    */
-  @Endpoint(describeByClass = true)
-  public static SetSize create(Scope scope, Operand<TInt64> setIndices, Operand<? extends TType> setValues, Operand<TInt64> setShape, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SetSize create(Scope scope, Operand<TInt64> setIndices,
+      Operand<? extends TType> setValues, Operand<TInt64> setShape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SetSize", scope.makeOpName("SetSize"));
     opBuilder.addInput(setIndices.asOutput());
     opBuilder.addInput(setValues.asOutput());
@@ -87,36 +81,51 @@ public final class SetSize extends RawOp implements Operand<TInt32> {
     }
     return new SetSize(opBuilder.build());
   }
-  
+
   /**
-   * @param validateIndices 
+   * Sets the validateIndices option.
+   *
+   * @param validateIndices the validateIndices option
+   * @return this Options instance.
    */
   public static Options validateIndices(Boolean validateIndices) {
     return new Options().validateIndices(validateIndices);
   }
-  
+
   /**
-   * For `set` ranked `n`, this is a `Tensor` with rank `n-1`, and the same 1st
-   * `n-1` dimensions as `set`. Each value is the number of unique elements in
-   * the corresponding `[0...n-1]` dimension of `set`.
+   * Gets output.
+   * For {@code set} ranked {@code n}, this is a {@code Tensor} with rank {@code n-1}, and the same 1st
+   * {@code n-1} dimensions as {@code set}. Each value is the number of unique elements in
+   * the corresponding {@code [0...n-1]} dimension of {@code set}.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SetSize";
-  
-  private Output<TInt32> output;
-  
-  private SetSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.SetSize}
+   */
+  public static class Options {
+    private Boolean validateIndices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the validateIndices option.
+     *
+     * @param validateIndices the validateIndices option
+     * @return this Options instance.
+     */
+    public Options validateIndices(Boolean validateIndices) {
+      this.validateIndices = validateIndices;
+      return this;
+    }
   }
 }

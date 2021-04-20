@@ -23,12 +23,10 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Load FTRL embedding parameters.
- * <p>
  * An op that loads optimization parameters into HBM for embedding. Must be
  * preceded by a ConfigureTPUEmbeddingHost op that sets up the correct
  * embedding table configuration. For example, this op is used to install
@@ -36,58 +34,33 @@ import org.tensorflow.types.TFloat32;
  * executed.
  */
 public final class LoadTPUEmbeddingFTRLParameters extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.LoadTPUEmbeddingFTRLParameters}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param tableId 
-     */
-    public Options tableId(Long tableId) {
-      this.tableId = tableId;
-      return this;
-    }
-    
-    /**
-     * @param tableName 
-     */
-    public Options tableName(String tableName) {
-      this.tableName = tableName;
-      return this;
-    }
-    
-    /**
-     * @param config 
-     */
-    public Options config(String config) {
-      this.config = config;
-      return this;
-    }
-    
-    private Long tableId;
-    private String tableName;
-    private String config;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LoadTPUEmbeddingFTRLParameters";
+
+  private LoadTPUEmbeddingFTRLParameters(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new LoadTPUEmbeddingFTRLParameters operation.
-   * 
+   *
    * @param scope current scope
    * @param parameters Value of parameters used in the FTRL optimization algorithm.
    * @param accumulators Value of accumulators used in the FTRL optimization algorithm.
    * @param linears Value of linears used in the FTRL optimization algorithm.
-   * @param numShards 
-   * @param shardId 
-   * @param options carries optional attributes values
+   * @param numShards the value of the numShards property
+   * @param shardId the value of the shardId property
+   * @param options carries optional attribute values
    * @return a new instance of LoadTPUEmbeddingFTRLParameters
    */
-  @Endpoint(describeByClass = true)
-  public static LoadTPUEmbeddingFTRLParameters create(Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> linears, Long numShards, Long shardId, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LoadTPUEmbeddingFTRLParameters create(Scope scope, Operand<TFloat32> parameters,
+      Operand<TFloat32> accumulators, Operand<TFloat32> linears, Long numShards, Long shardId,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingFTRLParameters", scope.makeOpName("LoadTPUEmbeddingFTRLParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
@@ -110,32 +83,81 @@ public final class LoadTPUEmbeddingFTRLParameters extends RawOp {
     }
     return new LoadTPUEmbeddingFTRLParameters(opBuilder.build());
   }
-  
+
   /**
-   * @param tableId 
+   * Sets the tableId option.
+   *
+   * @param tableId the tableId option
+   * @return this Options instance.
    */
   public static Options tableId(Long tableId) {
     return new Options().tableId(tableId);
   }
-  
+
   /**
-   * @param tableName 
+   * Sets the tableName option.
+   *
+   * @param tableName the tableName option
+   * @return this Options instance.
    */
   public static Options tableName(String tableName) {
     return new Options().tableName(tableName);
   }
-  
+
   /**
-   * @param config 
+   * Sets the config option.
+   *
+   * @param config the config option
+   * @return this Options instance.
    */
   public static Options config(String config) {
     return new Options().config(config);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LoadTPUEmbeddingFTRLParameters";
-  
-  private LoadTPUEmbeddingFTRLParameters(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.LoadTPUEmbeddingFTRLParameters}
+   */
+  public static class Options {
+    private Long tableId;
+
+    private String tableName;
+
+    private String config;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the tableId option.
+     *
+     * @param tableId the tableId option
+     * @return this Options instance.
+     */
+    public Options tableId(Long tableId) {
+      this.tableId = tableId;
+      return this;
+    }
+
+    /**
+     * Sets the tableName option.
+     *
+     * @param tableName the tableName option
+     * @return this Options instance.
+     */
+    public Options tableName(String tableName) {
+      this.tableName = tableName;
+      return this;
+    }
+
+    /**
+     * Sets the config option.
+     *
+     * @param config the config option
+     * @return this Options instance.
+     */
+    public Options config(String config) {
+      this.config = config;
+      return this;
+    }
   }
 }

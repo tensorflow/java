@@ -29,75 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Multiplies slices of two tensors in batches.
- * <p>
- * Multiplies all slices of `Tensor` `x` and `y` (each slice can be
+ * Multiplies all slices of {@code Tensor} {@code x} and {@code y} (each slice can be
  * viewed as an element of a batch), and arranges the individual results
  * in a single output tensor of the same batch size. Each of the
  * individual slices can optionally be adjointed (to adjoint a matrix
  * means to transpose and conjugate it) before multiplication by setting
- * the `adj_x` or `adj_y` flag to `True`, which are by default `False`.
- * <p>
- * The input tensors `x` and `y` are 2-D or higher with shape `[..., r_x, c_x]`
- * and `[..., r_y, c_y]`.
- * <p>
- * The output tensor is 2-D or higher with shape `[..., r_o, c_o]`, where:
- * <p>
- *     r_o = c_x if adj_x else r_x
- *     c_o = r_y if adj_y else c_y
- * <p>
- * It is computed as:
- * <p>
- *     output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
- * <p>
- * <i>NOTE</i>: `train.BatchMatMul` supports broadcasting in the batch dimensions. More
+ * the {@code adj_x} or {@code adj_y} flag to {@code True}, which are by default {@code False}.
+ * <p>The input tensors {@code x} and {@code y} are 2-D or higher with shape {@code [..., r_x, c_x]}
+ * and {@code [..., r_y, c_y]}.
+ * <p>The output tensor is 2-D or higher with shape {@code [..., r_o, c_o]}, where:
+ * <pre>
+ * r_o = c_x if adj_x else r_x
+ * c_o = r_y if adj_y else c_y
+ * </pre>
+ * <p>It is computed as:
+ * <pre>
+ * output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
+ * </pre>
+ * <p><em>NOTE</em>: {@code train.BatchMatMul} supports broadcasting in the batch dimensions. More
  * about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html).
- * 
- * 
- * @param <T> data type for {@code output()} output
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class BatchMatMul<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.BatchMatMul}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adjX If `True`, adjoint the slices of `x`. Defaults to `False`.
-     */
-    public Options adjX(Boolean adjX) {
-      this.adjX = adjX;
-      return this;
-    }
-    
-    /**
-     * @param adjY If `True`, adjoint the slices of `y`. Defaults to `False`.
-     */
-    public Options adjY(Boolean adjY) {
-      this.adjY = adjY;
-      return this;
-    }
-    
-    private Boolean adjX;
-    private Boolean adjY;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchMatMulV2";
+
+  private Output<T> output;
+
+  private BatchMatMul(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new BatchMatMul operation.
-   * 
+   * Factory method to create a class wrapping a new BatchMatMulV2 operation.
+   *
    * @param scope current scope
-   * @param x 2-D or higher with shape `[..., r_x, c_x]`.
-   * @param y 2-D or higher with shape `[..., r_y, c_y]`.
-   * @param options carries optional attributes values
+   * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
+   * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchMatMulV2} output and operands
    * @return a new instance of BatchMatMul
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatMulV2", scope.makeOpName("BatchMatMul"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -112,43 +98,74 @@ public final class BatchMatMul<T extends TType> extends RawOp implements Operand
         }
       }
     }
-    return new BatchMatMul<T>(opBuilder.build());
+    return new BatchMatMul<>(opBuilder.build());
   }
-  
+
   /**
-   * @param adjX If `True`, adjoint the slices of `x`. Defaults to `False`.
+   * Sets the adjX option.
+   *
+   * @param adjX If {@code True}, adjoint the slices of {@code x}. Defaults to {@code False}.
+   * @return this Options instance.
    */
   public static Options adjX(Boolean adjX) {
     return new Options().adjX(adjX);
   }
-  
+
   /**
-   * @param adjY If `True`, adjoint the slices of `y`. Defaults to `False`.
+   * Sets the adjY option.
+   *
+   * @param adjY If {@code True}, adjoint the slices of {@code y}. Defaults to {@code False}.
+   * @return this Options instance.
    */
   public static Options adjY(Boolean adjY) {
     return new Options().adjY(adjY);
   }
-  
+
   /**
-   * 3-D or higher with shape `[..., r_o, c_o]`
+   * Gets output.
+   * 3-D or higher with shape {@code [..., r_o, c_o]}
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchMatMulV2";
-  
-  private Output<T> output;
-  
-  private BatchMatMul(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.BatchMatMul}
+   */
+  public static class Options {
+    private Boolean adjX;
+
+    private Boolean adjY;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adjX option.
+     *
+     * @param adjX If {@code True}, adjoint the slices of {@code x}. Defaults to {@code False}.
+     * @return this Options instance.
+     */
+    public Options adjX(Boolean adjX) {
+      this.adjX = adjX;
+      return this;
+    }
+
+    /**
+     * Sets the adjY option.
+     *
+     * @param adjY If {@code True}, adjoint the slices of {@code y}. Defaults to {@code False}.
+     * @return this Options instance.
+     */
+    public Options adjY(Boolean adjY) {
+      this.adjY = adjY;
+      return this;
+    }
   }
 }

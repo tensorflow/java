@@ -23,40 +23,43 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Applies a gradient to a given accumulator.
- * <p>
  * Does not add if local_step is lesser than the accumulator's global_step.
  */
 public final class ResourceAccumulatorApplyGradient extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ResourceAccumulatorApplyGradient";
+
+  private ResourceAccumulatorApplyGradient(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ResourceAccumulatorApplyGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a accumulator.
    * @param localStep The local_step value at which the gradient was computed.
    * @param gradient A tensor of the gradient to be accumulated.
    * @return a new instance of ResourceAccumulatorApplyGradient
    */
-  @Endpoint(describeByClass = true)
-  public static ResourceAccumulatorApplyGradient create(Scope scope, Operand<?> handle, Operand<TInt64> localStep, Operand<? extends TType> gradient) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ResourceAccumulatorApplyGradient create(Scope scope,
+      Operand<? extends TType> handle, Operand<TInt64> localStep,
+      Operand<? extends TType> gradient) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorApplyGradient", scope.makeOpName("ResourceAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradient.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ResourceAccumulatorApplyGradient(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceAccumulatorApplyGradient";
-  
-  private ResourceAccumulatorApplyGradient(Operation operation) {
-    super(operation);
   }
 }

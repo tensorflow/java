@@ -29,51 +29,57 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Increments 'ref' until it reaches 'limit'.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class CountUpTo<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "CountUpTo";
+
+  private Output<T> output;
+
+  private CountUpTo(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new CountUpTo operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref Should be from a scalar `Variable` node.
+   * @param ref Should be from a scalar {@code Variable} node.
    * @param limit If incrementing ref would bring it above limit, instead generates an
    * 'OutOfRange' error.
+   * @param <T> data type for {@code CountUpTo} output and operands
    * @return a new instance of CountUpTo
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> CountUpTo<T> create(Scope scope, Operand<T> ref, Long limit) {
     OperationBuilder opBuilder = scope.env().opBuilder("CountUpTo", scope.makeOpName("CountUpTo"));
     opBuilder.addInput(ref.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
-    return new CountUpTo<T>(opBuilder.build());
+    return new CountUpTo<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * A copy of the input before increment. If nothing else modifies the
    * input, the values produced will all be distinct.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CountUpTo";
-  
-  private Output<T> output;
-  
-  private CountUpTo(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

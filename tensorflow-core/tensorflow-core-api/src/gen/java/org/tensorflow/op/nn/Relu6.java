@@ -28,47 +28,56 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes rectified linear 6: `min(max(features, 0), 6)`.
- * 
- * @param <T> data type for {@code activations()} output
+ * Computes rectified linear 6: {@code min(max(features, 0), 6)}.
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Relu6<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Relu6 operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @return a new instance of Relu6
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Relu6<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Relu6", scope.makeOpName("Relu6"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Relu6<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> activations() {
-    return activations;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return activations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Relu6";
-  
+
   private Output<T> activations;
-  
+
   private Relu6(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Relu6 operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param <T> data type for {@code Relu6} output and operands
+   * @return a new instance of Relu6
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Relu6<T> create(Scope scope, Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Relu6", scope.makeOpName("Relu6"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Relu6<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   *
+   * @return activations.
+   */
+  public Output<T> activations() {
+    return activations;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return activations;
   }
 }

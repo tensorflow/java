@@ -24,7 +24,6 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -32,18 +31,34 @@ import org.tensorflow.types.family.TType;
  * Converts a SparseTensor to a (possibly batched) CSRSparseMatrix.
  */
 public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseTensorToCSRSparseMatrix";
+
+  private Output<? extends TType> sparseMatrix;
+
+  @SuppressWarnings("unchecked")
+  private SparseTensorToCSRSparseMatrix(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    sparseMatrix = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseTensorToCSRSparseMatrix operation.
-   * 
+   *
    * @param scope current scope
    * @param indices SparseTensor indices.
    * @param values SparseTensor values.
    * @param denseShape SparseTensor dense shape.
    * @return a new instance of SparseTensorToCSRSparseMatrix
    */
-  @Endpoint(describeByClass = true)
-  public static SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices, Operand<? extends TType> values, Operand<TInt64> denseShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices,
+      Operand<? extends TType> values, Operand<TInt64> denseShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorToCSRSparseMatrix", scope.makeOpName("SparseTensorToCSRSparseMatrix"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
@@ -51,28 +66,19 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
     opBuilder = scope.apply(opBuilder);
     return new SparseTensorToCSRSparseMatrix(opBuilder.build());
   }
-  
+
   /**
+   * Gets sparseMatrix.
    * A (possibly batched) CSRSparseMatrix.
+   * @return sparseMatrix.
    */
-  public Output<?> sparseMatrix() {
+  public Output<? extends TType> sparseMatrix() {
     return sparseMatrix;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) sparseMatrix;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseTensorToCSRSparseMatrix";
-  
-  private Output<?> sparseMatrix;
-  
-  private SparseTensorToCSRSparseMatrix(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    sparseMatrix = operation.output(outputIdx++);
   }
 }

@@ -31,45 +31,52 @@ import org.tensorflow.types.TString;
 /**
  * Computes fingerprints of the input strings.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SdcaFprint extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SdcaFprint";
+
+  private Output<TInt64> output;
+
+  private SdcaFprint(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SdcaFprint operation.
-   * 
+   *
    * @param scope current scope
    * @param input vector of strings to compute fingerprints on.
    * @return a new instance of SdcaFprint
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static SdcaFprint create(Scope scope, Operand<TString> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaFprint", scope.makeOpName("SdcaFprint"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new SdcaFprint(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * a (N,2) shaped matrix where N is the number of elements in the input
    * vector. Each row contains the low and high parts of the fingerprint.
+   * @return output.
    */
   public Output<TInt64> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SdcaFprint";
-  
-  private Output<TInt64> output;
-  
-  private SdcaFprint(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

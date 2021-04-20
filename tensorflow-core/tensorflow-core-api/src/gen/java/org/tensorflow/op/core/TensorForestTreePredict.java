@@ -24,25 +24,40 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Output the logits for the given input data
  */
 public final class TensorForestTreePredict extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorForestTreePredict";
+
+  private Output<TFloat32> logits;
+
+  private TensorForestTreePredict(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    logits = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorForestTreePredict operation.
-   * 
+   *
    * @param scope current scope
    * @param treeHandle Handle to the tree resource.
    * @param denseFeatures Rank 2 dense features tensor.
    * @param logitsDimension Scalar, dimension of the logits.
    * @return a new instance of TensorForestTreePredict
    */
-  @Endpoint(describeByClass = true)
-  public static TensorForestTreePredict create(Scope scope, Operand<?> treeHandle, Operand<TFloat32> denseFeatures, Long logitsDimension) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorForestTreePredict create(Scope scope, Operand<? extends TType> treeHandle,
+      Operand<TFloat32> denseFeatures, Long logitsDimension) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreePredict", scope.makeOpName("TensorForestTreePredict"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(denseFeatures.asOutput());
@@ -50,27 +65,18 @@ public final class TensorForestTreePredict extends RawOp implements Operand<TFlo
     opBuilder.setAttr("logits_dimension", logitsDimension);
     return new TensorForestTreePredict(opBuilder.build());
   }
-  
+
   /**
+   * Gets logits.
    * The logits predictions from the tree for each instance in the batch.
+   * @return logits.
    */
   public Output<TFloat32> logits() {
     return logits;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return logits;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestTreePredict";
-  
-  private Output<TFloat32> logits;
-  
-  private TensorForestTreePredict(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    logits = operation.output(outputIdx++);
   }
 }

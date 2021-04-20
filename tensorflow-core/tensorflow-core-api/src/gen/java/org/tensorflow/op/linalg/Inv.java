@@ -29,51 +29,45 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the inverse of one or more square invertible matrices or their adjoints (conjugate transposes).
- * <p>
- * 
- * The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
+ * The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
  * form square matrices. The output is a tensor of the same shape as the input
- * containing the inverse for all input submatrices `[..., :, :]`.
- * <p>
- * The op uses LU decomposition with partial pivoting to compute the inverses.
- * <p>
- * If a matrix is not invertible there is no guarantee what the op does. It
+ * containing the inverse for all input submatrices {@code [..., :, :]}.
+ * <p>The op uses LU decomposition with partial pivoting to compute the inverses.
+ * <p>If a matrix is not invertible there is no guarantee what the op does. It
  * may detect the condition and raise an exception or it may simply return a
  * garbage result.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Inv<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.Inv}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adjoint 
-     */
-    public Options adjoint(Boolean adjoint) {
-      this.adjoint = adjoint;
-      return this;
-    }
-    
-    private Boolean adjoint;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MatrixInverse";
+
+  private Output<T> output;
+
+  private Inv(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Inv operation.
-   * 
+   * Factory method to create a class wrapping a new MatrixInverse operation.
+   *
    * @param scope current scope
-   * @param input Shape is `[..., M, M]`.
-   * @param options carries optional attributes values
+   * @param input Shape is {@code [..., M, M]}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MatrixInverse} output and operands
    * @return a new instance of Inv
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Inv<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixInverse", scope.makeOpName("Inv"));
     opBuilder.addInput(input.asOutput());
@@ -85,40 +79,54 @@ public final class Inv<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Inv<T>(opBuilder.build());
+    return new Inv<>(opBuilder.build());
   }
-  
+
   /**
-   * @param adjoint 
+   * Sets the adjoint option.
+   *
+   * @param adjoint the adjoint option
+   * @return this Options instance.
    */
   public static Options adjoint(Boolean adjoint) {
     return new Options().adjoint(adjoint);
   }
-  
+
   /**
-   * Shape is `[..., M, M]`.
-   * <p>
-   * @compatibility(numpy)
+   * Gets output.
+   * Shape is {@code [..., M, M]}.
+   * <p>{@literal @}compatibility(numpy)<br>
    * Equivalent to np.linalg.inv
-   * @end_compatibility
+   * <br>{@literal @}end_compatibility
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MatrixInverse";
-  
-  private Output<T> output;
-  
-  private Inv(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.Inv}
+   */
+  public static class Options {
+    private Boolean adjoint;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adjoint option.
+     *
+     * @param adjoint the adjoint option
+     * @return this Options instance.
+     */
+    public Options adjoint(Boolean adjoint) {
+      this.adjoint = adjoint;
+      return this;
+    }
   }
 }

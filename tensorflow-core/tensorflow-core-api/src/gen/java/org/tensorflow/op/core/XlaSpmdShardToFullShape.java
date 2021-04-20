@@ -30,54 +30,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op used by XLA SPMD partitioner to switch from manual partitioning to
- * <p>
  * automatic partitioning. It converts the shard-shaped, manually partitioned input
  * into full-shaped tensor to be partitioned automatically with the same sharding
  * used by manual partitioning.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class XlaSpmdShardToFullShape<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaSpmdShardToFullShape";
+
+  private Output<T> output;
+
+  private XlaSpmdShardToFullShape(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new XlaSpmdShardToFullShape operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param manualSharding 
-   * @param fullShape 
+   * @param input the input value
+   * @param manualSharding the value of the manualSharding property
+   * @param fullShape the value of the fullShape property
+   * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
    * @return a new instance of XlaSpmdShardToFullShape
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> XlaSpmdShardToFullShape<T> create(Scope scope, Operand<T> input, String manualSharding, Shape fullShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> XlaSpmdShardToFullShape<T> create(Scope scope, Operand<T> input,
+      String manualSharding, Shape fullShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSpmdShardToFullShape", scope.makeOpName("XlaSpmdShardToFullShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("manual_sharding", manualSharding);
     opBuilder.setAttr("full_shape", fullShape);
-    return new XlaSpmdShardToFullShape<T>(opBuilder.build());
+    return new XlaSpmdShardToFullShape<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaSpmdShardToFullShape";
-  
-  private Output<T> output;
-  
-  private XlaSpmdShardToFullShape(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

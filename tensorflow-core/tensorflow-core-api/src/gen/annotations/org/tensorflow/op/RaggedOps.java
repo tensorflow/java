@@ -39,29 +39,29 @@ public final class RaggedOps {
 
   /**
    * Counts the number of occurrences of each value in an integer array.
-   *  <p>
-   *  Outputs a vector with length `size` and the same dtype as `weights`. If
-   *  `weights` are empty, then index `i` stores the number of times the value `i` is
-   *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
-   *  the value in `weights` at each index where the corresponding value in `arr` is
-   *  `i`.
-   *  <p>
-   *  Values in `arr` outside of the range [0, size) are ignored.
+   *  Outputs a vector with length {@code size} and the same dtype as {@code weights}. If
+   *  {@code weights} are empty, then index {@code i} stores the number of times the value {@code i} is
+   *  counted in {@code arr}. If {@code weights} are non-empty, then index {@code i} stores the sum of
+   *  the value in {@code weights} at each index where the corresponding value in {@code arr} is
+   *  {@code i}.
+   *  <p>Values in {@code arr} outside of the range [0, size) are ignored.
    *
-   * @param <U> data type for {@code output()} output
-   * @param splits 1D int64 `Tensor`.
-   * @param values 2D int `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   *  shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
+   * @param <U> data type for {@code output} output
+   * @param splits 1D int64 {@code Tensor}.
+   * @param values 2D int {@code Tensor}.
+   * @param sizeOutput non-negative int scalar {@code Tensor}.
+   * @param weights is an int32, int64, float32, or float64 {@code Tensor} with the same
+   *  shape as {@code input}, or a length-0 {@code Tensor}, in which case it acts as all weights
    *  equal to 1.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code RaggedBincount} output and operands
+   * @param <T> data type for {@code RaggedBincount} output and operands
    * @return a new instance of RaggedBincount
    */
   public <U extends TNumber, T extends TNumber> RaggedBincount<U> raggedBincount(
-      Operand<TInt64> splits, Operand<T> values, Operand<T> size, Operand<U> weights,
+      Operand<TInt64> splits, Operand<T> values, Operand<T> sizeOutput, Operand<U> weights,
       RaggedBincount.Options... options) {
-    return RaggedBincount.create(scope, splits, values, size, weights, options);
+    return RaggedBincount.create(scope, splits, values, sizeOutput, weights, options);
   }
 
   /**

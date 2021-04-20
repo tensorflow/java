@@ -29,54 +29,60 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise remainder of division. This emulates C semantics in that
- * <p>
- * the result here is consistent with a truncating divide. E.g. `truncate(x / y) *
- * y + truncate_mod(x, y) = x`.
- * <p>
- * <i>NOTE</i>: `math.TruncateMod` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * 
- * @param <T> data type for {@code z()} output
+ * the result here is consistent with a truncating divide. E.g. {@code truncate(x / y) * y + truncate_mod(x, y) = x}.
+ * <p><em>NOTE</em>: {@code math.TruncateMod} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class TruncateMod<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TruncateMod";
+
+  private Output<T> z;
+
+  private TruncateMod(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TruncateMod operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code TruncateMod} output and operands
    * @return a new instance of TruncateMod
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> TruncateMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("TruncateMod", scope.makeOpName("TruncateMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TruncateMod<T>(opBuilder.build());
+    return new TruncateMod<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TruncateMod";
-  
-  private Output<T> z;
-  
-  private TruncateMod(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

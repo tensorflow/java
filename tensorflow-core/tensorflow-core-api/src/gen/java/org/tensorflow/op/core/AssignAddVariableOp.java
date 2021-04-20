@@ -28,34 +28,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Adds a value to the current value of a variable.
- * <p>
  * Any ReadVariableOp with a control dependency on this op is guaranteed to
  * see the incremented value or a subsequent newer one.
  */
 @Operator
 public final class AssignAddVariableOp extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AssignAddVariableOp";
+
+  private AssignAddVariableOp(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new AssignAddVariableOp operation.
-   * 
+   *
    * @param scope current scope
    * @param resource handle to the resource in which to store the variable.
    * @param value the value by which the variable will be incremented.
    * @return a new instance of AssignAddVariableOp
    */
-  @Endpoint(describeByClass = true)
-  public static AssignAddVariableOp create(Scope scope, Operand<?> resource, Operand<? extends TType> value) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AssignAddVariableOp create(Scope scope, Operand<? extends TType> resource,
+      Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignAddVariableOp", scope.makeOpName("AssignAddVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new AssignAddVariableOp(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AssignAddVariableOp";
-  
-  private AssignAddVariableOp(Operation operation) {
-    super(operation);
   }
 }

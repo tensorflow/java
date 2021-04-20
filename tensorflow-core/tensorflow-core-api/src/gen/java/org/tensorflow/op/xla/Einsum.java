@@ -29,53 +29,62 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op which supports basic einsum op with 2 inputs and 1 output.
- * <p>
  * This op has better TPU performance since it doesn't have explicitly reshape and
  * transpose operations as tf.einsum does.
- * 
- * @param <T> data type for {@code product()} output
+ *
+ * @param <T> data type for {@code product} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Einsum operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaEinsum";
+
+  private Output<T> product;
+
+  private Einsum(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    product = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaEinsum operation.
+   *
    * @param scope current scope
-   * @param a 
-   * @param b 
-   * @param equation 
+   * @param a the a value
+   * @param b the b value
+   * @param equation the value of the equation property
+   * @param <T> data type for {@code XlaEinsum} output and operands
    * @return a new instance of Einsum
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Einsum<T> create(Scope scope, Operand<T> a, Operand<T> b, String equation) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Einsum<T> create(Scope scope, Operand<T> a, Operand<T> b,
+      String equation) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaEinsum", scope.makeOpName("Einsum"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("equation", equation);
-    return new Einsum<T>(opBuilder.build());
+    return new Einsum<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets product.
+   *
+   * @return product.
    */
   public Output<T> product() {
     return product;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return product;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaEinsum";
-  
-  private Output<T> product;
-  
-  private Einsum(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    product = operation.output(outputIdx++);
   }
 }

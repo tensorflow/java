@@ -28,48 +28,43 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
- * Replaces matches of the `pattern` regular expression in `input` with the
- * replacement string provided in `rewrite`.
- * <p>
+ * Replaces matches of the {@code pattern} regular expression in {@code input} with the
+ * replacement string provided in {@code rewrite}.
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class RegexReplace extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.RegexReplace}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param replaceGlobal If True, the replacement is global (that is, all matches of the `pattern` regular
-     * expression in each input string are rewritten), otherwise the `rewrite`
-     * substitution is only made for the first `pattern` match.
-     */
-    public Options replaceGlobal(Boolean replaceGlobal) {
-      this.replaceGlobal = replaceGlobal;
-      return this;
-    }
-    
-    private Boolean replaceGlobal;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RegexReplace";
+
+  private Output<TString> output;
+
+  private RegexReplace(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RegexReplace operation.
-   * 
+   *
    * @param scope current scope
    * @param input The text to be processed.
-   * @param pattern The regular expression to be matched in the `input` strings.
-   * @param rewrite The rewrite string to be substituted for the `pattern` expression where it is
-   * matched in the `input` strings.
-   * @param options carries optional attributes values
+   * @param pattern The regular expression to be matched in the {@code input} strings.
+   * @param rewrite The rewrite string to be substituted for the {@code pattern} expression where it is
+   * matched in the {@code input} strings.
+   * @param options carries optional attribute values
    * @return a new instance of RegexReplace
    */
-  @Endpoint(describeByClass = true)
-  public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern, Operand<TString> rewrite, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern,
+      Operand<TString> rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RegexReplace", scope.makeOpName("RegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
@@ -84,36 +79,53 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
     }
     return new RegexReplace(opBuilder.build());
   }
-  
+
   /**
-   * @param replaceGlobal If True, the replacement is global (that is, all matches of the `pattern` regular
-   * expression in each input string are rewritten), otherwise the `rewrite`
-   * substitution is only made for the first `pattern` match.
+   * Sets the replaceGlobal option.
+   *
+   * @param replaceGlobal If True, the replacement is global (that is, all matches of the {@code pattern} regular
+   * expression in each input string are rewritten), otherwise the {@code rewrite}
+   * substitution is only made for the first {@code pattern} match.
+   * @return this Options instance.
    */
   public static Options replaceGlobal(Boolean replaceGlobal) {
     return new Options().replaceGlobal(replaceGlobal);
   }
-  
+
   /**
+   * Gets output.
    * The text after applying pattern match and rewrite substitution.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RegexReplace";
-  
-  private Output<TString> output;
-  
-  private RegexReplace(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.RegexReplace}
+   */
+  public static class Options {
+    private Boolean replaceGlobal;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the replaceGlobal option.
+     *
+     * @param replaceGlobal If True, the replacement is global (that is, all matches of the {@code pattern} regular
+     * expression in each input string are rewritten), otherwise the {@code rewrite}
+     * substitution is only made for the first {@code pattern} match.
+     * @return this Options instance.
+     */
+    public Options replaceGlobal(Boolean replaceGlobal) {
+      this.replaceGlobal = replaceGlobal;
+      return this;
+    }
   }
 }

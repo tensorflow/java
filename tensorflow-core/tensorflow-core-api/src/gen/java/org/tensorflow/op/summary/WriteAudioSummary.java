@@ -23,52 +23,44 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes an audio summary.
- * <p>
- * Writes encoded audio summary `tensor` at `step` with `tag` using summary `writer`.
- * `sample_rate` is the audio sample rate is Hz.
+ * Writes encoded audio summary {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
+ * {@code sample_rate} is the audio sample rate is Hz.
  */
 public final class WriteAudioSummary extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.summary.WriteAudioSummary}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param maxOutputs 
-     */
-    public Options maxOutputs(Long maxOutputs) {
-      this.maxOutputs = maxOutputs;
-      return this;
-    }
-    
-    private Long maxOutputs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "WriteAudioSummary";
+
+  private WriteAudioSummary(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new WriteAudioSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tag 
-   * @param tensor 
-   * @param sampleRate 
-   * @param options carries optional attributes values
+   * @param writer the writer value
+   * @param step the step value
+   * @param tag the tag value
+   * @param tensor the tensor value
+   * @param sampleRate the sampleRate value
+   * @param options carries optional attribute values
    * @return a new instance of WriteAudioSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteAudioSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<TFloat32> tensor, Operand<TFloat32> sampleRate, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteAudioSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<TString> tag, Operand<TFloat32> tensor,
+      Operand<TFloat32> sampleRate, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteAudioSummary", scope.makeOpName("WriteAudioSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
@@ -85,18 +77,35 @@ public final class WriteAudioSummary extends RawOp {
     }
     return new WriteAudioSummary(opBuilder.build());
   }
-  
+
   /**
-   * @param maxOutputs 
+   * Sets the maxOutputs option.
+   *
+   * @param maxOutputs the maxOutputs option
+   * @return this Options instance.
    */
   public static Options maxOutputs(Long maxOutputs) {
     return new Options().maxOutputs(maxOutputs);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteAudioSummary";
-  
-  private WriteAudioSummary(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.summary.WriteAudioSummary}
+   */
+  public static class Options {
+    private Long maxOutputs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the maxOutputs option.
+     *
+     * @param maxOutputs the maxOutputs option
+     * @return this Options instance.
+     */
+    public Options maxOutputs(Long maxOutputs) {
+      this.maxOutputs = maxOutputs;
+      return this;
+    }
   }
 }

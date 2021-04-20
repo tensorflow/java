@@ -29,41 +29,35 @@ import org.tensorflow.types.family.TType;
 /**
  * Update '*var' by subtracting 'alpha' * 'delta' from it.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyGradientDescent extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyGradientDescent}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, the subtraction will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyGradientDescent";
+
+  private ResourceApplyGradientDescent(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceApplyGradientDescent operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param delta The change.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyGradientDescent} output and operands
    * @return a new instance of ResourceApplyGradientDescent
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyGradientDescent create(Scope scope, Operand<?> var, Operand<T> alpha, Operand<T> delta, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyGradientDescent create(Scope scope,
+      Operand<? extends TType> var, Operand<T> alpha, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyGradientDescent", scope.makeOpName("ResourceApplyGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
@@ -78,19 +72,37 @@ public final class ResourceApplyGradientDescent extends RawOp {
     }
     return new ResourceApplyGradientDescent(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, the subtraction will be protected by a lock;
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, the subtraction will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyGradientDescent";
-  
-  private ResourceApplyGradientDescent(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyGradientDescent}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

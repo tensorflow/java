@@ -34,23 +34,42 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Op that loads and executes a TPU program on a TPU device.
- * <p>
  * For the internal use of the distributed TPU compiler.
  */
-@Operator(group = "tpu")
+@Operator(
+    group = "tpu"
+)
 public final class Execute extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new Execute operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TPUExecute";
+
+  private List<Output<?>> results;
+
+  @SuppressWarnings("unchecked")
+  private Execute(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int resultsLength = operation.outputListLength("results");
+    results = Arrays.asList(operation.outputList(outputIdx, resultsLength));
+    outputIdx += resultsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TPUExecute operation.
+   *
    * @param scope current scope
-   * @param args 
-   * @param key 
-   * @param Tresults 
+   * @param args the args value
+   * @param key the key value
+   * @param Tresults the value of the Tresults property
    * @return a new instance of Execute
    */
-  @Endpoint(describeByClass = true)
-  public static Execute create(Scope scope, Iterable<Operand<?>> args, Operand<TString> key, List<Class<? extends TType>> Tresults) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Execute create(Scope scope, Iterable<Operand<?>> args, Operand<TString> key,
+      List<Class<? extends TType>> Tresults) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUExecute", scope.makeOpName("Execute"));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder.addInput(key.asOutput());
@@ -58,29 +77,19 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
     opBuilder.setAttr("Tresults", Operands.toDataTypes(Tresults));
     return new Execute(opBuilder.build());
   }
-  
+
   /**
+   * Gets results.
+   *
+   * @return results.
    */
   public List<Output<?>> results() {
     return results;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) results.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUExecute";
-  
-  private List<Output<?>> results;
-  
-  private Execute(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int resultsLength = operation.outputListLength("results");
-    results = Arrays.asList(operation.outputList(outputIdx, resultsLength));
-    outputIdx += resultsLength;
   }
 }

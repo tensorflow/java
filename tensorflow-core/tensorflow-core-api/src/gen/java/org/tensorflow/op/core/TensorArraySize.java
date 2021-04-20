@@ -27,50 +27,57 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Get the current size of the TensorArray.
  */
 @Operator
 public final class TensorArraySize extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorArraySize operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArraySizeV3";
+
+  private Output<TInt32> output;
+
+  private TensorArraySize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorArraySizeV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArraySize
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArraySize create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArraySize create(Scope scope, Operand<? extends TType> handle,
+      Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArraySizeV3", scope.makeOpName("TensorArraySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorArraySize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * The current size of the TensorArray.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArraySizeV3";
-  
-  private Output<TInt32> output;
-  
-  private TensorArraySize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

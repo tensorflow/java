@@ -29,21 +29,39 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The TensorListConcatLists operation
  */
 @Operator
 public final class TensorListConcatLists extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListConcatLists";
+
+  private Output<? extends TType> output;
+
+  @SuppressWarnings("unchecked")
+  private TensorListConcatLists(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListConcatLists operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputA 
-   * @param inputB 
-   * @param elementDtype 
+   * @param inputA the inputA value
+   * @param inputB the inputB value
+   * @param elementDtype the value of the elementDtype property
+   * @param <T> data type for {@code TensorListConcatLists} output and operands
    * @return a new instance of TensorListConcatLists
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorListConcatLists create(Scope scope, Operand<?> inputA, Operand<?> inputB, Class<T> elementDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorListConcatLists create(Scope scope,
+      Operand<? extends TType> inputA, Operand<? extends TType> inputB, Class<T> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
@@ -51,27 +69,19 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListConcatLists(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
-  public Output<?> output() {
+  public Output<? extends TType> output() {
     return output;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListConcatLists";
-  
-  private Output<?> output;
-  
-  private TensorListConcatLists(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

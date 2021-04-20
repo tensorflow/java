@@ -37,28 +37,70 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a vector of tf.Example protos (as strings) into typed tensors.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ParseExample extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new ParseExample operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ParseExampleV2";
+
+  private List<Output<TInt64>> sparseIndices;
+
+  private List<Output<?>> sparseValues;
+
+  private List<Output<TInt64>> sparseShapes;
+
+  private List<Output<?>> denseValues;
+
+  private List<Output<?>> raggedValues;
+
+  private List<Output<?>> raggedRowSplits;
+
+  @SuppressWarnings("unchecked")
+  private ParseExample(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int sparseIndicesLength = operation.outputListLength("sparse_indices");
+    sparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, sparseIndicesLength));
+    outputIdx += sparseIndicesLength;
+    int sparseValuesLength = operation.outputListLength("sparse_values");
+    sparseValues = Arrays.asList(operation.outputList(outputIdx, sparseValuesLength));
+    outputIdx += sparseValuesLength;
+    int sparseShapesLength = operation.outputListLength("sparse_shapes");
+    sparseShapes = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, sparseShapesLength));
+    outputIdx += sparseShapesLength;
+    int denseValuesLength = operation.outputListLength("dense_values");
+    denseValues = Arrays.asList(operation.outputList(outputIdx, denseValuesLength));
+    outputIdx += denseValuesLength;
+    int raggedValuesLength = operation.outputListLength("ragged_values");
+    raggedValues = Arrays.asList(operation.outputList(outputIdx, raggedValuesLength));
+    outputIdx += raggedValuesLength;
+    int raggedRowSplitsLength = operation.outputListLength("ragged_row_splits");
+    raggedRowSplits = Arrays.asList(operation.outputList(outputIdx, raggedRowSplitsLength));
+    outputIdx += raggedRowSplitsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ParseExampleV2 operation.
+   *
    * @param scope current scope
    * @param serialized A scalar or vector containing binary serialized Example protos.
    * @param names A tensor containing the names of the serialized protos.
-   * Corresponds 1:1 with the `serialized` tensor.
+   * Corresponds 1:1 with the {@code serialized} tensor.
    * May contain, for example, table key (descriptive) names for the
    * corresponding serialized protos.  These are purely useful for debugging
    * purposes, and the presence of values here has no effect on the output.
    * May also be an empty vector if no names are available.
-   * If non-empty, this tensor must have the same shape as "serialized".
+   * If non-empty, this tensor must have the same shape as &quot;serialized&quot;.
    * @param sparseKeys Vector of strings.
    * The keys expected in the Examples' features associated with sparse values.
    * @param denseKeys Vector of strings.
    * The keys expected in the Examples' features associated with dense values.
    * @param raggedKeys Vector of strings.
    * The keys expected in the Examples' features associated with ragged values.
-   * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with `dense_keys`.
+   * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with {@code dense_keys}.
    * dense_defaults[j] provides default values
    * when the example's feature_map lacks dense_key[j].  If an empty Tensor is
    * provided for dense_defaults[j], then the Feature dense_keys[j] is required.
@@ -69,19 +111,19 @@ public final class ParseExample extends RawOp {
    * feature), dense_defaults[j] must contain a single element:
    * the padding element.
    * @param numSparse The number of sparse keys.
-   * @param sparseTypes A list of `num_sparse` types; the data types of data in each Feature
+   * @param sparseTypes A list of {@code num_sparse} types; the data types of data in each Feature
    * given in sparse_keys.
    * Currently the ParseExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
-   * @param raggedValueTypes A list of `num_ragged` types; the data types of data in each Feature
-   * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+   * @param raggedValueTypes A list of {@code num_ragged} types; the data types of data in each Feature
+   * given in ragged_keys (where {@code num_ragged = sparse_keys.size()}).
    * Currently the ParseExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
-   * @param raggedSplitTypes A list of `num_ragged` types; the data types of row_splits in each Feature
-   * given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+   * @param raggedSplitTypes A list of {@code num_ragged} types; the data types of row_splits in each Feature
+   * given in ragged_keys (where {@code num_ragged = sparse_keys.size()}).
    * May be DT_INT32 or DT_INT64.
-   * @param denseShapes A list of `num_dense` shapes; the shapes of data in each Feature
-   * given in dense_keys (where `num_dense = dense_keys.size()`).
+   * @param denseShapes A list of {@code num_dense} shapes; the shapes of data in each Feature
+   * given in dense_keys (where {@code num_dense = dense_keys.size()}).
    * The number of elements in the Feature corresponding to dense_key[j]
    * must always equal dense_shapes[j].NumEntries().
    * If dense_shapes[j] == (D0, D1, ..., DN) then the shape of output
@@ -96,8 +138,14 @@ public final class ParseExample extends RawOp {
    * scalar element along the second dimension.
    * @return a new instance of ParseExample
    */
-  @Endpoint(describeByClass = true)
-  public static ParseExample create(Scope scope, Operand<TString> serialized, Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys, Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse, List<Class<? extends TType>> sparseTypes, List<Class<? extends TType>> raggedValueTypes, List<Class<? extends TNumber>> raggedSplitTypes, List<Shape> denseShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ParseExample create(Scope scope, Operand<TString> serialized,
+      Operand<TString> names, Operand<TString> sparseKeys, Operand<TString> denseKeys,
+      Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse,
+      List<Class<? extends TType>> sparseTypes, List<Class<? extends TType>> raggedValueTypes,
+      List<Class<? extends TNumber>> raggedSplitTypes, List<Shape> denseShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(names.asOutput());
@@ -111,80 +159,64 @@ public final class ParseExample extends RawOp {
     opBuilder.setAttr("ragged_value_types", Operands.toDataTypes(raggedValueTypes));
     opBuilder.setAttr("ragged_split_types", Operands.toDataTypes(raggedSplitTypes));
     Shape[] denseShapesArray = new Shape[denseShapes.size()];
-    for (int i = 0; i < denseShapesArray.length; ++i) {
+    for (int i = 0 ; i < denseShapesArray.length ; i++) {
       denseShapesArray[i] = denseShapes.get(i);
     }
     opBuilder.setAttr("dense_shapes", denseShapesArray);
     return new ParseExample(opBuilder.build());
   }
-  
+
   /**
+   * Gets sparseIndices.
+   *
+   * @return sparseIndices.
    */
   public List<Output<TInt64>> sparseIndices() {
     return sparseIndices;
   }
-  
+
   /**
+   * Gets sparseValues.
+   *
+   * @return sparseValues.
    */
   public List<Output<?>> sparseValues() {
     return sparseValues;
   }
-  
+
   /**
+   * Gets sparseShapes.
+   *
+   * @return sparseShapes.
    */
   public List<Output<TInt64>> sparseShapes() {
     return sparseShapes;
   }
-  
+
   /**
+   * Gets denseValues.
+   *
+   * @return denseValues.
    */
   public List<Output<?>> denseValues() {
     return denseValues;
   }
-  
+
   /**
+   * Gets raggedValues.
+   *
+   * @return raggedValues.
    */
   public List<Output<?>> raggedValues() {
     return raggedValues;
   }
-  
+
   /**
+   * Gets raggedRowSplits.
+   *
+   * @return raggedRowSplits.
    */
   public List<Output<?>> raggedRowSplits() {
     return raggedRowSplits;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ParseExampleV2";
-  
-  private List<Output<TInt64>> sparseIndices;
-  private List<Output<?>> sparseValues;
-  private List<Output<TInt64>> sparseShapes;
-  private List<Output<?>> denseValues;
-  private List<Output<?>> raggedValues;
-  private List<Output<?>> raggedRowSplits;
-  
-  @SuppressWarnings("unchecked")
-  private ParseExample(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int sparseIndicesLength = operation.outputListLength("sparse_indices");
-    sparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, sparseIndicesLength));
-    outputIdx += sparseIndicesLength;
-    int sparseValuesLength = operation.outputListLength("sparse_values");
-    sparseValues = Arrays.asList(operation.outputList(outputIdx, sparseValuesLength));
-    outputIdx += sparseValuesLength;
-    int sparseShapesLength = operation.outputListLength("sparse_shapes");
-    sparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, sparseShapesLength));
-    outputIdx += sparseShapesLength;
-    int denseValuesLength = operation.outputListLength("dense_values");
-    denseValues = Arrays.asList(operation.outputList(outputIdx, denseValuesLength));
-    outputIdx += denseValuesLength;
-    int raggedValuesLength = operation.outputListLength("ragged_values");
-    raggedValues = Arrays.asList(operation.outputList(outputIdx, raggedValuesLength));
-    outputIdx += raggedValuesLength;
-    int raggedRowSplitsLength = operation.outputListLength("ragged_row_splits");
-    raggedRowSplits = Arrays.asList(operation.outputList(outputIdx, raggedRowSplitsLength));
-    outputIdx += raggedRowSplitsLength;
   }
 }

@@ -25,72 +25,83 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Converts a `RaggedTensor` into a `SparseTensor` with the same values.
- * <p>
+ * Converts a {@code RaggedTensor} into a {@code SparseTensor} with the same values.
  * input=ragged.from_nested_row_splits(rt_dense_values, rt_nested_splits)
  * output=SparseTensor(indices=sparse_indices, values=sparse_values,
- *                     dense_shape=sparse_dense_shape)
- * 
- * @param <U> data type for {@code sparseValues()} output
+ * dense_shape=sparse_dense_shape)
+ *
+ * @param <U> data type for {@code sparse_values} output
  */
 public final class RaggedTensorToSparse<U extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new RaggedTensorToSparse operation.
-   * 
-   * @param scope current scope
-   * @param rtNestedSplits The `row_splits` for the `RaggedTensor`.
-   * @param rtDenseValues The `flat_values` for the `RaggedTensor`.
-   * @return a new instance of RaggedTensorToSparse
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> RaggedTensorToSparse<U> create(Scope scope, Iterable<Operand<T>> rtNestedSplits, Operand<U> rtDenseValues) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
-    opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
-    opBuilder.addInput(rtDenseValues.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new RaggedTensorToSparse<U>(opBuilder.build());
-  }
-  
-  /**
-   * The indices for the `SparseTensor`.
-   */
-  public Output<TInt64> sparseIndices() {
-    return sparseIndices;
-  }
-  
-  /**
-   * The values of the `SparseTensor`.
-   */
-  public Output<U> sparseValues() {
-    return sparseValues;
-  }
-  
-  /**
-   * `sparse_dense_shape` is a tight bounding box of the input `RaggedTensor`.
-   */
-  public Output<TInt64> sparseDenseShape() {
-    return sparseDenseShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "RaggedTensorToSparse";
-  
+
   private Output<TInt64> sparseIndices;
+
   private Output<U> sparseValues;
+
   private Output<TInt64> sparseDenseShape;
-  
+
   private RaggedTensorToSparse(Operation operation) {
     super(operation);
     int outputIdx = 0;
     sparseIndices = operation.output(outputIdx++);
     sparseValues = operation.output(outputIdx++);
     sparseDenseShape = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new RaggedTensorToSparse operation.
+   *
+   * @param scope current scope
+   * @param rtNestedSplits The {@code row_splits} for the {@code RaggedTensor}.
+   * @param rtDenseValues The {@code flat_values} for the {@code RaggedTensor}.
+   * @param <U> data type for {@code RaggedTensorToSparse} output and operands
+   * @return a new instance of RaggedTensorToSparse
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> RaggedTensorToSparse<U> create(Scope scope,
+      Iterable<Operand<? extends TNumber>> rtNestedSplits, Operand<U> rtDenseValues) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorToSparse", scope.makeOpName("RaggedTensorToSparse"));
+    opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
+    opBuilder.addInput(rtDenseValues.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new RaggedTensorToSparse<>(opBuilder.build());
+  }
+
+  /**
+   * Gets sparseIndices.
+   * The indices for the {@code SparseTensor}.
+   * @return sparseIndices.
+   */
+  public Output<TInt64> sparseIndices() {
+    return sparseIndices;
+  }
+
+  /**
+   * Gets sparseValues.
+   * The values of the {@code SparseTensor}.
+   * @return sparseValues.
+   */
+  public Output<U> sparseValues() {
+    return sparseValues;
+  }
+
+  /**
+   * Gets sparseDenseShape.
+   * {@code sparse_dense_shape} is a tight bounding box of the input {@code RaggedTensor}.
+   * @return sparseDenseShape.
+   */
+  public Output<TInt64> sparseDenseShape() {
+    return sparseDenseShape;
   }
 }

@@ -32,64 +32,74 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Extract the shape information of a JPEG-encoded image.
- * <p>
  * This op only parses the image header, so it is much faster than DecodeJpeg.
- * 
- * @param <T> data type for {@code imageShape()} output
+ *
+ * @param <T> data type for {@code image_shape} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class ExtractJpegShape<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ExtractJpegShape operation.
-   * 
-   * @param scope current scope
-   * @param contents 0-D. The JPEG-encoded image.
-   * @param outputType (Optional) The output type of the operation (int32 or int64).
-   * Defaults to int32.
-   * @return a new instance of ExtractJpegShape
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope, Operand<TString> contents, Class<T> outputType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
-    opBuilder.addInput(contents.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_type", Operands.toDataType(outputType));
-    return new ExtractJpegShape<T>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new ExtractJpegShape operation using default output types.
-   * 
-   * @param scope current scope
-   * @param contents 0-D. The JPEG-encoded image.
-   * @return a new instance of ExtractJpegShape
-   */
-  @Endpoint(describeByClass = true)
-  public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
-    return create(scope, contents, TInt32.class);
-  }
-  
-  /**
-   * 1-D. The image shape with format [height, width, channels].
-   */
-  public Output<T> imageShape() {
-    return imageShape;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return imageShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ExtractJpegShape";
-  
+
   private Output<T> imageShape;
-  
+
   private ExtractJpegShape(Operation operation) {
     super(operation);
     int outputIdx = 0;
     imageShape = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExtractJpegShape operation.
+   *
+   * @param scope current scope
+   * @param contents 0-D. The JPEG-encoded image.
+   * @param outputType (Optional) The output type of the operation (int32 or int64).
+   * Defaults to int32.
+   * @param <T> data type for {@code ExtractJpegShape} output and operands
+   * @return a new instance of ExtractJpegShape
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> ExtractJpegShape<T> create(Scope scope,
+      Operand<TString> contents, Class<T> outputType) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ExtractJpegShape", scope.makeOpName("ExtractJpegShape"));
+    opBuilder.addInput(contents.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_type", Operands.toDataType(outputType));
+    return new ExtractJpegShape<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExtractJpegShape operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param contents 0-D. The JPEG-encoded image.
+   * @return a new instance of ExtractJpegShape, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ExtractJpegShape<TInt32> create(Scope scope, Operand<TString> contents) {
+    return create(scope, contents, TInt32.class);
+  }
+
+  /**
+   * Gets imageShape.
+   * 1-D. The image shape with format [height, width, channels].
+   * @return imageShape.
+   */
+  public Output<T> imageShape() {
+    return imageShape;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return imageShape;
   }
 }

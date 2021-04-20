@@ -30,7 +30,6 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Transforms a spectrogram into a form that's useful for speech recognition.
- * <p>
  * Mel Frequency Cepstral Coefficients are a way of representing audio data that's
  * been effective as an input feature for machine learning. They are created by
  * taking the spectrum of a spectrogram (a 'cepstrum'), and discarding some of the
@@ -38,69 +37,38 @@ import org.tensorflow.types.TInt32;
  * history in the speech recognition world, and https://en.wikipedia.org/wiki/Mel-frequency_cepstrum
  * is a good resource to learn more.
  */
-@Operator(group = "audio")
+@Operator(
+    group = "audio"
+)
 public final class Mfcc extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.audio.Mfcc}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param upperFrequencyLimit The highest frequency to use when calculating the
-     * ceptstrum.
-     */
-    public Options upperFrequencyLimit(Float upperFrequencyLimit) {
-      this.upperFrequencyLimit = upperFrequencyLimit;
-      return this;
-    }
-    
-    /**
-     * @param lowerFrequencyLimit The lowest frequency to use when calculating the
-     * ceptstrum.
-     */
-    public Options lowerFrequencyLimit(Float lowerFrequencyLimit) {
-      this.lowerFrequencyLimit = lowerFrequencyLimit;
-      return this;
-    }
-    
-    /**
-     * @param filterbankChannelCount Resolution of the Mel bank used internally.
-     */
-    public Options filterbankChannelCount(Long filterbankChannelCount) {
-      this.filterbankChannelCount = filterbankChannelCount;
-      return this;
-    }
-    
-    /**
-     * @param dctCoefficientCount How many output channels to produce per time slice.
-     */
-    public Options dctCoefficientCount(Long dctCoefficientCount) {
-      this.dctCoefficientCount = dctCoefficientCount;
-      return this;
-    }
-    
-    private Float upperFrequencyLimit;
-    private Float lowerFrequencyLimit;
-    private Long filterbankChannelCount;
-    private Long dctCoefficientCount;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Mfcc";
+
+  private Output<TFloat32> output;
+
+  private Mfcc(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Mfcc operation.
-   * 
+   *
    * @param scope current scope
    * @param spectrogram Typically produced by the Spectrogram op, with magnitude_squared
    * set to true.
    * @param sampleRate How many samples per second the source audio used.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Mfcc
    */
-  @Endpoint(describeByClass = true)
-  public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mfcc", scope.makeOpName("Mfcc"));
     opBuilder.addInput(spectrogram.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
@@ -123,56 +91,122 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
     }
     return new Mfcc(opBuilder.build());
   }
-  
+
   /**
+   * Sets the upperFrequencyLimit option.
+   *
    * @param upperFrequencyLimit The highest frequency to use when calculating the
    * ceptstrum.
+   * @return this Options instance.
    */
   public static Options upperFrequencyLimit(Float upperFrequencyLimit) {
     return new Options().upperFrequencyLimit(upperFrequencyLimit);
   }
-  
+
   /**
+   * Sets the lowerFrequencyLimit option.
+   *
    * @param lowerFrequencyLimit The lowest frequency to use when calculating the
    * ceptstrum.
+   * @return this Options instance.
    */
   public static Options lowerFrequencyLimit(Float lowerFrequencyLimit) {
     return new Options().lowerFrequencyLimit(lowerFrequencyLimit);
   }
-  
+
   /**
+   * Sets the filterbankChannelCount option.
+   *
    * @param filterbankChannelCount Resolution of the Mel bank used internally.
+   * @return this Options instance.
    */
   public static Options filterbankChannelCount(Long filterbankChannelCount) {
     return new Options().filterbankChannelCount(filterbankChannelCount);
   }
-  
+
   /**
+   * Sets the dctCoefficientCount option.
+   *
    * @param dctCoefficientCount How many output channels to produce per time slice.
+   * @return this Options instance.
    */
   public static Options dctCoefficientCount(Long dctCoefficientCount) {
     return new Options().dctCoefficientCount(dctCoefficientCount);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TFloat32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Mfcc";
-  
-  private Output<TFloat32> output;
-  
-  private Mfcc(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.audio.Mfcc}
+   */
+  public static class Options {
+    private Float upperFrequencyLimit;
+
+    private Float lowerFrequencyLimit;
+
+    private Long filterbankChannelCount;
+
+    private Long dctCoefficientCount;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the upperFrequencyLimit option.
+     *
+     * @param upperFrequencyLimit The highest frequency to use when calculating the
+     * ceptstrum.
+     * @return this Options instance.
+     */
+    public Options upperFrequencyLimit(Float upperFrequencyLimit) {
+      this.upperFrequencyLimit = upperFrequencyLimit;
+      return this;
+    }
+
+    /**
+     * Sets the lowerFrequencyLimit option.
+     *
+     * @param lowerFrequencyLimit The lowest frequency to use when calculating the
+     * ceptstrum.
+     * @return this Options instance.
+     */
+    public Options lowerFrequencyLimit(Float lowerFrequencyLimit) {
+      this.lowerFrequencyLimit = lowerFrequencyLimit;
+      return this;
+    }
+
+    /**
+     * Sets the filterbankChannelCount option.
+     *
+     * @param filterbankChannelCount Resolution of the Mel bank used internally.
+     * @return this Options instance.
+     */
+    public Options filterbankChannelCount(Long filterbankChannelCount) {
+      this.filterbankChannelCount = filterbankChannelCount;
+      return this;
+    }
+
+    /**
+     * Sets the dctCoefficientCount option.
+     *
+     * @param dctCoefficientCount How many output channels to produce per time slice.
+     * @return this Options instance.
+     */
+    public Options dctCoefficientCount(Long dctCoefficientCount) {
+      this.dctCoefficientCount = dctCoefficientCount;
+      return this;
+    }
   }
 }

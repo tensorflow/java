@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -29,76 +30,55 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes a 3-D convolution given 5-D `input` and `filter` tensors.
- * <p>
+ * Computes a 3-D convolution given 5-D {@code input} and {@code filter} tensors.
  * In signal processing, cross-correlation is a measure of similarity of
  * two waveforms as a function of a time-lag applied to one of them. This
  * is also known as a sliding dot product or sliding inner-product.
- * <p>
- * Our Conv3D implements a form of cross-correlation.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>Our Conv3D implements a form of cross-correlation.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv3d}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dataFormat The data format of the input and output data. With the
-     * default format "NDHWC", the data is stored in the order of:
-     *     [batch, in_depth, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCDHW", the data storage order is:
-     *     [batch, in_channels, in_depth, in_height, in_width].
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    /**
-     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
-     * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
-     * depth dimensions must be 1.
-     */
-    public Options dilations(List<Long> dilations) {
-      this.dilations = dilations;
-      return this;
-    }
-    
-    private String dataFormat;
-    private List<Long> dilations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Conv3D";
+
+  private Output<T> output;
+
+  private Conv3d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Conv3d operation.
-   * 
+   * Factory method to create a class wrapping a new Conv3D operation.
+   *
    * @param scope current scope
-   * @param input Shape `[batch, in_depth, in_height, in_width, in_channels]`.
-   * @param filter Shape `[filter_depth, filter_height, filter_width, in_channels,
-   * out_channels]`. `in_channels` must match between `input` and `filter`.
+   * @param input Shape {@code [batch, in_depth, in_height, in_width, in_channels]}.
+   * @param filter Shape {@code [filter_depth, filter_height, filter_width, in_channels, out_channels]}. {@code in_channels} must match between {@code input} and {@code filter}.
    * @param strides 1-D tensor of length 5. The stride of the sliding window for each
-   * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+   * dimension of {@code input}. Must have {@code strides[0] = strides[4] = 1}.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Conv3D} output and operands
    * @return a new instance of Conv3d
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Conv3d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Conv3d<T> create(Scope scope, Operand<T> input,
+      Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3D", scope.makeOpName("Conv3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -110,57 +90,126 @@ public final class Conv3d<T extends TNumber> extends RawOp implements Operand<T>
         }
         if (opts.dilations != null) {
           long[] dilationsArray = new long[opts.dilations.size()];
-          for (int i = 0; i < dilationsArray.length; ++i) {
+          for (int i = 0 ; i < dilationsArray.length ; i++) {
             dilationsArray[i] = opts.dilations.get(i);
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
       }
     }
-    return new Conv3d<T>(opBuilder.build());
+    return new Conv3d<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat The data format of the input and output data. With the
-   * default format "NDHWC", the data is stored in the order of:
-   *     [batch, in_depth, in_height, in_width, in_channels].
-   * Alternatively, the format could be "NCDHW", the data storage order is:
-   *     [batch, in_channels, in_depth, in_height, in_width].
+   * default format &quot;NDHWC&quot;, the data is stored in the order of:
+   * [batch, in_depth, in_height, in_width, in_channels].
+   * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+   * [batch, in_channels, in_depth, in_height, in_width].
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
    * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
-   * `input`. If set to k > 1, there will be k-1 skipped cells between each
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
    * filter element on that dimension. The dimension order is determined by the
-   * value of `data_format`, see above for details. Dilations in the batch and
+   * value of {@code data_format}, see above for details. Dilations in the batch and
    * depth dimensions must be 1.
+   * @return this Options instance.
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
+   * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+   * filter element on that dimension. The dimension order is determined by the
+   * value of {@code data_format}, see above for details. Dilations in the batch and
+   * depth dimensions must be 1.
+   * @return this Options instance.
+   */
+  public static Options dilations(Long[] dilations) {
+    return new Options().dilations(dilations);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Conv3D";
-  
-  private Output<T> output;
-  
-  private Conv3d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv3d}
+   */
+  public static class Options {
+    private String dataFormat;
+
+    private List<Long> dilations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat The data format of the input and output data. With the
+     * default format &quot;NDHWC&quot;, the data is stored in the order of:
+     * [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+     * [batch, in_channels, in_depth, in_height, in_width].
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(List<Long> dilations) {
+      this.dilations = dilations;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(Long... dilations) {
+      this.dilations = Arrays.asList(dilations);
+      return this;
+    }
   }
 }

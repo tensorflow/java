@@ -29,50 +29,59 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The TensorScatterMin operation
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class TensorScatterNdMin<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorScatterNdMin operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorScatterMin";
+
+  private Output<T> output;
+
+  private TensorScatterNdMin(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorScatterMin operation.
+   *
    * @param scope current scope
    * @param tensor Tensor to update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param <T> data type for {@code TensorScatterMin} output and operands
    * @return a new instance of TensorScatterNdMin
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorScatterNdMin<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> indices, Operand<T> updates) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorScatterNdMin<T> create(Scope scope, Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterMin", scope.makeOpName("TensorScatterNdMin"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorScatterNdMin<T>(opBuilder.build());
+    return new TensorScatterNdMin<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * A new tensor copied from tensor whose values are element-wise minimum between tensor and updates according to the indices.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorScatterMin";
-  
-  private Output<T> output;
-  
-  private TensorScatterNdMin(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

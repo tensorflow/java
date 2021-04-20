@@ -31,45 +31,54 @@ import org.tensorflow.types.TString;
 /**
  * Generate a glob pattern matching all sharded file names.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ShardedFilespec extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ShardedFilespec";
+
+  private Output<TString> filename;
+
+  private ShardedFilespec(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    filename = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ShardedFilespec operation.
-   * 
+   *
    * @param scope current scope
-   * @param basename 
-   * @param numShards 
+   * @param basename the basename value
+   * @param numShards the numShards value
    * @return a new instance of ShardedFilespec
    */
-  @Endpoint(describeByClass = true)
-  public static ShardedFilespec create(Scope scope, Operand<TString> basename, Operand<TInt32> numShards) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ShardedFilespec create(Scope scope, Operand<TString> basename,
+      Operand<TInt32> numShards) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShardedFilespec", scope.makeOpName("ShardedFilespec"));
     opBuilder.addInput(basename.asOutput());
     opBuilder.addInput(numShards.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ShardedFilespec(opBuilder.build());
   }
-  
+
   /**
+   * Gets filename.
+   *
+   * @return filename.
    */
   public Output<TString> filename() {
     return filename;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return filename;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShardedFilespec";
-  
-  private Output<TString> filename;
-  
-  private ShardedFilespec(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    filename = operation.output(outputIdx++);
   }
 }

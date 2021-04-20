@@ -29,57 +29,46 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Resize `images` to `size` using nearest neighbor interpolation.
- * 
- * @param <T> data type for {@code resizedImages()} output
+ * Resize {@code images} to {@code size} using nearest neighbor interpolation.
+ *
+ * @param <T> data type for {@code resized_images} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.ResizeNearestNeighbor}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
-     * aligned, preserving the values at the corner pixels. Defaults to false.
-     */
-    public Options alignCorners(Boolean alignCorners) {
-      this.alignCorners = alignCorners;
-      return this;
-    }
-    
-    /**
-     * @param halfPixelCenters 
-     */
-    public Options halfPixelCenters(Boolean halfPixelCenters) {
-      this.halfPixelCenters = halfPixelCenters;
-      return this;
-    }
-    
-    private Boolean alignCorners;
-    private Boolean halfPixelCenters;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResizeNearestNeighbor";
+
+  private Output<T> resizedImages;
+
+  private ResizeNearestNeighbor(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resizedImages = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResizeNearestNeighbor operation.
-   * 
+   *
    * @param scope current scope
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    * new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeNearestNeighbor} output and operands
    * @return a new instance of ResizeNearestNeighbor
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images, Operand<TInt32> size, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images,
+      Operand<TInt32> sizeOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeNearestNeighbor", scope.makeOpName("ResizeNearestNeighbor"));
     opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -91,45 +80,77 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
         }
       }
     }
-    return new ResizeNearestNeighbor<T>(opBuilder.build());
+    return new ResizeNearestNeighbor<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the alignCorners option.
+   *
    * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
    * aligned, preserving the values at the corner pixels. Defaults to false.
+   * @return this Options instance.
    */
   public static Options alignCorners(Boolean alignCorners) {
     return new Options().alignCorners(alignCorners);
   }
-  
+
   /**
-   * @param halfPixelCenters 
+   * Sets the halfPixelCenters option.
+   *
+   * @param halfPixelCenters the halfPixelCenters option
+   * @return this Options instance.
    */
   public static Options halfPixelCenters(Boolean halfPixelCenters) {
     return new Options().halfPixelCenters(halfPixelCenters);
   }
-  
+
   /**
+   * Gets resizedImages.
    * 4-D with shape
-   * `[batch, new_height, new_width, channels]`.
+   * {@code [batch, new_height, new_width, channels]}.
+   * @return resizedImages.
    */
   public Output<T> resizedImages() {
     return resizedImages;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return resizedImages;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResizeNearestNeighbor";
-  
-  private Output<T> resizedImages;
-  
-  private ResizeNearestNeighbor(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resizedImages = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.ResizeNearestNeighbor}
+   */
+  public static class Options {
+    private Boolean alignCorners;
+
+    private Boolean halfPixelCenters;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alignCorners option.
+     *
+     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     * @return this Options instance.
+     */
+    public Options alignCorners(Boolean alignCorners) {
+      this.alignCorners = alignCorners;
+      return this;
+    }
+
+    /**
+     * Sets the halfPixelCenters option.
+     *
+     * @param halfPixelCenters the halfPixelCenters option
+     * @return this Options instance.
+     */
+    public Options halfPixelCenters(Boolean halfPixelCenters) {
+      this.halfPixelCenters = halfPixelCenters;
+      return this;
+    }
   }
 }

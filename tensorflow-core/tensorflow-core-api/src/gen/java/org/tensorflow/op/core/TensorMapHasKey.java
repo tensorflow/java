@@ -30,50 +30,56 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns whether the given key exists in the map.
- * <p>
  * input_handle: the input map
  * key: the key to check
  * has_key: whether the key is already in the map or not
  */
 @Operator
 public final class TensorMapHasKey extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorMapHasKey";
+
+  private Output<TBool> hasKey;
+
+  private TensorMapHasKey(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    hasKey = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorMapHasKey operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param key 
+   * @param inputHandle the inputHandle value
+   * @param key the key value
    * @return a new instance of TensorMapHasKey
    */
-  @Endpoint(describeByClass = true)
-  public static TensorMapHasKey create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> key) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorMapHasKey create(Scope scope, Operand<? extends TType> inputHandle,
+      Operand<? extends TType> key) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorMapHasKey", scope.makeOpName("TensorMapHasKey"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorMapHasKey(opBuilder.build());
   }
-  
+
   /**
+   * Gets hasKey.
+   *
+   * @return hasKey.
    */
   public Output<TBool> hasKey() {
     return hasKey;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return hasKey;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorMapHasKey";
-  
-  private Output<TBool> hasKey;
-  
-  private TensorMapHasKey(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    hasKey = operation.output(outputIdx++);
   }
 }

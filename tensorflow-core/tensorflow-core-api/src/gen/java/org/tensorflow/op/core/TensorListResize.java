@@ -30,52 +30,57 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Resizes the list.
- * <p>
- * 
  * input_handle: the input list
  * size: size of the output list
- * 
  */
 @Operator
 public final class TensorListResize extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorListResize operation.
-   * 
-   * @param scope current scope
-   * @param inputHandle 
-   * @param size 
-   * @return a new instance of TensorListResize
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListResize create(Scope scope, Operand<?> inputHandle, Operand<TInt32> size) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListResize", scope.makeOpName("TensorListResize"));
-    opBuilder.addInput(inputHandle.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new TensorListResize(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<?> outputHandle() {
-    return outputHandle;
-  }
-  
-  @Override
-  @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "TensorListResize";
-  
-  private Output<?> outputHandle;
-  
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
   private TensorListResize(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputHandle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorListResize operation.
+   *
+   * @param scope current scope
+   * @param inputHandle the inputHandle value
+   * @param sizeOutput the sizeOutput value
+   * @return a new instance of TensorListResize
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListResize create(Scope scope, Operand<? extends TType> inputHandle,
+      Operand<TInt32> sizeOutput) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TensorListResize", scope.makeOpName("TensorListResize"));
+    opBuilder.addInput(inputHandle.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new TensorListResize(opBuilder.build());
+  }
+
+  /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
+   */
+  public Output<? extends TType> outputHandle() {
+    return outputHandle;
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public Output<TType> asOutput() {
+    return (Output<TType>) outputHandle;
   }
 }

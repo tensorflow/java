@@ -17,130 +17,42 @@ limitations under the License.
 
 package org.tensorflow.op.tpu;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 
 /**
  * Metadata indicating how the TPU computation should be replicated.
- * <p>
- * This operation holds the metadata common to operations of a `tpu.replicate()` computation subgraph.
+ * This operation holds the metadata common to operations of a {@code tpu.replicate()} computation subgraph.
+ *
+ * @deprecated use {@link org.tensorflow.op.tpu.ReplicateMetadata} instead
  */
+@Deprecated
 public final class TPUReplicateMetadata extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.TPUReplicateMetadata}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param numCoresPerReplica Number of cores per replica. Used for model parallelism.
-     */
-    public Options numCoresPerReplica(Long numCoresPerReplica) {
-      this.numCoresPerReplica = numCoresPerReplica;
-      return this;
-    }
-    
-    /**
-     * @param topology TopologyProto indicating the topology of the TPU pod slice.
-     */
-    public Options topology(String topology) {
-      this.topology = topology;
-      return this;
-    }
-    
-    /**
-     * @param useTpu Whether to place the computation on the TPU.
-     */
-    public Options useTpu(Boolean useTpu) {
-      this.useTpu = useTpu;
-      return this;
-    }
-    
-    /**
-     * @param deviceAssignment The assignment of devices for the computation.
-     */
-    public Options deviceAssignment(List<Long> deviceAssignment) {
-      this.deviceAssignment = deviceAssignment;
-      return this;
-    }
-    
-    /**
-     * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
-     */
-    public Options computationShape(List<Long> computationShape) {
-      this.computationShape = computationShape;
-      return this;
-    }
-    
-    /**
-     * @param hostComputeCore 
-     */
-    public Options hostComputeCore(List<String> hostComputeCore) {
-      this.hostComputeCore = hostComputeCore;
-      return this;
-    }
-    
-    /**
-     * @param paddingMap 
-     */
-    public Options paddingMap(List<String> paddingMap) {
-      this.paddingMap = paddingMap;
-      return this;
-    }
-    
-    /**
-     * @param stepMarkerLocation 
-     */
-    public Options stepMarkerLocation(String stepMarkerLocation) {
-      this.stepMarkerLocation = stepMarkerLocation;
-      return this;
-    }
-    
-    /**
-     * @param allowSoftPlacement 
-     */
-    public Options allowSoftPlacement(Boolean allowSoftPlacement) {
-      this.allowSoftPlacement = allowSoftPlacement;
-      return this;
-    }
-    
-    /**
-     * @param useSpmdForXlaPartitioning 
-     */
-    public Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
-      this.useSpmdForXlaPartitioning = useSpmdForXlaPartitioning;
-      return this;
-    }
-    
-    private Long numCoresPerReplica;
-    private String topology;
-    private Boolean useTpu;
-    private List<Long> deviceAssignment;
-    private List<Long> computationShape;
-    private List<String> hostComputeCore;
-    private List<String> paddingMap;
-    private String stepMarkerLocation;
-    private Boolean allowSoftPlacement;
-    private Boolean useSpmdForXlaPartitioning;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TPUReplicateMetadata";
+
+  private TPUReplicateMetadata(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TPUReplicateMetadata operation.
-   * 
+   *
    * @param scope current scope
    * @param numReplicas Number of replicas of the computation
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of TPUReplicateMetadata
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TPUReplicateMetadata create(Scope scope, Long numReplicas, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicateMetadata", scope.makeOpName("TPUReplicateMetadata"));
     opBuilder = scope.apply(opBuilder);
@@ -158,28 +70,28 @@ public final class TPUReplicateMetadata extends RawOp {
         }
         if (opts.deviceAssignment != null) {
           long[] deviceAssignmentArray = new long[opts.deviceAssignment.size()];
-          for (int i = 0; i < deviceAssignmentArray.length; ++i) {
+          for (int i = 0 ; i < deviceAssignmentArray.length ; i++) {
             deviceAssignmentArray[i] = opts.deviceAssignment.get(i);
           }
           opBuilder.setAttr("device_assignment", deviceAssignmentArray);
         }
         if (opts.computationShape != null) {
           long[] computationShapeArray = new long[opts.computationShape.size()];
-          for (int i = 0; i < computationShapeArray.length; ++i) {
+          for (int i = 0 ; i < computationShapeArray.length ; i++) {
             computationShapeArray[i] = opts.computationShape.get(i);
           }
           opBuilder.setAttr("computation_shape", computationShapeArray);
         }
         if (opts.hostComputeCore != null) {
           String[] hostComputeCoreArray = new String[opts.hostComputeCore.size()];
-          for (int i = 0; i < hostComputeCoreArray.length; ++i) {
+          for (int i = 0 ; i < hostComputeCoreArray.length ; i++) {
             hostComputeCoreArray[i] = opts.hostComputeCore.get(i);
           }
           opBuilder.setAttr("host_compute_core", hostComputeCoreArray);
         }
         if (opts.paddingMap != null) {
           String[] paddingMapArray = new String[opts.paddingMap.size()];
-          for (int i = 0; i < paddingMapArray.length; ++i) {
+          for (int i = 0 ; i < paddingMapArray.length ; i++) {
             paddingMapArray[i] = opts.paddingMap.get(i);
           }
           opBuilder.setAttr("padding_map", paddingMapArray);
@@ -197,81 +109,326 @@ public final class TPUReplicateMetadata extends RawOp {
     }
     return new TPUReplicateMetadata(opBuilder.build());
   }
-  
+
   /**
+   * Sets the numCoresPerReplica option.
+   *
    * @param numCoresPerReplica Number of cores per replica. Used for model parallelism.
+   * @return this Options instance.
    */
   public static Options numCoresPerReplica(Long numCoresPerReplica) {
     return new Options().numCoresPerReplica(numCoresPerReplica);
   }
-  
+
   /**
+   * Sets the topology option.
+   *
    * @param topology TopologyProto indicating the topology of the TPU pod slice.
+   * @return this Options instance.
    */
   public static Options topology(String topology) {
     return new Options().topology(topology);
   }
-  
+
   /**
+   * Sets the useTpu option.
+   *
    * @param useTpu Whether to place the computation on the TPU.
+   * @return this Options instance.
    */
   public static Options useTpu(Boolean useTpu) {
     return new Options().useTpu(useTpu);
   }
-  
+
   /**
+   * Sets the deviceAssignment option.
+   *
    * @param deviceAssignment The assignment of devices for the computation.
+   * @return this Options instance.
    */
   public static Options deviceAssignment(List<Long> deviceAssignment) {
     return new Options().deviceAssignment(deviceAssignment);
   }
-  
+
   /**
+   * Sets the deviceAssignment option.
+   *
+   * @param deviceAssignment The assignment of devices for the computation.
+   * @return this Options instance.
+   */
+  public static Options deviceAssignment(Long[] deviceAssignment) {
+    return new Options().deviceAssignment(deviceAssignment);
+  }
+
+  /**
+   * Sets the computationShape option.
+   *
    * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
+   * @return this Options instance.
    */
   public static Options computationShape(List<Long> computationShape) {
     return new Options().computationShape(computationShape);
   }
-  
+
   /**
-   * @param hostComputeCore 
+   * Sets the computationShape option.
+   *
+   * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
+   * @return this Options instance.
+   */
+  public static Options computationShape(Long[] computationShape) {
+    return new Options().computationShape(computationShape);
+  }
+
+  /**
+   * Sets the hostComputeCore option.
+   *
+   * @param hostComputeCore the hostComputeCore option
+   * @return this Options instance.
    */
   public static Options hostComputeCore(List<String> hostComputeCore) {
     return new Options().hostComputeCore(hostComputeCore);
   }
-  
+
   /**
-   * @param paddingMap 
+   * Sets the hostComputeCore option.
+   *
+   * @param hostComputeCore the hostComputeCore option
+   * @return this Options instance.
+   */
+  public static Options hostComputeCore(String[] hostComputeCore) {
+    return new Options().hostComputeCore(hostComputeCore);
+  }
+
+  /**
+   * Sets the paddingMap option.
+   *
+   * @param paddingMap the paddingMap option
+   * @return this Options instance.
    */
   public static Options paddingMap(List<String> paddingMap) {
     return new Options().paddingMap(paddingMap);
   }
-  
+
   /**
-   * @param stepMarkerLocation 
+   * Sets the paddingMap option.
+   *
+   * @param paddingMap the paddingMap option
+   * @return this Options instance.
+   */
+  public static Options paddingMap(String[] paddingMap) {
+    return new Options().paddingMap(paddingMap);
+  }
+
+  /**
+   * Sets the stepMarkerLocation option.
+   *
+   * @param stepMarkerLocation the stepMarkerLocation option
+   * @return this Options instance.
    */
   public static Options stepMarkerLocation(String stepMarkerLocation) {
     return new Options().stepMarkerLocation(stepMarkerLocation);
   }
-  
+
   /**
-   * @param allowSoftPlacement 
+   * Sets the allowSoftPlacement option.
+   *
+   * @param allowSoftPlacement the allowSoftPlacement option
+   * @return this Options instance.
    */
   public static Options allowSoftPlacement(Boolean allowSoftPlacement) {
     return new Options().allowSoftPlacement(allowSoftPlacement);
   }
-  
+
   /**
-   * @param useSpmdForXlaPartitioning 
+   * Sets the useSpmdForXlaPartitioning option.
+   *
+   * @param useSpmdForXlaPartitioning the useSpmdForXlaPartitioning option
+   * @return this Options instance.
    */
   public static Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
     return new Options().useSpmdForXlaPartitioning(useSpmdForXlaPartitioning);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUReplicateMetadata";
-  
-  private TPUReplicateMetadata(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.TPUReplicateMetadata}
+   */
+  public static class Options {
+    private Long numCoresPerReplica;
+
+    private String topology;
+
+    private Boolean useTpu;
+
+    private List<Long> deviceAssignment;
+
+    private List<Long> computationShape;
+
+    private List<String> hostComputeCore;
+
+    private List<String> paddingMap;
+
+    private String stepMarkerLocation;
+
+    private Boolean allowSoftPlacement;
+
+    private Boolean useSpmdForXlaPartitioning;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numCoresPerReplica option.
+     *
+     * @param numCoresPerReplica Number of cores per replica. Used for model parallelism.
+     * @return this Options instance.
+     */
+    public Options numCoresPerReplica(Long numCoresPerReplica) {
+      this.numCoresPerReplica = numCoresPerReplica;
+      return this;
+    }
+
+    /**
+     * Sets the topology option.
+     *
+     * @param topology TopologyProto indicating the topology of the TPU pod slice.
+     * @return this Options instance.
+     */
+    public Options topology(String topology) {
+      this.topology = topology;
+      return this;
+    }
+
+    /**
+     * Sets the useTpu option.
+     *
+     * @param useTpu Whether to place the computation on the TPU.
+     * @return this Options instance.
+     */
+    public Options useTpu(Boolean useTpu) {
+      this.useTpu = useTpu;
+      return this;
+    }
+
+    /**
+     * Sets the deviceAssignment option.
+     *
+     * @param deviceAssignment The assignment of devices for the computation.
+     * @return this Options instance.
+     */
+    public Options deviceAssignment(List<Long> deviceAssignment) {
+      this.deviceAssignment = deviceAssignment;
+      return this;
+    }
+
+    /**
+     * Sets the deviceAssignment option.
+     *
+     * @param deviceAssignment The assignment of devices for the computation.
+     * @return this Options instance.
+     */
+    public Options deviceAssignment(Long... deviceAssignment) {
+      this.deviceAssignment = Arrays.asList(deviceAssignment);
+      return this;
+    }
+
+    /**
+     * Sets the computationShape option.
+     *
+     * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
+     * @return this Options instance.
+     */
+    public Options computationShape(List<Long> computationShape) {
+      this.computationShape = computationShape;
+      return this;
+    }
+
+    /**
+     * Sets the computationShape option.
+     *
+     * @param computationShape DEPRECATED. Use num_cores_per_replica instead.
+     * @return this Options instance.
+     */
+    public Options computationShape(Long... computationShape) {
+      this.computationShape = Arrays.asList(computationShape);
+      return this;
+    }
+
+    /**
+     * Sets the hostComputeCore option.
+     *
+     * @param hostComputeCore the hostComputeCore option
+     * @return this Options instance.
+     */
+    public Options hostComputeCore(List<String> hostComputeCore) {
+      this.hostComputeCore = hostComputeCore;
+      return this;
+    }
+
+    /**
+     * Sets the hostComputeCore option.
+     *
+     * @param hostComputeCore the hostComputeCore option
+     * @return this Options instance.
+     */
+    public Options hostComputeCore(String... hostComputeCore) {
+      this.hostComputeCore = Arrays.asList(hostComputeCore);
+      return this;
+    }
+
+    /**
+     * Sets the paddingMap option.
+     *
+     * @param paddingMap the paddingMap option
+     * @return this Options instance.
+     */
+    public Options paddingMap(List<String> paddingMap) {
+      this.paddingMap = paddingMap;
+      return this;
+    }
+
+    /**
+     * Sets the paddingMap option.
+     *
+     * @param paddingMap the paddingMap option
+     * @return this Options instance.
+     */
+    public Options paddingMap(String... paddingMap) {
+      this.paddingMap = Arrays.asList(paddingMap);
+      return this;
+    }
+
+    /**
+     * Sets the stepMarkerLocation option.
+     *
+     * @param stepMarkerLocation the stepMarkerLocation option
+     * @return this Options instance.
+     */
+    public Options stepMarkerLocation(String stepMarkerLocation) {
+      this.stepMarkerLocation = stepMarkerLocation;
+      return this;
+    }
+
+    /**
+     * Sets the allowSoftPlacement option.
+     *
+     * @param allowSoftPlacement the allowSoftPlacement option
+     * @return this Options instance.
+     */
+    public Options allowSoftPlacement(Boolean allowSoftPlacement) {
+      this.allowSoftPlacement = allowSoftPlacement;
+      return this;
+    }
+
+    /**
+     * Sets the useSpmdForXlaPartitioning option.
+     *
+     * @param useSpmdForXlaPartitioning the useSpmdForXlaPartitioning option
+     * @return this Options instance.
+     */
+    public Options useSpmdForXlaPartitioning(Boolean useSpmdForXlaPartitioning) {
+      this.useSpmdForXlaPartitioning = useSpmdForXlaPartitioning;
+      return this;
+    }
   }
 }

@@ -27,66 +27,73 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that caches elements from `input_dataset`.
- * <p>
+ * Creates a dataset that caches elements from {@code input_dataset}.
  * A CacheDataset will iterate over the input_dataset, and store tensors. If the
  * cache already exists, the cache will be used. If the cache is inappropriate
  * (e.g. cannot be opened, contains tensors of the wrong shape / size), an error
  * will the returned when used.
  */
 public final class CacheDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "CacheDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private CacheDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new CacheDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDataset 
+   * @param inputDataset the inputDataset value
    * @param filename A path on the filesystem where we should cache the dataset. Note: this
    * will be a directory.
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of CacheDataset
    */
-  @Endpoint(describeByClass = true)
-  public static CacheDataset create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static CacheDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TString> filename, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("CacheDataset", scope.makeOpName("CacheDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new CacheDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CacheDataset";
-  
-  private Output<?> handle;
-  
-  private CacheDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

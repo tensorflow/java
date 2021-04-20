@@ -27,101 +27,103 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Gather ragged slices from `params` axis `0` according to `indices`.
- * <p>
- * Outputs a `RaggedTensor` output composed from `output_dense_values` and
- * `output_nested_splits`, such that:
- * <pre>{@code
+ * Gather ragged slices from {@code params} axis {@code 0} according to {@code indices}.
+ * Outputs a {@code RaggedTensor} output composed from {@code output_dense_values} and
+ * {@code output_nested_splits}, such that:
+ * <pre>
  * output.shape = indices.shape + params.shape[1:]
  * output.ragged_rank = indices.shape.ndims + params.ragged_rank
  * output[i...j, d0...dn] = params[indices[i...j], d0...dn]
- * }</pre>
- * where
+ * </pre>
+ * <p>where
  * <ul>
- * <li>
- * `params =
- *    ragged.from_nested_row_splits(params_dense_values, params_nested_splits)`
- *    provides the values that should be gathered.
- * </li>
- * <li>
- * `indices` ia a dense tensor with dtype `int32` or `int64`, indicating which
- *    values should be gathered.
- * </li>
- * <li>
- * `output =
- *    ragged.from_nested_row_splits(output_dense_values, output_nested_splits)`
- *    is the output tensor.
- * </li>
+ * <li>{@code params = ragged.from_nested_row_splits(params_dense_values, params_nested_splits)}
+ * provides the values that should be gathered.</li>
+ * <li>{@code indices} ia a dense tensor with dtype {@code int32} or {@code int64}, indicating which
+ * values should be gathered.</li>
+ * <li>{@code output = ragged.from_nested_row_splits(output_dense_values, output_nested_splits)}
+ * is the output tensor.</li>
  * </ul>
- * (Note: This c++ op is used to implement the higher-level python
- * `tf.ragged.gather` op, which also supports ragged indices.)
- * 
- * 
- * @param <T> data type for {@code outputNestedSplits()} output
- * @param <U> data type for {@code outputDenseValues()} output
+ * <p>(Note: This c++ op is used to implement the higher-level python
+ * {@code tf.ragged.gather} op, which also supports ragged indices.)
+ *
+ * @param <T> data type for {@code output_nested_splits} output
+ *
+ * @param <U> data type for {@code output_dense_values} output
  */
 public final class RaggedGather<T extends TNumber, U extends TType> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RaggedGather";
+
+  private List<Output<T>> outputNestedSplits;
+
+  private Output<U> outputDenseValues;
+
+  @SuppressWarnings("unchecked")
+  private RaggedGather(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
+    outputNestedSplits = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputNestedSplitsLength));
+    outputIdx += outputNestedSplitsLength;
+    outputDenseValues = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RaggedGather operation.
-   * 
+   *
    * @param scope current scope
-   * @param paramsNestedSplits The `nested_row_splits` tensors that define the row-partitioning for the
-   * `params` RaggedTensor input.
-   * @param paramsDenseValues The `flat_values` for the `params` RaggedTensor. There was a terminology change
+   * @param paramsNestedSplits The {@code nested_row_splits} tensors that define the row-partitioning for the
+   * {@code params} RaggedTensor input.
+   * @param paramsDenseValues The {@code flat_values} for the {@code params} RaggedTensor. There was a terminology change
    * at the python level from dense_values to flat_values, so dense_values is the
    * deprecated name.
-   * @param indices Indices in the outermost dimension of `params` of the values that should be
+   * @param indices Indices in the outermost dimension of {@code params} of the values that should be
    * gathered.
-   * @param OUTPUTRAGGEDRANK The ragged rank of the output RaggedTensor. `output_nested_splits` will contain
-   * this number of `row_splits` tensors. This value should equal
-   * `indices.shape.ndims + params.ragged_rank - 1`.
+   * @param OUTPUTRAGGEDRANK The ragged rank of the output RaggedTensor. {@code output_nested_splits} will contain
+   * this number of {@code row_splits} tensors. This value should equal
+   * {@code indices.shape.ndims + params.ragged_rank - 1}.
+   * @param <T> data type for {@code RaggedGather} output and operands
+   * @param <U> data type for {@code RaggedGather} output and operands
    * @return a new instance of RaggedGather
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber, U extends TType> RaggedGather<T, U> create(Scope scope, Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues, Operand<? extends TNumber> indices, Long OUTPUTRAGGEDRANK) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber, U extends TType> RaggedGather<T, U> create(Scope scope,
+      Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues,
+      Operand<? extends TNumber> indices, Long OUTPUTRAGGEDRANK) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedGather", scope.makeOpName("RaggedGather"));
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));
     opBuilder.addInput(paramsDenseValues.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("OUTPUT_RAGGED_RANK", OUTPUTRAGGEDRANK);
-    return new RaggedGather<T, U>(opBuilder.build());
+    return new RaggedGather<>(opBuilder.build());
   }
-  
+
   /**
-   * The `nested_row_splits` tensors that define the row-partitioning for the
+   * Gets outputNestedSplits.
+   * The {@code nested_row_splits} tensors that define the row-partitioning for the
    * returned RaggedTensor.
+   * @return outputNestedSplits.
    */
   public List<Output<T>> outputNestedSplits() {
     return outputNestedSplits;
   }
-  
+
   /**
-   * The `flat_values` for the returned RaggedTensor.
+   * Gets outputDenseValues.
+   * The {@code flat_values} for the returned RaggedTensor.
+   * @return outputDenseValues.
    */
   public Output<U> outputDenseValues() {
     return outputDenseValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RaggedGather";
-  
-  private List<Output<T>> outputNestedSplits;
-  private Output<U> outputDenseValues;
-  
-  @SuppressWarnings("unchecked")
-  private RaggedGather(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
-    outputNestedSplits = Arrays.asList((Output<T>[])operation.outputList(outputIdx, outputNestedSplitsLength));
-    outputIdx += outputNestedSplitsLength;
-    outputDenseValues = operation.output(outputIdx++);
   }
 }

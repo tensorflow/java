@@ -27,70 +27,86 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes Quantized Rectified Linear: `max(features, 0)`
- * 
- * @param <U> data type for {@code activations()} output
+ * Computes Quantized Rectified Linear: {@code max(features, 0)}
+ *
+ * @param <U> data type for {@code activations} output
  */
-@Operator(group = "nn")
-public final class QuantizedRelu<U extends TType> extends RawOp {
-  
+@Operator(
+    group = "nn"
+)
+public final class QuantizedRelu<U extends TNumber> extends RawOp {
   /**
-   * Factory method to create a class wrapping a new QuantizedRelu operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @param minFeatures The float value that the lowest quantized value represents.
-   * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType 
-   * @return a new instance of QuantizedRelu
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> QuantizedRelu<U> create(Scope scope, Operand<? extends TType> features, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder.addInput(minFeatures.asOutput());
-    opBuilder.addInput(maxFeatures.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", Operands.toDataType(outType));
-    return new QuantizedRelu<U>(opBuilder.build());
-  }
-  
-  /**
-   * Has the same output shape as "features".
-   */
-  public Output<U> activations() {
-    return activations;
-  }
-  
-  /**
-   * The float value that the lowest quantized value represents.
-   */
-  public Output<TFloat32> minActivations() {
-    return minActivations;
-  }
-  
-  /**
-   * The float value that the highest quantized value represents.
-   */
-  public Output<TFloat32> maxActivations() {
-    return maxActivations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "QuantizedRelu";
-  
+
   private Output<U> activations;
+
   private Output<TFloat32> minActivations;
+
   private Output<TFloat32> maxActivations;
-  
+
   private QuantizedRelu(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
     minActivations = operation.output(outputIdx++);
     maxActivations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new QuantizedRelu operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param minFeatures The float value that the lowest quantized value represents.
+   * @param maxFeatures The float value that the highest quantized value represents.
+   * @param outType the value of the outType property
+   * @param <U> data type for {@code QuantizedRelu} output and operands
+   * @return a new instance of QuantizedRelu
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> QuantizedRelu<U> create(Scope scope,
+      Operand<? extends TNumber> features, Operand<TFloat32> minFeatures,
+      Operand<TFloat32> maxFeatures, Class<U> outType) {
+    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedRelu", scope.makeOpName("QuantizedRelu"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder.addInput(minFeatures.asOutput());
+    opBuilder.addInput(maxFeatures.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
+    return new QuantizedRelu<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   * Has the same output shape as &quot;features&quot;.
+   * @return activations.
+   */
+  public Output<U> activations() {
+    return activations;
+  }
+
+  /**
+   * Gets minActivations.
+   * The float value that the lowest quantized value represents.
+   * @return minActivations.
+   */
+  public Output<TFloat32> minActivations() {
+    return minActivations;
+  }
+
+  /**
+   * Gets maxActivations.
+   * The float value that the highest quantized value represents.
+   * @return maxActivations.
+   */
+  public Output<TFloat32> maxActivations() {
+    return maxActivations;
   }
 }

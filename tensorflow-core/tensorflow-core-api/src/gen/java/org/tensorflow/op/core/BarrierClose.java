@@ -28,7 +28,6 @@ import org.tensorflow.types.TString;
 
 /**
  * Closes the given barrier.
- * <p>
  * This operation signals that no more new elements will be inserted in the
  * given barrier. Subsequent InsertMany that try to introduce a new key will fail.
  * Subsequent InsertMany operations that just add missing components to already
@@ -38,37 +37,26 @@ import org.tensorflow.types.TString;
  */
 @Operator
 public final class BarrierClose extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.BarrierClose}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param cancelPendingEnqueues If true, all pending enqueue requests that are
-     * blocked on the barrier's queue will be canceled. InsertMany will fail, even
-     * if no new key is introduced.
-     */
-    public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
-      this.cancelPendingEnqueues = cancelPendingEnqueues;
-      return this;
-    }
-    
-    private Boolean cancelPendingEnqueues;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BarrierClose";
+
+  private BarrierClose(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BarrierClose operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a barrier.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of BarrierClose
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static BarrierClose create(Scope scope, Operand<TString> handle, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierClose", scope.makeOpName("BarrierClose"));
     opBuilder.addInput(handle.asOutput());
@@ -82,20 +70,39 @@ public final class BarrierClose extends RawOp {
     }
     return new BarrierClose(opBuilder.build());
   }
-  
+
   /**
+   * Sets the cancelPendingEnqueues option.
+   *
    * @param cancelPendingEnqueues If true, all pending enqueue requests that are
    * blocked on the barrier's queue will be canceled. InsertMany will fail, even
    * if no new key is introduced.
+   * @return this Options instance.
    */
   public static Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
     return new Options().cancelPendingEnqueues(cancelPendingEnqueues);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BarrierClose";
-  
-  private BarrierClose(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.BarrierClose}
+   */
+  public static class Options {
+    private Boolean cancelPendingEnqueues;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the cancelPendingEnqueues option.
+     *
+     * @param cancelPendingEnqueues If true, all pending enqueue requests that are
+     * blocked on the barrier's queue will be canceled. InsertMany will fail, even
+     * if no new key is introduced.
+     * @return this Options instance.
+     */
+    public Options cancelPendingEnqueues(Boolean cancelPendingEnqueues) {
+      this.cancelPendingEnqueues = cancelPendingEnqueues;
+      return this;
+    }
   }
 }

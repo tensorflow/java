@@ -27,49 +27,48 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The ShuffleDatasetV3 operation
  */
 public final class ShuffleDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.ShuffleDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param reshuffleEachIteration 
-     */
-    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
-      this.reshuffleEachIteration = reshuffleEachIteration;
-      return this;
-    }
-    
-    private Boolean reshuffleEachIteration;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ShuffleDatasetV3";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private ShuffleDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ShuffleDataset operation.
-   * 
+   * Factory method to create a class wrapping a new ShuffleDatasetV3 operation.
+   *
    * @param scope current scope
-   * @param inputDataset 
-   * @param bufferSize 
-   * @param seed 
-   * @param seed2 
-   * @param seedGenerator 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param inputDataset the inputDataset value
+   * @param bufferSize the bufferSize value
+   * @param seed the seed value
+   * @param seed2 the seed2 value
+   * @param seedGenerator the seedGenerator value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of ShuffleDataset
    */
-  @Endpoint(describeByClass = true)
-  public static ShuffleDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2, Operand<?> seedGenerator, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ShuffleDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2,
+      Operand<? extends TType> seedGenerator, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShuffleDatasetV3", scope.makeOpName("ShuffleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
@@ -79,7 +78,7 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -92,34 +91,50 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
     }
     return new ShuffleDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param reshuffleEachIteration 
+   * Sets the reshuffleEachIteration option.
+   *
+   * @param reshuffleEachIteration the reshuffleEachIteration option
+   * @return this Options instance.
    */
   public static Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
     return new Options().reshuffleEachIteration(reshuffleEachIteration);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShuffleDatasetV3";
-  
-  private Output<?> handle;
-  
-  private ShuffleDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.ShuffleDataset}
+   */
+  public static class Options {
+    private Boolean reshuffleEachIteration;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the reshuffleEachIteration option.
+     *
+     * @param reshuffleEachIteration the reshuffleEachIteration option
+     * @return this Options instance.
+     */
+    public Options reshuffleEachIteration(Boolean reshuffleEachIteration) {
+      this.reshuffleEachIteration = reshuffleEachIteration;
+      return this;
+    }
   }
 }

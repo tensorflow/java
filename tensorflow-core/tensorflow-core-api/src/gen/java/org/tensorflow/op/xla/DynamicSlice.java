@@ -30,62 +30,71 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA DynamicSlice operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#dynamicslice
+ * https://www.tensorflow.org/performance/xla/operation_semantics#dynamicslice
  * .
- * <p>
- * DynamicSlice extracts a sub-array from the input array at dynamic
+ * <p>DynamicSlice extracts a sub-array from the input array at dynamic
  * start_indices. The size of the slice in each dimension is passed in
  * size_indices, which specify the end point of exclusive slice intervals in each
  * dimension -- [start, start + size). The shape of start_indices must have rank 1,
  * with dimension size equal to the rank of operand.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class DynamicSlice<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new DynamicSlice operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaDynamicSlice";
+
+  private Output<T> output;
+
+  private DynamicSlice(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaDynamicSlice operation.
+   *
    * @param scope current scope
-   * @param input A `Tensor` of type T.
+   * @param input A {@code Tensor} of type T.
    * @param startIndices List of N integers containing the slice size for each
    * dimension. Each value must be strictly greater than zero, and start + size
    * must be less than or equal to the size of the dimension to avoid
    * implementation defined behavior.
-   * @param sizeIndices 
+   * @param sizeIndices the sizeIndices value
+   * @param <T> data type for {@code XlaDynamicSlice} output and operands
+   * @param <U> data type for {@code XlaDynamicSlice} output and operands
    * @return a new instance of DynamicSlice
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> DynamicSlice<T> create(Scope scope, Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> DynamicSlice<T> create(Scope scope,
+      Operand<T> input, Operand<U> startIndices, Operand<U> sizeIndices) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDynamicSlice", scope.makeOpName("DynamicSlice"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(startIndices.asOutput());
     opBuilder.addInput(sizeIndices.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new DynamicSlice<T>(opBuilder.build());
+    return new DynamicSlice<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaDynamicSlice";
-  
-  private Output<T> output;
-  
-  private DynamicSlice(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

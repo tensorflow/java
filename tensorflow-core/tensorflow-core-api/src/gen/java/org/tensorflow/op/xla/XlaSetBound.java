@@ -29,21 +29,38 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Set a bound for the given input value as a hint to Xla compiler,
- * <p>
- *         returns the same value.
+ * <pre>
+ *     returns the same value.
+ * </pre>
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class XlaSetBound extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaSetBound";
+
+  private Output<TInt32> output;
+
+  private XlaSetBound(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new XlaSetBound operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param bound 
+   * @param input the input value
+   * @param bound the bound value
    * @return a new instance of XlaSetBound
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static XlaSetBound create(Scope scope, Operand<TInt32> input, Operand<TInt32> bound) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSetBound", scope.makeOpName("XlaSetBound"));
     opBuilder.addInput(input.asOutput());
@@ -51,26 +68,18 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
     opBuilder = scope.apply(opBuilder);
     return new XlaSetBound(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaSetBound";
-  
-  private Output<TInt32> output;
-  
-  private XlaSetBound(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

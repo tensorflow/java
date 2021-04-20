@@ -29,52 +29,27 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
- * <p>
  * Set use_nesterov = True if you want to use Nesterov momentum.
- * <p>
- * That is for rows we have grad for, we update var and accum as follows:
- * <p>
- * accum = accum * momentum + grad
+ * <p>That is for rows we have grad for, we update var and accum as follows:
+ * <p>accum = accum * momentum + grad
  * var -= lr * accum
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceSparseApplyMomentum extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyMomentum}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    /**
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
-     * var - lr * momentum * accum, so in the end, the var you get is actually
-     * var - lr * momentum * accum.
-     */
-    public Options useNesterov(Boolean useNesterov) {
-      this.useNesterov = useNesterov;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    private Boolean useNesterov;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceSparseApplyMomentum";
+
+  private ResourceSparseApplyMomentum(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceSparseApplyMomentum operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -82,11 +57,16 @@ public final class ResourceSparseApplyMomentum extends RawOp {
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
    * @param momentum Momentum. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyMomentum} output and operands
    * @return a new instance of ResourceSparseApplyMomentum
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceSparseApplyMomentum create(Scope scope, Operand<?> var, Operand<?> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> momentum, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceSparseApplyMomentum create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> momentum, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyMomentum", scope.makeOpName("ResourceSparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -107,29 +87,66 @@ public final class ResourceSparseApplyMomentum extends RawOp {
     }
     return new ResourceSparseApplyMomentum(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and accum tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * @param useNesterov If `True`, the tensor passed to compute grad will be
+   * Sets the useNesterov option.
+   *
+   * @param useNesterov If {@code True}, the tensor passed to compute grad will be
    * var - lr * momentum * accum, so in the end, the var you get is actually
    * var - lr * momentum * accum.
+   * @return this Options instance.
    */
   public static Options useNesterov(Boolean useNesterov) {
     return new Options().useNesterov(useNesterov);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceSparseApplyMomentum";
-  
-  private ResourceSparseApplyMomentum(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyMomentum}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Boolean useNesterov;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the useNesterov option.
+     *
+     * @param useNesterov If {@code True}, the tensor passed to compute grad will be
+     * var - lr * momentum * accum, so in the end, the var you get is actually
+     * var - lr * momentum * accum.
+     * @return this Options instance.
+     */
+    public Options useNesterov(Boolean useNesterov) {
+      this.useNesterov = useNesterov;
+      return this;
+    }
   }
 }

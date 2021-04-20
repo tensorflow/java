@@ -24,65 +24,77 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Picks the best algorithm based on device, and scrambles seed into key and counter.
- * <p>
  * This op picks the best counter-based RNG algorithm based on device, and scrambles a shape-[2] seed into a key and a counter, both needed by the counter-based algorithm. The scrambling is opaque but approximately satisfies the property that different seed results in different key/counter pair (which will in turn result in different random numbers).
  */
 public final class StatelessRandomGetKeyCounterAlg extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new StatelessRandomGetKeyCounterAlg operation.
-   * 
-   * @param scope current scope
-   * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomGetKeyCounterAlg
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static StatelessRandomGetKeyCounterAlg create(Scope scope, Operand<? extends TNumber> seed) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGetKeyCounterAlg", scope.makeOpName("StatelessRandomGetKeyCounterAlg"));
-    opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new StatelessRandomGetKeyCounterAlg(opBuilder.build());
-  }
-  
-  /**
-   * Key for the counter-based RNG algorithm (shape uint64[1]).
-   */
-  public Output<?> key() {
-    return key;
-  }
-  
-  /**
-   * Counter for the counter-based RNG algorithm. Since counter size is algorithm-dependent, this output will be right-padded with zeros to reach shape uint64[2] (the current maximal counter size among algorithms).
-   */
-  public Output<?> counter() {
-    return counter;
-  }
-  
-  /**
-   * The RNG algorithm (shape int32[]).
-   */
-  public Output<TInt32> alg() {
-    return alg;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "StatelessRandomGetKeyCounterAlg";
-  
-  private Output<?> key;
-  private Output<?> counter;
+
+  private Output<? extends TType> key;
+
+  private Output<? extends TType> counter;
+
   private Output<TInt32> alg;
-  
+
+  @SuppressWarnings("unchecked")
   private StatelessRandomGetKeyCounterAlg(Operation operation) {
     super(operation);
     int outputIdx = 0;
     key = operation.output(outputIdx++);
     counter = operation.output(outputIdx++);
     alg = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new StatelessRandomGetKeyCounterAlg operation.
+   *
+   * @param scope current scope
+   * @param seed 2 seeds (shape [2]).
+   * @return a new instance of StatelessRandomGetKeyCounterAlg
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatelessRandomGetKeyCounterAlg create(Scope scope,
+      Operand<? extends TNumber> seed) {
+    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGetKeyCounterAlg", scope.makeOpName("StatelessRandomGetKeyCounterAlg"));
+    opBuilder.addInput(seed.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new StatelessRandomGetKeyCounterAlg(opBuilder.build());
+  }
+
+  /**
+   * Gets key.
+   * Key for the counter-based RNG algorithm (shape uint64[1]).
+   * @return key.
+   */
+  public Output<? extends TType> key() {
+    return key;
+  }
+
+  /**
+   * Gets counter.
+   * Counter for the counter-based RNG algorithm. Since counter size is algorithm-dependent, this output will be right-padded with zeros to reach shape uint64[2] (the current maximal counter size among algorithms).
+   * @return counter.
+   */
+  public Output<? extends TType> counter() {
+    return counter;
+  }
+
+  /**
+   * Gets alg.
+   * The RNG algorithm (shape int32[]).
+   * @return alg.
+   */
+  public Output<TInt32> alg() {
+    return alg;
   }
 }

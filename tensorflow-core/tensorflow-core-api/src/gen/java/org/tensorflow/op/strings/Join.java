@@ -30,48 +30,48 @@ import org.tensorflow.types.TString;
 
 /**
  * Joins the strings in the given list of string tensors into one tensor;
- * <p>
  * with the given separator (default is an empty separator).
- * <p>
- * Examples:
- * <p>
- * >>> s = ["hello", "world", "tensorflow"]
- * >>> tf.strings.join(s, " ")
- * <tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'>
+ * <p>Examples:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>s = [&quot;hello&quot;, &quot;world&quot;, &quot;tensorflow&quot;]
+ * tf.strings.join(s, &quot; &quot;)
+ * &lt;tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class Join extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.Join}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param separator string, an optional join separator.
-     */
-    public Options separator(String separator) {
-      this.separator = separator;
-      return this;
-    }
-    
-    private String separator;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StringJoin";
+
+  private Output<TString> output;
+
+  private Join(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Join operation.
-   * 
+   * Factory method to create a class wrapping a new StringJoin operation.
+   *
    * @param scope current scope
    * @param inputs A list of string tensors.  The tensors must all have the same shape,
    * or be scalars.  Scalars may be mixed in; these will be broadcast to the shape
    * of non-scalar inputs.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Join
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Join create(Scope scope, Iterable<Operand<TString>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringJoin", scope.makeOpName("Join"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
@@ -85,33 +85,49 @@ public final class Join extends RawOp implements Operand<TString> {
     }
     return new Join(opBuilder.build());
   }
-  
+
   /**
+   * Sets the separator option.
+   *
    * @param separator string, an optional join separator.
+   * @return this Options instance.
    */
   public static Options separator(String separator) {
     return new Options().separator(separator);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringJoin";
-  
-  private Output<TString> output;
-  
-  private Join(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.Join}
+   */
+  public static class Options {
+    private String separator;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the separator option.
+     *
+     * @param separator string, an optional join separator.
+     * @return this Options instance.
+     */
+    public Options separator(String separator) {
+      this.separator = separator;
+      return this;
+    }
   }
 }

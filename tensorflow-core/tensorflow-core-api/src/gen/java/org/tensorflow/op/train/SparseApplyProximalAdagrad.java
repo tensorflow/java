@@ -30,41 +30,34 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
- * <p>
  * That is for rows we have grad for, we update var and accum as follows:
- * $$accum += grad <i> grad$$
+ * $$accum += grad * grad$$
  * $$prox_v = var$$
- * $$prox_v -= lr </i> grad <i> (1 / sqrt(accum))$$
- * $$var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}$$
- * 
- * @param <T> data type for {@code out()} output
+ * $$prox_v -= lr * grad * (1 / sqrt(accum))$$
+ * $$var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}$$
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyProximalAdagrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseApplyProximalAdagrad";
+
+  private Output<T> out;
+
+  private SparseApplyProximalAdagrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseApplyProximalAdagrad operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -73,11 +66,16 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
    * @param l2 L2 regularization. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseApplyProximalAdagrad} output and operands
    * @return a new instance of SparseApplyProximalAdagrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseApplyProximalAdagrad<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseApplyProximalAdagrad<T> create(Scope scope, Operand<T> var,
+      Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad,
+      Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyProximalAdagrad", scope.makeOpName("SparseApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -94,37 +92,53 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
         }
       }
     }
-    return new SparseApplyProximalAdagrad<T>(opBuilder.build());
+    return new SparseApplyProximalAdagrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseApplyProximalAdagrad";
-  
-  private Output<T> out;
-  
-  private SparseApplyProximalAdagrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyProximalAdagrad}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

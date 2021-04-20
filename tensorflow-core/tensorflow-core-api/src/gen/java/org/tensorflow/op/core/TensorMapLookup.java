@@ -30,54 +30,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the value from a given key in a tensor map.
- * <p>
  * input_handle: the input map
  * key: the key to be looked up
  * value: the value found from the given key
- * 
- * @param <U> data type for {@code value()} output
+ *
+ * @param <U> data type for {@code value} output
  */
 @Operator
 public final class TensorMapLookup<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorMapLookup";
+
+  private Output<U> value;
+
+  private TensorMapLookup(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    value = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorMapLookup operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param key 
-   * @param valueDtype 
+   * @param inputHandle the inputHandle value
+   * @param key the key value
+   * @param valueDtype the value of the valueDtype property
+   * @param <U> data type for {@code TensorMapLookup} output and operands
    * @return a new instance of TensorMapLookup
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> TensorMapLookup<U> create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> TensorMapLookup<U> create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorMapLookup", scope.makeOpName("TensorMapLookup"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));
-    return new TensorMapLookup<U>(opBuilder.build());
+    return new TensorMapLookup<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets value.
+   *
+   * @return value.
    */
   public Output<U> value() {
     return value;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorMapLookup";
-  
-  private Output<U> value;
-  
-  private TensorMapLookup(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    value = operation.output(outputIdx++);
   }
 }

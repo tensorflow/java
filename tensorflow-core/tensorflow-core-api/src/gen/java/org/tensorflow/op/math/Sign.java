@@ -29,54 +29,66 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns an element-wise indication of the sign of a number.
- * <p>
- * `y = sign(x) = -1` if `x < 0`; 0 if `x == 0`; 1 if `x > 0`.
- * <p>
- * For complex numbers, `y = sign(x) = x / |x|` if `x != 0`, otherwise `y = 0`.
- * <p>
- * Example usage:
- * >>> tf.math.sign([0., 2., -3.])
- * <tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 0.,  1., -1.], dtype=float32)>
- * 
- * @param <T> data type for {@code y()} output
+ * {@code y = sign(x) = -1} if {@code x < 0}; 0 if {@code x == 0}; 1 if {@code x > 0}.
+ * <p>For complex numbers, {@code y = sign(x) = x / |x|} if {@code x != 0}, otherwise {@code y = 0}.
+ * <p>Example usage:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.math.sign([0., 2., -3.])
+ * &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array([ 0.,  1., -1.], dtype=float32)&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Sign<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Sign operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Sign
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Sign<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Sign";
-  
+
   private Output<T> y;
-  
+
   private Sign(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Sign operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Sign} output and operands
+   * @return a new instance of Sign
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sign<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Sign", scope.makeOpName("Sign"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Sign<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

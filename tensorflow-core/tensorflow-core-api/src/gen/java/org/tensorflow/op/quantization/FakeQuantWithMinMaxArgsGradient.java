@@ -30,66 +30,37 @@ import org.tensorflow.types.TFloat32;
 /**
  * Compute gradients for a FakeQuantWithMinMaxArgs operation.
  */
-@Operator(group = "quantization")
+@Operator(
+    group = "quantization"
+)
 public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param min 
-     */
-    public Options min(Float min) {
-      this.min = min;
-      return this;
-    }
-    
-    /**
-     * @param max 
-     */
-    public Options max(Float max) {
-      this.max = max;
-      return this;
-    }
-    
-    /**
-     * @param numBits 
-     */
-    public Options numBits(Long numBits) {
-      this.numBits = numBits;
-      return this;
-    }
-    
-    /**
-     * @param narrowRange 
-     */
-    public Options narrowRange(Boolean narrowRange) {
-      this.narrowRange = narrowRange;
-      return this;
-    }
-    
-    private Float min;
-    private Float max;
-    private Long numBits;
-    private Boolean narrowRange;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FakeQuantWithMinMaxArgsGradient";
+
+  private Output<TFloat32> backprops;
+
+  private FakeQuantWithMinMaxArgsGradient(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    backprops = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new FakeQuantWithMinMaxArgsGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param gradients Backpropagated gradients above the FakeQuantWithMinMaxArgs operation.
    * @param inputs Values passed as inputs to the FakeQuantWithMinMaxArgs operation.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of FakeQuantWithMinMaxArgsGradient
    */
-  @Endpoint(describeByClass = true)
-  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients,
+      Operand<TFloat32> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -112,56 +83,119 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
     }
     return new FakeQuantWithMinMaxArgsGradient(opBuilder.build());
   }
-  
+
   /**
-   * @param min 
+   * Sets the min option.
+   *
+   * @param min the min option
+   * @return this Options instance.
    */
   public static Options min(Float min) {
     return new Options().min(min);
   }
-  
+
   /**
-   * @param max 
+   * Sets the max option.
+   *
+   * @param max the max option
+   * @return this Options instance.
    */
   public static Options max(Float max) {
     return new Options().max(max);
   }
-  
+
   /**
-   * @param numBits 
+   * Sets the numBits option.
+   *
+   * @param numBits the numBits option
+   * @return this Options instance.
    */
   public static Options numBits(Long numBits) {
     return new Options().numBits(numBits);
   }
-  
+
   /**
-   * @param narrowRange 
+   * Sets the narrowRange option.
+   *
+   * @param narrowRange the narrowRange option
+   * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
   }
-  
+
   /**
+   * Gets backprops.
    * Backpropagated gradients below the FakeQuantWithMinMaxArgs operation:
-   * `gradients * (inputs >= min && inputs <= max)`.
+   * {@code gradients * (inputs >= min && inputs <= max)}.
+   * @return backprops.
    */
   public Output<TFloat32> backprops() {
     return backprops;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return backprops;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FakeQuantWithMinMaxArgsGradient";
-  
-  private Output<TFloat32> backprops;
-  
-  private FakeQuantWithMinMaxArgsGradient(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    backprops = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient}
+   */
+  public static class Options {
+    private Float min;
+
+    private Float max;
+
+    private Long numBits;
+
+    private Boolean narrowRange;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the min option.
+     *
+     * @param min the min option
+     * @return this Options instance.
+     */
+    public Options min(Float min) {
+      this.min = min;
+      return this;
+    }
+
+    /**
+     * Sets the max option.
+     *
+     * @param max the max option
+     * @return this Options instance.
+     */
+    public Options max(Float max) {
+      this.max = max;
+      return this;
+    }
+
+    /**
+     * Sets the numBits option.
+     *
+     * @param numBits the numBits option
+     * @return this Options instance.
+     */
+    public Options numBits(Long numBits) {
+      this.numBits = numBits;
+      return this;
+    }
+
+    /**
+     * Sets the narrowRange option.
+     *
+     * @param narrowRange the narrowRange option
+     * @return this Options instance.
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
   }
 }

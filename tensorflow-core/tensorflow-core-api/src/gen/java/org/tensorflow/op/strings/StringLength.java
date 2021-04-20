@@ -29,52 +29,48 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
 /**
- * String lengths of `input`.
- * <p>
+ * String lengths of {@code input}.
  * Computes the length of each string given in the input tensor.
- * <p>
- * >>> strings = tf.constant(['Hello','TensorFlow', '\U0001F642'])
- * >>> tf.strings.length(strings).numpy() # default counts bytes
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>strings = tf.constant(['Hello','TensorFlow', '\U0001F642'])
+ * tf.strings.length(strings).numpy() # default counts bytes
  * array([ 5, 10, 4], dtype=int32)
- * >>> tf.strings.length(strings, unit="UTF8_CHAR").numpy()
+ * tf.strings.length(strings, unit=&quot;UTF8_CHAR&quot;).numpy()
  * array([ 5, 10, 1], dtype=int32)
- * 
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class StringLength extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.StringLength}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param unit The unit that is counted to compute string length.  One of: `"BYTE"` (for
-     * the number of bytes in each string) or `"UTF8_CHAR"` (for the number of UTF-8
-     * encoded Unicode code points in each string).  Results are undefined
-     * if `unit=UTF8_CHAR` and the `input` strings do not contain structurally
-     * valid UTF-8.
-     */
-    public Options unit(String unit) {
-      this.unit = unit;
-      return this;
-    }
-    
-    private String unit;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StringLength";
+
+  private Output<TInt32> output;
+
+  private StringLength(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new StringLength operation.
-   * 
+   *
    * @param scope current scope
    * @param input The strings for which to compute the length for each element.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of StringLength
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static StringLength create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringLength", scope.makeOpName("StringLength"));
     opBuilder.addInput(input.asOutput());
@@ -88,39 +84,58 @@ public final class StringLength extends RawOp implements Operand<TInt32> {
     }
     return new StringLength(opBuilder.build());
   }
-  
+
   /**
-   * @param unit The unit that is counted to compute string length.  One of: `"BYTE"` (for
-   * the number of bytes in each string) or `"UTF8_CHAR"` (for the number of UTF-8
+   * Sets the unit option.
+   *
+   * @param unit The unit that is counted to compute string length.  One of: {@code "BYTE"} (for
+   * the number of bytes in each string) or {@code "UTF8_CHAR"} (for the number of UTF-8
    * encoded Unicode code points in each string).  Results are undefined
-   * if `unit=UTF8_CHAR` and the `input` strings do not contain structurally
+   * if {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally
    * valid UTF-8.
+   * @return this Options instance.
    */
   public static Options unit(String unit) {
     return new Options().unit(unit);
   }
-  
+
   /**
-   * Integer tensor that has the same shape as `input`. The output contains the
-   * element-wise string lengths of `input`.
+   * Gets output.
+   * Integer tensor that has the same shape as {@code input}. The output contains the
+   * element-wise string lengths of {@code input}.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringLength";
-  
-  private Output<TInt32> output;
-  
-  private StringLength(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.StringLength}
+   */
+  public static class Options {
+    private String unit;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the unit option.
+     *
+     * @param unit The unit that is counted to compute string length.  One of: {@code "BYTE"} (for
+     * the number of bytes in each string) or {@code "UTF8_CHAR"} (for the number of UTF-8
+     * encoded Unicode code points in each string).  Results are undefined
+     * if {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally
+     * valid UTF-8.
+     * @return this Options instance.
+     */
+    public Options unit(String unit) {
+      this.unit = unit;
+      return this;
+    }
   }
 }

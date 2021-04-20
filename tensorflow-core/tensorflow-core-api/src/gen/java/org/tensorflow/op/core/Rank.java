@@ -30,56 +30,60 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the rank of a tensor.
- * <p>
- * This operation returns an integer representing the rank of `input`.
- * <p>
- * For example:
- * <pre>{@code
+ * This operation returns an integer representing the rank of {@code input}.
+ * <p>For example:
+ * <pre>
  * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
  * # shape of tensor 't' is [2, 2, 3]
- * rank(t) ==> 3
- * }</pre>
- * <b>Note</b>: The rank of a tensor is not the same as the rank of a matrix. The rank
+ * rank(t) ==&gt; 3
+ * </pre>
+ * <p><strong>Note</strong>: The rank of a tensor is not the same as the rank of a matrix. The rank
  * of a tensor is the number of indices required to uniquely select each element
- * of the tensor. Rank is also known as "order", "degree", or "ndims."
+ * of the tensor. Rank is also known as &quot;order&quot;, &quot;degree&quot;, or &quot;ndims.&quot;
  */
 @Operator
 public final class Rank extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Rank";
+
+  private Output<TInt32> output;
+
+  private Rank(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Rank operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @return a new instance of Rank
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Rank create(Scope scope, Operand<? extends TType> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("Rank", scope.makeOpName("Rank"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Rank(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Rank";
-  
-  private Output<TInt32> output;
-  
-  private Rank(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -32,76 +32,85 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the argument of a complex number.
- * <p>
- * Given a tensor `input` of complex numbers, this operation returns a tensor of
- * type `float` that is the argument of each element in `input`. All elements in
- * `input` must be complex numbers of the form \\(a + bj\\), where <i>a</i>
- * is the real part and <i>b</i> is the imaginary part.
- * <p>
- * The argument returned by this operation is of the form \\(atan2(b, a)\\).
- * <p>
- * For example:
- * <pre>{@code
+ * Given a tensor {@code input} of complex numbers, this operation returns a tensor of
+ * type {@code float} that is the argument of each element in {@code input}. All elements in
+ * {@code input} must be complex numbers of the form \(a + bj\), where <em>a</em>
+ * is the real part and <em>b</em> is the imaginary part.
+ * <p>The argument returned by this operation is of the form \(atan2(b, a)\).
+ * <p>For example:
+ * <pre>
  * # tensor 'input' is [-2.25 + 4.75j, 3.25 + 5.75j]
- * tf.angle(input) ==> [2.0132, 1.056]
- * }</pre>
- * @compatibility(numpy)
+ * tf.angle(input) ==&gt; [2.0132, 1.056]
+ * </pre>
+ * <p>{@literal @}compatibility(numpy)<br>
  * Equivalent to np.angle.
- * @end_compatibility
- * 
- * @param <U> data type for {@code output()} output
+ * <br>{@literal @}end_compatibility
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Angle<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new Angle operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param Tout 
-   * @return a new instance of Angle
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> Angle<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
-    return new Angle<U>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new Angle operation using default output types.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of Angle
-   */
-  @Endpoint(describeByClass = true)
-  public static Angle<TFloat32> create(Scope scope, Operand<? extends TType> input) {
-    return create(scope, input, TFloat32.class);
-  }
-  
-  /**
-   */
-  public Output<U> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<U> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Angle";
-  
+
   private Output<U> output;
-  
+
   private Angle(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Angle operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param Tout the value of the Tout property
+   * @param <U> data type for {@code Angle} output and operands
+   * @return a new instance of Angle
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> Angle<U> create(Scope scope, Operand<? extends TType> input,
+      Class<U> Tout) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Angle", scope.makeOpName("Angle"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("Tout", Operands.toDataType(Tout));
+    return new Angle<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Angle operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @return a new instance of Angle, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Angle<TFloat32> create(Scope scope, Operand<? extends TType> input) {
+    return create(scope, input, TFloat32.class);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<U> output() {
+    return output;
+  }
+
+  @Override
+  public Output<U> asOutput() {
+    return output;
   }
 }

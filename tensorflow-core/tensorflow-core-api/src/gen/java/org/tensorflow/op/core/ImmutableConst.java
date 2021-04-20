@@ -31,53 +31,60 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns immutable tensor from memory region.
- * <p>
  * The current implementation memmaps the tensor from a file.
- * 
- * @param <T> data type for {@code tensor()} output
+ *
+ * @param <T> data type for {@code tensor} output
  */
 @Operator
 public final class ImmutableConst<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ImmutableConst";
+
+  private Output<T> tensor;
+
+  private ImmutableConst(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    tensor = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ImmutableConst operation.
-   * 
+   *
    * @param scope current scope
    * @param dtype Type of the returned tensor.
    * @param shape Shape of the returned tensor.
    * @param memoryRegionName Name of readonly memory region used by the tensor, see
    * NewReadOnlyMemoryRegionFromFile in tensorflow::Env.
+   * @param <T> data type for {@code ImmutableConst} output and operands
    * @return a new instance of ImmutableConst
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ImmutableConst<T> create(Scope scope, Class<T> dtype, Shape shape, String memoryRegionName) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ImmutableConst<T> create(Scope scope, Class<T> dtype, Shape shape,
+      String memoryRegionName) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImmutableConst", scope.makeOpName("ImmutableConst"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);
     opBuilder.setAttr("memory_region_name", memoryRegionName);
-    return new ImmutableConst<T>(opBuilder.build());
+    return new ImmutableConst<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets tensor.
+   *
+   * @return tensor.
    */
   public Output<T> tensor() {
     return tensor;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return tensor;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ImmutableConst";
-  
-  private Output<T> tensor;
-  
-  private ImmutableConst(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    tensor = operation.output(outputIdx++);
   }
 }

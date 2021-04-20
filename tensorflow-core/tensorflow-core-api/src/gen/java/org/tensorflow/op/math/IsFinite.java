@@ -30,55 +30,60 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns which elements of x are finite.
- * <p>
- * @compatibility(numpy)
+ * {@literal @}compatibility(numpy)<br>
  * Equivalent to np.isfinite
- * @end_compatibility
- * <p>
- * Example:
- * <pre>{@code
+ * <br>{@literal @}end_compatibility
+ * <p>Example:
+ * <pre>
  * x = tf.constant([5.0, 4.8, 6.8, np.inf, np.nan])
- * tf.math.is_finite(x) ==> [True, True, True, False, False]
- * }</pre>
- * 
+ * tf.math.is_finite(x) ==&gt; [True, True, True, False, False]
+ * </pre>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class IsFinite extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IsFinite";
+
+  private Output<TBool> y;
+
+  private IsFinite(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IsFinite operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
+   * @param x the x value
    * @return a new instance of IsFinite
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static IsFinite create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsFinite", scope.makeOpName("IsFinite"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IsFinite(opBuilder.build());
   }
-  
+
   /**
+   * Gets y.
+   *
+   * @return y.
    */
   public Output<TBool> y() {
     return y;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IsFinite";
-  
-  private Output<TBool> y;
-  
-  private IsFinite(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

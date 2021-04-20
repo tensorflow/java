@@ -24,78 +24,35 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Sets up the centralized structures for a distributed TPU system.
  */
 public final class ConfigureDistributedTPU extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.ConfigureDistributedTPU}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param embeddingConfig Reserved. Do not use.
-     */
-    public Options embeddingConfig(String embeddingConfig) {
-      this.embeddingConfig = embeddingConfig;
-      return this;
-    }
-    
-    /**
-     * @param tpuEmbeddingConfig Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
-     * describes the embedding lookups of the program.
-     */
-    public Options tpuEmbeddingConfig(String tpuEmbeddingConfig) {
-      this.tpuEmbeddingConfig = tpuEmbeddingConfig;
-      return this;
-    }
-    
-    /**
-     * @param isGlobalInit Reserved. Do not use.
-     */
-    public Options isGlobalInit(Boolean isGlobalInit) {
-      this.isGlobalInit = isGlobalInit;
-      return this;
-    }
-    
-    /**
-     * @param enableWholeMeshCompilations 
-     */
-    public Options enableWholeMeshCompilations(Boolean enableWholeMeshCompilations) {
-      this.enableWholeMeshCompilations = enableWholeMeshCompilations;
-      return this;
-    }
-    
-    /**
-     * @param compilationFailureClosesChips 
-     */
-    public Options compilationFailureClosesChips(Boolean compilationFailureClosesChips) {
-      this.compilationFailureClosesChips = compilationFailureClosesChips;
-      return this;
-    }
-    
-    private String embeddingConfig;
-    private String tpuEmbeddingConfig;
-    private Boolean isGlobalInit;
-    private Boolean enableWholeMeshCompilations;
-    private Boolean compilationFailureClosesChips;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ConfigureDistributedTPU";
+
+  private Output<TString> topology;
+
+  private ConfigureDistributedTPU(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    topology = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ConfigureDistributedTPU operation.
-   * 
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ConfigureDistributedTPU
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ConfigureDistributedTPU create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureDistributedTPU", scope.makeOpName("ConfigureDistributedTPU"));
     opBuilder = scope.apply(opBuilder);
@@ -120,64 +77,144 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
     }
     return new ConfigureDistributedTPU(opBuilder.build());
   }
-  
+
   /**
+   * Sets the embeddingConfig option.
+   *
    * @param embeddingConfig Reserved. Do not use.
+   * @return this Options instance.
    */
   public static Options embeddingConfig(String embeddingConfig) {
     return new Options().embeddingConfig(embeddingConfig);
   }
-  
+
   /**
+   * Sets the tpuEmbeddingConfig option.
+   *
    * @param tpuEmbeddingConfig Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
    * describes the embedding lookups of the program.
+   * @return this Options instance.
    */
   public static Options tpuEmbeddingConfig(String tpuEmbeddingConfig) {
     return new Options().tpuEmbeddingConfig(tpuEmbeddingConfig);
   }
-  
+
   /**
+   * Sets the isGlobalInit option.
+   *
    * @param isGlobalInit Reserved. Do not use.
+   * @return this Options instance.
    */
   public static Options isGlobalInit(Boolean isGlobalInit) {
     return new Options().isGlobalInit(isGlobalInit);
   }
-  
+
   /**
-   * @param enableWholeMeshCompilations 
+   * Sets the enableWholeMeshCompilations option.
+   *
+   * @param enableWholeMeshCompilations the enableWholeMeshCompilations option
+   * @return this Options instance.
    */
   public static Options enableWholeMeshCompilations(Boolean enableWholeMeshCompilations) {
     return new Options().enableWholeMeshCompilations(enableWholeMeshCompilations);
   }
-  
+
   /**
-   * @param compilationFailureClosesChips 
+   * Sets the compilationFailureClosesChips option.
+   *
+   * @param compilationFailureClosesChips the compilationFailureClosesChips option
+   * @return this Options instance.
    */
   public static Options compilationFailureClosesChips(Boolean compilationFailureClosesChips) {
     return new Options().compilationFailureClosesChips(compilationFailureClosesChips);
   }
-  
+
   /**
+   * Gets topology.
    * A serialized tensorflow.tpu.TopologyProto that describes the TPU
    * topology.
+   * @return topology.
    */
   public Output<TString> topology() {
     return topology;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return topology;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ConfigureDistributedTPU";
-  
-  private Output<TString> topology;
-  
-  private ConfigureDistributedTPU(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    topology = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.ConfigureDistributedTPU}
+   */
+  public static class Options {
+    private String embeddingConfig;
+
+    private String tpuEmbeddingConfig;
+
+    private Boolean isGlobalInit;
+
+    private Boolean enableWholeMeshCompilations;
+
+    private Boolean compilationFailureClosesChips;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the embeddingConfig option.
+     *
+     * @param embeddingConfig Reserved. Do not use.
+     * @return this Options instance.
+     */
+    public Options embeddingConfig(String embeddingConfig) {
+      this.embeddingConfig = embeddingConfig;
+      return this;
+    }
+
+    /**
+     * Sets the tpuEmbeddingConfig option.
+     *
+     * @param tpuEmbeddingConfig Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
+     * describes the embedding lookups of the program.
+     * @return this Options instance.
+     */
+    public Options tpuEmbeddingConfig(String tpuEmbeddingConfig) {
+      this.tpuEmbeddingConfig = tpuEmbeddingConfig;
+      return this;
+    }
+
+    /**
+     * Sets the isGlobalInit option.
+     *
+     * @param isGlobalInit Reserved. Do not use.
+     * @return this Options instance.
+     */
+    public Options isGlobalInit(Boolean isGlobalInit) {
+      this.isGlobalInit = isGlobalInit;
+      return this;
+    }
+
+    /**
+     * Sets the enableWholeMeshCompilations option.
+     *
+     * @param enableWholeMeshCompilations the enableWholeMeshCompilations option
+     * @return this Options instance.
+     */
+    public Options enableWholeMeshCompilations(Boolean enableWholeMeshCompilations) {
+      this.enableWholeMeshCompilations = enableWholeMeshCompilations;
+      return this;
+    }
+
+    /**
+     * Sets the compilationFailureClosesChips option.
+     *
+     * @param compilationFailureClosesChips the compilationFailureClosesChips option
+     * @return this Options instance.
+     */
+    public Options compilationFailureClosesChips(Boolean compilationFailureClosesChips) {
+      this.compilationFailureClosesChips = compilationFailureClosesChips;
+      return this;
+    }
   }
 }

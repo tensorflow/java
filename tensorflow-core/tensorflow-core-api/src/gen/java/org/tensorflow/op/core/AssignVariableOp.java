@@ -28,34 +28,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Assigns a new value to a variable.
- * <p>
  * Any ReadVariableOp with a control dependency on this op is guaranteed to return
  * this value or a subsequent newer value of the variable.
  */
 @Operator
 public final class AssignVariableOp extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "AssignVariableOp";
+
+  private AssignVariableOp(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new AssignVariableOp operation.
-   * 
+   *
    * @param scope current scope
    * @param resource handle to the resource in which to store the variable.
    * @param value the value to set the new tensor to use.
    * @return a new instance of AssignVariableOp
    */
-  @Endpoint(describeByClass = true)
-  public static AssignVariableOp create(Scope scope, Operand<?> resource, Operand<? extends TType> value) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AssignVariableOp create(Scope scope, Operand<? extends TType> resource,
+      Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("AssignVariableOp", scope.makeOpName("AssignVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new AssignVariableOp(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "AssignVariableOp";
-  
-  private AssignVariableOp(Operation operation) {
-    super(operation);
   }
 }

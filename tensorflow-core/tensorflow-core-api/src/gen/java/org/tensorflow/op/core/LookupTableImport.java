@@ -28,36 +28,39 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Replaces the contents of the table with the specified keys and values.
- * <p>
- * The tensor `keys` must be of the same type as the keys of the table.
- * The tensor `values` must be of the type of the table values.
+ * The tensor {@code keys} must be of the same type as the keys of the table.
+ * The tensor {@code values} must be of the type of the table values.
  */
 @Operator
 public final class LookupTableImport extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new LookupTableImport operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LookupTableImportV2";
+
+  private LookupTableImport(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LookupTableImportV2 operation.
+   *
    * @param scope current scope
    * @param tableHandle Handle to the table.
    * @param keys Any shape.  Keys to look up.
    * @param values Values to associate with keys.
    * @return a new instance of LookupTableImport
    */
-  @Endpoint(describeByClass = true)
-  public static LookupTableImport create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<? extends TType> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LookupTableImport create(Scope scope, Operand<? extends TType> tableHandle,
+      Operand<? extends TType> keys, Operand<? extends TType> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableImportV2", scope.makeOpName("LookupTableImport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LookupTableImport(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LookupTableImportV2";
-  
-  private LookupTableImport(Operation operation) {
-    super(operation);
   }
 }

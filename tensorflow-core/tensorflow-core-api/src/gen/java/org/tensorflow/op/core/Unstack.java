@@ -31,57 +31,52 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Unpacks a given dimension of a rank-`R` tensor into `num` rank-`(R-1)` tensors.
- * <p>
- * Unpacks `num` tensors from `value` by chipping it along the `axis` dimension.
- * For example, given a tensor of shape `(A, B, C, D)`;
- * <p>
- * If `axis == 0` then the i'th tensor in `output` is the slice `value[i, :, :, :]`
- *   and each tensor in `output` will have shape `(B, C, D)`. (Note that the
- *   dimension unpacked along is gone, unlike `split`).
- * <p>
- * If `axis == 1` then the i'th tensor in `output` is the slice `value[:, i, :, :]`
- *   and each tensor in `output` will have shape `(A, C, D)`.
+ * Unpacks a given dimension of a rank-{@code R} tensor into {@code num} rank-{@code (R-1)} tensors.
+ * Unpacks {@code num} tensors from {@code value} by chipping it along the {@code axis} dimension.
+ * For example, given a tensor of shape {@code (A, B, C, D)};
+ * <p>If {@code axis == 0} then the i'th tensor in {@code output} is the slice {@code value[i, :, :, :]}
+ * and each tensor in {@code output} will have shape {@code (B, C, D)}. (Note that the
+ * dimension unpacked along is gone, unlike {@code split}).
+ * <p>If {@code axis == 1} then the i'th tensor in {@code output} is the slice {@code value[:, i, :, :]}
+ * and each tensor in {@code output} will have shape {@code (A, C, D)}.
  * Etc.
- * <p>
- * This is the opposite of `pack`.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>This is the opposite of {@code pack}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Unstack<T extends TType> extends RawOp implements Iterable<Operand<T>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Unstack}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param axis Dimension along which to unpack.  Negative values wrap around, so the
-     * valid range is `[-R, R)`.
-     */
-    public Options axis(Long axis) {
-      this.axis = axis;
-      return this;
-    }
-    
-    private Long axis;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Unpack";
+
+  private List<Output<T>> output;
+
+  @SuppressWarnings("unchecked")
+  private Unstack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputLength = operation.outputListLength("output");
+    output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
+    outputIdx += outputLength;
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Unstack operation.
-   * 
+   * Factory method to create a class wrapping a new Unpack operation.
+   *
    * @param scope current scope
-   * @param value 1-D or higher, with `axis` dimension size equal to `num`.
-   * @param num 
-   * @param options carries optional attributes values
+   * @param value 1-D or higher, with {@code axis} dimension size equal to {@code num}.
+   * @param num the value of the num property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Unpack} output and operands
    * @return a new instance of Unstack
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Unstack<T> create(Scope scope, Operand<T> value, Long num,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unpack", scope.makeOpName("Unstack"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -93,41 +88,54 @@ public final class Unstack<T extends TType> extends RawOp implements Iterable<Op
         }
       }
     }
-    return new Unstack<T>(opBuilder.build());
+    return new Unstack<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the axis option.
+   *
    * @param axis Dimension along which to unpack.  Negative values wrap around, so the
-   * valid range is `[-R, R)`.
+   * valid range is {@code [-R, R)}.
+   * @return this Options instance.
    */
   public static Options axis(Long axis) {
     return new Options().axis(axis);
   }
-  
+
   /**
-   * The list of tensors unpacked from `value`.
+   * Gets output.
+   * The list of tensors unpacked from {@code value}.
+   * @return output.
    */
   public List<Output<T>> output() {
     return output;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<T>> iterator() {
     return (Iterator) output.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Unpack";
-  
-  private List<Output<T>> output;
-  
-  @SuppressWarnings("unchecked")
-  private Unstack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputLength = operation.outputListLength("output");
-    output = Arrays.asList((Output<T>[])operation.outputList(outputIdx, outputLength));
-    outputIdx += outputLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Unstack}
+   */
+  public static class Options {
+    private Long axis;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the axis option.
+     *
+     * @param axis Dimension along which to unpack.  Negative values wrap around, so the
+     * valid range is {@code [-R, R)}.
+     * @return this Options instance.
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
   }
 }

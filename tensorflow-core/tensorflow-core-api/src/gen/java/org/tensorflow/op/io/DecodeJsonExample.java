@@ -29,54 +29,60 @@ import org.tensorflow.types.TString;
 
 /**
  * Convert JSON-encoded Example records to binary protocol buffer strings.
- * <p>
  * This op translates a tensor containing Example records, encoded using
- * the [standard JSON
- * mapping](https://developers.google.com/protocol-buffers/docs/proto3#json),
+ * the  <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">standard JSON
+ * mapping</a> ,
  * into a tensor containing the same records encoded as binary protocol
  * buffers. The resulting tensor can then be fed to any of the other
  * Example-parsing ops.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class DecodeJsonExample extends RawOp implements Operand<TString> {
-  
   /**
-   * Factory method to create a class wrapping a new DecodeJsonExample operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DecodeJSONExample";
+
+  private Output<TString> binaryExamples;
+
+  private DecodeJsonExample(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    binaryExamples = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DecodeJSONExample operation.
+   *
    * @param scope current scope
    * @param jsonExamples Each string is a JSON object serialized according to the JSON
    * mapping of the Example proto.
    * @return a new instance of DecodeJsonExample
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeJsonExample create(Scope scope, Operand<TString> jsonExamples) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeJSONExample", scope.makeOpName("DecodeJsonExample"));
     opBuilder.addInput(jsonExamples.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DecodeJsonExample(opBuilder.build());
   }
-  
+
   /**
+   * Gets binaryExamples.
    * Each string is a binary Example protocol buffer corresponding
-   * to the respective element of `json_examples`.
+   * to the respective element of {@code json_examples}.
+   * @return binaryExamples.
    */
   public Output<TString> binaryExamples() {
     return binaryExamples;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return binaryExamples;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeJSONExample";
-  
-  private Output<TString> binaryExamples;
-  
-  private DecodeJsonExample(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    binaryExamples = operation.output(outputIdx++);
   }
 }

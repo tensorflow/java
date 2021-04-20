@@ -23,53 +23,45 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes an image summary.
- * <p>
- * Writes image `tensor` at `step` with `tag` using summary `writer`.
- * `tensor` is image with shape [height, width, channels].
+ * Writes image {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
+ * {@code tensor} is image with shape [height, width, channels].
  */
 public final class WriteImageSummary extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.summary.WriteImageSummary}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param maxImages 
-     */
-    public Options maxImages(Long maxImages) {
-      this.maxImages = maxImages;
-      return this;
-    }
-    
-    private Long maxImages;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "WriteImageSummary";
+
+  private WriteImageSummary(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new WriteImageSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tag 
-   * @param tensor 
-   * @param badColor 
-   * @param options carries optional attributes values
+   * @param writer the writer value
+   * @param step the step value
+   * @param tag the tag value
+   * @param tensor the tensor value
+   * @param badColor the badColor value
+   * @param options carries optional attribute values
    * @return a new instance of WriteImageSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteImageSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> tensor, Operand<TUint8> badColor, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteImageSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> tensor,
+      Operand<TUint8> badColor, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteImageSummary", scope.makeOpName("WriteImageSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
@@ -86,18 +78,35 @@ public final class WriteImageSummary extends RawOp {
     }
     return new WriteImageSummary(opBuilder.build());
   }
-  
+
   /**
-   * @param maxImages 
+   * Sets the maxImages option.
+   *
+   * @param maxImages the maxImages option
+   * @return this Options instance.
    */
   public static Options maxImages(Long maxImages) {
     return new Options().maxImages(maxImages);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteImageSummary";
-  
-  private WriteImageSummary(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.summary.WriteImageSummary}
+   */
+  public static class Options {
+    private Long maxImages;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the maxImages option.
+     *
+     * @param maxImages the maxImages option
+     * @return this Options instance.
+     */
+    public Options maxImages(Long maxImages) {
+      this.maxImages = maxImages;
+      return this;
+    }
   }
 }

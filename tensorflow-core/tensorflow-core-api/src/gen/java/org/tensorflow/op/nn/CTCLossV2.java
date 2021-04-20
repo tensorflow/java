@@ -24,77 +24,52 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
 /**
  * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
- * <p>
  * the gradient.  This class performs the softmax operation for you, so inputs
  * should be e.g. linear projections of outputs by an LSTM.
  */
 public final class CTCLossV2 extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.CTCLossV2}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param preprocessCollapseRepeated Scalar, if true then repeated labels are
-     * collapsed prior to the CTC calculation.
-     */
-    public Options preprocessCollapseRepeated(Boolean preprocessCollapseRepeated) {
-      this.preprocessCollapseRepeated = preprocessCollapseRepeated;
-      return this;
-    }
-    
-    /**
-     * @param ctcMergeRepeated Scalar.  If set to false, <i>during</i> CTC calculation
-     * repeated non-blank labels will not be merged and are interpreted as
-     * individual labels.  This is a simplified version of CTC.
-     */
-    public Options ctcMergeRepeated(Boolean ctcMergeRepeated) {
-      this.ctcMergeRepeated = ctcMergeRepeated;
-      return this;
-    }
-    
-    /**
-     * @param ignoreLongerOutputsThanInputs Scalar. If set to true, during CTC
-     * calculation, items that have longer output sequences than input sequences
-     * are skipped: they don't contribute to the loss term and have zero-gradient.
-     */
-    public Options ignoreLongerOutputsThanInputs(Boolean ignoreLongerOutputsThanInputs) {
-      this.ignoreLongerOutputsThanInputs = ignoreLongerOutputsThanInputs;
-      return this;
-    }
-    
-    private Boolean preprocessCollapseRepeated;
-    private Boolean ctcMergeRepeated;
-    private Boolean ignoreLongerOutputsThanInputs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CTCLossV2";
+
+  private Output<TFloat32> loss;
+
+  private Output<TFloat32> gradient;
+
+  private CTCLossV2(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    loss = operation.output(outputIdx++);
+    gradient = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new CTCLossV2 operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits. Default blank
+   * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits. Default blank
    * label is 0 rather num_classes - 1.
-   * @param labelsIndices The indices of a `SparseTensor<int32, 2>`.
-   * `labels_indices(i, :) == [b, t]` means `labels_values(i)` stores the id for
-   * `(batch b, time t)`.
+   * @param labelsIndices The indices of a {@code SparseTensor<int32, 2>}.
+   * {@code labels_indices(i, :) == [b, t]} means {@code labels_values(i)} stores the id for
+   * {@code (batch b, time t)}.
    * @param labelsValues The values (labels) associated with the given batch and time.
    * @param sequenceLength A vector containing sequence lengths (batch).
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of CTCLossV2
    */
-  @Endpoint(describeByClass = true)
-  public static CTCLossV2 create(Scope scope, Operand<TFloat32> inputs, Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static CTCLossV2 create(Scope scope, Operand<TFloat32> inputs,
+      Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCLossV2", scope.makeOpName("CTCLossV2"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
@@ -116,58 +91,110 @@ public final class CTCLossV2 extends RawOp {
     }
     return new CTCLossV2(opBuilder.build());
   }
-  
+
   /**
+   * Sets the preprocessCollapseRepeated option.
+   *
    * @param preprocessCollapseRepeated Scalar, if true then repeated labels are
    * collapsed prior to the CTC calculation.
+   * @return this Options instance.
    */
   public static Options preprocessCollapseRepeated(Boolean preprocessCollapseRepeated) {
     return new Options().preprocessCollapseRepeated(preprocessCollapseRepeated);
   }
-  
+
   /**
-   * @param ctcMergeRepeated Scalar.  If set to false, <i>during</i> CTC calculation
+   * Sets the ctcMergeRepeated option.
+   *
+   * @param ctcMergeRepeated Scalar.  If set to false, <em>during</em> CTC calculation
    * repeated non-blank labels will not be merged and are interpreted as
    * individual labels.  This is a simplified version of CTC.
+   * @return this Options instance.
    */
   public static Options ctcMergeRepeated(Boolean ctcMergeRepeated) {
     return new Options().ctcMergeRepeated(ctcMergeRepeated);
   }
-  
+
   /**
+   * Sets the ignoreLongerOutputsThanInputs option.
+   *
    * @param ignoreLongerOutputsThanInputs Scalar. If set to true, during CTC
    * calculation, items that have longer output sequences than input sequences
    * are skipped: they don't contribute to the loss term and have zero-gradient.
+   * @return this Options instance.
    */
   public static Options ignoreLongerOutputsThanInputs(Boolean ignoreLongerOutputsThanInputs) {
     return new Options().ignoreLongerOutputsThanInputs(ignoreLongerOutputsThanInputs);
   }
-  
+
   /**
+   * Gets loss.
    * A vector (batch) containing log-probabilities.
+   * @return loss.
    */
   public Output<TFloat32> loss() {
     return loss;
   }
-  
+
   /**
-   * The gradient of `loss`.  3-D, shape:
-   * `(max_time x batch_size x num_classes)`.
+   * Gets gradient.
+   * The gradient of {@code loss}.  3-D, shape:
+   * {@code (max_time x batch_size x num_classes)}.
+   * @return gradient.
    */
   public Output<TFloat32> gradient() {
     return gradient;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CTCLossV2";
-  
-  private Output<TFloat32> loss;
-  private Output<TFloat32> gradient;
-  
-  private CTCLossV2(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    loss = operation.output(outputIdx++);
-    gradient = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.CTCLossV2}
+   */
+  public static class Options {
+    private Boolean preprocessCollapseRepeated;
+
+    private Boolean ctcMergeRepeated;
+
+    private Boolean ignoreLongerOutputsThanInputs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the preprocessCollapseRepeated option.
+     *
+     * @param preprocessCollapseRepeated Scalar, if true then repeated labels are
+     * collapsed prior to the CTC calculation.
+     * @return this Options instance.
+     */
+    public Options preprocessCollapseRepeated(Boolean preprocessCollapseRepeated) {
+      this.preprocessCollapseRepeated = preprocessCollapseRepeated;
+      return this;
+    }
+
+    /**
+     * Sets the ctcMergeRepeated option.
+     *
+     * @param ctcMergeRepeated Scalar.  If set to false, <em>during</em> CTC calculation
+     * repeated non-blank labels will not be merged and are interpreted as
+     * individual labels.  This is a simplified version of CTC.
+     * @return this Options instance.
+     */
+    public Options ctcMergeRepeated(Boolean ctcMergeRepeated) {
+      this.ctcMergeRepeated = ctcMergeRepeated;
+      return this;
+    }
+
+    /**
+     * Sets the ignoreLongerOutputsThanInputs option.
+     *
+     * @param ignoreLongerOutputsThanInputs Scalar. If set to true, during CTC
+     * calculation, items that have longer output sequences than input sequences
+     * are skipped: they don't contribute to the loss term and have zero-gradient.
+     * @return this Options instance.
+     */
+    public Options ignoreLongerOutputsThanInputs(Boolean ignoreLongerOutputsThanInputs) {
+      this.ignoreLongerOutputsThanInputs = ignoreLongerOutputsThanInputs;
+      return this;
+    }
   }
 }

@@ -32,28 +32,44 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates and returns an empty tensor list.
- * <p>
  * All list elements must be tensors of dtype element_dtype and shape compatible
  * with element_shape.
- * <p>
- * handle: an empty tensor list.
+ * <p>handle: an empty tensor list.
  * element_dtype: the type of elements in the list.
  * element_shape: a shape compatible with that of elements in the list.
  */
 @Operator
 public final class EmptyTensorList extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "EmptyTensorList";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private EmptyTensorList(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new EmptyTensorList operation.
-   * 
+   *
    * @param scope current scope
-   * @param elementShape 
-   * @param maxNumElements 
-   * @param elementDtype 
+   * @param elementShape the elementShape value
+   * @param maxNumElements the maxNumElements value
+   * @param elementDtype the value of the elementDtype property
+   * @param <U> data type for {@code EmptyTensorList} output and operands
    * @return a new instance of EmptyTensorList
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> EmptyTensorList create(Scope scope, Operand<? extends TNumber> elementShape, Operand<TInt32> maxNumElements, Class<U> elementDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> EmptyTensorList create(Scope scope,
+      Operand<? extends TNumber> elementShape, Operand<TInt32> maxNumElements,
+      Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("EmptyTensorList", scope.makeOpName("EmptyTensorList"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
@@ -61,27 +77,19 @@ public final class EmptyTensorList extends RawOp implements Operand<TType> {
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new EmptyTensorList(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "EmptyTensorList";
-  
-  private Output<?> handle;
-  
-  private EmptyTensorList(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

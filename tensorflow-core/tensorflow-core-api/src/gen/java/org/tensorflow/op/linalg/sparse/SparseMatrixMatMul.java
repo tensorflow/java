@@ -24,116 +24,63 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Matrix-multiplies a sparse matrix with a dense matrix.
- * <p>
  * Returns a dense matrix.
  * For inputs A and B, where A is CSR and B is dense; this op returns a dense C;
- * <p>
- * If transpose_output is false, returns:
- * <pre>{@code
+ * <p>If transpose_output is false, returns:
+ * <pre>
  *   C = A . B
- * }</pre>
- * If transpose_output is `true`, returns:
- * <pre>{@code
+ * </pre>
+ * <p>If transpose_output is {@code true}, returns:
+ * <pre>
  *   C = transpose(A . B) = transpose(B) . transpose(A)
- * }</pre>
- * where the transposition is performed along the two innermost (matrix)
+ * </pre>
+ * <p>where the transposition is performed along the two innermost (matrix)
  * dimensions.
- * <p>
- * If conjugate_output is `true`, returns:
- * <pre>{@code
+ * <p>If conjugate_output is {@code true}, returns:
+ * <pre>
  *   C = conjugate(A . B) = conjugate(A) . conjugate(B)
- * }</pre>
- * If both conjugate_output and transpose_output are `true`, returns:
- * <pre>{@code
+ * </pre>
+ * <p>If both conjugate_output and transpose_output are {@code true}, returns:
+ * <pre>
  *   C = conjugate(transpose(A . B)) = conjugate(transpose(B)) .
  *                                     conjugate(transpose(A))
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class SparseMatrixMatMul<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixMatMul}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param transposeA Indicates whether `a` should be transposed.
-     */
-    public Options transposeA(Boolean transposeA) {
-      this.transposeA = transposeA;
-      return this;
-    }
-    
-    /**
-     * @param transposeB Indicates whether `b` should be transposed.
-     */
-    public Options transposeB(Boolean transposeB) {
-      this.transposeB = transposeB;
-      return this;
-    }
-    
-    /**
-     * @param adjointA Indicates whether `a` should be conjugate-transposed.
-     */
-    public Options adjointA(Boolean adjointA) {
-      this.adjointA = adjointA;
-      return this;
-    }
-    
-    /**
-     * @param adjointB Indicates whether `b` should be conjugate-transposed.
-     */
-    public Options adjointB(Boolean adjointB) {
-      this.adjointB = adjointB;
-      return this;
-    }
-    
-    /**
-     * @param transposeOutput Transposes the product of `a` and `b`.
-     */
-    public Options transposeOutput(Boolean transposeOutput) {
-      this.transposeOutput = transposeOutput;
-      return this;
-    }
-    
-    /**
-     * @param conjugateOutput Conjugates the product of `a` and `b`.
-     */
-    public Options conjugateOutput(Boolean conjugateOutput) {
-      this.conjugateOutput = conjugateOutput;
-      return this;
-    }
-    
-    private Boolean transposeA;
-    private Boolean transposeB;
-    private Boolean adjointA;
-    private Boolean adjointB;
-    private Boolean transposeOutput;
-    private Boolean conjugateOutput;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseMatrixMatMul";
+
+  private Output<T> output;
+
+  private SparseMatrixMatMul(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseMatrixMatMul operation.
-   * 
+   *
    * @param scope current scope
    * @param a A CSRSparseMatrix.
    * @param b A dense tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseMatrixMatMul} output and operands
    * @return a new instance of SparseMatrixMatMul
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixMatMul<T> create(Scope scope, Operand<?> a, Operand<T> b, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseMatrixMatMul<T> create(Scope scope,
+      Operand<? extends TType> a, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixMatMul", scope.makeOpName("SparseMatrixMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -160,71 +107,166 @@ public final class SparseMatrixMatMul<T extends TType> extends RawOp implements 
         }
       }
     }
-    return new SparseMatrixMatMul<T>(opBuilder.build());
+    return new SparseMatrixMatMul<>(opBuilder.build());
   }
-  
+
   /**
-   * @param transposeA Indicates whether `a` should be transposed.
+   * Sets the transposeA option.
+   *
+   * @param transposeA Indicates whether {@code a} should be transposed.
+   * @return this Options instance.
    */
   public static Options transposeA(Boolean transposeA) {
     return new Options().transposeA(transposeA);
   }
-  
+
   /**
-   * @param transposeB Indicates whether `b` should be transposed.
+   * Sets the transposeB option.
+   *
+   * @param transposeB Indicates whether {@code b} should be transposed.
+   * @return this Options instance.
    */
   public static Options transposeB(Boolean transposeB) {
     return new Options().transposeB(transposeB);
   }
-  
+
   /**
-   * @param adjointA Indicates whether `a` should be conjugate-transposed.
+   * Sets the adjointA option.
+   *
+   * @param adjointA Indicates whether {@code a} should be conjugate-transposed.
+   * @return this Options instance.
    */
   public static Options adjointA(Boolean adjointA) {
     return new Options().adjointA(adjointA);
   }
-  
+
   /**
-   * @param adjointB Indicates whether `b` should be conjugate-transposed.
+   * Sets the adjointB option.
+   *
+   * @param adjointB Indicates whether {@code b} should be conjugate-transposed.
+   * @return this Options instance.
    */
   public static Options adjointB(Boolean adjointB) {
     return new Options().adjointB(adjointB);
   }
-  
+
   /**
-   * @param transposeOutput Transposes the product of `a` and `b`.
+   * Sets the transposeOutput option.
+   *
+   * @param transposeOutput Transposes the product of {@code a} and {@code b}.
+   * @return this Options instance.
    */
   public static Options transposeOutput(Boolean transposeOutput) {
     return new Options().transposeOutput(transposeOutput);
   }
-  
+
   /**
-   * @param conjugateOutput Conjugates the product of `a` and `b`.
+   * Sets the conjugateOutput option.
+   *
+   * @param conjugateOutput Conjugates the product of {@code a} and {@code b}.
+   * @return this Options instance.
    */
   public static Options conjugateOutput(Boolean conjugateOutput) {
     return new Options().conjugateOutput(conjugateOutput);
   }
-  
+
   /**
+   * Gets output.
    * A dense output tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseMatrixMatMul";
-  
-  private Output<T> output;
-  
-  private SparseMatrixMatMul(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.sparse.SparseMatrixMatMul}
+   */
+  public static class Options {
+    private Boolean transposeA;
+
+    private Boolean transposeB;
+
+    private Boolean adjointA;
+
+    private Boolean adjointB;
+
+    private Boolean transposeOutput;
+
+    private Boolean conjugateOutput;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the transposeA option.
+     *
+     * @param transposeA Indicates whether {@code a} should be transposed.
+     * @return this Options instance.
+     */
+    public Options transposeA(Boolean transposeA) {
+      this.transposeA = transposeA;
+      return this;
+    }
+
+    /**
+     * Sets the transposeB option.
+     *
+     * @param transposeB Indicates whether {@code b} should be transposed.
+     * @return this Options instance.
+     */
+    public Options transposeB(Boolean transposeB) {
+      this.transposeB = transposeB;
+      return this;
+    }
+
+    /**
+     * Sets the adjointA option.
+     *
+     * @param adjointA Indicates whether {@code a} should be conjugate-transposed.
+     * @return this Options instance.
+     */
+    public Options adjointA(Boolean adjointA) {
+      this.adjointA = adjointA;
+      return this;
+    }
+
+    /**
+     * Sets the adjointB option.
+     *
+     * @param adjointB Indicates whether {@code b} should be conjugate-transposed.
+     * @return this Options instance.
+     */
+    public Options adjointB(Boolean adjointB) {
+      this.adjointB = adjointB;
+      return this;
+    }
+
+    /**
+     * Sets the transposeOutput option.
+     *
+     * @param transposeOutput Transposes the product of {@code a} and {@code b}.
+     * @return this Options instance.
+     */
+    public Options transposeOutput(Boolean transposeOutput) {
+      this.transposeOutput = transposeOutput;
+      return this;
+    }
+
+    /**
+     * Sets the conjugateOutput option.
+     *
+     * @param conjugateOutput Conjugates the product of {@code a} and {@code b}.
+     * @return this Options instance.
+     */
+    public Options conjugateOutput(Boolean conjugateOutput) {
+      this.conjugateOutput = conjugateOutput;
+      return this;
+    }
   }
 }

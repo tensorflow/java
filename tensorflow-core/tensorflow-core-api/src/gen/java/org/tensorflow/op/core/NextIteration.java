@@ -29,47 +29,53 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Makes its input available to the next iteration.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class NextIteration<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new NextIteration operation.
-   * 
-   * @param scope current scope
-   * @param data The tensor to be made available to the next iteration.
-   * @return a new instance of NextIteration
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new NextIteration<T>(opBuilder.build());
-  }
-  
-  /**
-   * The same tensor as `data`.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "NextIteration";
-  
+
   private Output<T> output;
-  
+
   private NextIteration(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new NextIteration operation.
+   *
+   * @param scope current scope
+   * @param data The tensor to be made available to the next iteration.
+   * @param <T> data type for {@code NextIteration} output and operands
+   * @return a new instance of NextIteration
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> NextIteration<T> create(Scope scope, Operand<T> data) {
+    OperationBuilder opBuilder = scope.env().opBuilder("NextIteration", scope.makeOpName("NextIteration"));
+    opBuilder.addInput(data.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new NextIteration<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * The same tensor as {@code data}.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

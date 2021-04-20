@@ -24,32 +24,38 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Restore a Reader to its initial clean state.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReaderReset extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new ReaderReset operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReaderResetV2";
+
+  private ReaderReset(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReaderResetV2 operation.
+   *
    * @param scope current scope
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderReset
    */
-  @Endpoint(describeByClass = true)
-  public static ReaderReset create(Scope scope, Operand<?> readerHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ReaderReset create(Scope scope, Operand<? extends TType> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderResetV2", scope.makeOpName("ReaderReset"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderReset(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReaderResetV2";
-  
-  private ReaderReset(Operation operation) {
-    super(operation);
   }
 }

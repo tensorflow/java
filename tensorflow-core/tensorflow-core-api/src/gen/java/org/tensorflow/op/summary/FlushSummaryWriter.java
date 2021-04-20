@@ -23,31 +23,35 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The FlushSummaryWriter operation
  */
 public final class FlushSummaryWriter extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "FlushSummaryWriter";
+
+  private FlushSummaryWriter(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new FlushSummaryWriter operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
+   * @param writer the writer value
    * @return a new instance of FlushSummaryWriter
    */
-  @Endpoint(describeByClass = true)
-  public static FlushSummaryWriter create(Scope scope, Operand<?> writer) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FlushSummaryWriter create(Scope scope, Operand<? extends TType> writer) {
     OperationBuilder opBuilder = scope.env().opBuilder("FlushSummaryWriter", scope.makeOpName("FlushSummaryWriter"));
     opBuilder.addInput(writer.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new FlushSummaryWriter(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FlushSummaryWriter";
-  
-  private FlushSummaryWriter(Operation operation) {
-    super(operation);
   }
 }

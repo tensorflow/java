@@ -32,22 +32,40 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that emits the lines of one or more text files.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class TextLineDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TextLineDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private TextLineDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TextLineDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param filenames A scalar or a vector containing the name(s) of the file(s) to be
    * read.
    * @param compressionType A scalar containing either (i) the empty string (no
-   * compression), (ii) "ZLIB", or (iii) "GZIP".
+   * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @param bufferSize A scalar containing the number of bytes to buffer.
    * @return a new instance of TextLineDataset
    */
-  @Endpoint(describeByClass = true)
-  public static TextLineDataset create(Scope scope, Operand<TString> filenames, Operand<TString> compressionType, Operand<TInt64> bufferSize) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TextLineDataset create(Scope scope, Operand<TString> filenames,
+      Operand<TString> compressionType, Operand<TInt64> bufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("TextLineDataset", scope.makeOpName("TextLineDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
@@ -55,27 +73,19 @@ public final class TextLineDataset extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TextLineDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TextLineDataset";
-  
-  private Output<?> handle;
-  
-  private TextLineDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

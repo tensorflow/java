@@ -29,75 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse addition to individual values or slices in a Variable.
- * <p>
- * `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
- * <p>
- * `indices` must be integer tensor, containing indices into `ref`.
- * It must be shape `[d_0, ..., d_{Q-2}, K]` where `0 < K <= P`.
- * <p>
- * The innermost dimension of `indices` (with length `K`) corresponds to
- * indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
- * dimension of `ref`.
- * <p>
- * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
- * <pre>{@code
+ * {@code ref} is a {@code Tensor} with rank {@code P} and {@code indices} is a {@code Tensor} of rank {@code Q}.
+ * <p>{@code indices} must be integer tensor, containing indices into {@code ref}.
+ * It must be shape {@code [d_0, ..., d_{Q-2}, K]} where {@code 0 < K <= P}.
+ * <p>The innermost dimension of {@code indices} (with length {@code K}) corresponds to
+ * indices into elements (if {@code K = P}) or slices (if {@code K < P}) along the {@code K}th
+ * dimension of {@code ref}.
+ * <p>{@code updates} is {@code Tensor} of rank {@code Q-1+P-K} with shape:
+ * <pre>
  * [d_0, ..., d_{Q-2}, ref.shape[K], ..., ref.shape[P-1]]
- * }</pre>
- * For example, say we want to add 4 scattered elements to a rank-1 tensor to
+ * </pre>
+ * <p>For example, say we want to add 4 scattered elements to a rank-1 tensor to
  * 8 elements. In Python, that addition would look like this:
- * <pre>{@code
+ * <pre>
  * ref = tf.Variable([1, 2, 3, 4, 5, 6, 7, 8], use_resource=True)
  * indices = tf.constant([[4], [3], [1], [7]])
  * updates = tf.constant([9, 10, 11, 12])
  * add = tf.scatter_nd_add(ref, indices, updates)
  * with tf.Session() as sess:
  *   print sess.run(add)
- * }</pre>
- * The resulting update to ref would look like this:
- * <p>
- *     [1, 13, 3, 14, 14, 6, 7, 20]
- * <p>
- * See `tf.scatter_nd` for more details about how to make updates to
+ * </pre>
+ * <p>The resulting update to ref would look like this:
+ * <pre>
+ * [1, 13, 3, 14, 14, 6, 7, 20]
+ * </pre>
+ * <p>See {@code tf.scatter_nd} for more details about how to make updates to
  * slices.
  */
 @Operator
 public final class ResourceScatterNdAdd extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ResourceScatterNdAdd}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking An optional bool. Defaults to True. If True, the assignment will
-     * be protected by a lock; otherwise the behavior is undefined,
-     * but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceScatterNdAdd";
+
+  private ResourceScatterNdAdd(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceScatterNdAdd operation.
-   * 
+   *
    * @param scope current scope
    * @param ref A resource handle. Must be from a VarHandleOp.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    * A tensor of indices into ref.
    * @param updates A Tensor. Must have the same type as ref. A tensor of
    * values to add to ref.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ResourceScatterNdAdd
    */
-  @Endpoint(describeByClass = true)
-  public static ResourceScatterNdAdd create(Scope scope, Operand<?> ref, Operand<? extends TNumber> indices, Operand<? extends TType> updates, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ResourceScatterNdAdd create(Scope scope, Operand<? extends TType> ref,
+      Operand<? extends TNumber> indices, Operand<? extends TType> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterNdAdd", scope.makeOpName("ResourceScatterNdAdd"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -112,20 +98,39 @@ public final class ResourceScatterNdAdd extends RawOp {
     }
     return new ResourceScatterNdAdd(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking An optional bool. Defaults to True. If True, the assignment will
    * be protected by a lock; otherwise the behavior is undefined,
    * but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceScatterNdAdd";
-  
-  private ResourceScatterNdAdd(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ResourceScatterNdAdd}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking An optional bool. Defaults to True. If True, the assignment will
+     * be protected by a lock; otherwise the behavior is undefined,
+     * but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

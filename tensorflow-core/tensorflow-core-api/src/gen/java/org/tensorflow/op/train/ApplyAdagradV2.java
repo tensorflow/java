@@ -24,63 +24,47 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the adagrad scheme.
- * <p>
  * accum += grad * grad
  * var -= lr * grad * (1 / sqrt(accum))
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
 public final class ApplyAdagradV2<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradV2}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    /**
-     * @param updateSlots 
-     */
-    public Options updateSlots(Boolean updateSlots) {
-      this.updateSlots = updateSlots;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    private Boolean updateSlots;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApplyAdagradV2";
+
+  private Output<T> out;
+
+  private ApplyAdagradV2(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ApplyAdagradV2 operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param epsilon Constant factor. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyAdagradV2} output and operands
    * @return a new instance of ApplyAdagradV2
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyAdagradV2<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApplyAdagradV2<T> create(Scope scope, Operand<T> var,
+      Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradV2", scope.makeOpName("ApplyAdagradV2"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -98,45 +82,78 @@ public final class ApplyAdagradV2<T extends TType> extends RawOp implements Oper
         }
       }
     }
-    return new ApplyAdagradV2<T>(opBuilder.build());
+    return new ApplyAdagradV2<>(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and accum tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * @param updateSlots 
+   * Sets the updateSlots option.
+   *
+   * @param updateSlots the updateSlots option
+   * @return this Options instance.
    */
   public static Options updateSlots(Boolean updateSlots) {
     return new Options().updateSlots(updateSlots);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApplyAdagradV2";
-  
-  private Output<T> out;
-  
-  private ApplyAdagradV2(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradV2}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Boolean updateSlots;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the updateSlots option.
+     *
+     * @param updateSlots the updateSlots option
+     * @return this Options instance.
+     */
+    public Options updateSlots(Boolean updateSlots) {
+      this.updateSlots = updateSlots;
+      return this;
+    }
   }
 }

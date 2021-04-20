@@ -29,54 +29,61 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise remainder of division. This emulates C semantics in that
- * <p>
  * the result here is consistent with a truncating divide. E.g.
- * `tf.truncatediv(x, y) * y + truncate_mod(x, y) = x`.
- * <p>
- * <i>NOTE</i>: `math.Mod` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * 
- * @param <T> data type for {@code z()} output
+ * {@code tf.truncatediv(x, y) * y + truncate_mod(x, y) = x}.
+ * <p><em>NOTE</em>: {@code math.Mod} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Mod<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Mod";
+
+  private Output<T> z;
+
+  private Mod(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Mod operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Mod} output and operands
    * @return a new instance of Mod
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Mod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Mod", scope.makeOpName("Mod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Mod<T>(opBuilder.build());
+    return new Mod<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Mod";
-  
-  private Output<T> z;
-  
-  private Mod(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

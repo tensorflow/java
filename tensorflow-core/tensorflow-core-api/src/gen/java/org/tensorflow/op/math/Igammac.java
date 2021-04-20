@@ -28,62 +28,65 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Compute the upper regularized incomplete Gamma function `Q(a, x)`.
- * <p>
+ * Compute the upper regularized incomplete Gamma function {@code Q(a, x)}.
  * The upper regularized incomplete Gamma function is defined as:
- * <p>
- * \\(Q(a, x) = Gamma(a, x) / Gamma(a) = 1 - P(a, x)\\)
- * <p>
- * where
- * <p>
- * \\(Gamma(a, x) = int_{x}^{\infty} t^{a-1} exp(-t) dt\\)
- * <p>
- * is the upper incomplete Gama function.
- * <p>
- * Note, above `P(a, x)` (`Igamma`) is the lower regularized complete
+ * <p>\(Q(a, x) = Gamma(a, x) / Gamma(a) = 1 - P(a, x)\)
+ * <p>where
+ * <p>\(Gamma(a, x) = int_{x}^{\infty} t^{a-1} exp(-t) dt\)
+ * <p>is the upper incomplete Gama function.
+ * <p>Note, above {@code P(a, x)} ({@code Igamma}) is the lower regularized complete
  * Gamma function.
- * 
- * @param <T> data type for {@code z()} output
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Igammac<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Igammac";
+
+  private Output<T> z;
+
+  private Igammac(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Igammac operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param x 
+   * @param a the a value
+   * @param x the x value
+   * @param <T> data type for {@code Igammac} output and operands
    * @return a new instance of Igammac
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Igammac<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Igammac", scope.makeOpName("Igammac"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Igammac<T>(opBuilder.build());
+    return new Igammac<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Igammac";
-  
-  private Output<T> z;
-  
-  private Igammac(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

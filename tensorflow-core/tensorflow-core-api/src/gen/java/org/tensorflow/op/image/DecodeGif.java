@@ -30,54 +30,60 @@ import org.tensorflow.types.TUint8;
 
 /**
  * Decode the frame(s) of a GIF-encoded image to a uint8 tensor.
- * <p>
  * GIF images with frame or transparency compression are not supported.
  * On Linux and MacOS systems, convert animated GIFs from compressed to
  * uncompressed by running:
- * <p>
- *     convert $src.gif -coalesce $dst.gif
- * <p>
- * This op also supports decoding JPEGs and PNGs, though it is cleaner to use
- * `tf.io.decode_image`.
+ * <pre>
+ * convert $src.gif -coalesce $dst.gif
+ * </pre>
+ * <p>This op also supports decoding JPEGs and PNGs, though it is cleaner to use
+ * {@code tf.io.decode_image}.
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class DecodeGif extends RawOp implements Operand<TUint8> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DecodeGif";
+
+  private Output<TUint8> image;
+
+  private DecodeGif(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    image = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DecodeGif operation.
-   * 
+   *
    * @param scope current scope
    * @param contents 0-D.  The GIF-encoded image.
    * @return a new instance of DecodeGif
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeGif create(Scope scope, Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeGif", scope.makeOpName("DecodeGif"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DecodeGif(opBuilder.build());
   }
-  
+
   /**
-   * 4-D with shape `[num_frames, height, width, 3]`. RGB channel order.
+   * Gets image.
+   * 4-D with shape {@code [num_frames, height, width, 3]}. RGB channel order.
+   * @return image.
    */
   public Output<TUint8> image() {
     return image;
   }
-  
+
   @Override
   public Output<TUint8> asOutput() {
     return image;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeGif";
-  
-  private Output<TUint8> image;
-  
-  private DecodeGif(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    image = operation.output(outputIdx++);
   }
 }

@@ -30,58 +30,36 @@ import org.tensorflow.types.TString;
 
 /**
  * Formats a string template using a list of tensors.
- * <p>
  * Formats a string template using a list of tensors, pretty-printing tensor summaries.
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class StringFormat extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.StringFormat}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param template A string, the template to format tensor summaries into.
-     */
-    public Options template(String template) {
-      this.template = template;
-      return this;
-    }
-    
-    /**
-     * @param placeholder A string, at each placeholder in the template a subsequent tensor summary will be inserted.
-     */
-    public Options placeholder(String placeholder) {
-      this.placeholder = placeholder;
-      return this;
-    }
-    
-    /**
-     * @param summarize When formatting the tensor summaries print the first and last summarize entries of each tensor dimension.
-     */
-    public Options summarize(Long summarize) {
-      this.summarize = summarize;
-      return this;
-    }
-    
-    private String template;
-    private String placeholder;
-    private Long summarize;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StringFormat";
+
+  private Output<TString> output;
+
+  private StringFormat(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new StringFormat operation.
-   * 
+   *
    * @param scope current scope
    * @param inputs The list of tensors to format into the placeholder string.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of StringFormat
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static StringFormat create(Scope scope, Iterable<Operand<?>> inputs, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringFormat", scope.makeOpName("StringFormat"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
@@ -101,48 +79,95 @@ public final class StringFormat extends RawOp implements Operand<TString> {
     }
     return new StringFormat(opBuilder.build());
   }
-  
+
   /**
+   * Sets the template option.
+   *
    * @param template A string, the template to format tensor summaries into.
+   * @return this Options instance.
    */
   public static Options template(String template) {
     return new Options().template(template);
   }
-  
+
   /**
+   * Sets the placeholder option.
+   *
    * @param placeholder A string, at each placeholder in the template a subsequent tensor summary will be inserted.
+   * @return this Options instance.
    */
   public static Options placeholder(String placeholder) {
     return new Options().placeholder(placeholder);
   }
-  
+
   /**
+   * Sets the summarize option.
+   *
    * @param summarize When formatting the tensor summaries print the first and last summarize entries of each tensor dimension.
+   * @return this Options instance.
    */
   public static Options summarize(Long summarize) {
     return new Options().summarize(summarize);
   }
-  
+
   /**
+   * Gets output.
    * = The resulting string scalar.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringFormat";
-  
-  private Output<TString> output;
-  
-  private StringFormat(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.StringFormat}
+   */
+  public static class Options {
+    private String template;
+
+    private String placeholder;
+
+    private Long summarize;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the template option.
+     *
+     * @param template A string, the template to format tensor summaries into.
+     * @return this Options instance.
+     */
+    public Options template(String template) {
+      this.template = template;
+      return this;
+    }
+
+    /**
+     * Sets the placeholder option.
+     *
+     * @param placeholder A string, at each placeholder in the template a subsequent tensor summary will be inserted.
+     * @return this Options instance.
+     */
+    public Options placeholder(String placeholder) {
+      this.placeholder = placeholder;
+      return this;
+    }
+
+    /**
+     * Sets the summarize option.
+     *
+     * @param summarize When formatting the tensor summaries print the first and last summarize entries of each tensor dimension.
+     * @return this Options instance.
+     */
+    public Options summarize(Long summarize) {
+      this.summarize = summarize;
+      return this;
+    }
   }
 }

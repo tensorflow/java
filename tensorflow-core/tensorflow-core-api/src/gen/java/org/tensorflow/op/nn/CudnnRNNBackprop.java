@@ -24,169 +24,113 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Backprop step of CudnnRNNV3.
- * <p>
  * Compute the backprop of both data and weights in a RNN. Takes an extra
- *     "sequence_lengths" input than CudnnRNNBackprop.
- * <p>
- * rnn_mode: Indicates the type of the RNN model.
+ * &quot;sequence_lengths&quot; input than CudnnRNNBackprop.
+ * <p>rnn_mode: Indicates the type of the RNN model.
  * input_mode: Indicates whether there is a linear projection between the input and
- *     the actual computation before the first layer. 'skip_input' is only allowed
- *     when input_size == num_units; 'auto_select' implies 'skip_input' when
- *     input_size == num_units; otherwise, it implies 'linear_input'.
+ * the actual computation before the first layer. 'skip_input' is only allowed
+ * when input_size == num_units; 'auto_select' implies 'skip_input' when
+ * input_size == num_units; otherwise, it implies 'linear_input'.
  * direction: Indicates whether a bidirectional model will be used. Should be
- *   "unidirectional" or "bidirectional".
+ * &quot;unidirectional&quot; or &quot;bidirectional&quot;.
  * dropout: Dropout probability. When set to 0., dropout is disabled.
  * seed: The 1st part of a seed to initialize dropout.
  * seed2: The 2nd part of a seed to initialize dropout.
  * input: If time_major is true, this is a 3-D tensor with the shape of
- *     [seq_length, batch_size, input_size]. If time_major is false, the shape is
- *     [batch_size, seq_length, input_size].
+ * [seq_length, batch_size, input_size]. If time_major is false, the shape is
+ * [batch_size, seq_length, input_size].
  * input_h: If time_major is true, this is a 3-D tensor with the shape of
- *     [num_layer * dir, batch_size, num_units]. If time_major is false, the shape
- *     is [batch_size, num_layer * dir, num_units].
+ * [num_layer * dir, batch_size, num_units]. If time_major is false, the shape
+ * is [batch_size, num_layer * dir, num_units].
  * input_c: For LSTM, a 3-D tensor with the shape of
- *     [num_layer * dir, batch, num_units]. For other models, it is ignored.
+ * [num_layer * dir, batch, num_units]. For other models, it is ignored.
  * params: A 1-D tensor that contains the weights and biases in an opaque layout.
- *     The size must be created through CudnnRNNParamsSize, and initialized
- *     separately. Note that they might not be compatible across different
- *     generations. So it is a good idea to save and restore
+ * The size must be created through CudnnRNNParamsSize, and initialized
+ * separately. Note that they might not be compatible across different
+ * generations. So it is a good idea to save and restore
  * sequence_lengths: a vector of lengths of each input sequence.
  * output: If time_major is true, this is a 3-D tensor with the shape of
- *     [seq_length, batch_size, dir * num_units]. If time_major is false, the
- *     shape is [batch_size, seq_length, dir * num_units].
+ * [seq_length, batch_size, dir * num_units]. If time_major is false, the
+ * shape is [batch_size, seq_length, dir * num_units].
  * output_h: The same shape has input_h.
  * output_c: The same shape as input_c for LSTM. An empty tensor for other models.
  * output_backprop: A 3-D tensor with the same shape as output in the forward pass.
  * output_h_backprop: A 3-D tensor with the same shape as output_h in the forward
- *     pass.
+ * pass.
  * output_c_backprop: A 3-D tensor with the same shape as output_c in the forward
- *     pass.
+ * pass.
  * time_major: Indicates whether the input/output format is time major or batch
- *     major.
+ * major.
  * reserve_space: The same reserve_space produced in the forward operation.
  * input_backprop: The backprop to input in the forward pass. Has the same shape
- *     as input.
+ * as input.
  * input_h_backprop: The backprop to input_h in the forward pass. Has the same
- *     shape as input_h.
+ * shape as input_h.
  * input_c_backprop: The backprop to input_c in the forward pass. Has the same
- *     shape as input_c.
+ * shape as input_c.
  * params_backprop: The backprop to the params buffer in the forward pass. Has the
- *     same shape as params.
- * 
- * @param <T> data type for {@code inputBackprop()} output
+ * same shape as params.
+ *
+ * @param <T> data type for {@code input_backprop} output
  */
 public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.CudnnRNNBackprop}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param rnnMode 
-     */
-    public Options rnnMode(String rnnMode) {
-      this.rnnMode = rnnMode;
-      return this;
-    }
-    
-    /**
-     * @param inputMode 
-     */
-    public Options inputMode(String inputMode) {
-      this.inputMode = inputMode;
-      return this;
-    }
-    
-    /**
-     * @param direction 
-     */
-    public Options direction(String direction) {
-      this.direction = direction;
-      return this;
-    }
-    
-    /**
-     * @param dropout 
-     */
-    public Options dropout(Float dropout) {
-      this.dropout = dropout;
-      return this;
-    }
-    
-    /**
-     * @param seed 
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    /**
-     * @param numProj 
-     */
-    public Options numProj(Long numProj) {
-      this.numProj = numProj;
-      return this;
-    }
-    
-    /**
-     * @param timeMajor 
-     */
-    public Options timeMajor(Boolean timeMajor) {
-      this.timeMajor = timeMajor;
-      return this;
-    }
-    
-    private String rnnMode;
-    private String inputMode;
-    private String direction;
-    private Float dropout;
-    private Long seed;
-    private Long seed2;
-    private Long numProj;
-    private Boolean timeMajor;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CudnnRNNBackpropV3";
+
+  private Output<T> inputBackprop;
+
+  private Output<T> inputHBackprop;
+
+  private Output<T> inputCBackprop;
+
+  private Output<T> paramsBackprop;
+
+  private CudnnRNNBackprop(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    inputBackprop = operation.output(outputIdx++);
+    inputHBackprop = operation.output(outputIdx++);
+    inputCBackprop = operation.output(outputIdx++);
+    paramsBackprop = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new CudnnRNNBackprop operation.
-   * 
+   * Factory method to create a class wrapping a new CudnnRNNBackpropV3 operation.
+   *
    * @param scope current scope
-   * @param input 
-   * @param inputH 
-   * @param inputC 
-   * @param params 
-   * @param sequenceLengths 
-   * @param output 
-   * @param outputH 
-   * @param outputC 
-   * @param outputBackprop 
-   * @param outputHBackprop 
-   * @param outputCBackprop 
-   * @param reserveSpace 
-   * @param hostReserved 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param inputH the inputH value
+   * @param inputC the inputC value
+   * @param params the params value
+   * @param sequenceLengths the sequenceLengths value
+   * @param output the output value
+   * @param outputH the outputH value
+   * @param outputC the outputC value
+   * @param outputBackprop the outputBackprop value
+   * @param outputHBackprop the outputHBackprop value
+   * @param outputCBackprop the outputCBackprop value
+   * @param reserveSpace the reserveSpace value
+   * @param hostReserved the hostReserved value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CudnnRNNBackpropV3} output and operands
    * @return a new instance of CudnnRNNBackprop
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CudnnRNNBackprop<T> create(Scope scope, Operand<T> input, Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths, Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop, Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace, Operand<?> hostReserved, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CudnnRNNBackprop<T> create(Scope scope, Operand<T> input,
+      Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths,
+      Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop,
+      Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace,
+      Operand<? extends TType> hostReserved, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNBackpropV3", scope.makeOpName("CudnnRNNBackprop"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());
@@ -230,103 +174,234 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
         }
       }
     }
-    return new CudnnRNNBackprop<T>(opBuilder.build());
+    return new CudnnRNNBackprop<>(opBuilder.build());
   }
-  
+
   /**
-   * @param rnnMode 
+   * Sets the rnnMode option.
+   *
+   * @param rnnMode the rnnMode option
+   * @return this Options instance.
    */
   public static Options rnnMode(String rnnMode) {
     return new Options().rnnMode(rnnMode);
   }
-  
+
   /**
-   * @param inputMode 
+   * Sets the inputMode option.
+   *
+   * @param inputMode the inputMode option
+   * @return this Options instance.
    */
   public static Options inputMode(String inputMode) {
     return new Options().inputMode(inputMode);
   }
-  
+
   /**
-   * @param direction 
+   * Sets the direction option.
+   *
+   * @param direction the direction option
+   * @return this Options instance.
    */
   public static Options direction(String direction) {
     return new Options().direction(direction);
   }
-  
+
   /**
-   * @param dropout 
+   * Sets the dropout option.
+   *
+   * @param dropout the dropout option
+   * @return this Options instance.
    */
   public static Options dropout(Float dropout) {
     return new Options().dropout(dropout);
   }
-  
+
   /**
-   * @param seed 
+   * Sets the seed option.
+   *
+   * @param seed the seed option
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
-   * @param seed2 
+   * Sets the seed2 option.
+   *
+   * @param seed2 the seed2 option
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
-   * @param numProj 
+   * Sets the numProj option.
+   *
+   * @param numProj the numProj option
+   * @return this Options instance.
    */
   public static Options numProj(Long numProj) {
     return new Options().numProj(numProj);
   }
-  
+
   /**
-   * @param timeMajor 
+   * Sets the timeMajor option.
+   *
+   * @param timeMajor the timeMajor option
+   * @return this Options instance.
    */
   public static Options timeMajor(Boolean timeMajor) {
     return new Options().timeMajor(timeMajor);
   }
-  
+
   /**
+   * Gets inputBackprop.
+   *
+   * @return inputBackprop.
    */
   public Output<T> inputBackprop() {
     return inputBackprop;
   }
-  
+
   /**
+   * Gets inputHBackprop.
+   *
+   * @return inputHBackprop.
    */
   public Output<T> inputHBackprop() {
     return inputHBackprop;
   }
-  
+
   /**
+   * Gets inputCBackprop.
+   *
+   * @return inputCBackprop.
    */
   public Output<T> inputCBackprop() {
     return inputCBackprop;
   }
-  
+
   /**
+   * Gets paramsBackprop.
+   *
+   * @return paramsBackprop.
    */
   public Output<T> paramsBackprop() {
     return paramsBackprop;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CudnnRNNBackpropV3";
-  
-  private Output<T> inputBackprop;
-  private Output<T> inputHBackprop;
-  private Output<T> inputCBackprop;
-  private Output<T> paramsBackprop;
-  
-  private CudnnRNNBackprop(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    inputBackprop = operation.output(outputIdx++);
-    inputHBackprop = operation.output(outputIdx++);
-    inputCBackprop = operation.output(outputIdx++);
-    paramsBackprop = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.CudnnRNNBackprop}
+   */
+  public static class Options {
+    private String rnnMode;
+
+    private String inputMode;
+
+    private String direction;
+
+    private Float dropout;
+
+    private Long seed;
+
+    private Long seed2;
+
+    private Long numProj;
+
+    private Boolean timeMajor;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the rnnMode option.
+     *
+     * @param rnnMode the rnnMode option
+     * @return this Options instance.
+     */
+    public Options rnnMode(String rnnMode) {
+      this.rnnMode = rnnMode;
+      return this;
+    }
+
+    /**
+     * Sets the inputMode option.
+     *
+     * @param inputMode the inputMode option
+     * @return this Options instance.
+     */
+    public Options inputMode(String inputMode) {
+      this.inputMode = inputMode;
+      return this;
+    }
+
+    /**
+     * Sets the direction option.
+     *
+     * @param direction the direction option
+     * @return this Options instance.
+     */
+    public Options direction(String direction) {
+      this.direction = direction;
+      return this;
+    }
+
+    /**
+     * Sets the dropout option.
+     *
+     * @param dropout the dropout option
+     * @return this Options instance.
+     */
+    public Options dropout(Float dropout) {
+      this.dropout = dropout;
+      return this;
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed the seed option
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 the seed2 option
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
+
+    /**
+     * Sets the numProj option.
+     *
+     * @param numProj the numProj option
+     * @return this Options instance.
+     */
+    public Options numProj(Long numProj) {
+      this.numProj = numProj;
+      return this;
+    }
+
+    /**
+     * Sets the timeMajor option.
+     *
+     * @param timeMajor the timeMajor option
+     * @return this Options instance.
+     */
+    public Options timeMajor(Boolean timeMajor) {
+      this.timeMajor = timeMajor;
+      return this;
+    }
   }
 }

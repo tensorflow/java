@@ -28,49 +28,57 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Makes a copy of `x`.
- * 
- * @param <T> data type for {@code y()} output
+ * Makes a copy of {@code x}.
+ *
+ * @param <T> data type for {@code y} output
  */
 @Operator
 public final class DeepCopy<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new DeepCopy operation.
-   * 
-   * @param scope current scope
-   * @param x The source tensor of type `T`.
-   * @return a new instance of DeepCopy
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new DeepCopy<T>(opBuilder.build());
-  }
-  
-  /**
-   *     y: A `Tensor` of type `T`. A copy of `x`. Guaranteed that `y`
-   *       is not an alias of `x`.
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DeepCopy";
-  
+
   private Output<T> y;
-  
+
   private DeepCopy(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DeepCopy operation.
+   *
+   * @param scope current scope
+   * @param x The source tensor of type {@code T}.
+   * @param <T> data type for {@code DeepCopy} output and operands
+   * @return a new instance of DeepCopy
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new DeepCopy<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   * <pre>
+   * y: A `Tensor` of type `T`. A copy of `x`. Guaranteed that `y`
+   *   is not an alias of `x`.
+   * </pre>
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

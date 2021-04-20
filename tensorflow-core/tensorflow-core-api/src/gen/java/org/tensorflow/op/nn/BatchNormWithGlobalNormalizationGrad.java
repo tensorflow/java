@@ -29,17 +29,42 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Gradients for batch normalization.
- * <p>
- * This op is deprecated. See `tf.nn.batch_normalization`.
- * 
- * @param <T> data type for {@code dx()} output
+ * This op is deprecated. See {@code tf.nn.batch_normalization}.
+ *
+ * @param <T> data type for {@code dx} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BatchNormWithGlobalNormalizationGrad";
+
+  private Output<T> dx;
+
+  private Output<T> dm;
+
+  private Output<T> dv;
+
+  private Output<T> db;
+
+  private Output<T> dg;
+
+  private BatchNormWithGlobalNormalizationGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    dx = operation.output(outputIdx++);
+    dm = operation.output(outputIdx++);
+    dv = operation.output(outputIdx++);
+    db = operation.output(outputIdx++);
+    dg = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BatchNormWithGlobalNormalizationGrad operation.
-   * 
+   *
    * @param scope current scope
    * @param t A 4D input Tensor.
    * @param m A 1D mean Tensor with size matching the last dimension of t.
@@ -49,16 +74,21 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
    * This is the second output from tf.nn.moments,
    * or a saved moving average thereof.
    * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * If "scale_after_normalization" is true, this Tensor will be multiplied
+   * If &quot;scale_after_normalization&quot; is true, this Tensor will be multiplied
    * with the normalized Tensor.
    * @param backprop 4D backprop Tensor.
    * @param varianceEpsilon A small float number to avoid dividing by 0.
    * @param scaleAfterNormalization A bool indicating whether the resulted tensor
    * needs to be multiplied with gamma.
+   * @param <T> data type for {@code BatchNormWithGlobalNormalizationGrad} output and operands
    * @return a new instance of BatchNormWithGlobalNormalizationGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope,
+      Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalizationGrad", scope.makeOpName("BatchNormWithGlobalNormalizationGrad"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -68,60 +98,51 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);
-    return new BatchNormWithGlobalNormalizationGrad<T>(opBuilder.build());
+    return new BatchNormWithGlobalNormalizationGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets dx.
    * 4D backprop tensor for input.
+   * @return dx.
    */
   public Output<T> dx() {
     return dx;
   }
-  
+
   /**
+   * Gets dm.
    * 1D backprop tensor for mean.
+   * @return dm.
    */
   public Output<T> dm() {
     return dm;
   }
-  
+
   /**
+   * Gets dv.
    * 1D backprop tensor for variance.
+   * @return dv.
    */
   public Output<T> dv() {
     return dv;
   }
-  
+
   /**
+   * Gets db.
    * 1D backprop tensor for beta.
+   * @return db.
    */
   public Output<T> db() {
     return db;
   }
-  
+
   /**
+   * Gets dg.
    * 1D backprop tensor for gamma.
+   * @return dg.
    */
   public Output<T> dg() {
     return dg;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchNormWithGlobalNormalizationGrad";
-  
-  private Output<T> dx;
-  private Output<T> dm;
-  private Output<T> dv;
-  private Output<T> db;
-  private Output<T> dg;
-  
-  private BatchNormWithGlobalNormalizationGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    dx = operation.output(outputIdx++);
-    dm = operation.output(outputIdx++);
-    dv = operation.output(outputIdx++);
-    db = operation.output(outputIdx++);
-    dg = operation.output(outputIdx++);
   }
 }

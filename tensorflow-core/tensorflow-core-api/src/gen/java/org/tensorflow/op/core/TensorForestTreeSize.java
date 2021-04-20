@@ -24,49 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Get the number of nodes in a tree
  */
 public final class TensorForestTreeSize extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorForestTreeSize";
+
+  private Output<TInt32> treeSize;
+
+  private TensorForestTreeSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    treeSize = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorForestTreeSize operation.
-   * 
+   *
    * @param scope current scope
    * @param treeHandle Handle to the tree resource.
    * @return a new instance of TensorForestTreeSize
    */
-  @Endpoint(describeByClass = true)
-  public static TensorForestTreeSize create(Scope scope, Operand<?> treeHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorForestTreeSize create(Scope scope, Operand<? extends TType> treeHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSize", scope.makeOpName("TensorForestTreeSize"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorForestTreeSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets treeSize.
    * The size of the tree.
+   * @return treeSize.
    */
   public Output<TInt32> treeSize() {
     return treeSize;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return treeSize;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestTreeSize";
-  
-  private Output<TInt32> treeSize;
-  
-  private TensorForestTreeSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    treeSize = operation.output(outputIdx++);
   }
 }

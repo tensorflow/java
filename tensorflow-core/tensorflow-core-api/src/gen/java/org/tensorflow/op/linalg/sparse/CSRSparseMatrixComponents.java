@@ -25,72 +25,83 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Reads out the CSR components at batch `index`.
- * <p>
+ * Reads out the CSR components at batch {@code index}.
  * This op is meant only for debugging / testing, and its interface is not expected
  * to be stable.
- * 
- * @param <T> data type for {@code values()} output
+ *
+ * @param <T> data type for {@code values} output
  */
 public final class CSRSparseMatrixComponents<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new CSRSparseMatrixComponents operation.
-   * 
-   * @param scope current scope
-   * @param csrSparseMatrix A batched CSRSparseMatrix.
-   * @param index The index in `csr_sparse_matrix`'s batch.
-   * @param type 
-   * @return a new instance of CSRSparseMatrixComponents
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope, Operand<?> csrSparseMatrix, Operand<TInt32> index, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixComponents", scope.makeOpName("CSRSparseMatrixComponents"));
-    opBuilder.addInput(csrSparseMatrix.asOutput());
-    opBuilder.addInput(index.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("type", Operands.toDataType(type));
-    return new CSRSparseMatrixComponents<T>(opBuilder.build());
-  }
-  
-  /**
-   * An array containing CSR matrix row pointers.
-   */
-  public Output<TInt32> rowPtrs() {
-    return rowPtrs;
-  }
-  
-  /**
-   * An array containing CSR matrix column indices.
-   */
-  public Output<TInt32> colInds() {
-    return colInds;
-  }
-  
-  /**
-   * An array containing CSR matrix nonzero values.
-   */
-  public Output<T> values() {
-    return values;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CSRSparseMatrixComponents";
-  
+
   private Output<TInt32> rowPtrs;
+
   private Output<TInt32> colInds;
+
   private Output<T> values;
-  
+
   private CSRSparseMatrixComponents(Operation operation) {
     super(operation);
     int outputIdx = 0;
     rowPtrs = operation.output(outputIdx++);
     colInds = operation.output(outputIdx++);
     values = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CSRSparseMatrixComponents operation.
+   *
+   * @param scope current scope
+   * @param csrSparseMatrix A batched CSRSparseMatrix.
+   * @param index The index in {@code csr_sparse_matrix}'s batch.
+   * @param type the value of the type property
+   * @param <T> data type for {@code CSRSparseMatrixComponents} output and operands
+   * @return a new instance of CSRSparseMatrixComponents
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> CSRSparseMatrixComponents<T> create(Scope scope,
+      Operand<? extends TType> csrSparseMatrix, Operand<TInt32> index, Class<T> type) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixComponents", scope.makeOpName("CSRSparseMatrixComponents"));
+    opBuilder.addInput(csrSparseMatrix.asOutput());
+    opBuilder.addInput(index.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("type", Operands.toDataType(type));
+    return new CSRSparseMatrixComponents<>(opBuilder.build());
+  }
+
+  /**
+   * Gets rowPtrs.
+   * An array containing CSR matrix row pointers.
+   * @return rowPtrs.
+   */
+  public Output<TInt32> rowPtrs() {
+    return rowPtrs;
+  }
+
+  /**
+   * Gets colInds.
+   * An array containing CSR matrix column indices.
+   * @return colInds.
+   */
+  public Output<TInt32> colInds() {
+    return colInds;
+  }
+
+  /**
+   * Gets values.
+   * An array containing CSR matrix nonzero values.
+   * @return values.
+   */
+  public Output<T> values() {
+    return values;
   }
 }

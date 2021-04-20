@@ -29,54 +29,53 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of one or more square self-adjoint matrices.
- * <p>
  * Computes the eigenvalues and (optionally) eigenvectors of each inner matrix in
- * `input` such that `input[..., :, :] = v[..., :, :] * diag(e[..., :])`. The eigenvalues
+ * {@code input} such that {@code input[..., :, :] = v[..., :, :] * diag(e[..., :])}. The eigenvalues
  * are sorted in non-decreasing order.
- * <pre>{@code
+ * <pre>
  * # a is a tensor.
  * # e is a tensor of eigenvalues.
  * # v is a tensor of eigenvectors.
  * e, v = self_adjoint_eig(a)
  * e = self_adjoint_eig(a, compute_v=False)
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code e()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code e} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class SelfAdjointEig<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.SelfAdjointEig}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param computeV If `True` then eigenvectors will be computed and returned in `v`.
-     * Otherwise, only the eigenvalues will be computed.
-     */
-    public Options computeV(Boolean computeV) {
-      this.computeV = computeV;
-      return this;
-    }
-    
-    private Boolean computeV;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SelfAdjointEigV2";
+
+  private Output<T> e;
+
+  private Output<T> v;
+
+  private SelfAdjointEig(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    e = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new SelfAdjointEig operation.
-   * 
+   * Factory method to create a class wrapping a new SelfAdjointEigV2 operation.
+   *
    * @param scope current scope
-   * @param input `Tensor` input of shape `[N, N]`.
-   * @param options carries optional attributes values
+   * @param input {@code Tensor} input of shape {@code [N, N]}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SelfAdjointEigV2} output and operands
    * @return a new instance of SelfAdjointEig
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SelfAdjointEigV2", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -87,41 +86,57 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
         }
       }
     }
-    return new SelfAdjointEig<T>(opBuilder.build());
+    return new SelfAdjointEig<>(opBuilder.build());
   }
-  
+
   /**
-   * @param computeV If `True` then eigenvectors will be computed and returned in `v`.
+   * Sets the computeV option.
+   *
+   * @param computeV If {@code True} then eigenvectors will be computed and returned in {@code v}.
    * Otherwise, only the eigenvalues will be computed.
+   * @return this Options instance.
    */
   public static Options computeV(Boolean computeV) {
     return new Options().computeV(computeV);
   }
-  
+
   /**
-   * Eigenvalues. Shape is `[N]`.
+   * Gets e.
+   * Eigenvalues. Shape is {@code [N]}.
+   * @return e.
    */
   public Output<T> e() {
     return e;
   }
-  
+
   /**
-   * Eigenvectors. Shape is `[N, N]`.
+   * Gets v.
+   * Eigenvectors. Shape is {@code [N, N]}.
+   * @return v.
    */
   public Output<T> v() {
     return v;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SelfAdjointEigV2";
-  
-  private Output<T> e;
-  private Output<T> v;
-  
-  private SelfAdjointEig(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    e = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.SelfAdjointEig}
+   */
+  public static class Options {
+    private Boolean computeV;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the computeV option.
+     *
+     * @param computeV If {@code True} then eigenvectors will be computed and returned in {@code v}.
+     * Otherwise, only the eigenvalues will be computed.
+     * @return this Options instance.
+     */
+    public Options computeV(Boolean computeV) {
+      this.computeV = computeV;
+      return this;
+    }
   }
 }

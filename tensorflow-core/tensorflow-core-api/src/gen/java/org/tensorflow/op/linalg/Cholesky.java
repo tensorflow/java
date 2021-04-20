@@ -29,61 +29,65 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the Cholesky decomposition of one or more square matrices.
- * <p>
- * The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
+ * The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
  * form square matrices.
- * <p>
- * The input has to be symmetric and positive definite. Only the lower-triangular
+ * <p>The input has to be symmetric and positive definite. Only the lower-triangular
  * part of the input will be used for this operation. The upper-triangular part
  * will not be read.
- * <p>
- * The output is a tensor of the same shape as the input
- * containing the Cholesky decompositions for all input submatrices `[..., :, :]`.
- * <p>
- * <b>Note</b>: The gradient computation on GPU is faster for large matrices but
+ * <p>The output is a tensor of the same shape as the input
+ * containing the Cholesky decompositions for all input submatrices {@code [..., :, :]}.
+ * <p><strong>Note</strong>: The gradient computation on GPU is faster for large matrices but
  * not for large batch dimensions when the submatrices are small. In this
  * case it might be faster to use the CPU.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Cholesky<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Cholesky operation.
-   * 
-   * @param scope current scope
-   * @param input Shape is `[..., M, M]`.
-   * @return a new instance of Cholesky
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Cholesky<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Cholesky", scope.makeOpName("Cholesky"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Cholesky<T>(opBuilder.build());
-  }
-  
-  /**
-   * Shape is `[..., M, M]`.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Cholesky";
-  
+
   private Output<T> output;
-  
+
   private Cholesky(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Cholesky operation.
+   *
+   * @param scope current scope
+   * @param input Shape is {@code [..., M, M]}.
+   * @param <T> data type for {@code Cholesky} output and operands
+   * @return a new instance of Cholesky
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Cholesky<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Cholesky", scope.makeOpName("Cholesky"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Cholesky<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Shape is {@code [..., M, M]}.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -30,70 +30,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Applies sparse updates to a variable reference.
- * <p>
  * This operation computes
- * <pre>{@code
+ * <pre>
  *     # Scalar indices
  *     ref[indices, ...] = updates[...]
- * 
+ *
  *     # Vector indices (for each i)
  *     ref[indices[i], ...] = updates[i, ...]
- * 
+ *
  *     # High rank indices (for each i, ..., j)
  *     ref[indices[i, ..., j], ...] = updates[i, ..., j, ...]
- * }</pre>
- * This operation outputs `ref` after the update is done.
+ * </pre>
+ * <p>This operation outputs {@code ref} after the update is done.
  * This makes it easier to chain operations that need to use the reset value.
- * <p>
- * If values in `ref` is to be updated more than once, because there are
- * duplicate entries in `indices`, the order at which the updates happen
+ * <p>If values in {@code ref} is to be updated more than once, because there are
+ * duplicate entries in {@code indices}, the order at which the updates happen
  * for each value is undefined.
- * <p>
- * Requires `updates.shape = indices.shape + ref.shape[1:]` or `updates.shape = []`.
- * <p>
+ * <p>Requires {@code updates.shape = indices.shape + ref.shape[1:]} or {@code updates.shape = []}.
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/ScatterUpdate.png" alt>
  * </div>
- * <p>
- * See also `tf.batch_scatter_update` and `tf.scatter_nd_update`.
- * 
- * @param <T> data type for {@code outputRef()} output
+ * <p>See also {@code tf.batch_scatter_update} and {@code tf.scatter_nd_update}.
+ *
+ * @param <T> data type for {@code output_ref} output
  */
 @Operator
 public final class ScatterUpdate<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ScatterUpdate}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, the assignment will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ScatterUpdate";
+
+  private Output<T> outputRef;
+
+  private ScatterUpdate(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputRef = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ScatterUpdate operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref Should be from a `Variable` node.
-   * @param indices A tensor of indices into the first dimension of `ref`.
-   * @param updates A tensor of updated values to store in `ref`.
-   * @param options carries optional attributes values
+   * @param ref Should be from a {@code Variable} node.
+   * @param indices A tensor of indices into the first dimension of {@code ref}.
+   * @param updates A tensor of updated values to store in {@code ref}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScatterUpdate} output and operands
    * @return a new instance of ScatterUpdate
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ScatterUpdate<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ScatterUpdate<T> create(Scope scope, Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterUpdate", scope.makeOpName("ScatterUpdate"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -106,38 +97,54 @@ public final class ScatterUpdate<T extends TType> extends RawOp implements Opera
         }
       }
     }
-    return new ScatterUpdate<T>(opBuilder.build());
+    return new ScatterUpdate<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, the assignment will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * = Same as `ref`.  Returned as a convenience for operations that want
+   * Gets outputRef.
+   * = Same as {@code ref}.  Returned as a convenience for operations that want
    * to use the updated values after the update is done.
+   * @return outputRef.
    */
   public Output<T> outputRef() {
     return outputRef;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return outputRef;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ScatterUpdate";
-  
-  private Output<T> outputRef;
-  
-  private ScatterUpdate(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputRef = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ScatterUpdate}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, the assignment will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

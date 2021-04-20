@@ -24,48 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the static batch size of a dataset sans partial batches.
  */
 public final class ComputeBatchSize extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ComputeBatchSize";
+
+  private Output<TInt64> batchSize;
+
+  private ComputeBatchSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    batchSize = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ComputeBatchSize operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDataset 
+   * @param inputDataset the inputDataset value
    * @return a new instance of ComputeBatchSize
    */
-  @Endpoint(describeByClass = true)
-  public static ComputeBatchSize create(Scope scope, Operand<?> inputDataset) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ComputeBatchSize create(Scope scope, Operand<? extends TType> inputDataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("ComputeBatchSize", scope.makeOpName("ComputeBatchSize"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ComputeBatchSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets batchSize.
+   *
+   * @return batchSize.
    */
   public Output<TInt64> batchSize() {
     return batchSize;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return batchSize;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ComputeBatchSize";
-  
-  private Output<TInt64> batchSize;
-  
-  private ComputeBatchSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    batchSize = operation.output(outputIdx++);
   }
 }

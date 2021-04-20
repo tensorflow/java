@@ -29,77 +29,85 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Extract `patches` from `images` and put them in the "depth" output dimension.
- * 
- * @param <T> data type for {@code patches()} output
+ * Extract {@code patches} from {@code images} and put them in the &quot;depth&quot; output dimension.
+ *
+ * @param <T> data type for {@code patches} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class ExtractImagePatches<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ExtractImagePatches operation.
-   * 
-   * @param scope current scope
-   * @param images 4-D Tensor with shape `[batch, in_rows, in_cols, depth]`.
-   * @param ksizes The size of the sliding window for each dimension of `images`.
-   * @param strides How far the centers of two consecutive patches are in
-   * the images. Must be: `[1, stride_rows, stride_cols, 1]`.
-   * @param rates Must be: `[1, rate_rows, rate_cols, 1]`. This is the
-   * input stride, specifying how far two consecutive patch samples are in the
-   * input. Equivalent to extracting patches with
-   * `patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)`, followed by
-   * subsampling them spatially by a factor of `rates`. This is equivalent to
-   * `rate` in dilated (a.k.a. Atrous) convolutions.
-   * @param padding The type of padding algorithm to use.
-   * @return a new instance of ExtractImagePatches
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ExtractImagePatches<T> create(Scope scope, Operand<T> images, List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    long[] ksizesArray = new long[ksizes.size()];
-    for (int i = 0; i < ksizesArray.length; ++i) {
-      ksizesArray[i] = ksizes.get(i);
-    }
-    opBuilder.setAttr("ksizes", ksizesArray);
-    long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
-      stridesArray[i] = strides.get(i);
-    }
-    opBuilder.setAttr("strides", stridesArray);
-    long[] ratesArray = new long[rates.size()];
-    for (int i = 0; i < ratesArray.length; ++i) {
-      ratesArray[i] = rates.get(i);
-    }
-    opBuilder.setAttr("rates", ratesArray);
-    opBuilder.setAttr("padding", padding);
-    return new ExtractImagePatches<T>(opBuilder.build());
-  }
-  
-  /**
-   * 4-D Tensor with shape `[batch, out_rows, out_cols, ksize_rows *
-   * ksize_cols * depth]` containing image patches with size
-   * `ksize_rows x ksize_cols x depth` vectorized in the "depth" dimension. Note
-   * `out_rows` and `out_cols` are the dimensions of the output patches.
-   */
-  public Output<T> patches() {
-    return patches;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return patches;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ExtractImagePatches";
-  
+
   private Output<T> patches;
-  
+
   private ExtractImagePatches(Operation operation) {
     super(operation);
     int outputIdx = 0;
     patches = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExtractImagePatches operation.
+   *
+   * @param scope current scope
+   * @param images 4-D Tensor with shape {@code [batch, in_rows, in_cols, depth]}.
+   * @param ksizes The size of the sliding window for each dimension of {@code images}.
+   * @param strides How far the centers of two consecutive patches are in
+   * the images. Must be: {@code [1, stride_rows, stride_cols, 1]}.
+   * @param rates Must be: {@code [1, rate_rows, rate_cols, 1]}. This is the
+   * input stride, specifying how far two consecutive patch samples are in the
+   * input. Equivalent to extracting patches with
+   * {@code patch_sizes_eff = patch_sizes + (patch_sizes - 1) * (rates - 1)}, followed by
+   * subsampling them spatially by a factor of {@code rates}. This is equivalent to
+   * {@code rate} in dilated (a.k.a. Atrous) convolutions.
+   * @param padding The type of padding algorithm to use.
+   * @param <T> data type for {@code ExtractImagePatches} output and operands
+   * @return a new instance of ExtractImagePatches
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ExtractImagePatches<T> create(Scope scope, Operand<T> images,
+      List<Long> ksizes, List<Long> strides, List<Long> rates, String padding) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ExtractImagePatches", scope.makeOpName("ExtractImagePatches"));
+    opBuilder.addInput(images.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    long[] ksizesArray = new long[ksizes.size()];
+    for (int i = 0 ; i < ksizesArray.length ; i++) {
+      ksizesArray[i] = ksizes.get(i);
+    }
+    opBuilder.setAttr("ksizes", ksizesArray);
+    long[] stridesArray = new long[strides.size()];
+    for (int i = 0 ; i < stridesArray.length ; i++) {
+      stridesArray[i] = strides.get(i);
+    }
+    opBuilder.setAttr("strides", stridesArray);
+    long[] ratesArray = new long[rates.size()];
+    for (int i = 0 ; i < ratesArray.length ; i++) {
+      ratesArray[i] = rates.get(i);
+    }
+    opBuilder.setAttr("rates", ratesArray);
+    opBuilder.setAttr("padding", padding);
+    return new ExtractImagePatches<>(opBuilder.build());
+  }
+
+  /**
+   * Gets patches.
+   * 4-D Tensor with shape {@code [batch, out_rows, out_cols, ksize_rows * ksize_cols * depth]} containing image patches with size
+   * {@code ksize_rows x ksize_cols x depth} vectorized in the &quot;depth&quot; dimension. Note
+   * {@code out_rows} and {@code out_cols} are the dimensions of the output patches.
+   * @return patches.
+   */
+  public Output<T> patches() {
+    return patches;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return patches;
   }
 }

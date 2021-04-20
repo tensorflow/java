@@ -29,51 +29,59 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * L2 Loss.
- * <p>
- * Computes half the L2 norm of a tensor without the `sqrt`:
- * <p>
- *     output = sum(t ** 2) / 2
- * 
- * @param <T> data type for {@code output()} output
+ * Computes half the L2 norm of a tensor without the {@code sqrt}:
+ * <pre>
+ * output = sum(t ** 2) / 2
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class L2Loss<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new L2Loss operation.
-   * 
-   * @param scope current scope
-   * @param t Typically 2-D, but may have any dimensions.
-   * @return a new instance of L2Loss
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
-    OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
-    opBuilder.addInput(t.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new L2Loss<T>(opBuilder.build());
-  }
-  
-  /**
-   * 0-D.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "L2Loss";
-  
+
   private Output<T> output;
-  
+
   private L2Loss(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new L2Loss operation.
+   *
+   * @param scope current scope
+   * @param t Typically 2-D, but may have any dimensions.
+   * @param <T> data type for {@code L2Loss} output and operands
+   * @return a new instance of L2Loss
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> L2Loss<T> create(Scope scope, Operand<T> t) {
+    OperationBuilder opBuilder = scope.env().opBuilder("L2Loss", scope.makeOpName("L2Loss"));
+    opBuilder.addInput(t.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new L2Loss<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * 0-D.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -26,50 +26,58 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Produce a string tensor that encodes the state of a Reader.
- * <p>
  * Not all Readers support being serialized, so this can produce an
  * Unimplemented error.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReaderSerializeState extends RawOp implements Operand<TString> {
-  
   /**
-   * Factory method to create a class wrapping a new ReaderSerializeState operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReaderSerializeStateV2";
+
+  private Output<TString> state;
+
+  private ReaderSerializeState(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    state = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReaderSerializeStateV2 operation.
+   *
    * @param scope current scope
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderSerializeState
    */
-  @Endpoint(describeByClass = true)
-  public static ReaderSerializeState create(Scope scope, Operand<?> readerHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ReaderSerializeState create(Scope scope, Operand<? extends TType> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderSerializeStateV2", scope.makeOpName("ReaderSerializeState"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderSerializeState(opBuilder.build());
   }
-  
+
   /**
+   * Gets state.
+   *
+   * @return state.
    */
   public Output<TString> state() {
     return state;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return state;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReaderSerializeStateV2";
-  
-  private Output<TString> state;
-  
-  private ReaderSerializeState(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    state = operation.output(outputIdx++);
   }
 }

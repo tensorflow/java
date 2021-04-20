@@ -24,52 +24,56 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
- * Returns the cardinality of `input_dataset`.
- * <p>
- * Returns the cardinality of `input_dataset`.
+ * Returns the cardinality of {@code input_dataset}.
+ * Returns the cardinality of {@code input_dataset}.
  */
 public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DatasetCardinality";
+
+  private Output<TInt64> cardinality;
+
+  private DatasetCardinality(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    cardinality = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DatasetCardinality operation.
-   * 
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the dataset to return cardinality for.
    * @return a new instance of DatasetCardinality
    */
-  @Endpoint(describeByClass = true)
-  public static DatasetCardinality create(Scope scope, Operand<?> inputDataset) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DatasetCardinality create(Scope scope, Operand<? extends TType> inputDataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetCardinality", scope.makeOpName("DatasetCardinality"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DatasetCardinality(opBuilder.build());
   }
-  
+
   /**
-   * The cardinality of `input_dataset`. Named constants are used to represent
+   * Gets cardinality.
+   * The cardinality of {@code input_dataset}. Named constants are used to represent
    * infinite and unknown cardinality.
+   * @return cardinality.
    */
   public Output<TInt64> cardinality() {
     return cardinality;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return cardinality;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DatasetCardinality";
-  
-  private Output<TInt64> cardinality;
-  
-  private DatasetCardinality(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    cardinality = operation.output(outputIdx++);
   }
 }

@@ -29,57 +29,54 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the QR decompositions of one or more matrices.
- * <p>
- * Computes the QR decomposition of each inner matrix in `tensor` such that
- * `tensor[..., :, :] = q[..., :, :] * r[..., :,:])`
- * <p>
- * Currently, the gradient for the QR decomposition is well-defined only when
- * the first `P` columns of the inner matrix are linearly independent, where
- * `P` is the minimum of `M` and `N`, the 2 inner-most dimmensions of `tensor`.
- * <pre>{@code
+ * Computes the QR decomposition of each inner matrix in {@code tensor} such that
+ * {@code tensor[..., :, :] = q[..., :, :] * r[..., :,:])}
+ * <p>Currently, the gradient for the QR decomposition is well-defined only when
+ * the first {@code P} columns of the inner matrix are linearly independent, where
+ * {@code P} is the minimum of {@code M} and {@code N}, the 2 inner-most dimmensions of {@code tensor}.
+ * <pre>
  * # a is a tensor.
  * # q is a tensor of orthonormal matrices.
  * # r is a tensor of upper triangular matrices.
  * q, r = qr(a)
  * q_full, r_full = qr(a, full_matrices=True)
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code q()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code q} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Qr<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.Qr}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param fullMatrices If true, compute full-sized `q` and `r`. If false
-     * (the default), compute only the leading `P` columns of `q`.
-     */
-    public Options fullMatrices(Boolean fullMatrices) {
-      this.fullMatrices = fullMatrices;
-      return this;
-    }
-    
-    private Boolean fullMatrices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Qr";
+
+  private Output<T> q;
+
+  private Output<T> r;
+
+  private Qr(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    q = operation.output(outputIdx++);
+    r = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Qr operation.
-   * 
+   *
    * @param scope current scope
-   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
-   * form matrices of size `[M, N]`. Let `P` be the minimum of `M` and `N`.
-   * @param options carries optional attributes values
+   * @param input A tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
+   * form matrices of size {@code [M, N]}. Let {@code P} be the minimum of {@code M} and {@code N}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Qr} output and operands
    * @return a new instance of Qr
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Qr<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Qr", scope.makeOpName("Qr"));
     opBuilder.addInput(input.asOutput());
@@ -91,44 +88,60 @@ public final class Qr<T extends TType> extends RawOp {
         }
       }
     }
-    return new Qr<T>(opBuilder.build());
+    return new Qr<>(opBuilder.build());
   }
-  
+
   /**
-   * @param fullMatrices If true, compute full-sized `q` and `r`. If false
-   * (the default), compute only the leading `P` columns of `q`.
+   * Sets the fullMatrices option.
+   *
+   * @param fullMatrices If true, compute full-sized {@code q} and {@code r}. If false
+   * (the default), compute only the leading {@code P} columns of {@code q}.
+   * @return this Options instance.
    */
   public static Options fullMatrices(Boolean fullMatrices) {
     return new Options().fullMatrices(fullMatrices);
   }
-  
+
   /**
-   * Orthonormal basis for range of `a`. If `full_matrices` is `False` then
-   * shape is `[..., M, P]`; if `full_matrices` is `True` then shape is
-   * `[..., M, M]`.
+   * Gets q.
+   * Orthonormal basis for range of {@code a}. If {@code full_matrices} is {@code False} then
+   * shape is {@code [..., M, P]}; if {@code full_matrices} is {@code True} then shape is
+   * {@code [..., M, M]}.
+   * @return q.
    */
   public Output<T> q() {
     return q;
   }
-  
+
   /**
-   * Triangular factor. If `full_matrices` is `False` then shape is
-   * `[..., P, N]`. If `full_matrices` is `True` then shape is `[..., M, N]`.
+   * Gets r.
+   * Triangular factor. If {@code full_matrices} is {@code False} then shape is
+   * {@code [..., P, N]}. If {@code full_matrices} is {@code True} then shape is {@code [..., M, N]}.
+   * @return r.
    */
   public Output<T> r() {
     return r;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Qr";
-  
-  private Output<T> q;
-  private Output<T> r;
-  
-  private Qr(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    q = operation.output(outputIdx++);
-    r = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.Qr}
+   */
+  public static class Options {
+    private Boolean fullMatrices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the fullMatrices option.
+     *
+     * @param fullMatrices If true, compute full-sized {@code q} and {@code r}. If false
+     * (the default), compute only the leading {@code P} columns of {@code q}.
+     * @return this Options instance.
+     */
+    public Options fullMatrices(Boolean fullMatrices) {
+      this.fullMatrices = fullMatrices;
+      return this;
+    }
   }
 }

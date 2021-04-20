@@ -24,49 +24,55 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of gradients aggregated in the given accumulators.
  */
 public final class ResourceAccumulatorNumAccumulated extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ResourceAccumulatorNumAccumulated";
+
+  private Output<TInt32> numAccumulated;
+
+  private ResourceAccumulatorNumAccumulated(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    numAccumulated = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ResourceAccumulatorNumAccumulated operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to an accumulator.
    * @return a new instance of ResourceAccumulatorNumAccumulated
    */
-  @Endpoint(describeByClass = true)
-  public static ResourceAccumulatorNumAccumulated create(Scope scope, Operand<?> handle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ResourceAccumulatorNumAccumulated create(Scope scope,
+      Operand<? extends TType> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorNumAccumulated", scope.makeOpName("ResourceAccumulatorNumAccumulated"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ResourceAccumulatorNumAccumulated(opBuilder.build());
   }
-  
+
   /**
+   * Gets numAccumulated.
    * The number of gradients aggregated in the given accumulator.
+   * @return numAccumulated.
    */
   public Output<TInt32> numAccumulated() {
     return numAccumulated;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return numAccumulated;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceAccumulatorNumAccumulated";
-  
-  private Output<TInt32> numAccumulated;
-  
-  private ResourceAccumulatorNumAccumulated(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    numAccumulated = operation.output(outputIdx++);
   }
 }

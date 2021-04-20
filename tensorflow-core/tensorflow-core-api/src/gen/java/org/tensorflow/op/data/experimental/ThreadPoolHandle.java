@@ -24,65 +24,42 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that uses a custom thread pool to compute `input_dataset`.
+ * Creates a dataset that uses a custom thread pool to compute {@code input_dataset}.
  */
 public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.ThreadPoolHandle}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param maxIntraOpParallelism The maximum degree of parallelism to use within operations that execute on this
-     * threadpool.
-     */
-    public Options maxIntraOpParallelism(Long maxIntraOpParallelism) {
-      this.maxIntraOpParallelism = maxIntraOpParallelism;
-      return this;
-    }
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long maxIntraOpParallelism;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ExperimentalThreadPoolHandle";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private ThreadPoolHandle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ThreadPoolHandle operation.
-   * 
+   * Factory method to create a class wrapping a new ExperimentalThreadPoolHandle operation.
+   *
    * @param scope current scope
    * @param numThreads The number of threads in the thread pool.
    * @param displayName A human-readable name for the threads that may be visible in some
    * visualizations.
    * threadpool.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ThreadPoolHandle
    */
-  @Endpoint(describeByClass = true)
-  public static ThreadPoolHandle create(Scope scope, Long numThreads, String displayName, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ThreadPoolHandle create(Scope scope, Long numThreads, String displayName,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalThreadPoolHandle", scope.makeOpName("ThreadPoolHandle"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_threads", numThreads);
@@ -102,51 +79,99 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
     }
     return new ThreadPoolHandle(opBuilder.build());
   }
-  
+
   /**
+   * Sets the maxIntraOpParallelism option.
+   *
    * @param maxIntraOpParallelism The maximum degree of parallelism to use within operations that execute on this
    * threadpool.
+   * @return this Options instance.
    */
   public static Options maxIntraOpParallelism(Long maxIntraOpParallelism) {
     return new Options().maxIntraOpParallelism(maxIntraOpParallelism);
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets handle.
    * A resource that can be consumed by one or more ExperimentalThreadPoolDataset
    * ops.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ExperimentalThreadPoolHandle";
-  
-  private Output<?> handle;
-  
-  private ThreadPoolHandle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.experimental.ThreadPoolHandle}
+   */
+  public static class Options {
+    private Long maxIntraOpParallelism;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the maxIntraOpParallelism option.
+     *
+     * @param maxIntraOpParallelism The maximum degree of parallelism to use within operations that execute on this
+     * threadpool.
+     * @return this Options instance.
+     */
+    public Options maxIntraOpParallelism(Long maxIntraOpParallelism) {
+      this.maxIntraOpParallelism = maxIntraOpParallelism;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

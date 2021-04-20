@@ -30,49 +30,59 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <U> data type for {@code output()} output
+ * The ResourceGatherNd operation
+ *
+ * @param <U> data type for {@code output} output
  */
 @Operator
 public final class ResourceGatherNd<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ResourceGatherNd";
+
+  private Output<U> output;
+
+  private ResourceGatherNd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ResourceGatherNd operation.
-   * 
+   *
    * @param scope current scope
-   * @param resource 
-   * @param indices 
-   * @param dtype 
+   * @param resource the resource value
+   * @param indices the indices value
+   * @param dtype the value of the dtype property
+   * @param <U> data type for {@code ResourceGatherNd} output and operands
    * @return a new instance of ResourceGatherNd
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> ResourceGatherNd<U> create(Scope scope, Operand<?> resource, Operand<? extends TNumber> indices, Class<U> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> ResourceGatherNd<U> create(Scope scope,
+      Operand<? extends TType> resource, Operand<? extends TNumber> indices, Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceGatherNd", scope.makeOpName("ResourceGatherNd"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new ResourceGatherNd<U>(opBuilder.build());
+    return new ResourceGatherNd<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceGatherNd";
-  
-  private Output<U> output;
-  
-  private ResourceGatherNd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

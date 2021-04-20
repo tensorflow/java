@@ -24,61 +24,47 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates or finds a child frame, and makes `data` available to the child frame.
- * <p>
- * This op is used together with `Exit` to create loops in the graph.
- * The unique `frame_name` is used by the `Executor` to identify frames. If
- * `is_constant` is true, `output` is a constant in the child frame; otherwise
- * it may be changed in the child frame. At most `parallel_iterations` iterations
+ * Creates or finds a child frame, and makes {@code data} available to the child frame.
+ * This op is used together with {@code Exit} to create loops in the graph.
+ * The unique {@code frame_name} is used by the {@code Executor} to identify frames. If
+ * {@code is_constant} is true, {@code output} is a constant in the child frame; otherwise
+ * it may be changed in the child frame. At most {@code parallel_iterations} iterations
  * are run in parallel in the child frame.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class Enter<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Enter}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param isConstant If true, the output is constant within the child frame.
-     */
-    public Options isConstant(Boolean isConstant) {
-      this.isConstant = isConstant;
-      return this;
-    }
-    
-    /**
-     * @param parallelIterations The number of iterations allowed to run in parallel.
-     */
-    public Options parallelIterations(Long parallelIterations) {
-      this.parallelIterations = parallelIterations;
-      return this;
-    }
-    
-    private Boolean isConstant;
-    private Long parallelIterations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Enter";
+
+  private Output<T> output;
+
+  private Enter(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Enter operation.
-   * 
+   *
    * @param scope current scope
    * @param data The tensor to be made available to the child frame.
    * @param frameName The name of the child frame.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Enter} output and operands
    * @return a new instance of Enter
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Enter<T> create(Scope scope, Operand<T> data, String frameName, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Enter<T> create(Scope scope, Operand<T> data, String frameName,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Enter", scope.makeOpName("Enter"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -93,43 +79,74 @@ public final class Enter<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Enter<T>(opBuilder.build());
+    return new Enter<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the isConstant option.
+   *
    * @param isConstant If true, the output is constant within the child frame.
+   * @return this Options instance.
    */
   public static Options isConstant(Boolean isConstant) {
     return new Options().isConstant(isConstant);
   }
-  
+
   /**
+   * Sets the parallelIterations option.
+   *
    * @param parallelIterations The number of iterations allowed to run in parallel.
+   * @return this Options instance.
    */
   public static Options parallelIterations(Long parallelIterations) {
     return new Options().parallelIterations(parallelIterations);
   }
-  
+
   /**
-   * The same tensor as `data`.
+   * Gets output.
+   * The same tensor as {@code data}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Enter";
-  
-  private Output<T> output;
-  
-  private Enter(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Enter}
+   */
+  public static class Options {
+    private Boolean isConstant;
+
+    private Long parallelIterations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the isConstant option.
+     *
+     * @param isConstant If true, the output is constant within the child frame.
+     * @return this Options instance.
+     */
+    public Options isConstant(Boolean isConstant) {
+      this.isConstant = isConstant;
+      return this;
+    }
+
+    /**
+     * Sets the parallelIterations option.
+     *
+     * @param parallelIterations The number of iterations allowed to run in parallel.
+     * @return this Options instance.
+     */
+    public Options parallelIterations(Long parallelIterations) {
+      this.parallelIterations = parallelIterations;
+      return this;
+    }
   }
 }

@@ -30,52 +30,58 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Ensures that the tensor's shape matches the expected shape.
- * <p>
  * Raises an error if the input tensor's shape does not match the specified shape.
  * Returns the input tensor otherwise.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class EnsureShape<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new EnsureShape operation.
-   * 
-   * @param scope current scope
-   * @param input A tensor, whose shape is to be validated.
-   * @param shape The expected (possibly partially specified) shape of the input tensor.
-   * @return a new instance of EnsureShape
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input, Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("shape", shape);
-    return new EnsureShape<T>(opBuilder.build());
-  }
-  
-  /**
-   * A tensor with the same shape and contents as the input tensor or value.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "EnsureShape";
-  
+
   private Output<T> output;
-  
+
   private EnsureShape(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new EnsureShape operation.
+   *
+   * @param scope current scope
+   * @param input A tensor, whose shape is to be validated.
+   * @param shape The expected (possibly partially specified) shape of the input tensor.
+   * @param <T> data type for {@code EnsureShape} output and operands
+   * @return a new instance of EnsureShape
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> EnsureShape<T> create(Scope scope, Operand<T> input,
+      Shape shape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("EnsureShape", scope.makeOpName("EnsureShape"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("shape", shape);
+    return new EnsureShape<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * A tensor with the same shape and contents as the input tensor or value.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

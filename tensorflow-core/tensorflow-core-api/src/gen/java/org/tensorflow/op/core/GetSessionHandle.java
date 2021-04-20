@@ -32,44 +32,50 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class GetSessionHandle extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new GetSessionHandle operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "GetSessionHandleV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private GetSessionHandle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new GetSessionHandleV2 operation.
+   *
    * @param scope current scope
    * @param value The tensor to be stored.
    * @return a new instance of GetSessionHandle
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static GetSessionHandle create(Scope scope, Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("GetSessionHandleV2", scope.makeOpName("GetSessionHandle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new GetSessionHandle(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
    * The handle for the tensor stored in the session state, represented
    * as a ResourceHandle object.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "GetSessionHandleV2";
-  
-  private Output<?> handle;
-  
-  private GetSessionHandle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

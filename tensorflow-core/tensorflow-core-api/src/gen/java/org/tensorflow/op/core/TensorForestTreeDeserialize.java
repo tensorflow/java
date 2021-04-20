@@ -23,35 +23,39 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Deserializes a proto into the tree handle
  */
 public final class TensorForestTreeDeserialize extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorForestTreeDeserialize";
+
+  private TensorForestTreeDeserialize(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorForestTreeDeserialize operation.
-   * 
+   *
    * @param scope current scope
    * @param treeHandle Handle to the tree resource to be restored.
    * @param treeConfig Serialied proto string of the boosted_trees.Tree proto.
    * @return a new instance of TensorForestTreeDeserialize
    */
-  @Endpoint(describeByClass = true)
-  public static TensorForestTreeDeserialize create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorForestTreeDeserialize create(Scope scope, Operand<? extends TType> treeHandle,
+      Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(treeConfig.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorForestTreeDeserialize(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestTreeDeserialize";
-  
-  private TensorForestTreeDeserialize(Operation operation) {
-    super(operation);
   }
 }

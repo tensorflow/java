@@ -30,33 +30,31 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Interleave the values from the `data` tensors into a single tensor.
- * <p>
+ * Interleave the values from the {@code data} tensors into a single tensor.
  * Builds a merged tensor such that
- * <pre>{@code
+ * <pre>
  *     merged[indices[m][i, ..., j], ...] = data[m][i, ..., j, ...]
- * }</pre>
- * For example, if each `indices[m]` is scalar or vector, we have
- * <pre>{@code
+ * </pre>
+ * <p>For example, if each {@code indices[m]} is scalar or vector, we have
+ * <pre>
  *     # Scalar indices:
  *     merged[indices[m], ...] = data[m][...]
- * 
+ *
  *     # Vector indices:
  *     merged[indices[m][i], ...] = data[m][i, ...]
- * }</pre>
- * Each `data[i].shape` must start with the corresponding `indices[i].shape`,
- * and the rest of `data[i].shape` must be constant w.r.t. `i`.  That is, we
- * must have `data[i].shape = indices[i].shape + constant`.  In terms of this
- * `constant`, the output shape is
- * <p>
- *     merged.shape = [max(indices)] + constant
- * <p>
- * Values may be merged in parallel, so if an index appears in both `indices[m][i]`
- * and `indices[n][j]`, the result may be invalid. This differs from the normal
+ * </pre>
+ * <p>Each {@code data[i].shape} must start with the corresponding {@code indices[i].shape},
+ * and the rest of {@code data[i].shape} must be constant w.r.t. {@code i}.  That is, we
+ * must have {@code data[i].shape = indices[i].shape + constant}.  In terms of this
+ * {@code constant}, the output shape is
+ * <pre>
+ * merged.shape = [max(indices)] + constant
+ * </pre>
+ * <p>Values may be merged in parallel, so if an index appears in both {@code indices[m][i]}
+ * and {@code indices[n][j]}, the result may be invalid. This differs from the normal
  * DynamicStitch operator that defines the behavior in that case.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>For example:
+ * <pre>
  *     indices[0] = 6
  *     indices[1] = [4, 1]
  *     indices[2] = [[5, 2], [0, 3]]
@@ -65,10 +63,10 @@ import org.tensorflow.types.family.TType;
  *     data[2] = [[[51, 52], [21, 22]], [[1, 2], [31, 32]]]
  *     merged = [[1, 2], [11, 12], [21, 22], [31, 32], [41, 42],
  *               [51, 52], [61, 62]]
- * }</pre>
- * This method can be used to merge partitions created by `dynamic_partition`
+ * </pre>
+ * <p>This method can be used to merge partitions created by {@code dynamic_partition}
  * as illustrated on the following example:
- * <pre>{@code
+ * <pre>
  *     # Apply function (increments x_i) on elements for which a certain condition
  *     # apply (x_i != -1 in this example).
  *     x=tf.constant([0.1, -1., 5.2, 4.3, -1., 7.4])
@@ -81,52 +79,60 @@ import org.tensorflow.types.family.TType;
  *     x = tf.dynamic_stitch(condition_indices, partitioned_data)
  *     # Here x=[1.1, -1., 6.2, 5.3, -1, 8.4], the -1. values remain
  *     # unchanged.
- * }</pre>
+ * </pre>
  * <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
  * <img style="width:100%" src="https://www.tensorflow.org/images/DynamicStitch.png" alt>
  * </div>
- * 
- * @param <T> data type for {@code merged()} output
+ *
+ * @param <T> data type for {@code merged} output
  */
 @Operator
 public final class ParallelDynamicStitch<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ParallelDynamicStitch operation.
-   * 
-   * @param scope current scope
-   * @param indices 
-   * @param data 
-   * @return a new instance of ParallelDynamicStitch
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ParallelDynamicStitch<T> create(Scope scope, Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParallelDynamicStitch", scope.makeOpName("ParallelDynamicStitch"));
-    opBuilder.addInputList(Operands.asOutputs(indices));
-    opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder = scope.apply(opBuilder);
-    return new ParallelDynamicStitch<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> merged() {
-    return merged;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return merged;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ParallelDynamicStitch";
-  
+
   private Output<T> merged;
-  
+
   private ParallelDynamicStitch(Operation operation) {
     super(operation);
     int outputIdx = 0;
     merged = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ParallelDynamicStitch operation.
+   *
+   * @param scope current scope
+   * @param indices the indices value
+   * @param data the data value
+   * @param <T> data type for {@code ParallelDynamicStitch} output and operands
+   * @return a new instance of ParallelDynamicStitch
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ParallelDynamicStitch<T> create(Scope scope,
+      Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ParallelDynamicStitch", scope.makeOpName("ParallelDynamicStitch"));
+    opBuilder.addInputList(Operands.asOutputs(indices));
+    opBuilder.addInputList(Operands.asOutputs(data));
+    opBuilder = scope.apply(opBuilder);
+    return new ParallelDynamicStitch<>(opBuilder.build());
+  }
+
+  /**
+   * Gets merged.
+   *
+   * @return merged.
+   */
+  public Output<T> merged() {
+    return merged;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return merged;
   }
 }

@@ -29,7 +29,6 @@ import org.tensorflow.types.TFloat32;
 
 /**
  * Computes the Kth order statistic of a data set. The current
- * <p>
  * implementation uses a binary search requiring exactly 32 passes over
  * the input data. The running time is linear with respect to input
  * size. The median-of-medians algorithm is probably faster, but is
@@ -47,16 +46,30 @@ import org.tensorflow.types.TFloat32;
  */
 @Operator
 public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "KthOrderStatistic";
+
+  private Output<TFloat32> output;
+
+  private KthOrderStatistic(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new KthOrderStatistic operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param k 
+   * @param input the input value
+   * @param k the value of the k property
    * @return a new instance of KthOrderStatistic
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static KthOrderStatistic create(Scope scope, Operand<TFloat32> input, Long k) {
     OperationBuilder opBuilder = scope.env().opBuilder("KthOrderStatistic", scope.makeOpName("KthOrderStatistic"));
     opBuilder.addInput(input.asOutput());
@@ -64,26 +77,18 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
     opBuilder.setAttr("k", k);
     return new KthOrderStatistic(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TFloat32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "KthOrderStatistic";
-  
-  private Output<TFloat32> output;
-  
-  private KthOrderStatistic(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

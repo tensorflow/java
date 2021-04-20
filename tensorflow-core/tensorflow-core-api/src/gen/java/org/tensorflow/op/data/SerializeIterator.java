@@ -28,40 +28,39 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Converts the given `resource_handle` representing an iterator to a variant tensor.
+ * Converts the given {@code resource_handle} representing an iterator to a variant tensor.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class SerializeIterator extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.SerializeIterator}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param externalStatePolicy 
-     */
-    public Options externalStatePolicy(Long externalStatePolicy) {
-      this.externalStatePolicy = externalStatePolicy;
-      return this;
-    }
-    
-    private Long externalStatePolicy;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SerializeIterator";
+
+  private Output<? extends TType> serialized;
+
+  @SuppressWarnings("unchecked")
+  private SerializeIterator(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    serialized = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SerializeIterator operation.
-   * 
+   *
    * @param scope current scope
    * @param resourceHandle A handle to an iterator resource.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of SerializeIterator
    */
-  @Endpoint(describeByClass = true)
-  public static SerializeIterator create(Scope scope, Operand<?> resourceHandle, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SerializeIterator create(Scope scope, Operand<? extends TType> resourceHandle,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeIterator", scope.makeOpName("SerializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -74,36 +73,51 @@ public final class SerializeIterator extends RawOp implements Operand<TType> {
     }
     return new SerializeIterator(opBuilder.build());
   }
-  
+
   /**
-   * @param externalStatePolicy 
+   * Sets the externalStatePolicy option.
+   *
+   * @param externalStatePolicy the externalStatePolicy option
+   * @return this Options instance.
    */
   public static Options externalStatePolicy(Long externalStatePolicy) {
     return new Options().externalStatePolicy(externalStatePolicy);
   }
-  
+
   /**
+   * Gets serialized.
    * A variant tensor storing the state of the iterator contained in the
    * resource.
+   * @return serialized.
    */
-  public Output<?> serialized() {
+  public Output<? extends TType> serialized() {
     return serialized;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) serialized;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SerializeIterator";
-  
-  private Output<?> serialized;
-  
-  private SerializeIterator(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    serialized = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.SerializeIterator}
+   */
+  public static class Options {
+    private Long externalStatePolicy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the externalStatePolicy option.
+     *
+     * @param externalStatePolicy the externalStatePolicy option
+     * @return this Options instance.
+     */
+    public Options externalStatePolicy(Long externalStatePolicy) {
+      this.externalStatePolicy = externalStatePolicy;
+      return this;
+    }
   }
 }

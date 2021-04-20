@@ -30,37 +30,51 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Says whether the targets are in the top `K` predictions.
- * <p>
- * This outputs a `batch_size` bool array, an entry `out[i]` is `true` if the
- * prediction for the target class is among the top `k` predictions among
- * all predictions for example `i`. Note that the behavior of `InTopK` differs
- * from the `TopK` op in its handling of ties; if multiple classes have the
- * same prediction value and straddle the top-`k` boundary, all of those
- * classes are considered to be in the top `k`.
- * <p>
- * More formally, let
- * <p>
- *   \\(predictions_i\\) be the predictions for all classes for example `i`,
- *   \\(targets_i\\) be the target class for example `i`,
- *   \\(out_i\\) be the output for example `i`,
- * <p>
- * $$out_i = predictions_{i, targets_i} \in TopKIncludingTies(predictions_i)$$
+ * Says whether the targets are in the top {@code K} predictions.
+ * This outputs a {@code batch_size} bool array, an entry {@code out[i]} is {@code true} if the
+ * prediction for the target class is among the top {@code k} predictions among
+ * all predictions for example {@code i}. Note that the behavior of {@code InTopK} differs
+ * from the {@code TopK} op in its handling of ties; if multiple classes have the
+ * same prediction value and straddle the top-{@code k} boundary, all of those
+ * classes are considered to be in the top {@code k}.
+ * <p>More formally, let
+ * <p>\(predictions_i\) be the predictions for all classes for example {@code i},
+ * \(targets_i\) be the target class for example {@code i},
+ * \(out_i\) be the output for example {@code i},
+ * <p>$$out_i = predictions_{i, targets_i} \in TopKIncludingTies(predictions_i)$$
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class InTopK extends RawOp implements Operand<TBool> {
-  
   /**
-   * Factory method to create a class wrapping a new InTopK operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "InTopKV2";
+
+  private Output<TBool> precision;
+
+  private InTopK(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    precision = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new InTopKV2 operation.
+   *
    * @param scope current scope
-   * @param predictions A `batch_size` x `classes` tensor.
-   * @param targets A `batch_size` vector of class ids.
+   * @param predictions A {@code batch_size} x {@code classes} tensor.
+   * @param targets A {@code batch_size} vector of class ids.
    * @param k Number of top elements to look at for computing precision.
+   * @param <T> data type for {@code InTopKV2} output and operands
    * @return a new instance of InTopK
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions, Operand<T> targets, Operand<T> k) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions,
+      Operand<T> targets, Operand<T> k) {
     OperationBuilder opBuilder = scope.env().opBuilder("InTopKV2", scope.makeOpName("InTopK"));
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());
@@ -68,27 +82,18 @@ public final class InTopK extends RawOp implements Operand<TBool> {
     opBuilder = scope.apply(opBuilder);
     return new InTopK(opBuilder.build());
   }
-  
+
   /**
-   * Computed precision at `k` as a `bool Tensor`.
+   * Gets precision.
+   * Computed precision at {@code k} as a {@code bool Tensor}.
+   * @return precision.
    */
   public Output<TBool> precision() {
     return precision;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return precision;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InTopKV2";
-  
-  private Output<TBool> precision;
-  
-  private InTopK(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    precision = operation.output(outputIdx++);
   }
 }

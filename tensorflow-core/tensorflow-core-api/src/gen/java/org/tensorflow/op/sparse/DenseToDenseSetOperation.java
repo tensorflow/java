@@ -29,54 +29,57 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Applies set operation along last dimension of 2 `Tensor` inputs.
- * <p>
- * See SetOperationOp::SetOperationFromContext for values of `set_operation`.
- * <p>
- * Output `result` is a `SparseTensor` represented by `result_indices`,
- * `result_values`, and `result_shape`. For `set1` and `set2` ranked `n`, this
- * has rank `n` and the same 1st `n-1` dimensions as `set1` and `set2`. The `nth`
- * dimension contains the result of `set_operation` applied to the corresponding
- * `[0...n-1]` dimension of `set`.
- * 
- * @param <T> data type for {@code resultValues()} output
+ * Applies set operation along last dimension of 2 {@code Tensor} inputs.
+ * See SetOperationOp::SetOperationFromContext for values of {@code set_operation}.
+ * <p>Output {@code result} is a {@code SparseTensor} represented by {@code result_indices},
+ * {@code result_values}, and {@code result_shape}. For {@code set1} and {@code set2} ranked {@code n}, this
+ * has rank {@code n} and the same 1st {@code n-1} dimensions as {@code set1} and {@code set2}. The {@code nth}
+ * dimension contains the result of {@code set_operation} applied to the corresponding
+ * {@code [0...n-1]} dimension of {@code set}.
+ *
+ * @param <T> data type for {@code result_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.DenseToDenseSetOperation}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param validateIndices 
-     */
-    public Options validateIndices(Boolean validateIndices) {
-      this.validateIndices = validateIndices;
-      return this;
-    }
-    
-    private Boolean validateIndices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DenseToDenseSetOperation";
+
+  private Output<TInt64> resultIndices;
+
+  private Output<T> resultValues;
+
+  private Output<TInt64> resultShape;
+
+  private DenseToDenseSetOperation(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resultIndices = operation.output(outputIdx++);
+    resultValues = operation.output(outputIdx++);
+    resultShape = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DenseToDenseSetOperation operation.
-   * 
+   *
    * @param scope current scope
-   * @param set1 `Tensor` with rank `n`. 1st `n-1` dimensions must be the same as `set2`.
-   * Dimension `n` contains values in a set, duplicates are allowed but ignored.
-   * @param set2 `Tensor` with rank `n`. 1st `n-1` dimensions must be the same as `set1`.
-   * Dimension `n` contains values in a set, duplicates are allowed but ignored.
-   * @param setOperation 
-   * @param options carries optional attributes values
+   * @param set1 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set2}.
+   * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
+   * @param set2 {@code Tensor} with rank {@code n}. 1st {@code n-1} dimensions must be the same as {@code set1}.
+   * Dimension {@code n} contains values in a set, duplicates are allowed but ignored.
+   * @param setOperation the value of the setOperation property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DenseToDenseSetOperation} output and operands
    * @return a new instance of DenseToDenseSetOperation
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1, Operand<T> set2, String setOperation, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1,
+      Operand<T> set2, String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToDenseSetOperation", scope.makeOpName("DenseToDenseSetOperation"));
     opBuilder.addInput(set1.asOutput());
     opBuilder.addInput(set2.asOutput());
@@ -89,51 +92,66 @@ public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
         }
       }
     }
-    return new DenseToDenseSetOperation<T>(opBuilder.build());
+    return new DenseToDenseSetOperation<>(opBuilder.build());
   }
-  
+
   /**
-   * @param validateIndices 
+   * Sets the validateIndices option.
+   *
+   * @param validateIndices the validateIndices option
+   * @return this Options instance.
    */
   public static Options validateIndices(Boolean validateIndices) {
     return new Options().validateIndices(validateIndices);
   }
-  
+
   /**
-   * 2D indices of a `SparseTensor`.
+   * Gets resultIndices.
+   * 2D indices of a {@code SparseTensor}.
+   * @return resultIndices.
    */
   public Output<TInt64> resultIndices() {
     return resultIndices;
   }
-  
+
   /**
-   * 1D values of a `SparseTensor`.
+   * Gets resultValues.
+   * 1D values of a {@code SparseTensor}.
+   * @return resultValues.
    */
   public Output<T> resultValues() {
     return resultValues;
   }
-  
+
   /**
-   * 1D `Tensor` shape of a `SparseTensor`. `result_shape[0...n-1]` is
-   * the same as the 1st `n-1` dimensions of `set1` and `set2`, `result_shape[n]`
-   * is the max result set size across all `0...n-1` dimensions.
+   * Gets resultShape.
+   * 1D {@code Tensor} shape of a {@code SparseTensor}. {@code result_shape[0...n-1]} is
+   * the same as the 1st {@code n-1} dimensions of {@code set1} and {@code set2}, {@code result_shape[n]}
+   * is the max result set size across all {@code 0...n-1} dimensions.
+   * @return resultShape.
    */
   public Output<TInt64> resultShape() {
     return resultShape;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DenseToDenseSetOperation";
-  
-  private Output<TInt64> resultIndices;
-  private Output<T> resultValues;
-  private Output<TInt64> resultShape;
-  
-  private DenseToDenseSetOperation(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resultIndices = operation.output(outputIdx++);
-    resultValues = operation.output(outputIdx++);
-    resultShape = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.DenseToDenseSetOperation}
+   */
+  public static class Options {
+    private Boolean validateIndices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the validateIndices option.
+     *
+     * @param validateIndices the validateIndices option
+     * @return this Options instance.
+     */
+    public Options validateIndices(Boolean validateIndices) {
+      this.validateIndices = validateIndices;
+      return this;
+    }
   }
 }

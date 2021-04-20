@@ -31,60 +31,68 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that zips together `input_datasets`.
- * <p>
+ * Creates a dataset that zips together {@code input_datasets}.
  * The elements of the resulting dataset are created by zipping corresponding
  * elements from each of the input datasets.
- * <p>
- * The size of the resulting dataset will match the size of the smallest input
+ * <p>The size of the resulting dataset will match the size of the smallest input
  * dataset, and no error will be raised if input datasets have different sizes.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class ZipDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ZipDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private ZipDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ZipDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDatasets List of `N` variant Tensors representing datasets to be zipped together.
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param inputDatasets List of {@code N} variant Tensors representing datasets to be zipped together.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of ZipDataset
    */
-  @Endpoint(describeByClass = true)
-  public static ZipDataset create(Scope scope, Iterable<Operand<?>> inputDatasets, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ZipDataset create(Scope scope, Iterable<Operand<? extends TType>> inputDatasets,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ZipDataset", scope.makeOpName("ZipDataset"));
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new ZipDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ZipDataset";
-  
-  private Output<?> handle;
-  
-  private ZipDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

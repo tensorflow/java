@@ -29,55 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Inverse 3D fast Fourier transform.
- * <p>
  * Computes the inverse 3-dimensional discrete Fourier transform over the
- * inner-most 3 dimensions of `input`.
- * 
- * @param <T> data type for {@code output()} output
+ * inner-most 3 dimensions of {@code input}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "signal")
+@Operator(
+    group = "signal"
+)
 public final class Ifft3d<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Ifft3d operation.
-   * 
-   * @param scope current scope
-   * @param input A complex tensor.
-   * @return a new instance of Ifft3d
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Ifft3d<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IFFT3D", scope.makeOpName("Ifft3d"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Ifft3d<T>(opBuilder.build());
-  }
-  
-  /**
-   * A complex tensor of the same shape as `input`. The inner-most 3
-   *   dimensions of `input` are replaced with their inverse 3D Fourier transform.
-   * <p>
-   * @compatibility(numpy)
-   * Equivalent to np.fft.ifftn with 3 dimensions.
-   * @end_compatibility
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IFFT3D";
-  
+
   private Output<T> output;
-  
+
   private Ifft3d(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IFFT3D operation.
+   *
+   * @param scope current scope
+   * @param input A complex tensor.
+   * @param <T> data type for {@code IFFT3D} output and operands
+   * @return a new instance of Ifft3d
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Ifft3d<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IFFT3D", scope.makeOpName("Ifft3d"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Ifft3d<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * A complex tensor of the same shape as {@code input}. The inner-most 3
+   * dimensions of {@code input} are replaced with their inverse 3D Fourier transform.
+   * <p>{@literal @}compatibility(numpy)<br>
+   * Equivalent to np.fft.ifftn with 3 dimensions.
+   * <br>{@literal @}end_compatibility
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -30,110 +30,121 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Concatenates a list of `SparseTensor` along the specified dimension.
- * <p>
+ * Concatenates a list of {@code SparseTensor} along the specified dimension.
  * Concatenation is with respect to the dense versions of these sparse tensors.
- * It is assumed that each input is a `SparseTensor` whose elements are ordered
+ * It is assumed that each input is a {@code SparseTensor} whose elements are ordered
  * along increasing dimension number.
- * <p>
- * All inputs' shapes must match, except for the concat dimension.  The
- * `indices`, `values`, and `shapes` lists must have the same length.
- * <p>
- * The output shape is identical to the inputs', except along the concat
+ * <p>All inputs' shapes must match, except for the concat dimension.  The
+ * {@code indices}, {@code values}, and {@code shapes} lists must have the same length.
+ * <p>The output shape is identical to the inputs', except along the concat
  * dimension, where it is the sum of the inputs' sizes along that dimension.
- * <p>
- * The output elements will be resorted to preserve the sort order along
+ * <p>The output elements will be resorted to preserve the sort order along
  * increasing dimension number.
- * <p>
- * This op runs in `O(M log M)` time, where `M` is the total number of non-empty
+ * <p>This op runs in {@code O(M log M)} time, where {@code M} is the total number of non-empty
  * values across all inputs. This is due to the need for an internal sort in
  * order to concatenate efficiently across an arbitrary dimension.
- * <p>
- * For example, if `concat_dim = 1` and the inputs are
- * <p>
- *     sp_inputs[0]: shape = [2, 3]
- *     [0, 2]: "a"
- *     [1, 0]: "b"
- *     [1, 1]: "c"
- * <p>
- *     sp_inputs[1]: shape = [2, 4]
- *     [0, 1]: "d"
- *     [0, 2]: "e"
- * <p>
- * then the output will be
- * <p>
- *     shape = [2, 7]
- *     [0, 2]: "a"
- *     [0, 4]: "d"
- *     [0, 5]: "e"
- *     [1, 0]: "b"
- *     [1, 1]: "c"
- * <p>
- * Graphically this is equivalent to doing
- * <p>
- *     [    a] concat [  d e  ] = [    a   d e  ]
- *     [b c  ]        [       ]   [b c          ]
- * 
- * @param <T> data type for {@code outputValues()} output
+ * <p>For example, if {@code concat_dim = 1} and the inputs are
+ * <pre>
+ * sp_inputs[0]: shape = [2, 3]
+ * [0, 2]: &quot;a&quot;
+ * [1, 0]: &quot;b&quot;
+ * [1, 1]: &quot;c&quot;
+ *
+ * sp_inputs[1]: shape = [2, 4]
+ * [0, 1]: &quot;d&quot;
+ * [0, 2]: &quot;e&quot;
+ * </pre>
+ * <p>then the output will be
+ * <pre>
+ * shape = [2, 7]
+ * [0, 2]: &quot;a&quot;
+ * [0, 4]: &quot;d&quot;
+ * [0, 5]: &quot;e&quot;
+ * [1, 0]: &quot;b&quot;
+ * [1, 1]: &quot;c&quot;
+ * </pre>
+ * <p>Graphically this is equivalent to doing
+ * <pre>
+ * [    a] concat [  d e  ] = [    a   d e  ]
+ * [b c  ]        [       ]   [b c          ]
+ * </pre>
+ *
+ * @param <T> data type for {@code output_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseConcat<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new SparseConcat operation.
-   * 
-   * @param scope current scope
-   * @param indices 2-D.  Indices of each input `SparseTensor`.
-   * @param values 1-D.  Non-empty values of each `SparseTensor`.
-   * @param shapes 1-D.  Shapes of each `SparseTensor`.
-   * @param concatDim Dimension to concatenate along. Must be in range [-rank, rank),
-   * where rank is the number of dimensions in each input `SparseTensor`.
-   * @return a new instance of SparseConcat
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseConcat<T> create(Scope scope, Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values, Iterable<Operand<TInt64>> shapes, Long concatDim) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
-    opBuilder.addInputList(Operands.asOutputs(indices));
-    opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder.addInputList(Operands.asOutputs(shapes));
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("concat_dim", concatDim);
-    return new SparseConcat<T>(opBuilder.build());
-  }
-  
-  /**
-   * 2-D.  Indices of the concatenated `SparseTensor`.
-   */
-  public Output<TInt64> outputIndices() {
-    return outputIndices;
-  }
-  
-  /**
-   * 1-D.  Non-empty values of the concatenated `SparseTensor`.
-   */
-  public Output<T> outputValues() {
-    return outputValues;
-  }
-  
-  /**
-   * 1-D.  Shape of the concatenated `SparseTensor`.
-   */
-  public Output<TInt64> outputShape() {
-    return outputShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "SparseConcat";
-  
+
   private Output<TInt64> outputIndices;
+
   private Output<T> outputValues;
+
   private Output<TInt64> outputShape;
-  
+
   private SparseConcat(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputIndices = operation.output(outputIdx++);
     outputValues = operation.output(outputIdx++);
     outputShape = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SparseConcat operation.
+   *
+   * @param scope current scope
+   * @param indices 2-D.  Indices of each input {@code SparseTensor}.
+   * @param values 1-D.  Non-empty values of each {@code SparseTensor}.
+   * @param shapes 1-D.  Shapes of each {@code SparseTensor}.
+   * @param concatDim Dimension to concatenate along. Must be in range [-rank, rank),
+   * where rank is the number of dimensions in each input {@code SparseTensor}.
+   * @param <T> data type for {@code SparseConcat} output and operands
+   * @return a new instance of SparseConcat
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseConcat<T> create(Scope scope,
+      Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values,
+      Iterable<Operand<TInt64>> shapes, Long concatDim) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
+    opBuilder.addInputList(Operands.asOutputs(indices));
+    opBuilder.addInputList(Operands.asOutputs(values));
+    opBuilder.addInputList(Operands.asOutputs(shapes));
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("concat_dim", concatDim);
+    return new SparseConcat<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputIndices.
+   * 2-D.  Indices of the concatenated {@code SparseTensor}.
+   * @return outputIndices.
+   */
+  public Output<TInt64> outputIndices() {
+    return outputIndices;
+  }
+
+  /**
+   * Gets outputValues.
+   * 1-D.  Non-empty values of the concatenated {@code SparseTensor}.
+   * @return outputValues.
+   */
+  public Output<T> outputValues() {
+    return outputValues;
+  }
+
+  /**
+   * Gets outputShape.
+   * 1-D.  Shape of the concatenated {@code SparseTensor}.
+   * @return outputShape.
+   */
+  public Output<TInt64> outputShape() {
+    return outputShape;
   }
 }

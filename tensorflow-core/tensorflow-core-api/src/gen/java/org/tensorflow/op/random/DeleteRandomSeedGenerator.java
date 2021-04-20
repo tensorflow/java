@@ -23,33 +23,38 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The DeleteRandomSeedGenerator operation
  */
 public final class DeleteRandomSeedGenerator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeleteRandomSeedGenerator";
+
+  private DeleteRandomSeedGenerator(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeleteRandomSeedGenerator operation.
-   * 
+   *
    * @param scope current scope
-   * @param handle 
-   * @param deleter 
+   * @param handle the handle value
+   * @param deleter the deleter value
    * @return a new instance of DeleteRandomSeedGenerator
    */
-  @Endpoint(describeByClass = true)
-  public static DeleteRandomSeedGenerator create(Scope scope, Operand<?> handle, Operand<?> deleter) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DeleteRandomSeedGenerator create(Scope scope, Operand<? extends TType> handle,
+      Operand<? extends TType> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteRandomSeedGenerator", scope.makeOpName("DeleteRandomSeedGenerator"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(deleter.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeleteRandomSeedGenerator(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeleteRandomSeedGenerator";
-  
-  private DeleteRandomSeedGenerator(Operation operation) {
-    super(operation);
   }
 }

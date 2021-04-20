@@ -29,46 +29,55 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Operator that connects the output of an XLA computation to other consumer graph nodes.
- * 
- * @param <T> data type for {@code outputs()} output
+ *
+ * @param <T> data type for {@code outputs} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class ClusterOutput<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ClusterOutput operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of ClusterOutput
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ClusterOutput<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaClusterOutput", scope.makeOpName("ClusterOutput"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new ClusterOutput<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> outputs() {
-    return outputs;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return outputs;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "XlaClusterOutput";
-  
+
   private Output<T> outputs;
-  
+
   private ClusterOutput(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputs = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaClusterOutput operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code XlaClusterOutput} output and operands
+   * @return a new instance of ClusterOutput
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ClusterOutput<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaClusterOutput", scope.makeOpName("ClusterOutput"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new ClusterOutput<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputs.
+   *
+   * @return outputs.
+   */
+  public Output<T> outputs() {
+    return outputs;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return outputs;
   }
 }

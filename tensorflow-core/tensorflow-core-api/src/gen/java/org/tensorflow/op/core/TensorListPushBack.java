@@ -28,8 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Returns a list which has the passed-in `Tensor` as last element and the other elements of the given list in `input_handle`.
- * <p>
+ * Returns a list which has the passed-in {@code Tensor} as last element and the other elements of the given list in {@code input_handle}.
  * tensor: The tensor to put on the list.
  * input_handle: The old list.
  * output_handle: A list with the elements of the old list followed by tensor.
@@ -38,44 +37,52 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class TensorListPushBack extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListPushBack";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListPushBack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListPushBack operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param tensor 
+   * @param inputHandle the inputHandle value
+   * @param tensor the tensor value
    * @return a new instance of TensorListPushBack
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListPushBack create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> tensor) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListPushBack create(Scope scope, Operand<? extends TType> inputHandle,
+      Operand<? extends TType> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBack", scope.makeOpName("TensorListPushBack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorListPushBack(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListPushBack";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListPushBack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

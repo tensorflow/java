@@ -26,58 +26,69 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the next record (key, value pair) produced by a Reader.
- * <p>
  * Will dequeue from the input queue if necessary (e.g. when the
  * Reader needs to start reading from a new file since it has finished
  * with the previous file).
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReaderRead extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new ReaderRead operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReaderReadV2";
+
+  private Output<TString> key;
+
+  private Output<TString> value;
+
+  private ReaderRead(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    key = operation.output(outputIdx++);
+    value = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReaderReadV2 operation.
+   *
    * @param scope current scope
    * @param readerHandle Handle to a Reader.
    * @param queueHandle Handle to a Queue, with string work items.
    * @return a new instance of ReaderRead
    */
-  @Endpoint(describeByClass = true)
-  public static ReaderRead create(Scope scope, Operand<?> readerHandle, Operand<?> queueHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ReaderRead create(Scope scope, Operand<? extends TType> readerHandle,
+      Operand<? extends TType> queueHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadV2", scope.makeOpName("ReaderRead"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderRead(opBuilder.build());
   }
-  
+
   /**
+   * Gets key.
    * A scalar.
+   * @return key.
    */
   public Output<TString> key() {
     return key;
   }
-  
+
   /**
+   * Gets value.
    * A scalar.
+   * @return value.
    */
   public Output<TString> value() {
     return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReaderReadV2";
-  
-  private Output<TString> key;
-  private Output<TString> value;
-  
-  private ReaderRead(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    key = operation.output(outputIdx++);
-    value = operation.output(outputIdx++);
   }
 }

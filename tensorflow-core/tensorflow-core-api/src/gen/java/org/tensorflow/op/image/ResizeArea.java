@@ -30,58 +30,52 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Resize `images` to `size` using area interpolation.
- * <p>
+ * Resize {@code images} to {@code size} using area interpolation.
  * Input images can be of different types but output images are always float.
- * <p>
- * The range of pixel values for the output image might be slightly different
+ * <p>The range of pixel values for the output image might be slightly different
  * from the range for the input image because of limited numerical precision.
- * To guarantee an output range, for example `[0.0, 1.0]`, apply
- * `tf.clip_by_value` to the output.
- * <p>
- * Each output pixel is computed by first transforming the pixel's footprint into
+ * To guarantee an output range, for example {@code [0.0, 1.0]}, apply
+ * {@code tf.clip_by_value} to the output.
+ * <p>Each output pixel is computed by first transforming the pixel's footprint into
  * the input tensor and then averaging the pixels that intersect the footprint. An
  * input pixel's contribution to the average is weighted by the fraction of its
  * area that intersects the footprint.  This is the same as OpenCV's INTER_AREA.
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class ResizeArea extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.ResizeArea}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
-     * aligned, preserving the values at the corner pixels. Defaults to false.
-     */
-    public Options alignCorners(Boolean alignCorners) {
-      this.alignCorners = alignCorners;
-      return this;
-    }
-    
-    private Boolean alignCorners;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResizeArea";
+
+  private Output<TFloat32> resizedImages;
+
+  private ResizeArea(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resizedImages = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResizeArea operation.
-   * 
+   *
    * @param scope current scope
-   * @param images 4-D with shape `[batch, height, width, channels]`.
-   * @param size = A 1-D int32 Tensor of 2 elements: `new_height, new_width`.  The
+   * @param images 4-D with shape {@code [batch, height, width, channels]}.
+   * @param sizeOutput = A 1-D int32 Tensor of 2 elements: {@code new_height, new_width}.  The
    * new size for the images.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ResizeArea
    */
-  @Endpoint(describeByClass = true)
-  public static ResizeArea create(Scope scope, Operand<? extends TNumber> images, Operand<TInt32> size, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ResizeArea create(Scope scope, Operand<? extends TNumber> images,
+      Operand<TInt32> sizeOutput, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeArea", scope.makeOpName("ResizeArea"));
     opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -92,36 +86,52 @@ public final class ResizeArea extends RawOp implements Operand<TFloat32> {
     }
     return new ResizeArea(opBuilder.build());
   }
-  
+
   /**
+   * Sets the alignCorners option.
+   *
    * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
    * aligned, preserving the values at the corner pixels. Defaults to false.
+   * @return this Options instance.
    */
   public static Options alignCorners(Boolean alignCorners) {
     return new Options().alignCorners(alignCorners);
   }
-  
+
   /**
+   * Gets resizedImages.
    * 4-D with shape
-   * `[batch, new_height, new_width, channels]`.
+   * {@code [batch, new_height, new_width, channels]}.
+   * @return resizedImages.
    */
   public Output<TFloat32> resizedImages() {
     return resizedImages;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return resizedImages;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResizeArea";
-  
-  private Output<TFloat32> resizedImages;
-  
-  private ResizeArea(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resizedImages = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.ResizeArea}
+   */
+  public static class Options {
+    private Boolean alignCorners;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alignCorners option.
+     *
+     * @param alignCorners If true, the centers of the 4 corner pixels of the input and output tensors are
+     * aligned, preserving the values at the corner pixels. Defaults to false.
+     * @return this Options instance.
+     */
+    public Options alignCorners(Boolean alignCorners) {
+      this.alignCorners = alignCorners;
+      return this;
+    }
   }
 }

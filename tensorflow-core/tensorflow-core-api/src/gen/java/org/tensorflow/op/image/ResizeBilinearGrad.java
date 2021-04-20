@@ -24,58 +24,44 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of bilinear interpolation.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class ResizeBilinearGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.ResizeBilinearGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alignCorners If true, the centers of the 4 corner pixels of the input and grad tensors are
-     * aligned. Defaults to false.
-     */
-    public Options alignCorners(Boolean alignCorners) {
-      this.alignCorners = alignCorners;
-      return this;
-    }
-    
-    /**
-     * @param halfPixelCenters 
-     */
-    public Options halfPixelCenters(Boolean halfPixelCenters) {
-      this.halfPixelCenters = halfPixelCenters;
-      return this;
-    }
-    
-    private Boolean alignCorners;
-    private Boolean halfPixelCenters;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResizeBilinearGrad";
+
+  private Output<T> output;
+
+  private ResizeBilinearGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResizeBilinearGrad operation.
-   * 
+   *
    * @param scope current scope
-   * @param grads 4-D with shape `[batch, height, width, channels]`.
-   * @param originalImage 4-D with shape `[batch, orig_height, orig_width, channels]`,
+   * @param grads 4-D with shape {@code [batch, height, width, channels]}.
+   * @param originalImage 4-D with shape {@code [batch, orig_height, orig_width, channels]},
    * The image tensor that was resized.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResizeBilinearGrad} output and operands
    * @return a new instance of ResizeBilinearGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope, Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope,
+      Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResizeBilinearGrad", scope.makeOpName("ResizeBilinearGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());
@@ -90,46 +76,78 @@ public final class ResizeBilinearGrad<T extends TNumber> extends RawOp implement
         }
       }
     }
-    return new ResizeBilinearGrad<T>(opBuilder.build());
+    return new ResizeBilinearGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the alignCorners option.
+   *
    * @param alignCorners If true, the centers of the 4 corner pixels of the input and grad tensors are
    * aligned. Defaults to false.
+   * @return this Options instance.
    */
   public static Options alignCorners(Boolean alignCorners) {
     return new Options().alignCorners(alignCorners);
   }
-  
+
   /**
-   * @param halfPixelCenters 
+   * Sets the halfPixelCenters option.
+   *
+   * @param halfPixelCenters the halfPixelCenters option
+   * @return this Options instance.
    */
   public static Options halfPixelCenters(Boolean halfPixelCenters) {
     return new Options().halfPixelCenters(halfPixelCenters);
   }
-  
+
   /**
-   * 4-D with shape `[batch, orig_height, orig_width, channels]`.
+   * Gets output.
+   * 4-D with shape {@code [batch, orig_height, orig_width, channels]}.
    * Gradients with respect to the input image. Input image must have been
    * float or double.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResizeBilinearGrad";
-  
-  private Output<T> output;
-  
-  private ResizeBilinearGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.ResizeBilinearGrad}
+   */
+  public static class Options {
+    private Boolean alignCorners;
+
+    private Boolean halfPixelCenters;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alignCorners option.
+     *
+     * @param alignCorners If true, the centers of the 4 corner pixels of the input and grad tensors are
+     * aligned. Defaults to false.
+     * @return this Options instance.
+     */
+    public Options alignCorners(Boolean alignCorners) {
+      this.alignCorners = alignCorners;
+      return this;
+    }
+
+    /**
+     * Sets the halfPixelCenters option.
+     *
+     * @param halfPixelCenters the halfPixelCenters option
+     * @return this Options instance.
+     */
+    public Options halfPixelCenters(Boolean halfPixelCenters) {
+      this.halfPixelCenters = halfPixelCenters;
+      return this;
+    }
   }
 }

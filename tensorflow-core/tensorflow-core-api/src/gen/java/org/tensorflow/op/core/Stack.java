@@ -29,61 +29,54 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Packs a list of `N` rank-`R` tensors into one rank-`(R+1)` tensor.
- * <p>
- * Packs the `N` tensors in `values` into a tensor with rank one higher than each
- * tensor in `values`, by packing them along the `axis` dimension.
- * Given a list of tensors of shape `(A, B, C)`;
- * <p>
- * if `axis == 0` then the `output` tensor will have the shape `(N, A, B, C)`.
- * if `axis == 1` then the `output` tensor will have the shape `(A, N, B, C)`.
+ * Packs a list of {@code N} rank-{@code R} tensors into one rank-{@code (R+1)} tensor.
+ * Packs the {@code N} tensors in {@code values} into a tensor with rank one higher than each
+ * tensor in {@code values}, by packing them along the {@code axis} dimension.
+ * Given a list of tensors of shape {@code (A, B, C)};
+ * <p>if {@code axis == 0} then the {@code output} tensor will have the shape {@code (N, A, B, C)}.
+ * if {@code axis == 1} then the {@code output} tensor will have the shape {@code (A, N, B, C)}.
  * Etc.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>For example:
+ * <pre>
  * # 'x' is [1, 4]
  * # 'y' is [2, 5]
  * # 'z' is [3, 6]
- * pack([x, y, z]) => [[1, 4], [2, 5], [3, 6]]  # Pack along first dim.
- * pack([x, y, z], axis=1) => [[1, 2, 3], [4, 5, 6]]
- * }</pre>
- * This is the opposite of `unpack`.
- * 
- * @param <T> data type for {@code output()} output
+ * pack([x, y, z]) =&gt; [[1, 4], [2, 5], [3, 6]]  # Pack along first dim.
+ * pack([x, y, z], axis=1) =&gt; [[1, 2, 3], [4, 5, 6]]
+ * </pre>
+ * <p>This is the opposite of {@code unpack}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Stack<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Stack}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param axis Dimension along which to pack.  Negative values wrap around, so the
-     * valid range is `[-(R+1), R+1)`.
-     */
-    public Options axis(Long axis) {
-      this.axis = axis;
-      return this;
-    }
-    
-    private Long axis;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Pack";
+
+  private Output<T> output;
+
+  private Stack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Stack operation.
-   * 
+   * Factory method to create a class wrapping a new Pack operation.
+   *
    * @param scope current scope
    * @param values Must be of same shape and type.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Pack} output and operands
    * @return a new instance of Stack
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Stack<T> create(Scope scope, Iterable<Operand<T>> values, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Stack<T> create(Scope scope, Iterable<Operand<T>> values,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Pack", scope.makeOpName("Stack"));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.apply(opBuilder);
@@ -94,37 +87,53 @@ public final class Stack<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Stack<T>(opBuilder.build());
+    return new Stack<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the axis option.
+   *
    * @param axis Dimension along which to pack.  Negative values wrap around, so the
-   * valid range is `[-(R+1), R+1)`.
+   * valid range is {@code [-(R+1), R+1)}.
+   * @return this Options instance.
    */
   public static Options axis(Long axis) {
     return new Options().axis(axis);
   }
-  
+
   /**
+   * Gets output.
    * The packed tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Pack";
-  
-  private Output<T> output;
-  
-  private Stack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Stack}
+   */
+  public static class Options {
+    private Long axis;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the axis option.
+     *
+     * @param axis Dimension along which to pack.  Negative values wrap around, so the
+     * valid range is {@code [-(R+1), R+1)}.
+     * @return this Options instance.
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
   }
 }

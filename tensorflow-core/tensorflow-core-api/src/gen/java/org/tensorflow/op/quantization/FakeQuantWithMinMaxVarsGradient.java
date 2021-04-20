@@ -30,51 +30,46 @@ import org.tensorflow.types.TFloat32;
 /**
  * Compute gradients for a FakeQuantWithMinMaxVars operation.
  */
-@Operator(group = "quantization")
+@Operator(
+    group = "quantization"
+)
 public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param numBits The bitwidth of the quantization; between 2 and 8, inclusive.
-     */
-    public Options numBits(Long numBits) {
-      this.numBits = numBits;
-      return this;
-    }
-    
-    /**
-     * @param narrowRange Whether to quantize into 2^num_bits - 1 distinct values.
-     */
-    public Options narrowRange(Boolean narrowRange) {
-      this.narrowRange = narrowRange;
-      return this;
-    }
-    
-    private Long numBits;
-    private Boolean narrowRange;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FakeQuantWithMinMaxVarsGradient";
+
+  private Output<TFloat32> backpropsWrtInput;
+
+  private Output<TFloat32> backpropWrtMin;
+
+  private Output<TFloat32> backpropWrtMax;
+
+  private FakeQuantWithMinMaxVarsGradient(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    backpropsWrtInput = operation.output(outputIdx++);
+    backpropWrtMin = operation.output(outputIdx++);
+    backpropWrtMax = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new FakeQuantWithMinMaxVarsGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param gradients Backpropagated gradients above the FakeQuantWithMinMaxVars operation.
    * @param inputs Values passed as inputs to the FakeQuantWithMinMaxVars operation.
    * min, max: Quantization interval, scalar floats.
-   * @param min 
-   * @param max 
-   * @param options carries optional attributes values
+   * @param min the min value
+   * @param max the max value
+   * @param options carries optional attribute values
    * @return a new instance of FakeQuantWithMinMaxVarsGradient
    */
-  @Endpoint(describeByClass = true)
-  public static FakeQuantWithMinMaxVarsGradient create(Scope scope, Operand<TFloat32> gradients, Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FakeQuantWithMinMaxVarsGradient create(Scope scope, Operand<TFloat32> gradients,
+      Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsGradient", scope.makeOpName("FakeQuantWithMinMaxVarsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
@@ -93,57 +88,88 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
     }
     return new FakeQuantWithMinMaxVarsGradient(opBuilder.build());
   }
-  
+
   /**
+   * Sets the numBits option.
+   *
    * @param numBits The bitwidth of the quantization; between 2 and 8, inclusive.
+   * @return this Options instance.
    */
   public static Options numBits(Long numBits) {
     return new Options().numBits(numBits);
   }
-  
+
   /**
+   * Sets the narrowRange option.
+   *
    * @param narrowRange Whether to quantize into 2^num_bits - 1 distinct values.
+   * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
   }
-  
+
   /**
+   * Gets backpropsWrtInput.
    * Backpropagated gradients w.r.t. inputs:
-   * `gradients * (inputs >= min && inputs <= max)`.
+   * {@code gradients * (inputs >= min && inputs <= max)}.
+   * @return backpropsWrtInput.
    */
   public Output<TFloat32> backpropsWrtInput() {
     return backpropsWrtInput;
   }
-  
+
   /**
+   * Gets backpropWrtMin.
    * Backpropagated gradients w.r.t. min parameter:
-   * `sum(gradients * (inputs < min))`.
+   * {@code sum(gradients * (inputs < min))}.
+   * @return backpropWrtMin.
    */
   public Output<TFloat32> backpropWrtMin() {
     return backpropWrtMin;
   }
-  
+
   /**
+   * Gets backpropWrtMax.
    * Backpropagated gradients w.r.t. max parameter:
-   * `sum(gradients * (inputs > max))`.
+   * {@code sum(gradients * (inputs > max))}.
+   * @return backpropWrtMax.
    */
   public Output<TFloat32> backpropWrtMax() {
     return backpropWrtMax;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FakeQuantWithMinMaxVarsGradient";
-  
-  private Output<TFloat32> backpropsWrtInput;
-  private Output<TFloat32> backpropWrtMin;
-  private Output<TFloat32> backpropWrtMax;
-  
-  private FakeQuantWithMinMaxVarsGradient(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    backpropsWrtInput = operation.output(outputIdx++);
-    backpropWrtMin = operation.output(outputIdx++);
-    backpropWrtMax = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient}
+   */
+  public static class Options {
+    private Long numBits;
+
+    private Boolean narrowRange;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numBits option.
+     *
+     * @param numBits The bitwidth of the quantization; between 2 and 8, inclusive.
+     * @return this Options instance.
+     */
+    public Options numBits(Long numBits) {
+      this.numBits = numBits;
+      return this;
+    }
+
+    /**
+     * Sets the narrowRange option.
+     *
+     * @param narrowRange Whether to quantize into 2^num_bits - 1 distinct values.
+     * @return this Options instance.
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
   }
 }

@@ -31,56 +31,67 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that concatenates `input_dataset` with `another_dataset`.
+ * Creates a dataset that concatenates {@code input_dataset} with {@code another_dataset}.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class ConcatenateDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ConcatenateDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private ConcatenateDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ConcatenateDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputDataset 
-   * @param anotherDataset 
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param inputDataset the inputDataset value
+   * @param anotherDataset the anotherDataset value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of ConcatenateDataset
    */
-  @Endpoint(describeByClass = true)
-  public static ConcatenateDataset create(Scope scope, Operand<?> inputDataset, Operand<?> anotherDataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ConcatenateDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<? extends TType> anotherDataset, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConcatenateDataset", scope.makeOpName("ConcatenateDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(anotherDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new ConcatenateDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ConcatenateDataset";
-  
-  private Output<?> handle;
-  
-  private ConcatenateDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

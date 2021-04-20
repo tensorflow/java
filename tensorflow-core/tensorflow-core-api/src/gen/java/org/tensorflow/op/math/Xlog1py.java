@@ -29,48 +29,57 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns 0 if x == 0, and x * log1p(y) otherwise, elementwise.
- * 
- * @param <T> data type for {@code z()} output
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Xlog1py<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Xlog1py";
+
+  private Output<T> z;
+
+  private Xlog1py(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Xlog1py operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Xlog1py} output and operands
    * @return a new instance of Xlog1py
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Xlog1py<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Xlog1py", scope.makeOpName("Xlog1py"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Xlog1py<T>(opBuilder.build());
+    return new Xlog1py<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Xlog1py";
-  
-  private Output<T> z;
-  
-  private Xlog1py(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

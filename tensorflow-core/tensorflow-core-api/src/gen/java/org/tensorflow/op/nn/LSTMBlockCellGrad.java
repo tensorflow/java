@@ -24,21 +24,43 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell backward propagation for 1 timestep.
- * <p>
  * This implementation is to be used in conjunction of LSTMBlockCell.
- * 
- * @param <T> data type for {@code csPrevGrad()} output
+ *
+ * @param <T> data type for {@code cs_prev_grad} output
  */
 public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LSTMBlockCellGrad";
+
+  private Output<T> csPrevGrad;
+
+  private Output<T> dicfo;
+
+  private Output<T> wciGrad;
+
+  private Output<T> wcfGrad;
+
+  private Output<T> wcoGrad;
+
+  private LSTMBlockCellGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    csPrevGrad = operation.output(outputIdx++);
+    dicfo = operation.output(outputIdx++);
+    wciGrad = operation.output(outputIdx++);
+    wcfGrad = operation.output(outputIdx++);
+    wcoGrad = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new LSTMBlockCellGrad operation.
-   * 
+   *
    * @param scope current scope
    * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
    * @param csPrev The previous cell state.
@@ -57,10 +79,16 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
    * @param csGrad The current gradient of cs.
    * @param hGrad The gradient of h vector.
    * @param usePeephole Whether the cell uses peephole connections.
+   * @param <T> data type for {@code LSTMBlockCellGrad} output and operands
    * @return a new instance of LSTMBlockCellGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LSTMBlockCellGrad<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LSTMBlockCellGrad<T> create(Scope scope, Operand<T> x,
+      Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
+      Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o,
+      Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCellGrad", scope.makeOpName("LSTMBlockCellGrad"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());
@@ -80,60 +108,51 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(hGrad.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
-    return new LSTMBlockCellGrad<T>(opBuilder.build());
+    return new LSTMBlockCellGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets csPrevGrad.
    * The gradient of cs to be back-propped.
+   * @return csPrevGrad.
    */
   public Output<T> csPrevGrad() {
     return csPrevGrad;
   }
-  
+
   /**
+   * Gets dicfo.
    * The derivative wrt to [i, cs, f, o].
+   * @return dicfo.
    */
   public Output<T> dicfo() {
     return dicfo;
   }
-  
+
   /**
+   * Gets wciGrad.
    * The gradient for wci to be back-propped.
+   * @return wciGrad.
    */
   public Output<T> wciGrad() {
     return wciGrad;
   }
-  
+
   /**
+   * Gets wcfGrad.
    * The gradient for wcf to be back-propped.
+   * @return wcfGrad.
    */
   public Output<T> wcfGrad() {
     return wcfGrad;
   }
-  
+
   /**
+   * Gets wcoGrad.
    * The gradient for wco to be back-propped.
+   * @return wcoGrad.
    */
   public Output<T> wcoGrad() {
     return wcoGrad;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LSTMBlockCellGrad";
-  
-  private Output<T> csPrevGrad;
-  private Output<T> dicfo;
-  private Output<T> wciGrad;
-  private Output<T> wcfGrad;
-  private Output<T> wcoGrad;
-  
-  private LSTMBlockCellGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    csPrevGrad = operation.output(outputIdx++);
-    dicfo = operation.output(outputIdx++);
-    wciGrad = operation.output(outputIdx++);
-    wcfGrad = operation.output(outputIdx++);
-    wcoGrad = operation.output(outputIdx++);
   }
 }

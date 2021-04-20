@@ -24,36 +24,41 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * A container for an iterator resource.
  */
 public final class DeleteMultiDeviceIterator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeleteMultiDeviceIterator";
+
+  private DeleteMultiDeviceIterator(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeleteMultiDeviceIterator operation.
-   * 
+   *
    * @param scope current scope
    * @param multiDeviceIterator A handle to the multi device iterator to delete.
    * @param iterators A list of iterator handles (unused). This is added so that automatic control dependencies get added during function tracing that ensure this op runs after all the dependent iterators are deleted.
    * @param deleter A variant deleter.
    * @return a new instance of DeleteMultiDeviceIterator
    */
-  @Endpoint(describeByClass = true)
-  public static DeleteMultiDeviceIterator create(Scope scope, Operand<?> multiDeviceIterator, Iterable<Operand<?>> iterators, Operand<?> deleter) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DeleteMultiDeviceIterator create(Scope scope,
+      Operand<? extends TType> multiDeviceIterator, Iterable<Operand<? extends TType>> iterators,
+      Operand<? extends TType> deleter) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteMultiDeviceIterator", scope.makeOpName("DeleteMultiDeviceIterator"));
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInputList(Operands.asOutputs(iterators));
     opBuilder.addInput(deleter.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeleteMultiDeviceIterator(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeleteMultiDeviceIterator";
-  
-  private DeleteMultiDeviceIterator(Operation operation) {
-    super(operation);
   }
 }

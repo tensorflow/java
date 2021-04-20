@@ -29,22 +29,37 @@ import org.tensorflow.types.TBool;
 
 /**
  * Returns the truth value of x OR y element-wise.
- * <p>
- * <i>NOTE</i>: `math.LogicalOr` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+ * <em>NOTE</em>: {@code math.LogicalOr} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class LogicalOr extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LogicalOr";
+
+  private Output<TBool> z;
+
+  private LogicalOr(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new LogicalOr operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
    * @return a new instance of LogicalOr
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static LogicalOr create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogicalOr", scope.makeOpName("LogicalOr"));
     opBuilder.addInput(x.asOutput());
@@ -52,26 +67,18 @@ public final class LogicalOr extends RawOp implements Operand<TBool> {
     opBuilder = scope.apply(opBuilder);
     return new LogicalOr(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<TBool> z() {
     return z;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LogicalOr";
-  
-  private Output<TBool> z;
-  
-  private LogicalOr(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

@@ -30,35 +30,29 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the proximal adagrad scheme.
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ApplyAdagradDa<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradDa}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApplyAdagradDA";
+
+  private Output<T> out;
+
+  private ApplyAdagradDa(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ApplyAdagradDa operation.
-   * 
+   * Factory method to create a class wrapping a new ApplyAdagradDA operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
@@ -68,11 +62,16 @@ public final class ApplyAdagradDa<T extends TType> extends RawOp implements Oper
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 regularization. Must be a scalar.
    * @param globalStep Training step number. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyAdagradDA} output and operands
    * @return a new instance of ApplyAdagradDa
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApplyAdagradDa<T> create(Scope scope, Operand<T> var,
+      Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad,
+      Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradDA", scope.makeOpName("ApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
@@ -90,37 +89,53 @@ public final class ApplyAdagradDa<T extends TType> extends RawOp implements Oper
         }
       }
     }
-    return new ApplyAdagradDa<T>(opBuilder.build());
+    return new ApplyAdagradDa<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApplyAdagradDA";
-  
-  private Output<T> out;
-  
-  private ApplyAdagradDa(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdagradDa}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

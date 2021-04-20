@@ -31,65 +31,72 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Converts two real numbers to a complex number.
- * <p>
- * Given a tensor `real` representing the real part of a complex number, and a
- * tensor `imag` representing the imaginary part of a complex number, this
- * operation returns complex numbers elementwise of the form \\(a + bj\\), where
- * <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
- * <p>
- * The input tensors `real` and `imag` must have the same shape.
- * <p>
- * For example:
- * <pre>{@code
+ * Given a tensor {@code real} representing the real part of a complex number, and a
+ * tensor {@code imag} representing the imaginary part of a complex number, this
+ * operation returns complex numbers elementwise of the form \(a + bj\), where
+ * <em>a</em> represents the {@code real} part and <em>b</em> represents the {@code imag} part.
+ * <p>The input tensors {@code real} and {@code imag} must have the same shape.
+ * <p>For example:
+ * <pre>
  * # tensor 'real' is [2.25, 3.25]
  * # tensor `imag` is [4.75, 5.75]
- * tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
- * }</pre>
- * 
- * 
- * @param <U> data type for {@code out()} output
+ * tf.complex(real, imag) ==&gt; [[2.25 + 4.75j], [3.25 + 5.75j]]
+ * </pre>
+ *
+ * @param <U> data type for {@code out} output
  */
-@Operator(group = "dtypes")
+@Operator(
+    group = "dtypes"
+)
 public final class Complex<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Complex";
+
+  private Output<U> out;
+
+  private Complex(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Complex operation.
-   * 
+   *
    * @param scope current scope
-   * @param real 
-   * @param imag 
-   * @param Tout 
+   * @param real the real value
+   * @param imag the imag value
+   * @param Tout the value of the Tout property
+   * @param <U> data type for {@code Complex} output and operands
+   * @param <T> data type for {@code Complex} output and operands
    * @return a new instance of Complex
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real, Operand<T> imag, Class<U> Tout) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real,
+      Operand<T> imag, Class<U> Tout) {
     OperationBuilder opBuilder = scope.env().opBuilder("Complex", scope.makeOpName("Complex"));
     opBuilder.addInput(real.asOutput());
     opBuilder.addInput(imag.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));
-    return new Complex<U>(opBuilder.build());
+    return new Complex<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets out.
+   *
+   * @return out.
    */
   public Output<U> out() {
     return out;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return out;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Complex";
-  
-  private Output<U> out;
-  
-  private Complex(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
   }
 }

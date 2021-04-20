@@ -27,12 +27,10 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * An op that receives embedding activations on the TPU.
- * <p>
  * The TPU system performs the embedding lookups and aggregations specified by
  * the arguments to TPUEmbeddingEnqueue(Integer/Sparse/SparseTensor)Batch. The
  * results of these aggregations are visible to the Tensorflow Graph as the
@@ -41,17 +39,34 @@ import org.tensorflow.types.TFloat32;
  * most one RecvTPUEmbeddingActivations op in the TPU graph.
  */
 public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable<Operand<TFloat32>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RecvTPUEmbeddingActivations";
+
+  private List<Output<TFloat32>> outputs;
+
+  @SuppressWarnings("unchecked")
+  private RecvTPUEmbeddingActivations(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputsLength = operation.outputListLength("outputs");
+    outputs = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, outputsLength));
+    outputIdx += outputsLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new RecvTPUEmbeddingActivations operation.
-   * 
+   *
    * @param scope current scope
    * @param numOutputs The number of output activation tensors, equal to the number of
    * embedding tables in the model.
    * @param config Serialized TPUEmbeddingConfiguration proto.
    * @return a new instance of RecvTPUEmbeddingActivations
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static RecvTPUEmbeddingActivations create(Scope scope, Long numOutputs, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecvTPUEmbeddingActivations", scope.makeOpName("RecvTPUEmbeddingActivations"));
     opBuilder = scope.apply(opBuilder);
@@ -59,32 +74,20 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
     opBuilder.setAttr("config", config);
     return new RecvTPUEmbeddingActivations(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputs.
    * A TensorList of embedding activations containing one Tensor per
    * embedding table in the model.
+   * @return outputs.
    */
   public List<Output<TFloat32>> outputs() {
     return outputs;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) outputs.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RecvTPUEmbeddingActivations";
-  
-  private List<Output<TFloat32>> outputs;
-  
-  @SuppressWarnings("unchecked")
-  private RecvTPUEmbeddingActivations(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, outputsLength));
-    outputIdx += outputsLength;
   }
 }

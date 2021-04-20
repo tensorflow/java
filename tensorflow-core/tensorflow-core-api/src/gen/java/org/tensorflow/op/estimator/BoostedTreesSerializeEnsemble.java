@@ -24,54 +24,63 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Serializes the tree ensemble to a proto.
  */
 public final class BoostedTreesSerializeEnsemble extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new BoostedTreesSerializeEnsemble operation.
-   * 
-   * @param scope current scope
-   * @param treeEnsembleHandle Handle to the tree ensemble.
-   * @return a new instance of BoostedTreesSerializeEnsemble
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesSerializeEnsemble create(Scope scope, Operand<?> treeEnsembleHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSerializeEnsemble", scope.makeOpName("BoostedTreesSerializeEnsemble"));
-    opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new BoostedTreesSerializeEnsemble(opBuilder.build());
-  }
-  
-  /**
-   * Stamp token of the tree ensemble resource.
-   */
-  public Output<TInt64> stampToken() {
-    return stampToken;
-  }
-  
-  /**
-   * Serialized proto of the ensemble.
-   */
-  public Output<TString> treeEnsembleSerialized() {
-    return treeEnsembleSerialized;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BoostedTreesSerializeEnsemble";
-  
+
   private Output<TInt64> stampToken;
+
   private Output<TString> treeEnsembleSerialized;
-  
+
   private BoostedTreesSerializeEnsemble(Operation operation) {
     super(operation);
     int outputIdx = 0;
     stampToken = operation.output(outputIdx++);
     treeEnsembleSerialized = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BoostedTreesSerializeEnsemble operation.
+   *
+   * @param scope current scope
+   * @param treeEnsembleHandle Handle to the tree ensemble.
+   * @return a new instance of BoostedTreesSerializeEnsemble
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesSerializeEnsemble create(Scope scope,
+      Operand<? extends TType> treeEnsembleHandle) {
+    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSerializeEnsemble", scope.makeOpName("BoostedTreesSerializeEnsemble"));
+    opBuilder.addInput(treeEnsembleHandle.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new BoostedTreesSerializeEnsemble(opBuilder.build());
+  }
+
+  /**
+   * Gets stampToken.
+   * Stamp token of the tree ensemble resource.
+   * @return stampToken.
+   */
+  public Output<TInt64> stampToken() {
+    return stampToken;
+  }
+
+  /**
+   * Gets treeEnsembleSerialized.
+   * Serialized proto of the ensemble.
+   * @return treeEnsembleSerialized.
+   */
+  public Output<TString> treeEnsembleSerialized() {
+    return treeEnsembleSerialized;
   }
 }

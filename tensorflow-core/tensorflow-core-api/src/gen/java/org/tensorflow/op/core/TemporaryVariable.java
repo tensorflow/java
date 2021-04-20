@@ -31,58 +31,50 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor that may be mutated, but only persists within a single step.
- * <p>
  * This is an experimental op for internal use only and it is possible to use this
  * op in unsafe ways.  DO NOT USE unless you fully understand the risks.
- * <p>
- * It is the caller's responsibility to ensure that 'ref' is eventually passed to a
+ * <p>It is the caller's responsibility to ensure that 'ref' is eventually passed to a
  * matching 'DestroyTemporaryVariable' op after all other uses have completed.
- * <p>
- * Outputs a ref to the tensor state so it may be read or modified.
- * <p>
- *   E.g.
- *       var = state_ops._temporary_variable([1, 2], types.float_)
- *       var_name = var.op.name
- *       var = state_ops.assign(var, [[4.0, 5.0]])
- *       var = state_ops.assign_add(var, [[6.0, 7.0]])
- *       final = state_ops._destroy_temporary_variable(var, var_name=var_name)
- * 
- * @param <T> data type for {@code ref()} output
+ * <p>Outputs a ref to the tensor state so it may be read or modified.
+ * <p>E.g.
+ * var = state_ops.<em>temporary_variable([1, 2], types.float</em>)
+ * var_name = var.op.name
+ * var = state_ops.assign(var, [[4.0, 5.0]])
+ * var = state_ops.assign_add(var, [[6.0, 7.0]])
+ * final = state_ops._destroy_temporary_variable(var, var_name=var_name)
+ *
+ * @param <T> data type for {@code ref} output
  */
 @Operator
 public final class TemporaryVariable<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TemporaryVariable}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param varName Overrides the name used for the temporary variable resource. Default
-     * value is the name of the 'TemporaryVariable' op (which is guaranteed unique).
-     */
-    public Options varName(String varName) {
-      this.varName = varName;
-      return this;
-    }
-    
-    private String varName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TemporaryVariable";
+
+  private Output<T> ref;
+
+  private TemporaryVariable(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    ref = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TemporaryVariable operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the variable tensor.
    * @param dtype The type of elements in the variable tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TemporaryVariable} output and operands
    * @return a new instance of TemporaryVariable
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
@@ -94,37 +86,53 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
         }
       }
     }
-    return new TemporaryVariable<T>(opBuilder.build());
+    return new TemporaryVariable<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the varName option.
+   *
    * @param varName Overrides the name used for the temporary variable resource. Default
    * value is the name of the 'TemporaryVariable' op (which is guaranteed unique).
+   * @return this Options instance.
    */
   public static Options varName(String varName) {
     return new Options().varName(varName);
   }
-  
+
   /**
+   * Gets ref.
    * A reference to the variable tensor.
+   * @return ref.
    */
   public Output<T> ref() {
     return ref;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return ref;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TemporaryVariable";
-  
-  private Output<T> ref;
-  
-  private TemporaryVariable(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    ref = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TemporaryVariable}
+   */
+  public static class Options {
+    private String varName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the varName option.
+     *
+     * @param varName Overrides the name used for the temporary variable resource. Default
+     * value is the name of the 'TemporaryVariable' op (which is guaranteed unique).
+     * @return this Options instance.
+     */
+    public Options varName(String varName) {
+      this.varName = varName;
+      return this;
+    }
   }
 }

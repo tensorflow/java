@@ -34,70 +34,44 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Op removes and returns a random (key, value)
- * <p>
  * from the underlying container.   If the underlying container
  * does not contain elements, the op will block until it does.
  */
 @Operator
 public final class MapUnstageNoKey extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.MapUnstageNoKey}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity 
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param memoryLimit 
-     */
-    public Options memoryLimit(Long memoryLimit) {
-      this.memoryLimit = memoryLimit;
-      return this;
-    }
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private Long memoryLimit;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MapUnstageNoKey";
+
+  private Output<TInt64> key;
+
+  private List<Output<?>> values;
+
+  @SuppressWarnings("unchecked")
+  private MapUnstageNoKey(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    key = operation.output(outputIdx++);
+    int valuesLength = operation.outputListLength("values");
+    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
+    outputIdx += valuesLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MapUnstageNoKey operation.
-   * 
+   *
    * @param scope current scope
-   * @param indices 
-   * @param dtypes 
-   * @param options carries optional attributes values
+   * @param indices the indices value
+   * @param dtypes the value of the dtypes property
+   * @param options carries optional attribute values
    * @return a new instance of MapUnstageNoKey
    */
-  @Endpoint(describeByClass = true)
-  public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices, List<Class<? extends TType>> dtypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices,
+      List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -120,59 +94,122 @@ public final class MapUnstageNoKey extends RawOp {
     }
     return new MapUnstageNoKey(opBuilder.build());
   }
-  
+
   /**
-   * @param capacity 
+   * Sets the capacity option.
+   *
+   * @param capacity the capacity option
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
-   * @param memoryLimit 
+   * Sets the memoryLimit option.
+   *
+   * @param memoryLimit the memoryLimit option
+   * @return this Options instance.
    */
   public static Options memoryLimit(Long memoryLimit) {
     return new Options().memoryLimit(memoryLimit);
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets key.
+   *
+   * @return key.
    */
   public Output<TInt64> key() {
     return key;
   }
-  
+
   /**
+   * Gets values.
+   *
+   * @return values.
    */
   public List<Output<?>> values() {
     return values;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MapUnstageNoKey";
-  
-  private Output<TInt64> key;
-  private List<Output<?>> values;
-  
-  private MapUnstageNoKey(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    key = operation.output(outputIdx++);
-    int valuesLength = operation.outputListLength("values");
-    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
-    outputIdx += valuesLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.MapUnstageNoKey}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private Long memoryLimit;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity the capacity option
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the memoryLimit option.
+     *
+     * @param memoryLimit the memoryLimit option
+     * @return this Options instance.
+     */
+    public Options memoryLimit(Long memoryLimit) {
+      this.memoryLimit = memoryLimit;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

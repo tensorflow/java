@@ -29,50 +29,46 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An identity op that triggers an error if a gradient is requested.
- * <p>
  * When executed in a graph, this op outputs its input tensor as-is.
- * <p>
- * When building ops to compute gradients, the TensorFlow gradient system
+ * <p>When building ops to compute gradients, the TensorFlow gradient system
  * will return an error when trying to lookup the gradient of this op,
  * because no gradient must ever be registered for this function.  This
  * op exists to prevent subtle bugs from silently returning unimplemented
  * gradients in some corner cases.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class PreventGradient<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.PreventGradient}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param message Will be printed in the error when anyone tries to differentiate
-     * this operation.
-     */
-    public Options message(String message) {
-      this.message = message;
-      return this;
-    }
-    
-    private String message;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "PreventGradient";
+
+  private Output<T> output;
+
+  private PreventGradient(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new PreventGradient operation.
-   * 
+   *
    * @param scope current scope
    * @param input any tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code PreventGradient} output and operands
    * @return a new instance of PreventGradient
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> PreventGradient<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> PreventGradient<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PreventGradient", scope.makeOpName("PreventGradient"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -83,37 +79,53 @@ public final class PreventGradient<T extends TType> extends RawOp implements Ope
         }
       }
     }
-    return new PreventGradient<T>(opBuilder.build());
+    return new PreventGradient<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the message option.
+   *
    * @param message Will be printed in the error when anyone tries to differentiate
    * this operation.
+   * @return this Options instance.
    */
   public static Options message(String message) {
     return new Options().message(message);
   }
-  
+
   /**
+   * Gets output.
    * the same input tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PreventGradient";
-  
-  private Output<T> output;
-  
-  private PreventGradient(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.PreventGradient}
+   */
+  public static class Options {
+    private String message;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the message option.
+     *
+     * @param message Will be printed in the error when anyone tries to differentiate
+     * this operation.
+     * @return this Options instance.
+     */
+    public Options message(String message) {
+      this.message = message;
+      return this;
+    }
   }
 }

@@ -35,54 +35,64 @@ import org.tensorflow.types.family.TType;
 /**
  * Returns the value stored in an Optional variant or raises an error if none exists.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class OptionalGetValue extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new OptionalGetValue operation.
-   * 
-   * @param scope current scope
-   * @param optional 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of OptionalGetValue
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static OptionalGetValue create(Scope scope, Operand<?> optional, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
-    opBuilder.addInput(optional.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new OptionalGetValue(opBuilder.build());
-  }
-  
-  /**
-   */
-  public List<Output<?>> components() {
-    return components;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) components.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "OptionalGetValue";
-  
+
   private List<Output<?>> components;
-  
+
+  @SuppressWarnings("unchecked")
   private OptionalGetValue(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
     outputIdx += componentsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new OptionalGetValue operation.
+   *
+   * @param scope current scope
+   * @param optional the optional value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of OptionalGetValue
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static OptionalGetValue create(Scope scope, Operand<? extends TType> optional,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
+    opBuilder.addInput(optional.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
+    return new OptionalGetValue(opBuilder.build());
+  }
+
+  /**
+   * Gets components.
+   *
+   * @return components.
+   */
+  public List<Output<?>> components() {
+    return components;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) components.iterator();
   }
 }

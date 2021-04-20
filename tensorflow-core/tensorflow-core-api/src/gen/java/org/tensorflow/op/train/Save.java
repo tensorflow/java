@@ -29,28 +29,40 @@ import org.tensorflow.types.TString;
 
 /**
  * Saves tensors in V2 checkpoint format.
- * <p>
  * By default, saves the named tensors in full.  If the caller wishes to save
- * specific slices of full tensors, "shape_and_slices" should be non-empty strings
+ * specific slices of full tensors, &quot;shape_and_slices&quot; should be non-empty strings
  * and correspondingly well-formed.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class Save extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new Save operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SaveV2";
+
+  private Save(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SaveV2 operation.
+   *
    * @param scope current scope
    * @param prefix Must have a single element. The prefix of the V2 checkpoint to which we
    * write the tensors.
    * @param tensorNames shape {N}. The names of the tensors to be saved.
    * @param shapeAndSlices shape {N}.  The slice specs of the tensors to be saved.
    * Empty strings indicate that they are non-partitioned tensors.
-   * @param tensors `N` tensors to save.
+   * @param tensors {@code N} tensors to save.
    * @return a new instance of Save
    */
-  @Endpoint(describeByClass = true)
-  public static Save create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Save create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames,
+      Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
     OperationBuilder opBuilder = scope.env().opBuilder("SaveV2", scope.makeOpName("Save"));
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
@@ -58,12 +70,5 @@ public final class Save extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(tensors));
     opBuilder = scope.apply(opBuilder);
     return new Save(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SaveV2";
-  
-  private Save(Operation operation) {
-    super(operation);
   }
 }

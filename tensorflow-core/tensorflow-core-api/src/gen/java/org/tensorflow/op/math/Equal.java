@@ -30,53 +30,50 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the truth value of (x == y) element-wise.
- * <p>
- * <i>NOTE</i>: `math.Equal` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * <pre>{@code
+ * <em>NOTE</em>: {@code math.Equal} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
+ * <pre>
  * x = tf.constant([2, 4])
  * y = tf.constant(2)
- * tf.math.equal(x, y) ==> array([True, False])
- * 
+ * tf.math.equal(x, y) ==&gt; array([True, False])
+ *
  * x = tf.constant([2, 4])
  * y = tf.constant([2, 4])
- * tf.math.equal(x, y) ==> array([True,  True])
- * }</pre>
- * 
+ * tf.math.equal(x, y) ==&gt; array([True,  True])
+ * </pre>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Equal extends RawOp implements Operand<TBool> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.math.Equal}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param incompatibleShapeError 
-     */
-    public Options incompatibleShapeError(Boolean incompatibleShapeError) {
-      this.incompatibleShapeError = incompatibleShapeError;
-      return this;
-    }
-    
-    private Boolean incompatibleShapeError;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Equal";
+
+  private Output<TBool> z;
+
+  private Equal(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Equal operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
-   * @param options carries optional attributes values
+   * @param x the x value
+   * @param y the y value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Equal} output and operands
    * @return a new instance of Equal
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Equal create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Equal create(Scope scope, Operand<T> x, Operand<T> y,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Equal", scope.makeOpName("Equal"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -90,33 +87,49 @@ public final class Equal extends RawOp implements Operand<TBool> {
     }
     return new Equal(opBuilder.build());
   }
-  
+
   /**
-   * @param incompatibleShapeError 
+   * Sets the incompatibleShapeError option.
+   *
+   * @param incompatibleShapeError the incompatibleShapeError option
+   * @return this Options instance.
    */
   public static Options incompatibleShapeError(Boolean incompatibleShapeError) {
     return new Options().incompatibleShapeError(incompatibleShapeError);
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<TBool> z() {
     return z;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return z;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Equal";
-  
-  private Output<TBool> z;
-  
-  private Equal(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.math.Equal}
+   */
+  public static class Options {
+    private Boolean incompatibleShapeError;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the incompatibleShapeError option.
+     *
+     * @param incompatibleShapeError the incompatibleShapeError option
+     * @return this Options instance.
+     */
+    public Options incompatibleShapeError(Boolean incompatibleShapeError) {
+      this.incompatibleShapeError = incompatibleShapeError;
+      return this;
+    }
   }
 }

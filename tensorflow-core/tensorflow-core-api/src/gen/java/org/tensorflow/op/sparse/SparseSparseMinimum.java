@@ -30,29 +30,50 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the element-wise min of two SparseTensors.
- * <p>
  * Assumes the two SparseTensors have the same shape, i.e., no broadcasting.
- * 
- * @param <T> data type for {@code outputValues()} output
+ *
+ * @param <T> data type for {@code output_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseSparseMinimum<T extends TType> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseSparseMinimum";
+
+  private Output<TInt64> outputIndices;
+
+  private Output<T> outputValues;
+
+  private SparseSparseMinimum(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputIndices = operation.output(outputIdx++);
+    outputValues = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseSparseMinimum operation.
-   * 
+   *
    * @param scope current scope
-   * @param aIndices 2-D.  `N x R` matrix with the indices of non-empty values in a
+   * @param aIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    * SparseTensor, in the canonical lexicographic ordering.
-   * @param aValues 1-D.  `N` non-empty values corresponding to `a_indices`.
+   * @param aValues 1-D.  {@code N} non-empty values corresponding to {@code a_indices}.
    * @param aShape 1-D.  Shape of the input SparseTensor.
-   * @param bIndices counterpart to `a_indices` for the other operand.
-   * @param bValues counterpart to `a_values` for the other operand; must be of the same dtype.
-   * @param bShape counterpart to `a_shape` for the other operand; the two shapes must be equal.
+   * @param bIndices counterpart to {@code a_indices} for the other operand.
+   * @param bValues counterpart to {@code a_values} for the other operand; must be of the same dtype.
+   * @param bShape counterpart to {@code a_shape} for the other operand; the two shapes must be equal.
+   * @param <T> data type for {@code SparseSparseMinimum} output and operands
    * @return a new instance of SparseSparseMinimum
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseSparseMinimum<T> create(Scope scope, Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseSparseMinimum<T> create(Scope scope,
+      Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape,
+      Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMinimum", scope.makeOpName("SparseSparseMinimum"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
@@ -61,33 +82,24 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseSparseMinimum<T>(opBuilder.build());
+    return new SparseSparseMinimum<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputIndices.
    * 2-D.  The indices of the output SparseTensor.
+   * @return outputIndices.
    */
   public Output<TInt64> outputIndices() {
     return outputIndices;
   }
-  
+
   /**
+   * Gets outputValues.
    * 1-D.  The values of the output SparseTensor.
+   * @return outputValues.
    */
   public Output<T> outputValues() {
     return outputValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSparseMinimum";
-  
-  private Output<TInt64> outputIndices;
-  private Output<T> outputValues;
-  
-  private SparseSparseMinimum(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputIndices = operation.output(outputIdx++);
-    outputValues = operation.output(outputIdx++);
   }
 }

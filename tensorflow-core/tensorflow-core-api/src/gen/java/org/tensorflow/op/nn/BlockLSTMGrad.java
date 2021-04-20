@@ -24,22 +24,53 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell backward propagation for the entire time sequence.
- * <p>
  * This implementation is to be used in conjunction of BlockLSTMV2.
- * 
- * @param <T> data type for {@code xGrad()} output
+ *
+ * @param <T> data type for {@code x_grad} output
  */
 public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new BlockLSTMGrad operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BlockLSTMGradV2";
+
+  private Output<T> xGrad;
+
+  private Output<T> csPrevGrad;
+
+  private Output<T> hPrevGrad;
+
+  private Output<T> wGrad;
+
+  private Output<T> wciGrad;
+
+  private Output<T> wcfGrad;
+
+  private Output<T> wcoGrad;
+
+  private Output<T> bGrad;
+
+  private BlockLSTMGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    xGrad = operation.output(outputIdx++);
+    csPrevGrad = operation.output(outputIdx++);
+    hPrevGrad = operation.output(outputIdx++);
+    wGrad = operation.output(outputIdx++);
+    wciGrad = operation.output(outputIdx++);
+    wcfGrad = operation.output(outputIdx++);
+    wcoGrad = operation.output(outputIdx++);
+    bGrad = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BlockLSTMGradV2 operation.
+   *
    * @param scope current scope
    * @param seqLenMax Maximum time length actually used by this input. Outputs are padded
    * with zeros beyond this length.
@@ -61,10 +92,17 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
    * @param csGrad The current gradient of cs.
    * @param hGrad The gradient of h vector.
    * @param usePeephole Whether to use peephole weights.
+   * @param <T> data type for {@code BlockLSTMGradV2} output and operands
    * @return a new instance of BlockLSTMGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BlockLSTMGrad<T> create(Scope scope, Operand<TInt64> seqLenMax,
+      Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci,
+      Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f,
+      Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad,
+      Boolean usePeephole) {
     OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMGradV2", scope.makeOpName("BlockLSTMGrad"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());
@@ -86,87 +124,78 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(hGrad.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
-    return new BlockLSTMGrad<T>(opBuilder.build());
+    return new BlockLSTMGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets xGrad.
    * The gradient of x to be back-propped.
+   * @return xGrad.
    */
   public Output<T> xGrad() {
     return xGrad;
   }
-  
+
   /**
+   * Gets csPrevGrad.
    * The gradient of cs_prev to be back-propped.
+   * @return csPrevGrad.
    */
   public Output<T> csPrevGrad() {
     return csPrevGrad;
   }
-  
+
   /**
+   * Gets hPrevGrad.
    * The gradient of h_prev to be back-propped.
+   * @return hPrevGrad.
    */
   public Output<T> hPrevGrad() {
     return hPrevGrad;
   }
-  
+
   /**
+   * Gets wGrad.
    * The gradient for w to be back-propped.
+   * @return wGrad.
    */
   public Output<T> wGrad() {
     return wGrad;
   }
-  
+
   /**
+   * Gets wciGrad.
    * The gradient for wci to be back-propped.
+   * @return wciGrad.
    */
   public Output<T> wciGrad() {
     return wciGrad;
   }
-  
+
   /**
+   * Gets wcfGrad.
    * The gradient for wcf to be back-propped.
+   * @return wcfGrad.
    */
   public Output<T> wcfGrad() {
     return wcfGrad;
   }
-  
+
   /**
+   * Gets wcoGrad.
    * The gradient for wco to be back-propped.
+   * @return wcoGrad.
    */
   public Output<T> wcoGrad() {
     return wcoGrad;
   }
-  
+
   /**
+   * Gets bGrad.
    * The gradient for w to be back-propped.
+   * @return bGrad.
    */
   public Output<T> bGrad() {
     return bGrad;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BlockLSTMGradV2";
-  
-  private Output<T> xGrad;
-  private Output<T> csPrevGrad;
-  private Output<T> hPrevGrad;
-  private Output<T> wGrad;
-  private Output<T> wciGrad;
-  private Output<T> wcfGrad;
-  private Output<T> wcoGrad;
-  private Output<T> bGrad;
-  
-  private BlockLSTMGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    xGrad = operation.output(outputIdx++);
-    csPrevGrad = operation.output(outputIdx++);
-    hPrevGrad = operation.output(outputIdx++);
-    wGrad = operation.output(outputIdx++);
-    wciGrad = operation.output(outputIdx++);
-    wcfGrad = operation.output(outputIdx++);
-    wcoGrad = operation.output(outputIdx++);
-    bGrad = operation.output(outputIdx++);
   }
 }

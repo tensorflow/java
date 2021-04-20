@@ -30,77 +30,81 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the product along segments of a tensor.
- * <p>
  * Read
- * [the section on segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
+ *  <a href="https://tensorflow.org/api_docs/python/tf/math#Segmentation">the section on segmentation</a> 
  * for an explanation of segments.
- * <p>
- * This operator is similar to the unsorted segment sum operator found
- * [(here)](../../../api_docs/python/math_ops.md#UnsortedSegmentSum).
+ * <p>This operator is similar to the unsorted segment sum operator found
+ *  <a href="../../../api_docs/python/math_ops.md#UnsortedSegmentSum">(here)</a> .
  * Instead of computing the sum over segments, it computes the product of all
  * entries belonging to a segment such that:
- * <p>
- * \\(output_i = \prod_{j...} data[j...]\\) where the product is over tuples
- * `j...` such that `segment_ids[j...] == i`.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>\(output_i = \prod_{j...} data[j...]\) where the product is over tuples
+ * {@code j...} such that {@code segment_ids[j...] == i}.
+ * <p>For example:
+ * <pre>
  * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
  * tf.unsorted_segment_prod(c, tf.constant([0, 1, 0]), num_segments=2)
- * # ==> [[ 4,  6, 6, 4],
+ * # ==&gt; [[ 4,  6, 6, 4],
  * #       [5,  6, 7, 8]]
- * }</pre>
- * If there is no entry for a given segment ID `i`, it outputs 1.
- * <p>
- * If the given segment ID `i` is negative, then the corresponding value is
+ * </pre>
+ * <p>If there is no entry for a given segment ID {@code i}, it outputs 1.
+ * <p>If the given segment ID {@code i} is negative, then the corresponding value is
  * dropped, and will not be included in the result.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class UnsortedSegmentProd<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "UnsortedSegmentProd";
+
+  private Output<T> output;
+
+  private UnsortedSegmentProd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new UnsortedSegmentProd operation.
-   * 
+   *
    * @param scope current scope
-   * @param data 
-   * @param segmentIds A tensor whose shape is a prefix of `data.shape`.
-   * @param numSegments 
+   * @param data the data value
+   * @param segmentIds A tensor whose shape is a prefix of {@code data.shape}.
+   * @param numSegments the numSegments value
+   * @param <T> data type for {@code UnsortedSegmentProd} output and operands
    * @return a new instance of UnsortedSegmentProd
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentProd", scope.makeOpName("UnsortedSegmentProd"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new UnsortedSegmentProd<T>(opBuilder.build());
+    return new UnsortedSegmentProd<>(opBuilder.build());
   }
-  
+
   /**
-   * Has same shape as data, except for the first `segment_ids.rank`
+   * Gets output.
+   * Has same shape as data, except for the first {@code segment_ids.rank}
    * dimensions, which are replaced with a single dimension which has size
-   * `num_segments`.
+   * {@code num_segments}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "UnsortedSegmentProd";
-  
-  private Output<T> output;
-  
-  private UnsortedSegmentProd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

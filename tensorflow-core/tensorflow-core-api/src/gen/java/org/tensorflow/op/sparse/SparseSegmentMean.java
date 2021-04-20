@@ -29,57 +29,64 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the mean along sparse segments of a tensor.
- * <p>
- * See `tf.sparse.segment_sum` for usage examples.
- * <p>
- * Like `SegmentMean`, but `segment_ids` can have rank less than `data`'s first
- * dimension, selecting a subset of dimension 0, specified by `indices`.
- * 
- * @param <T> data type for {@code output()} output
+ * See {@code tf.sparse.segment_sum} for usage examples.
+ * <p>Like {@code SegmentMean}, but {@code segment_ids} can have rank less than {@code data}'s first
+ * dimension, selecting a subset of dimension 0, specified by {@code indices}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseSegmentMean<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseSegmentMean";
+
+  private Output<T> output;
+
+  private SparseSegmentMean(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseSegmentMean operation.
-   * 
+   *
    * @param scope current scope
-   * @param data 
-   * @param indices A 1-D tensor. Has same rank as `segment_ids`.
+   * @param data the data value
+   * @param indices A 1-D tensor. Has same rank as {@code segment_ids}.
    * @param segmentIds A 1-D tensor. Values should be sorted and can be repeated.
+   * @param <T> data type for {@code SparseSegmentMean} output and operands
    * @return a new instance of SparseSegmentMean
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SparseSegmentMean<T> create(Scope scope, Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> SparseSegmentMean<T> create(Scope scope, Operand<T> data,
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentMean", scope.makeOpName("SparseSegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseSegmentMean<T>(opBuilder.build());
+    return new SparseSegmentMean<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Has same shape as data, except for dimension 0 which
-   * has size `k`, the number of segments.
+   * has size {@code k}, the number of segments.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSegmentMean";
-  
-  private Output<T> output;
-  
-  private SparseSegmentMean(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

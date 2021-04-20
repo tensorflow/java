@@ -24,37 +24,43 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
- * Makes a new iterator from the given `dataset` and stores it in `iterator`.
- * <p>
+ * Makes a new iterator from the given {@code dataset} and stores it in {@code iterator}.
  * This operation may be executed multiple times. Each execution will reset the
- * iterator in `iterator` to the first element of `dataset`.
+ * iterator in {@code iterator} to the first element of {@code dataset}.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class MakeIterator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MakeIterator";
+
+  private MakeIterator(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new MakeIterator operation.
-   * 
+   *
    * @param scope current scope
-   * @param dataset 
-   * @param iterator 
+   * @param dataset the dataset value
+   * @param iterator the iterator value
    * @return a new instance of MakeIterator
    */
-  @Endpoint(describeByClass = true)
-  public static MakeIterator create(Scope scope, Operand<?> dataset, Operand<?> iterator) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MakeIterator create(Scope scope, Operand<? extends TType> dataset,
+      Operand<? extends TType> iterator) {
     OperationBuilder opBuilder = scope.env().opBuilder("MakeIterator", scope.makeOpName("MakeIterator"));
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(iterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new MakeIterator(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MakeIterator";
-  
-  private MakeIterator(Operation operation) {
-    super(operation);
   }
 }

@@ -32,69 +32,82 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a normal distribution.
- * <p>
  * The generated values will have mean 0 and standard deviation 1.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class StatefulStandardNormal<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new StatefulStandardNormal operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatefulStandardNormalV2";
+
+  private Output<U> output;
+
+  private StatefulStandardNormal(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new StatefulStandardNormalV2 operation.
+   *
    * @param scope current scope
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
+   * @param <U> data type for {@code StatefulStandardNormalV2} output and operands
    * @return a new instance of StatefulStandardNormal
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> StatefulStandardNormal<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Class<U> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> StatefulStandardNormal<U> create(Scope scope,
+      Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
+      Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new StatefulStandardNormal<U>(opBuilder.build());
+    return new StatefulStandardNormal<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new StatefulStandardNormal operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new StatefulStandardNormalV2 operation, with the default output types.
+   *
    * @param scope current scope
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulStandardNormal
+   * @return a new instance of StatefulStandardNormal, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static StatefulStandardNormal<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatefulStandardNormal<TFloat32> create(Scope scope,
+      Operand<? extends TType> resource, Operand<TInt64> algorithm,
+      Operand<? extends TType> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.class);
   }
-  
+
   /**
+   * Gets output.
    * A tensor of the specified shape filled with random normal values.
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatefulStandardNormalV2";
-  
-  private Output<U> output;
-  
-  private StatefulStandardNormal(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

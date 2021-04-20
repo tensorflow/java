@@ -25,57 +25,61 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 
 /**
  * Return the index of device the op runs.
- * <p>
  * Given a list of device names, this operation returns the index of the device
  * this op runs. The length of the list is returned in two cases:
  * (1) Device does not exist in the given device list.
  * (2) It is in XLA compilation.
  */
 public final class DeviceIndex extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeviceIndex";
+
+  private Output<TInt32> index;
+
+  private DeviceIndex(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    index = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeviceIndex operation.
-   * 
+   *
    * @param scope current scope
-   * @param deviceNames 
+   * @param deviceNames the value of the deviceNames property
    * @return a new instance of DeviceIndex
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DeviceIndex create(Scope scope, List<String> deviceNames) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeviceIndex", scope.makeOpName("DeviceIndex"));
     opBuilder = scope.apply(opBuilder);
     String[] deviceNamesArray = new String[deviceNames.size()];
-    for (int i = 0; i < deviceNamesArray.length; ++i) {
+    for (int i = 0 ; i < deviceNamesArray.length ; i++) {
       deviceNamesArray[i] = deviceNames.get(i);
     }
     opBuilder.setAttr("device_names", deviceNamesArray);
     return new DeviceIndex(opBuilder.build());
   }
-  
+
   /**
+   * Gets index.
+   *
+   * @return index.
    */
   public Output<TInt32> index() {
     return index;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return index;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeviceIndex";
-  
-  private Output<TInt32> index;
-  
-  private DeviceIndex(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    index = operation.output(outputIdx++);
   }
 }

@@ -29,48 +29,57 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns 0 if x == 0, and x / y otherwise, elementwise.
- * 
- * @param <T> data type for {@code z()} output
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Xdivy<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Xdivy";
+
+  private Output<T> z;
+
+  private Xdivy(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Xdivy operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Xdivy} output and operands
    * @return a new instance of Xdivy
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Xdivy<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Xdivy", scope.makeOpName("Xdivy"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Xdivy<T>(opBuilder.build());
+    return new Xdivy<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Xdivy";
-  
-  private Output<T> z;
-  
-  private Xdivy(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

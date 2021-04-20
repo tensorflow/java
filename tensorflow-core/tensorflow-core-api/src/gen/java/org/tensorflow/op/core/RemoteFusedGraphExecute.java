@@ -33,7 +33,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Execute a sub graph on a remote processor.
- * <p>
  * The graph specifications(such as graph itself, input tensors and output names)
  * are stored as a serialized protocol buffer of RemoteFusedGraphExecuteInfo
  * as serialized_remote_fused_graph_execute_info.
@@ -44,19 +43,37 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Operand<TType>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RemoteFusedGraphExecute";
+
+  private List<Output<?>> outputs;
+
+  @SuppressWarnings("unchecked")
+  private RemoteFusedGraphExecute(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputsLength = operation.outputListLength("outputs");
+    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
+    outputIdx += outputsLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new RemoteFusedGraphExecute operation.
-   * 
+   *
    * @param scope current scope
    * @param inputs Arbitrary number of tensors with arbitrary data types
-   * @param Toutputs 
+   * @param Toutputs the value of the Toutputs property
    * @param serializedRemoteFusedGraphExecuteInfo Serialized protocol buffer
    * of RemoteFusedGraphExecuteInfo which contains graph specifications.
    * @return a new instance of RemoteFusedGraphExecute
    */
-  @Endpoint(describeByClass = true)
-  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs, List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RemoteFusedGraphExecute create(Scope scope, Iterable<Operand<?>> inputs,
+      List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
     OperationBuilder opBuilder = scope.env().opBuilder("RemoteFusedGraphExecute", scope.makeOpName("RemoteFusedGraphExecute"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
@@ -64,30 +81,19 @@ public final class RemoteFusedGraphExecute extends RawOp implements Iterable<Ope
     opBuilder.setAttr("serialized_remote_fused_graph_execute_info", serializedRemoteFusedGraphExecuteInfo);
     return new RemoteFusedGraphExecute(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputs.
    * Arbitrary number of tensors with arbitrary data types
+   * @return outputs.
    */
   public List<Output<?>> outputs() {
     return outputs;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RemoteFusedGraphExecute";
-  
-  private List<Output<?>> outputs;
-  
-  private RemoteFusedGraphExecute(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
-    outputIdx += outputsLength;
   }
 }

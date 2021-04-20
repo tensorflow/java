@@ -29,62 +29,48 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Randomly shuffles a tensor along its first dimension.
- * <p>
- *   The tensor is shuffled along dimension 0, such that each `value[j]` is mapped
- *   to one and only one `output[i]`. For example, a mapping that might occur for a
- *   3x2 tensor is:
- * <pre>{@code
+ * The tensor is shuffled along dimension 0, such that each {@code value[j]} is mapped
+ * to one and only one {@code output[i]}. For example, a mapping that might occur for a
+ * 3x2 tensor is:
+ * <pre>
  * [[1, 2],       [[5, 6],
- *  [3, 4],  ==>   [1, 2],
+ *  [3, 4],  ==&gt;   [1, 2],
  *  [5, 6]]        [3, 4]]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class RandomShuffle<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.random.RandomShuffle}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
-     * generator is seeded by the given seed.  Otherwise, it is seeded by a
-     * random seed.
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 A second seed to avoid seed collision.
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    private Long seed;
-    private Long seed2;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RandomShuffle";
+
+  private Output<T> output;
+
+  private RandomShuffle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RandomShuffle operation.
-   * 
+   *
    * @param scope current scope
    * @param value The tensor to be shuffled.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code RandomShuffle} output and operands
    * @return a new instance of RandomShuffle
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffle", scope.makeOpName("RandomShuffle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -98,46 +84,79 @@ public final class RandomShuffle<T extends TType> extends RawOp implements Opera
         }
       }
     }
-    return new RandomShuffle<T>(opBuilder.build());
+    return new RandomShuffle<>(opBuilder.build());
   }
-  
+
   /**
-   * @param seed If either `seed` or `seed2` are set to be non-zero, the random number
+   * Sets the seed option.
+   *
+   * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
    * generator is seeded by the given seed.  Otherwise, it is seeded by a
    * random seed.
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
+   * Sets the seed2 option.
+   *
    * @param seed2 A second seed to avoid seed collision.
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
-   * A tensor of same shape and type as `value`, shuffled along its first
+   * Gets output.
+   * A tensor of same shape and type as {@code value}, shuffled along its first
    * dimension.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RandomShuffle";
-  
-  private Output<T> output;
-  
-  private RandomShuffle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.random.RandomShuffle}
+   */
+  public static class Options {
+    private Long seed;
+
+    private Long seed2;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed If either {@code seed} or {@code seed2} are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 A second seed to avoid seed collision.
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
   }
 }

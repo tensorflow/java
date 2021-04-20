@@ -31,27 +31,41 @@ import org.tensorflow.types.TString;
 
 /**
  * Encode audio data using the WAV file format.
- * <p>
  * This operation will generate a string suitable to be saved out to create a .wav
  * audio file. It will be encoded in the 16-bit PCM format. It takes in float
  * values in the range -1.0f to 1.0f, and any outside that value will be clamped to
  * that range.
- * <p>
- * `audio` is a 2-D float Tensor of shape `[length, channels]`.
- * `sample_rate` is a scalar Tensor holding the rate to use (e.g. 44100).
+ * <p>{@code audio} is a 2-D float Tensor of shape {@code [length, channels]}.
+ * {@code sample_rate} is a scalar Tensor holding the rate to use (e.g. 44100).
  */
-@Operator(group = "audio")
+@Operator(
+    group = "audio"
+)
 public final class EncodeWav extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "EncodeWav";
+
+  private Output<TString> contents;
+
+  private EncodeWav(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    contents = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new EncodeWav operation.
-   * 
+   *
    * @param scope current scope
-   * @param audio 2-D with shape `[length, channels]`.
+   * @param audio 2-D with shape {@code [length, channels]}.
    * @param sampleRate Scalar containing the sample frequency.
    * @return a new instance of EncodeWav
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static EncodeWav create(Scope scope, Operand<TFloat32> audio, Operand<TInt32> sampleRate) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeWav", scope.makeOpName("EncodeWav"));
     opBuilder.addInput(audio.asOutput());
@@ -59,27 +73,18 @@ public final class EncodeWav extends RawOp implements Operand<TString> {
     opBuilder = scope.apply(opBuilder);
     return new EncodeWav(opBuilder.build());
   }
-  
+
   /**
+   * Gets contents.
    * 0-D. WAV-encoded file contents.
+   * @return contents.
    */
   public Output<TString> contents() {
     return contents;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return contents;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "EncodeWav";
-  
-  private Output<TString> contents;
-  
-  private EncodeWav(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    contents = operation.output(outputIdx++);
   }
 }

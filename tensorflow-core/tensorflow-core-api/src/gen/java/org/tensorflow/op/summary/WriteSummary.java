@@ -23,31 +23,41 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Writes a tensor summary.
- * <p>
- * Writes `tensor` at `step` with `tag` using summary `writer`.
+ * Writes {@code tensor} at {@code step} with {@code tag} using summary {@code writer}.
  */
 public final class WriteSummary extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WriteSummary";
+
+  private WriteSummary(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new WriteSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tensor 
-   * @param tag 
-   * @param summaryMetadata 
+   * @param writer the writer value
+   * @param step the step value
+   * @param tensor the tensor value
+   * @param tag the tag value
+   * @param summaryMetadata the summaryMetadata value
    * @return a new instance of WriteSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<? extends TType> tensor, Operand<TString> tag, Operand<TString> summaryMetadata) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<? extends TType> tensor, Operand<TString> tag,
+      Operand<TString> summaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteSummary", scope.makeOpName("WriteSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
@@ -56,12 +66,5 @@ public final class WriteSummary extends RawOp {
     opBuilder.addInput(summaryMetadata.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WriteSummary(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteSummary";
-  
-  private WriteSummary(Operation operation) {
-    super(operation);
   }
 }

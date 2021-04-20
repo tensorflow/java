@@ -29,59 +29,67 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
- * Forwards `data` to the output port determined by `pred`.
- * <p>
- * If `pred` is true, the `data` input is forwarded to `output_true`. Otherwise,
- * the data goes to `output_false`.
- * <p>
- * See also `RefSwitch` and `Merge`.
- * 
- * @param <T> data type for {@code outputFalse()} output
+ * Forwards {@code data} to the output port determined by {@code pred}.
+ * If {@code pred} is true, the {@code data} input is forwarded to {@code output_true}. Otherwise,
+ * the data goes to {@code output_false}.
+ * <p>See also {@code RefSwitch} and {@code Merge}.
+ *
+ * @param <T> data type for {@code output_false} output
  */
 @Operator
 public final class SwitchCond<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new SwitchCond operation.
-   * 
-   * @param scope current scope
-   * @param data The tensor to be forwarded to the appropriate output.
-   * @param pred A scalar that specifies which output port will receive data.
-   * @return a new instance of SwitchCond
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SwitchCond<T> create(Scope scope, Operand<T> data, Operand<TBool> pred) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Switch", scope.makeOpName("SwitchCond"));
-    opBuilder.addInput(data.asOutput());
-    opBuilder.addInput(pred.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new SwitchCond<T>(opBuilder.build());
-  }
-  
-  /**
-   * If `pred` is false, data will be forwarded to this output.
-   */
-  public Output<T> outputFalse() {
-    return outputFalse;
-  }
-  
-  /**
-   * If `pred` is true, data will be forwarded to this output.
-   */
-  public Output<T> outputTrue() {
-    return outputTrue;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Switch";
-  
+
   private Output<T> outputFalse;
+
   private Output<T> outputTrue;
-  
+
   private SwitchCond(Operation operation) {
     super(operation);
     int outputIdx = 0;
     outputFalse = operation.output(outputIdx++);
     outputTrue = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Switch operation.
+   *
+   * @param scope current scope
+   * @param data The tensor to be forwarded to the appropriate output.
+   * @param pred A scalar that specifies which output port will receive data.
+   * @param <T> data type for {@code Switch} output and operands
+   * @return a new instance of SwitchCond
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SwitchCond<T> create(Scope scope, Operand<T> data,
+      Operand<TBool> pred) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Switch", scope.makeOpName("SwitchCond"));
+    opBuilder.addInput(data.asOutput());
+    opBuilder.addInput(pred.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new SwitchCond<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputFalse.
+   * If {@code pred} is false, data will be forwarded to this output.
+   * @return outputFalse.
+   */
+  public Output<T> outputFalse() {
+    return outputFalse;
+  }
+
+  /**
+   * Gets outputTrue.
+   * If {@code pred} is true, data will be forwarded to this output.
+   * @return outputTrue.
+   */
+  public Output<T> outputTrue() {
+    return outputTrue;
   }
 }

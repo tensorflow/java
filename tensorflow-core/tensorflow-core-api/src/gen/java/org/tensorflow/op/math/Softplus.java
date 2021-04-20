@@ -28,47 +28,56 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes softplus: `log(exp(features) + 1)`.
- * 
- * @param <T> data type for {@code activations()} output
+ * Computes softplus: {@code log(exp(features) + 1)}.
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Softplus<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Softplus operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @return a new instance of Softplus
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Softplus", scope.makeOpName("Softplus"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Softplus<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> activations() {
-    return activations;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return activations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Softplus";
-  
+
   private Output<T> activations;
-  
+
   private Softplus(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Softplus operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param <T> data type for {@code Softplus} output and operands
+   * @return a new instance of Softplus
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Softplus", scope.makeOpName("Softplus"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Softplus<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   *
+   * @return activations.
+   */
+  public Output<T> activations() {
+    return activations;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return activations;
   }
 }

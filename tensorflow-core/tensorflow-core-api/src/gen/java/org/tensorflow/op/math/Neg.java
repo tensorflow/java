@@ -29,48 +29,56 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes numerical negative value element-wise.
- * <p>
- * I.e., \\(y = -x\\).
- * 
- * @param <T> data type for {@code y()} output
+ * I.e., \(y = -x\).
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Neg<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Neg operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Neg
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Neg<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Neg", scope.makeOpName("Neg"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Neg<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Neg";
-  
+
   private Output<T> y;
-  
+
   private Neg(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Neg operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Neg} output and operands
+   * @return a new instance of Neg
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Neg<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Neg", scope.makeOpName("Neg"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Neg<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

@@ -26,50 +26,43 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Retrieves a single tensor from the computation outfeed.
- * <p>
  * This operation will block indefinitely until data is available.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class OutfeedDequeue<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.OutfeedDequeue}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
-     * is running on a TPU device, and >= 0 when the Op is running on the CPU
-     * device.
-     */
-    public Options deviceOrdinal(Long deviceOrdinal) {
-      this.deviceOrdinal = deviceOrdinal;
-      return this;
-    }
-    
-    private Long deviceOrdinal;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "OutfeedDequeue";
+
+  private Output<T> output;
+
+  private OutfeedDequeue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new OutfeedDequeue operation.
-   * 
+   *
    * @param scope current scope
    * @param dtype The type of elements in the tensor.
    * @param shape The shape of the tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code OutfeedDequeue} output and operands
    * @return a new instance of OutfeedDequeue
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> OutfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> OutfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeue", scope.makeOpName("OutfeedDequeue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
@@ -81,38 +74,55 @@ public final class OutfeedDequeue<T extends TType> extends RawOp implements Oper
         }
       }
     }
-    return new OutfeedDequeue<T>(opBuilder.build());
+    return new OutfeedDequeue<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the deviceOrdinal option.
+   *
    * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
-   * is running on a TPU device, and >= 0 when the Op is running on the CPU
+   * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
    * device.
+   * @return this Options instance.
    */
   public static Options deviceOrdinal(Long deviceOrdinal) {
     return new Options().deviceOrdinal(deviceOrdinal);
   }
-  
+
   /**
+   * Gets output.
    * A tensor that will be read from the device outfeed.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OutfeedDequeue";
-  
-  private Output<T> output;
-  
-  private OutfeedDequeue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.OutfeedDequeue}
+   */
+  public static class Options {
+    private Long deviceOrdinal;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the deviceOrdinal option.
+     *
+     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
+     * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
+     * device.
+     * @return this Options instance.
+     */
+    public Options deviceOrdinal(Long deviceOrdinal) {
+      this.deviceOrdinal = deviceOrdinal;
+      return this;
+    }
   }
 }

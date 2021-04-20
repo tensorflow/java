@@ -24,53 +24,57 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset from the given `graph_def`.
- * <p>
- * Creates a dataset from the provided `graph_def`.
+ * Creates a dataset from the given {@code graph_def}.
+ * Creates a dataset from the provided {@code graph_def}.
  */
 public final class DatasetFromGraph extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DatasetFromGraph";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private DatasetFromGraph(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DatasetFromGraph operation.
-   * 
+   *
    * @param scope current scope
    * @param graphDef The graph representation of the dataset (as serialized GraphDef).
    * @return a new instance of DatasetFromGraph
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DatasetFromGraph create(Scope scope, Operand<TString> graphDef) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetFromGraph", scope.makeOpName("DatasetFromGraph"));
     opBuilder.addInput(graphDef.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DatasetFromGraph(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
    * A variant tensor representing the dataset.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DatasetFromGraph";
-  
-  private Output<?> handle;
-  
-  private DatasetFromGraph(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

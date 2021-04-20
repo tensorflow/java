@@ -24,58 +24,46 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Mutually accumulates multiple tensors of identical type and shape.
- * 
- * @param <T> data type for {@code data()} output
+ *
+ * @param <T> data type for {@code data} output
  */
 public final class GatherV2<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.collective.GatherV2}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param communicationHint 
-     */
-    public Options communicationHint(String communicationHint) {
-      this.communicationHint = communicationHint;
-      return this;
-    }
-    
-    /**
-     * @param timeoutSeconds 
-     */
-    public Options timeoutSeconds(Float timeoutSeconds) {
-      this.timeoutSeconds = timeoutSeconds;
-      return this;
-    }
-    
-    private String communicationHint;
-    private Float timeoutSeconds;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CollectiveGatherV2";
+
+  private Output<T> data;
+
+  private GatherV2(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    data = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new GatherV2 operation.
-   * 
+   * Factory method to create a class wrapping a new CollectiveGatherV2 operation.
+   *
    * @param scope current scope
-   * @param input 
-   * @param groupSize 
-   * @param groupKey 
-   * @param instanceKey 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param groupSize the groupSize value
+   * @param groupKey the groupKey value
+   * @param instanceKey the instanceKey value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CollectiveGatherV2} output and operands
    * @return a new instance of GatherV2
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> GatherV2<T> create(Scope scope, Operand<T> input, Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> GatherV2<T> create(Scope scope, Operand<T> input,
+      Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGatherV2", scope.makeOpName("GatherV2"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
@@ -92,42 +80,74 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
         }
       }
     }
-    return new GatherV2<T>(opBuilder.build());
+    return new GatherV2<>(opBuilder.build());
   }
-  
+
   /**
-   * @param communicationHint 
+   * Sets the communicationHint option.
+   *
+   * @param communicationHint the communicationHint option
+   * @return this Options instance.
    */
   public static Options communicationHint(String communicationHint) {
     return new Options().communicationHint(communicationHint);
   }
-  
+
   /**
-   * @param timeoutSeconds 
+   * Sets the timeoutSeconds option.
+   *
+   * @param timeoutSeconds the timeoutSeconds option
+   * @return this Options instance.
    */
   public static Options timeoutSeconds(Float timeoutSeconds) {
     return new Options().timeoutSeconds(timeoutSeconds);
   }
-  
+
   /**
+   * Gets data.
+   *
+   * @return data.
    */
   public Output<T> data() {
     return data;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return data;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CollectiveGatherV2";
-  
-  private Output<T> data;
-  
-  private GatherV2(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    data = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.collective.GatherV2}
+   */
+  public static class Options {
+    private String communicationHint;
+
+    private Float timeoutSeconds;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the communicationHint option.
+     *
+     * @param communicationHint the communicationHint option
+     * @return this Options instance.
+     */
+    public Options communicationHint(String communicationHint) {
+      this.communicationHint = communicationHint;
+      return this;
+    }
+
+    /**
+     * Sets the timeoutSeconds option.
+     *
+     * @param timeoutSeconds the timeoutSeconds option
+     * @return this Options instance.
+     */
+    public Options timeoutSeconds(Float timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
   }
 }

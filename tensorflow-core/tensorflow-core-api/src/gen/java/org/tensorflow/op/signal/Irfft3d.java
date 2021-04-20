@@ -33,85 +33,93 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Inverse 3D real-valued fast Fourier transform.
- * <p>
  * Computes the inverse 3-dimensional discrete Fourier transform of a real-valued
- * signal over the inner-most 3 dimensions of `input`.
- * <p>
- * The inner-most 3 dimensions of `input` are assumed to be the result of `RFFT3D`:
- * The inner-most dimension contains the `fft_length / 2 + 1` unique components of
- * the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
- * from the size of the inner-most 3 dimensions of `input`. If the FFT length used
- * to compute `input` is odd, it should be provided since it cannot be inferred
+ * signal over the inner-most 3 dimensions of {@code input}.
+ * <p>The inner-most 3 dimensions of {@code input} are assumed to be the result of {@code RFFT3D}:
+ * The inner-most dimension contains the {@code fft_length / 2 + 1} unique components of
+ * the DFT of a real-valued signal. If {@code fft_length} is not provided, it is computed
+ * from the size of the inner-most 3 dimensions of {@code input}. If the FFT length used
+ * to compute {@code input} is odd, it should be provided since it cannot be inferred
  * properly.
- * <p>
- * Along each axis `signal.Irfft3d` is computed on, if `fft_length` (or
- * `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
- * corresponding dimension of `input`, the dimension is cropped. If it is larger,
+ * <p>Along each axis {@code signal.Irfft3d} is computed on, if {@code fft_length} (or
+ * {@code fft_length / 2 + 1} for the inner-most dimension) is smaller than the
+ * corresponding dimension of {@code input}, the dimension is cropped. If it is larger,
  * the dimension is padded with zeros.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "signal")
+@Operator(
+    group = "signal"
+)
 public final class Irfft3d<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Factory method to create a class wrapping a new Irfft3d operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IRFFT3D";
+
+  private Output<U> output;
+
+  private Irfft3d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IRFFT3D operation.
+   *
    * @param scope current scope
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @param Treal 
+   * @param Treal the value of the Treal property
+   * @param <U> data type for {@code IRFFT3D} output and operands
    * @return a new instance of Irfft3d
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> Irfft3d<U> create(Scope scope, Operand<? extends TType> input, Operand<TInt32> fftLength, Class<U> Treal) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> Irfft3d<U> create(Scope scope, Operand<? extends TType> input,
+      Operand<TInt32> fftLength, Class<U> Treal) {
     OperationBuilder opBuilder = scope.env().opBuilder("IRFFT3D", scope.makeOpName("Irfft3d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Treal", Operands.toDataType(Treal));
-    return new Irfft3d<U>(opBuilder.build());
+    return new Irfft3d<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Irfft3d operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new IRFFT3D operation, with the default output types.
+   *
    * @param scope current scope
    * @param input A complex tensor.
    * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
-   * @return a new instance of Irfft3d
+   * @return a new instance of Irfft3d, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static Irfft3d<TFloat32> create(Scope scope, Operand<? extends TType> input, Operand<TInt32> fftLength) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Irfft3d<TFloat32> create(Scope scope, Operand<? extends TType> input,
+      Operand<TInt32> fftLength) {
     return create(scope, input, fftLength, TFloat32.class);
   }
-  
+
   /**
-   * A float32 tensor of the same rank as `input`. The inner-most 3
-   *   dimensions of `input` are replaced with the `fft_length` samples of their
-   *   inverse 3D real Fourier transform.
-   * <p>
-   * @compatibility(numpy)
+   * Gets output.
+   * A float32 tensor of the same rank as {@code input}. The inner-most 3
+   * dimensions of {@code input} are replaced with the {@code fft_length} samples of their
+   * inverse 3D real Fourier transform.
+   * <p>{@literal @}compatibility(numpy)<br>
    * Equivalent to np.irfftn with 3 dimensions.
-   * @end_compatibility
+   * <br>{@literal @}end_compatibility
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IRFFT3D";
-  
-  private Output<U> output;
-  
-  private Irfft3d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

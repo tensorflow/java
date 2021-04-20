@@ -24,74 +24,59 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Compute the cumulative product of the tensor `x` along `axis`.
- * <p>
+ * Compute the cumulative product of the tensor {@code x} along {@code axis}.
  * By default, this op performs an inclusive cumulative log-sum-exp,
  * which means that the first
  * element of the input is identical to the first element of the output:
- * <pre>{@code
- * tf.math.cumulative_logsumexp([a, b, c])  # => [a, log(exp(a) + exp(b)), log(exp(a) + exp(b) + exp(c))]
- * }</pre>
- * By setting the `exclusive` kwarg to `True`, an exclusive cumulative log-sum-exp is
+ * <pre>
+ * tf.math.cumulative_logsumexp([a, b, c])  # =&gt; [a, log(exp(a) + exp(b)), log(exp(a) + exp(b) + exp(c))]
+ * </pre>
+ * <p>By setting the {@code exclusive} kwarg to {@code True}, an exclusive cumulative log-sum-exp is
  * performed instead:
- * <pre>{@code
- * tf.cumulative_logsumexp([a, b, c], exclusive=True)  # => [-inf, a, log(exp(a) * exp(b))]
- * }</pre>
- * Note that the neutral element of the log-sum-exp operation is `-inf`,
+ * <pre>
+ * tf.cumulative_logsumexp([a, b, c], exclusive=True)  # =&gt; [-inf, a, log(exp(a) * exp(b))]
+ * </pre>
+ * <p>Note that the neutral element of the log-sum-exp operation is {@code -inf},
  * however, for performance reasons, the minimal value representable by the
  * floating point type is used instead.
- * <p>
- * By setting the `reverse` kwarg to `True`, the cumulative log-sum-exp is performed in the
+ * <p>By setting the {@code reverse} kwarg to {@code True}, the cumulative log-sum-exp is performed in the
  * opposite direction.
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
 public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.math.CumulativeLogsumexp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param exclusive If `True`, perform exclusive cumulative log-sum-exp.
-     */
-    public Options exclusive(Boolean exclusive) {
-      this.exclusive = exclusive;
-      return this;
-    }
-    
-    /**
-     * @param reverse A `bool` (default: False).
-     */
-    public Options reverse(Boolean reverse) {
-      this.reverse = reverse;
-      return this;
-    }
-    
-    private Boolean exclusive;
-    private Boolean reverse;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CumulativeLogsumexp";
+
+  private Output<T> out;
+
+  private CumulativeLogsumexp(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new CumulativeLogsumexp operation.
-   * 
+   *
    * @param scope current scope
-   * @param x A `Tensor`. Must be one of the following types: `float16`, `float32`, `float64`.
-   * @param axis A `Tensor` of type `int32` (default: 0). Must be in the range
-   * `[-rank(x), rank(x))`.
-   * @param options carries optional attributes values
+   * @param x A {@code Tensor}. Must be one of the following types: {@code float16}, {@code float32}, {@code float64}.
+   * @param axis A {@code Tensor} of type {@code int32} (default: 0). Must be in the range
+   * {@code [-rank(x), rank(x))}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CumulativeLogsumexp} output and operands
    * @return a new instance of CumulativeLogsumexp
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CumulativeLogsumexp<T> create(Scope scope, Operand<T> x, Operand<? extends TNumber> axis, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CumulativeLogsumexp<T> create(Scope scope, Operand<T> x,
+      Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CumulativeLogsumexp", scope.makeOpName("CumulativeLogsumexp"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -106,42 +91,74 @@ public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implemen
         }
       }
     }
-    return new CumulativeLogsumexp<T>(opBuilder.build());
+    return new CumulativeLogsumexp<>(opBuilder.build());
   }
-  
+
   /**
-   * @param exclusive If `True`, perform exclusive cumulative log-sum-exp.
+   * Sets the exclusive option.
+   *
+   * @param exclusive If {@code True}, perform exclusive cumulative log-sum-exp.
+   * @return this Options instance.
    */
   public static Options exclusive(Boolean exclusive) {
     return new Options().exclusive(exclusive);
   }
-  
+
   /**
-   * @param reverse A `bool` (default: False).
+   * Sets the reverse option.
+   *
+   * @param reverse A {@code bool} (default: False).
+   * @return this Options instance.
    */
   public static Options reverse(Boolean reverse) {
     return new Options().reverse(reverse);
   }
-  
+
   /**
+   * Gets out.
+   *
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CumulativeLogsumexp";
-  
-  private Output<T> out;
-  
-  private CumulativeLogsumexp(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.math.CumulativeLogsumexp}
+   */
+  public static class Options {
+    private Boolean exclusive;
+
+    private Boolean reverse;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the exclusive option.
+     *
+     * @param exclusive If {@code True}, perform exclusive cumulative log-sum-exp.
+     * @return this Options instance.
+     */
+    public Options exclusive(Boolean exclusive) {
+      this.exclusive = exclusive;
+      return this;
+    }
+
+    /**
+     * Sets the reverse option.
+     *
+     * @param reverse A {@code bool} (default: False).
+     * @return this Options instance.
+     */
+    public Options reverse(Boolean reverse) {
+      this.reverse = reverse;
+      return this;
+    }
   }
 }

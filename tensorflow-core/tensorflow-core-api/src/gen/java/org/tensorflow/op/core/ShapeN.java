@@ -35,66 +35,75 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns shape of tensors.
- * <p>
- * This operation returns N 1-D integer tensors representing shape of `input[i]s`.
- * 
- * @param <U> data type for {@code output()} output
+ * This operation returns N 1-D integer tensors representing shape of {@code input[i]s}.
+ *
+ * @param <U> data type for {@code output} output
  */
 @Operator
 public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<Operand<U>> {
-  
   /**
-   * Factory method to create a class wrapping a new ShapeN operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param outType 
-   * @return a new instance of ShapeN
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> ShapeN<U> create(Scope scope, Iterable<Operand<T>> input, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
-    opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("out_type", Operands.toDataType(outType));
-    return new ShapeN<U>(opBuilder.build());
-  }
-  
-  /**
-   * Factory method to create a class wrapping a new ShapeN operation using default output types.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of ShapeN
-   */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ShapeN<TInt32> create(Scope scope, Iterable<Operand<T>> input) {
-    return create(scope, input, TInt32.class);
-  }
-  
-  /**
-   */
-  public List<Output<U>> output() {
-    return output;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<U>> iterator() {
-    return (Iterator) output.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ShapeN";
-  
+
   private List<Output<U>> output;
-  
+
   @SuppressWarnings("unchecked")
   private ShapeN(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
-    output = Arrays.asList((Output<U>[])operation.outputList(outputIdx, outputLength));
+    output = Arrays.asList((Output<U>[]) operation.outputList(outputIdx, outputLength));
     outputIdx += outputLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ShapeN operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param outType the value of the outType property
+   * @param <U> data type for {@code ShapeN} output and operands
+   * @return a new instance of ShapeN
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> ShapeN<U> create(Scope scope,
+      Iterable<Operand<? extends TType>> input, Class<U> outType) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
+    opBuilder.addInputList(Operands.asOutputs(input));
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("out_type", Operands.toDataType(outType));
+    return new ShapeN<>(opBuilder.build());
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ShapeN operation, with the default output types.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @return a new instance of ShapeN, with default output types
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ShapeN<TInt32> create(Scope scope, Iterable<Operand<? extends TType>> input) {
+    return create(scope, input, TInt32.class);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public List<Output<U>> output() {
+    return output;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<U>> iterator() {
+    return (Iterator) output.iterator();
   }
 }

@@ -32,58 +32,53 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradient of the crop_and_resize op wrt the input image tensor.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class CropAndResizeGradImage<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.CropAndResizeGradImage}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param method A string specifying the interpolation method. Only 'bilinear' is
-     * supported for now.
-     */
-    public Options method(String method) {
-      this.method = method;
-      return this;
-    }
-    
-    private String method;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CropAndResizeGradImage";
+
+  private Output<T> output;
+
+  private CropAndResizeGradImage(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new CropAndResizeGradImage operation.
-   * 
+   *
    * @param scope current scope
-   * @param grads A 4-D tensor of shape `[num_boxes, crop_height, crop_width, depth]`.
-   * @param boxes A 2-D tensor of shape `[num_boxes, 4]`. The `i`-th row of the tensor
-   * specifies the coordinates of a box in the `box_ind[i]` image and is specified
-   * in normalized coordinates `[y1, x1, y2, x2]`. A normalized coordinate value of
-   * `y` is mapped to the image coordinate at `y * (image_height - 1)`, so as the
-   * `[0, 1]` interval of normalized image height is mapped to
-   * `[0, image_height - 1] in image height coordinates. We do allow y1 > y2, in
-   * which case the sampled crop is an up-down flipped version of the original
-   * image. The width dimension is treated similarly. Normalized coordinates
-   * outside the `[0, 1]` range are allowed, in which case we use
-   * `extrapolation_value` to extrapolate the input image values.
-   * @param boxInd A 1-D tensor of shape `[num_boxes]` with int32 values in `[0, batch)`.
-   * The value of `box_ind[i]` specifies the image that the `i`-th box refers to.
-   * @param imageSize A 1-D tensor with value `[batch, image_height, image_width, depth]`
-   * containing the original image size. Both `image_height` and `image_width` need
+   * @param grads A 4-D tensor of shape {@code [num_boxes, crop_height, crop_width, depth]}.
+   * @param boxes A 2-D tensor of shape {@code [num_boxes, 4]}. The {@code i}-th row of the tensor
+   * specifies the coordinates of a box in the {@code box_ind[i]} image and is specified
+   * in normalized coordinates {@code [y1, x1, y2, x2]}. A normalized coordinate value of
+   * {@code y} is mapped to the image coordinate at {@code y * (image_height - 1)}, so as the
+   * {@code [0, 1]} interval of normalized image height is mapped to
+   * {@code [0, image_height - 1] in image height coordinates. We do allow y1 > y2, in which case the sampled crop is an up-down flipped version of the original image. The width dimension is treated similarly. Normalized coordinates outside the }[0, 1]{@code range are allowed, in which case we use}extrapolation_value` to extrapolate the input image values.
+   * @param boxInd A 1-D tensor of shape {@code [num_boxes]} with int32 values in {@code [0, batch)}.
+   * The value of {@code box_ind[i]} specifies the image that the {@code i}-th box refers to.
+   * @param imageSize A 1-D tensor with value {@code [batch, image_height, image_width, depth]}
+   * containing the original image size. Both {@code image_height} and {@code image_width} need
    * to be positive.
-   * @param T 
-   * @param options carries optional attributes values
+   * @param T the value of the T property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CropAndResizeGradImage} output and operands
    * @return a new instance of CropAndResizeGradImage
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope, Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd, Operand<TInt32> imageSize, Class<T> T, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CropAndResizeGradImage<T> create(Scope scope,
+      Operand<TFloat32> grads, Operand<TFloat32> boxes, Operand<TInt32> boxInd,
+      Operand<TInt32> imageSize, Class<T> T, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CropAndResizeGradImage", scope.makeOpName("CropAndResizeGradImage"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(boxes.asOutput());
@@ -98,37 +93,53 @@ public final class CropAndResizeGradImage<T extends TNumber> extends RawOp imple
         }
       }
     }
-    return new CropAndResizeGradImage<T>(opBuilder.build());
+    return new CropAndResizeGradImage<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the method option.
+   *
    * @param method A string specifying the interpolation method. Only 'bilinear' is
    * supported for now.
+   * @return this Options instance.
    */
   public static Options method(String method) {
     return new Options().method(method);
   }
-  
+
   /**
-   * A 4-D tensor of shape `[batch, image_height, image_width, depth]`.
+   * Gets output.
+   * A 4-D tensor of shape {@code [batch, image_height, image_width, depth]}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CropAndResizeGradImage";
-  
-  private Output<T> output;
-  
-  private CropAndResizeGradImage(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.CropAndResizeGradImage}
+   */
+  public static class Options {
+    private String method;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the method option.
+     *
+     * @param method A string specifying the interpolation method. Only 'bilinear' is
+     * supported for now.
+     * @return this Options instance.
+     */
+    public Options method(String method) {
+      this.method = method;
+      return this;
+    }
   }
 }

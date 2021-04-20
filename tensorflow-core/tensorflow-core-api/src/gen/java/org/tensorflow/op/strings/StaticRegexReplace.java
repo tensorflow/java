@@ -24,48 +24,41 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
  * Replaces the match of pattern in input with rewrite.
- * <p>
  * It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
  */
 public final class StaticRegexReplace extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.StaticRegexReplace}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param replaceGlobal If True, the replacement is global, otherwise the replacement
-     * is done only on the first match.
-     */
-    public Options replaceGlobal(Boolean replaceGlobal) {
-      this.replaceGlobal = replaceGlobal;
-      return this;
-    }
-    
-    private Boolean replaceGlobal;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StaticRegexReplace";
+
+  private Output<TString> output;
+
+  private StaticRegexReplace(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new StaticRegexReplace operation.
-   * 
+   *
    * @param scope current scope
    * @param input The text to be processed.
    * @param pattern The regular expression to match the input.
    * @param rewrite The rewrite to be applied to the matched expression.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of StaticRegexReplace
    */
-  @Endpoint(describeByClass = true)
-  public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern, String rewrite, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern,
+      String rewrite, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexReplace", scope.makeOpName("StaticRegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -80,35 +73,51 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
     }
     return new StaticRegexReplace(opBuilder.build());
   }
-  
+
   /**
+   * Sets the replaceGlobal option.
+   *
    * @param replaceGlobal If True, the replacement is global, otherwise the replacement
    * is done only on the first match.
+   * @return this Options instance.
    */
   public static Options replaceGlobal(Boolean replaceGlobal) {
     return new Options().replaceGlobal(replaceGlobal);
   }
-  
+
   /**
+   * Gets output.
    * The text after applying pattern and rewrite.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StaticRegexReplace";
-  
-  private Output<TString> output;
-  
-  private StaticRegexReplace(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.StaticRegexReplace}
+   */
+  public static class Options {
+    private Boolean replaceGlobal;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the replaceGlobal option.
+     *
+     * @param replaceGlobal If True, the replacement is global, otherwise the replacement
+     * is done only on the first match.
+     * @return this Options instance.
+     */
+    public Options replaceGlobal(Boolean replaceGlobal) {
+      this.replaceGlobal = replaceGlobal;
+      return this;
+    }
   }
 }

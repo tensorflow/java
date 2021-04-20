@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.io;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -32,80 +33,41 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A queue that produces elements in first-in first-out order.
- * <p>
  * Variable-size shapes are allowed by setting the corresponding shape dimensions
  * to 0 in the shape attr.  In this case DequeueMany will pad up to the maximum
  * size of any given element in the minibatch.  See below for details.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.PaddingFifoQueue}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param shapes The shape of each component in a value. The length of this attr must
-     * be either 0 or the same as the length of component_types.
-     * Shapes of fixed rank but variable size are allowed by setting
-     * any shape dimension to -1.  In this case, the inputs' shape may vary along
-     * the given dimension, and DequeueMany will pad the given dimension with
-     * zeros up to the maximum shape of all elements in the given batch.
-     * If the length of this attr is 0, different queue elements may have
-     * different ranks and shapes, but only one element may be dequeued at a time.
-     */
-    public Options shapes(List<Shape> shapes) {
-      this.shapes = shapes;
-      return this;
-    }
-    
-    /**
-     * @param capacity The upper bound on the number of elements in this queue.
-     * Negative numbers mean no limit.
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this queue is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this queue will be shared under the given name
-     * across multiple sessions.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private List<Shape> shapes;
-    private Long capacity;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "PaddingFIFOQueueV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private PaddingFifoQueue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new PaddingFifoQueue operation.
-   * 
+   * Factory method to create a class wrapping a new PaddingFIFOQueueV2 operation.
+   *
    * @param scope current scope
    * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of PaddingFifoQueue
    */
-  @Endpoint(describeByClass = true)
-  public static PaddingFifoQueue create(Scope scope, List<Class<? extends TType>> componentTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static PaddingFifoQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PaddingFIFOQueueV2", scope.makeOpName("PaddingFifoQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
@@ -113,7 +75,7 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
       for (Options opts : options) {
         if (opts.shapes != null) {
           Shape[] shapesArray = new Shape[opts.shapes.size()];
-          for (int i = 0; i < shapesArray.length; ++i) {
+          for (int i = 0 ; i < shapesArray.length ; i++) {
             shapesArray[i] = opts.shapes.get(i);
           }
           opBuilder.setAttr("shapes", shapesArray);
@@ -131,8 +93,10 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
     }
     return new PaddingFifoQueue(opBuilder.build());
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
    * @param shapes The shape of each component in a value. The length of this attr must
    * be either 0 or the same as the length of component_types.
    * Shapes of fixed rank but variable size are allowed by setting
@@ -141,56 +105,162 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
    * zeros up to the maximum shape of all elements in the given batch.
    * If the length of this attr is 0, different queue elements may have
    * different ranks and shapes, but only one element may be dequeued at a time.
+   * @return this Options instance.
    */
   public static Options shapes(List<Shape> shapes) {
     return new Options().shapes(shapes);
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
+   * @param shapes The shape of each component in a value. The length of this attr must
+   * be either 0 or the same as the length of component_types.
+   * Shapes of fixed rank but variable size are allowed by setting
+   * any shape dimension to -1.  In this case, the inputs' shape may vary along
+   * the given dimension, and DequeueMany will pad the given dimension with
+   * zeros up to the maximum shape of all elements in the given batch.
+   * If the length of this attr is 0, different queue elements may have
+   * different ranks and shapes, but only one element may be dequeued at a time.
+   * @return this Options instance.
+   */
+  public static Options shapes(Shape[] shapes) {
+    return new Options().shapes(shapes);
+  }
+
+  /**
+   * Sets the capacity option.
+   *
    * @param capacity The upper bound on the number of elements in this queue.
    * Negative numbers mean no limit.
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this queue is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this queue will be shared under the given name
    * across multiple sessions.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets handle.
    * The handle to the queue.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PaddingFIFOQueueV2";
-  
-  private Output<?> handle;
-  
-  private PaddingFifoQueue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.PaddingFifoQueue}
+   */
+  public static class Options {
+    private List<Shape> shapes;
+
+    private Long capacity;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. The length of this attr must
+     * be either 0 or the same as the length of component_types.
+     * Shapes of fixed rank but variable size are allowed by setting
+     * any shape dimension to -1.  In this case, the inputs' shape may vary along
+     * the given dimension, and DequeueMany will pad the given dimension with
+     * zeros up to the maximum shape of all elements in the given batch.
+     * If the length of this attr is 0, different queue elements may have
+     * different ranks and shapes, but only one element may be dequeued at a time.
+     * @return this Options instance.
+     */
+    public Options shapes(List<Shape> shapes) {
+      this.shapes = shapes;
+      return this;
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. The length of this attr must
+     * be either 0 or the same as the length of component_types.
+     * Shapes of fixed rank but variable size are allowed by setting
+     * any shape dimension to -1.  In this case, the inputs' shape may vary along
+     * the given dimension, and DequeueMany will pad the given dimension with
+     * zeros up to the maximum shape of all elements in the given batch.
+     * If the length of this attr is 0, different queue elements may have
+     * different ranks and shapes, but only one element may be dequeued at a time.
+     * @return this Options instance.
+     */
+    public Options shapes(Shape... shapes) {
+      this.shapes = Arrays.asList(shapes);
+      return this;
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity The upper bound on the number of elements in this queue.
+     * Negative numbers mean no limit.
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this queue is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this queue will be shared under the given name
+     * across multiple sessions.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

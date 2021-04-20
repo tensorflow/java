@@ -25,23 +25,38 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
  * Generates a feature cross from a list of tensors, and returns it as a
- * RaggedTensor.  See `tf.ragged.cross` for more details.
- * 
- * @param <T> data type for {@code outputValues()} output
- * @param <U> data type for {@code outputRowSplits()} output
+ * RaggedTensor.  See {@code tf.ragged.cross} for more details.
+ *
+ * @param <T> data type for {@code output_values} output
+ *
+ * @param <U> data type for {@code output_row_splits} output
  */
 public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RaggedCross";
+
+  private Output<T> outputValues;
+
+  private Output<U> outputRowSplits;
+
+  private RaggedCross(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputValues = operation.output(outputIdx++);
+    outputRowSplits = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RaggedCross operation.
-   * 
+   *
    * @param scope current scope
    * @param raggedValues The values tensor for each RaggedTensor input.
    * @param raggedRowSplits The row_splits tensor for each RaggedTensor input.
@@ -49,19 +64,28 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
    * @param sparseValues The values tensor for each SparseTensor input.
    * @param sparseShape The dense_shape tensor for each SparseTensor input.
    * @param denseInputs The tf.Tensor inputs.
-   * @param inputOrder String specifying the tensor type for each input.  The `i`th character in
-   * this string specifies the type of the `i`th input, and is one of: 'R' (ragged),
+   * @param inputOrder String specifying the tensor type for each input.  The {@code i}th character in
+   * this string specifies the type of the {@code i}th input, and is one of: 'R' (ragged),
    * 'D' (dense), or 'S' (sparse).  This attr is used to ensure that the crossed
    * values are combined in the order of the inputs from the call to tf.ragged.cross.
-   * @param hashedOutput 
-   * @param numBuckets 
-   * @param hashKey 
-   * @param outValuesType 
-   * @param outRowSplitsType 
+   * @param hashedOutput the value of the hashedOutput property
+   * @param numBuckets the value of the numBuckets property
+   * @param hashKey the value of the hashKey property
+   * @param outValuesType the value of the outValuesType property
+   * @param outRowSplitsType the value of the outRowSplitsType property
+   * @param <T> data type for {@code RaggedCross} output and operands
+   * @param <U> data type for {@code RaggedCross} output and operands
    * @return a new instance of RaggedCross
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> RaggedCross<T, U> create(Scope scope, Iterable<Operand<?>> raggedValues, Iterable<Operand<?>> raggedRowSplits, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<?>> sparseValues, Iterable<Operand<TInt64>> sparseShape, Iterable<Operand<?>> denseInputs, String inputOrder, Boolean hashedOutput, Long numBuckets, Long hashKey, Class<T> outValuesType, Class<U> outRowSplitsType) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> RaggedCross<T, U> create(Scope scope,
+      Iterable<Operand<?>> raggedValues, Iterable<Operand<?>> raggedRowSplits,
+      Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<?>> sparseValues,
+      Iterable<Operand<TInt64>> sparseShape, Iterable<Operand<?>> denseInputs, String inputOrder,
+      Boolean hashedOutput, Long numBuckets, Long hashKey, Class<T> outValuesType,
+      Class<U> outRowSplitsType) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedCross", scope.makeOpName("RaggedCross"));
     opBuilder.addInputList(Operands.asOutputs(raggedValues));
     opBuilder.addInputList(Operands.asOutputs(raggedRowSplits));
@@ -76,33 +100,24 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
     opBuilder.setAttr("hash_key", hashKey);
     opBuilder.setAttr("out_values_type", Operands.toDataType(outValuesType));
     opBuilder.setAttr("out_row_splits_type", Operands.toDataType(outRowSplitsType));
-    return new RaggedCross<T, U>(opBuilder.build());
+    return new RaggedCross<>(opBuilder.build());
   }
-  
+
   /**
-   * The `values` for the returned `RaggedTensor`.
+   * Gets outputValues.
+   * The {@code values} for the returned {@code RaggedTensor}.
+   * @return outputValues.
    */
   public Output<T> outputValues() {
     return outputValues;
   }
-  
+
   /**
-   * The `row_splits` for the returned `RaggedTensor`.
+   * Gets outputRowSplits.
+   * The {@code row_splits} for the returned {@code RaggedTensor}.
+   * @return outputRowSplits.
    */
   public Output<U> outputRowSplits() {
     return outputRowSplits;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RaggedCross";
-  
-  private Output<T> outputValues;
-  private Output<U> outputRowSplits;
-  
-  private RaggedCross(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputValues = operation.output(outputIdx++);
-    outputRowSplits = operation.output(outputIdx++);
   }
 }

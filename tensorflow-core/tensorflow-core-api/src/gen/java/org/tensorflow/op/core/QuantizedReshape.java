@@ -31,67 +31,79 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reshapes a quantized tensor as per the Reshape op.
- * <p>
- * ```
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class QuantizedReshape<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new QuantizedReshape operation.
-   * 
-   * @param scope current scope
-   * @param tensor 
-   * @param shape Defines the shape of the output tensor.
-   * @param inputMin The minimum value of the input.
-   * @param inputMax The maximum value of the input.
-   * @return a new instance of QuantizedReshape
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> QuantizedReshape<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder.addInput(shape.asOutput());
-    opBuilder.addInput(inputMin.asOutput());
-    opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new QuantizedReshape<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  /**
-   * This value is copied from input_min.
-   */
-  public Output<TFloat32> outputMin() {
-    return outputMin;
-  }
-  
-  /**
-   * This value is copied from input_max.
-   */
-  public Output<TFloat32> outputMax() {
-    return outputMax;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "QuantizedReshape";
-  
+
   private Output<T> output;
+
   private Output<TFloat32> outputMin;
+
   private Output<TFloat32> outputMax;
-  
+
   private QuantizedReshape(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     outputMin = operation.output(outputIdx++);
     outputMax = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new QuantizedReshape operation.
+   *
+   * @param scope current scope
+   * @param tensor the tensor value
+   * @param shape Defines the shape of the output tensor.
+   * @param inputMin The minimum value of the input.
+   * @param inputMax The maximum value of the input.
+   * @param <T> data type for {@code QuantizedReshape} output and operands
+   * @return a new instance of QuantizedReshape
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> QuantizedReshape<T> create(Scope scope, Operand<T> tensor,
+      Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
+    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReshape", scope.makeOpName("QuantizedReshape"));
+    opBuilder.addInput(tensor.asOutput());
+    opBuilder.addInput(shape.asOutput());
+    opBuilder.addInput(inputMin.asOutput());
+    opBuilder.addInput(inputMax.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new QuantizedReshape<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  /**
+   * Gets outputMin.
+   * This value is copied from input_min.
+   * @return outputMin.
+   */
+  public Output<TFloat32> outputMin() {
+    return outputMin;
+  }
+
+  /**
+   * Gets outputMax.
+   * This value is copied from input_max.
+   * @return outputMax.
+   */
+  public Output<TFloat32> outputMax() {
+    return outputMax;
   }
 }

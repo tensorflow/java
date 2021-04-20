@@ -29,53 +29,42 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns the dimension index in the destination data format given the one in
- * <p>
  * the source data format.
- * 
- * @param <T> data type for {@code y()} output
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class DataFormatDimMap<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.DataFormatDimMap}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param srcFormat source data format.
-     */
-    public Options srcFormat(String srcFormat) {
-      this.srcFormat = srcFormat;
-      return this;
-    }
-    
-    /**
-     * @param dstFormat destination data format.
-     */
-    public Options dstFormat(String dstFormat) {
-      this.dstFormat = dstFormat;
-      return this;
-    }
-    
-    private String srcFormat;
-    private String dstFormat;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DataFormatDimMap";
+
+  private Output<T> y;
+
+  private DataFormatDimMap(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DataFormatDimMap operation.
-   * 
+   *
    * @param scope current scope
    * @param x A Tensor with each element as a dimension index in source data format.
    * Must be in the range [-4, 4).
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DataFormatDimMap} output and operands
    * @return a new instance of DataFormatDimMap
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> DataFormatDimMap<T> create(Scope scope, Operand<T> x,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatDimMap", scope.makeOpName("DataFormatDimMap"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -89,43 +78,74 @@ public final class DataFormatDimMap<T extends TNumber> extends RawOp implements 
         }
       }
     }
-    return new DataFormatDimMap<T>(opBuilder.build());
+    return new DataFormatDimMap<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the srcFormat option.
+   *
    * @param srcFormat source data format.
+   * @return this Options instance.
    */
   public static Options srcFormat(String srcFormat) {
     return new Options().srcFormat(srcFormat);
   }
-  
+
   /**
+   * Sets the dstFormat option.
+   *
    * @param dstFormat destination data format.
+   * @return this Options instance.
    */
   public static Options dstFormat(String dstFormat) {
     return new Options().dstFormat(dstFormat);
   }
-  
+
   /**
+   * Gets y.
    * A Tensor with each element as a dimension index in destination data format.
+   * @return y.
    */
   public Output<T> y() {
     return y;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return y;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DataFormatDimMap";
-  
-  private Output<T> y;
-  
-  private DataFormatDimMap(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.DataFormatDimMap}
+   */
+  public static class Options {
+    private String srcFormat;
+
+    private String dstFormat;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the srcFormat option.
+     *
+     * @param srcFormat source data format.
+     * @return this Options instance.
+     */
+    public Options srcFormat(String srcFormat) {
+      this.srcFormat = srcFormat;
+      return this;
+    }
+
+    /**
+     * Sets the dstFormat option.
+     *
+     * @param dstFormat destination data format.
+     * @return this Options instance.
+     */
+    public Options dstFormat(String dstFormat) {
+      this.dstFormat = dstFormat;
+      return this;
+    }
   }
 }

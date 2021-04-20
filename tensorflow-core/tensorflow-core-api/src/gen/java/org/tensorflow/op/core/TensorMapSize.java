@@ -26,50 +26,56 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of tensors in the input tensor map.
- * <p>
  * input_handle: the input map
  * size: the number of tensors in the map
  */
 @Operator
 public final class TensorMapSize extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorMapSize";
+
+  private Output<TInt32> output;
+
+  private TensorMapSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorMapSize operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
+   * @param inputHandle the inputHandle value
    * @return a new instance of TensorMapSize
    */
-  @Endpoint(describeByClass = true)
-  public static TensorMapSize create(Scope scope, Operand<?> inputHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorMapSize create(Scope scope, Operand<? extends TType> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorMapSize", scope.makeOpName("TensorMapSize"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorMapSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorMapSize";
-  
-  private Output<TInt32> output;
-  
-  private TensorMapSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

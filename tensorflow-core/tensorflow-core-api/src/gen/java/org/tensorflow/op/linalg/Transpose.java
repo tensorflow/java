@@ -30,51 +30,60 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Shuffle dimensions of x according to a permutation.
- * <p>
- * The output `y` has the same rank as `x`. The shapes of `x` and `y` satisfy:
- *   `y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]`
- * 
- * @param <T> data type for {@code y()} output
+ * The output {@code y} has the same rank as {@code x}. The shapes of {@code x} and {@code y} satisfy:
+ * {@code y.shape[i] == x.shape[perm[i]] for i in [0, 1, ..., rank(x) - 1]}
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Transpose<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Transpose operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @param perm 
-   * @return a new instance of Transpose
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Transpose<T> create(Scope scope, Operand<T> x, Operand<? extends TNumber> perm) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder.addInput(perm.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Transpose<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Transpose";
-  
+
   private Output<T> y;
-  
+
   private Transpose(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Transpose operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param perm the perm value
+   * @param <T> data type for {@code Transpose} output and operands
+   * @return a new instance of Transpose
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Transpose<T> create(Scope scope, Operand<T> x,
+      Operand<? extends TNumber> perm) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Transpose", scope.makeOpName("Transpose"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(perm.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Transpose<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

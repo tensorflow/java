@@ -28,45 +28,56 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code diagonal()} output
+ * The BatchMatrixDiagPart operation
+ *
+ * @param <T> data type for {@code diagonal} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixDiagPart<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new BatchMatrixDiagPart operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of BatchMatrixDiagPart
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiagPart", scope.makeOpName("BatchMatrixDiagPart"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new BatchMatrixDiagPart<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> diagonal() {
-    return diagonal;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return diagonal;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BatchMatrixDiagPart";
-  
+
   private Output<T> diagonal;
-  
+
   private BatchMatrixDiagPart(Operation operation) {
     super(operation);
     int outputIdx = 0;
     diagonal = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BatchMatrixDiagPart operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code BatchMatrixDiagPart} output and operands
+   * @return a new instance of BatchMatrixDiagPart
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchMatrixDiagPart<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixDiagPart", scope.makeOpName("BatchMatrixDiagPart"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new BatchMatrixDiagPart<>(opBuilder.build());
+  }
+
+  /**
+   * Gets diagonal.
+   *
+   * @return diagonal.
+   */
+  public Output<T> diagonal() {
+    return diagonal;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return diagonal;
   }
 }

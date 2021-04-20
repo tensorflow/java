@@ -29,14 +29,28 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Outputs a `Summary` protocol buffer with a tensor and per-plugin data.
+ * Outputs a {@code Summary} protocol buffer with a tensor and per-plugin data.
  */
-@Operator(group = "summary")
+@Operator(
+    group = "summary"
+)
 public final class TensorSummary extends RawOp implements Operand<TString> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorSummary operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorSummaryV2";
+
+  private Output<TString> summary;
+
+  private TensorSummary(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    summary = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorSummaryV2 operation.
+   *
    * @param scope current scope
    * @param tag A string attached to this summary. Used for organization in TensorBoard.
    * @param tensor A tensor to serialize.
@@ -44,8 +58,11 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
    * data.
    * @return a new instance of TensorSummary
    */
-  @Endpoint(describeByClass = true)
-  public static TensorSummary create(Scope scope, Operand<TString> tag, Operand<? extends TType> tensor, Operand<TString> serializedSummaryMetadata) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorSummary create(Scope scope, Operand<TString> tag,
+      Operand<? extends TType> tensor, Operand<TString> serializedSummaryMetadata) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSummaryV2", scope.makeOpName("TensorSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -53,26 +70,18 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
     opBuilder = scope.apply(opBuilder);
     return new TensorSummary(opBuilder.build());
   }
-  
+
   /**
+   * Gets summary.
+   *
+   * @return summary.
    */
   public Output<TString> summary() {
     return summary;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return summary;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorSummaryV2";
-  
-  private Output<TString> summary;
-  
-  private TensorSummary(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    summary = operation.output(outputIdx++);
   }
 }

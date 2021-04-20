@@ -29,52 +29,58 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA Sort operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
+ * https://www.tensorflow.org/performance/xla/operation_semantics#sort
  * .
- * <p>
- * Sorts a tensor. Currently only sorts in ascending order are supported.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>Sorts a tensor. Currently only sorts in ascending order are supported.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Sort<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Sort operation.
-   * 
-   * @param scope current scope
-   * @param input A `Tensor` of type T.
-   * @return a new instance of Sort
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sort<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSort", scope.makeOpName("Sort"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Sort<T>(opBuilder.build());
-  }
-  
-  /**
-   * A `Tensor` of type T.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "XlaSort";
-  
+
   private Output<T> output;
-  
+
   private Sort(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaSort operation.
+   *
+   * @param scope current scope
+   * @param input A {@code Tensor} of type T.
+   * @param <T> data type for {@code XlaSort} output and operands
+   * @return a new instance of Sort
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sort<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaSort", scope.makeOpName("Sort"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Sort<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * A {@code Tensor} of type T.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -32,57 +32,69 @@ import org.tensorflow.types.family.TType;
 /**
  * A container for an iterator resource.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class AnonymousIterator extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new AnonymousIterator operation.
-   * 
-   * @param scope current scope
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of AnonymousIterator
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static AnonymousIterator create(Scope scope, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new AnonymousIterator(opBuilder.build());
-  }
-  
-  /**
-   * A handle to the iterator that can be passed to a "MakeIterator" or
-   * "IteratorGetNext" op. In contrast to Iterator, AnonymousIterator prevents
-   * resource sharing by name, and does not keep a reference to the resource
-   * container.
-   */
-  public Output<?> handle() {
-    return handle;
-  }
-  
-  /**
-   * A variant deleter that should be passed into the op that deletes the iterator.
-   */
-  public Output<?> deleter() {
-    return deleter;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "AnonymousIteratorV2";
-  
-  private Output<?> handle;
-  private Output<?> deleter;
-  
+
+  private Output<? extends TType> handle;
+
+  private Output<? extends TType> deleter;
+
+  @SuppressWarnings("unchecked")
   private AnonymousIterator(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
     deleter = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new AnonymousIteratorV2 operation.
+   *
+   * @param scope current scope
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of AnonymousIterator
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static AnonymousIterator create(Scope scope, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("AnonymousIteratorV2", scope.makeOpName("AnonymousIterator"));
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
+    return new AnonymousIterator(opBuilder.build());
+  }
+
+  /**
+   * Gets handle.
+   * A handle to the iterator that can be passed to a &quot;MakeIterator&quot; or
+   * &quot;IteratorGetNext&quot; op. In contrast to Iterator, AnonymousIterator prevents
+   * resource sharing by name, and does not keep a reference to the resource
+   * container.
+   * @return handle.
+   */
+  public Output<? extends TType> handle() {
+    return handle;
+  }
+
+  /**
+   * Gets deleter.
+   * A variant deleter that should be passed into the op that deletes the iterator.
+   * @return deleter.
+   */
+  public Output<? extends TType> deleter() {
+    return deleter;
   }
 }

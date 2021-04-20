@@ -24,52 +24,58 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes the gradient of `igamma(a, x)` wrt `a`.
- * 
- * @param <T> data type for {@code z()} output
+ * Computes the gradient of {@code igamma(a, x)} wrt {@code a}.
+ *
+ * @param <T> data type for {@code z} output
  */
 public final class IgammaGradA<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IgammaGradA";
+
+  private Output<T> z;
+
+  private IgammaGradA(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IgammaGradA operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param x 
+   * @param a the a value
+   * @param x the x value
+   * @param <T> data type for {@code IgammaGradA} output and operands
    * @return a new instance of IgammaGradA
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new IgammaGradA<T>(opBuilder.build());
+    return new IgammaGradA<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IgammaGradA";
-  
-  private Output<T> z;
-  
-  private IgammaGradA(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

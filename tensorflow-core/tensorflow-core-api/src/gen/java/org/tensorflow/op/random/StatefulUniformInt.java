@@ -24,38 +24,52 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random integers from a uniform distribution.
- * <p>
- * The generated values are uniform integers in the range `[minval, maxval)`.
- * The lower bound `minval` is included in the range, while the upper bound
- * `maxval` is excluded.
- * <p>
- * The random integers are slightly biased unless `maxval - minval` is an exact
- * power of two.  The bias is small for values of `maxval - minval` significantly
- * smaller than the range of the output (either `2^32` or `2^64`).
- * 
- * @param <U> data type for {@code output()} output
+ * The generated values are uniform integers in the range {@code [minval, maxval)}.
+ * The lower bound {@code minval} is included in the range, while the upper bound
+ * {@code maxval} is excluded.
+ * <p>The random integers are slightly biased unless {@code maxval - minval} is an exact
+ * power of two.  The bias is small for values of {@code maxval - minval} significantly
+ * smaller than the range of the output (either {@code 2^32} or {@code 2^64}).
+ *
+ * @param <U> data type for {@code output} output
  */
 public final class StatefulUniformInt<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatefulUniformInt";
+
+  private Output<U> output;
+
+  private StatefulUniformInt(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatefulUniformInt operation.
-   * 
+   *
    * @param scope current scope
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
    * @param minval Minimum value (inclusive, scalar).
    * @param maxval Maximum value (exclusive, scalar).
+   * @param <U> data type for {@code StatefulUniformInt} output and operands
    * @return a new instance of StatefulUniformInt
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> StatefulUniformInt<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Operand<U> minval, Operand<U> maxval) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> StatefulUniformInt<U> create(Scope scope,
+      Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
+      Operand<U> minval, Operand<U> maxval) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniformInt", scope.makeOpName("StatefulUniformInt"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
@@ -63,29 +77,20 @@ public final class StatefulUniformInt<U extends TType> extends RawOp implements 
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new StatefulUniformInt<U>(opBuilder.build());
+    return new StatefulUniformInt<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatefulUniformInt";
-  
-  private Output<U> output;
-  
-  private StatefulUniformInt(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

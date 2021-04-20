@@ -32,42 +32,41 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code value()} output
+ * The TensorArrayPack operation
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class TensorArrayPack<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayPack}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param elementShape 
-     */
-    public Options elementShape(Shape elementShape) {
-      this.elementShape = elementShape;
-      return this;
-    }
-    
-    private Shape elementShape;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorArrayPack";
+
+  private Output<T> value;
+
+  private TensorArrayPack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    value = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TensorArrayPack operation.
-   * 
+   *
    * @param scope current scope
-   * @param handle 
-   * @param flowIn 
-   * @param dtype 
-   * @param options carries optional attributes values
+   * @param handle the handle value
+   * @param flowIn the flowIn value
+   * @param dtype the value of the dtype property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TensorArrayPack} output and operands
    * @return a new instance of TensorArrayPack
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle,
+      Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayPack", scope.makeOpName("TensorArrayPack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -80,35 +79,51 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
         }
       }
     }
-    return new TensorArrayPack<T>(opBuilder.build());
+    return new TensorArrayPack<>(opBuilder.build());
   }
-  
+
   /**
-   * @param elementShape 
+   * Sets the elementShape option.
+   *
+   * @param elementShape the elementShape option
+   * @return this Options instance.
    */
   public static Options elementShape(Shape elementShape) {
     return new Options().elementShape(elementShape);
   }
-  
+
   /**
+   * Gets value.
+   *
+   * @return value.
    */
   public Output<T> value() {
     return value;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return value;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayPack";
-  
-  private Output<T> value;
-  
-  private TensorArrayPack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    value = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayPack}
+   */
+  public static class Options {
+    private Shape elementShape;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the elementShape option.
+     *
+     * @param elementShape the elementShape option
+     * @return this Options instance.
+     */
+    public Options elementShape(Shape elementShape) {
+      this.elementShape = elementShape;
+      return this;
+    }
   }
 }

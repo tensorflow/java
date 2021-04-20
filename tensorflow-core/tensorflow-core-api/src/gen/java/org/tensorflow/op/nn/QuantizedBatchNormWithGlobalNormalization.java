@@ -27,22 +27,41 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Quantized Batch normalization.
- * <p>
  * This op is deprecated and will be removed in the future. Prefer
- * `tf.nn.batch_normalization`.
- * 
- * @param <U> data type for {@code result()} output
+ * {@code tf.nn.batch_normalization}.
+ *
+ * @param <U> data type for {@code result} output
  */
-@Operator(group = "nn")
-public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> extends RawOp {
-  
+@Operator(
+    group = "nn"
+)
+public final class QuantizedBatchNormWithGlobalNormalization<U extends TNumber> extends RawOp {
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "QuantizedBatchNormWithGlobalNormalization";
+
+  private Output<U> result;
+
+  private Output<TFloat32> resultMin;
+
+  private Output<TFloat32> resultMax;
+
+  private QuantizedBatchNormWithGlobalNormalization(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    result = operation.output(outputIdx++);
+    resultMin = operation.output(outputIdx++);
+    resultMax = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new QuantizedBatchNormWithGlobalNormalization operation.
-   * 
+   *
    * @param scope current scope
    * @param t A 4D input Tensor.
    * @param tMin The value represented by the lowest quantized input.
@@ -62,18 +81,27 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
    * @param betaMin The value represented by the lowest quantized offset.
    * @param betaMax The value represented by the highest quantized offset.
    * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * If "scale_after_normalization" is true, this tensor will be multiplied
+   * If &quot;scale_after_normalization&quot; is true, this tensor will be multiplied
    * with the normalized tensor.
    * @param gammaMin The value represented by the lowest quantized gamma.
    * @param gammaMax The value represented by the highest quantized gamma.
-   * @param outType 
+   * @param outType the value of the outType property
    * @param varianceEpsilon A small float number to avoid dividing by 0.
    * @param scaleAfterNormalization A bool indicating whether the resulted tensor
    * needs to be multiplied with gamma.
+   * @param <U> data type for {@code QuantizedBatchNormWithGlobalNormalization} output and operands
+   * @param <T> data type for {@code QuantizedBatchNormWithGlobalNormalization} output and operands
    * @return a new instance of QuantizedBatchNormWithGlobalNormalization
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TType> QuantizedBatchNormWithGlobalNormalization<U> create(Scope scope, Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m, Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin, Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax, Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, Class<U> outType, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber, T extends TNumber> QuantizedBatchNormWithGlobalNormalization<U> create(
+      Scope scope, Operand<T> t, Operand<TFloat32> tMin, Operand<TFloat32> tMax, Operand<T> m,
+      Operand<TFloat32> mMin, Operand<TFloat32> mMax, Operand<T> v, Operand<TFloat32> vMin,
+      Operand<TFloat32> vMax, Operand<T> beta, Operand<TFloat32> betaMin, Operand<TFloat32> betaMax,
+      Operand<T> gamma, Operand<TFloat32> gammaMin, Operand<TFloat32> gammaMax, Class<U> outType,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedBatchNormWithGlobalNormalization", scope.makeOpName("QuantizedBatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(tMin.asOutput());
@@ -94,39 +122,33 @@ public final class QuantizedBatchNormWithGlobalNormalization<U extends TType> ex
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);
-    return new QuantizedBatchNormWithGlobalNormalization<U>(opBuilder.build());
+    return new QuantizedBatchNormWithGlobalNormalization<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets result.
+   *
+   * @return result.
    */
   public Output<U> result() {
     return result;
   }
-  
+
   /**
+   * Gets resultMin.
+   *
+   * @return resultMin.
    */
   public Output<TFloat32> resultMin() {
     return resultMin;
   }
-  
+
   /**
+   * Gets resultMax.
+   *
+   * @return resultMax.
    */
   public Output<TFloat32> resultMax() {
     return resultMax;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedBatchNormWithGlobalNormalization";
-  
-  private Output<U> result;
-  private Output<TFloat32> resultMin;
-  private Output<TFloat32> resultMax;
-  
-  private QuantizedBatchNormWithGlobalNormalization(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    result = operation.output(outputIdx++);
-    resultMin = operation.output(outputIdx++);
-    resultMax = operation.output(outputIdx++);
   }
 }

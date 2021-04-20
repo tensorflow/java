@@ -28,47 +28,56 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The TensorListPushBackBatch operation
  */
 @Operator
 public final class TensorListPushBackBatch extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListPushBackBatch";
+
+  private Output<? extends TType> outputHandles;
+
+  @SuppressWarnings("unchecked")
+  private TensorListPushBackBatch(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandles = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListPushBackBatch operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandles 
-   * @param tensor 
+   * @param inputHandles the inputHandles value
+   * @param tensor the tensor value
    * @return a new instance of TensorListPushBackBatch
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListPushBackBatch create(Scope scope, Operand<?> inputHandles, Operand<? extends TType> tensor) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListPushBackBatch create(Scope scope, Operand<? extends TType> inputHandles,
+      Operand<? extends TType> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBackBatch", scope.makeOpName("TensorListPushBackBatch"));
     opBuilder.addInput(inputHandles.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorListPushBackBatch(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandles.
+   *
+   * @return outputHandles.
    */
-  public Output<?> outputHandles() {
+  public Output<? extends TType> outputHandles() {
     return outputHandles;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandles;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListPushBackBatch";
-  
-  private Output<?> outputHandles;
-  
-  private TensorListPushBackBatch(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandles = operation.output(outputIdx++);
   }
 }

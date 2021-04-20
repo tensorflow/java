@@ -24,57 +24,67 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Return the reduction indices for computing gradients of s0 op s1 with broadcast.
- * <p>
  * This is typically used by gradient computations for a broadcasting operation.
- * 
- * @param <T> data type for {@code r0()} output
+ *
+ * @param <T> data type for {@code r0} output
  */
 public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new BroadcastGradientArgs operation.
-   * 
-   * @param scope current scope
-   * @param s0 
-   * @param s1 
-   * @return a new instance of BroadcastGradientArgs
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0, Operand<T> s1) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
-    opBuilder.addInput(s0.asOutput());
-    opBuilder.addInput(s1.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new BroadcastGradientArgs<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> r0() {
-    return r0;
-  }
-  
-  /**
-   */
-  public Output<T> r1() {
-    return r1;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "BroadcastGradientArgs";
-  
+
   private Output<T> r0;
+
   private Output<T> r1;
-  
+
   private BroadcastGradientArgs(Operation operation) {
     super(operation);
     int outputIdx = 0;
     r0 = operation.output(outputIdx++);
     r1 = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new BroadcastGradientArgs operation.
+   *
+   * @param scope current scope
+   * @param s0 the s0 value
+   * @param s1 the s1 value
+   * @param <T> data type for {@code BroadcastGradientArgs} output and operands
+   * @return a new instance of BroadcastGradientArgs
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0,
+      Operand<T> s1) {
+    OperationBuilder opBuilder = scope.env().opBuilder("BroadcastGradientArgs", scope.makeOpName("BroadcastGradientArgs"));
+    opBuilder.addInput(s0.asOutput());
+    opBuilder.addInput(s1.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new BroadcastGradientArgs<>(opBuilder.build());
+  }
+
+  /**
+   * Gets r0.
+   *
+   * @return r0.
+   */
+  public Output<T> r0() {
+    return r0;
+  }
+
+  /**
+   * Gets r1.
+   *
+   * @return r1.
+   */
+  public Output<T> r1() {
+    return r1;
   }
 }

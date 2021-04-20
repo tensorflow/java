@@ -32,7 +32,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * List of the given size with empty elements.
- * <p>
  * element_shape: the shape of the future elements of the list
  * num_elements: the number of elements to reserve
  * handle: the output list
@@ -40,18 +39,35 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class TensorListReserve extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListReserve";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListReserve(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListReserve operation.
-   * 
+   *
    * @param scope current scope
-   * @param elementShape 
-   * @param numElements 
-   * @param elementDtype 
+   * @param elementShape the elementShape value
+   * @param numElements the numElements value
+   * @param elementDtype the value of the elementDtype property
+   * @param <U> data type for {@code TensorListReserve} output and operands
    * @return a new instance of TensorListReserve
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> TensorListReserve create(Scope scope, Operand<? extends TNumber> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> TensorListReserve create(Scope scope,
+      Operand<? extends TNumber> elementShape, Operand<TInt32> numElements, Class<U> elementDtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListReserve", scope.makeOpName("TensorListReserve"));
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(numElements.asOutput());
@@ -59,27 +75,19 @@ public final class TensorListReserve extends RawOp implements Operand<TType> {
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListReserve(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListReserve";
-  
-  private Output<?> handle;
-  
-  private TensorListReserve(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

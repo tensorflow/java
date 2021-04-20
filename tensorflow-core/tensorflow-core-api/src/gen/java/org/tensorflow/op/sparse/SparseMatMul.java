@@ -29,78 +29,47 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Multiply matrix "a" by matrix "b".
- * <p>
- * The inputs must be two-dimensional matrices and the inner dimension of "a" must
- * match the outer dimension of "b". Both "a" and "b" must be `Tensor`s not
- * `SparseTensor`s.  This op is optimized for the case where at least one of "a" or
- * "b" is sparse, in the sense that they have a large proportion of zero values.
+ * Multiply matrix &quot;a&quot; by matrix &quot;b&quot;.
+ * The inputs must be two-dimensional matrices and the inner dimension of &quot;a&quot; must
+ * match the outer dimension of &quot;b&quot;. Both &quot;a&quot; and &quot;b&quot; must be {@code Tensor}s not
+ * {@code SparseTensor}s.  This op is optimized for the case where at least one of &quot;a&quot; or
+ * &quot;b&quot; is sparse, in the sense that they have a large proportion of zero values.
  * The breakeven for using this versus a dense matrix multiply on one platform was
  * 30% zero values in the sparse matrix.
- * <p>
- * The gradient computation of this operation will only take advantage of sparsity
+ * <p>The gradient computation of this operation will only take advantage of sparsity
  * in the input gradient when that gradient comes from a Relu.
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.SparseMatMul}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param transposeA 
-     */
-    public Options transposeA(Boolean transposeA) {
-      this.transposeA = transposeA;
-      return this;
-    }
-    
-    /**
-     * @param transposeB 
-     */
-    public Options transposeB(Boolean transposeB) {
-      this.transposeB = transposeB;
-      return this;
-    }
-    
-    /**
-     * @param aIsSparse 
-     */
-    public Options aIsSparse(Boolean aIsSparse) {
-      this.aIsSparse = aIsSparse;
-      return this;
-    }
-    
-    /**
-     * @param bIsSparse 
-     */
-    public Options bIsSparse(Boolean bIsSparse) {
-      this.bIsSparse = bIsSparse;
-      return this;
-    }
-    
-    private Boolean transposeA;
-    private Boolean transposeB;
-    private Boolean aIsSparse;
-    private Boolean bIsSparse;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseMatMul";
+
+  private Output<TFloat32> product;
+
+  private SparseMatMul(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    product = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseMatMul operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param b 
-   * @param options carries optional attributes values
+   * @param a the a value
+   * @param b the b value
+   * @param options carries optional attribute values
    * @return a new instance of SparseMatMul
    */
-  @Endpoint(describeByClass = true)
-  public static SparseMatMul create(Scope scope, Operand<? extends TNumber> a, Operand<? extends TNumber> b, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SparseMatMul create(Scope scope, Operand<? extends TNumber> a,
+      Operand<? extends TNumber> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
@@ -123,54 +92,118 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
     }
     return new SparseMatMul(opBuilder.build());
   }
-  
+
   /**
-   * @param transposeA 
+   * Sets the transposeA option.
+   *
+   * @param transposeA the transposeA option
+   * @return this Options instance.
    */
   public static Options transposeA(Boolean transposeA) {
     return new Options().transposeA(transposeA);
   }
-  
+
   /**
-   * @param transposeB 
+   * Sets the transposeB option.
+   *
+   * @param transposeB the transposeB option
+   * @return this Options instance.
    */
   public static Options transposeB(Boolean transposeB) {
     return new Options().transposeB(transposeB);
   }
-  
+
   /**
-   * @param aIsSparse 
+   * Sets the aIsSparse option.
+   *
+   * @param aIsSparse the aIsSparse option
+   * @return this Options instance.
    */
   public static Options aIsSparse(Boolean aIsSparse) {
     return new Options().aIsSparse(aIsSparse);
   }
-  
+
   /**
-   * @param bIsSparse 
+   * Sets the bIsSparse option.
+   *
+   * @param bIsSparse the bIsSparse option
+   * @return this Options instance.
    */
   public static Options bIsSparse(Boolean bIsSparse) {
     return new Options().bIsSparse(bIsSparse);
   }
-  
+
   /**
+   * Gets product.
+   *
+   * @return product.
    */
   public Output<TFloat32> product() {
     return product;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return product;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseMatMul";
-  
-  private Output<TFloat32> product;
-  
-  private SparseMatMul(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    product = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseMatMul}
+   */
+  public static class Options {
+    private Boolean transposeA;
+
+    private Boolean transposeB;
+
+    private Boolean aIsSparse;
+
+    private Boolean bIsSparse;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the transposeA option.
+     *
+     * @param transposeA the transposeA option
+     * @return this Options instance.
+     */
+    public Options transposeA(Boolean transposeA) {
+      this.transposeA = transposeA;
+      return this;
+    }
+
+    /**
+     * Sets the transposeB option.
+     *
+     * @param transposeB the transposeB option
+     * @return this Options instance.
+     */
+    public Options transposeB(Boolean transposeB) {
+      this.transposeB = transposeB;
+      return this;
+    }
+
+    /**
+     * Sets the aIsSparse option.
+     *
+     * @param aIsSparse the aIsSparse option
+     * @return this Options instance.
+     */
+    public Options aIsSparse(Boolean aIsSparse) {
+      this.aIsSparse = aIsSparse;
+      return this;
+    }
+
+    /**
+     * Sets the bIsSparse option.
+     *
+     * @param bIsSparse the bIsSparse option
+     * @return this Options instance.
+     */
+    public Options bIsSparse(Boolean bIsSparse) {
+      this.bIsSparse = bIsSparse;
+      return this;
+    }
   }
 }

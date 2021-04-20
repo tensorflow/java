@@ -41,22 +41,24 @@ public final class DtypesOps {
 
   /**
    * Converts each entry in the given tensor to strings.
-   *  <p>
    *  Supports many numeric types and boolean.
-   *  <p>
-   *  For Unicode, see the
+   *  <p>For Unicode, see the
    *  [https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode text)
    *  tutorial.
-   *  <p>
-   *  Examples:
-   *  <p>
-   *  >>> tf.strings.as_string([3, 2])
-   *  <tf.Tensor: shape=(2,), dtype=string, numpy=array([b'3', b'2'], dtype=object)>
-   *  >>> tf.strings.as_string([3.1415926, 2.71828], precision=2).numpy()
+   *  <p>Examples:
+   *  <blockquote>
+   *  <blockquote>
+   *  <blockquote>
+   *  <p>tf.strings.as_string([3, 2])
+   *  &lt;tf.Tensor: shape=(2,), dtype=string, numpy=array([b'3', b'2'], dtype=object)&gt;
+   *  tf.strings.as_string([3.1415926, 2.71828], precision=2).numpy()
    *  array([b'3.14', b'2.72'], dtype=object)
+   *  </blockquote>
+   *  </blockquote>
+   *  </blockquote>
    *
-   * @param input
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param options carries optional attribute values
    * @return a new instance of AsString
    */
   public AsString asString(Operand<? extends TType> input, AsString.Options... options) {
@@ -66,10 +68,11 @@ public final class DtypesOps {
   /**
    * Cast x of type SrcT to y of DstT.
    *
-   * @param <U> data type for {@code y()} output
-   * @param x
-   * @param DstT
-   * @param options carries optional attributes values
+   * @param <U> data type for {@code y} output
+   * @param x the x value
+   * @param DstT the value of the DstT property
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code Cast} output and operands
    * @return a new instance of Cast
    */
   public <U extends TType> Cast<U> cast(Operand<? extends TType> x, Class<U> DstT,
@@ -79,25 +82,24 @@ public final class DtypesOps {
 
   /**
    * Converts two real numbers to a complex number.
-   *  <p>
-   *  Given a tensor `real` representing the real part of a complex number, and a
-   *  tensor `imag` representing the imaginary part of a complex number, this
-   *  operation returns complex numbers elementwise of the form \\(a + bj\\), where
-   *  <i>a</i> represents the `real` part and <i>b</i> represents the `imag` part.
-   *  <p>
-   *  The input tensors `real` and `imag` must have the same shape.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
+   *  Given a tensor {@code real} representing the real part of a complex number, and a
+   *  tensor {@code imag} representing the imaginary part of a complex number, this
+   *  operation returns complex numbers elementwise of the form \(a + bj\), where
+   *  <em>a</em> represents the {@code real} part and <em>b</em> represents the {@code imag} part.
+   *  <p>The input tensors {@code real} and {@code imag} must have the same shape.
+   *  <p>For example:
+   *  <pre>
    *  # tensor 'real' is [2.25, 3.25]
    *  # tensor `imag` is [4.75, 5.75]
-   *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
-   *  }</pre>
+   *  tf.complex(real, imag) ==&gt; [[2.25 + 4.75j], [3.25 + 5.75j]]
+   *  </pre>
    *
-   * @param <U> data type for {@code out()} output
-   * @param real
-   * @param imag
-   * @param Tout
+   * @param <U> data type for {@code out} output
+   * @param real the real value
+   * @param imag the imag value
+   * @param Tout the value of the Tout property
+   * @param <U> data type for {@code Complex} output and operands
+   * @param <T> data type for {@code Complex} output and operands
    * @return a new instance of Complex
    */
   public <U extends TType, T extends TNumber> Complex<U> complex(Operand<T> real, Operand<T> imag,

@@ -28,8 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
- * Make all elements in the non-Batch dimension unique, but \"close\" to
- * <p>
+ * Make all elements in the non-Batch dimension unique, but &quot;close&quot; to
  * their initial value. Never returns a sub-normal number. Never returns
  * zero. The sign of each input element is always identical to the sign
  * of the corresponding output element. Behavior for infinite elements is
@@ -37,41 +36,47 @@ import org.tensorflow.types.TFloat32;
  */
 @Operator
 public final class MakeUnique extends RawOp implements Operand<TFloat32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MakeUnique";
+
+  private Output<TFloat32> output;
+
+  private MakeUnique(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new MakeUnique operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @return a new instance of MakeUnique
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static MakeUnique create(Scope scope, Operand<TFloat32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("MakeUnique", scope.makeOpName("MakeUnique"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new MakeUnique(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TFloat32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MakeUnique";
-  
-  private Output<TFloat32> output;
-  
-  private MakeUnique(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

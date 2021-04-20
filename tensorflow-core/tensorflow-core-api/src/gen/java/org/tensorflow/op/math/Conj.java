@@ -29,60 +29,65 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the complex conjugate of a complex number.
- * <p>
- * Given a tensor `input` of complex numbers, this operation returns a tensor of
- * complex numbers that are the complex conjugate of each element in `input`. The
- * complex numbers in `input` must be of the form \\(a + bj\\), where <i>a</i> is the
- * real part and <i>b</i> is the imaginary part.
- * <p>
- * The complex conjugate returned by this operation is of the form \\(a - bj\\).
- * <p>
- * For example:
- * <pre>{@code
+ * Given a tensor {@code input} of complex numbers, this operation returns a tensor of
+ * complex numbers that are the complex conjugate of each element in {@code input}. The
+ * complex numbers in {@code input} must be of the form \(a + bj\), where <em>a</em> is the
+ * real part and <em>b</em> is the imaginary part.
+ * <p>The complex conjugate returned by this operation is of the form \(a - bj\).
+ * <p>For example:
+ * <pre>
  * # tensor 'input' is [-2.25 + 4.75j, 3.25 + 5.75j]
- * tf.conj(input) ==> [-2.25 - 4.75j, 3.25 - 5.75j]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * tf.conj(input) ==&gt; [-2.25 - 4.75j, 3.25 - 5.75j]
+ * </pre>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Conj<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Conj operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of Conj
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Conj<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Conj", scope.makeOpName("Conj"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Conj<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Conj";
-  
+
   private Output<T> output;
-  
+
   private Conj(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Conj operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code Conj} output and operands
+   * @return a new instance of Conj
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Conj<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Conj", scope.makeOpName("Conj"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Conj<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

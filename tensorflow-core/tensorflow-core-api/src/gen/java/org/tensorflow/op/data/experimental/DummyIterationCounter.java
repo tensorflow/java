@@ -24,46 +24,53 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The DummyIterationCounter operation
  */
 public final class DummyIterationCounter extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DummyIterationCounter";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private DummyIterationCounter(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DummyIterationCounter operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of DummyIterationCounter
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DummyIterationCounter create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("DummyIterationCounter", scope.makeOpName("DummyIterationCounter"));
     opBuilder = scope.apply(opBuilder);
     return new DummyIterationCounter(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DummyIterationCounter";
-  
-  private Output<?> handle;
-  
-  private DummyIterationCounter(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

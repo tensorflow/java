@@ -29,46 +29,55 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise largest integer not greater than x.
- * 
- * @param <T> data type for {@code y()} output
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Floor<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Floor operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Floor
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Floor<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Floor", scope.makeOpName("Floor"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Floor<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Floor";
-  
+
   private Output<T> y;
-  
+
   private Floor(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Floor operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Floor} output and operands
+   * @return a new instance of Floor
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Floor<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Floor", scope.makeOpName("Floor"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Floor<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

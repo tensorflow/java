@@ -30,54 +30,60 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Add all input tensors element wise.
- * <p>
- *   Inputs must be of same size and shape.
- * <p>
- *   <pre>{@code
- *   x = [9, 7, 10]
- *   tf.math.add_n(x) ==> 26
- *   }</pre>
- * 
- * 
- * @param <T> data type for {@code sum()} output
+ * Inputs must be of same size and shape.
+ * <pre>
+ * x = [9, 7, 10]
+ * tf.math.add_n(x) ==&gt; 26
+ * </pre>
+ *
+ * @param <T> data type for {@code sum} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class AddN<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new AddN operation.
-   * 
-   * @param scope current scope
-   * @param inputs 
-   * @return a new instance of AddN
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
-    return new AddN<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> sum() {
-    return sum;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return sum;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "AddN";
-  
+
   private Output<T> sum;
-  
+
   private AddN(Operation operation) {
     super(operation);
     int outputIdx = 0;
     sum = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new AddN operation.
+   *
+   * @param scope current scope
+   * @param inputs the inputs value
+   * @param <T> data type for {@code AddN} output and operands
+   * @return a new instance of AddN
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+    OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
+    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder = scope.apply(opBuilder);
+    return new AddN<>(opBuilder.build());
+  }
+
+  /**
+   * Gets sum.
+   *
+   * @return sum.
+   */
+  public Output<T> sum() {
+    return sum;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return sum;
   }
 }

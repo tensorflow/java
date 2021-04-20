@@ -33,56 +33,49 @@ import org.tensorflow.types.TString;
  */
 @Operator
 public final class Skipgram extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Skipgram}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param windowSize The number of words to predict to the left and right of the target.
-     */
-    public Options windowSize(Long windowSize) {
-      this.windowSize = windowSize;
-      return this;
-    }
-    
-    /**
-     * @param minCount The minimum number of word occurrences for it to be included in the
-     * vocabulary.
-     */
-    public Options minCount(Long minCount) {
-      this.minCount = minCount;
-      return this;
-    }
-    
-    /**
-     * @param subsample Threshold for word occurrence. Words that appear with higher
-     * frequency will be randomly down-sampled. Set to 0 to disable.
-     */
-    public Options subsample(Float subsample) {
-      this.subsample = subsample;
-      return this;
-    }
-    
-    private Long windowSize;
-    private Long minCount;
-    private Float subsample;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Skipgram";
+
+  private Output<TString> vocabWord;
+
+  private Output<TInt32> vocabFreq;
+
+  private Output<TInt64> wordsPerEpoch;
+
+  private Output<TInt32> currentEpoch;
+
+  private Output<TInt64> totalWordsProcessed;
+
+  private Output<TInt32> examples;
+
+  private Output<TInt32> labels;
+
+  private Skipgram(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    vocabWord = operation.output(outputIdx++);
+    vocabFreq = operation.output(outputIdx++);
+    wordsPerEpoch = operation.output(outputIdx++);
+    currentEpoch = operation.output(outputIdx++);
+    totalWordsProcessed = operation.output(outputIdx++);
+    examples = operation.output(outputIdx++);
+    labels = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Skipgram operation.
-   * 
+   *
    * @param scope current scope
    * @param filename The corpus's text file name.
    * @param batchSize The size of produced batch.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Skipgram
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Skipgram create(Scope scope, String filename, Long batchSize, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Skipgram", scope.makeOpName("Skipgram"));
     opBuilder = scope.apply(opBuilder);
@@ -103,99 +96,148 @@ public final class Skipgram extends RawOp {
     }
     return new Skipgram(opBuilder.build());
   }
-  
+
   /**
+   * Sets the windowSize option.
+   *
    * @param windowSize The number of words to predict to the left and right of the target.
+   * @return this Options instance.
    */
   public static Options windowSize(Long windowSize) {
     return new Options().windowSize(windowSize);
   }
-  
+
   /**
+   * Sets the minCount option.
+   *
    * @param minCount The minimum number of word occurrences for it to be included in the
    * vocabulary.
+   * @return this Options instance.
    */
   public static Options minCount(Long minCount) {
     return new Options().minCount(minCount);
   }
-  
+
   /**
+   * Sets the subsample option.
+   *
    * @param subsample Threshold for word occurrence. Words that appear with higher
    * frequency will be randomly down-sampled. Set to 0 to disable.
+   * @return this Options instance.
    */
   public static Options subsample(Float subsample) {
     return new Options().subsample(subsample);
   }
-  
+
   /**
+   * Gets vocabWord.
    * A vector of words in the corpus.
+   * @return vocabWord.
    */
   public Output<TString> vocabWord() {
     return vocabWord;
   }
-  
+
   /**
+   * Gets vocabFreq.
    * Frequencies of words. Sorted in the non-ascending order.
+   * @return vocabFreq.
    */
   public Output<TInt32> vocabFreq() {
     return vocabFreq;
   }
-  
+
   /**
+   * Gets wordsPerEpoch.
    * Number of words per epoch in the data file.
+   * @return wordsPerEpoch.
    */
   public Output<TInt64> wordsPerEpoch() {
     return wordsPerEpoch;
   }
-  
+
   /**
+   * Gets currentEpoch.
    * The current epoch number.
+   * @return currentEpoch.
    */
   public Output<TInt32> currentEpoch() {
     return currentEpoch;
   }
-  
+
   /**
+   * Gets totalWordsProcessed.
    * The total number of words processed so far.
+   * @return totalWordsProcessed.
    */
   public Output<TInt64> totalWordsProcessed() {
     return totalWordsProcessed;
   }
-  
+
   /**
+   * Gets examples.
    * A vector of word ids.
+   * @return examples.
    */
   public Output<TInt32> examples() {
     return examples;
   }
-  
+
   /**
+   * Gets labels.
    * A vector of word ids.
+   * @return labels.
    */
   public Output<TInt32> labels() {
     return labels;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Skipgram";
-  
-  private Output<TString> vocabWord;
-  private Output<TInt32> vocabFreq;
-  private Output<TInt64> wordsPerEpoch;
-  private Output<TInt32> currentEpoch;
-  private Output<TInt64> totalWordsProcessed;
-  private Output<TInt32> examples;
-  private Output<TInt32> labels;
-  
-  private Skipgram(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    vocabWord = operation.output(outputIdx++);
-    vocabFreq = operation.output(outputIdx++);
-    wordsPerEpoch = operation.output(outputIdx++);
-    currentEpoch = operation.output(outputIdx++);
-    totalWordsProcessed = operation.output(outputIdx++);
-    examples = operation.output(outputIdx++);
-    labels = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Skipgram}
+   */
+  public static class Options {
+    private Long windowSize;
+
+    private Long minCount;
+
+    private Float subsample;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the windowSize option.
+     *
+     * @param windowSize The number of words to predict to the left and right of the target.
+     * @return this Options instance.
+     */
+    public Options windowSize(Long windowSize) {
+      this.windowSize = windowSize;
+      return this;
+    }
+
+    /**
+     * Sets the minCount option.
+     *
+     * @param minCount The minimum number of word occurrences for it to be included in the
+     * vocabulary.
+     * @return this Options instance.
+     */
+    public Options minCount(Long minCount) {
+      this.minCount = minCount;
+      return this;
+    }
+
+    /**
+     * Sets the subsample option.
+     *
+     * @param subsample Threshold for word occurrence. Words that appear with higher
+     * frequency will be randomly down-sampled. Set to 0 to disable.
+     * @return this Options instance.
+     */
+    public Options subsample(Float subsample) {
+      this.subsample = subsample;
+      return this;
+    }
   }
 }

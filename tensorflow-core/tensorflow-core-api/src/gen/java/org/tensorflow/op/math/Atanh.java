@@ -29,58 +29,64 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes inverse hyperbolic tangent of x element-wise.
- * <p>
- *   Given an input tensor, this function computes inverse hyperbolic tangent
- *   for every element in the tensor. Input range is `[-1,1]` and output range is
- *   `[-inf, inf]`. If input is `-1`, output will be `-inf` and if the
- *   input is `1`, output will be `inf`. Values outside the range will have
- *   `nan` as output.
- * <p>
- *   <pre>{@code
- *   x = tf.constant([-float("inf"), -1, -0.5, 1, 0, 0.5, 10, float("inf")])
- *   tf.math.atanh(x) ==> [nan -inf -0.54930615 inf  0. 0.54930615 nan nan]
- *   }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Given an input tensor, this function computes inverse hyperbolic tangent
+ * for every element in the tensor. Input range is {@code [-1,1]} and output range is
+ * {@code [-inf, inf]}. If input is {@code -1}, output will be {@code -inf} and if the
+ * input is {@code 1}, output will be {@code inf}. Values outside the range will have
+ * {@code nan} as output.
+ * <pre>
+ * x = tf.constant([-float(&quot;inf&quot;), -1, -0.5, 1, 0, 0.5, 10, float(&quot;inf&quot;)])
+ * tf.math.atanh(x) ==&gt; [nan -inf -0.54930615 inf  0. 0.54930615 nan nan]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Atanh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Atanh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Atanh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Atanh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Atanh", scope.makeOpName("Atanh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Atanh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Atanh";
-  
+
   private Output<T> y;
-  
+
   private Atanh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Atanh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Atanh} output and operands
+   * @return a new instance of Atanh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Atanh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Atanh", scope.makeOpName("Atanh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Atanh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

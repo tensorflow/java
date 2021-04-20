@@ -34,10 +34,22 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorArrayWrite operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArrayWriteV3";
+
+  private Output<TFloat32> flowOut;
+
+  private TensorArrayWrite(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    flowOut = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorArrayWriteV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
    * @param index The position to write to inside the TensorArray.
@@ -45,8 +57,11 @@ public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @return a new instance of TensorArrayWrite
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArrayWrite create(Scope scope, Operand<?> handle, Operand<TInt32> index, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArrayWrite create(Scope scope, Operand<? extends TType> handle,
+      Operand<TInt32> index, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayWriteV3", scope.makeOpName("TensorArrayWrite"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -55,27 +70,18 @@ public final class TensorArrayWrite extends RawOp implements Operand<TFloat32> {
     opBuilder = scope.apply(opBuilder);
     return new TensorArrayWrite(opBuilder.build());
   }
-  
+
   /**
+   * Gets flowOut.
    * A float scalar that enforces proper chaining of operations.
+   * @return flowOut.
    */
   public Output<TFloat32> flowOut() {
     return flowOut;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return flowOut;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayWriteV3";
-  
-  private Output<TFloat32> flowOut;
-  
-  private TensorArrayWrite(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    flowOut = operation.output(outputIdx++);
   }
 }

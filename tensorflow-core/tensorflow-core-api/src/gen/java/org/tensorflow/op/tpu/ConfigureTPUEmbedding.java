@@ -22,33 +22,35 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 
 /**
  * Sets up TPUEmbedding in a distributed TPU system.
  */
 public final class ConfigureTPUEmbedding extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ConfigureTPUEmbedding";
+
+  private ConfigureTPUEmbedding(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ConfigureTPUEmbedding operation.
-   * 
+   *
    * @param scope current scope
    * @param config Serialized tensorflow.tpu.TPUEmbeddingConfiguration that
    * describes the embedding lookups of the program.
    * @return a new instance of ConfigureTPUEmbedding
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ConfigureTPUEmbedding create(Scope scope, String config) {
     OperationBuilder opBuilder = scope.env().opBuilder("ConfigureTPUEmbedding", scope.makeOpName("ConfigureTPUEmbedding"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("config", config);
     return new ConfigureTPUEmbedding(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ConfigureTPUEmbedding";
-  
-  private ConfigureTPUEmbedding(Operation operation) {
-    super(operation);
   }
 }

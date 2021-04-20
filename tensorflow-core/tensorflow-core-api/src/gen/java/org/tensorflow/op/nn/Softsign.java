@@ -28,47 +28,56 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes softsign: `features / (abs(features) + 1)`.
- * 
- * @param <T> data type for {@code activations()} output
+ * Computes softsign: {@code features / (abs(features) + 1)}.
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Softsign<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Softsign operation.
-   * 
-   * @param scope current scope
-   * @param features 
-   * @return a new instance of Softsign
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Softsign<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Softsign", scope.makeOpName("Softsign"));
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Softsign<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> activations() {
-    return activations;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return activations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Softsign";
-  
+
   private Output<T> activations;
-  
+
   private Softsign(Operation operation) {
     super(operation);
     int outputIdx = 0;
     activations = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Softsign operation.
+   *
+   * @param scope current scope
+   * @param features the features value
+   * @param <T> data type for {@code Softsign} output and operands
+   * @return a new instance of Softsign
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Softsign<T> create(Scope scope, Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Softsign", scope.makeOpName("Softsign"));
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Softsign<>(opBuilder.build());
+  }
+
+  /**
+   * Gets activations.
+   *
+   * @return activations.
+   */
+  public Output<T> activations() {
+    return activations;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return activations;
   }
 }

@@ -31,69 +31,79 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom random values from a uniform distribution.
- * <p>
- * The generated values follow a uniform distribution in the range `[0, 1)`. The
+ * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
- * <p>
- * The outputs are a deterministic function of `shape` and `seed`.
- * 
- * @param <V> data type for {@code output()} output
+ * <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
+ *
+ * @param <V> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class StatelessRandomUniform<V extends TNumber> extends RawOp implements Operand<V> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatelessRandomUniform";
+
+  private Output<V> output;
+
+  private StatelessRandomUniform(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatelessRandomUniform operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
+   * @param <V> data type for {@code StatelessRandomUniform} output and operands
    * @return a new instance of StatelessRandomUniform
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TNumber> StatelessRandomUniform<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> StatelessRandomUniform<V> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomUniform", scope.makeOpName("StatelessRandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new StatelessRandomUniform<V>(opBuilder.build());
+    return new StatelessRandomUniform<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new StatelessRandomUniform operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new StatelessRandomUniform operation, with the default output types.
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomUniform
+   * @return a new instance of StatelessRandomUniform, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static StatelessRandomUniform<TFloat32> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatelessRandomUniform<TFloat32> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
     return create(scope, shape, seed, TFloat32.class);
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   @Override
   public Output<V> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatelessRandomUniform";
-  
-  private Output<V> output;
-  
-  private StatelessRandomUniform(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

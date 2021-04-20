@@ -30,55 +30,54 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of one or more square matrices.
- * <p>
  * Computes the eigenvalues and (optionally) right eigenvectors of each inner matrix in
- * `input` such that `input[..., :, :] = v[..., :, :] * diag(e[..., :])`. The eigenvalues
+ * {@code input} such that {@code input[..., :, :] = v[..., :, :] * diag(e[..., :])}. The eigenvalues
  * are sorted in non-decreasing order.
- * <pre>{@code
+ * <pre>
  * # a is a tensor.
  * # e is a tensor of eigenvalues.
  * # v is a tensor of eigenvectors.
  * e, v = eig(a)
  * e = eig(a, compute_v=False)
- * }</pre>
- * 
- * 
- * @param <U> data type for {@code e()} output
+ * </pre>
+ *
+ * @param <U> data type for {@code e} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Eig<U extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.Eig}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param computeV If `True` then eigenvectors will be computed and returned in `v`.
-     * Otherwise, only the eigenvalues will be computed.
-     */
-    public Options computeV(Boolean computeV) {
-      this.computeV = computeV;
-      return this;
-    }
-    
-    private Boolean computeV;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Eig";
+
+  private Output<U> e;
+
+  private Output<U> v;
+
+  private Eig(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    e = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Eig operation.
-   * 
+   *
    * @param scope current scope
-   * @param input `Tensor` input of shape `[N, N]`.
-   * @param Tout 
-   * @param options carries optional attributes values
+   * @param input {@code Tensor} input of shape {@code [N, N]}.
+   * @param Tout the value of the Tout property
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code Eig} output and operands
    * @return a new instance of Eig
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> Eig<U> create(Scope scope, Operand<? extends TType> input, Class<U> Tout, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> Eig<U> create(Scope scope, Operand<? extends TType> input,
+      Class<U> Tout, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Eig", scope.makeOpName("Eig"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -90,41 +89,57 @@ public final class Eig<U extends TType> extends RawOp {
         }
       }
     }
-    return new Eig<U>(opBuilder.build());
+    return new Eig<>(opBuilder.build());
   }
-  
+
   /**
-   * @param computeV If `True` then eigenvectors will be computed and returned in `v`.
+   * Sets the computeV option.
+   *
+   * @param computeV If {@code True} then eigenvectors will be computed and returned in {@code v}.
    * Otherwise, only the eigenvalues will be computed.
+   * @return this Options instance.
    */
   public static Options computeV(Boolean computeV) {
     return new Options().computeV(computeV);
   }
-  
+
   /**
-   * Eigenvalues. Shape is `[N]`.
+   * Gets e.
+   * Eigenvalues. Shape is {@code [N]}.
+   * @return e.
    */
   public Output<U> e() {
     return e;
   }
-  
+
   /**
-   * Eigenvectors. Shape is `[N, N]`.
+   * Gets v.
+   * Eigenvectors. Shape is {@code [N, N]}.
+   * @return v.
    */
   public Output<U> v() {
     return v;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Eig";
-  
-  private Output<U> e;
-  private Output<U> v;
-  
-  private Eig(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    e = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.Eig}
+   */
+  public static class Options {
+    private Boolean computeV;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the computeV option.
+     *
+     * @param computeV If {@code True} then eigenvectors will be computed and returned in {@code v}.
+     * Otherwise, only the eigenvalues will be computed.
+     * @return this Options instance.
+     */
+    public Options computeV(Boolean computeV) {
+      this.computeV = computeV;
+      return this;
+    }
   }
 }

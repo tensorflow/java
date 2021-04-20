@@ -29,53 +29,59 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a TensorList which, when stacked, has the value of `tensor`.
- * <p>
+ * Creates a TensorList which, when stacked, has the value of {@code tensor}.
  * Each tensor in the result list corresponds to one row of the input tensor.
- * <p>
- * tensor: The input tensor.
+ * <p>tensor: The input tensor.
  * output_handle: The list.
  */
 @Operator
 public final class TensorListFromTensor extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListFromTensor";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListFromTensor(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListFromTensor operation.
-   * 
+   *
    * @param scope current scope
-   * @param tensor 
-   * @param elementShape 
+   * @param tensor the tensor value
+   * @param elementShape the elementShape value
    * @return a new instance of TensorListFromTensor
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListFromTensor create(Scope scope, Operand<? extends TType> tensor, Operand<? extends TNumber> elementShape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListFromTensor create(Scope scope, Operand<? extends TType> tensor,
+      Operand<? extends TNumber> elementShape) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorListFromTensor(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListFromTensor";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListFromTensor(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

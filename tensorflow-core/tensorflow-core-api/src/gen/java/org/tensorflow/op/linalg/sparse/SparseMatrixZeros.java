@@ -25,53 +25,60 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates an all-zeros CSRSparseMatrix with shape `dense_shape`.
+ * Creates an all-zeros CSRSparseMatrix with shape {@code dense_shape}.
  */
 public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseMatrixZeros";
+
+  private Output<? extends TType> sparseMatrix;
+
+  @SuppressWarnings("unchecked")
+  private SparseMatrixZeros(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    sparseMatrix = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseMatrixZeros operation.
-   * 
+   *
    * @param scope current scope
    * @param denseShape The desired matrix shape.
-   * @param type 
+   * @param type the value of the type property
+   * @param <T> data type for {@code SparseMatrixZeros} output and operands
    * @return a new instance of SparseMatrixZeros
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape, Class<T> type) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape,
+      Class<T> type) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixZeros", scope.makeOpName("SparseMatrixZeros"));
     opBuilder.addInput(denseShape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));
     return new SparseMatrixZeros(opBuilder.build());
   }
-  
+
   /**
-   * An empty CSR matrix with shape `dense_shape`.
+   * Gets sparseMatrix.
+   * An empty CSR matrix with shape {@code dense_shape}.
+   * @return sparseMatrix.
    */
-  public Output<?> sparseMatrix() {
+  public Output<? extends TType> sparseMatrix() {
     return sparseMatrix;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) sparseMatrix;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseMatrixZeros";
-  
-  private Output<?> sparseMatrix;
-  
-  private SparseMatrixZeros(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    sparseMatrix = operation.output(outputIdx++);
   }
 }

@@ -30,32 +30,22 @@ import org.tensorflow.types.family.TType;
 /**
  * Update '*var' according to the proximal adagrad scheme.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyAdagradDa extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdagradDa}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyAdagradDA";
+
+  private ResourceApplyAdagradDa(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ResourceApplyAdagradDa operation.
-   * 
+   * Factory method to create a class wrapping a new ResourceApplyAdagradDA operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
@@ -65,11 +55,17 @@ public final class ResourceApplyAdagradDa extends RawOp {
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 regularization. Must be a scalar.
    * @param globalStep Training step number. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAdagradDA} output and operands
    * @return a new instance of ResourceApplyAdagradDa
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAdagradDa create(Scope scope, Operand<?> var, Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyAdagradDa create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> gradientAccumulator,
+      Operand<? extends TType> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr,
+      Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdagradDA", scope.makeOpName("ResourceApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
@@ -89,19 +85,37 @@ public final class ResourceApplyAdagradDa extends RawOp {
     }
     return new ResourceApplyAdagradDa(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyAdagradDA";
-  
-  private ResourceApplyAdagradDa(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAdagradDa}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

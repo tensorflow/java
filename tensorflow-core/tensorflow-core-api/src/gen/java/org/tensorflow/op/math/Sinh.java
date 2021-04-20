@@ -29,56 +29,62 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes hyperbolic sine of x element-wise.
- * <p>
- *   Given an input tensor, this function computes hyperbolic sine of every
- *   element in the tensor. Input range is `[-inf,inf]` and output range
- *   is `[-inf,inf]`.
- * <p>
- *   <pre>{@code
- *   x = tf.constant([-float("inf"), -9, -0.5, 1, 1.2, 2, 10, float("inf")])
- *   tf.math.sinh(x) ==> [-inf -4.0515420e+03 -5.2109528e-01 1.1752012e+00 1.5094614e+00 3.6268604e+00 1.1013232e+04 inf]
- *   }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Given an input tensor, this function computes hyperbolic sine of every
+ * element in the tensor. Input range is {@code [-inf,inf]} and output range
+ * is {@code [-inf,inf]}.
+ * <pre>
+ * x = tf.constant([-float(&quot;inf&quot;), -9, -0.5, 1, 1.2, 2, 10, float(&quot;inf&quot;)])
+ * tf.math.sinh(x) ==&gt; [-inf -4.0515420e+03 -5.2109528e-01 1.1752012e+00 1.5094614e+00 3.6268604e+00 1.1013232e+04 inf]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Sinh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Sinh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Sinh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sinh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Sinh", scope.makeOpName("Sinh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Sinh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Sinh";
-  
+
   private Output<T> y;
-  
+
   private Sinh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Sinh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Sinh} output and operands
+   * @return a new instance of Sinh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sinh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Sinh", scope.makeOpName("Sinh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Sinh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

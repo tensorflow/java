@@ -31,35 +31,29 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SparseApplyAdagradDa<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyAdagradDa}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseApplyAdagradDA";
+
+  private Output<T> out;
+
+  private SparseApplyAdagradDa(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new SparseApplyAdagradDa operation.
-   * 
+   * Factory method to create a class wrapping a new SparseApplyAdagradDA operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
@@ -70,11 +64,17 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 regularization. Must be a scalar.
    * @param globalStep Training step number. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseApplyAdagradDA} output and operands
    * @return a new instance of SparseApplyAdagradDa
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var, Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseApplyAdagradDa<T> create(Scope scope, Operand<T> var,
+      Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
+      Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradDA", scope.makeOpName("SparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
@@ -93,37 +93,53 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
         }
       }
     }
-    return new SparseApplyAdagradDa<T>(opBuilder.build());
+    return new SparseApplyAdagradDa<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseApplyAdagradDA";
-  
-  private Output<T> out;
-  
-  private SparseApplyAdagradDa(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyAdagradDa}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

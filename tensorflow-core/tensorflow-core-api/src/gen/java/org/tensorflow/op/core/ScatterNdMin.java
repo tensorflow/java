@@ -24,52 +24,46 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
  * Computes element-wise minimum.
- * 
- * @param <T> data type for {@code outputRef()} output
+ *
+ * @param <T> data type for {@code output_ref} output
  */
 public final class ScatterNdMin<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ScatterNdMin}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking An optional bool. Defaults to True. If True, the assignment will
-     * be protected by a lock; otherwise the behavior is undefined,
-     * but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ScatterNdMin";
+
+  private Output<T> outputRef;
+
+  private ScatterNdMin(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputRef = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ScatterNdMin operation.
-   * 
+   *
    * @param scope current scope
    * @param ref A mutable Tensor. Should be from a Variable node.
    * @param indices A Tensor. Must be one of the following types: int32, int64.
    * A tensor of indices into ref.
    * @param updates A Tensor. Must have the same type as ref. A tensor of updated values
    * to add to ref.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ScatterNdMin} output and operands
    * @return a new instance of ScatterNdMin
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ScatterNdMin<T> create(Scope scope, Operand<T> ref, Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ScatterNdMin<T> create(Scope scope, Operand<T> ref,
+      Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdMin", scope.makeOpName("ScatterNdMin"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -82,39 +76,56 @@ public final class ScatterNdMin<T extends TType> extends RawOp implements Operan
         }
       }
     }
-    return new ScatterNdMin<T>(opBuilder.build());
+    return new ScatterNdMin<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking An optional bool. Defaults to True. If True, the assignment will
    * be protected by a lock; otherwise the behavior is undefined,
    * but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
+   * Gets outputRef.
    * Same as ref. Returned as a convenience for operations that want
    * to use the updated values after the update is done.
+   * @return outputRef.
    */
   public Output<T> outputRef() {
     return outputRef;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return outputRef;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ScatterNdMin";
-  
-  private Output<T> outputRef;
-  
-  private ScatterNdMin(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputRef = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ScatterNdMin}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking An optional bool. Defaults to True. If True, the assignment will
+     * be protected by a lock; otherwise the behavior is undefined,
+     * but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

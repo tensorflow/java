@@ -343,7 +343,7 @@
             <goals>
               <goal>java</goal>
             </goals>
-            <!--            <phase>generate-sources</phase>-->
+            <phase>generate-sources</phase>
           </execution>
         </executions>
         <dependencies>

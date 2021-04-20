@@ -30,51 +30,47 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients of the maxpooling function.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class MaxPoolGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dataFormat Specify the data format of the input and output data. With the
-     * default format "NHWC", the data is stored in the order of:
-     *     [batch, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, in_channels, in_height, in_width].
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    private String dataFormat;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MaxPoolGradV2";
+
+  private Output<T> output;
+
+  private MaxPoolGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new MaxPoolGrad operation.
-   * 
+   * Factory method to create a class wrapping a new MaxPoolGradV2 operation.
+   *
    * @param scope current scope
    * @param origInput The original input tensor.
    * @param origOutput The original output tensor.
-   * @param grad 4-D.  Gradients w.r.t. the output of `max_pool`.
+   * @param grad 4-D.  Gradients w.r.t. the output of {@code max_pool}.
    * @param ksize The size of the window for each dimension of the input tensor.
    * @param strides The stride of the sliding window for each dimension of the
    * input tensor.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MaxPoolGradV2} output and operands
    * @return a new instance of MaxPoolGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> MaxPoolGrad<T> create(Scope scope, Operand<T> origInput, Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> MaxPoolGrad<T> create(Scope scope, Operand<T> origInput,
+      Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides,
+      String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradV2", scope.makeOpName("MaxPoolGrad"));
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());
@@ -90,40 +86,59 @@ public final class MaxPoolGrad<T extends TNumber> extends RawOp implements Opera
         }
       }
     }
-    return new MaxPoolGrad<T>(opBuilder.build());
+    return new MaxPoolGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat Specify the data format of the input and output data. With the
-   * default format "NHWC", the data is stored in the order of:
-   *     [batch, in_height, in_width, in_channels].
-   * Alternatively, the format could be "NCHW", the data storage order of:
-   *     [batch, in_channels, in_height, in_width].
+   * default format &quot;NHWC&quot;, the data is stored in the order of:
+   * [batch, in_height, in_width, in_channels].
+   * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+   * [batch, in_channels, in_height, in_width].
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
-   * Gradients w.r.t. the input to `max_pool`.
+   * Gets output.
+   * Gradients w.r.t. the input to {@code max_pool}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MaxPoolGradV2";
-  
-  private Output<T> output;
-  
-  private MaxPoolGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.MaxPoolGrad}
+   */
+  public static class Options {
+    private String dataFormat;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat Specify the data format of the input and output data. With the
+     * default format &quot;NHWC&quot;, the data is stored in the order of:
+     * [batch, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, in_channels, in_height, in_width].
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
   }
 }

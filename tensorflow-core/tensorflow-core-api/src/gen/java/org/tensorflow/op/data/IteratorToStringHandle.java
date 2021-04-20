@@ -26,48 +26,57 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
- * Converts the given `resource_handle` representing an iterator to a string.
+ * Converts the given {@code resource_handle} representing an iterator to a string.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class IteratorToStringHandle extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IteratorToStringHandle";
+
+  private Output<TString> stringHandle;
+
+  private IteratorToStringHandle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    stringHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IteratorToStringHandle operation.
-   * 
+   *
    * @param scope current scope
    * @param resourceHandle A handle to an iterator resource.
    * @return a new instance of IteratorToStringHandle
    */
-  @Endpoint(describeByClass = true)
-  public static IteratorToStringHandle create(Scope scope, Operand<?> resourceHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IteratorToStringHandle create(Scope scope,
+      Operand<? extends TType> resourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorToStringHandle", scope.makeOpName("IteratorToStringHandle"));
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IteratorToStringHandle(opBuilder.build());
   }
-  
+
   /**
+   * Gets stringHandle.
    * A string representation of the given handle.
+   * @return stringHandle.
    */
   public Output<TString> stringHandle() {
     return stringHandle;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return stringHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IteratorToStringHandle";
-  
-  private Output<TString> stringHandle;
-  
-  private IteratorToStringHandle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    stringHandle = operation.output(outputIdx++);
   }
 }
