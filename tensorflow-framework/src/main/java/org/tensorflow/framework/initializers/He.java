@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TFloating;
 
 /**
  * He initializer.
@@ -53,17 +52,18 @@ import org.tensorflow.types.family.TFloating;
  * </pre>
  *
  * <p><b>NOTE:</b>
+ *
  * <p>For an HeNormal equivalent initializer, use {@link
  * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
- * <p>For an HeUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
- * for the distribution parameter.
  *
- * @param <T> The TType for the call operation
+ * <p>For an HeUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM} for
+ * the distribution parameter.
+ *
  * @see <a
  *     href="https://www.cv-foundation.org/openaccess/content_iccv_2015/html/He_Delving_Deep_into_ICCV_2015_paper.html">He
  *     et al., 2015</a>
  */
-public class He<T extends TFloating> extends VarianceScaling<T> {
+public class He extends VarianceScaling {
 
   public static final double SCALE = 2.0;
 
@@ -73,7 +73,7 @@ public class He<T extends TFloating> extends VarianceScaling<T> {
    * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the He initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and dtype.
+   *     will always produce the same random tensor for a given shape and data type.
    * @see VarianceScaling.Distribution
    */
   public He(Ops tf, Distribution distribution, long seed) {

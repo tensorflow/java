@@ -30,10 +30,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = tanh.call(input);
  *     // result = [-0.9950547f, -0.7615942f,  0.f,  0.7615942f,  0.9950547f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Tanh<T extends TFloating> extends Activation<T> {
+public class Tanh extends Activation<TFloating> {
 
   /**
    * Creates a Hyperbolic tangent activation.
@@ -46,7 +44,7 @@ public class Tanh<T extends TFloating> extends Activation<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.math.tanh(input);
   }
 }

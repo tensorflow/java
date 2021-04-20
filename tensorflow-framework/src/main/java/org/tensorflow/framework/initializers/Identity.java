@@ -21,6 +21,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates the identity matrix.
  *
@@ -34,10 +36,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; values =
  *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
- *
- * @param <T> The TType for the call operation
  */
-public class Identity<T extends TFloating> extends BaseInitializer<T> {
+public class Identity extends BaseInitializer<TFloating> {
   public static final double GAIN_DEFAULT = 1.0;
 
   private final double gain;
@@ -65,7 +65,7 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public <U extends TFloating> Operand<U> call(Operand<TInt64> dims, Class<U> type) {
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
@@ -74,10 +74,10 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
     long diagSize = Math.min(shape.size(0), shape.size(1));
     Shape diagShape = Shape.of(diagSize);
 
-    Operand<T> op;
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), type);
-    Operand<T> diagOnes =
-        tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), type));
+    Operand<U> op;
+    Operand<U> zero = cast(tf, tf.constant(0), type);
+    Operand<U> diagOnes =
+        tf.fill(tf.constant(diagShape.asArray()), cast(tf, tf.constant(1.0), type));
     if (isSquare) {
       op =
           tf.linalg.matrixDiag(
@@ -87,10 +87,10 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
               tf.constant((int) shape.size(1)),
               zero);
     } else {
-      Operand<T> zeroMatrix = tf.zeros(dims, type);
+      Operand<U> zeroMatrix = tf.zeros(dims, type);
       op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 
-    return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), type));
+    return tf.math.mul(op, cast(tf, tf.constant(gain), type));
   }
 }

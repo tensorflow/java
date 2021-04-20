@@ -50,8 +50,8 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat32> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_IN,
@@ -71,8 +71,8 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_IN,
@@ -91,13 +91,9 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat32> instance =
-            new VarianceScaling<>(
-                tf,
-                1.0,
-                VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.NORMAL,
-                SEED);
+        VarianceScaling instance =
+            new VarianceScaling(
+                tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.NORMAL, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -112,13 +108,9 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
-                tf,
-                1.0,
-                VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.NORMAL,
-                SEED);
+        VarianceScaling instance =
+            new VarianceScaling(
+                tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.NORMAL, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -132,8 +124,8 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat32> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.UNIFORM, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
@@ -149,8 +141,8 @@ public class VarianceScalingTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
@@ -164,8 +156,8 @@ public class VarianceScalingTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
@@ -180,13 +172,9 @@ public class VarianceScalingTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
-                tf,
-                1.0,
-                VarianceScaling.Mode.FAN_IN,
-                VarianceScaling.Distribution.NORMAL,
-                SEED);
+        VarianceScaling instance =
+            new VarianceScaling(
+                tf, 1.0, VarianceScaling.Mode.FAN_IN, VarianceScaling.Distribution.NORMAL, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
@@ -200,8 +188,8 @@ public class VarianceScalingTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf,
                 1.0,
                 VarianceScaling.Mode.FAN_OUT,
@@ -220,8 +208,8 @@ public class VarianceScalingTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        VarianceScaling<TFloat64> instance =
-            new VarianceScaling<>(
+        VarianceScaling instance =
+            new VarianceScaling(
                 tf, 1.0, VarianceScaling.Mode.FAN_AVG, VarianceScaling.Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);

@@ -44,11 +44,10 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = elu.call(input);
  * </pre>
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
-public class ELU<T extends TFloating> extends Activation<T> {
+public class ELU extends Activation<TFloating> {
 
   private static final double ALPHA_DEFAULT = 1.0;
 
@@ -76,20 +75,16 @@ public class ELU<T extends TFloating> extends Activation<T> {
     this.alpha = alpha;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
 
-    Operand<T> result = tf.nn.elu(input);
-    if (alpha == 1.0) return result;
-    else {
-      Class<T> inputType = input.type();
-      Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
+    Operand<U> result = tf.nn.elu(input);
+    if (alpha == 1.0) {
+      return result;
+    } else {
+      Class<U> inputType = input.type();
+      Operand<U> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
       Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), inputType));
       return tf.select(cond, result, y);
     }

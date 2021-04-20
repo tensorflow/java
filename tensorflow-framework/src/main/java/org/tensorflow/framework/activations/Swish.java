@@ -37,10 +37,9 @@ import org.tensorflow.types.family.TFloating;
  *
  * </pre>
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
-public class Swish<T extends TFloating> extends Activation<T> {
+public class Swish extends Activation<TFloating> {
 
   /**
    * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
@@ -57,7 +56,7 @@ public class Swish<T extends TFloating> extends Activation<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
 
     // TODO Python Keras returns a "grad", which is an optimization not implemented in Java.
     return tf.math.mul(input, tf.math.sigmoid(input));

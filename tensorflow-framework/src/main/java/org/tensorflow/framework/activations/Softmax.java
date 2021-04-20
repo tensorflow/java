@@ -35,10 +35,8 @@ import org.tensorflow.types.family.TFloating;
  * <p>The softmax of each vector x is computed as: <code>exp(x) / tf.sum(exp(x))</code>.
  *
  * <p>The input values in are the log-odds of the resulting probability.
- *
- * @param <T> the data type of the activation
  */
-public class Softmax<T extends TFloating> extends Activation<T> {
+public class Softmax extends Activation<TFloating> {
 
   private static final int AXIS_DEFAULT = -1;
 
@@ -65,23 +63,18 @@ public class Softmax<T extends TFloating> extends Activation<T> {
     this.axis = axis;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     Shape shape = input.shape();
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {
       return tf.nn.softmax(input);
     } else {
-      Operand<T> e =
+      Operand<U> e =
           tf.math.exp(
               tf.math.sub(input, tf.reduceMax(input, tf.constant(axis), ReduceMax.keepDims(true))));
-      Operand<T> s = tf.reduceSum(e, tf.constant(axis), ReduceSum.keepDims(true));
+      Operand<U> s = tf.reduceSum(e, tf.constant(axis), ReduceSum.keepDims(true));
       return tf.math.div(e, s);
     }
   }

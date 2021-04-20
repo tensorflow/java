@@ -30,10 +30,8 @@ import org.tensorflow.types.family.TFloating;
  *   Operand&lt;TFloat32&gt; result = exp.call(input);
  *   // result is [0.04978707f,  0.36787945f,  1.f,  2.7182817f, 20.085537f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Exponential<T extends TFloating> extends Activation<T> {
+public class Exponential extends Activation<TFloating> {
 
   /**
    * Creates an Exponential activation.
@@ -48,10 +46,12 @@ public class Exponential<T extends TFloating> extends Activation<T> {
    * Calculates the Exponential activation.
    *
    * @param input the input tensor
+   * @param <U> the data type of the input and result
    * @return an Operand for the exponential activation: <code>exp(x)</code>.
    */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
+
     return tf.math.exp(input);
   }
 }

@@ -21,8 +21,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /** @author Jim Clarke */
 public class ELUTest {
 
@@ -42,8 +40,6 @@ public class ELUTest {
   @AfterEach
   public void tearDown() {}
 
-
-
   /** Test of ELU call method */
   @Test
   public void testCallFloat() {
@@ -52,7 +48,7 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat32> instance = new ELU<>(tf);
+        ELU instance = new ELU(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -66,7 +62,7 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>(tf);
+        ELU instance = new ELU(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -80,7 +76,7 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>(tf, 2.0f);
+        ELU instance = new ELU(tf, 2.0f);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

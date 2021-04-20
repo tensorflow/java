@@ -30,10 +30,8 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = softsign.call(input);
  *     // result is [-0.5f, 0.f, 0.5f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Softsign<T extends TFloating> extends Activation<T> {
+public class Softsign extends Activation<TFloating> {
 
   /**
    * Creates a Softsign activation.
@@ -44,14 +42,9 @@ public class Softsign<T extends TFloating> extends Activation<T> {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.nn.softsign(input);
   }
 }

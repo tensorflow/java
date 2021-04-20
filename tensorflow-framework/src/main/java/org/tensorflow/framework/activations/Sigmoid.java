@@ -38,10 +38,8 @@ import org.tensorflow.types.family.TFloating;
  *     // result is [2.0611537e-09f, 2.6894143e-01f,
  *     //                 5.0000000e-01f,7.3105860e-01f, 1.f]
  * </pre>
- *
- * @param <T> the data type of the activation
  */
-public class Sigmoid<T extends TFloating> extends Activation<T> {
+public class Sigmoid extends Activation<TFloating> {
 
   /**
    * Creates a Sigmoid activation.
@@ -52,14 +50,9 @@ public class Sigmoid<T extends TFloating> extends Activation<T> {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.math.sigmoid(input);
   }
 }

@@ -50,7 +50,7 @@ public class SoftplusTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softplus<TFloat32> instance = new Softplus<>(tf);
+        Softplus instance = new Softplus(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -68,7 +68,7 @@ public class SoftplusTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softplus<TFloat64> instance = new Softplus<>(tf);
+        Softplus instance = new Softplus(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

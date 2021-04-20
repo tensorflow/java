@@ -42,10 +42,9 @@ import org.tensorflow.types.family.TFloating;
  * <p><b>Notes: </b> To be used together with the {@link
  * org.tensorflow.framework.initializers.LeCun} initializer with Normal Distribution.
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
-public class SELU<T extends TFloating> extends Activation<T> {
+public class SELU extends Activation<TFloating> {
 
   /**
    * Creates a Scaled Exponential Linear Unit (SELU) activation.
@@ -56,14 +55,9 @@ public class SELU<T extends TFloating> extends Activation<T> {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.nn.selu(input);
   }
 }

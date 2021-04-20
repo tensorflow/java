@@ -46,7 +46,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat32> instance = new ReLU<>(tf);
+        ReLU instance = new ReLU(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -60,7 +60,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TInt32> instance = new ReLU<>(tf);
+        ReLU instance = new ReLU(tf);
         Operand<TInt32> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -74,7 +74,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TInt64> instance = new ReLU<>(tf);
+        ReLU instance = new ReLU(tf);
         Operand<TInt64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -88,7 +88,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat16> instance = new ReLU<>(tf);
+        ReLU instance = new ReLU(tf);
         Operand<TFloat16> result =
             instance.call(tf.dtypes.cast(tf.constant(input), TFloat16.class));
         session.evaluate(tf.dtypes.cast(tf.constant(expected), TFloat16.class), result);
@@ -103,7 +103,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(tf);
+        ReLU instance = new ReLU(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -112,11 +112,11 @@ public class ReLUTest {
   @Test
   public void testAlpha() {
     double[] input = {-10., -5., 0.0, 5., 10.};
-    double[] expected = {-5. , -2.5,  0.,  5., 10.};
+    double[] expected = {-5., -2.5, 0., 5., 10.};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
+        ReLU instance = new ReLU(tf, 0.5f, ReLU.MAX_VALUE_DEFAULT, ReLU.THRESHOLD_DEFAULT);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -129,7 +129,7 @@ public class ReLUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, 5, ReLU.THRESHOLD_DEFAULT);
+        ReLU instance = new ReLU(tf, ReLU.ALPHA_DEFAULT, 5, ReLU.THRESHOLD_DEFAULT);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }
@@ -138,11 +138,11 @@ public class ReLUTest {
   @Test
   public void testThreshold() {
     double[] input = {-10., -5., 0.0, 5., 10.};
-    double[] expected = {-0., -0.,  0.,  0., 10.};
+    double[] expected = {-0., -0., 0., 0., 10.};
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ReLU<TFloat64> instance = new ReLU<>(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5.0f);
+        ReLU instance = new ReLU(tf, ReLU.ALPHA_DEFAULT, ReLU.MAX_VALUE_DEFAULT, 5.0f);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(tf.constant(expected), result);
       }

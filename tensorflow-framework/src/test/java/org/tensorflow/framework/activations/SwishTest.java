@@ -21,8 +21,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /** @author Jim Clarke */
 public class SwishTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -41,8 +39,6 @@ public class SwishTest {
   @AfterEach
   public void tearDown() {}
 
-
-
   /** Test of Swish call method */
   @Test
   public void testCallFloat() {
@@ -60,7 +56,7 @@ public class SwishTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Swish<TFloat32> instance = new Swish<>(tf);
+        Swish instance = new Swish(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -83,7 +79,7 @@ public class SwishTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Swish<TFloat64> instance = new Swish<>(tf);
+        Swish instance = new Swish(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

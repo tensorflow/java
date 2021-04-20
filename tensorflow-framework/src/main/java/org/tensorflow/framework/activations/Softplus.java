@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TFloating;
  *     //                 1.3132616e+00f, 2.0000000e+01f]
  * </pre>
  */
-public class Softplus<T extends TFloating> extends Activation<T> {
+public class Softplus extends Activation<TFloating> {
 
   /**
    * Creates a Softplus activation function.
@@ -43,14 +43,9 @@ public class Softplus<T extends TFloating> extends Activation<T> {
     super(tf);
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public <U extends TFloating> Operand<U> call(Operand<U> input) {
     return tf.math.softplus(input);
   }
 }

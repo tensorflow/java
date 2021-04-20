@@ -52,7 +52,7 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat32> instance = new Tanh<>(tf);
+        Tanh instance = new Tanh(tf);
         Operand<TFloat32> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }
@@ -71,7 +71,7 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat64> instance = new Tanh<>(tf);
+        Tanh instance = new Tanh(tf);
         Operand<TFloat64> result = instance.call(tf.constant(input));
         session.evaluate(expected, result);
       }

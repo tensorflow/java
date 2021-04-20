@@ -27,7 +27,6 @@ import org.tensorflow.types.TFloat64;
 public class HeTest {
   private static final long SEED = 1000L;
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-  int counter;
 
   public HeTest() {}
 
@@ -51,7 +50,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat32> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        He instance = new He(tf, Distribution.TRUNCATED_NORMAL, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -66,7 +65,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat64> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        He instance = new He(tf, Distribution.TRUNCATED_NORMAL, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -80,7 +79,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat32> instance = new He<>(tf, Distribution.UNIFORM, SEED);
+        He instance = new He(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -95,7 +94,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat64> instance = new He<>(tf, Distribution.UNIFORM, SEED);
+        He instance = new He(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -107,7 +106,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat64> instance = new He<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        He instance = new He(tf, Distribution.TRUNCATED_NORMAL, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
@@ -120,7 +119,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat64> instance = new He<>(tf, Distribution.UNIFORM, SEED);
+        He instance = new He(tf, Distribution.UNIFORM, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
@@ -133,7 +132,7 @@ public class HeTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        He<TFloat64> instance = new He<>(tf, Distribution.NORMAL, SEED);
+        He instance = new He(tf, Distribution.NORMAL, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);

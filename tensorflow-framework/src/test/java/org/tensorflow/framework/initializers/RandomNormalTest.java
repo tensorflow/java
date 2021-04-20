@@ -14,13 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /** Test the RandomNormal initializer */
 public class RandomNormalTest {
@@ -32,18 +34,6 @@ public class RandomNormalTest {
 
   public RandomNormalTest() {}
 
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
   /** Test of call method, of class RandomNormal. */
   @Test
   public void testCalltestSoftmaxFloat() {
@@ -52,8 +42,7 @@ public class RandomNormalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomNormal<TFloat32> instance =
-            new RandomNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
+        RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
         Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
@@ -68,8 +57,7 @@ public class RandomNormalTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        RandomNormal<TFloat64> instance =
-            new RandomNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
+        RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
         Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
@@ -82,11 +70,24 @@ public class RandomNormalTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        RandomNormal<TFloat64> instance =
-            new RandomNormal<>(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
+        RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, STDDEV_VALUE, SEED);
         Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
         Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
+  }
+
+  @Test
+  public void testInvalidStdDev() {
+    for (TestSession.Mode tfMode : tfModes)
+      assertThrows(
+          IllegalArgumentException.class,
+          () -> {
+            try (TestSession session = TestSession.createTestSession(tfMode)) {
+              Ops tf = session.getTF();
+
+              RandomNormal instance = new RandomNormal(tf, MEAN_VALUE, -2.5, SEED);
+            }
+          });
   }
 }
