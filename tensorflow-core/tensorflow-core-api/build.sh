@@ -89,7 +89,7 @@ if [[ -z "$SKIP_EXPORT" ]]; then
       --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
       $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
 else
-  echo "Skiping Op export"
+  echo "Skipping Op export"
 fi
 
 
