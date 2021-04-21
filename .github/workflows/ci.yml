@@ -56,114 +56,13 @@ jobs:
           STAGING_REPOSITORY_ID=`awk -F'[<>]' '/stagedRepositoryId/{print $3}' response.xml`
           echo "Staging repository created: $STAGING_REPOSITORY_ID"
           echo "::set-output name=stagingRepositoryId::$STAGING_REPOSITORY_ID"
-  linux-x86_64:
-    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: ubuntu-latest
-    container: centos:7
-    needs: prepare
-    strategy:
-      matrix:
-        ext: [ "", -mkl, -gpu, -mkl-gpu ]
-    steps:
-      - name: Install environment
-        run: |
-          echo Not updating glibc since CUDA fails with updated versions
-          GLIBC="glibc glibc-common glibc-devel glibc-headers"
-          yum --disablerepo updates -y install $GLIBC
-          yum -x "$GLIBC" -y update
-          yum -x "$GLIBC" -y install centos-release-scl-rh epel-release
-          yum -x "$GLIBC" -y install java-1.8.0-openjdk-devel devtoolset-7 rh-git218 patch perl-Data-Dumper python36-devel python36-numpy python36-pip python36-six
-          echo Downloading Maven
-          curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
-          tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
-          ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
-          echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-linux-x86_64.sh -o bazel.sh --retry 10
-          bash bazel.sh
-          if [[ "${{ matrix.ext }}" == *-gpu ]]; then
-          echo Installing CUDA
-          curl -L https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda-repo-rhel7-11-0-local-11.0.3_450.51.06-1.x86_64.rpm -o $HOME/cuda.rpm
-          curl -L https://developer.download.nvidia.com/compute/redist/cudnn/v8.0.3/cudnn-11.0-linux-x64-v8.0.3.33.tgz -o $HOME/cudnn.tgz
-          curl -L https://developer.download.nvidia.com/compute/redist/nccl/v2.7/nccl_2.7.8-1+cuda11.0_x86_64.txz -o $HOME/nccl.txz
-          rpm -i $HOME/cuda.rpm
-          pushd /var/cuda-repo-rhel7-11-0-local/; rpm -i --nodeps cuda*.rpm libc*.rpm libn*.rpm; rm *.rpm; popd
-          ln -sf /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/libcuda.so
-          ln -sf /usr/local/cuda/lib64/stubs/libnvidia-ml.so /usr/local/cuda/lib64/libnvidia-ml.so
-          tar hxvf $HOME/cudnn.tgz -C /usr/local/
-          tar hxvf $HOME/nccl.txz --strip-components=1 -C /usr/local/cuda/
-          mv /usr/local/cuda/lib/* /usr/local/cuda/lib64/
-          echo Removing downloaded archives and unused libraries to avoid running out of disk space
-          rm -f $HOME/*.rpm $HOME/*.tgz $HOME/*.txz $HOME/*.tar.*
-          rm -f $(find /usr/local/cuda/ -name '*.a' -and -not -name libcudart_static.a -and -not -name libcudadevrt.a)
-          rm -rf /usr/local/cuda/doc* /usr/local/cuda/libnvvp* /usr/local/cuda/nsight* /usr/local/cuda/samples*
-          fi
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Build project
-        run: |
-          source scl_source enable devtoolset-7 rh-git218 || true
-          git --version
-          gcc --version
-          mvn -version
-          bazel version
-          df -h
-          echo "Fixing HOME to /root (was '$HOME')"
-          export HOME=/root
-          mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
-            printf '%s\n' "${GCP_CREDS}" > $HOME/gcp_creds.json
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
-          else
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
-          fi
-          echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=linux-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
-          df -h
-  macosx-x86_64:
-    if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
-    runs-on: macos-latest
-    needs: prepare
-    strategy:
-      matrix:
-        ext: [ "", -mkl ]
-    steps:
-      - name: Install environment
-        run: |
-          python3 -m pip install numpy six
-          echo Downloading Bazel
-          curl -L https://github.com/bazelbuild/bazel/releases/download/3.1.0/bazel-3.1.0-installer-darwin-x86_64.sh -o bazel.sh --retry 10
-          bash bazel.sh
-          brew install libomp perl
-      - name: Checkout repository
-        uses: actions/checkout@v1
-      - name: Build project
-        run: |
-          git --version
-          clang --version
-          mvn -version
-          bazel version
-          mkdir -p $HOME/.m2
-          [[ "${{ github.event_name }}" == "push" ]] && MAVEN_PHASE=deploy || MAVEN_PHASE=install
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.CI_DEPLOY_USERNAME }}</username><password>${{ secrets.CI_DEPLOY_PASSWORD }}</password></server></servers></settings>" > $HOME/.m2/settings.xml
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.repository }}" == "tensorflow/java" ]]; then
-            printf '%s\n' "${GCP_CREDS}" > $HOME/gcp_creds.json
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=true --google_credentials=$HOME/gcp_creds.json"
-          else
-            export BAZEL_CACHE="--remote_cache=https://storage.googleapis.com/tensorflow-sigs-jvm --remote_upload_local_results=false"
-          fi
-          df -h
-          echo Executing Maven $MAVEN_PHASE
-          mvn clean $MAVEN_PHASE -B -U -e -Djavacpp.platform=macosx-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl $NATIVE_BUILD_PROJECTS -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=$BAZEL_CACHE"
-          df -h
   windows-x86_64:
     if: github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: windows-latest
     needs: prepare
     strategy:
       matrix:
-        ext: [ "", -gpu, -mkl ] #, -mkl-gpu]
+        ext: [ "" ] #, -mkl-gpu]
 
     steps:
       - name: Configure page file
