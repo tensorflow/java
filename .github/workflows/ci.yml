@@ -128,6 +128,7 @@ jobs:
           )          
           df -h
           wmic pagefile list /format:list
+          set "SKIP_EXPORT=true"
           echo Executing Maven %MAVEN_PHASE%
           call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=%BAZEL_CACHE%"
           if ERRORLEVEL 1 exit /b
