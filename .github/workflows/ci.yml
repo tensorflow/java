@@ -134,6 +134,7 @@ jobs:
           df -h
           wmic pagefile list /format:list
       - name: Archive ops.pb
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: ops.pb
