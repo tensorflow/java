@@ -82,7 +82,7 @@ mkdir -p $GEN_SRCS_DIR
 GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
 mkdir -p $GEN_RESOURCE_DIR
 
-if [[ -z "$SKIP_EXPORT" ]]; then
+if [[ -z ${SKIP_EXPORT} ]]; then
   # Export op defs
   echo "Exporting Ops"
   $BAZEL_BIN/java_op_exporter \
