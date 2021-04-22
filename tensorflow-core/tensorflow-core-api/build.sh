@@ -82,10 +82,15 @@ mkdir -p $GEN_SRCS_DIR
 GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
 mkdir -p $GEN_RESOURCE_DIR
 
-# Export op defs
-$BAZEL_BIN/java_op_exporter \
-    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
-    $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+if [[ -z "${SKIP_EXPORT:-}" ]]; then
+  # Export op defs
+  echo "Exporting Ops"
+  $BAZEL_BIN/java_op_exporter \
+      --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
+      $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+else
+  echo "Skipping Op export"
+fi
 
 
 # Copy generated Java protos from source jars
