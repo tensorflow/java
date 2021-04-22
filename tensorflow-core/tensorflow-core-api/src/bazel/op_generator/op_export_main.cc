@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
 
   tensorflow::Env* env = tensorflow::Env::Default();
-  std::cerr << "Env Type: " << typeid(*env).name() << "\n";
+  std::cerr << "Loading lib: " << argv[1] << "\n";
   void* ops_libs_handles[1];
   TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
   tensorflow::OpList ops;
