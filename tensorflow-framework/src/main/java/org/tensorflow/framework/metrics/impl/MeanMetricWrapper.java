@@ -29,8 +29,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of
  * {@link MetricReduction#WEIGHTED_MEAN}.
  *
- * <p>The loss function calculates the loss between the <code>labels</code> and <code>predictions
- * </code> then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
+ * <p>The loss function calculates the loss between the {@code labels} and {@code predictions
+ * } then passes this loss to the {@link Mean} metric to calculate the weighted mean of the
  * loss over many iterations or epochs
  *
  * @param <T> The data type for the metric result
