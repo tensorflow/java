@@ -20,7 +20,7 @@
 #include "tensorflow/core/framework/op.h"
 #include "tensorflow/core/lib/core/status.h"
 #include "tensorflow/core/lib/strings/str_util.h"
-#include "tensorflow/core/platform/env.h"
+#include "tensorflow/core/framework/load_library.cc"
 #include "tensorflow/core/platform/init_main.h"
 #include "tensorflow/core/util/command_line_flags.h"
 #include "tensorflow/core/framework/api_def.pb.h"
@@ -70,9 +70,8 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
       }
     }
   }
+
   api_map.UpdateDocs();
-
-
 
   for (int i = 0 ; i < op_list->op_size() ; i++) {
     OpDef *op_def = op_list->mutable_op(i);
@@ -102,9 +101,11 @@ int main(int argc, char* argv[]) {
   std::vector<tensorflow::string> api_dirs = tensorflow::str_util::Split(
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
 
-  tensorflow::Env* env = tensorflow::Env::Default();
-  void* ops_libs_handles[1];
-  TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
+  void* result;
+  void* buff;
+  size_t len;
+  TF_CHECK_OK(tensorflow::LoadDynamicLibrary(argv[1], &result, &buff, &len));
+
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
   TF_CHECK_OK(tensorflow::java::UpdateOpDefs(&ops, api_dirs, env));
