@@ -30,56 +30,63 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Adjust the hue of one or more images.
- * <p>
- * `images` is a tensor of at least 3 dimensions.  The last dimension is
+ * {@code images} is a tensor of at least 3 dimensions.  The last dimension is
  * interpreted as channels, and must be three.
- * <p>
- * The input image is considered in the RGB colorspace. Conceptually, the RGB
+ * <p>The input image is considered in the RGB colorspace. Conceptually, the RGB
  * colors are first mapped into HSV. A delta is then applied all the hue values,
  * and then remapped back to RGB colorspace.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class AdjustHue<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new AdjustHue operation.
-   * 
-   * @param scope current scope
-   * @param images Images to adjust.  At least 3-D.
-   * @param delta A float delta to add to the hue.
-   * @return a new instance of AdjustHue
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images, Operand<TFloat32> delta) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new AdjustHue<T>(opBuilder.build());
-  }
-  
-  /**
-   * The hue-adjusted image or images.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "AdjustHue";
-  
+
   private Output<T> output;
-  
+
   private AdjustHue(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new AdjustHue operation.
+   *
+   * @param scope current scope
+   * @param images Images to adjust.  At least 3-D.
+   * @param delta A float delta to add to the hue.
+   * @param <T> data type for {@code AdjustHue} output and operands
+   * @return a new instance of AdjustHue
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images,
+      Operand<TFloat32> delta) {
+    OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
+    opBuilder.addInput(images.asOutput());
+    opBuilder.addInput(delta.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new AdjustHue<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * The hue-adjusted image or images.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

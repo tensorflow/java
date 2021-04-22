@@ -24,25 +24,40 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Initializes the multi device iterator with the given dataset.
  */
 public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MultiDeviceIteratorInit";
+
+  private Output<TInt64> incarnationId;
+
+  private MultiDeviceIteratorInit(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    incarnationId = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorInit operation.
-   * 
+   *
    * @param scope current scope
    * @param dataset Dataset to be iterated upon.
    * @param multiDeviceIterator A MultiDeviceIteratorResource.
    * @param maxBufferSize The maximum size of the host side per device buffer to keep.
    * @return a new instance of MultiDeviceIteratorInit
    */
-  @Endpoint(describeByClass = true)
-  public static MultiDeviceIteratorInit create(Scope scope, Operand<?> dataset, Operand<?> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MultiDeviceIteratorInit create(Scope scope, Operand<? extends TType> dataset,
+      Operand<? extends TType> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorInit", scope.makeOpName("MultiDeviceIteratorInit"));
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(multiDeviceIterator.asOutput());
@@ -50,28 +65,19 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
     opBuilder = scope.apply(opBuilder);
     return new MultiDeviceIteratorInit(opBuilder.build());
   }
-  
+
   /**
+   * Gets incarnationId.
    * An int64 indicating which incarnation of the MultiDeviceIterator
    * is running.
+   * @return incarnationId.
    */
   public Output<TInt64> incarnationId() {
     return incarnationId;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return incarnationId;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MultiDeviceIteratorInit";
-  
-  private Output<TInt64> incarnationId;
-  
-  private MultiDeviceIteratorInit(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    incarnationId = operation.output(outputIdx++);
   }
 }

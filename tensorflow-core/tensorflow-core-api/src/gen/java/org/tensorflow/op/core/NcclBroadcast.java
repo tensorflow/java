@@ -25,62 +25,68 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Sends `input` to all devices that are connected to the output.
- * <p>
- * Sends `input` to all devices that are connected to the output.
- * <p>
- * The graph should be constructed so that all ops connected to the output have a
+ * Sends {@code input} to all devices that are connected to the output.
+ * Sends {@code input} to all devices that are connected to the output.
+ * <p>The graph should be constructed so that all ops connected to the output have a
  * valid device assignment, and the op itself is assigned one of these devices.
- * <p>
- * input: The input to the broadcast.
+ * <p>input: The input to the broadcast.
  * output: The same as input.
  * shape: The shape of the input tensor.
- * 
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
+ *
+ * @deprecated use {@link org.tensorflow.op.distribute.NcclBroadcast} instead
  */
+@Deprecated
 public final class NcclBroadcast<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new NcclBroadcast operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param shape 
-   * @return a new instance of NcclBroadcast
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input, Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("shape", shape);
-    return new NcclBroadcast<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "NcclBroadcast";
-  
+
   private Output<T> output;
-  
+
   private NcclBroadcast(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new NcclBroadcast operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param shape the value of the shape property
+   * @param <T> data type for {@code NcclBroadcast} output and operands
+   * @return a new instance of NcclBroadcast
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input,
+      Shape shape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("shape", shape);
+    return new NcclBroadcast<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

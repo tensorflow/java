@@ -29,67 +29,76 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts one or more images from RGB to HSV.
- * <p>
- * Outputs a tensor of the same shape as the `images` tensor, containing the HSV
- * value of the pixels. The output is only well defined if the value in `images`
- * are in `[0,1]`.
- * <p>
- * `output[..., 0]` contains hue, `output[..., 1]` contains saturation, and
- * `output[..., 2]` contains value. All HSV values are in `[0,1]`. A hue of 0
+ * Outputs a tensor of the same shape as the {@code images} tensor, containing the HSV
+ * value of the pixels. The output is only well defined if the value in {@code images}
+ * are in {@code [0,1]}.
+ * <p>{@code output[..., 0]} contains hue, {@code output[..., 1]} contains saturation, and
+ * {@code output[..., 2]} contains value. All HSV values are in {@code [0,1]}. A hue of 0
  * corresponds to pure red, hue 1/3 is pure green, and 2/3 is pure blue.
- * <p>
- * Usage Example:
- * <p>
- * >>> blue_image = tf.stack([
+ * <p>Usage Example:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>blue_image = tf.stack([
  * ...    tf.zeros([5,5]),
  * ...    tf.zeros([5,5]),
  * ...    tf.ones([5,5])],
  * ...    axis=-1)
- * >>> blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
- * >>> blue_hsv_image[0,0].numpy()
+ * blue_hsv_image = tf.image.rgb_to_hsv(blue_image)
+ * blue_hsv_image[0,0].numpy()
  * array([0.6666667, 1. , 1. ], dtype=float32)
- * 
- * 
- * @param <T> data type for {@code output()} output
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class RgbToHsv<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new RgbToHsv operation.
-   * 
-   * @param scope current scope
-   * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
-   * @return a new instance of RgbToHsv
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> RgbToHsv<T> create(Scope scope, Operand<T> images) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RGBToHSV", scope.makeOpName("RgbToHsv"));
-    opBuilder.addInput(images.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new RgbToHsv<T>(opBuilder.build());
-  }
-  
-  /**
-   * `images` converted to HSV.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "RGBToHSV";
-  
+
   private Output<T> output;
-  
+
   private RgbToHsv(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new RGBToHSV operation.
+   *
+   * @param scope current scope
+   * @param images 1-D or higher rank. RGB data to convert. Last dimension must be size 3.
+   * @param <T> data type for {@code RGBToHSV} output and operands
+   * @return a new instance of RgbToHsv
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> RgbToHsv<T> create(Scope scope, Operand<T> images) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RGBToHSV", scope.makeOpName("RgbToHsv"));
+    opBuilder.addInput(images.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new RgbToHsv<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * {@code images} converted to HSV.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

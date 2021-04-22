@@ -30,34 +30,24 @@ import org.tensorflow.types.family.TType;
 /**
  * var: Should be from a Variable().
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceSparseApplyAdadelta extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdadelta}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceSparseApplyAdadelta";
+
+  private ResourceSparseApplyAdadelta(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceSparseApplyAdadelta operation.
-   * 
+   *
    * @param scope current scope
-   * @param var 
+   * @param var the var value
    * @param accum Should be from a Variable().
    * @param accumUpdate : Should be from a Variable().
    * @param lr Learning rate. Must be a scalar.
@@ -65,11 +55,17 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
    * @param epsilon Constant factor. Must be a scalar.
    * @param grad The gradient.
    * @param indices A vector of indices into the first dimension of var and accum.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyAdadelta} output and operands
    * @return a new instance of ResourceSparseApplyAdadelta
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceSparseApplyAdadelta create(Scope scope, Operand<?> var, Operand<?> accum, Operand<?> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceSparseApplyAdadelta create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> accum,
+      Operand<? extends TType> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
+      Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdadelta", scope.makeOpName("ResourceSparseApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -89,19 +85,37 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
     }
     return new ResourceSparseApplyAdadelta(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceSparseApplyAdadelta";
-  
-  private ResourceSparseApplyAdadelta(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdadelta}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

@@ -29,50 +29,47 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Solves systems of linear equations.
- * <p>
- * `Matrix` is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
- * form square matrices. `Rhs` is a tensor of shape `[..., M, K]`. The `output` is
- * a tensor shape `[..., M, K]`.  If `adjoint` is `False` then each output matrix
- * satisfies `matrix[..., :, :] * output[..., :, :] = rhs[..., :, :]`.
- * If `adjoint` is `True` then each output matrix satisfies
- * `adjoint(matrix[..., :, :]) * output[..., :, :] = rhs[..., :, :]`.
- * 
- * @param <T> data type for {@code output()} output
+ * {@code Matrix} is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
+ * form square matrices. {@code Rhs} is a tensor of shape {@code [..., M, K]}. The {@code output} is
+ * a tensor shape {@code [..., M, K]}.  If {@code adjoint} is {@code False} then each output matrix
+ * satisfies {@code matrix[..., :, :] * output[..., :, :] = rhs[..., :, :]}.
+ * If {@code adjoint} is {@code True} then each output matrix satisfies
+ * {@code adjoint(matrix[..., :, :]) * output[..., :, :] = rhs[..., :, :]}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Solve<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.Solve}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adjoint Boolean indicating whether to solve with `matrix` or its (block-wise)
-     * adjoint.
-     */
-    public Options adjoint(Boolean adjoint) {
-      this.adjoint = adjoint;
-      return this;
-    }
-    
-    private Boolean adjoint;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MatrixSolve";
+
+  private Output<T> output;
+
+  private Solve(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Solve operation.
-   * 
+   * Factory method to create a class wrapping a new MatrixSolve operation.
+   *
    * @param scope current scope
-   * @param matrix Shape is `[..., M, M]`.
-   * @param rhs Shape is `[..., M, K]`.
-   * @param options carries optional attributes values
+   * @param matrix Shape is {@code [..., M, M]}.
+   * @param rhs Shape is {@code [..., M, K]}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MatrixSolve} output and operands
    * @return a new instance of Solve
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolve", scope.makeOpName("Solve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -84,37 +81,53 @@ public final class Solve<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Solve<T>(opBuilder.build());
+    return new Solve<>(opBuilder.build());
   }
-  
+
   /**
-   * @param adjoint Boolean indicating whether to solve with `matrix` or its (block-wise)
+   * Sets the adjoint option.
+   *
+   * @param adjoint Boolean indicating whether to solve with {@code matrix} or its (block-wise)
    * adjoint.
+   * @return this Options instance.
    */
   public static Options adjoint(Boolean adjoint) {
     return new Options().adjoint(adjoint);
   }
-  
+
   /**
-   * Shape is `[..., M, K]`.
+   * Gets output.
+   * Shape is {@code [..., M, K]}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MatrixSolve";
-  
-  private Output<T> output;
-  
-  private Solve(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.Solve}
+   */
+  public static class Options {
+    private Boolean adjoint;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adjoint option.
+     *
+     * @param adjoint Boolean indicating whether to solve with {@code matrix} or its (block-wise)
+     * adjoint.
+     * @return this Options instance.
+     */
+    public Options adjoint(Boolean adjoint) {
+      this.adjoint = adjoint;
+      return this;
+    }
   }
 }

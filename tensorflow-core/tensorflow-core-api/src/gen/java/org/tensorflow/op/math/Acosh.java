@@ -29,54 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes inverse hyperbolic cosine of x element-wise.
- * <p>
  * Given an input tensor, the function computes inverse hyperbolic cosine of every element.
- * Input range is `[1, inf]`. It returns `nan` if the input lies outside the range.
- * <pre>{@code
- * x = tf.constant([-2, -0.5, 1, 1.2, 200, 10000, float("inf")])
- * tf.math.acosh(x) ==> [nan nan 0. 0.62236255 5.9914584 9.903487 inf]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Input range is {@code [1, inf]}. It returns {@code nan} if the input lies outside the range.
+ * <pre>
+ * x = tf.constant([-2, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
+ * tf.math.acosh(x) ==&gt; [nan nan 0. 0.62236255 5.9914584 9.903487 inf]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Acosh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Acosh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Acosh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Acosh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Acosh", scope.makeOpName("Acosh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Acosh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Acosh";
-  
+
   private Output<T> y;
-  
+
   private Acosh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Acosh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Acosh} output and operands
+   * @return a new instance of Acosh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Acosh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Acosh", scope.makeOpName("Acosh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Acosh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

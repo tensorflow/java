@@ -32,58 +32,52 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Concat the elements from the TensorArray into value `value`.
- * <p>
- * Takes `T` elements of shapes
- * <p>
- *   <pre>{@code
- *   (n0 x d0 x d1 x ...), (n1 x d0 x d1 x ...), ..., (n(T-1) x d0 x d1 x ...)
- *   }</pre>
- * and concatenates them into a Tensor of shape:
- * <p>
- *   <pre>{@code
- * (n0 + n1 + ... + n(T-1) x d0 x d1 x ...)}</pre>
- * All elements must have the same shape (excepting the first dimension).
- * 
- * @param <T> data type for {@code value()} output
+ * Concat the elements from the TensorArray into value {@code value}.
+ * Takes {@code T} elements of shapes
+ * <pre>
+ * (n0 x d0 x d1 x ...), (n1 x d0 x d1 x ...), ..., (n(T-1) x d0 x d1 x ...)
+ * </pre>
+ * <p>and concatenates them into a Tensor of shape:
+ * <p>{@code (n0 + n1 + ... + n(T-1) x d0 x d1 x ...)}
+ * <p>All elements must have the same shape (excepting the first dimension).
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class TensorArrayConcat<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayConcat}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param elementShapeExcept0 The expected shape of an element, if known,
-     * excluding the first dimension. Used to validate the shapes of
-     * TensorArray elements. If this shape is not fully specified, concatenating
-     * zero-size TensorArrays is an error.
-     */
-    public Options elementShapeExcept0(Shape elementShapeExcept0) {
-      this.elementShapeExcept0 = elementShapeExcept0;
-      return this;
-    }
-    
-    private Shape elementShapeExcept0;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorArrayConcatV3";
+
+  private Output<T> value;
+
+  private Output<TInt64> lengths;
+
+  private TensorArrayConcat(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    value = operation.output(outputIdx++);
+    lengths = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new TensorArrayConcat operation.
-   * 
+   * Factory method to create a class wrapping a new TensorArrayConcatV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TensorArrayConcatV3} output and operands
    * @return a new instance of TensorArrayConcat
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayConcat<T> create(Scope scope, Operand<?> handle, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorArrayConcat<T> create(Scope scope,
+      Operand<? extends TType> handle, Operand<TFloat32> flowIn, Class<T> dtype,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayConcatV3", scope.makeOpName("TensorArrayConcat"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
@@ -96,46 +90,64 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
         }
       }
     }
-    return new TensorArrayConcat<T>(opBuilder.build());
+    return new TensorArrayConcat<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the elementShapeExcept0 option.
+   *
    * @param elementShapeExcept0 The expected shape of an element, if known,
    * excluding the first dimension. Used to validate the shapes of
    * TensorArray elements. If this shape is not fully specified, concatenating
    * zero-size TensorArrays is an error.
+   * @return this Options instance.
    */
   public static Options elementShapeExcept0(Shape elementShapeExcept0) {
     return new Options().elementShapeExcept0(elementShapeExcept0);
   }
-  
+
   /**
+   * Gets value.
    * All of the elements in the TensorArray, concatenated along the first
    * axis.
+   * @return value.
    */
   public Output<T> value() {
     return value;
   }
-  
+
   /**
+   * Gets lengths.
    * A vector of the row sizes of the original T elements in the
    * value output.  In the example above, this would be the values:
-   * `(n1, n2, ..., n(T-1))`.
+   * {@code (n1, n2, ..., n(T-1))}.
+   * @return lengths.
    */
   public Output<TInt64> lengths() {
     return lengths;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayConcatV3";
-  
-  private Output<T> value;
-  private Output<TInt64> lengths;
-  
-  private TensorArrayConcat(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    value = operation.output(outputIdx++);
-    lengths = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayConcat}
+   */
+  public static class Options {
+    private Shape elementShapeExcept0;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the elementShapeExcept0 option.
+     *
+     * @param elementShapeExcept0 The expected shape of an element, if known,
+     * excluding the first dimension. Used to validate the shapes of
+     * TensorArray elements. If this shape is not fully specified, concatenating
+     * zero-size TensorArrays is an error.
+     * @return this Options instance.
+     */
+    public Options elementShapeExcept0(Shape elementShapeExcept0) {
+      this.elementShapeExcept0 = elementShapeExcept0;
+      return this;
+    }
   }
 }

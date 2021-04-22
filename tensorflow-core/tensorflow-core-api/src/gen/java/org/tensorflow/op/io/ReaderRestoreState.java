@@ -25,38 +25,44 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Restore a reader to a previously saved state.
- * <p>
  * Not all Readers support being restored, so this can produce an
  * Unimplemented error.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReaderRestoreState extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new ReaderRestoreState operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReaderRestoreStateV2";
+
+  private ReaderRestoreState(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReaderRestoreStateV2 operation.
+   *
    * @param scope current scope
    * @param readerHandle Handle to a Reader.
    * @param state Result of a ReaderSerializeState of a Reader with type
    * matching reader_handle.
    * @return a new instance of ReaderRestoreState
    */
-  @Endpoint(describeByClass = true)
-  public static ReaderRestoreState create(Scope scope, Operand<?> readerHandle, Operand<TString> state) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ReaderRestoreState create(Scope scope, Operand<? extends TType> readerHandle,
+      Operand<TString> state) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderRestoreStateV2", scope.makeOpName("ReaderRestoreState"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(state.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderRestoreState(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReaderRestoreStateV2";
-  
-  private ReaderRestoreState(Operation operation) {
-    super(operation);
   }
 }

@@ -26,50 +26,59 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns the number of records this Reader has produced.
- * <p>
  * This is the same as the number of ReaderRead executions that have
  * succeeded.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ReaderNumRecordsProduced extends RawOp implements Operand<TInt64> {
-  
   /**
-   * Factory method to create a class wrapping a new ReaderNumRecordsProduced operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ReaderNumRecordsProducedV2";
+
+  private Output<TInt64> recordsProduced;
+
+  private ReaderNumRecordsProduced(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    recordsProduced = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ReaderNumRecordsProducedV2 operation.
+   *
    * @param scope current scope
    * @param readerHandle Handle to a Reader.
    * @return a new instance of ReaderNumRecordsProduced
    */
-  @Endpoint(describeByClass = true)
-  public static ReaderNumRecordsProduced create(Scope scope, Operand<?> readerHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ReaderNumRecordsProduced create(Scope scope,
+      Operand<? extends TType> readerHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("ReaderNumRecordsProducedV2", scope.makeOpName("ReaderNumRecordsProduced"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderNumRecordsProduced(opBuilder.build());
   }
-  
+
   /**
+   * Gets recordsProduced.
+   *
+   * @return recordsProduced.
    */
   public Output<TInt64> recordsProduced() {
     return recordsProduced;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return recordsProduced;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ReaderNumRecordsProducedV2";
-  
-  private Output<TInt64> recordsProduced;
-  
-  private ReaderNumRecordsProduced(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    recordsProduced = operation.output(outputIdx++);
   }
 }

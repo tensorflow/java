@@ -23,27 +23,40 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The CreateSummaryFileWriter operation
  */
 public final class CreateSummaryFileWriter extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "CreateSummaryFileWriter";
+
+  private CreateSummaryFileWriter(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new CreateSummaryFileWriter operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param logdir 
-   * @param maxQueue 
-   * @param flushMillis 
-   * @param filenameSuffix 
+   * @param writer the writer value
+   * @param logdir the logdir value
+   * @param maxQueue the maxQueue value
+   * @param flushMillis the flushMillis value
+   * @param filenameSuffix the filenameSuffix value
    * @return a new instance of CreateSummaryFileWriter
    */
-  @Endpoint(describeByClass = true)
-  public static CreateSummaryFileWriter create(Scope scope, Operand<?> writer, Operand<TString> logdir, Operand<TInt32> maxQueue, Operand<TInt32> flushMillis, Operand<TString> filenameSuffix) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static CreateSummaryFileWriter create(Scope scope, Operand<? extends TType> writer,
+      Operand<TString> logdir, Operand<TInt32> maxQueue, Operand<TInt32> flushMillis,
+      Operand<TString> filenameSuffix) {
     OperationBuilder opBuilder = scope.env().opBuilder("CreateSummaryFileWriter", scope.makeOpName("CreateSummaryFileWriter"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(logdir.asOutput());
@@ -52,12 +65,5 @@ public final class CreateSummaryFileWriter extends RawOp {
     opBuilder.addInput(filenameSuffix.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new CreateSummaryFileWriter(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CreateSummaryFileWriter";
-  
-  private CreateSummaryFileWriter(Operation operation) {
-    super(operation);
   }
 }

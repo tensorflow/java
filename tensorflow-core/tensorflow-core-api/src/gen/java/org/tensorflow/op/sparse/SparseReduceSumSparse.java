@@ -31,58 +31,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum of elements across dimensions of a SparseTensor.
- * <p>
  * This Op takes a SparseTensor and is the sparse counterpart to
- * `tf.reduce_sum()`.  In contrast to SparseReduceSum, this Op returns a
+ * {@code tf.reduce_sum()}.  In contrast to SparseReduceSum, this Op returns a
  * SparseTensor.
- * <p>
- * Reduces `sp_input` along the dimensions given in `reduction_axes`.  Unless
- * `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
- * `reduction_axes`. If `keep_dims` is true, the reduced dimensions are retained
+ * <p>Reduces {@code sp_input} along the dimensions given in {@code reduction_axes}.  Unless
+ * {@code keep_dims} is true, the rank of the tensor is reduced by 1 for each entry in
+ * {@code reduction_axes}. If {@code keep_dims} is true, the reduced dimensions are retained
  * with length 1.
- * <p>
- * If `reduction_axes` has no entries, all dimensions are reduced, and a tensor
+ * <p>If {@code reduction_axes} has no entries, all dimensions are reduced, and a tensor
  * with a single element is returned.  Additionally, the axes can be negative,
  * which are interpreted according to the indexing rules in Python.
- * 
- * @param <T> data type for {@code outputValues()} output
+ *
+ * @param <T> data type for {@code output_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseReduceSumSparse<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceSumSparse}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param keepDims If true, retain reduced dimensions with length 1.
-     */
-    public Options keepDims(Boolean keepDims) {
-      this.keepDims = keepDims;
-      return this;
-    }
-    
-    private Boolean keepDims;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseReduceSumSparse";
+
+  private Output<TInt64> outputIndices;
+
+  private Output<T> outputValues;
+
+  private Output<TInt64> outputShape;
+
+  private SparseReduceSumSparse(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputIndices = operation.output(outputIdx++);
+    outputValues = operation.output(outputIdx++);
+    outputShape = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseReduceSumSparse operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputIndices 2-D.  `N x R` matrix with the indices of non-empty values in a
+   * @param inputIndices 2-D.  {@code N x R} matrix with the indices of non-empty values in a
    * SparseTensor, possibly not in canonical ordering.
-   * @param inputValues 1-D.  `N` non-empty values corresponding to `input_indices`.
+   * @param inputValues 1-D.  {@code N} non-empty values corresponding to {@code input_indices}.
    * @param inputShape 1-D.  Shape of the input SparseTensor.
-   * @param reductionAxes 1-D.  Length-`K` vector containing the reduction axes.
-   * @param options carries optional attributes values
+   * @param reductionAxes 1-D.  Length-{@code K} vector containing the reduction axes.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseReduceSumSparse} output and operands
    * @return a new instance of SparseReduceSumSparse
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseReduceSumSparse<T> create(Scope scope, Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape, Operand<TInt32> reductionAxes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseReduceSumSparse<T> create(Scope scope,
+      Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
+      Operand<TInt32> reductionAxes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceSumSparse", scope.makeOpName("SparseReduceSumSparse"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
@@ -96,46 +99,64 @@ public final class SparseReduceSumSparse<T extends TType> extends RawOp {
         }
       }
     }
-    return new SparseReduceSumSparse<T>(opBuilder.build());
+    return new SparseReduceSumSparse<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the keepDims option.
+   *
    * @param keepDims If true, retain reduced dimensions with length 1.
+   * @return this Options instance.
    */
   public static Options keepDims(Boolean keepDims) {
     return new Options().keepDims(keepDims);
   }
-  
+
   /**
+   * Gets outputIndices.
+   *
+   * @return outputIndices.
    */
   public Output<TInt64> outputIndices() {
     return outputIndices;
   }
-  
+
   /**
+   * Gets outputValues.
+   *
+   * @return outputValues.
    */
   public Output<T> outputValues() {
     return outputValues;
   }
-  
+
   /**
+   * Gets outputShape.
+   *
+   * @return outputShape.
    */
   public Output<TInt64> outputShape() {
     return outputShape;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseReduceSumSparse";
-  
-  private Output<TInt64> outputIndices;
-  private Output<T> outputValues;
-  private Output<TInt64> outputShape;
-  
-  private SparseReduceSumSparse(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputIndices = operation.output(outputIdx++);
-    outputValues = operation.output(outputIdx++);
-    outputShape = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseReduceSumSparse}
+   */
+  public static class Options {
+    private Boolean keepDims;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the keepDims option.
+     *
+     * @param keepDims If true, retain reduced dimensions with length 1.
+     * @return this Options instance.
+     */
+    public Options keepDims(Boolean keepDims) {
+      this.keepDims = keepDims;
+      return this;
+    }
   }
 }

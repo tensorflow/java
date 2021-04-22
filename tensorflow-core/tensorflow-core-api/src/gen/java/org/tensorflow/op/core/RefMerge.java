@@ -25,62 +25,68 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Forwards the value of an available tensor from `inputs` to `output`.
- * <p>
- * `Merge` waits for at least one of the tensors in `inputs` to become available.
- * It is usually combined with `Switch` to implement branching.
- * <p>
- * `Merge` forwards the first tensor for become available to `output`, and sets
- * `value_index` to its index in `inputs`.
- * 
- * @param <T> data type for {@code output()} output
+ * Forwards the value of an available tensor from {@code inputs} to {@code output}.
+ * {@code Merge} waits for at least one of the tensors in {@code inputs} to become available.
+ * It is usually combined with {@code Switch} to implement branching.
+ * <p>{@code Merge} forwards the first tensor for become available to {@code output}, and sets
+ * {@code value_index} to its index in {@code inputs}.
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class RefMerge<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new RefMerge operation.
-   * 
-   * @param scope current scope
-   * @param inputs The input tensors, exactly one of which will become available.
-   * @return a new instance of RefMerge
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> RefMerge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RefMerge", scope.makeOpName("RefMerge"));
-    opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
-    return new RefMerge<T>(opBuilder.build());
-  }
-  
-  /**
-   * Will be set to the available input tensor.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  /**
-   * The index of the chosen input tensor in `inputs`.
-   */
-  public Output<TInt32> valueIndex() {
-    return valueIndex;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "RefMerge";
-  
+
   private Output<T> output;
+
   private Output<TInt32> valueIndex;
-  
+
   private RefMerge(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
     valueIndex = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new RefMerge operation.
+   *
+   * @param scope current scope
+   * @param inputs The input tensors, exactly one of which will become available.
+   * @param <T> data type for {@code RefMerge} output and operands
+   * @return a new instance of RefMerge
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> RefMerge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RefMerge", scope.makeOpName("RefMerge"));
+    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder = scope.apply(opBuilder);
+    return new RefMerge<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Will be set to the available input tensor.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  /**
+   * Gets valueIndex.
+   * The index of the chosen input tensor in {@code inputs}.
+   * @return valueIndex.
+   */
+  public Output<TInt32> valueIndex() {
+    return valueIndex;
   }
 }

@@ -33,69 +33,40 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Op is similar to a lightweight Dequeue.
- * <p>
  * The basic functionality is similar to dequeue with many fewer
  * capabilities and options.  This Op is optimized for performance.
  */
 @Operator
 public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Unstage}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity 
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param memoryLimit 
-     */
-    public Options memoryLimit(Long memoryLimit) {
-      this.memoryLimit = memoryLimit;
-      return this;
-    }
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private Long memoryLimit;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Unstage";
+
+  private List<Output<?>> values;
+
+  @SuppressWarnings("unchecked")
+  private Unstage(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int valuesLength = operation.outputListLength("values");
+    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
+    outputIdx += valuesLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Unstage operation.
-   * 
+   *
    * @param scope current scope
-   * @param dtypes 
-   * @param options carries optional attributes values
+   * @param dtypes the value of the dtypes property
+   * @param options carries optional attribute values
    * @return a new instance of Unstage
    */
-  @Endpoint(describeByClass = true)
-  public static Unstage create(Scope scope, List<Class<? extends TType>> dtypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Unstage create(Scope scope, List<Class<? extends TType>> dtypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unstage", scope.makeOpName("Unstage"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
@@ -117,57 +88,119 @@ public final class Unstage extends RawOp implements Iterable<Operand<TType>> {
     }
     return new Unstage(opBuilder.build());
   }
-  
+
   /**
-   * @param capacity 
+   * Sets the capacity option.
+   *
+   * @param capacity the capacity option
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
-   * @param memoryLimit 
+   * Sets the memoryLimit option.
+   *
+   * @param memoryLimit the memoryLimit option
+   * @return this Options instance.
    */
   public static Options memoryLimit(Long memoryLimit) {
     return new Options().memoryLimit(memoryLimit);
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets values.
+   *
+   * @return values.
    */
   public List<Output<?>> values() {
     return values;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Unstage";
-  
-  private List<Output<?>> values;
-  
-  private Unstage(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int valuesLength = operation.outputListLength("values");
-    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
-    outputIdx += valuesLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Unstage}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private Long memoryLimit;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity the capacity option
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the memoryLimit option.
+     *
+     * @param memoryLimit the memoryLimit option
+     * @return this Options instance.
+     */
+    public Options memoryLimit(Long memoryLimit) {
+      this.memoryLimit = memoryLimit;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

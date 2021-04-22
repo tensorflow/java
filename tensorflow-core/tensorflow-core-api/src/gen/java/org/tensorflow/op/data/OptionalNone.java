@@ -30,42 +30,51 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates an Optional variant with no value.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class OptionalNone extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "OptionalNone";
+
+  private Output<? extends TType> optional;
+
+  @SuppressWarnings("unchecked")
+  private OptionalNone(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    optional = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new OptionalNone operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of OptionalNone
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static OptionalNone create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalNone", scope.makeOpName("OptionalNone"));
     opBuilder = scope.apply(opBuilder);
     return new OptionalNone(opBuilder.build());
   }
-  
+
   /**
+   * Gets optional.
+   *
+   * @return optional.
    */
-  public Output<?> optional() {
+  public Output<? extends TType> optional() {
     return optional;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) optional;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OptionalNone";
-  
-  private Output<?> optional;
-  
-  private OptionalNone(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    optional = operation.output(outputIdx++);
   }
 }

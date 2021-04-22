@@ -29,51 +29,59 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softmax activations.
- * <p>
- * For each batch `i` and class `j` we have
- * <p>
- *     $$softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))$$
- * 
- * @param <T> data type for {@code softmax()} output
+ * For each batch {@code i} and class {@code j} we have
+ * <pre>
+ * $$softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))$$
+ * </pre>
+ *
+ * @param <T> data type for {@code softmax} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Softmax<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Softmax operation.
-   * 
-   * @param scope current scope
-   * @param logits 2-D with shape `[batch_size, num_classes]`.
-   * @return a new instance of Softmax
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Softmax", scope.makeOpName("Softmax"));
-    opBuilder.addInput(logits.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Softmax<T>(opBuilder.build());
-  }
-  
-  /**
-   * Same shape as `logits`.
-   */
-  public Output<T> softmax() {
-    return softmax;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return softmax;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Softmax";
-  
+
   private Output<T> softmax;
-  
+
   private Softmax(Operation operation) {
     super(operation);
     int outputIdx = 0;
     softmax = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Softmax operation.
+   *
+   * @param scope current scope
+   * @param logits 2-D with shape {@code [batch_size, num_classes]}.
+   * @param <T> data type for {@code Softmax} output and operands
+   * @return a new instance of Softmax
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Softmax", scope.makeOpName("Softmax"));
+    opBuilder.addInput(logits.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Softmax<>(opBuilder.build());
+  }
+
+  /**
+   * Gets softmax.
+   * Same shape as {@code logits}.
+   * @return softmax.
+   */
+  public Output<T> softmax() {
+    return softmax;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return softmax;
   }
 }

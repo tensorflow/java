@@ -23,34 +23,39 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The ImportEvent operation
  */
 public final class ImportEvent extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ImportEvent";
+
+  private ImportEvent(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ImportEvent operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param event 
+   * @param writer the writer value
+   * @param event the event value
    * @return a new instance of ImportEvent
    */
-  @Endpoint(describeByClass = true)
-  public static ImportEvent create(Scope scope, Operand<?> writer, Operand<TString> event) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ImportEvent create(Scope scope, Operand<? extends TType> writer,
+      Operand<TString> event) {
     OperationBuilder opBuilder = scope.env().opBuilder("ImportEvent", scope.makeOpName("ImportEvent"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(event.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ImportEvent(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ImportEvent";
-  
-  private ImportEvent(Operation operation) {
-    super(operation);
   }
 }

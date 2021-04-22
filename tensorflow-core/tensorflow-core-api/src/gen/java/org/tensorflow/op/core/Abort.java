@@ -26,51 +26,31 @@ import org.tensorflow.op.annotation.Operator;
 
 /**
  * Raise a exception to abort the process when called.
- * <p>
  * If exit_without_error is true, the process will exit normally,
  * otherwise it will exit with a SIGABORT signal.
- * <p>
- * Returns nothing but an exception.
+ * <p>Returns nothing but an exception.
  */
 @Operator
 public final class Abort extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Abort}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param errorMsg A string which is the message associated with the exception.
-     */
-    public Options errorMsg(String errorMsg) {
-      this.errorMsg = errorMsg;
-      return this;
-    }
-    
-    /**
-     * @param exitWithoutError 
-     */
-    public Options exitWithoutError(Boolean exitWithoutError) {
-      this.exitWithoutError = exitWithoutError;
-      return this;
-    }
-    
-    private String errorMsg;
-    private Boolean exitWithoutError;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Abort";
+
+  private Abort(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Abort operation.
-   * 
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Abort
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Abort create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Abort", scope.makeOpName("Abort"));
     opBuilder = scope.apply(opBuilder);
@@ -86,25 +66,58 @@ public final class Abort extends RawOp {
     }
     return new Abort(opBuilder.build());
   }
-  
+
   /**
+   * Sets the errorMsg option.
+   *
    * @param errorMsg A string which is the message associated with the exception.
+   * @return this Options instance.
    */
   public static Options errorMsg(String errorMsg) {
     return new Options().errorMsg(errorMsg);
   }
-  
+
   /**
-   * @param exitWithoutError 
+   * Sets the exitWithoutError option.
+   *
+   * @param exitWithoutError the exitWithoutError option
+   * @return this Options instance.
    */
   public static Options exitWithoutError(Boolean exitWithoutError) {
     return new Options().exitWithoutError(exitWithoutError);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Abort";
-  
-  private Abort(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Abort}
+   */
+  public static class Options {
+    private String errorMsg;
+
+    private Boolean exitWithoutError;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the errorMsg option.
+     *
+     * @param errorMsg A string which is the message associated with the exception.
+     * @return this Options instance.
+     */
+    public Options errorMsg(String errorMsg) {
+      this.errorMsg = errorMsg;
+      return this;
+    }
+
+    /**
+     * Sets the exitWithoutError option.
+     *
+     * @param exitWithoutError the exitWithoutError option
+     * @return this Options instance.
+     */
+    public Options exitWithoutError(Boolean exitWithoutError) {
+      this.exitWithoutError = exitWithoutError;
+      return this;
+    }
   }
 }

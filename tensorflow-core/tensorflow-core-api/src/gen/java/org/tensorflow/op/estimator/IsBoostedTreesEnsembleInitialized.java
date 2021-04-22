@@ -24,49 +24,55 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a tree ensemble has been initialized.
  */
 public final class IsBoostedTreesEnsembleInitialized extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IsBoostedTreesEnsembleInitialized";
+
+  private Output<TBool> isInitialized;
+
+  private IsBoostedTreesEnsembleInitialized(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    isInitialized = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IsBoostedTreesEnsembleInitialized operation.
-   * 
+   *
    * @param scope current scope
    * @param treeEnsembleHandle Handle to the tree ensemble resource.
    * @return a new instance of IsBoostedTreesEnsembleInitialized
    */
-  @Endpoint(describeByClass = true)
-  public static IsBoostedTreesEnsembleInitialized create(Scope scope, Operand<?> treeEnsembleHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IsBoostedTreesEnsembleInitialized create(Scope scope,
+      Operand<? extends TType> treeEnsembleHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesEnsembleInitialized", scope.makeOpName("IsBoostedTreesEnsembleInitialized"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IsBoostedTreesEnsembleInitialized(opBuilder.build());
   }
-  
+
   /**
+   * Gets isInitialized.
    * output boolean on whether it is initialized or not.
+   * @return isInitialized.
    */
   public Output<TBool> isInitialized() {
     return isInitialized;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return isInitialized;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IsBoostedTreesEnsembleInitialized";
-  
-  private Output<TBool> isInitialized;
-  
-  private IsBoostedTreesEnsembleInitialized(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    isInitialized = operation.output(outputIdx++);
   }
 }

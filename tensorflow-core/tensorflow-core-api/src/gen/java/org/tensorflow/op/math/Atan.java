@@ -29,62 +29,67 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the trignometric inverse tangent of x element-wise.
- * <p>
- * The `tf.math.atan` operation returns the inverse of `tf.math.tan`, such that
- * if `y = tf.math.tan(x)` then, `x = tf.math.atan(y)`.
- * <p>
- * <b>Note</b>: The output of `tf.math.atan` will lie within the invertible range
+ * The {@code tf.math.atan} operation returns the inverse of {@code tf.math.tan}, such that
+ * if {@code y = tf.math.tan(x)} then, {@code x = tf.math.atan(y)}.
+ * <p><strong>Note</strong>: The output of {@code tf.math.atan} will lie within the invertible range
  * of tan, i.e (-pi/2, pi/2).
- * <p>
- * For example:
- * <pre>{@code
+ * <p>For example:
+ * <pre>
  * # Note: [1.047, 0.785] ~= [(pi/3), (pi/4)]
  * x = tf.constant([1.047, 0.785])
  * y = tf.math.tan(x) # [1.731261, 0.99920404]
- * 
+ *
  * tf.math.atan(y) # [1.047, 0.785] = x
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Atan<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Atan operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Atan
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Atan<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Atan", scope.makeOpName("Atan"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Atan<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Atan";
-  
+
   private Output<T> y;
-  
+
   private Atan(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Atan operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Atan} output and operands
+   * @return a new instance of Atan
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Atan<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Atan", scope.makeOpName("Atan"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Atan<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

@@ -29,66 +29,55 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the singular value decompositions of one or more matrices.
- * <p>
- * Computes the SVD of each inner matrix in `input` such that
- * `input[..., :, :] = u[..., :, :] * diag(s[..., :, :]) * transpose(v[..., :, :])`
- * <pre>{@code
+ * Computes the SVD of each inner matrix in {@code input} such that
+ * {@code input[..., :, :] = u[..., :, :] * diag(s[..., :, :]) * transpose(v[..., :, :])}
+ * <pre>
  * # a is a tensor containing a batch of matrices.
  * # s is a tensor of singular values for each matrix.
  * # u is the tensor containing the left singular vectors for each matrix.
  * # v is the tensor containing the right singular vectors for each matrix.
  * s, u, v = svd(a)
  * s, _, _ = svd(a, compute_uv=False)
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code s()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code s} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Svd<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.Svd}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param computeUv If true, left and right singular vectors will be
-     * computed and returned in `u` and `v`, respectively.
-     * If false, `u` and `v` are not set and should never referenced.
-     */
-    public Options computeUv(Boolean computeUv) {
-      this.computeUv = computeUv;
-      return this;
-    }
-    
-    /**
-     * @param fullMatrices If true, compute full-sized `u` and `v`. If false
-     * (the default), compute only the leading `P` singular vectors.
-     * Ignored if `compute_uv` is `False`.
-     */
-    public Options fullMatrices(Boolean fullMatrices) {
-      this.fullMatrices = fullMatrices;
-      return this;
-    }
-    
-    private Boolean computeUv;
-    private Boolean fullMatrices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Svd";
+
+  private Output<T> s;
+
+  private Output<T> u;
+
+  private Output<T> v;
+
+  private Svd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    s = operation.output(outputIdx++);
+    u = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Svd operation.
-   * 
+   *
    * @param scope current scope
-   * @param input A tensor of shape `[..., M, N]` whose inner-most 2 dimensions
-   * form matrices of size `[M, N]`. Let `P` be the minimum of `M` and `N`.
-   * @param options carries optional attributes values
+   * @param input A tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
+   * form matrices of size {@code [M, N]}. Let {@code P} be the minimum of {@code M} and {@code N}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Svd} output and operands
    * @return a new instance of Svd
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TType> Svd<T> create(Scope scope, Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Svd", scope.makeOpName("Svd"));
     opBuilder.addInput(input.asOutput());
@@ -103,64 +92,99 @@ public final class Svd<T extends TType> extends RawOp {
         }
       }
     }
-    return new Svd<T>(opBuilder.build());
+    return new Svd<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the computeUv option.
+   *
    * @param computeUv If true, left and right singular vectors will be
-   * computed and returned in `u` and `v`, respectively.
-   * If false, `u` and `v` are not set and should never referenced.
+   * computed and returned in {@code u} and {@code v}, respectively.
+   * If false, {@code u} and {@code v} are not set and should never referenced.
+   * @return this Options instance.
    */
   public static Options computeUv(Boolean computeUv) {
     return new Options().computeUv(computeUv);
   }
-  
+
   /**
-   * @param fullMatrices If true, compute full-sized `u` and `v`. If false
-   * (the default), compute only the leading `P` singular vectors.
-   * Ignored if `compute_uv` is `False`.
+   * Sets the fullMatrices option.
+   *
+   * @param fullMatrices If true, compute full-sized {@code u} and {@code v}. If false
+   * (the default), compute only the leading {@code P} singular vectors.
+   * Ignored if {@code compute_uv} is {@code False}.
+   * @return this Options instance.
    */
   public static Options fullMatrices(Boolean fullMatrices) {
     return new Options().fullMatrices(fullMatrices);
   }
-  
+
   /**
-   * Singular values. Shape is `[..., P]`.
+   * Gets s.
+   * Singular values. Shape is {@code [..., P]}.
+   * @return s.
    */
   public Output<T> s() {
     return s;
   }
-  
+
   /**
-   * Left singular vectors. If `full_matrices` is `False` then shape is
-   * `[..., M, P]`; if `full_matrices` is `True` then shape is
-   * `[..., M, M]`. Undefined if `compute_uv` is `False`.
+   * Gets u.
+   * Left singular vectors. If {@code full_matrices} is {@code False} then shape is
+   * {@code [..., M, P]}; if {@code full_matrices} is {@code True} then shape is
+   * {@code [..., M, M]}. Undefined if {@code compute_uv} is {@code False}.
+   * @return u.
    */
   public Output<T> u() {
     return u;
   }
-  
+
   /**
-   * Left singular vectors. If `full_matrices` is `False` then shape is
-   * `[..., N, P]`. If `full_matrices` is `True` then shape is `[..., N, N]`.
-   * Undefined if `compute_uv` is false.
+   * Gets v.
+   * Left singular vectors. If {@code full_matrices} is {@code False} then shape is
+   * {@code [..., N, P]}. If {@code full_matrices} is {@code True} then shape is {@code [..., N, N]}.
+   * Undefined if {@code compute_uv} is false.
+   * @return v.
    */
   public Output<T> v() {
     return v;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Svd";
-  
-  private Output<T> s;
-  private Output<T> u;
-  private Output<T> v;
-  
-  private Svd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    s = operation.output(outputIdx++);
-    u = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.Svd}
+   */
+  public static class Options {
+    private Boolean computeUv;
+
+    private Boolean fullMatrices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the computeUv option.
+     *
+     * @param computeUv If true, left and right singular vectors will be
+     * computed and returned in {@code u} and {@code v}, respectively.
+     * If false, {@code u} and {@code v} are not set and should never referenced.
+     * @return this Options instance.
+     */
+    public Options computeUv(Boolean computeUv) {
+      this.computeUv = computeUv;
+      return this;
+    }
+
+    /**
+     * Sets the fullMatrices option.
+     *
+     * @param fullMatrices If true, compute full-sized {@code u} and {@code v}. If false
+     * (the default), compute only the leading {@code P} singular vectors.
+     * Ignored if {@code compute_uv} is {@code False}.
+     * @return this Options instance.
+     */
+    public Options fullMatrices(Boolean fullMatrices) {
+      this.fullMatrices = fullMatrices;
+      return this;
+    }
   }
 }

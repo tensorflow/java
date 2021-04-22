@@ -63,6 +63,7 @@ public class AssertBroadcastableTest {
       TestSession testSession, Ops tf, Operand<T> weights, Operand<T> values, Class<T> type) {
 
     Op staticOp = MetricsHelper.assertBroadcastable(tf, weights, values);
+    testSession.run(staticOp);
 
     // dynamic test
     Operand<T> weightsPlaceholder = tf.placeholder(type);

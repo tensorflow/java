@@ -28,38 +28,26 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AddSign update.
- * <p>
- * m_t <- beta1 * m_{t-1} + (1 - beta1) * g
- * update <- (alpha + sign_decay * sign(g) *sign(m)) * g
- * variable <- variable - lr_t * update
+ * m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+ * update &lt;- (alpha + sign_decay * sign(g) *sign(m)) * g
+ * variable &lt;- variable - lr_t * update
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyAddSign extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAddSign}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and m tensors is
-     * protected by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyAddSign";
+
+  private ResourceApplyAddSign(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceApplyAddSign operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -68,11 +56,16 @@ public final class ResourceApplyAddSign extends RawOp {
    * @param signDecay Must be a scalar.
    * @param beta Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyAddSign} output and operands
    * @return a new instance of ResourceApplyAddSign
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyAddSign create(Scope scope, Operand<?> var, Operand<?> m, Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyAddSign create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> m, Operand<T> lr, Operand<T> alpha,
+      Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAddSign", scope.makeOpName("ResourceApplyAddSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -91,20 +84,39 @@ public final class ResourceApplyAddSign extends RawOp {
     }
     return new ResourceApplyAddSign(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and m tensors is
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and m tensors is
    * protected by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyAddSign";
-  
-  private ResourceApplyAddSign(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyAddSign}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and m tensors is
+     * protected by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

@@ -31,29 +31,43 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Splits a tensor into a list.
- * <p>
  * list[i] corresponds to lengths[i] tensors from the input tensor.
  * The tensor must have rank at least 1 and contain exactly sum(lengths) elements.
- * <p>
- * tensor: The input tensor.
+ * <p>tensor: The input tensor.
  * element_shape: A shape compatible with that of elements in the tensor.
  * lengths: Vector of sizes of the 0th dimension of tensors in the list.
  * output_handle: The list.
  */
 @Operator
 public final class TensorListSplit extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListSplit";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListSplit(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListSplit operation.
-   * 
+   *
    * @param scope current scope
-   * @param tensor 
-   * @param elementShape 
-   * @param lengths 
+   * @param tensor the tensor value
+   * @param elementShape the elementShape value
+   * @param lengths the lengths value
    * @return a new instance of TensorListSplit
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListSplit create(Scope scope, Operand<? extends TType> tensor, Operand<? extends TNumber> elementShape, Operand<TInt64> lengths) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListSplit create(Scope scope, Operand<? extends TType> tensor,
+      Operand<? extends TNumber> elementShape, Operand<TInt64> lengths) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSplit", scope.makeOpName("TensorListSplit"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
@@ -61,27 +75,19 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TensorListSplit(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListSplit";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListSplit(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

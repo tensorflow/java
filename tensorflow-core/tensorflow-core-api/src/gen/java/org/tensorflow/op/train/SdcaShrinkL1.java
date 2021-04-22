@@ -30,12 +30,22 @@ import org.tensorflow.types.TFloat32;
 /**
  * Applies L1 regularization shrink step on the parameters.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SdcaShrinkL1 extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SdcaShrinkL1";
+
+  private SdcaShrinkL1(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new SdcaShrinkL1 operation.
-   * 
+   *
    * @param scope current scope
    * @param weights a list of vectors where each value is the weight associated with a
    * feature group.
@@ -43,20 +53,16 @@ public final class SdcaShrinkL1 extends RawOp {
    * @param l2 Symmetric l2 regularization strength. Should be a positive float.
    * @return a new instance of SdcaShrinkL1
    */
-  @Endpoint(describeByClass = true)
-  public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat32>> weights, Float l1, Float l2) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat32>> weights, Float l1,
+      Float l2) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaShrinkL1", scope.makeOpName("SdcaShrinkL1"));
     opBuilder.addInputList(Operands.asOutputs(weights));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("l1", l1);
     opBuilder.setAttr("l2", l2);
     return new SdcaShrinkL1(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SdcaShrinkL1";
-  
-  private SdcaShrinkL1(Operation operation) {
-    super(operation);
   }
 }

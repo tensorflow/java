@@ -29,51 +29,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A Reader that outputs the entire contents of a file as a value.
- * <p>
  * To use, enqueue filenames in a Queue.  The output of ReaderRead will
  * be a filename (key) and the contents of that file (value).
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class WholeFileReader extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.WholeFileReader}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container If non-empty, this reader is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this reader is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "WholeFileReaderV2";
+
+  private Output<? extends TType> readerHandle;
+
+  @SuppressWarnings("unchecked")
+  private WholeFileReader(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    readerHandle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new WholeFileReader operation.
-   * 
+   * Factory method to create a class wrapping a new WholeFileReaderV2 operation.
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of WholeFileReader
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static WholeFileReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("WholeFileReaderV2", scope.makeOpName("WholeFileReader"));
     opBuilder = scope.apply(opBuilder);
@@ -89,44 +75,77 @@ public final class WholeFileReader extends RawOp implements Operand<TType> {
     }
     return new WholeFileReader(opBuilder.build());
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this reader is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this reader is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets readerHandle.
    * The handle to reference the Reader.
+   * @return readerHandle.
    */
-  public Output<?> readerHandle() {
+  public Output<? extends TType> readerHandle() {
     return readerHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) readerHandle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WholeFileReaderV2";
-  
-  private Output<?> readerHandle;
-  
-  private WholeFileReader(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    readerHandle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.WholeFileReader}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

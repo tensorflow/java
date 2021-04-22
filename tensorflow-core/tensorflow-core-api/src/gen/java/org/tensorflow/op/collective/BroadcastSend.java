@@ -25,58 +25,45 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Broadcasts a tensor value to one or more other devices.
- * 
- * @param <T> data type for {@code data()} output
+ *
+ * @param <T> data type for {@code data} output
  */
 public final class BroadcastSend<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.collective.BroadcastSend}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param communicationHint 
-     */
-    public Options communicationHint(String communicationHint) {
-      this.communicationHint = communicationHint;
-      return this;
-    }
-    
-    /**
-     * @param timeoutSeconds 
-     */
-    public Options timeoutSeconds(Float timeoutSeconds) {
-      this.timeoutSeconds = timeoutSeconds;
-      return this;
-    }
-    
-    private String communicationHint;
-    private Float timeoutSeconds;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CollectiveBcastSend";
+
+  private Output<T> data;
+
+  private BroadcastSend(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    data = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new BroadcastSend operation.
-   * 
+   * Factory method to create a class wrapping a new CollectiveBcastSend operation.
+   *
    * @param scope current scope
-   * @param input 
-   * @param groupSize 
-   * @param groupKey 
-   * @param instanceKey 
-   * @param shape 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param groupSize the value of the groupSize property
+   * @param groupKey the value of the groupKey property
+   * @param instanceKey the value of the instanceKey property
+   * @param shape the value of the shape property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CollectiveBcastSend} output and operands
    * @return a new instance of BroadcastSend
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BroadcastSend<T> create(Scope scope, Operand<T> input, Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BroadcastSend<T> create(Scope scope, Operand<T> input,
+      Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSend", scope.makeOpName("BroadcastSend"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -94,42 +81,74 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
         }
       }
     }
-    return new BroadcastSend<T>(opBuilder.build());
+    return new BroadcastSend<>(opBuilder.build());
   }
-  
+
   /**
-   * @param communicationHint 
+   * Sets the communicationHint option.
+   *
+   * @param communicationHint the communicationHint option
+   * @return this Options instance.
    */
   public static Options communicationHint(String communicationHint) {
     return new Options().communicationHint(communicationHint);
   }
-  
+
   /**
-   * @param timeoutSeconds 
+   * Sets the timeoutSeconds option.
+   *
+   * @param timeoutSeconds the timeoutSeconds option
+   * @return this Options instance.
    */
   public static Options timeoutSeconds(Float timeoutSeconds) {
     return new Options().timeoutSeconds(timeoutSeconds);
   }
-  
+
   /**
+   * Gets data.
+   *
+   * @return data.
    */
   public Output<T> data() {
     return data;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return data;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CollectiveBcastSend";
-  
-  private Output<T> data;
-  
-  private BroadcastSend(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    data = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.collective.BroadcastSend}
+   */
+  public static class Options {
+    private String communicationHint;
+
+    private Float timeoutSeconds;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the communicationHint option.
+     *
+     * @param communicationHint the communicationHint option
+     * @return this Options instance.
+     */
+    public Options communicationHint(String communicationHint) {
+      this.communicationHint = communicationHint;
+      return this;
+    }
+
+    /**
+     * Sets the timeoutSeconds option.
+     *
+     * @param timeoutSeconds the timeoutSeconds option
+     * @return this Options instance.
+     */
+    public Options timeoutSeconds(Float timeoutSeconds) {
+      this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
   }
 }

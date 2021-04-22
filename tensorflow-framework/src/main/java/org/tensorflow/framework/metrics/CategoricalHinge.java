@@ -45,7 +45,13 @@ public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
     setLoss(this);
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Computes the categorical hinge metric between {@code labels} and @{code predictions}.
+   *
+   * @param labels the truth values or labels, labels values are expected to be 0 or 1.
+   * @param predictions the predictions
+   * @return Categorical hinge loss values.
+   */
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {

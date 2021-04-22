@@ -29,7 +29,6 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a map that is the 'input_handle' with the given key-value pair inserted.
- * <p>
  * input_handle: the original map
  * output_handle: the map with key and value inserted
  * key: the key to be inserted
@@ -37,18 +36,34 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class TensorMapInsert extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorMapInsert";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorMapInsert(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorMapInsert operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param key 
-   * @param value 
+   * @param inputHandle the inputHandle value
+   * @param key the key value
+   * @param value the value value
    * @return a new instance of TensorMapInsert
    */
-  @Endpoint(describeByClass = true)
-  public static TensorMapInsert create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> key, Operand<? extends TType> value) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorMapInsert create(Scope scope, Operand<? extends TType> inputHandle,
+      Operand<? extends TType> key, Operand<? extends TType> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorMapInsert", scope.makeOpName("TensorMapInsert"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
@@ -56,27 +71,19 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TensorMapInsert(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorMapInsert";
-  
-  private Output<?> outputHandle;
-  
-  private TensorMapInsert(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

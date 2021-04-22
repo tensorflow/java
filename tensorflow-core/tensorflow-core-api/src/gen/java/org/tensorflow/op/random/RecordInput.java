@@ -30,84 +30,34 @@ import org.tensorflow.types.TString;
 /**
  * Emits randomized records.
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class RecordInput extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.random.RecordInput}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param fileRandomSeed Random seeds used to produce randomized records.
-     */
-    public Options fileRandomSeed(Long fileRandomSeed) {
-      this.fileRandomSeed = fileRandomSeed;
-      return this;
-    }
-    
-    /**
-     * @param fileShuffleShiftRatio Shifts the list of files after the list is randomly
-     * shuffled.
-     */
-    public Options fileShuffleShiftRatio(Float fileShuffleShiftRatio) {
-      this.fileShuffleShiftRatio = fileShuffleShiftRatio;
-      return this;
-    }
-    
-    /**
-     * @param fileBufferSize The randomization shuffling buffer.
-     */
-    public Options fileBufferSize(Long fileBufferSize) {
-      this.fileBufferSize = fileBufferSize;
-      return this;
-    }
-    
-    /**
-     * @param fileParallelism How many sstables are opened and concurrently iterated over.
-     */
-    public Options fileParallelism(Long fileParallelism) {
-      this.fileParallelism = fileParallelism;
-      return this;
-    }
-    
-    /**
-     * @param batchSize The batch size.
-     */
-    public Options batchSize(Long batchSize) {
-      this.batchSize = batchSize;
-      return this;
-    }
-    
-    /**
-     * @param compressionType The type of compression for the file. Currently ZLIB and
-     * GZIP are supported. Defaults to none.
-     */
-    public Options compressionType(String compressionType) {
-      this.compressionType = compressionType;
-      return this;
-    }
-    
-    private Long fileRandomSeed;
-    private Float fileShuffleShiftRatio;
-    private Long fileBufferSize;
-    private Long fileParallelism;
-    private Long batchSize;
-    private String compressionType;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RecordInput";
+
+  private Output<TString> records;
+
+  private RecordInput(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    records = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RecordInput operation.
-   * 
+   *
    * @param scope current scope
    * @param filePattern Glob pattern for the data files.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of RecordInput
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static RecordInput create(Scope scope, String filePattern, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RecordInput", scope.makeOpName("RecordInput"));
     opBuilder = scope.apply(opBuilder);
@@ -136,71 +86,168 @@ public final class RecordInput extends RawOp implements Operand<TString> {
     }
     return new RecordInput(opBuilder.build());
   }
-  
+
   /**
+   * Sets the fileRandomSeed option.
+   *
    * @param fileRandomSeed Random seeds used to produce randomized records.
+   * @return this Options instance.
    */
   public static Options fileRandomSeed(Long fileRandomSeed) {
     return new Options().fileRandomSeed(fileRandomSeed);
   }
-  
+
   /**
+   * Sets the fileShuffleShiftRatio option.
+   *
    * @param fileShuffleShiftRatio Shifts the list of files after the list is randomly
    * shuffled.
+   * @return this Options instance.
    */
   public static Options fileShuffleShiftRatio(Float fileShuffleShiftRatio) {
     return new Options().fileShuffleShiftRatio(fileShuffleShiftRatio);
   }
-  
+
   /**
+   * Sets the fileBufferSize option.
+   *
    * @param fileBufferSize The randomization shuffling buffer.
+   * @return this Options instance.
    */
   public static Options fileBufferSize(Long fileBufferSize) {
     return new Options().fileBufferSize(fileBufferSize);
   }
-  
+
   /**
+   * Sets the fileParallelism option.
+   *
    * @param fileParallelism How many sstables are opened and concurrently iterated over.
+   * @return this Options instance.
    */
   public static Options fileParallelism(Long fileParallelism) {
     return new Options().fileParallelism(fileParallelism);
   }
-  
+
   /**
+   * Sets the batchSize option.
+   *
    * @param batchSize The batch size.
+   * @return this Options instance.
    */
   public static Options batchSize(Long batchSize) {
     return new Options().batchSize(batchSize);
   }
-  
+
   /**
+   * Sets the compressionType option.
+   *
    * @param compressionType The type of compression for the file. Currently ZLIB and
    * GZIP are supported. Defaults to none.
+   * @return this Options instance.
    */
   public static Options compressionType(String compressionType) {
     return new Options().compressionType(compressionType);
   }
-  
+
   /**
+   * Gets records.
    * A tensor of shape [batch_size].
+   * @return records.
    */
   public Output<TString> records() {
     return records;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return records;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RecordInput";
-  
-  private Output<TString> records;
-  
-  private RecordInput(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    records = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.random.RecordInput}
+   */
+  public static class Options {
+    private Long fileRandomSeed;
+
+    private Float fileShuffleShiftRatio;
+
+    private Long fileBufferSize;
+
+    private Long fileParallelism;
+
+    private Long batchSize;
+
+    private String compressionType;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the fileRandomSeed option.
+     *
+     * @param fileRandomSeed Random seeds used to produce randomized records.
+     * @return this Options instance.
+     */
+    public Options fileRandomSeed(Long fileRandomSeed) {
+      this.fileRandomSeed = fileRandomSeed;
+      return this;
+    }
+
+    /**
+     * Sets the fileShuffleShiftRatio option.
+     *
+     * @param fileShuffleShiftRatio Shifts the list of files after the list is randomly
+     * shuffled.
+     * @return this Options instance.
+     */
+    public Options fileShuffleShiftRatio(Float fileShuffleShiftRatio) {
+      this.fileShuffleShiftRatio = fileShuffleShiftRatio;
+      return this;
+    }
+
+    /**
+     * Sets the fileBufferSize option.
+     *
+     * @param fileBufferSize The randomization shuffling buffer.
+     * @return this Options instance.
+     */
+    public Options fileBufferSize(Long fileBufferSize) {
+      this.fileBufferSize = fileBufferSize;
+      return this;
+    }
+
+    /**
+     * Sets the fileParallelism option.
+     *
+     * @param fileParallelism How many sstables are opened and concurrently iterated over.
+     * @return this Options instance.
+     */
+    public Options fileParallelism(Long fileParallelism) {
+      this.fileParallelism = fileParallelism;
+      return this;
+    }
+
+    /**
+     * Sets the batchSize option.
+     *
+     * @param batchSize The batch size.
+     * @return this Options instance.
+     */
+    public Options batchSize(Long batchSize) {
+      this.batchSize = batchSize;
+      return this;
+    }
+
+    /**
+     * Sets the compressionType option.
+     *
+     * @param compressionType The type of compression for the file. Currently ZLIB and
+     * GZIP are supported. Defaults to none.
+     * @return this Options instance.
+     */
+    public Options compressionType(String compressionType) {
+      this.compressionType = compressionType;
+      return this;
+    }
   }
 }

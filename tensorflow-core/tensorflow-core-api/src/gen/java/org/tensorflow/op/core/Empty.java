@@ -31,44 +31,40 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates a tensor with the given shape.
- * <p>
- * This operation creates a tensor of `shape` and `dtype`.
- * 
- * @param <T> data type for {@code output()} output
+ * <p>This operation creates a tensor of {@code shape} and {@code dtype}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Empty<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Empty}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param init If True, initialize the returned tensor with the default value of dtype.  Otherwise, the implementation is free not to initializethe tensor's content.
-     */
-    public Options init(Boolean init) {
-      this.init = init;
-      return this;
-    }
-    
-    private Boolean init;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Empty";
+
+  private Output<T> output;
+
+  private Empty(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Empty operation.
-   * 
+   *
    * @param scope current scope
    * @param shape 1-D. Represents the shape of the output tensor.
-   * @param dtype 
-   * @param options carries optional attributes values
+   * @param dtype the value of the dtype property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Empty} output and operands
    * @return a new instance of Empty
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Empty<T> create(Scope scope, Operand<TInt32> shape,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Empty", scope.makeOpName("Empty"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -80,36 +76,51 @@ public final class Empty<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Empty<T>(opBuilder.build());
+    return new Empty<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the init option.
+   *
    * @param init If True, initialize the returned tensor with the default value of dtype.  Otherwise, the implementation is free not to initializethe tensor's content.
+   * @return this Options instance.
    */
   public static Options init(Boolean init) {
     return new Options().init(init);
   }
-  
+
   /**
-   * A `Tensor` of type `T`.
+   * Gets output.
+   * A {@code Tensor} of type {@code T}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Empty";
-  
-  private Output<T> output;
-  
-  private Empty(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Empty}
+   */
+  public static class Options {
+    private Boolean init;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the init option.
+     *
+     * @param init If True, initialize the returned tensor with the default value of dtype.  Otherwise, the implementation is free not to initializethe tensor's content.
+     * @return this Options instance.
+     */
+    public Options init(Boolean init) {
+      this.init = init;
+      return this;
+    }
   }
 }

@@ -35,71 +35,54 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Takes the given number of completed elements from a barrier.
- * <p>
  * This operation concatenates completed-element component tensors along
  * the 0th dimension to make a single component tensor.
- * <p>
- * Elements come out of the barrier when they are complete, and in the order
+ * <p>Elements come out of the barrier when they are complete, and in the order
  * in which they were placed into the barrier.  The indices output provides
  * information about the batch in which each element was originally inserted
  * into the barrier.
  */
 @Operator
 public final class BarrierTakeMany extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.BarrierTakeMany}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param allowSmallBatch Allow to return less than num_elements items if barrier is
-     * already closed.
-     */
-    public Options allowSmallBatch(Boolean allowSmallBatch) {
-      this.allowSmallBatch = allowSmallBatch;
-      return this;
-    }
-    
-    /**
-     * @param waitForIncomplete 
-     */
-    public Options waitForIncomplete(Boolean waitForIncomplete) {
-      this.waitForIncomplete = waitForIncomplete;
-      return this;
-    }
-    
-    /**
-     * @param timeoutMs If the queue is empty, this operation will block for up to
-     * timeout_ms milliseconds.
-     * Note: This option is not supported yet.
-     */
-    public Options timeoutMs(Long timeoutMs) {
-      this.timeoutMs = timeoutMs;
-      return this;
-    }
-    
-    private Boolean allowSmallBatch;
-    private Boolean waitForIncomplete;
-    private Long timeoutMs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BarrierTakeMany";
+
+  private Output<TInt64> indices;
+
+  private Output<TString> keys;
+
+  private List<Output<?>> values;
+
+  @SuppressWarnings("unchecked")
+  private BarrierTakeMany(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    indices = operation.output(outputIdx++);
+    keys = operation.output(outputIdx++);
+    int valuesLength = operation.outputListLength("values");
+    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
+    outputIdx += valuesLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BarrierTakeMany operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a barrier.
    * @param numElements A single-element tensor containing the number of elements to
    * take.
    * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of BarrierTakeMany
    */
-  @Endpoint(describeByClass = true)
-  public static BarrierTakeMany create(Scope scope, Operand<TString> handle, Operand<TInt32> numElements, List<Class<? extends TType>> componentTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BarrierTakeMany create(Scope scope, Operand<TString> handle,
+      Operand<TInt32> numElements, List<Class<? extends TType>> componentTypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierTakeMany", scope.makeOpName("BarrierTakeMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numElements.asOutput());
@@ -120,69 +103,117 @@ public final class BarrierTakeMany extends RawOp {
     }
     return new BarrierTakeMany(opBuilder.build());
   }
-  
+
   /**
+   * Sets the allowSmallBatch option.
+   *
    * @param allowSmallBatch Allow to return less than num_elements items if barrier is
    * already closed.
+   * @return this Options instance.
    */
   public static Options allowSmallBatch(Boolean allowSmallBatch) {
     return new Options().allowSmallBatch(allowSmallBatch);
   }
-  
+
   /**
-   * @param waitForIncomplete 
+   * Sets the waitForIncomplete option.
+   *
+   * @param waitForIncomplete the waitForIncomplete option
+   * @return this Options instance.
    */
   public static Options waitForIncomplete(Boolean waitForIncomplete) {
     return new Options().waitForIncomplete(waitForIncomplete);
   }
-  
+
   /**
+   * Sets the timeoutMs option.
+   *
    * @param timeoutMs If the queue is empty, this operation will block for up to
    * timeout_ms milliseconds.
    * Note: This option is not supported yet.
+   * @return this Options instance.
    */
   public static Options timeoutMs(Long timeoutMs) {
     return new Options().timeoutMs(timeoutMs);
   }
-  
+
   /**
+   * Gets indices.
    * A one-dimensional tensor of indices, with length num_elems.
    * These indices refer to the batch in which the values were placed into the
    * barrier (starting with MIN_LONG and increasing with each BarrierInsertMany).
+   * @return indices.
    */
   public Output<TInt64> indices() {
     return indices;
   }
-  
+
   /**
+   * Gets keys.
    * A one-dimensional tensor of keys, with length num_elements.
+   * @return keys.
    */
   public Output<TString> keys() {
     return keys;
   }
-  
+
   /**
+   * Gets values.
    * One any-dimensional tensor per component in a barrier element. All
    * values have length num_elements in the 0th dimension.
+   * @return values.
    */
   public List<Output<?>> values() {
     return values;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BarrierTakeMany";
-  
-  private Output<TInt64> indices;
-  private Output<TString> keys;
-  private List<Output<?>> values;
-  
-  private BarrierTakeMany(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    indices = operation.output(outputIdx++);
-    keys = operation.output(outputIdx++);
-    int valuesLength = operation.outputListLength("values");
-    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
-    outputIdx += valuesLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.BarrierTakeMany}
+   */
+  public static class Options {
+    private Boolean allowSmallBatch;
+
+    private Boolean waitForIncomplete;
+
+    private Long timeoutMs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the allowSmallBatch option.
+     *
+     * @param allowSmallBatch Allow to return less than num_elements items if barrier is
+     * already closed.
+     * @return this Options instance.
+     */
+    public Options allowSmallBatch(Boolean allowSmallBatch) {
+      this.allowSmallBatch = allowSmallBatch;
+      return this;
+    }
+
+    /**
+     * Sets the waitForIncomplete option.
+     *
+     * @param waitForIncomplete the waitForIncomplete option
+     * @return this Options instance.
+     */
+    public Options waitForIncomplete(Boolean waitForIncomplete) {
+      this.waitForIncomplete = waitForIncomplete;
+      return this;
+    }
+
+    /**
+     * Sets the timeoutMs option.
+     *
+     * @param timeoutMs If the queue is empty, this operation will block for up to
+     * timeout_ms milliseconds.
+     * Note: This option is not supported yet.
+     * @return this Options instance.
+     */
+    public Options timeoutMs(Long timeoutMs) {
+      this.timeoutMs = timeoutMs;
+      return this;
+    }
   }
 }

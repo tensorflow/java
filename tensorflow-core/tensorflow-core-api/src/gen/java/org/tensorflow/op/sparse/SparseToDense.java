@@ -30,66 +30,64 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Converts a sparse representation into a dense tensor.
- * <p>
- * Builds an array `dense` with shape `output_shape` such that
- * <pre>{@code
+ * Builds an array {@code dense} with shape {@code output_shape} such that
+ * <pre>
  * # If sparse_indices is scalar
  * dense[i] = (i == sparse_indices ? sparse_values : default_value)
- * 
+ *
  * # If sparse_indices is a vector, then for each i
  * dense[sparse_indices[i]] = sparse_values[i]
- * 
+ *
  * # If sparse_indices is an n by d matrix, then for each i in [0, n)
  * dense[sparse_indices[i][0], ..., sparse_indices[i][d-1]] = sparse_values[i]
- * }</pre>
- * All other values in `dense` are set to `default_value`.  If `sparse_values` is a
+ * </pre>
+ * <p>All other values in {@code dense} are set to {@code default_value}.  If {@code sparse_values} is a
  * scalar, all sparse indices are set to this single value.
- * <p>
- * Indices should be sorted in lexicographic order, and indices must not
- * contain any repeats. If `validate_indices` is true, these properties
+ * <p>Indices should be sorted in lexicographic order, and indices must not
+ * contain any repeats. If {@code validate_indices} is true, these properties
  * are checked during execution.
- * 
- * @param <U> data type for {@code dense()} output
+ *
+ * @param <U> data type for {@code dense} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseToDense<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.SparseToDense}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param validateIndices If true, indices are checked to make sure they are sorted in
-     * lexicographic order and that there are no repeats.
-     */
-    public Options validateIndices(Boolean validateIndices) {
-      this.validateIndices = validateIndices;
-      return this;
-    }
-    
-    private Boolean validateIndices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseToDense";
+
+  private Output<U> dense;
+
+  private SparseToDense(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    dense = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseToDense operation.
-   * 
+   *
    * @param scope current scope
-   * @param sparseIndices 0-D, 1-D, or 2-D.  `sparse_indices[i]` contains the complete
-   * index where `sparse_values[i]` will be placed.
+   * @param sparseIndices 0-D, 1-D, or 2-D.  {@code sparse_indices[i]} contains the complete
+   * index where {@code sparse_values[i]} will be placed.
    * @param outputShape 1-D.  Shape of the dense output tensor.
-   * @param sparseValues 1-D.  Values corresponding to each row of `sparse_indices`,
+   * @param sparseValues 1-D.  Values corresponding to each row of {@code sparse_indices},
    * or a scalar value to be used for all sparse indices.
    * @param defaultValue Scalar value to set for indices not specified in
-   * `sparse_indices`.
-   * @param options carries optional attributes values
+   * {@code sparse_indices}.
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code SparseToDense} output and operands
+   * @param <T> data type for {@code SparseToDense} output and operands
    * @return a new instance of SparseToDense
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> SparseToDense<U> create(Scope scope, Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues, Operand<U> defaultValue, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType, T extends TNumber> SparseToDense<U> create(Scope scope,
+      Operand<T> sparseIndices, Operand<T> outputShape, Operand<U> sparseValues,
+      Operand<U> defaultValue, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToDense", scope.makeOpName("SparseToDense"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(outputShape.asOutput());
@@ -103,37 +101,53 @@ public final class SparseToDense<U extends TType> extends RawOp implements Opera
         }
       }
     }
-    return new SparseToDense<U>(opBuilder.build());
+    return new SparseToDense<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the validateIndices option.
+   *
    * @param validateIndices If true, indices are checked to make sure they are sorted in
    * lexicographic order and that there are no repeats.
+   * @return this Options instance.
    */
   public static Options validateIndices(Boolean validateIndices) {
     return new Options().validateIndices(validateIndices);
   }
-  
+
   /**
-   * Dense output tensor of shape `output_shape`.
+   * Gets dense.
+   * Dense output tensor of shape {@code output_shape}.
+   * @return dense.
    */
   public Output<U> dense() {
     return dense;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return dense;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseToDense";
-  
-  private Output<U> dense;
-  
-  private SparseToDense(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    dense = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseToDense}
+   */
+  public static class Options {
+    private Boolean validateIndices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the validateIndices option.
+     *
+     * @param validateIndices If true, indices are checked to make sure they are sorted in
+     * lexicographic order and that there are no repeats.
+     * @return this Options instance.
+     */
+    public Options validateIndices(Boolean validateIndices) {
+      this.validateIndices = validateIndices;
+      return this;
+    }
   }
 }

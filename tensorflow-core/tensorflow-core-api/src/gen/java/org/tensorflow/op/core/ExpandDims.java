@@ -30,81 +30,82 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Inserts a dimension of 1 into a tensor's shape.
- * <p>
- * Given a tensor `input`, this operation inserts a dimension of 1 at the
- * dimension index `axis` of `input`'s shape. The dimension index `axis` starts at
- * zero; if you specify a negative number for `axis` it is counted backward from
+ * Given a tensor {@code input}, this operation inserts a dimension of 1 at the
+ * dimension index {@code axis} of {@code input}'s shape. The dimension index {@code axis} starts at
+ * zero; if you specify a negative number for {@code axis} it is counted backward from
  * the end.
- * <p>
- * This operation is useful if you want to add a batch dimension to a single
- * element. For example, if you have a single image of shape `[height, width,
- * channels]`, you can make it a batch of 1 image with `expand_dims(image, 0)`,
- * which will make the shape `[1, height, width, channels]`.
- * <p>
- * Other examples:
- * <pre>{@code
+ * <p>This operation is useful if you want to add a batch dimension to a single
+ * element. For example, if you have a single image of shape {@code [height, width, channels]}, you can make it a batch of 1 image with {@code expand_dims(image, 0)},
+ * which will make the shape {@code [1, height, width, channels]}.
+ * <p>Other examples:
+ * <pre>
  * # 't' is a tensor of shape [2]
- * shape(expand_dims(t, 0)) ==> [1, 2]
- * shape(expand_dims(t, 1)) ==> [2, 1]
- * shape(expand_dims(t, -1)) ==> [2, 1]
- * 
+ * shape(expand_dims(t, 0)) ==&gt; [1, 2]
+ * shape(expand_dims(t, 1)) ==&gt; [2, 1]
+ * shape(expand_dims(t, -1)) ==&gt; [2, 1]
+ *
  * # 't2' is a tensor of shape [2, 3, 5]
- * shape(expand_dims(t2, 0)) ==> [1, 2, 3, 5]
- * shape(expand_dims(t2, 2)) ==> [2, 3, 1, 5]
- * shape(expand_dims(t2, 3)) ==> [2, 3, 5, 1]
- * }</pre>
- * This operation requires that:
- * <p>
- * `-1-input.dims() <= dim <= input.dims()`
- * <p>
- * This operation is related to `squeeze()`, which removes dimensions of
+ * shape(expand_dims(t2, 0)) ==&gt; [1, 2, 3, 5]
+ * shape(expand_dims(t2, 2)) ==&gt; [2, 3, 1, 5]
+ * shape(expand_dims(t2, 3)) ==&gt; [2, 3, 5, 1]
+ * </pre>
+ * <p>This operation requires that:
+ * <p>{@code -1-input.dims() <= dim <= input.dims()}
+ * <p>This operation is related to {@code squeeze()}, which removes dimensions of
  * size 1.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class ExpandDims<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new ExpandDims operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param axis 0-D (scalar). Specifies the dimension index at which to
-   * expand the shape of `input`. Must be in the range
-   * `[-rank(input) - 1, rank(input)]`.
-   * @return a new instance of ExpandDims
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ExpandDims<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new ExpandDims<T>(opBuilder.build());
-  }
-  
-  /**
-   * Contains the same data as `input`, but its shape has an additional
-   * dimension of size 1 added.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "ExpandDims";
-  
+
   private Output<T> output;
-  
+
   private ExpandDims(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExpandDims operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param axis 0-D (scalar). Specifies the dimension index at which to
+   * expand the shape of {@code input}. Must be in the range
+   * {@code [-rank(input) - 1, rank(input)]}.
+   * @param <T> data type for {@code ExpandDims} output and operands
+   * @return a new instance of ExpandDims
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ExpandDims<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> axis) {
+    OperationBuilder opBuilder = scope.env().opBuilder("ExpandDims", scope.makeOpName("ExpandDims"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(axis.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new ExpandDims<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Contains the same data as {@code input}, but its shape has an additional
+   * dimension of size 1 added.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

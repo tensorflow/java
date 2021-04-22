@@ -32,66 +32,54 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Decode a PNG-encoded image to a uint8 or uint16 tensor.
- * <p>
- * The attr `channels` indicates the desired number of color channels for the
+ * The attr {@code channels} indicates the desired number of color channels for the
  * decoded image.
- * <p>
- * Accepted values are:
+ * <p>Accepted values are:
  * <ul>
- * <li>
- * 0: Use the number of channels in the PNG-encoded image.
- * </li>
- * <li>
- * 1: output a grayscale image.
- * </li>
- * <li>
- * 3: output an RGB image.
- * </li>
- * <li>
- * 4: output an RGBA image.
- * </li>
+ * <li>0: Use the number of channels in the PNG-encoded image.</li>
+ * <li>1: output a grayscale image.</li>
+ * <li>3: output an RGB image.</li>
+ * <li>4: output an RGBA image.</li>
  * </ul>
- * If needed, the PNG-encoded image is transformed to match the requested number
+ * <p>If needed, the PNG-encoded image is transformed to match the requested number
  * of color channels.
- * <p>
- * This op also supports decoding JPEGs and non-animated GIFs since the interface
- * is the same, though it is cleaner to use `tf.io.decode_image`.
- * 
- * @param <T> data type for {@code image()} output
+ * <p>This op also supports decoding JPEGs and non-animated GIFs since the interface
+ * is the same, though it is cleaner to use {@code tf.io.decode_image}.
+ *
+ * @param <T> data type for {@code image} output
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class DecodePng<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.DecodePng}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param channels Number of color channels for the decoded image.
-     */
-    public Options channels(Long channels) {
-      this.channels = channels;
-      return this;
-    }
-    
-    private Long channels;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodePng";
+
+  private Output<T> image;
+
+  private DecodePng(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    image = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodePng operation.
-   * 
+   *
    * @param scope current scope
    * @param contents 0-D.  The PNG-encoded image.
-   * @param dtype 
-   * @param options carries optional attributes values
+   * @param dtype the value of the dtype property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodePng} output and operands
    * @return a new instance of DecodePng
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> DecodePng<T> create(Scope scope, Operand<TString> contents,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePng", scope.makeOpName("DecodePng"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -103,49 +91,67 @@ public final class DecodePng<T extends TNumber> extends RawOp implements Operand
         }
       }
     }
-    return new DecodePng<T>(opBuilder.build());
+    return new DecodePng<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new DecodePng operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new DecodePng operation, with the default output types.
+   *
    * @param scope current scope
    * @param contents 0-D.  The PNG-encoded image.
-   * @param options carries optional attributes values
-   * @return a new instance of DecodePng
+   * @param options carries optional attribute values
+   * @return a new instance of DecodePng, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DecodePng<TUint8> create(Scope scope, Operand<TString> contents,
+      Options[] options) {
     return create(scope, contents, TUint8.class, options);
   }
-  
+
   /**
+   * Sets the channels option.
+   *
    * @param channels Number of color channels for the decoded image.
+   * @return this Options instance.
    */
   public static Options channels(Long channels) {
     return new Options().channels(channels);
   }
-  
+
   /**
-   * 3-D with shape `[height, width, channels]`.
+   * Gets image.
+   * 3-D with shape {@code [height, width, channels]}.
+   * @return image.
    */
   public Output<T> image() {
     return image;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return image;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodePng";
-  
-  private Output<T> image;
-  
-  private DecodePng(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    image = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.DecodePng}
+   */
+  public static class Options {
+    private Long channels;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the channels option.
+     *
+     * @param channels Number of color channels for the decoded image.
+     * @return this Options instance.
+     */
+    public Options channels(Long channels) {
+      this.channels = channels;
+      return this;
+    }
   }
 }

@@ -31,55 +31,66 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The IteratorV2 operation
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class Iterator extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new Iterator operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IteratorV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private Iterator(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IteratorV2 operation.
+   *
    * @param scope current scope
-   * @param sharedName 
-   * @param container 
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param sharedName the value of the sharedName property
+   * @param container the value of the container property
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of Iterator
    */
-  @Endpoint(describeByClass = true)
-  public static Iterator create(Scope scope, String sharedName, String container, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Iterator create(Scope scope, String sharedName, String container,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorV2", scope.makeOpName("Iterator"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shared_name", sharedName);
     opBuilder.setAttr("container", container);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new Iterator(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IteratorV2";
-  
-  private Output<?> handle;
-  
-  private Iterator(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

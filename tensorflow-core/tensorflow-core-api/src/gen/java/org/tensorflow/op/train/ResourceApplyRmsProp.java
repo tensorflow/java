@@ -28,59 +28,51 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the RMSProp algorithm.
- * <p>
  * Note that in dense implementation of this algorithm, ms and mom will
  * update even if the grad is zero, but in this sparse implementation, ms
  * and mom will not update in iterations during which the grad is zero.
- * <p>
- * mean_square = decay * mean_square + (1-decay) * gradient ** 2
+ * <p>mean_square = decay * mean_square + (1-decay) * gradient ** 2
  * Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
- * <p>
- * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
- * mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
- * var <- var - mom
+ * <p>ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+ * mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
+ * var &lt;- var - mom
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceApplyRmsProp extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyRmsProp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceApplyRMSProp";
+
+  private ResourceApplyRmsProp(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ResourceApplyRmsProp operation.
-   * 
+   * Factory method to create a class wrapping a new ResourceApplyRMSProp operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param ms Should be from a Variable().
    * @param mom Should be from a Variable().
    * @param lr Scaling factor. Must be a scalar.
    * @param rho Decay rate. Must be a scalar.
-   * @param momentum 
+   * @param momentum the momentum value
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceApplyRMSProp} output and operands
    * @return a new instance of ResourceApplyRmsProp
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceApplyRmsProp create(Scope scope, Operand<?> var, Operand<?> ms, Operand<?> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceApplyRmsProp create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> ms, Operand<? extends TType> mom,
+      Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyRMSProp", scope.makeOpName("ResourceApplyRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());
@@ -100,20 +92,39 @@ public final class ResourceApplyRmsProp extends RawOp {
     }
     return new ResourceApplyRmsProp(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var, ms, and mom tensors is protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceApplyRMSProp";
-  
-  private ResourceApplyRmsProp(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceApplyRmsProp}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var, ms, and mom tensors is protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

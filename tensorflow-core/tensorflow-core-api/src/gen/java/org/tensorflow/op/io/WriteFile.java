@@ -28,33 +28,38 @@ import org.tensorflow.types.TString;
 
 /**
  * Writes contents to the file at input filename. Creates file and recursively
- * <p>
  * creates directory if not existing.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class WriteFile extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WriteFile";
+
+  private WriteFile(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new WriteFile operation.
-   * 
+   *
    * @param scope current scope
    * @param filename scalar. The name of the file to which we write the contents.
    * @param contents scalar. The content to be written to the output file.
    * @return a new instance of WriteFile
    */
-  @Endpoint(describeByClass = true)
-  public static WriteFile create(Scope scope, Operand<TString> filename, Operand<TString> contents) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteFile create(Scope scope, Operand<TString> filename,
+      Operand<TString> contents) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteFile", scope.makeOpName("WriteFile"));
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WriteFile(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteFile";
-  
-  private WriteFile(Operation operation) {
-    super(operation);
   }
 }

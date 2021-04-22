@@ -28,34 +28,38 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Sends the named tensor to another XLA computation. Wraps the XLA Send operator
- * <p>
  * documented at
- *  https://www.tensorflow.org/performance/xla/operation_semantics#send .
+ * https://www.tensorflow.org/performance/xla/operation_semantics#send .
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Send extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new Send operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaSend";
+
+  private Send(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaSend operation.
+   *
    * @param scope current scope
    * @param tensor The tensor to send.
    * @param tensorName A string key that identifies the channel.
    * @return a new instance of Send
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Send create(Scope scope, Operand<? extends TType> tensor, String tensorName) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSend", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("tensor_name", tensorName);
     return new Send(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaSend";
-  
-  private Send(Operation operation) {
-    super(operation);
   }
 }

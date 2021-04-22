@@ -28,87 +28,43 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Assign `value` to the sliced l-value reference of `ref`.
- * <p>
- * The values of `value` are assigned to the positions in the variable
- * `ref` that are selected by the slice parameters. The slice parameters
- * `begin, `end`, `strides`, etc. work exactly as in `StridedSlice`.
- * <p>
- * NOTE this op currently does not support broadcasting and so `value`'s
- * shape must be exactly the shape produced by the slice of `ref`.
+ * Assign {@code value} to the sliced l-value reference of {@code ref}.
+ * The values of {@code value} are assigned to the positions in the variable
+ * {@code ref} that are selected by the slice parameters. The slice parameters
+ * {@code begin, }end{@code , }strides{@code , etc. work exactly as in }StridedSlice`.
+ * <p>NOTE this op currently does not support broadcasting and so {@code value}'s
+ * shape must be exactly the shape produced by the slice of {@code ref}.
  */
 @Operator
 public final class ResourceStridedSliceAssign extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ResourceStridedSliceAssign}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param beginMask 
-     */
-    public Options beginMask(Long beginMask) {
-      this.beginMask = beginMask;
-      return this;
-    }
-    
-    /**
-     * @param endMask 
-     */
-    public Options endMask(Long endMask) {
-      this.endMask = endMask;
-      return this;
-    }
-    
-    /**
-     * @param ellipsisMask 
-     */
-    public Options ellipsisMask(Long ellipsisMask) {
-      this.ellipsisMask = ellipsisMask;
-      return this;
-    }
-    
-    /**
-     * @param newAxisMask 
-     */
-    public Options newAxisMask(Long newAxisMask) {
-      this.newAxisMask = newAxisMask;
-      return this;
-    }
-    
-    /**
-     * @param shrinkAxisMask 
-     */
-    public Options shrinkAxisMask(Long shrinkAxisMask) {
-      this.shrinkAxisMask = shrinkAxisMask;
-      return this;
-    }
-    
-    private Long beginMask;
-    private Long endMask;
-    private Long ellipsisMask;
-    private Long newAxisMask;
-    private Long shrinkAxisMask;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceStridedSliceAssign";
+
+  private ResourceStridedSliceAssign(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ResourceStridedSliceAssign operation.
-   * 
+   *
    * @param scope current scope
-   * @param ref 
-   * @param begin 
-   * @param end 
-   * @param strides 
-   * @param value 
-   * @param options carries optional attributes values
+   * @param ref the ref value
+   * @param begin the begin value
+   * @param end the end value
+   * @param strides the strides value
+   * @param value the value value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceStridedSliceAssign} output and operands
    * @return a new instance of ResourceStridedSliceAssign
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> ResourceStridedSliceAssign create(Scope scope, Operand<?> ref, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<? extends TType> value, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> ResourceStridedSliceAssign create(Scope scope,
+      Operand<? extends TType> ref, Operand<T> begin, Operand<T> end, Operand<T> strides,
+      Operand<? extends TType> value, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceStridedSliceAssign", scope.makeOpName("ResourceStridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(begin.asOutput());
@@ -137,46 +93,127 @@ public final class ResourceStridedSliceAssign extends RawOp {
     }
     return new ResourceStridedSliceAssign(opBuilder.build());
   }
-  
+
   /**
-   * @param beginMask 
+   * Sets the beginMask option.
+   *
+   * @param beginMask the beginMask option
+   * @return this Options instance.
    */
   public static Options beginMask(Long beginMask) {
     return new Options().beginMask(beginMask);
   }
-  
+
   /**
-   * @param endMask 
+   * Sets the endMask option.
+   *
+   * @param endMask the endMask option
+   * @return this Options instance.
    */
   public static Options endMask(Long endMask) {
     return new Options().endMask(endMask);
   }
-  
+
   /**
-   * @param ellipsisMask 
+   * Sets the ellipsisMask option.
+   *
+   * @param ellipsisMask the ellipsisMask option
+   * @return this Options instance.
    */
   public static Options ellipsisMask(Long ellipsisMask) {
     return new Options().ellipsisMask(ellipsisMask);
   }
-  
+
   /**
-   * @param newAxisMask 
+   * Sets the newAxisMask option.
+   *
+   * @param newAxisMask the newAxisMask option
+   * @return this Options instance.
    */
   public static Options newAxisMask(Long newAxisMask) {
     return new Options().newAxisMask(newAxisMask);
   }
-  
+
   /**
-   * @param shrinkAxisMask 
+   * Sets the shrinkAxisMask option.
+   *
+   * @param shrinkAxisMask the shrinkAxisMask option
+   * @return this Options instance.
    */
   public static Options shrinkAxisMask(Long shrinkAxisMask) {
     return new Options().shrinkAxisMask(shrinkAxisMask);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceStridedSliceAssign";
-  
-  private ResourceStridedSliceAssign(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.ResourceStridedSliceAssign}
+   */
+  public static class Options {
+    private Long beginMask;
+
+    private Long endMask;
+
+    private Long ellipsisMask;
+
+    private Long newAxisMask;
+
+    private Long shrinkAxisMask;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the beginMask option.
+     *
+     * @param beginMask the beginMask option
+     * @return this Options instance.
+     */
+    public Options beginMask(Long beginMask) {
+      this.beginMask = beginMask;
+      return this;
+    }
+
+    /**
+     * Sets the endMask option.
+     *
+     * @param endMask the endMask option
+     * @return this Options instance.
+     */
+    public Options endMask(Long endMask) {
+      this.endMask = endMask;
+      return this;
+    }
+
+    /**
+     * Sets the ellipsisMask option.
+     *
+     * @param ellipsisMask the ellipsisMask option
+     * @return this Options instance.
+     */
+    public Options ellipsisMask(Long ellipsisMask) {
+      this.ellipsisMask = ellipsisMask;
+      return this;
+    }
+
+    /**
+     * Sets the newAxisMask option.
+     *
+     * @param newAxisMask the newAxisMask option
+     * @return this Options instance.
+     */
+    public Options newAxisMask(Long newAxisMask) {
+      this.newAxisMask = newAxisMask;
+      return this;
+    }
+
+    /**
+     * Sets the shrinkAxisMask option.
+     *
+     * @param shrinkAxisMask the shrinkAxisMask option
+     * @return this Options instance.
+     */
+    public Options shrinkAxisMask(Long shrinkAxisMask) {
+      this.shrinkAxisMask = shrinkAxisMask;
+      return this;
+    }
   }
 }

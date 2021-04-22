@@ -24,29 +24,46 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The FixedLengthRecordDatasetV2 operation
  */
 public final class FixedLengthRecordDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new FixedLengthRecordDataset operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "FixedLengthRecordDatasetV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private FixedLengthRecordDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new FixedLengthRecordDatasetV2 operation.
+   *
    * @param scope current scope
-   * @param filenames 
-   * @param headerBytes 
-   * @param recordBytes 
-   * @param footerBytes 
-   * @param bufferSize 
-   * @param compressionType 
+   * @param filenames the filenames value
+   * @param headerBytes the headerBytes value
+   * @param recordBytes the recordBytes value
+   * @param footerBytes the footerBytes value
+   * @param bufferSize the bufferSize value
+   * @param compressionType the compressionType value
    * @return a new instance of FixedLengthRecordDataset
    */
-  @Endpoint(describeByClass = true)
-  public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames, Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes, Operand<TInt64> bufferSize, Operand<TString> compressionType) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FixedLengthRecordDataset create(Scope scope, Operand<TString> filenames,
+      Operand<TInt64> headerBytes, Operand<TInt64> recordBytes, Operand<TInt64> footerBytes,
+      Operand<TInt64> bufferSize, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordDatasetV2", scope.makeOpName("FixedLengthRecordDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(headerBytes.asOutput());
@@ -57,27 +74,19 @@ public final class FixedLengthRecordDataset extends RawOp implements Operand<TTy
     opBuilder = scope.apply(opBuilder);
     return new FixedLengthRecordDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FixedLengthRecordDatasetV2";
-  
-  private Output<?> handle;
-  
-  private FixedLengthRecordDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

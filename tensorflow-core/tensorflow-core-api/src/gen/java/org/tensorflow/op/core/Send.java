@@ -23,50 +23,38 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Sends the named tensor from send_device to recv_device.
  */
 public final class Send extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Send}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param clientTerminated If set to true, this indicates that the node was added
-     * to the graph as a result of a client-side feed or fetch of Tensor data,
-     * in which case the corresponding send or recv is expected to be managed
-     * locally by the caller.
-     */
-    public Options clientTerminated(Boolean clientTerminated) {
-      this.clientTerminated = clientTerminated;
-      return this;
-    }
-    
-    private Boolean clientTerminated;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Send";
+
+  private Send(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Send operation.
-   * 
+   *
    * @param scope current scope
    * @param tensor The tensor to send.
    * @param tensorName The name of the tensor to send.
    * @param sendDevice The name of the device sending the tensor.
    * @param sendDeviceIncarnation The current incarnation of send_device.
    * @param recvDevice The name of the device receiving the tensor.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Send
    */
-  @Endpoint(describeByClass = true)
-  public static Send create(Scope scope, Operand<? extends TType> tensor, String tensorName, String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Send create(Scope scope, Operand<? extends TType> tensor, String tensorName,
+      String sendDevice, Long sendDeviceIncarnation, String recvDevice, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Send", scope.makeOpName("Send"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -83,21 +71,41 @@ public final class Send extends RawOp {
     }
     return new Send(opBuilder.build());
   }
-  
+
   /**
+   * Sets the clientTerminated option.
+   *
    * @param clientTerminated If set to true, this indicates that the node was added
    * to the graph as a result of a client-side feed or fetch of Tensor data,
    * in which case the corresponding send or recv is expected to be managed
    * locally by the caller.
+   * @return this Options instance.
    */
   public static Options clientTerminated(Boolean clientTerminated) {
     return new Options().clientTerminated(clientTerminated);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Send";
-  
-  private Send(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Send}
+   */
+  public static class Options {
+    private Boolean clientTerminated;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the clientTerminated option.
+     *
+     * @param clientTerminated If set to true, this indicates that the node was added
+     * to the graph as a result of a client-side feed or fetch of Tensor data,
+     * in which case the corresponding send or recv is expected to be managed
+     * locally by the caller.
+     * @return this Options instance.
+     */
+    public Options clientTerminated(Boolean clientTerminated) {
+      this.clientTerminated = clientTerminated;
+      return this;
+    }
   }
 }

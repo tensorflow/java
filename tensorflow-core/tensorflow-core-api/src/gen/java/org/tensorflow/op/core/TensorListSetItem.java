@@ -29,21 +29,38 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The TensorListSetItem operation
  */
 @Operator
 public final class TensorListSetItem extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListSetItem";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListSetItem(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListSetItem operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param index 
-   * @param item 
+   * @param inputHandle the inputHandle value
+   * @param index the index value
+   * @param item the item value
    * @return a new instance of TensorListSetItem
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListSetItem create(Scope scope, Operand<?> inputHandle, Operand<TInt32> index, Operand<? extends TType> item) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListSetItem create(Scope scope, Operand<? extends TType> inputHandle,
+      Operand<TInt32> index, Operand<? extends TType> item) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListSetItem", scope.makeOpName("TensorListSetItem"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
@@ -51,27 +68,19 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TensorListSetItem(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListSetItem";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListSetItem(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

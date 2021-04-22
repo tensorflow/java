@@ -29,40 +29,31 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Return substrings from `Tensor` of strings.
- * <p>
- * For each string in the input `Tensor`, creates a substring starting at index
- * `pos` with a total length of `len`.
- * <p>
- * If `len` defines a substring that would extend beyond the length of the input
- * string, or if `len` is negative, then as many characters as possible are used.
- * <p>
- * A negative `pos` indicates distance within the string backwards from the end.
- * <p>
- * If `pos` specifies an index which is out of range for any of the input strings,
- * then an `InvalidArgumentError` is thrown.
- * <p>
- * `pos` and `len` must have the same shape, otherwise a `ValueError` is thrown on
+ * Return substrings from {@code Tensor} of strings.
+ * For each string in the input {@code Tensor}, creates a substring starting at index
+ * {@code pos} with a total length of {@code len}.
+ * <p>If {@code len} defines a substring that would extend beyond the length of the input
+ * string, or if {@code len} is negative, then as many characters as possible are used.
+ * <p>A negative {@code pos} indicates distance within the string backwards from the end.
+ * <p>If {@code pos} specifies an index which is out of range for any of the input strings,
+ * then an {@code InvalidArgumentError} is thrown.
+ * <p>{@code pos} and {@code len} must have the same shape, otherwise a {@code ValueError} is thrown on
  * Op creation.
- * <p>
- * <i>NOTE</i>: `strings.Substr` supports broadcasting up to two dimensions. More about
+ * <p><em>NOTE</em>: {@code strings.Substr} supports broadcasting up to two dimensions. More about
  * broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * <p>
- * ---
- * <p>
- * Examples
- * <p>
- * Using scalar `pos` and `len`:
- * <pre>{@code
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
+ * <hr />
+ * <p>Examples
+ * <p>Using scalar {@code pos} and {@code len}:
+ * <pre>
  * input = [b'Hello', b'World']
  * position = 1
  * length = 3
- * 
+ *
  * output = [b'ell', b'orl']
- * }</pre>
- * Using `pos` and `len` with same shape as `input`:
- * <pre>{@code
+ * </pre>
+ * <p>Using {@code pos} and {@code len} with same shape as {@code input}:
+ * <pre>
  * input = [[b'ten', b'eleven', b'twelve'],
  *          [b'thirteen', b'fourteen', b'fifteen'],
  *          [b'sixteen', b'seventeen', b'eighteen']]
@@ -72,79 +63,74 @@ import org.tensorflow.types.family.TNumber;
  * length =   [[2, 3, 4],
  *             [4, 3, 2],
  *             [5, 5, 5]]
- * 
+ *
  * output = [[b'en', b'eve', b'lve'],
  *           [b'hirt', b'urt', b'te'],
  *           [b'ixtee', b'vente', b'hteen']]
- * }</pre>
- * Broadcasting `pos` and `len` onto `input`:
- * <pre>{@code
+ * </pre>
+ * <p>Broadcasting {@code pos} and {@code len} onto {@code input}:
+ * <pre>
  * input = [[b'ten', b'eleven', b'twelve'],
  *          [b'thirteen', b'fourteen', b'fifteen'],
  *          [b'sixteen', b'seventeen', b'eighteen'],
  *          [b'nineteen', b'twenty', b'twentyone']]
  * position = [1, 2, 3]
  * length =   [1, 2, 3]
- * 
+ *
  * output = [[b'e', b'ev', b'lve'],
  *           [b'h', b'ur', b'tee'],
  *           [b'i', b've', b'hte'],
  *           [b'i', b'en', b'nty']]
- * }</pre>
- * Broadcasting `input` onto `pos` and `len`:
- * <pre>{@code
+ * </pre>
+ * <p>Broadcasting {@code input} onto {@code pos} and {@code len}:
+ * <pre>
  * input = b'thirteen'
  * position = [1, 5, 7]
  * length =   [3, 2, 1]
- * 
+ *
  * output = [b'hir', b'ee', b'n']
- * }</pre>
- * Raises:
- * <p>
- *   * `ValueError`: If the first argument cannot be converted to a
- *      Tensor of `dtype string`.
- *   * `InvalidArgumentError`: If indices are out of range.
- *   * `ValueError`: If `pos` and `len` are not the same shape.
- * 
+ * </pre>
+ * <p>Raises:
+ * <ul>
+ * <li>{@code ValueError}: If the first argument cannot be converted to a
+ * Tensor of {@code dtype string}.</li>
+ * <li>{@code InvalidArgumentError}: If indices are out of range.</li>
+ * <li>{@code ValueError}: If {@code pos} and {@code len} are not the same shape.</li>
+ * </ul>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class Substr extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.Substr}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param unit The unit that is used to create the substring.  One of: `"BYTE"` (for
-     * defining position and length by bytes) or `"UTF8_CHAR"` (for the UTF-8
-     * encoded Unicode code points).  The default is `"BYTE"`. Results are undefined if
-     * `unit=UTF8_CHAR` and the `input` strings do not contain structurally valid
-     * UTF-8.
-     */
-    public Options unit(String unit) {
-      this.unit = unit;
-      return this;
-    }
-    
-    private String unit;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Substr";
+
+  private Output<TString> output;
+
+  private Substr(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Substr operation.
-   * 
+   *
    * @param scope current scope
    * @param input Tensor of strings
    * @param pos Scalar defining the position of first character in each substring
    * @param len Scalar defining the number of characters to include in each substring
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Substr} output and operands
    * @return a new instance of Substr
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input, Operand<T> pos, Operand<T> len, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input,
+      Operand<T> pos, Operand<T> len, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Substr", scope.makeOpName("Substr"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pos.asOutput());
@@ -159,38 +145,57 @@ public final class Substr extends RawOp implements Operand<TString> {
     }
     return new Substr(opBuilder.build());
   }
-  
+
   /**
-   * @param unit The unit that is used to create the substring.  One of: `"BYTE"` (for
-   * defining position and length by bytes) or `"UTF8_CHAR"` (for the UTF-8
-   * encoded Unicode code points).  The default is `"BYTE"`. Results are undefined if
-   * `unit=UTF8_CHAR` and the `input` strings do not contain structurally valid
+   * Sets the unit option.
+   *
+   * @param unit The unit that is used to create the substring.  One of: {@code "BYTE"} (for
+   * defining position and length by bytes) or {@code "UTF8_CHAR"} (for the UTF-8
+   * encoded Unicode code points).  The default is {@code "BYTE"}. Results are undefined if
+   * {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally valid
    * UTF-8.
+   * @return this Options instance.
    */
   public static Options unit(String unit) {
     return new Options().unit(unit);
   }
-  
+
   /**
+   * Gets output.
    * Tensor of substrings
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Substr";
-  
-  private Output<TString> output;
-  
-  private Substr(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.Substr}
+   */
+  public static class Options {
+    private String unit;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the unit option.
+     *
+     * @param unit The unit that is used to create the substring.  One of: {@code "BYTE"} (for
+     * defining position and length by bytes) or {@code "UTF8_CHAR"} (for the UTF-8
+     * encoded Unicode code points).  The default is {@code "BYTE"}. Results are undefined if
+     * {@code unit=UTF8_CHAR} and the {@code input} strings do not contain structurally valid
+     * UTF-8.
+     * @return this Options instance.
+     */
+    public Options unit(String unit) {
+      this.unit = unit;
+      return this;
+    }
   }
 }

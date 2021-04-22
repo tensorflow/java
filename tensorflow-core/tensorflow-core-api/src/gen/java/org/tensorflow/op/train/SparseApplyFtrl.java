@@ -30,54 +30,37 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
- * <p>
  * That is for rows we have grad for, we update var, accum and linear as follows:
  * grad_with_shrinkage = grad + 2 * l2_shrinkage * var
  * accum_new = accum + grad * grad
  * linear += grad_with_shrinkage -
- *     (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+ * (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
  * quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
- * var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+ * var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
  * accum = accum_new
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class SparseApplyFtrl<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyFtrl}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    /**
-     * @param multiplyLinearByLr 
-     */
-    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
-      this.multiplyLinearByLr = multiplyLinearByLr;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    private Boolean multiplyLinearByLr;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseApplyFtrlV2";
+
+  private Output<T> out;
+
+  private SparseApplyFtrl(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new SparseApplyFtrl operation.
-   * 
+   * Factory method to create a class wrapping a new SparseApplyFtrlV2 operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param accum Should be from a Variable().
@@ -87,13 +70,19 @@ public final class SparseApplyFtrl<T extends TType> extends RawOp implements Ope
    * @param lr Scaling factor. Must be a scalar.
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 shrinkage regularization. Must be a scalar.
-   * @param l2Shrinkage 
+   * @param l2Shrinkage the l2Shrinkage value
    * @param lrPower Scaling factor. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseApplyFtrlV2} output and operands
    * @return a new instance of SparseApplyFtrl
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseApplyFtrl<T> create(Scope scope, Operand<T> var,
+      Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<? extends TNumber> indices,
+      Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyFtrlV2", scope.makeOpName("SparseApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
@@ -116,45 +105,78 @@ public final class SparseApplyFtrl<T extends TType> extends RawOp implements Ope
         }
       }
     }
-    return new SparseApplyFtrl<T>(opBuilder.build());
+    return new SparseApplyFtrl<>(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var and accum tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * @param multiplyLinearByLr 
+   * Sets the multiplyLinearByLr option.
+   *
+   * @param multiplyLinearByLr the multiplyLinearByLr option
+   * @return this Options instance.
    */
   public static Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
     return new Options().multiplyLinearByLr(multiplyLinearByLr);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseApplyFtrlV2";
-  
-  private Output<T> out;
-  
-  private SparseApplyFtrl(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.SparseApplyFtrl}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Boolean multiplyLinearByLr;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var and accum tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
+
+    /**
+     * Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
+     */
+    public Options multiplyLinearByLr(Boolean multiplyLinearByLr) {
+      this.multiplyLinearByLr = multiplyLinearByLr;
+      return this;
+    }
   }
 }

@@ -24,35 +24,42 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Converts the given variant tensor to an iterator and stores it in the given resource.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class DeserializeIterator extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeserializeIterator";
+
+  private DeserializeIterator(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeserializeIterator operation.
-   * 
+   *
    * @param scope current scope
    * @param resourceHandle A handle to an iterator resource.
    * @param serialized A variant tensor storing the state of the iterator contained in the
    * resource.
    * @return a new instance of DeserializeIterator
    */
-  @Endpoint(describeByClass = true)
-  public static DeserializeIterator create(Scope scope, Operand<?> resourceHandle, Operand<?> serialized) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DeserializeIterator create(Scope scope, Operand<? extends TType> resourceHandle,
+      Operand<? extends TType> serialized) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeserializeIterator", scope.makeOpName("DeserializeIterator"));
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder.addInput(serialized.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeserializeIterator(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeserializeIterator";
-  
-  private DeserializeIterator(Operation operation) {
-    super(operation);
   }
 }

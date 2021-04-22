@@ -31,26 +31,29 @@ import org.tensorflow.types.TString;
  */
 @Operator
 public final class DeleteSessionTensor extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DeleteSessionTensor";
+
+  private DeleteSessionTensor(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new DeleteSessionTensor operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle for a tensor stored in the session state.
    * @return a new instance of DeleteSessionTensor
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DeleteSessionTensor create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("DeleteSessionTensor", scope.makeOpName("DeleteSessionTensor"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeleteSessionTensor(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DeleteSessionTensor";
-  
-  private DeleteSessionTensor(Operation operation) {
-    super(operation);
   }
 }

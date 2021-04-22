@@ -24,20 +24,36 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
  * Aggregates the summary of accumulated stats for the batch.
- * <p>
  * The summary stats contains gradients and hessians accumulated for each node, bucket and dimension id.
  */
 public final class BoostedTreesSparseAggregateStats extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesSparseAggregateStats";
+
+  private Output<TInt32> statsSummaryIndices;
+
+  private Output<TFloat32> statsSummaryValues;
+
+  private Output<TInt32> statsSummaryShape;
+
+  private BoostedTreesSparseAggregateStats(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    statsSummaryIndices = operation.output(outputIdx++);
+    statsSummaryValues = operation.output(outputIdx++);
+    statsSummaryShape = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesSparseAggregateStats operation.
-   * 
+   *
    * @param scope current scope
    * @param nodeIds int32; Rank 1 Tensor containing node ids for each example, shape [batch_size].
    * @param gradients float32; Rank 2 Tensor (shape=[batch_size, logits_dimension]) with gradients for each example.
@@ -55,8 +71,13 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
    * @param numBuckets int; equals to the maximum possible value of bucketized feature + 1.
    * @return a new instance of BoostedTreesSparseAggregateStats
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds, Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> featureIndices, Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits, Long numBuckets) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesSparseAggregateStats create(Scope scope, Operand<TInt32> nodeIds,
+      Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> featureIndices,
+      Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits,
+      Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSparseAggregateStats", scope.makeOpName("BoostedTreesSparseAggregateStats"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
@@ -69,47 +90,38 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
     opBuilder.setAttr("num_buckets", numBuckets);
     return new BoostedTreesSparseAggregateStats(opBuilder.build());
   }
-  
+
   /**
+   * Gets statsSummaryIndices.
    * int32; Rank 2 indices of summary sparse Tensors (shape=[number of non zero statistics, 4])
    * The second axis can only be 4 including node id, feature dimension, bucket id, and statistics_dimension.
    * statistics_dimension = logits_dimension + hessian_dimension.
+   * @return statsSummaryIndices.
    */
   public Output<TInt32> statsSummaryIndices() {
     return statsSummaryIndices;
   }
-  
+
   /**
+   * Gets statsSummaryValues.
    * output Rank 1 Tensor (shape=[number of non zero statistics])
+   * @return statsSummaryValues.
    */
   public Output<TFloat32> statsSummaryValues() {
     return statsSummaryValues;
   }
-  
+
   /**
+   * Gets statsSummaryShape.
    * output Rank 1 Tensor (shape=[4])
    * The tensor has following 4 values: [max_splits, feature_dimension, num_buckets, statistics_dimension],
    * where statistics_dimension = gradient_dimension + hessian_dimension. gradient_dimension
    * is the same as label_dimension, i.e., the output space. hessian_dimension can be the same
    * as logits dimension when diagonal hessian is used, or label_dimension^2 when full
    * hessian is used.
+   * @return statsSummaryShape.
    */
   public Output<TInt32> statsSummaryShape() {
     return statsSummaryShape;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesSparseAggregateStats";
-  
-  private Output<TInt32> statsSummaryIndices;
-  private Output<TFloat32> statsSummaryValues;
-  private Output<TInt32> statsSummaryShape;
-  
-  private BoostedTreesSparseAggregateStats(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    statsSummaryIndices = operation.output(outputIdx++);
-    statsSummaryValues = operation.output(outputIdx++);
-    statsSummaryShape = operation.output(outputIdx++);
   }
 }

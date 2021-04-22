@@ -25,62 +25,67 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom random numbers from a Poisson distribution.
- * <p>
  * Outputs random values from a Poisson distribution.
- * <p>
- * The outputs are a deterministic function of `shape`, `seed`, and `lam`.
- * 
- * @param <W> data type for {@code output()} output
+ * <p>The outputs are a deterministic function of {@code shape}, {@code seed}, and {@code lam}.
+ *
+ * @param <W> data type for {@code output} output
  */
 public final class StatelessRandomPoisson<W extends TNumber> extends RawOp implements Operand<W> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatelessRandomPoisson";
+
+  private Output<W> output;
+
+  private StatelessRandomPoisson(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatelessRandomPoisson operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param lam The rate of the Poisson distribution. Shape must match the rightmost dimensions
-   * of `shape`.
+   * of {@code shape}.
    * @param dtype The type of the output.
+   * @param <W> data type for {@code StatelessRandomPoisson} output and operands
    * @return a new instance of StatelessRandomPoisson
    */
-  @Endpoint(describeByClass = true)
-  public static <W extends TNumber> StatelessRandomPoisson<W> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<? extends TNumber> lam, Class<W> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <W extends TNumber> StatelessRandomPoisson<W> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed,
+      Operand<? extends TNumber> lam, Class<W> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomPoisson", scope.makeOpName("StatelessRandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(lam.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new StatelessRandomPoisson<W>(opBuilder.build());
+    return new StatelessRandomPoisson<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<W> output() {
     return output;
   }
-  
+
   @Override
   public Output<W> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatelessRandomPoisson";
-  
-  private Output<W> output;
-  
-  private StatelessRandomPoisson(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -29,89 +29,50 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Assign `value` to the sliced l-value reference of `input`.
- * <p>
- * The values of `value` are assigned to the positions in the tensor `input` that
- * are selected by the slice parameters. The slice parameters `begin` `end`
- * `strides` etc. work exactly as in `StridedSlice`.
- * <p>
- * NOTE this op currently does not support broadcasting and so `value`'s shape
- * must be exactly the shape produced by the slice of `input`.
- * 
- * @param <T> data type for {@code output()} output
+ * Assign {@code value} to the sliced l-value reference of {@code input}.
+ * The values of {@code value} are assigned to the positions in the tensor {@code input} that
+ * are selected by the slice parameters. The slice parameters {@code begin} {@code end}
+ * {@code strides} etc. work exactly as in {@code StridedSlice}.
+ * <p>NOTE this op currently does not support broadcasting and so {@code value}'s shape
+ * must be exactly the shape produced by the slice of {@code input}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class TensorStridedSliceUpdate<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorStridedSliceUpdate}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param beginMask 
-     */
-    public Options beginMask(Long beginMask) {
-      this.beginMask = beginMask;
-      return this;
-    }
-    
-    /**
-     * @param endMask 
-     */
-    public Options endMask(Long endMask) {
-      this.endMask = endMask;
-      return this;
-    }
-    
-    /**
-     * @param ellipsisMask 
-     */
-    public Options ellipsisMask(Long ellipsisMask) {
-      this.ellipsisMask = ellipsisMask;
-      return this;
-    }
-    
-    /**
-     * @param newAxisMask 
-     */
-    public Options newAxisMask(Long newAxisMask) {
-      this.newAxisMask = newAxisMask;
-      return this;
-    }
-    
-    /**
-     * @param shrinkAxisMask 
-     */
-    public Options shrinkAxisMask(Long shrinkAxisMask) {
-      this.shrinkAxisMask = shrinkAxisMask;
-      return this;
-    }
-    
-    private Long beginMask;
-    private Long endMask;
-    private Long ellipsisMask;
-    private Long newAxisMask;
-    private Long shrinkAxisMask;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorStridedSliceUpdate";
+
+  private Output<T> output;
+
+  private TensorStridedSliceUpdate(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TensorStridedSliceUpdate operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param begin 
-   * @param end 
-   * @param strides 
-   * @param value 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param begin the begin value
+   * @param end the end value
+   * @param strides the strides value
+   * @param value the value value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TensorStridedSliceUpdate} output and operands
+   * @param <U> data type for {@code TensorStridedSliceUpdate} output and operands
    * @return a new instance of TensorStridedSliceUpdate
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> TensorStridedSliceUpdate<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> TensorStridedSliceUpdate<T> create(Scope scope,
+      Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorStridedSliceUpdate", scope.makeOpName("TensorStridedSliceUpdate"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
@@ -138,63 +99,143 @@ public final class TensorStridedSliceUpdate<T extends TType> extends RawOp imple
         }
       }
     }
-    return new TensorStridedSliceUpdate<T>(opBuilder.build());
+    return new TensorStridedSliceUpdate<>(opBuilder.build());
   }
-  
+
   /**
-   * @param beginMask 
+   * Sets the beginMask option.
+   *
+   * @param beginMask the beginMask option
+   * @return this Options instance.
    */
   public static Options beginMask(Long beginMask) {
     return new Options().beginMask(beginMask);
   }
-  
+
   /**
-   * @param endMask 
+   * Sets the endMask option.
+   *
+   * @param endMask the endMask option
+   * @return this Options instance.
    */
   public static Options endMask(Long endMask) {
     return new Options().endMask(endMask);
   }
-  
+
   /**
-   * @param ellipsisMask 
+   * Sets the ellipsisMask option.
+   *
+   * @param ellipsisMask the ellipsisMask option
+   * @return this Options instance.
    */
   public static Options ellipsisMask(Long ellipsisMask) {
     return new Options().ellipsisMask(ellipsisMask);
   }
-  
+
   /**
-   * @param newAxisMask 
+   * Sets the newAxisMask option.
+   *
+   * @param newAxisMask the newAxisMask option
+   * @return this Options instance.
    */
   public static Options newAxisMask(Long newAxisMask) {
     return new Options().newAxisMask(newAxisMask);
   }
-  
+
   /**
-   * @param shrinkAxisMask 
+   * Sets the shrinkAxisMask option.
+   *
+   * @param shrinkAxisMask the shrinkAxisMask option
+   * @return this Options instance.
    */
   public static Options shrinkAxisMask(Long shrinkAxisMask) {
     return new Options().shrinkAxisMask(shrinkAxisMask);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorStridedSliceUpdate";
-  
-  private Output<T> output;
-  
-  private TensorStridedSliceUpdate(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorStridedSliceUpdate}
+   */
+  public static class Options {
+    private Long beginMask;
+
+    private Long endMask;
+
+    private Long ellipsisMask;
+
+    private Long newAxisMask;
+
+    private Long shrinkAxisMask;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the beginMask option.
+     *
+     * @param beginMask the beginMask option
+     * @return this Options instance.
+     */
+    public Options beginMask(Long beginMask) {
+      this.beginMask = beginMask;
+      return this;
+    }
+
+    /**
+     * Sets the endMask option.
+     *
+     * @param endMask the endMask option
+     * @return this Options instance.
+     */
+    public Options endMask(Long endMask) {
+      this.endMask = endMask;
+      return this;
+    }
+
+    /**
+     * Sets the ellipsisMask option.
+     *
+     * @param ellipsisMask the ellipsisMask option
+     * @return this Options instance.
+     */
+    public Options ellipsisMask(Long ellipsisMask) {
+      this.ellipsisMask = ellipsisMask;
+      return this;
+    }
+
+    /**
+     * Sets the newAxisMask option.
+     *
+     * @param newAxisMask the newAxisMask option
+     * @return this Options instance.
+     */
+    public Options newAxisMask(Long newAxisMask) {
+      this.newAxisMask = newAxisMask;
+      return this;
+    }
+
+    /**
+     * Sets the shrinkAxisMask option.
+     *
+     * @param shrinkAxisMask the shrinkAxisMask option
+     * @return this Options instance.
+     */
+    public Options shrinkAxisMask(Long shrinkAxisMask) {
+      this.shrinkAxisMask = shrinkAxisMask;
+      return this;
+    }
   }
 }

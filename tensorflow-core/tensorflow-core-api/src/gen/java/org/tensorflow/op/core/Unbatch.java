@@ -30,72 +30,58 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Reverses the operation of Batch for a single output Tensor.
- * <p>
  * An instance of Unbatch either receives an empty batched_tensor, in which case it
  * asynchronously waits until the values become available from a concurrently
  * running instance of Unbatch with the same container and shared_name, or receives
  * a non-empty batched_tensor in which case it finalizes all other concurrently
  * running instances and outputs its own element from the batch.
- * <p>
- * batched_tensor: The possibly transformed output of Batch. The size of the first
- *  dimension should remain unchanged by the transformations for the operation to
- *  work.
+ * <p>batched_tensor: The possibly transformed output of Batch. The size of the first
+ * dimension should remain unchanged by the transformations for the operation to
+ * work.
  * batch_index: The matching batch_index obtained from Batch.
  * id: The id scalar emitted by Batch.
  * unbatched_tensor: The Tensor corresponding to this execution.
  * timeout_micros: Maximum amount of time (in microseconds) to wait to receive the
- *  batched input tensor associated with a given invocation of the op.
+ * batched input tensor associated with a given invocation of the op.
  * container: Container to control resource sharing.
  * shared_name: Instances of Unbatch with the same container and shared_name are
- *  assumed to possibly belong to the same batch. If left empty, the op name will
- *  be used as the shared name.
- * 
- * @param <T> data type for {@code unbatchedTensor()} output
+ * assumed to possibly belong to the same batch. If left empty, the op name will
+ * be used as the shared name.
+ *
+ * @param <T> data type for {@code unbatched_tensor} output
  */
 @Operator
 public final class Unbatch<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Unbatch}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Unbatch";
+
+  private Output<T> unbatchedTensor;
+
+  private Unbatch(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    unbatchedTensor = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Unbatch operation.
-   * 
+   *
    * @param scope current scope
-   * @param batchedTensor 
-   * @param batchIndex 
-   * @param id 
-   * @param timeoutMicros 
-   * @param options carries optional attributes values
+   * @param batchedTensor the batchedTensor value
+   * @param batchIndex the batchIndex value
+   * @param id the id value
+   * @param timeoutMicros the value of the timeoutMicros property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Unbatch} output and operands
    * @return a new instance of Unbatch
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Unbatch<T> create(Scope scope, Operand<T> batchedTensor, Operand<TInt64> batchIndex, Operand<TInt64> id, Long timeoutMicros, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Unbatch<T> create(Scope scope, Operand<T> batchedTensor,
+      Operand<TInt64> batchIndex, Operand<TInt64> id, Long timeoutMicros, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Unbatch", scope.makeOpName("Unbatch"));
     opBuilder.addInput(batchedTensor.asOutput());
     opBuilder.addInput(batchIndex.asOutput());
@@ -112,42 +98,74 @@ public final class Unbatch<T extends TType> extends RawOp implements Operand<T> 
         }
       }
     }
-    return new Unbatch<T>(opBuilder.build());
+    return new Unbatch<>(opBuilder.build());
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets unbatchedTensor.
+   *
+   * @return unbatchedTensor.
    */
   public Output<T> unbatchedTensor() {
     return unbatchedTensor;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return unbatchedTensor;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Unbatch";
-  
-  private Output<T> unbatchedTensor;
-  
-  private Unbatch(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    unbatchedTensor = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Unbatch}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

@@ -23,30 +23,40 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes a scalar summary.
- * <p>
- * Writes scalar `value` at `step` with `tag` using summary `writer`.
+ * Writes scalar {@code value} at {@code step} with {@code tag} using summary {@code writer}.
  */
 public final class WriteScalarSummary extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WriteScalarSummary";
+
+  private WriteScalarSummary(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new WriteScalarSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tag 
-   * @param value 
+   * @param writer the writer value
+   * @param step the step value
+   * @param tag the tag value
+   * @param value the value value
    * @return a new instance of WriteScalarSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteScalarSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> value) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteScalarSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> value) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteScalarSummary", scope.makeOpName("WriteScalarSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
@@ -54,12 +64,5 @@ public final class WriteScalarSummary extends RawOp {
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WriteScalarSummary(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteScalarSummary";
-  
-  private WriteScalarSummary(Operation operation) {
-    super(operation);
   }
 }

@@ -24,54 +24,40 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
- * Returns a serialized GraphDef representing `input_dataset`.
- * <p>
- * Returns a graph representation for `input_dataset`.
+ * Returns a serialized GraphDef representing {@code input_dataset}.
+ * Returns a graph representation for {@code input_dataset}.
  */
 public final class DatasetToGraph extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.DatasetToGraph}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param externalStatePolicy 
-     */
-    public Options externalStatePolicy(Long externalStatePolicy) {
-      this.externalStatePolicy = externalStatePolicy;
-      return this;
-    }
-    
-    /**
-     * @param stripDeviceAssignment 
-     */
-    public Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
-      this.stripDeviceAssignment = stripDeviceAssignment;
-      return this;
-    }
-    
-    private Long externalStatePolicy;
-    private Boolean stripDeviceAssignment;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DatasetToGraphV2";
+
+  private Output<TString> graph;
+
+  private DatasetToGraph(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    graph = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new DatasetToGraph operation.
-   * 
+   * Factory method to create a class wrapping a new DatasetToGraphV2 operation.
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the dataset to return the graph representation for.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DatasetToGraph
    */
-  @Endpoint(describeByClass = true)
-  public static DatasetToGraph create(Scope scope, Operand<?> inputDataset, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DatasetToGraph create(Scope scope, Operand<? extends TType> inputDataset,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DatasetToGraphV2", scope.makeOpName("DatasetToGraph"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -87,41 +73,72 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
     }
     return new DatasetToGraph(opBuilder.build());
   }
-  
+
   /**
-   * @param externalStatePolicy 
+   * Sets the externalStatePolicy option.
+   *
+   * @param externalStatePolicy the externalStatePolicy option
+   * @return this Options instance.
    */
   public static Options externalStatePolicy(Long externalStatePolicy) {
     return new Options().externalStatePolicy(externalStatePolicy);
   }
-  
+
   /**
-   * @param stripDeviceAssignment 
+   * Sets the stripDeviceAssignment option.
+   *
+   * @param stripDeviceAssignment the stripDeviceAssignment option
+   * @return this Options instance.
    */
   public static Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
     return new Options().stripDeviceAssignment(stripDeviceAssignment);
   }
-  
+
   /**
+   * Gets graph.
    * The graph representation of the dataset (as serialized GraphDef).
+   * @return graph.
    */
   public Output<TString> graph() {
     return graph;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return graph;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DatasetToGraphV2";
-  
-  private Output<TString> graph;
-  
-  private DatasetToGraph(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    graph = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.DatasetToGraph}
+   */
+  public static class Options {
+    private Long externalStatePolicy;
+
+    private Boolean stripDeviceAssignment;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the externalStatePolicy option.
+     *
+     * @param externalStatePolicy the externalStatePolicy option
+     * @return this Options instance.
+     */
+    public Options externalStatePolicy(Long externalStatePolicy) {
+      this.externalStatePolicy = externalStatePolicy;
+      return this;
+    }
+
+    /**
+     * Sets the stripDeviceAssignment option.
+     *
+     * @param stripDeviceAssignment the stripDeviceAssignment option
+     * @return this Options instance.
+     */
+    public Options stripDeviceAssignment(Boolean stripDeviceAssignment) {
+      this.stripDeviceAssignment = stripDeviceAssignment;
+      return this;
+    }
   }
 }

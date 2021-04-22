@@ -29,53 +29,60 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Compute the pairwise cross product.
- * <p>
- * `a` and `b` must be the same shape; they can either be simple 3-element vectors,
+ * {@code a} and {@code b} must be the same shape; they can either be simple 3-element vectors,
  * or any shape where the innermost dimension is 3. In the latter case, each pair
  * of corresponding 3-element vectors is cross-multiplied independently.
- * 
- * @param <T> data type for {@code product()} output
+ *
+ * @param <T> data type for {@code product} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Cross<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Cross";
+
+  private Output<T> product;
+
+  private Cross(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    product = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Cross operation.
-   * 
+   *
    * @param scope current scope
    * @param a A tensor containing 3-element vectors.
-   * @param b Another tensor, of same type and shape as `a`.
+   * @param b Another tensor, of same type and shape as {@code a}.
+   * @param <T> data type for {@code Cross} output and operands
    * @return a new instance of Cross
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("Cross", scope.makeOpName("Cross"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Cross<T>(opBuilder.build());
+    return new Cross<>(opBuilder.build());
   }
-  
+
   /**
-   * Pairwise cross product of the vectors in `a` and `b`.
+   * Gets product.
+   * Pairwise cross product of the vectors in {@code a} and {@code b}.
+   * @return product.
    */
   public Output<T> product() {
     return product;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return product;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Cross";
-  
-  private Output<T> product;
-  
-  private Cross(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    product = operation.output(outputIdx++);
   }
 }

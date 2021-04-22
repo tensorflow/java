@@ -24,17 +24,24 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 
 /**
  * Performs gradient updates of embedding tables.
  */
 public final class SendTPUEmbeddingGradients extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SendTPUEmbeddingGradients";
+
+  private SendTPUEmbeddingGradients(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new SendTPUEmbeddingGradients operation.
-   * 
+   *
    * @param scope current scope
    * @param inputs A TensorList of gradients with which to update embedding tables.
    * This argument has the same length and shapes as the return value of
@@ -49,22 +56,57 @@ public final class SendTPUEmbeddingGradients extends RawOp {
    * in the configuration. If the learning rates for all tables are constant,
    * this list should be empty.
    * @param config Serialized TPUEmbeddingConfiguration proto.
+   * @param options carries optional attribute values
    * @return a new instance of SendTPUEmbeddingGradients
    */
-  @Endpoint(describeByClass = true)
-  public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat32>> inputs, Iterable<Operand<TFloat32>> learningRates, String config) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat32>> inputs,
+      Iterable<Operand<TFloat32>> learningRates, String config, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SendTPUEmbeddingGradients", scope.makeOpName("SendTPUEmbeddingGradients"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder.addInputList(Operands.asOutputs(learningRates));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("config", config);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.NN != null) {
+          opBuilder.setAttr("NN", opts.NN);
+        }
+      }
+    }
     return new SendTPUEmbeddingGradients(opBuilder.build());
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SendTPUEmbeddingGradients";
-  
-  private SendTPUEmbeddingGradients(Operation operation) {
-    super(operation);
+
+  /**
+   * Sets the NN option.
+   *
+   * @param NN the NN option
+   * @return this Options instance.
+   */
+  public static Options NN(Long NN) {
+    return new Options().NN(NN);
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.SendTPUEmbeddingGradients}
+   */
+  public static class Options {
+    private Long NN;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the NN option.
+     *
+     * @param NN the NN option
+     * @return this Options instance.
+     */
+    public Options NN(Long NN) {
+      this.NN = NN;
+      return this;
+    }
   }
 }

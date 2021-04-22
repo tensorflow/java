@@ -33,43 +33,48 @@ import org.tensorflow.types.TString;
  */
 @Operator
 public final class BarrierReadySize extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BarrierReadySize";
+
+  private Output<TInt32> output;
+
+  private BarrierReadySize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BarrierReadySize operation.
-   * 
+   *
    * @param scope current scope
    * @param handle The handle to a barrier.
    * @return a new instance of BarrierReadySize
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static BarrierReadySize create(Scope scope, Operand<TString> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("BarrierReadySize", scope.makeOpName("BarrierReadySize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new BarrierReadySize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * The number of complete elements (i.e. those with all of their value
    * components set) in the barrier.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BarrierReadySize";
-  
-  private Output<TInt32> output;
-  
-  private BarrierReadySize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

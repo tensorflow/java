@@ -30,52 +30,43 @@ import org.tensorflow.types.TUint8;
 
 /**
  * Decode the first frame of a BMP-encoded image to a uint8 tensor.
- * <p>
- * The attr `channels` indicates the desired number of color channels for the
+ * The attr {@code channels} indicates the desired number of color channels for the
  * decoded image.
- * <p>
- * Accepted values are:
+ * <p>Accepted values are:
  * <ul>
- * <li>
- * 0: Use the number of channels in the BMP-encoded image.
- * </li>
- * <li>
- * 3: output an RGB image.
- * </li>
- * <li>
- * 4: output an RGBA image.
+ * <li>0: Use the number of channels in the BMP-encoded image.</li>
+ * <li>3: output an RGB image.</li>
+ * <li>4: output an RGBA image.</li>
+ * </ul>
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class DecodeBmp extends RawOp implements Operand<TUint8> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.DecodeBmp}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param channels 
-     */
-    public Options channels(Long channels) {
-      this.channels = channels;
-      return this;
-    }
-    
-    private Long channels;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeBmp";
+
+  private Output<TUint8> image;
+
+  private DecodeBmp(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    image = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodeBmp operation.
-   * 
+   *
    * @param scope current scope
    * @param contents 0-D.  The BMP-encoded image.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeBmp
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeBmp create(Scope scope, Operand<TString> contents, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeBmp", scope.makeOpName("DecodeBmp"));
     opBuilder.addInput(contents.asOutput());
@@ -89,34 +80,49 @@ public final class DecodeBmp extends RawOp implements Operand<TUint8> {
     }
     return new DecodeBmp(opBuilder.build());
   }
-  
+
   /**
-   * @param channels 
+   * Sets the channels option.
+   *
+   * @param channels the channels option
+   * @return this Options instance.
    */
   public static Options channels(Long channels) {
     return new Options().channels(channels);
   }
-  
+
   /**
-   * 3-D with shape `[height, width, channels]`. RGB order
+   * Gets image.
+   * 3-D with shape {@code [height, width, channels]}. RGB order
+   * @return image.
    */
   public Output<TUint8> image() {
     return image;
   }
-  
+
   @Override
   public Output<TUint8> asOutput() {
     return image;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeBmp";
-  
-  private Output<TUint8> image;
-  
-  private DecodeBmp(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    image = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.DecodeBmp}
+   */
+  public static class Options {
+    private Long channels;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the channels option.
+     *
+     * @param channels the channels option
+     * @return this Options instance.
+     */
+    public Options channels(Long channels) {
+      this.channels = channels;
+      return this;
+    }
   }
 }

@@ -26,29 +26,31 @@ import org.tensorflow.op.annotation.Operator;
 
 /**
  * Does nothing. Serves as a control trigger for scheduling.
- * <p>
  * Only useful as a placeholder for control edges.
  */
 @Operator
 public final class ControlTrigger extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ControlTrigger";
+
+  private ControlTrigger(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ControlTrigger operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of ControlTrigger
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ControlTrigger create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ControlTrigger", scope.makeOpName("ControlTrigger"));
     opBuilder = scope.apply(opBuilder);
     return new ControlTrigger(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ControlTrigger";
-  
-  private ControlTrigger(Operation operation) {
-    super(operation);
   }
 }

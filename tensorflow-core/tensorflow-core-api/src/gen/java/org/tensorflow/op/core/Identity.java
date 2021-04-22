@@ -29,46 +29,53 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Return a tensor with the same shape and contents as the input tensor or value.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Identity<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Identity operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of Identity
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Identity<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Identity";
-  
+
   private Output<T> output;
-  
+
   private Identity(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Identity operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code Identity} output and operands
+   * @return a new instance of Identity
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Identity<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Identity", scope.makeOpName("Identity"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Identity<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

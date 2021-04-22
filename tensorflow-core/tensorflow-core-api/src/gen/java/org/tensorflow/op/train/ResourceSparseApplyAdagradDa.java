@@ -31,32 +31,22 @@ import org.tensorflow.types.family.TType;
 /**
  * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ResourceSparseApplyAdagradDa extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdagradDa}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If True, updating of the var and accum tensors will be protected by
-     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ResourceSparseApplyAdagradDA";
+
+  private ResourceSparseApplyAdagradDa(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ResourceSparseApplyAdagradDa operation.
-   * 
+   * Factory method to create a class wrapping a new ResourceSparseApplyAdagradDA operation.
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param gradientAccumulator Should be from a Variable().
@@ -67,11 +57,18 @@ public final class ResourceSparseApplyAdagradDa extends RawOp {
    * @param l1 L1 regularization. Must be a scalar.
    * @param l2 L2 regularization. Must be a scalar.
    * @param globalStep Training step number. Must be a scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ResourceSparseApplyAdagradDA} output and operands
    * @return a new instance of ResourceSparseApplyAdagradDa
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ResourceSparseApplyAdagradDa create(Scope scope, Operand<?> var, Operand<?> gradientAccumulator, Operand<?> gradientSquaredAccumulator, Operand<T> grad, Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ResourceSparseApplyAdagradDa create(Scope scope,
+      Operand<? extends TType> var, Operand<? extends TType> gradientAccumulator,
+      Operand<? extends TType> gradientSquaredAccumulator, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
+      Operand<TInt64> globalStep, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyAdagradDA", scope.makeOpName("ResourceSparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
@@ -92,19 +89,37 @@ public final class ResourceSparseApplyAdagradDa extends RawOp {
     }
     return new ResourceSparseApplyAdagradDa(opBuilder.build());
   }
-  
+
   /**
+   * Sets the useLocking option.
+   *
    * @param useLocking If True, updating of the var and accum tensors will be protected by
    * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ResourceSparseApplyAdagradDA";
-  
-  private ResourceSparseApplyAdagradDa(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ResourceSparseApplyAdagradDa}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If True, updating of the var and accum tensors will be protected by
+     * a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

@@ -30,55 +30,65 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradients for SparseSegmentSqrtN.
- * <p>
- * Returns tensor "output" with same shape as grad, except for dimension 0 whose
+ * Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
  * value is output_dim0.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseSegmentSqrtNGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseSegmentSqrtNGrad";
+
+  private Output<T> output;
+
+  private SparseSegmentSqrtNGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseSegmentSqrtNGrad operation.
-   * 
+   *
    * @param scope current scope
    * @param grad gradient propagated to the SparseSegmentSqrtN op.
    * @param indices indices passed to the corresponding SparseSegmentSqrtN op.
    * @param segmentIds segment_ids passed to the corresponding SparseSegmentSqrtN op.
-   * @param outputDim0 dimension 0 of "data" passed to SparseSegmentSqrtN op.
+   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSqrtN op.
+   * @param <T> data type for {@code SparseSegmentSqrtNGrad} output and operands
    * @return a new instance of SparseSegmentSqrtNGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds, Operand<TInt32> outputDim0) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> outputDim0) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNGrad", scope.makeOpName("SparseSegmentSqrtNGrad"));
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(outputDim0.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseSegmentSqrtNGrad<T>(opBuilder.build());
+    return new SparseSegmentSqrtNGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseSegmentSqrtNGrad";
-  
-  private Output<T> output;
-  
-  private SparseSegmentSqrtNGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

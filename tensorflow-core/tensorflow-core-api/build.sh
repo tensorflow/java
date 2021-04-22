@@ -37,7 +37,6 @@ bazel build $BUILD_FLAGS ${BUILD_USER_FLAGS:-} \
     @org_tensorflow//tensorflow:tensorflow_cc \
     @org_tensorflow//tensorflow/tools/lib_package:jnilicenses_generate \
     :java_proto_gen_sources \
-    :java_op_generator \
     :java_op_exporter \
     :java_api_import \
     :custom_ops_test
@@ -80,19 +79,18 @@ fi
 GEN_SRCS_DIR=src/gen/java
 mkdir -p $GEN_SRCS_DIR
 
-# Generate Java operator wrappers
-$BAZEL_BIN/java_op_generator \
-    --output_dir=$GEN_SRCS_DIR \
-    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
-    $TENSORFLOW_LIB
-
 GEN_RESOURCE_DIR=src/gen/resources/org/tensorflow/op
 mkdir -p $GEN_RESOURCE_DIR
 
-# Export op defs
-$BAZEL_BIN/java_op_exporter \
-    --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
-    $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+if [[ -z "${SKIP_EXPORT:-}" ]]; then
+  # Export op defs
+  echo "Exporting Ops"
+  $BAZEL_BIN/java_op_exporter \
+      --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
+      $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+else
+  echo "Skipping Op export"
+fi
 
 
 # Copy generated Java protos from source jars

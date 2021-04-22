@@ -29,48 +29,56 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the reciprocal of x element-wise.
- * <p>
- * I.e., \\(y = 1 / x\\).
- * 
- * @param <T> data type for {@code y()} output
+ * I.e., \(y = 1 / x\).
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Reciprocal<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Reciprocal operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Reciprocal
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Reciprocal<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Reciprocal", scope.makeOpName("Reciprocal"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Reciprocal<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Reciprocal";
-  
+
   private Output<T> y;
-  
+
   private Reciprocal(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Reciprocal operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Reciprocal} output and operands
+   * @return a new instance of Reciprocal
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Reciprocal<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Reciprocal", scope.makeOpName("Reciprocal"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Reciprocal<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

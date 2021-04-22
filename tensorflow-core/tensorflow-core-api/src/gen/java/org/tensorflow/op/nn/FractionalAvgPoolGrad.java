@@ -24,66 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes gradient of the FractionalAvgPool function.
- * <p>
  * Unlike FractionalMaxPoolGrad, we don't need to find arg_max for
  * FractionalAvgPoolGrad, we just need to evenly back-propagate each element of
  * out_backprop to those indices that form the same pooling cell. Therefore, we
  * just need to know the shape of original input tensor, instead of the whole
  * tensor.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class FractionalAvgPoolGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.FractionalAvgPoolGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param overlapping When set to True, it means when pooling, the values at the boundary
-     * of adjacent pooling cells are used by both cells. For example:
-     * <p>
-     * `index  0  1  2  3  4`
-     * <p>
-     * `value  20 5  16 3  7`
-     * <p>
-     * If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
-     * The result would be [41/3, 26/3] for fractional avg pooling.
-     */
-    public Options overlapping(Boolean overlapping) {
-      this.overlapping = overlapping;
-      return this;
-    }
-    
-    private Boolean overlapping;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FractionalAvgPoolGrad";
+
+  private Output<T> output;
+
+  private FractionalAvgPoolGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new FractionalAvgPoolGrad operation.
-   * 
+   *
    * @param scope current scope
-   * @param origInputTensorShape Original input tensor shape for `fractional_avg_pool`
-   * @param outBackprop 4-D with shape `[batch, height, width, channels]`.  Gradients
-   * w.r.t. the output of `fractional_avg_pool`.
+   * @param origInputTensorShape Original input tensor shape for {@code fractional_avg_pool}
+   * @param outBackprop 4-D with shape {@code [batch, height, width, channels]}.  Gradients
+   * w.r.t. the output of {@code fractional_avg_pool}.
    * @param rowPoolingSequence row pooling sequence, form pooling region with
    * col_pooling_sequence.
    * @param colPoolingSequence column pooling sequence, form pooling region with
    * row_pooling sequence.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code FractionalAvgPoolGrad} output and operands
    * @return a new instance of FractionalAvgPoolGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> FractionalAvgPoolGrad<T> create(Scope scope, Operand<TInt64> origInputTensorShape, Operand<T> outBackprop, Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> FractionalAvgPoolGrad<T> create(Scope scope,
+      Operand<TInt64> origInputTensorShape, Operand<T> outBackprop,
+      Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPoolGrad", scope.makeOpName("FractionalAvgPoolGrad"));
     opBuilder.addInput(origInputTensorShape.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
@@ -97,44 +85,61 @@ public final class FractionalAvgPoolGrad<T extends TNumber> extends RawOp implem
         }
       }
     }
-    return new FractionalAvgPoolGrad<T>(opBuilder.build());
+    return new FractionalAvgPoolGrad<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the overlapping option.
+   *
    * @param overlapping When set to True, it means when pooling, the values at the boundary
    * of adjacent pooling cells are used by both cells. For example:
-   * <p>
-   * `index  0  1  2  3  4`
-   * <p>
-   * `value  20 5  16 3  7`
-   * <p>
-   * If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
+   * <p>{@code index  0  1  2  3  4}
+   * <p>{@code value  20 5  16 3  7}
+   * <p>If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
    * The result would be [41/3, 26/3] for fractional avg pooling.
+   * @return this Options instance.
    */
   public static Options overlapping(Boolean overlapping) {
     return new Options().overlapping(overlapping);
   }
-  
+
   /**
-   * 4-D.  Gradients w.r.t. the input of `fractional_avg_pool`.
+   * Gets output.
+   * 4-D.  Gradients w.r.t. the input of {@code fractional_avg_pool}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FractionalAvgPoolGrad";
-  
-  private Output<T> output;
-  
-  private FractionalAvgPoolGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.FractionalAvgPoolGrad}
+   */
+  public static class Options {
+    private Boolean overlapping;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the overlapping option.
+     *
+     * @param overlapping When set to True, it means when pooling, the values at the boundary
+     * of adjacent pooling cells are used by both cells. For example:
+     * <p>{@code index  0  1  2  3  4}
+     * <p>{@code value  20 5  16 3  7}
+     * <p>If the pooling sequence is [0, 2, 4], then 16, at index 2 will be used twice.
+     * The result would be [41/3, 26/3] for fractional avg pooling.
+     * @return this Options instance.
+     */
+    public Options overlapping(Boolean overlapping) {
+      this.overlapping = overlapping;
+      return this;
+    }
   }
 }

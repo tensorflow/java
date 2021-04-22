@@ -34,71 +34,42 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Op peeks at the values at the specified index.  If the
- * <p>
  * underlying container does not contain sufficient elements
  * this op will block until it does.   This Op is optimized for
  * performance.
  */
 @Operator
 public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.StagePeek}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity 
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param memoryLimit 
-     */
-    public Options memoryLimit(Long memoryLimit) {
-      this.memoryLimit = memoryLimit;
-      return this;
-    }
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private Long memoryLimit;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "StagePeek";
+
+  private List<Output<?>> values;
+
+  @SuppressWarnings("unchecked")
+  private StagePeek(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int valuesLength = operation.outputListLength("values");
+    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
+    outputIdx += valuesLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new StagePeek operation.
-   * 
+   *
    * @param scope current scope
-   * @param index 
-   * @param dtypes 
-   * @param options carries optional attributes values
+   * @param index the index value
+   * @param dtypes the value of the dtypes property
+   * @param options carries optional attribute values
    * @return a new instance of StagePeek
    */
-  @Endpoint(describeByClass = true)
-  public static StagePeek create(Scope scope, Operand<TInt32> index, List<Class<? extends TType>> dtypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StagePeek create(Scope scope, Operand<TInt32> index,
+      List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("StagePeek", scope.makeOpName("StagePeek"));
     opBuilder.addInput(index.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -121,57 +92,119 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
     }
     return new StagePeek(opBuilder.build());
   }
-  
+
   /**
-   * @param capacity 
+   * Sets the capacity option.
+   *
+   * @param capacity the capacity option
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
-   * @param memoryLimit 
+   * Sets the memoryLimit option.
+   *
+   * @param memoryLimit the memoryLimit option
+   * @return this Options instance.
    */
   public static Options memoryLimit(Long memoryLimit) {
     return new Options().memoryLimit(memoryLimit);
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets values.
+   *
+   * @return values.
    */
   public List<Output<?>> values() {
     return values;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) values.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StagePeek";
-  
-  private List<Output<?>> values;
-  
-  private StagePeek(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int valuesLength = operation.outputListLength("values");
-    values = Arrays.asList(operation.outputList(outputIdx, valuesLength));
-    outputIdx += valuesLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.StagePeek}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private Long memoryLimit;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity the capacity option
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the memoryLimit option.
+     *
+     * @param memoryLimit the memoryLimit option
+     * @return this Options instance.
+     */
+    public Options memoryLimit(Long memoryLimit) {
+      this.memoryLimit = memoryLimit;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

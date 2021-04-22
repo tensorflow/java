@@ -29,70 +29,66 @@ import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Joins the elements of `inputs` based on `segment_ids`.
- * <p>
+ * Joins the elements of {@code inputs} based on {@code segment_ids}.
  * Computes the string join along segments of a tensor.
- * Given `segment_ids` with rank `N` and `data` with rank `N+M`:
- * <p>
- *     `output[i, k1...kM] = strings.join([data[j1...jN, k1...kM])`
- * <p>
- * where the join is over all [j1...jN] such that segment_ids[j1...jN] = i.
+ * Given {@code segment_ids} with rank {@code N} and {@code data} with rank {@code N+M}:
+ * <pre>
+ * `output[i, k1...kM] = strings.join([data[j1...jN, k1...kM])`
+ * </pre>
+ * <p>where the join is over all [j1...jN] such that segment_ids[j1...jN] = i.
  * Strings are joined in row-major order.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>For example:
+ * <pre>
  * inputs = [['Y', 'q', 'c'], ['Y', '6', '6'], ['p', 'G', 'a']]
  * output_array = string_ops.unsorted_segment_join(inputs=inputs,
  *                                                 segment_ids=[1, 0, 1],
  *                                                 num_segments=2,
  *                                                 separator=':'))
- * # output_array ==> [['Y', '6', '6'], ['Y:p', 'q:G', 'c:a']]
- * 
- * 
+ * # output_array ==&gt; [['Y', '6', '6'], ['Y:p', 'q:G', 'c:a']]
+ *
+ *
  * inputs = ['this', 'is', 'a', 'test']
  * output_array = string_ops.unsorted_segment_join(inputs=inputs,
  *                                                 segment_ids=[0, 0, 0, 0],
  *                                                 num_segments=1,
  *                                                 separator=':'))
- * # output_array ==> ['this:is:a:test']
- * }</pre>
- * 
+ * # output_array ==&gt; ['this:is:a:test']
+ * </pre>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class UnsortedSegmentJoin extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.strings.UnsortedSegmentJoin}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param separator The separator to use when joining.
-     */
-    public Options separator(String separator) {
-      this.separator = separator;
-      return this;
-    }
-    
-    private String separator;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "UnsortedSegmentJoin";
+
+  private Output<TString> output;
+
+  private UnsortedSegmentJoin(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new UnsortedSegmentJoin operation.
-   * 
+   *
    * @param scope current scope
    * @param inputs The input to be joined.
    * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are not
    * supported.
    * @param numSegments A scalar.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of UnsortedSegmentJoin
    */
-  @Endpoint(describeByClass = true)
-  public static UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs, Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static UnsortedSegmentJoin create(Scope scope, Operand<TString> inputs,
+      Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentJoin", scope.makeOpName("UnsortedSegmentJoin"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
@@ -107,33 +103,49 @@ public final class UnsortedSegmentJoin extends RawOp implements Operand<TString>
     }
     return new UnsortedSegmentJoin(opBuilder.build());
   }
-  
+
   /**
+   * Sets the separator option.
+   *
    * @param separator The separator to use when joining.
+   * @return this Options instance.
    */
   public static Options separator(String separator) {
     return new Options().separator(separator);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "UnsortedSegmentJoin";
-  
-  private Output<TString> output;
-  
-  private UnsortedSegmentJoin(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.strings.UnsortedSegmentJoin}
+   */
+  public static class Options {
+    private String separator;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the separator option.
+     *
+     * @param separator The separator to use when joining.
+     * @return this Options instance.
+     */
+    public Options separator(String separator) {
+      this.separator = separator;
+      return this;
+    }
   }
 }

@@ -27,70 +27,74 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that emits the key-value pairs in one or more LMDB files.
- * <p>
  * The Lightning Memory-Mapped Database Manager, or LMDB, is an embedded binary
  * key-value database. This dataset can read the contents of LMDB database files,
- * the names of which generally have the `.mdb` suffix.
- * <p>
- * Each output element consists of a key-value pair represented as a pair of
- * scalar string `Tensor`s, where the first `Tensor` contains the key and the
- * second `Tensor` contains the value.
- * <p>
- * LMDB uses different file formats on big- and little-endian machines.
- * `data.LMDBDataset` can only read files in the format of the host machine.
+ * the names of which generally have the {@code .mdb} suffix.
+ * <p>Each output element consists of a key-value pair represented as a pair of
+ * scalar string {@code Tensor}s, where the first {@code Tensor} contains the key and the
+ * second {@code Tensor} contains the value.
+ * <p>LMDB uses different file formats on big- and little-endian machines.
+ * {@code data.LMDBDataset} can only read files in the format of the host machine.
  */
 public final class LMDBDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LMDBDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private LMDBDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new LMDBDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param filenames A scalar or a vector containing the name(s) of the binary file(s) to be
    * read.
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of LMDBDataset
    */
-  @Endpoint(describeByClass = true)
-  public static LMDBDataset create(Scope scope, Operand<TString> filenames, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LMDBDataset create(Scope scope, Operand<TString> filenames,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("LMDBDataset", scope.makeOpName("LMDBDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new LMDBDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LMDBDataset";
-  
-  private Output<?> handle;
-  
-  private LMDBDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

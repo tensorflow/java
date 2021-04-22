@@ -23,33 +23,38 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
+ * The InitializeTableFromDataset operation
  */
 public final class InitializeTableFromDataset extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "InitializeTableFromDataset";
+
+  private InitializeTableFromDataset(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new InitializeTableFromDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param tableHandle 
-   * @param dataset 
+   * @param tableHandle the tableHandle value
+   * @param dataset the dataset value
    * @return a new instance of InitializeTableFromDataset
    */
-  @Endpoint(describeByClass = true)
-  public static InitializeTableFromDataset create(Scope scope, Operand<?> tableHandle, Operand<?> dataset) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static InitializeTableFromDataset create(Scope scope, Operand<? extends TType> tableHandle,
+      Operand<? extends TType> dataset) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableFromDataset", scope.makeOpName("InitializeTableFromDataset"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(dataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new InitializeTableFromDataset(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InitializeTableFromDataset";
-  
-  private InitializeTableFromDataset(Operation operation) {
-    super(operation);
   }
 }

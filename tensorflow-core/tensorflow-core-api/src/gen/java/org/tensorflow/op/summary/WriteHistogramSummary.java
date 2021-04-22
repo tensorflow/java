@@ -23,30 +23,40 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes a histogram summary.
- * <p>
- * Writes histogram `values` at `step` with `tag` using summary `writer`.
+ * Writes histogram {@code values} at {@code step} with {@code tag} using summary {@code writer}.
  */
 public final class WriteHistogramSummary extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WriteHistogramSummary";
+
+  private WriteHistogramSummary(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new WriteHistogramSummary operation.
-   * 
+   *
    * @param scope current scope
-   * @param writer 
-   * @param step 
-   * @param tag 
-   * @param values 
+   * @param writer the writer value
+   * @param step the step value
+   * @param tag the tag value
+   * @param values the values value
    * @return a new instance of WriteHistogramSummary
    */
-  @Endpoint(describeByClass = true)
-  public static WriteHistogramSummary create(Scope scope, Operand<?> writer, Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WriteHistogramSummary create(Scope scope, Operand<? extends TType> writer,
+      Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("WriteHistogramSummary", scope.makeOpName("WriteHistogramSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
@@ -54,12 +64,5 @@ public final class WriteHistogramSummary extends RawOp {
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WriteHistogramSummary(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WriteHistogramSummary";
-  
-  private WriteHistogramSummary(Operation operation) {
-    super(operation);
   }
 }

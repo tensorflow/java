@@ -27,51 +27,47 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that contains the elements of `input_dataset` ignoring errors.
+ * Creates a dataset that contains the elements of {@code input_dataset} ignoring errors.
  */
 public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.IgnoreErrorsDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param logWarning 
-     */
-    public Options logWarning(Boolean logWarning) {
-      this.logWarning = logWarning;
-      return this;
-    }
-    
-    private Boolean logWarning;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ExperimentalIgnoreErrorsDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private IgnoreErrorsDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new IgnoreErrorsDataset operation.
-   * 
+   * Factory method to create a class wrapping a new ExperimentalIgnoreErrorsDataset operation.
+   *
    * @param scope current scope
-   * @param inputDataset 
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param inputDataset the inputDataset value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of IgnoreErrorsDataset
    */
-  @Endpoint(describeByClass = true)
-  public static IgnoreErrorsDataset create(Scope scope, Operand<?> inputDataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IgnoreErrorsDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalIgnoreErrorsDataset", scope.makeOpName("IgnoreErrorsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -84,34 +80,50 @@ public final class IgnoreErrorsDataset extends RawOp implements Operand<TType> {
     }
     return new IgnoreErrorsDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param logWarning 
+   * Sets the logWarning option.
+   *
+   * @param logWarning the logWarning option
+   * @return this Options instance.
    */
   public static Options logWarning(Boolean logWarning) {
     return new Options().logWarning(logWarning);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ExperimentalIgnoreErrorsDataset";
-  
-  private Output<?> handle;
-  
-  private IgnoreErrorsDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.experimental.IgnoreErrorsDataset}
+   */
+  public static class Options {
+    private Boolean logWarning;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the logWarning option.
+     *
+     * @param logWarning the logWarning option
+     * @return this Options instance.
+     */
+    public Options logWarning(Boolean logWarning) {
+      this.logWarning = logWarning;
+      return this;
+    }
   }
 }

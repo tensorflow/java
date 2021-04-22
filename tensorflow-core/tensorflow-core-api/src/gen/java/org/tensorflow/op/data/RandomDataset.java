@@ -27,73 +27,77 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a Dataset that returns pseudorandom numbers.
- * <p>
  * Creates a Dataset that returns a stream of uniformly distributed
  * pseudorandom 64-bit signed integers.
- * <p>
- * In the TensorFlow Python API, you can instantiate this dataset via the
- * class `tf.data.experimental.RandomDataset`.
- * <p>
- * Instances of this dataset are also created as a result of the
- * `hoist_random_uniform` static optimization. Whether this optimization is
- * performed is determined by the `experimental_optimization.hoist_random_uniform`
- * option of `tf.data.Options`.
+ * <p>In the TensorFlow Python API, you can instantiate this dataset via the
+ * class {@code tf.data.experimental.RandomDataset}.
+ * <p>Instances of this dataset are also created as a result of the
+ * {@code hoist_random_uniform} static optimization. Whether this optimization is
+ * performed is determined by the {@code experimental_optimization.hoist_random_uniform}
+ * option of {@code tf.data.Options}.
  */
 public final class RandomDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RandomDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private RandomDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RandomDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param seed A scalar seed for the random number generator. If either seed or
    * seed2 is set to be non-zero, the random number generator is seeded
    * by the given seed.  Otherwise, a random seed is used.
    * @param seed2 A second scalar seed to avoid seed collision.
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of RandomDataset
    */
-  @Endpoint(describeByClass = true)
-  public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RandomDataset", scope.makeOpName("RandomDataset"));
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new RandomDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RandomDataset";
-  
-  private Output<?> handle;
-  
-  private RandomDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

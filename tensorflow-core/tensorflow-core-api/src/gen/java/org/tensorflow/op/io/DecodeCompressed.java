@@ -29,46 +29,40 @@ import org.tensorflow.types.TString;
 
 /**
  * Decompress strings.
- * <p>
- * This op decompresses each element of the `bytes` input `Tensor`, which
- * is assumed to be compressed using the given `compression_type`.
- * <p>
- * The `output` is a string `Tensor` of the same shape as `bytes`,
+ * This op decompresses each element of the {@code bytes} input {@code Tensor}, which
+ * is assumed to be compressed using the given {@code compression_type}.
+ * <p>The {@code output} is a string {@code Tensor} of the same shape as {@code bytes},
  * each element containing the decompressed data from the corresponding
- * element in `bytes`.
+ * element in {@code bytes}.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class DecodeCompressed extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.DecodeCompressed}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param compressionType A scalar containing either (i) the empty string (no
-     * compression), (ii) "ZLIB", or (iii) "GZIP".
-     */
-    public Options compressionType(String compressionType) {
-      this.compressionType = compressionType;
-      return this;
-    }
-    
-    private String compressionType;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeCompressed";
+
+  private Output<TString> output;
+
+  private DecodeCompressed(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodeCompressed operation.
-   * 
+   *
    * @param scope current scope
    * @param bytes A Tensor of string which is compressed.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeCompressed
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static DecodeCompressed create(Scope scope, Operand<TString> bytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCompressed", scope.makeOpName("DecodeCompressed"));
     opBuilder.addInput(bytes.asOutput());
@@ -82,36 +76,52 @@ public final class DecodeCompressed extends RawOp implements Operand<TString> {
     }
     return new DecodeCompressed(opBuilder.build());
   }
-  
+
   /**
+   * Sets the compressionType option.
+   *
    * @param compressionType A scalar containing either (i) the empty string (no
-   * compression), (ii) "ZLIB", or (iii) "GZIP".
+   * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
+   * @return this Options instance.
    */
   public static Options compressionType(String compressionType) {
     return new Options().compressionType(compressionType);
   }
-  
+
   /**
-   * A Tensor with the same shape as input `bytes`, uncompressed
+   * Gets output.
+   * A Tensor with the same shape as input {@code bytes}, uncompressed
    * from bytes.
+   * @return output.
    */
   public Output<TString> output() {
     return output;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeCompressed";
-  
-  private Output<TString> output;
-  
-  private DecodeCompressed(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.DecodeCompressed}
+   */
+  public static class Options {
+    private String compressionType;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the compressionType option.
+     *
+     * @param compressionType A scalar containing either (i) the empty string (no
+     * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
+     * @return this Options instance.
+     */
+    public Options compressionType(String compressionType) {
+      this.compressionType = compressionType;
+      return this;
+    }
   }
 }

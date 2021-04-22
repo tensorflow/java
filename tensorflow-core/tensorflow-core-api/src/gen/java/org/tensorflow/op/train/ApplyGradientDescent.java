@@ -29,44 +29,42 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' by subtracting 'alpha' * 'delta' from it.
- * 
- * @param <T> data type for {@code out()} output
+ *
+ * @param <T> data type for {@code out} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class ApplyGradientDescent<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ApplyGradientDescent}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, the subtraction will be protected by a lock;
-     * otherwise the behavior is undefined, but may exhibit less contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApplyGradientDescent";
+
+  private Output<T> out;
+
+  private ApplyGradientDescent(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ApplyGradientDescent operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param alpha Scaling factor. Must be a scalar.
    * @param delta The change.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyGradientDescent} output and operands
    * @return a new instance of ApplyGradientDescent
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyGradientDescent<T> create(Scope scope, Operand<T> var, Operand<T> alpha, Operand<T> delta, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApplyGradientDescent<T> create(Scope scope, Operand<T> var,
+      Operand<T> alpha, Operand<T> delta, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyGradientDescent", scope.makeOpName("ApplyGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
@@ -79,37 +77,53 @@ public final class ApplyGradientDescent<T extends TType> extends RawOp implement
         }
       }
     }
-    return new ApplyGradientDescent<T>(opBuilder.build());
+    return new ApplyGradientDescent<>(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, the subtraction will be protected by a lock;
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, the subtraction will be protected by a lock;
    * otherwise the behavior is undefined, but may exhibit less contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApplyGradientDescent";
-  
-  private Output<T> out;
-  
-  private ApplyGradientDescent(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ApplyGradientDescent}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, the subtraction will be protected by a lock;
+     * otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

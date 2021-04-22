@@ -30,26 +30,40 @@ import org.tensorflow.types.TString;
 
 /**
  * Converts each string in the input Tensor to its hash mod by a number of buckets.
- * <p>
  * The hash function is deterministic on the content of the string within the
  * process.
- * <p>
- * Note that the hash function may change from time to time.
+ * <p>Note that the hash function may change from time to time.
  * This functionality will be deprecated and it's recommended to use
- * `tf.string_to_hash_bucket_fast()` or `tf.string_to_hash_bucket_strong()`.
+ * {@code tf.string_to_hash_bucket_fast()} or {@code tf.string_to_hash_bucket_strong()}.
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class ToHashBucket extends RawOp implements Operand<TInt64> {
-  
   /**
-   * Factory method to create a class wrapping a new ToHashBucket operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StringToHashBucket";
+
+  private Output<TInt64> output;
+
+  private ToHashBucket(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new StringToHashBucket operation.
+   *
    * @param scope current scope
-   * @param stringTensor 
+   * @param stringTensor the stringTensor value
    * @param numBuckets The number of buckets.
    * @return a new instance of ToHashBucket
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ToHashBucket create(Scope scope, Operand<TString> stringTensor, Long numBuckets) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucket", scope.makeOpName("ToHashBucket"));
     opBuilder.addInput(stringTensor.asOutput());
@@ -57,27 +71,18 @@ public final class ToHashBucket extends RawOp implements Operand<TInt64> {
     opBuilder.setAttr("num_buckets", numBuckets);
     return new ToHashBucket(opBuilder.build());
   }
-  
+
   /**
-   * A Tensor of the same shape as the input `string_tensor`.
+   * Gets output.
+   * A Tensor of the same shape as the input {@code string_tensor}.
+   * @return output.
    */
   public Output<TInt64> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringToHashBucket";
-  
-  private Output<TInt64> output;
-  
-  private ToHashBucket(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

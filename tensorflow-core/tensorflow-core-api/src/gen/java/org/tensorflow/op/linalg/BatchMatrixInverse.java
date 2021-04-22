@@ -28,40 +28,41 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The BatchMatrixInverse operation
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixInverse<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixInverse}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adjoint 
-     */
-    public Options adjoint(Boolean adjoint) {
-      this.adjoint = adjoint;
-      return this;
-    }
-    
-    private Boolean adjoint;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchMatrixInverse";
+
+  private Output<T> output;
+
+  private BatchMatrixInverse(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BatchMatrixInverse operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param options carries optional attributes values
+   * @param input the input value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchMatrixInverse} output and operands
    * @return a new instance of BatchMatrixInverse
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchMatrixInverse<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BatchMatrixInverse<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixInverse", scope.makeOpName("BatchMatrixInverse"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -72,35 +73,51 @@ public final class BatchMatrixInverse<T extends TNumber> extends RawOp implement
         }
       }
     }
-    return new BatchMatrixInverse<T>(opBuilder.build());
+    return new BatchMatrixInverse<>(opBuilder.build());
   }
-  
+
   /**
-   * @param adjoint 
+   * Sets the adjoint option.
+   *
+   * @param adjoint the adjoint option
+   * @return this Options instance.
    */
   public static Options adjoint(Boolean adjoint) {
     return new Options().adjoint(adjoint);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchMatrixInverse";
-  
-  private Output<T> output;
-  
-  private BatchMatrixInverse(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixInverse}
+   */
+  public static class Options {
+    private Boolean adjoint;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adjoint option.
+     *
+     * @param adjoint the adjoint option
+     * @return this Options instance.
+     */
+    public Options adjoint(Boolean adjoint) {
+      this.adjoint = adjoint;
+      return this;
+    }
   }
 }

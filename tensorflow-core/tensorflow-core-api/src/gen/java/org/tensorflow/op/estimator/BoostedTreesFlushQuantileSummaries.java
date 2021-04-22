@@ -27,58 +27,64 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Flush the quantile summaries from each quantile stream resource.
- * <p>
  * An op that outputs a list of quantile summaries of a quantile stream resource.
  * Each summary Tensor is rank 2, containing summaries (value, weight, min_rank,
  * max_rank) for a single feature.
  */
 public final class BoostedTreesFlushQuantileSummaries extends RawOp implements Iterable<Operand<TFloat32>> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BoostedTreesFlushQuantileSummaries";
+
+  private List<Output<TFloat32>> summaries;
+
+  @SuppressWarnings("unchecked")
+  private BoostedTreesFlushQuantileSummaries(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int summariesLength = operation.outputListLength("summaries");
+    summaries = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, summariesLength));
+    outputIdx += summariesLength;
+  }
+
   /**
    * Factory method to create a class wrapping a new BoostedTreesFlushQuantileSummaries operation.
-   * 
+   *
    * @param scope current scope
    * @param quantileStreamResourceHandle resource handle referring to a QuantileStreamResource.
-   * @param numFeatures 
+   * @param numFeatures the value of the numFeatures property
    * @return a new instance of BoostedTreesFlushQuantileSummaries
    */
-  @Endpoint(describeByClass = true)
-  public static BoostedTreesFlushQuantileSummaries create(Scope scope, Operand<?> quantileStreamResourceHandle, Long numFeatures) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BoostedTreesFlushQuantileSummaries create(Scope scope,
+      Operand<? extends TType> quantileStreamResourceHandle, Long numFeatures) {
     OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesFlushQuantileSummaries", scope.makeOpName("BoostedTreesFlushQuantileSummaries"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_features", numFeatures);
     return new BoostedTreesFlushQuantileSummaries(opBuilder.build());
   }
-  
+
   /**
+   * Gets summaries.
+   *
+   * @return summaries.
    */
   public List<Output<TFloat32>> summaries() {
     return summaries;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TFloat32>> iterator() {
     return (Iterator) summaries.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BoostedTreesFlushQuantileSummaries";
-  
-  private List<Output<TFloat32>> summaries;
-  
-  @SuppressWarnings("unchecked")
-  private BoostedTreesFlushQuantileSummaries(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int summariesLength = operation.outputListLength("summaries");
-    summaries = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, summariesLength));
-    outputIdx += summariesLength;
   }
 }

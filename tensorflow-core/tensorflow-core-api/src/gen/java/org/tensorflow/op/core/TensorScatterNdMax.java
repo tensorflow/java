@@ -29,50 +29,59 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The TensorScatterMax operation
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class TensorScatterNdMax<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorScatterNdMax operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorScatterMax";
+
+  private Output<T> output;
+
+  private TensorScatterNdMax(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorScatterMax operation.
+   *
    * @param scope current scope
    * @param tensor Tensor to update.
    * @param indices Index tensor.
    * @param updates Updates to scatter into output.
+   * @param <T> data type for {@code TensorScatterMax} output and operands
    * @return a new instance of TensorScatterNdMax
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorScatterNdMax<T> create(Scope scope, Operand<T> tensor, Operand<? extends TNumber> indices, Operand<T> updates) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorScatterNdMax<T> create(Scope scope, Operand<T> tensor,
+      Operand<? extends TNumber> indices, Operand<T> updates) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterMax", scope.makeOpName("TensorScatterNdMax"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorScatterNdMax<T>(opBuilder.build());
+    return new TensorScatterNdMax<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * A new tensor copied from tensor whose values are element-wise maximum between tensor and updates according to the indices.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorScatterMax";
-  
-  private Output<T> output;
-  
-  private TensorScatterNdMax(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

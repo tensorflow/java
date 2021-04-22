@@ -29,64 +29,71 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Determine the script codes of a given tensor of Unicode integer code points.
- * <p>
  * This operation converts Unicode code points to script codes corresponding to
  * each code point. Script codes correspond to International Components for
  * Unicode (ICU) UScriptCode values.
- * <p>
- * See
- * [ICU project docs](http://icu-project.org/apiref/icu4c/uscript_8h.html)
+ * <p>See
+ *  <a href="http://icu-project.org/apiref/icu4c/uscript_8h.html">ICU project docs</a> 
  * for more details on script codes.
- * <p>
- * For an example, see the unicode strings guide on [unicode scripts]
+ * <p>For an example, see the unicode strings guide on [unicode scripts]
  * (https://www.tensorflow.org/tutorials/load_data/unicode#representing_unicode).
- * <p>
- * Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
+ * <p>Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
  * match input shape.
- * <p>
- * Examples:
- * <p>
- * >>> tf.strings.unicode_script([1, 31, 38])
- * <tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)>
+ * <p>Examples:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.strings.unicode_script([1, 31, 38])
+ * &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class UnicodeScript extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "UnicodeScript";
+
+  private Output<TInt32> output;
+
+  private UnicodeScript(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new UnicodeScript operation.
-   * 
+   *
    * @param scope current scope
    * @param input A Tensor of int32 Unicode code points.
    * @return a new instance of UnicodeScript
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static UnicodeScript create(Scope scope, Operand<TInt32> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnicodeScript", scope.makeOpName("UnicodeScript"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new UnicodeScript(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * A Tensor of int32 script codes corresponding to each input code point.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "UnicodeScript";
-  
-  private Output<TInt32> output;
-  
-  private UnicodeScript(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

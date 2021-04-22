@@ -26,48 +26,54 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the number of elements in the given table.
  */
 @Operator
 public final class LookupTableSize extends RawOp implements Operand<TInt64> {
-  
   /**
-   * Factory method to create a class wrapping a new LookupTableSize operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LookupTableSizeV2";
+
+  private Output<TInt64> output;
+
+  private LookupTableSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LookupTableSizeV2 operation.
+   *
    * @param scope current scope
    * @param tableHandle Handle to the table.
    * @return a new instance of LookupTableSize
    */
-  @Endpoint(describeByClass = true)
-  public static LookupTableSize create(Scope scope, Operand<?> tableHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LookupTableSize create(Scope scope, Operand<? extends TType> tableHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("LookupTableSizeV2", scope.makeOpName("LookupTableSize"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LookupTableSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Scalar that contains number of elements in the table.
+   * @return output.
    */
   public Output<TInt64> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LookupTableSizeV2";
-  
-  private Output<TInt64> output;
-  
-  private LookupTableSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

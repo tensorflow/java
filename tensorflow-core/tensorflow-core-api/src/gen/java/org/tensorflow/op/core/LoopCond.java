@@ -29,48 +29,52 @@ import org.tensorflow.types.TBool;
 
 /**
  * Forwards the input to the output.
- * <p>
  * This operator represents the loop termination condition used by the
- * "pivot" switches of a loop.
+ * &quot;pivot&quot; switches of a loop.
  */
 @Operator
 public final class LoopCond extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "LoopCond";
+
+  private Output<TBool> output;
+
+  private LoopCond(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new LoopCond operation.
-   * 
+   *
    * @param scope current scope
    * @param input A boolean scalar, representing the branch predicate of the Switch op.
    * @return a new instance of LoopCond
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static LoopCond create(Scope scope, Operand<TBool> input) {
     OperationBuilder opBuilder = scope.env().opBuilder("LoopCond", scope.makeOpName("LoopCond"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LoopCond(opBuilder.build());
   }
-  
+
   /**
-   * The same tensor as `input`.
+   * Gets output.
+   * The same tensor as {@code input}.
+   * @return output.
    */
   public Output<TBool> output() {
     return output;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LoopCond";
-  
-  private Output<TBool> output;
-  
-  private LoopCond(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

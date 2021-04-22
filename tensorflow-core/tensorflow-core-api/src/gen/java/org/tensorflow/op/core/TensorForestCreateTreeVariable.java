@@ -23,35 +23,39 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Creates a tree resource and returns a handle to it.
  */
 public final class TensorForestCreateTreeVariable extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorForestCreateTreeVariable";
+
+  private TensorForestCreateTreeVariable(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorForestCreateTreeVariable operation.
-   * 
+   *
    * @param scope current scope
    * @param treeHandle Handle to the tree resource to be created.
    * @param treeConfig Serialized proto string of the boosted_trees.Tree.
    * @return a new instance of TensorForestCreateTreeVariable
    */
-  @Endpoint(describeByClass = true)
-  public static TensorForestCreateTreeVariable create(Scope scope, Operand<?> treeHandle, Operand<TString> treeConfig) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorForestCreateTreeVariable create(Scope scope,
+      Operand<? extends TType> treeHandle, Operand<TString> treeConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorForestCreateTreeVariable", scope.makeOpName("TensorForestCreateTreeVariable"));
     opBuilder.addInput(treeHandle.asOutput());
     opBuilder.addInput(treeConfig.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorForestCreateTreeVariable(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorForestCreateTreeVariable";
-  
-  private TensorForestCreateTreeVariable(Operation operation) {
-    super(operation);
   }
 }

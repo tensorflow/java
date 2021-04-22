@@ -30,62 +30,69 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
- * <p>
- * Outputs a vector with length `size` and the same dtype as `weights`. If
- * `weights` are empty, then index `i` stores the number of times the value `i` is
- * counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
- * the value in `weights` at each index where the corresponding value in `arr` is
- * `i`.
- * <p>
- * Values in `arr` outside of the range [0, size) are ignored.
- * 
- * @param <T> data type for {@code bins()} output
+ * Outputs a vector with length {@code size} and the same dtype as {@code weights}. If
+ * {@code weights} are empty, then index {@code i} stores the number of times the value {@code i} is
+ * counted in {@code arr}. If {@code weights} are non-empty, then index {@code i} stores the sum of
+ * the value in {@code weights} at each index where the corresponding value in {@code arr} is
+ * {@code i}.
+ * <p>Values in {@code arr} outside of the range [0, size) are ignored.
+ *
+ * @param <T> data type for {@code bins} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Bincount<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Bincount operation.
-   * 
-   * @param scope current scope
-   * @param arr int32 `Tensor`.
-   * @param size non-negative int32 scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   * shape as `arr`, or a length-0 `Tensor`, in which case it acts as all weights
-   * equal to 1.
-   * @return a new instance of Bincount
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr, Operand<TInt32> size, Operand<T> weights) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
-    opBuilder.addInput(arr.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Bincount<T>(opBuilder.build());
-  }
-  
-  /**
-   * 1D `Tensor` with length equal to `size`. The counts or summed weights for
-   * each value in the range [0, size).
-   */
-  public Output<T> bins() {
-    return bins;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return bins;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Bincount";
-  
+
   private Output<T> bins;
-  
+
   private Bincount(Operation operation) {
     super(operation);
     int outputIdx = 0;
     bins = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Bincount operation.
+   *
+   * @param scope current scope
+   * @param arr int32 {@code Tensor}.
+   * @param sizeOutput non-negative int32 scalar {@code Tensor}.
+   * @param weights is an int32, int64, float32, or float64 {@code Tensor} with the same
+   * shape as {@code arr}, or a length-0 {@code Tensor}, in which case it acts as all weights
+   * equal to 1.
+   * @param <T> data type for {@code Bincount} output and operands
+   * @return a new instance of Bincount
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr,
+      Operand<TInt32> sizeOutput, Operand<T> weights) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
+    opBuilder.addInput(arr.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
+    opBuilder.addInput(weights.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Bincount<>(opBuilder.build());
+  }
+
+  /**
+   * Gets bins.
+   * 1D {@code Tensor} with length equal to {@code size}. The counts or summed weights for
+   * each value in the range [0, size).
+   * @return bins.
+   */
+  public Output<T> bins() {
+    return bins;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return bins;
   }
 }

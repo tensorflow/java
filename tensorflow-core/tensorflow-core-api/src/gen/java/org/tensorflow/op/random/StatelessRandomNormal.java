@@ -31,68 +31,78 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Outputs deterministic pseudorandom values from a normal distribution.
- * <p>
  * The generated values will have mean 0 and standard deviation 1.
- * <p>
- * The outputs are a deterministic function of `shape` and `seed`.
- * 
- * @param <V> data type for {@code output()} output
+ * <p>The outputs are a deterministic function of {@code shape} and {@code seed}.
+ *
+ * @param <V> data type for {@code output} output
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class StatelessRandomNormal<V extends TNumber> extends RawOp implements Operand<V> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatelessRandomNormal";
+
+  private Output<V> output;
+
+  private StatelessRandomNormal(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatelessRandomNormal operation.
-   * 
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
    * @param dtype The type of the output.
+   * @param <V> data type for {@code StatelessRandomNormal} output and operands
    * @return a new instance of StatelessRandomNormal
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TNumber> StatelessRandomNormal<V> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> StatelessRandomNormal<V> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomNormal", scope.makeOpName("StatelessRandomNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new StatelessRandomNormal<V>(opBuilder.build());
+    return new StatelessRandomNormal<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new StatelessRandomNormal operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new StatelessRandomNormal operation, with the default output types.
+   *
    * @param scope current scope
    * @param shape The shape of the output tensor.
    * @param seed 2 seeds (shape [2]).
-   * @return a new instance of StatelessRandomNormal
+   * @return a new instance of StatelessRandomNormal, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static StatelessRandomNormal<TFloat32> create(Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatelessRandomNormal<TFloat32> create(Scope scope,
+      Operand<? extends TNumber> shape, Operand<? extends TNumber> seed) {
     return create(scope, shape, seed, TFloat32.class);
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   @Override
   public Output<V> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatelessRandomNormal";
-  
-  private Output<V> output;
-  
-  private StatelessRandomNormal(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

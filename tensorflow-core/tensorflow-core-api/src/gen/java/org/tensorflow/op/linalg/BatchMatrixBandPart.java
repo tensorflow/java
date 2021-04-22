@@ -29,49 +29,61 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * @param <T> data type for {@code band()} output
+ * The BatchMatrixBandPart operation
+ *
+ * @param <T> data type for {@code band} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixBandPart<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BatchMatrixBandPart";
+
+  private Output<T> band;
+
+  private BatchMatrixBandPart(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    band = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BatchMatrixBandPart operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param numLower 
-   * @param numUpper 
+   * @param input the input value
+   * @param numLower the numLower value
+   * @param numUpper the numUpper value
+   * @param <T> data type for {@code BatchMatrixBandPart} output and operands
    * @return a new instance of BatchMatrixBandPart
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchMatrixBandPart<T> create(Scope scope, Operand<T> input, Operand<TInt64> numLower, Operand<TInt64> numUpper) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchMatrixBandPart<T> create(Scope scope, Operand<T> input,
+      Operand<TInt64> numLower, Operand<TInt64> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixBandPart", scope.makeOpName("BatchMatrixBandPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new BatchMatrixBandPart<T>(opBuilder.build());
+    return new BatchMatrixBandPart<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets band.
+   *
+   * @return band.
    */
   public Output<T> band() {
     return band;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return band;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchMatrixBandPart";
-  
-  private Output<T> band;
-  
-  private BatchMatrixBandPart(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    band = operation.output(outputIdx++);
   }
 }

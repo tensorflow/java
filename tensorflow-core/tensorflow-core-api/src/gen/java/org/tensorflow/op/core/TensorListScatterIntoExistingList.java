@@ -30,29 +30,44 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Scatters tensor at indices in an input list.
- * <p>
  * Each member of the TensorList corresponds to one row of the input tensor,
- * specified by the given index (see `tf.gather`).
- * <p>
- * input_handle: The list to scatter into.
+ * specified by the given index (see {@code tf.gather}).
+ * <p>input_handle: The list to scatter into.
  * tensor: The input tensor.
  * indices: The indices used to index into the list.
  * output_handle: The TensorList.
  */
 @Operator
 public final class TensorListScatterIntoExistingList extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListScatterIntoExistingList";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListScatterIntoExistingList(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorListScatterIntoExistingList operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
-   * @param tensor 
-   * @param indices 
+   * @param inputHandle the inputHandle value
+   * @param tensor the tensor value
+   * @param indices the indices value
    * @return a new instance of TensorListScatterIntoExistingList
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListScatterIntoExistingList create(Scope scope, Operand<?> inputHandle, Operand<? extends TType> tensor, Operand<TInt32> indices) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListScatterIntoExistingList create(Scope scope,
+      Operand<? extends TType> inputHandle, Operand<? extends TType> tensor,
+      Operand<TInt32> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterIntoExistingList", scope.makeOpName("TensorListScatterIntoExistingList"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
@@ -60,27 +75,19 @@ public final class TensorListScatterIntoExistingList extends RawOp implements Op
     opBuilder = scope.apply(opBuilder);
     return new TensorListScatterIntoExistingList(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListScatterIntoExistingList";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListScatterIntoExistingList(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

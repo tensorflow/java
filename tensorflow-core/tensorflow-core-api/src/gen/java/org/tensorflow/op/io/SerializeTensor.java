@@ -31,44 +31,51 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a Tensor into a serialized TensorProto proto.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class SerializeTensor extends RawOp implements Operand<TString> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SerializeTensor";
+
+  private Output<TString> serialized;
+
+  private SerializeTensor(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    serialized = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SerializeTensor operation.
-   * 
+   *
    * @param scope current scope
-   * @param tensor A Tensor of type `T`.
+   * @param tensor A Tensor of type {@code T}.
    * @return a new instance of SerializeTensor
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static SerializeTensor create(Scope scope, Operand<? extends TType> tensor) {
     OperationBuilder opBuilder = scope.env().opBuilder("SerializeTensor", scope.makeOpName("SerializeTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new SerializeTensor(opBuilder.build());
   }
-  
+
   /**
+   * Gets serialized.
    * A serialized TensorProto proto of the input tensor.
+   * @return serialized.
    */
   public Output<TString> serialized() {
     return serialized;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return serialized;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SerializeTensor";
-  
-  private Output<TString> serialized;
-  
-  private SerializeTensor(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    serialized = operation.output(outputIdx++);
   }
 }

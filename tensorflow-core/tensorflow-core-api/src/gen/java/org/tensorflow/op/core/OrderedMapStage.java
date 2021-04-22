@@ -32,74 +32,36 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Stage (key, values) in the underlying container which behaves like a ordered
- * <p>
  * associative container.   Elements are ordered by key.
  */
 @Operator
 public final class OrderedMapStage extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.OrderedMapStage}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity Maximum number of elements in the Staging Area. If > 0, inserts
-     * on the container will block when the capacity is reached.
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param memoryLimit 
-     */
-    public Options memoryLimit(Long memoryLimit) {
-      this.memoryLimit = memoryLimit;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this queue is placed in the given container. Otherwise,
-     * a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName It is necessary to match this name to the matching Unstage Op.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private Long memoryLimit;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "OrderedMapStage";
+
+  private OrderedMapStage(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new OrderedMapStage operation.
-   * 
+   *
    * @param scope current scope
    * @param key int64
-   * @param indices 
+   * @param indices the indices value
    * @param values a list of tensors
    * dtypes A list of data types that inserted values should adhere to.
-   * @param dtypes 
-   * @param options carries optional attributes values
+   * @param dtypes the value of the dtypes property
+   * @param options carries optional attribute values
    * @return a new instance of OrderedMapStage
    */
-  @Endpoint(describeByClass = true)
-  public static OrderedMapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices, Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static OrderedMapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices,
+      Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapStage", scope.makeOpName("OrderedMapStage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -124,41 +86,108 @@ public final class OrderedMapStage extends RawOp {
     }
     return new OrderedMapStage(opBuilder.build());
   }
-  
+
   /**
-   * @param capacity Maximum number of elements in the Staging Area. If > 0, inserts
+   * Sets the capacity option.
+   *
+   * @param capacity Maximum number of elements in the Staging Area. If &gt; 0, inserts
    * on the container will block when the capacity is reached.
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
-   * @param memoryLimit 
+   * Sets the memoryLimit option.
+   *
+   * @param memoryLimit the memoryLimit option
+   * @return this Options instance.
    */
   public static Options memoryLimit(Long memoryLimit) {
     return new Options().memoryLimit(memoryLimit);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this queue is placed in the given container. Otherwise,
    * a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName It is necessary to match this name to the matching Unstage Op.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OrderedMapStage";
-  
-  private OrderedMapStage(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.OrderedMapStage}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private Long memoryLimit;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity Maximum number of elements in the Staging Area. If &gt; 0, inserts
+     * on the container will block when the capacity is reached.
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the memoryLimit option.
+     *
+     * @param memoryLimit the memoryLimit option
+     * @return this Options instance.
+     */
+    public Options memoryLimit(Long memoryLimit) {
+      this.memoryLimit = memoryLimit;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this queue is placed in the given container. Otherwise,
+     * a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName It is necessary to match this name to the matching Unstage Op.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

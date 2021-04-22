@@ -32,75 +32,52 @@ import org.tensorflow.types.family.TType;
 
 /**
  * A queue that produces elements sorted by the first component value.
- * <p>
  * Note that the PriorityQueue requires the first component of any element
  * to be a scalar int64, in addition to the other elements declared by
  * component_types.  Therefore calls to Enqueue and EnqueueMany (resp. Dequeue
  * and DequeueMany) on a PriorityQueue will all require (resp. output) one extra
  * entry in their input (resp. output) lists.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class PriorityQueue extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.PriorityQueue}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param capacity The upper bound on the number of elements in this queue.
-     * Negative numbers mean no limit.
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this queue is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this queue will be shared under the given name
-     * across multiple sessions.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private Long capacity;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "PriorityQueueV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private PriorityQueue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new PriorityQueue operation.
-   * 
+   * Factory method to create a class wrapping a new PriorityQueueV2 operation.
+   *
    * @param scope current scope
    * @param componentTypes The type of each component in a value.
    * @param shapes The shape of each component in a value. The length of this attr must
    * be either 0 or the same as the length of component_types. If the length of
    * this attr is 0, the shapes of queue elements are not constrained, and
    * only one element may be dequeued at a time.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of PriorityQueue
    */
-  @Endpoint(describeByClass = true)
-  public static PriorityQueue create(Scope scope, List<Class<? extends TType>> componentTypes, List<Shape> shapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static PriorityQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
+      List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PriorityQueueV2", scope.makeOpName("PriorityQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     Shape[] shapesArray = new Shape[shapes.size()];
-    for (int i = 0; i < shapesArray.length; ++i) {
+    for (int i = 0 ; i < shapesArray.length ; i++) {
       shapesArray[i] = shapes.get(i);
     }
     opBuilder.setAttr("shapes", shapesArray);
@@ -119,52 +96,102 @@ public final class PriorityQueue extends RawOp implements Operand<TType> {
     }
     return new PriorityQueue(opBuilder.build());
   }
-  
+
   /**
+   * Sets the capacity option.
+   *
    * @param capacity The upper bound on the number of elements in this queue.
    * Negative numbers mean no limit.
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this queue is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this queue will be shared under the given name
    * across multiple sessions.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets handle.
    * The handle to the queue.
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PriorityQueueV2";
-  
-  private Output<?> handle;
-  
-  private PriorityQueue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.PriorityQueue}
+   */
+  public static class Options {
+    private Long capacity;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity The upper bound on the number of elements in this queue.
+     * Negative numbers mean no limit.
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this queue is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this queue will be shared under the given name
+     * across multiple sessions.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.core;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -33,11 +34,9 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Defines a barrier that persists across different graph executions.
- * <p>
  * A barrier represents a key-value map, where each key is a string, and
  * each value is a tuple of tensors.
- * <p>
- * At runtime, the barrier contains 'complete' and 'incomplete'
+ * <p>At runtime, the barrier contains 'complete' and 'incomplete'
  * elements. A complete element has defined tensors for all components of
  * its value tuple, and may be accessed using BarrierTakeMany. An
  * incomplete element has some undefined components in its value tuple,
@@ -45,68 +44,32 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class Barrier extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Barrier}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param shapes The shape of each component in a value. Each shape must be 1 in the
-     * first dimension. The length of this attr must be the same as the length of
-     * component_types.
-     */
-    public Options shapes(List<Shape> shapes) {
-      this.shapes = shapes;
-      return this;
-    }
-    
-    /**
-     * @param capacity The capacity of the barrier.  The default capacity is MAX_INT32,
-     * which is the largest capacity of the underlying queue.
-     */
-    public Options capacity(Long capacity) {
-      this.capacity = capacity;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this barrier is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this barrier will be shared under the given name
-     * across multiple sessions.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private List<Shape> shapes;
-    private Long capacity;
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Barrier";
+
+  private Output<TString> handle;
+
+  private Barrier(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Barrier operation.
-   * 
+   *
    * @param scope current scope
    * @param componentTypes The type of each component in a value.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Barrier
    */
-  @Endpoint(describeByClass = true)
-  public static Barrier create(Scope scope, List<Class<? extends TType>> componentTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Barrier create(Scope scope, List<Class<? extends TType>> componentTypes,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
@@ -114,7 +77,7 @@ public final class Barrier extends RawOp implements Operand<TString> {
       for (Options opts : options) {
         if (opts.shapes != null) {
           Shape[] shapesArray = new Shape[opts.shapes.size()];
-          for (int i = 0; i < shapesArray.length; ++i) {
+          for (int i = 0 ; i < shapesArray.length ; i++) {
             shapesArray[i] = opts.shapes.get(i);
           }
           opBuilder.setAttr("shapes", shapesArray);
@@ -132,60 +95,153 @@ public final class Barrier extends RawOp implements Operand<TString> {
     }
     return new Barrier(opBuilder.build());
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
    * @param shapes The shape of each component in a value. Each shape must be 1 in the
    * first dimension. The length of this attr must be the same as the length of
    * component_types.
+   * @return this Options instance.
    */
   public static Options shapes(List<Shape> shapes) {
     return new Options().shapes(shapes);
   }
-  
+
   /**
+   * Sets the shapes option.
+   *
+   * @param shapes The shape of each component in a value. Each shape must be 1 in the
+   * first dimension. The length of this attr must be the same as the length of
+   * component_types.
+   * @return this Options instance.
+   */
+  public static Options shapes(Shape[] shapes) {
+    return new Options().shapes(shapes);
+  }
+
+  /**
+   * Sets the capacity option.
+   *
    * @param capacity The capacity of the barrier.  The default capacity is MAX_INT32,
    * which is the largest capacity of the underlying queue.
+   * @return this Options instance.
    */
   public static Options capacity(Long capacity) {
     return new Options().capacity(capacity);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this barrier is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this barrier will be shared under the given name
    * across multiple sessions.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets handle.
    * The handle to the barrier.
+   * @return handle.
    */
   public Output<TString> handle() {
     return handle;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Barrier";
-  
-  private Output<TString> handle;
-  
-  private Barrier(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Barrier}
+   */
+  public static class Options {
+    private List<Shape> shapes;
+
+    private Long capacity;
+
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. Each shape must be 1 in the
+     * first dimension. The length of this attr must be the same as the length of
+     * component_types.
+     * @return this Options instance.
+     */
+    public Options shapes(List<Shape> shapes) {
+      this.shapes = shapes;
+      return this;
+    }
+
+    /**
+     * Sets the shapes option.
+     *
+     * @param shapes The shape of each component in a value. Each shape must be 1 in the
+     * first dimension. The length of this attr must be the same as the length of
+     * component_types.
+     * @return this Options instance.
+     */
+    public Options shapes(Shape... shapes) {
+      this.shapes = Arrays.asList(shapes);
+      return this;
+    }
+
+    /**
+     * Sets the capacity option.
+     *
+     * @param capacity The capacity of the barrier.  The default capacity is MAX_INT32,
+     * which is the largest capacity of the underlying queue.
+     * @return this Options instance.
+     */
+    public Options capacity(Long capacity) {
+      this.capacity = capacity;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this barrier is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this barrier will be shared under the given name
+     * across multiple sessions.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

@@ -30,12 +30,10 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Gradient of Unbatch.
- * <p>
  * Acts like Batch but using the given batch_index index of batching things as they
  * become available. This ensures that the gradients are propagated back in the
  * same session which did the forward pass.
- * <p>
- * original_input: The input to the Unbatch operation this is the gradient of.
+ * <p>original_input: The input to the Unbatch operation this is the gradient of.
  * batch_index: The batch_index given to the Unbatch operation this is the gradient
  * of.
  * grad: The downstream gradient.
@@ -43,55 +41,43 @@ import org.tensorflow.types.family.TType;
  * batched_grad: The return value, either an empty tensor or the batched gradient.
  * container: Container to control resource sharing.
  * shared_name: Instances of UnbatchGrad with the same container and shared_name
- *  are assumed to possibly belong to the same batch. If left empty, the op name
- *  will be used as the shared name.
- * 
- * @param <T> data type for {@code batchedGrad()} output
+ * are assumed to possibly belong to the same batch. If left empty, the op name
+ * will be used as the shared name.
+ *
+ * @param <T> data type for {@code batched_grad} output
  */
 @Operator
 public final class UnbatchGrad<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.UnbatchGrad}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container 
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName 
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "UnbatchGrad";
+
+  private Output<T> batchedGrad;
+
+  private UnbatchGrad(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    batchedGrad = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new UnbatchGrad operation.
-   * 
+   *
    * @param scope current scope
-   * @param originalInput 
-   * @param batchIndex 
-   * @param grad 
-   * @param id 
-   * @param options carries optional attributes values
+   * @param originalInput the originalInput value
+   * @param batchIndex the batchIndex value
+   * @param grad the grad value
+   * @param id the id value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code UnbatchGrad} output and operands
    * @return a new instance of UnbatchGrad
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput, Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput,
+      Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("UnbatchGrad", scope.makeOpName("UnbatchGrad"));
     opBuilder.addInput(originalInput.asOutput());
     opBuilder.addInput(batchIndex.asOutput());
@@ -108,42 +94,74 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
         }
       }
     }
-    return new UnbatchGrad<T>(opBuilder.build());
+    return new UnbatchGrad<>(opBuilder.build());
   }
-  
+
   /**
-   * @param container 
+   * Sets the container option.
+   *
+   * @param container the container option
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName 
+   * Sets the sharedName option.
+   *
+   * @param sharedName the sharedName option
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Gets batchedGrad.
+   *
+   * @return batchedGrad.
    */
   public Output<T> batchedGrad() {
     return batchedGrad;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return batchedGrad;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "UnbatchGrad";
-  
-  private Output<T> batchedGrad;
-  
-  private UnbatchGrad(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    batchedGrad = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.UnbatchGrad}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container the container option
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName the sharedName option
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

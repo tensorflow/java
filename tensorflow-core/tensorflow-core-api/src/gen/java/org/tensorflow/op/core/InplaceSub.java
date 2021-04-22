@@ -29,54 +29,63 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- *     Subtracts `v` into specified rows of `x`.
- * <p>
- *     Computes y = x; y[i, :] -= v; return y.
- * 
- * @param <T> data type for {@code y()} output
+ * <pre>
+ * Subtracts `v` into specified rows of `x`.
+ *
+ * Computes y = x; y[i, :] -= v; return y.
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
 @Operator
 public final class InplaceSub<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "InplaceSub";
+
+  private Output<T> y;
+
+  private InplaceSub(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new InplaceSub operation.
-   * 
+   *
    * @param scope current scope
-   * @param x A `Tensor` of type T.
-   * @param i A vector. Indices into the left-most dimension of `x`.
-   * @param v A `Tensor` of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
+   * @param x A {@code Tensor} of type T.
+   * @param i A vector. Indices into the left-most dimension of {@code x}.
+   * @param v A {@code Tensor} of type T. Same dimension sizes as x except the first dimension, which must be the same as i's size.
+   * @param <T> data type for {@code InplaceSub} output and operands
    * @return a new instance of InplaceSub
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> InplaceSub<T> create(Scope scope, Operand<T> x, Operand<TInt32> i, Operand<T> v) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> InplaceSub<T> create(Scope scope, Operand<T> x, Operand<TInt32> i,
+      Operand<T> v) {
     OperationBuilder opBuilder = scope.env().opBuilder("InplaceSub", scope.makeOpName("InplaceSub"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new InplaceSub<T>(opBuilder.build());
+    return new InplaceSub<>(opBuilder.build());
   }
-  
+
   /**
-   * A `Tensor` of type T. An alias of `x`. The content of `y` is undefined if there are duplicates in `i`.
+   * Gets y.
+   * A {@code Tensor} of type T. An alias of {@code x}. The content of {@code y} is undefined if there are duplicates in {@code i}.
+   * @return y.
    */
   public Output<T> y() {
     return y;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InplaceSub";
-  
-  private Output<T> y;
-  
-  private InplaceSub(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

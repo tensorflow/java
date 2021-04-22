@@ -31,30 +31,34 @@ import org.tensorflow.types.family.TType;
  */
 @Operator
 public final class InitializeTable extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new InitializeTable operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "InitializeTableV2";
+
+  private InitializeTable(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new InitializeTableV2 operation.
+   *
    * @param scope current scope
    * @param tableHandle Handle to a table which will be initialized.
    * @param keys Keys of type Tkey.
    * @param values Values of type Tval.
    * @return a new instance of InitializeTable
    */
-  @Endpoint(describeByClass = true)
-  public static InitializeTable create(Scope scope, Operand<?> tableHandle, Operand<? extends TType> keys, Operand<? extends TType> values) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static InitializeTable create(Scope scope, Operand<? extends TType> tableHandle,
+      Operand<? extends TType> keys, Operand<? extends TType> values) {
     OperationBuilder opBuilder = scope.env().opBuilder("InitializeTableV2", scope.makeOpName("InitializeTable"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new InitializeTable(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "InitializeTableV2";
-  
-  private InitializeTable(Operation operation) {
-    super(operation);
   }
 }

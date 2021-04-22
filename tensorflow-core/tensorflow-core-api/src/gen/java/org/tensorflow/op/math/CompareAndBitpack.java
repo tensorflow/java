@@ -29,15 +29,13 @@ import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
 
 /**
- * Compare values of `input` to `threshold` and pack resulting bits into a `uint8`.
- * <p>
- * Each comparison returns a boolean `true` (if `input_value > threshold`)
- * or and `false` otherwise.
- * <p>
- * This operation is useful for Locality-Sensitive-Hashing (LSH) and other
- * algorithms that use hashing approximations of cosine and `L2` distances;
+ * Compare values of {@code input} to {@code threshold} and pack resulting bits into a {@code uint8}.
+ * Each comparison returns a boolean {@code true} (if {@code input_value > threshold})
+ * or and {@code false} otherwise.
+ * <p>This operation is useful for Locality-Sensitive-Hashing (LSH) and other
+ * algorithms that use hashing approximations of cosine and {@code L2} distances;
  * codes can be generated from an input via:
- * <pre>{@code
+ * <pre>
  * codebook_size = 50
  * codebook_bits = codebook_size * 32
  * codebook = tf.get_variable('codebook', [x.shape[-1].value, codebook_bits],
@@ -46,53 +44,61 @@ import org.tensorflow.types.family.TType;
  * codes = compare_and_threshold(tf.matmul(x, codebook), threshold=0.)
  * codes = tf.bitcast(codes, tf.int32)  # go from uint8 to int32
  * # now codes has shape x.shape[:-1] + [codebook_size]
- * }</pre>
- * <b>NOTE</b>: Currently, the innermost dimension of the tensor must be divisible
+ * </pre>
+ * <p><strong>NOTE</strong>: Currently, the innermost dimension of the tensor must be divisible
  * by 8.
- * <p>
- * Given an `input` shaped `[s0, s1, ..., s_n]`, the output is
- * a `uint8` tensor shaped `[s0, s1, ..., s_n / 8]`.
+ * <p>Given an {@code input} shaped {@code [s0, s1, ..., s_n]}, the output is
+ * a {@code uint8} tensor shaped {@code [s0, s1, ..., s_n / 8]}.
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "CompareAndBitpack";
+
+  private Output<TUint8> output;
+
+  private CompareAndBitpack(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new CompareAndBitpack operation.
-   * 
+   *
    * @param scope current scope
-   * @param input Values to compare against `threshold` and bitpack.
+   * @param input Values to compare against {@code threshold} and bitpack.
    * @param threshold Threshold to compare against.
+   * @param <T> data type for {@code CompareAndBitpack} output and operands
    * @return a new instance of CompareAndBitpack
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input, Operand<T> threshold) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input,
+      Operand<T> threshold) {
     OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(threshold.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new CompareAndBitpack(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * The bitpacked comparisons.
+   * @return output.
    */
   public Output<TUint8> output() {
     return output;
   }
-  
+
   @Override
   public Output<TUint8> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CompareAndBitpack";
-  
-  private Output<TUint8> output;
-  
-  private CompareAndBitpack(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

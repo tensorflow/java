@@ -29,88 +29,63 @@ import org.tensorflow.types.TFloat32;
 
 /**
  * Fake-quantize the 'inputs' tensor of type float via per-channel floats
- * <p>
- * Fake-quantize the `inputs` tensor of type float per-channel and one of the
- * shapes: `[d]`, `[b, d]` `[b, h, w, d]` via per-channel floats `min` and `max`
- * of shape `[d]` to `outputs` tensor of same shape as `inputs`.
- * <p>
- * Attributes
+ * Fake-quantize the {@code inputs} tensor of type float per-channel and one of the
+ * shapes: {@code [d]}, {@code [b, d]} {@code [b, h, w, d]} via per-channel floats {@code min} and {@code max}
+ * of shape {@code [d]} to {@code outputs} tensor of same shape as {@code inputs}.
+ * <p>Attributes
  * <ul>
- * <li>
- * `[min; max]` define the clamping range for the `inputs` data.
- * </li>
- * <li>
- * `inputs` values are quantized into the quantization range (
- * `[0; 2^num_bits - 1]` when `narrow_range` is false and `[1; 2^num_bits - 1]`
- * when it is true) and then de-quantized and output as floats in `[min; max]`
- * interval.
- * </li>
- * <li>
- * `num_bits` is the bitwidth of the quantization; between 2 and 16, inclusive.
- * </li>
+ * <li>{@code [min; max]} define the clamping range for the {@code inputs} data.</li>
+ * <li>{@code inputs} values are quantized into the quantization range (
+ * {@code [0; 2^num_bits - 1]} when {@code narrow_range} is false and {@code [1; 2^num_bits - 1]}
+ * when it is true) and then de-quantized and output as floats in {@code [min; max]}
+ * interval.</li>
+ * <li>{@code num_bits} is the bitwidth of the quantization; between 2 and 16, inclusive.</li>
  * </ul>
- * Before quantization, `min` and `max` values are adjusted with the following
+ * <p>Before quantization, {@code min} and {@code max} values are adjusted with the following
  * logic.
- * It is suggested to have `min <= 0 <= max`. If `0` is not in the range of values,
+ * It is suggested to have {@code min <= 0 <= max}. If {@code 0} is not in the range of values,
  * the behavior can be unexpected:
  * <ul>
- * <li>
- * If `0 < min < max`: `min_adj = 0` and `max_adj = max - min`.
- * </li>
- * <li>
- * If `min < max < 0`: `min_adj = min - max` and `max_adj = 0`.
- * </li>
- * <li>
- * If `min <= 0 <= max`: `scale = (max - min) / (2^num_bits - 1) `,
- * `min_adj = scale * round(min / scale)` and `max_adj = max + min_adj - min`.
- * </li>
+ * <li>If {@code 0 < min < max}: {@code min_adj = 0} and {@code max_adj = max - min}.</li>
+ * <li>If {@code min < max < 0}: {@code min_adj = min - max} and {@code max_adj = 0}.</li>
+ * <li>If {@code min <= 0 <= max}: {@code scale = (max - min) / (2^num_bits - 1) },
+ * {@code min_adj = scale * round(min / scale)} and {@code max_adj = max + min_adj - min}.</li>
  * </ul>
- * This operation has a gradient and thus allows for training `min` and `max`
+ * <p>This operation has a gradient and thus allows for training {@code min} and {@code max}
  * values.
  */
-@Operator(group = "quantization")
+@Operator(
+    group = "quantization"
+)
 public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param numBits 
-     */
-    public Options numBits(Long numBits) {
-      this.numBits = numBits;
-      return this;
-    }
-    
-    /**
-     * @param narrowRange 
-     */
-    public Options narrowRange(Boolean narrowRange) {
-      this.narrowRange = narrowRange;
-      return this;
-    }
-    
-    private Long numBits;
-    private Boolean narrowRange;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FakeQuantWithMinMaxVarsPerChannel";
+
+  private Output<TFloat32> outputs;
+
+  private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputs = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new FakeQuantWithMinMaxVarsPerChannel operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputs 
-   * @param min 
-   * @param max 
-   * @param options carries optional attributes values
+   * @param inputs the inputs value
+   * @param min the min value
+   * @param max the max value
+   * @param options carries optional attribute values
    * @return a new instance of FakeQuantWithMinMaxVarsPerChannel
    */
-  @Endpoint(describeByClass = true)
-  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat32> inputs,
+      Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannel", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
@@ -128,40 +103,72 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
     }
     return new FakeQuantWithMinMaxVarsPerChannel(opBuilder.build());
   }
-  
+
   /**
-   * @param numBits 
+   * Sets the numBits option.
+   *
+   * @param numBits the numBits option
+   * @return this Options instance.
    */
   public static Options numBits(Long numBits) {
     return new Options().numBits(numBits);
   }
-  
+
   /**
-   * @param narrowRange 
+   * Sets the narrowRange option.
+   *
+   * @param narrowRange the narrowRange option
+   * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
   }
-  
+
   /**
+   * Gets outputs.
+   *
+   * @return outputs.
    */
   public Output<TFloat32> outputs() {
     return outputs;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return outputs;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FakeQuantWithMinMaxVarsPerChannel";
-  
-  private Output<TFloat32> outputs;
-  
-  private FakeQuantWithMinMaxVarsPerChannel(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputs = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel}
+   */
+  public static class Options {
+    private Long numBits;
+
+    private Boolean narrowRange;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the numBits option.
+     *
+     * @param numBits the numBits option
+     * @return this Options instance.
+     */
+    public Options numBits(Long numBits) {
+      this.numBits = numBits;
+      return this;
+    }
+
+    /**
+     * Sets the narrowRange option.
+     *
+     * @param narrowRange the narrowRange option
+     * @return this Options instance.
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
   }
 }

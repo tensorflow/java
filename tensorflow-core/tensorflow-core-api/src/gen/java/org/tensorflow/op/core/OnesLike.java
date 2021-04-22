@@ -29,47 +29,53 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns a tensor of ones with the same shape and type as x.
- * 
- * @param <T> data type for {@code y()} output
+ *
+ * @param <T> data type for {@code y} output
  */
 @Operator
 public final class OnesLike<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new OnesLike operation.
-   * 
-   * @param scope current scope
-   * @param x a tensor of type T.
-   * @return a new instance of OnesLike
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> OnesLike<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OnesLike", scope.makeOpName("OnesLike"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new OnesLike<T>(opBuilder.build());
-  }
-  
-  /**
-   * a tensor of the same shape and type as x but filled with ones.
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "OnesLike";
-  
+
   private Output<T> y;
-  
+
   private OnesLike(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new OnesLike operation.
+   *
+   * @param scope current scope
+   * @param x a tensor of type T.
+   * @param <T> data type for {@code OnesLike} output and operands
+   * @return a new instance of OnesLike
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> OnesLike<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("OnesLike", scope.makeOpName("OnesLike"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new OnesLike<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   * a tensor of the same shape and type as x but filled with ones.
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

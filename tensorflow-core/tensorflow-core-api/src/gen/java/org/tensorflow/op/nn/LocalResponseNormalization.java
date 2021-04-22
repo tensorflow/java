@@ -29,80 +29,51 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Local Response Normalization.
- * <p>
- * The 4-D `input` tensor is treated as a 3-D array of 1-D vectors (along the last
+ * The 4-D {@code input} tensor is treated as a 3-D array of 1-D vectors (along the last
  * dimension), and each vector is normalized independently.  Within a given vector,
  * each component is divided by the weighted, squared sum of inputs within
- * `depth_radius`.  In detail,
- * <p>
- *     sqr_sum[a, b, c, d] =
- *         sum(input[a, b, c, d - depth_radius : d + depth_radius + 1] ** 2)
- *     output = input / (bias + alpha * sqr_sum) ** beta
- * <p>
- * For details, see [Krizhevsky et al., ImageNet classification with deep
- * convolutional neural networks (NIPS 2012)](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks).
- * 
- * @param <T> data type for {@code output()} output
+ * {@code depth_radius}.  In detail,
+ * <pre>
+ * sqr_sum[a, b, c, d] =
+ *     sum(input[a, b, c, d - depth_radius : d + depth_radius + 1] ** 2)
+ * output = input / (bias + alpha * sqr_sum) ** beta
+ * </pre>
+ * <p>For details, see  <a href="http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks">Krizhevsky et al., ImageNet classification with deep
+ * convolutional neural networks (NIPS 2012)</a> .
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class LocalResponseNormalization<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.LocalResponseNormalization}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param depthRadius 0-D.  Half-width of the 1-D normalization window.
-     */
-    public Options depthRadius(Long depthRadius) {
-      this.depthRadius = depthRadius;
-      return this;
-    }
-    
-    /**
-     * @param bias An offset (usually positive to avoid dividing by 0).
-     */
-    public Options bias(Float bias) {
-      this.bias = bias;
-      return this;
-    }
-    
-    /**
-     * @param alpha A scale factor, usually positive.
-     */
-    public Options alpha(Float alpha) {
-      this.alpha = alpha;
-      return this;
-    }
-    
-    /**
-     * @param beta An exponent.
-     */
-    public Options beta(Float beta) {
-      this.beta = beta;
-      return this;
-    }
-    
-    private Long depthRadius;
-    private Float bias;
-    private Float alpha;
-    private Float beta;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LRN";
+
+  private Output<T> output;
+
+  private LocalResponseNormalization(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new LocalResponseNormalization operation.
-   * 
+   * Factory method to create a class wrapping a new LRN operation.
+   *
    * @param scope current scope
    * @param input 4-D.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LRN} output and operands
    * @return a new instance of LocalResponseNormalization
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LocalResponseNormalization<T> create(Scope scope, Operand<T> input, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LocalResponseNormalization<T> create(Scope scope,
+      Operand<T> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LRN", scope.makeOpName("LocalResponseNormalization"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -122,56 +93,120 @@ public final class LocalResponseNormalization<T extends TNumber> extends RawOp i
         }
       }
     }
-    return new LocalResponseNormalization<T>(opBuilder.build());
+    return new LocalResponseNormalization<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the depthRadius option.
+   *
    * @param depthRadius 0-D.  Half-width of the 1-D normalization window.
+   * @return this Options instance.
    */
   public static Options depthRadius(Long depthRadius) {
     return new Options().depthRadius(depthRadius);
   }
-  
+
   /**
+   * Sets the bias option.
+   *
    * @param bias An offset (usually positive to avoid dividing by 0).
+   * @return this Options instance.
    */
   public static Options bias(Float bias) {
     return new Options().bias(bias);
   }
-  
+
   /**
+   * Sets the alpha option.
+   *
    * @param alpha A scale factor, usually positive.
+   * @return this Options instance.
    */
   public static Options alpha(Float alpha) {
     return new Options().alpha(alpha);
   }
-  
+
   /**
+   * Sets the beta option.
+   *
    * @param beta An exponent.
+   * @return this Options instance.
    */
   public static Options beta(Float beta) {
     return new Options().beta(beta);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LRN";
-  
-  private Output<T> output;
-  
-  private LocalResponseNormalization(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.LocalResponseNormalization}
+   */
+  public static class Options {
+    private Long depthRadius;
+
+    private Float bias;
+
+    private Float alpha;
+
+    private Float beta;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the depthRadius option.
+     *
+     * @param depthRadius 0-D.  Half-width of the 1-D normalization window.
+     * @return this Options instance.
+     */
+    public Options depthRadius(Long depthRadius) {
+      this.depthRadius = depthRadius;
+      return this;
+    }
+
+    /**
+     * Sets the bias option.
+     *
+     * @param bias An offset (usually positive to avoid dividing by 0).
+     * @return this Options instance.
+     */
+    public Options bias(Float bias) {
+      this.bias = bias;
+      return this;
+    }
+
+    /**
+     * Sets the alpha option.
+     *
+     * @param alpha A scale factor, usually positive.
+     * @return this Options instance.
+     */
+    public Options alpha(Float alpha) {
+      this.alpha = alpha;
+      return this;
+    }
+
+    /**
+     * Sets the beta option.
+     *
+     * @param beta An exponent.
+     * @return this Options instance.
+     */
+    public Options beta(Float beta) {
+      this.beta = beta;
+      return this;
+    }
   }
 }

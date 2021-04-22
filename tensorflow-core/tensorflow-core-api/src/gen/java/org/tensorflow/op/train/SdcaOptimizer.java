@@ -27,55 +27,53 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 
 /**
  * Distributed version of Stochastic Dual Coordinate Ascent (SDCA) optimizer for
- * <p>
  * linear models with L1 + L2 regularization. As global optimization objective is
  * strongly-convex, the optimizer optimizes the dual objective at each step. The
  * optimizer applies each update one example at a time. Examples are sampled
  * uniformly, and the optimizer is learning rate free and enjoys linear convergence
  * rate.
- * <p>
- * [Proximal Stochastic Dual Coordinate Ascent](http://arxiv.org/pdf/1211.2717v1.pdf).<br>
+ * <p> <a href="http://arxiv.org/pdf/1211.2717v1.pdf">Proximal Stochastic Dual Coordinate Ascent</a> .<br>
  * Shai Shalev-Shwartz, Tong Zhang. 2012
- * <p>
- * $$Loss Objective = \sum f_{i} (wx_{i}) + (l2 / 2) * |w|^2 + l1 * |w|$$
- * <p>
- * [Adding vs. Averaging in Distributed Primal-Dual Optimization](http://arxiv.org/abs/1502.03508).<br>
+ * <p>$$Loss Objective = \sum f_{i} (wx_{i}) + (l2 / 2) * |w|^2 + l1 * |w|$$
+ * <p> <a href="http://arxiv.org/abs/1502.03508">Adding vs. Averaging in Distributed Primal-Dual Optimization</a> .<br>
  * Chenxin Ma, Virginia Smith, Martin Jaggi, Michael I. Jordan,
  * Peter Richtarik, Martin Takac. 2015
- * <p>
- * [Stochastic Dual Coordinate Ascent with Adaptive Probabilities](https://arxiv.org/abs/1502.08053).<br>
+ * <p> <a href="https://arxiv.org/abs/1502.08053">Stochastic Dual Coordinate Ascent with Adaptive Probabilities</a> .<br>
  * Dominik Csiba, Zheng Qu, Peter Richtarik. 2015
  */
 public final class SdcaOptimizer extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.SdcaOptimizer}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adaptive Whether to use Adaptive SDCA for the inner loop.
-     */
-    public Options adaptive(Boolean adaptive) {
-      this.adaptive = adaptive;
-      return this;
-    }
-    
-    private Boolean adaptive;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SdcaOptimizerV2";
+
+  private Output<TFloat32> outExampleStateData;
+
+  private List<Output<TFloat32>> outDeltaSparseWeights;
+
+  private List<Output<TFloat32>> outDeltaDenseWeights;
+
+  @SuppressWarnings("unchecked")
+  private SdcaOptimizer(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outExampleStateData = operation.output(outputIdx++);
+    int outDeltaSparseWeightsLength = operation.outputListLength("out_delta_sparse_weights");
+    outDeltaSparseWeights = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, outDeltaSparseWeightsLength));
+    outputIdx += outDeltaSparseWeightsLength;
+    int outDeltaDenseWeightsLength = operation.outputListLength("out_delta_dense_weights");
+    outDeltaDenseWeights = Arrays.asList((Output<TFloat32>[]) operation.outputList(outputIdx, outDeltaDenseWeightsLength));
+    outputIdx += outDeltaDenseWeightsLength;
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new SdcaOptimizer operation.
-   * 
+   * Factory method to create a class wrapping a new SdcaOptimizerV2 operation.
+   *
    * @param scope current scope
    * @param sparseExampleIndices a list of vectors which contain example indices.
    * @param sparseFeatureIndices a list of vectors which contain feature indices.
@@ -100,11 +98,19 @@ public final class SdcaOptimizer extends RawOp {
    * @param l2 Symmetric l2 regularization strength.
    * @param numLossPartitions Number of partitions of the global loss function.
    * @param numInnerIterations Number of iterations per mini-batch.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of SdcaOptimizer
    */
-  @Endpoint(describeByClass = true)
-  public static SdcaOptimizer create(Scope scope, Iterable<Operand<TInt64>> sparseExampleIndices, Iterable<Operand<TInt64>> sparseFeatureIndices, Iterable<Operand<TFloat32>> sparseFeatureValues, Iterable<Operand<TFloat32>> denseFeatures, Operand<TFloat32> exampleWeights, Operand<TFloat32> exampleLabels, Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights, Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType, Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SdcaOptimizer create(Scope scope, Iterable<Operand<TInt64>> sparseExampleIndices,
+      Iterable<Operand<TInt64>> sparseFeatureIndices,
+      Iterable<Operand<TFloat32>> sparseFeatureValues, Iterable<Operand<TFloat32>> denseFeatures,
+      Operand<TFloat32> exampleWeights, Operand<TFloat32> exampleLabels,
+      Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights,
+      Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType,
+      Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SdcaOptimizerV2", scope.makeOpName("SdcaOptimizer"));
     opBuilder.addInputList(Operands.asOutputs(sparseExampleIndices));
     opBuilder.addInputList(Operands.asOutputs(sparseFeatureIndices));
@@ -131,55 +137,65 @@ public final class SdcaOptimizer extends RawOp {
     }
     return new SdcaOptimizer(opBuilder.build());
   }
-  
+
   /**
+   * Sets the adaptive option.
+   *
    * @param adaptive Whether to use Adaptive SDCA for the inner loop.
+   * @return this Options instance.
    */
   public static Options adaptive(Boolean adaptive) {
     return new Options().adaptive(adaptive);
   }
-  
+
   /**
+   * Gets outExampleStateData.
    * a list of vectors containing the updated example state
    * data.
+   * @return outExampleStateData.
    */
   public Output<TFloat32> outExampleStateData() {
     return outExampleStateData;
   }
-  
+
   /**
+   * Gets outDeltaSparseWeights.
    * a list of vectors where each value is the delta
    * weights associated with a sparse feature group.
+   * @return outDeltaSparseWeights.
    */
   public List<Output<TFloat32>> outDeltaSparseWeights() {
     return outDeltaSparseWeights;
   }
-  
+
   /**
+   * Gets outDeltaDenseWeights.
    * a list of vectors where the values are the delta
    * weights associated with a dense feature group.
+   * @return outDeltaDenseWeights.
    */
   public List<Output<TFloat32>> outDeltaDenseWeights() {
     return outDeltaDenseWeights;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SdcaOptimizerV2";
-  
-  private Output<TFloat32> outExampleStateData;
-  private List<Output<TFloat32>> outDeltaSparseWeights;
-  private List<Output<TFloat32>> outDeltaDenseWeights;
-  
-  @SuppressWarnings("unchecked")
-  private SdcaOptimizer(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outExampleStateData = operation.output(outputIdx++);
-    int outDeltaSparseWeightsLength = operation.outputListLength("out_delta_sparse_weights");
-    outDeltaSparseWeights = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, outDeltaSparseWeightsLength));
-    outputIdx += outDeltaSparseWeightsLength;
-    int outDeltaDenseWeightsLength = operation.outputListLength("out_delta_dense_weights");
-    outDeltaDenseWeights = Arrays.asList((Output<TFloat32>[])operation.outputList(outputIdx, outDeltaDenseWeightsLength));
-    outputIdx += outDeltaDenseWeightsLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.SdcaOptimizer}
+   */
+  public static class Options {
+    private Boolean adaptive;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adaptive option.
+     *
+     * @param adaptive Whether to use Adaptive SDCA for the inner loop.
+     * @return this Options instance.
+     */
+    public Options adaptive(Boolean adaptive) {
+      this.adaptive = adaptive;
+      return this;
+    }
   }
 }

@@ -26,48 +26,56 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
  * Computes the number of elements in the given queue.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class QueueSize extends RawOp implements Operand<TInt32> {
-  
   /**
-   * Factory method to create a class wrapping a new QueueSize operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "QueueSizeV2";
+
+  private Output<TInt32> output;
+
+  private QueueSize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new QueueSizeV2 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a queue.
    * @return a new instance of QueueSize
    */
-  @Endpoint(describeByClass = true)
-  public static QueueSize create(Scope scope, Operand<?> handle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static QueueSize create(Scope scope, Operand<? extends TType> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("QueueSizeV2", scope.makeOpName("QueueSize"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new QueueSize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * The number of elements in the given queue.
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QueueSizeV2";
-  
-  private Output<TInt32> output;
-  
-  private QueueSize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -29,53 +29,62 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Returns the gradient of `Tile`.
- * <p>
- * Since `Tile` takes an input and repeats the input `multiples` times
- * along each dimension, `train.TileGrad` takes in `multiples` and aggregates
- * each repeated tile of `input` into `output`.
- * 
- * @param <T> data type for {@code output()} output
+ * Returns the gradient of {@code Tile}.
+ * Since {@code Tile} takes an input and repeats the input {@code multiples} times
+ * along each dimension, {@code train.TileGrad} takes in {@code multiples} and aggregates
+ * each repeated tile of {@code input} into {@code output}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class TileGrad<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new TileGrad operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param multiples 
-   * @return a new instance of TileGrad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input, Operand<TInt32> multiples) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(multiples.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new TileGrad<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "TileGrad";
-  
+
   private Output<T> output;
-  
+
   private TileGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TileGrad operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param multiples the multiples value
+   * @param <T> data type for {@code TileGrad} output and operands
+   * @return a new instance of TileGrad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input,
+      Operand<TInt32> multiples) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(multiples.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new TileGrad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

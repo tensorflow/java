@@ -24,57 +24,63 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Checks a tensor for NaN, -Inf and +Inf values.
- * <p>
- * When run, reports an `InvalidArgument` error if `tensor` has any values
- * that are not a number (NaN) or infinity (Inf). Otherwise, passes `tensor` as-is.
+ * When run, reports an {@code InvalidArgument} error if {@code tensor} has any values
+ * that are not a number (NaN) or infinity (Inf). Otherwise, passes {@code tensor} as-is.
  * Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf in the
  * errors it throws.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class CheckNumerics<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new CheckNumerics operation.
-   * 
-   * @param scope current scope
-   * @param tensor 
-   * @param message Prefix of the error message.
-   * @return a new instance of CheckNumerics
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor, String message) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CheckNumericsV2", scope.makeOpName("CheckNumerics"));
-    opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("message", message);
-    return new CheckNumerics<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "CheckNumericsV2";
-  
+
   private Output<T> output;
-  
+
   private CheckNumerics(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new CheckNumericsV2 operation.
+   *
+   * @param scope current scope
+   * @param tensor the tensor value
+   * @param message Prefix of the error message.
+   * @param <T> data type for {@code CheckNumericsV2} output and operands
+   * @return a new instance of CheckNumerics
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor,
+      String message) {
+    OperationBuilder opBuilder = scope.env().opBuilder("CheckNumericsV2", scope.makeOpName("CheckNumerics"));
+    opBuilder.addInput(tensor.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("message", message);
+    return new CheckNumerics<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

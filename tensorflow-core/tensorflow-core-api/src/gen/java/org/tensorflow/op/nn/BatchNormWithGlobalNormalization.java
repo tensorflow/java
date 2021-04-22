@@ -29,17 +29,30 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Batch normalization.
- * <p>
- * This op is deprecated. Prefer `tf.nn.batch_normalization`.
- * 
- * @param <T> data type for {@code result()} output
+ * This op is deprecated. Prefer {@code tf.nn.batch_normalization}.
+ *
+ * @param <T> data type for {@code result} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class BatchNormWithGlobalNormalization<T extends TType> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "BatchNormWithGlobalNormalization";
+
+  private Output<T> result;
+
+  private BatchNormWithGlobalNormalization(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    result = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new BatchNormWithGlobalNormalization operation.
-   * 
+   *
    * @param scope current scope
    * @param t A 4D input Tensor.
    * @param m A 1D mean Tensor with size matching the last dimension of t.
@@ -51,15 +64,20 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
    * @param beta A 1D beta Tensor with size matching the last dimension of t.
    * An offset to be added to the normalized tensor.
    * @param gamma A 1D gamma Tensor with size matching the last dimension of t.
-   * If "scale_after_normalization" is true, this tensor will be multiplied
+   * If &quot;scale_after_normalization&quot; is true, this tensor will be multiplied
    * with the normalized tensor.
    * @param varianceEpsilon A small float number to avoid dividing by 0.
    * @param scaleAfterNormalization A bool indicating whether the resulted tensor
    * needs to be multiplied with gamma.
+   * @param <T> data type for {@code BatchNormWithGlobalNormalization} output and operands
    * @return a new instance of BatchNormWithGlobalNormalization
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> BatchNormWithGlobalNormalization<T> create(Scope scope, Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma, Float varianceEpsilon, Boolean scaleAfterNormalization) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> BatchNormWithGlobalNormalization<T> create(Scope scope,
+      Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> beta, Operand<T> gamma,
+      Float varianceEpsilon, Boolean scaleAfterNormalization) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalization", scope.makeOpName("BatchNormWithGlobalNormalization"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -69,28 +87,20 @@ public final class BatchNormWithGlobalNormalization<T extends TType> extends Raw
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("variance_epsilon", varianceEpsilon);
     opBuilder.setAttr("scale_after_normalization", scaleAfterNormalization);
-    return new BatchNormWithGlobalNormalization<T>(opBuilder.build());
+    return new BatchNormWithGlobalNormalization<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets result.
+   *
+   * @return result.
    */
   public Output<T> result() {
     return result;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return result;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchNormWithGlobalNormalization";
-  
-  private Output<T> result;
-  
-  private BatchNormWithGlobalNormalization(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    result = operation.output(outputIdx++);
   }
 }

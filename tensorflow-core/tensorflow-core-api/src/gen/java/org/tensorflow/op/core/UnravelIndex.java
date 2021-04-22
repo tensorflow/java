@@ -29,10 +29,8 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Converts an array of flat indices into a tuple of coordinate arrays.
- * <p>
- * 
  * Example:
- * <pre>{@code
+ * <pre>
  * y = tf.unravel_index(indices=[2, 5, 7], dims=[3, 3])
  * # 'dims' represent a hypothetical (3, 3) tensor of indices:
  * # [[0, 1, *2*],
@@ -40,60 +38,67 @@ import org.tensorflow.types.family.TNumber;
  * #  [6, *7*, 8]]
  * # For each entry from 'indices', this operation returns
  * # its coordinates (marked with '*'), such as
- * # 2 ==> (0, 2)
- * # 5 ==> (1, 2)
- * # 7 ==> (2, 1)
- * y ==> [[0, 1, 2], [2, 2, 1]]
- * }</pre>
- * @compatibility(numpy)
+ * # 2 ==&gt; (0, 2)
+ * # 5 ==&gt; (1, 2)
+ * # 7 ==&gt; (2, 1)
+ * y ==&gt; [[0, 1, 2], [2, 2, 1]]
+ * </pre>
+ * <p>{@literal @}compatibility(numpy)<br>
  * Equivalent to np.unravel_index
- * @end_compatibility
- * 
- * @param <T> data type for {@code output()} output
+ * <br>{@literal @}end_compatibility
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class UnravelIndex<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new UnravelIndex operation.
-   * 
-   * @param scope current scope
-   * @param indices An 0-D or 1-D `int` Tensor whose elements are indices into the
-   * flattened version of an array of dimensions dims.
-   * @param dims An 1-D `int` Tensor. The shape of the array to use for unraveling
-   * indices.
-   * @return a new instance of UnravelIndex
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices, Operand<T> dims) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
-    opBuilder.addInput(indices.asOutput());
-    opBuilder.addInput(dims.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new UnravelIndex<T>(opBuilder.build());
-  }
-  
-  /**
-   * An 2-D (or 1-D if indices is 0-D) tensor where each row has the
-   * same shape as the indices array.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "UnravelIndex";
-  
+
   private Output<T> output;
-  
+
   private UnravelIndex(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new UnravelIndex operation.
+   *
+   * @param scope current scope
+   * @param indices An 0-D or 1-D {@code int} Tensor whose elements are indices into the
+   * flattened version of an array of dimensions dims.
+   * @param dims An 1-D {@code int} Tensor. The shape of the array to use for unraveling
+   * indices.
+   * @param <T> data type for {@code UnravelIndex} output and operands
+   * @return a new instance of UnravelIndex
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices,
+      Operand<T> dims) {
+    OperationBuilder opBuilder = scope.env().opBuilder("UnravelIndex", scope.makeOpName("UnravelIndex"));
+    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(dims.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new UnravelIndex<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * An 2-D (or 1-D if indices is 0-D) tensor where each row has the
+   * same shape as the indices array.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -32,49 +32,44 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Gather specific elements from the TensorArray into output `value`.
- * <p>
- * All elements selected by `indices` must have the same shape.
- * 
- * @param <T> data type for {@code value()} output
+ * Gather specific elements from the TensorArray into output {@code value}.
+ * All elements selected by {@code indices} must have the same shape.
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class TensorArrayGather<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayGather}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param elementShape The expected shape of an element, if known. Used to
-     * validate the shapes of TensorArray elements. If this shape is not
-     * fully specified, gathering zero-size TensorArrays is an error.
-     */
-    public Options elementShape(Shape elementShape) {
-      this.elementShape = elementShape;
-      return this;
-    }
-    
-    private Shape elementShape;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TensorArrayGatherV3";
+
+  private Output<T> value;
+
+  private TensorArrayGather(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    value = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new TensorArrayGather operation.
-   * 
+   * Factory method to create a class wrapping a new TensorArrayGatherV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray.
    * @param indices The locations in the TensorArray from which to read tensor elements.
    * @param flowIn A float scalar that enforces proper chaining of operations.
    * @param dtype The type of the elem that is returned.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TensorArrayGatherV3} output and operands
    * @return a new instance of TensorArrayGather
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TensorArrayGather<T> create(Scope scope, Operand<?> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TensorArrayGather<T> create(Scope scope,
+      Operand<? extends TType> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn,
+      Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayGatherV3", scope.makeOpName("TensorArrayGather"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -88,39 +83,56 @@ public final class TensorArrayGather<T extends TType> extends RawOp implements O
         }
       }
     }
-    return new TensorArrayGather<T>(opBuilder.build());
+    return new TensorArrayGather<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the elementShape option.
+   *
    * @param elementShape The expected shape of an element, if known. Used to
    * validate the shapes of TensorArray elements. If this shape is not
    * fully specified, gathering zero-size TensorArrays is an error.
+   * @return this Options instance.
    */
   public static Options elementShape(Shape elementShape) {
     return new Options().elementShape(elementShape);
   }
-  
+
   /**
+   * Gets value.
    * All of the elements in the TensorArray, concatenated along a new
    * axis (the new dimension 0).
+   * @return value.
    */
   public Output<T> value() {
     return value;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return value;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayGatherV3";
-  
-  private Output<T> value;
-  
-  private TensorArrayGather(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    value = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.TensorArrayGather}
+   */
+  public static class Options {
+    private Shape elementShape;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the elementShape option.
+     *
+     * @param elementShape The expected shape of an element, if known. Used to
+     * validate the shapes of TensorArray elements. If this shape is not
+     * fully specified, gathering zero-size TensorArrays is an error.
+     * @return this Options instance.
+     */
+    public Options elementShape(Shape elementShape) {
+      this.elementShape = elementShape;
+      return this;
+    }
   }
 }

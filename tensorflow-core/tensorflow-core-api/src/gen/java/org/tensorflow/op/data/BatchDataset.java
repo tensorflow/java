@@ -33,45 +33,45 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that batches `batch_size` elements from `input_dataset`.
+ * Creates a dataset that batches {@code batch_size} elements from {@code input_dataset}.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class BatchDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.BatchDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param parallelCopy 
-     */
-    public Options parallelCopy(Boolean parallelCopy) {
-      this.parallelCopy = parallelCopy;
-      return this;
-    }
-    
-    private Boolean parallelCopy;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchDatasetV2";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private BatchDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new BatchDataset operation.
-   * 
+   * Factory method to create a class wrapping a new BatchDatasetV2 operation.
+   *
    * @param scope current scope
-   * @param inputDataset 
+   * @param inputDataset the inputDataset value
    * @param batchSize A scalar representing the number of elements to accumulate in a batch.
    * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
    * is smaller than desired.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of BatchDataset
    */
-  @Endpoint(describeByClass = true)
-  public static BatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> batchSize, Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static BatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TInt64> batchSize, Operand<TBool> dropRemainder,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchDatasetV2", scope.makeOpName("BatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
@@ -79,7 +79,7 @@ public final class BatchDataset extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -92,34 +92,50 @@ public final class BatchDataset extends RawOp implements Operand<TType> {
     }
     return new BatchDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param parallelCopy 
+   * Sets the parallelCopy option.
+   *
+   * @param parallelCopy the parallelCopy option
+   * @return this Options instance.
    */
   public static Options parallelCopy(Boolean parallelCopy) {
     return new Options().parallelCopy(parallelCopy);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchDatasetV2";
-  
-  private Output<?> handle;
-  
-  private BatchDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.BatchDataset}
+   */
+  public static class Options {
+    private Boolean parallelCopy;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the parallelCopy option.
+     *
+     * @param parallelCopy the parallelCopy option
+     * @return this Options instance.
+     */
+    public Options parallelCopy(Boolean parallelCopy) {
+      this.parallelCopy = parallelCopy;
+      return this;
+    }
   }
 }

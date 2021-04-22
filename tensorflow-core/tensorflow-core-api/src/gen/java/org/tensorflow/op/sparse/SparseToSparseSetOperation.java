@@ -29,80 +29,81 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Applies set operation along last dimension of 2 `SparseTensor` inputs.
- * <p>
- * See SetOperationOp::SetOperationFromContext for values of `set_operation`.
- * <p>
- * If `validate_indices` is `True`, `sparse.SparseToSparseSetOperation` validates the
- * order and range of `set1` and `set2` indices.
- * <p>
- * Input `set1` is a `SparseTensor` represented by `set1_indices`, `set1_values`,
- * and `set1_shape`. For `set1` ranked `n`, 1st `n-1` dimensions must be the same
- * as `set2`. Dimension `n` contains values in a set, duplicates are allowed but
+ * Applies set operation along last dimension of 2 {@code SparseTensor} inputs.
+ * See SetOperationOp::SetOperationFromContext for values of {@code set_operation}.
+ * <p>If {@code validate_indices} is {@code True}, {@code sparse.SparseToSparseSetOperation} validates the
+ * order and range of {@code set1} and {@code set2} indices.
+ * <p>Input {@code set1} is a {@code SparseTensor} represented by {@code set1_indices}, {@code set1_values},
+ * and {@code set1_shape}. For {@code set1} ranked {@code n}, 1st {@code n-1} dimensions must be the same
+ * as {@code set2}. Dimension {@code n} contains values in a set, duplicates are allowed but
  * ignored.
- * <p>
- * Input `set2` is a `SparseTensor` represented by `set2_indices`, `set2_values`,
- * and `set2_shape`. For `set2` ranked `n`, 1st `n-1` dimensions must be the same
- * as `set1`. Dimension `n` contains values in a set, duplicates are allowed but
+ * <p>Input {@code set2} is a {@code SparseTensor} represented by {@code set2_indices}, {@code set2_values},
+ * and {@code set2_shape}. For {@code set2} ranked {@code n}, 1st {@code n-1} dimensions must be the same
+ * as {@code set1}. Dimension {@code n} contains values in a set, duplicates are allowed but
  * ignored.
- * <p>
- * If `validate_indices` is `True`, this op validates the order and range of `set1`
- * and `set2` indices.
- * <p>
- * Output `result` is a `SparseTensor` represented by `result_indices`,
- * `result_values`, and `result_shape`. For `set1` and `set2` ranked `n`, this
- * has rank `n` and the same 1st `n-1` dimensions as `set1` and `set2`. The `nth`
- * dimension contains the result of `set_operation` applied to the corresponding
- * `[0...n-1]` dimension of `set`.
- * 
- * @param <T> data type for {@code resultValues()} output
+ * <p>If {@code validate_indices} is {@code True}, this op validates the order and range of {@code set1}
+ * and {@code set2} indices.
+ * <p>Output {@code result} is a {@code SparseTensor} represented by {@code result_indices},
+ * {@code result_values}, and {@code result_shape}. For {@code set1} and {@code set2} ranked {@code n}, this
+ * has rank {@code n} and the same 1st {@code n-1} dimensions as {@code set1} and {@code set2}. The {@code nth}
+ * dimension contains the result of {@code set_operation} applied to the corresponding
+ * {@code [0...n-1]} dimension of {@code set}.
+ *
+ * @param <T> data type for {@code result_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseToSparseSetOperation<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.SparseToSparseSetOperation}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param validateIndices 
-     */
-    public Options validateIndices(Boolean validateIndices) {
-      this.validateIndices = validateIndices;
-      return this;
-    }
-    
-    private Boolean validateIndices;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseToSparseSetOperation";
+
+  private Output<TInt64> resultIndices;
+
+  private Output<T> resultValues;
+
+  private Output<TInt64> resultShape;
+
+  private SparseToSparseSetOperation(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resultIndices = operation.output(outputIdx++);
+    resultValues = operation.output(outputIdx++);
+    resultShape = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseToSparseSetOperation operation.
-   * 
+   *
    * @param scope current scope
-   * @param set1Indices 2D `Tensor`, indices of a `SparseTensor`. Must be in row-major
+   * @param set1Indices 2D {@code Tensor}, indices of a {@code SparseTensor}. Must be in row-major
    * order.
-   * @param set1Values 1D `Tensor`, values of a `SparseTensor`. Must be in row-major
+   * @param set1Values 1D {@code Tensor}, values of a {@code SparseTensor}. Must be in row-major
    * order.
-   * @param set1Shape 1D `Tensor`, shape of a `SparseTensor`. `set1_shape[0...n-1]` must
-   * be the same as `set2_shape[0...n-1]`, `set1_shape[n]` is the
-   * max set size across `0...n-1` dimensions.
-   * @param set2Indices 2D `Tensor`, indices of a `SparseTensor`. Must be in row-major
+   * @param set1Shape 1D {@code Tensor}, shape of a {@code SparseTensor}. {@code set1_shape[0...n-1]} must
+   * be the same as {@code set2_shape[0...n-1]}, {@code set1_shape[n]} is the
+   * max set size across {@code 0...n-1} dimensions.
+   * @param set2Indices 2D {@code Tensor}, indices of a {@code SparseTensor}. Must be in row-major
    * order.
-   * @param set2Values 1D `Tensor`, values of a `SparseTensor`. Must be in row-major
+   * @param set2Values 1D {@code Tensor}, values of a {@code SparseTensor}. Must be in row-major
    * order.
-   * @param set2Shape 1D `Tensor`, shape of a `SparseTensor`. `set2_shape[0...n-1]` must
-   * be the same as `set1_shape[0...n-1]`, `set2_shape[n]` is the
-   * max set size across `0...n-1` dimensions.
-   * @param setOperation 
-   * @param options carries optional attributes values
+   * @param set2Shape 1D {@code Tensor}, shape of a {@code SparseTensor}. {@code set2_shape[0...n-1]} must
+   * be the same as {@code set1_shape[0...n-1]}, {@code set2_shape[n]} is the
+   * max set size across {@code 0...n-1} dimensions.
+   * @param setOperation the value of the setOperation property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code SparseToSparseSetOperation} output and operands
    * @return a new instance of SparseToSparseSetOperation
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SparseToSparseSetOperation<T> create(Scope scope, Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape, Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape, String setOperation, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SparseToSparseSetOperation<T> create(Scope scope,
+      Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape,
+      Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape,
+      String setOperation, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseToSparseSetOperation", scope.makeOpName("SparseToSparseSetOperation"));
     opBuilder.addInput(set1Indices.asOutput());
     opBuilder.addInput(set1Values.asOutput());
@@ -119,51 +120,66 @@ public final class SparseToSparseSetOperation<T extends TType> extends RawOp {
         }
       }
     }
-    return new SparseToSparseSetOperation<T>(opBuilder.build());
+    return new SparseToSparseSetOperation<>(opBuilder.build());
   }
-  
+
   /**
-   * @param validateIndices 
+   * Sets the validateIndices option.
+   *
+   * @param validateIndices the validateIndices option
+   * @return this Options instance.
    */
   public static Options validateIndices(Boolean validateIndices) {
     return new Options().validateIndices(validateIndices);
   }
-  
+
   /**
-   * 2D indices of a `SparseTensor`.
+   * Gets resultIndices.
+   * 2D indices of a {@code SparseTensor}.
+   * @return resultIndices.
    */
   public Output<TInt64> resultIndices() {
     return resultIndices;
   }
-  
+
   /**
-   * 1D values of a `SparseTensor`.
+   * Gets resultValues.
+   * 1D values of a {@code SparseTensor}.
+   * @return resultValues.
    */
   public Output<T> resultValues() {
     return resultValues;
   }
-  
+
   /**
-   * 1D `Tensor` shape of a `SparseTensor`. `result_shape[0...n-1]` is
-   * the same as the 1st `n-1` dimensions of `set1` and `set2`, `result_shape[n]`
-   * is the max result set size across all `0...n-1` dimensions.
+   * Gets resultShape.
+   * 1D {@code Tensor} shape of a {@code SparseTensor}. {@code result_shape[0...n-1]} is
+   * the same as the 1st {@code n-1} dimensions of {@code set1} and {@code set2}, {@code result_shape[n]}
+   * is the max result set size across all {@code 0...n-1} dimensions.
+   * @return resultShape.
    */
   public Output<TInt64> resultShape() {
     return resultShape;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseToSparseSetOperation";
-  
-  private Output<TInt64> resultIndices;
-  private Output<T> resultValues;
-  private Output<TInt64> resultShape;
-  
-  private SparseToSparseSetOperation(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resultIndices = operation.output(outputIdx++);
-    resultValues = operation.output(outputIdx++);
-    resultShape = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseToSparseSetOperation}
+   */
+  public static class Options {
+    private Boolean validateIndices;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the validateIndices option.
+     *
+     * @param validateIndices the validateIndices option
+     * @return this Options instance.
+     */
+    public Options validateIndices(Boolean validateIndices) {
+      this.validateIndices = validateIndices;
+      return this;
+    }
   }
 }

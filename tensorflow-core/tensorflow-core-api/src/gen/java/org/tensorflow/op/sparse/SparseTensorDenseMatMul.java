@@ -30,66 +30,53 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Multiply SparseTensor (of rank 2) "A" by dense matrix "B".
- * <p>
+ * Multiply SparseTensor (of rank 2) &quot;A&quot; by dense matrix &quot;B&quot;.
  * No validity checking is performed on the indices of A.  However, the following
  * input format is recommended for optimal behavior:
- * <p>
- * if adjoint_a == false:
- *   A should be sorted in lexicographically increasing order.  Use SparseReorder
- *   if you're not sure.
+ * <p>if adjoint_a == false:
+ * A should be sorted in lexicographically increasing order.  Use SparseReorder
+ * if you're not sure.
  * if adjoint_a == true:
- *   A should be sorted in order of increasing dimension 1 (i.e., "column major"
- *   order instead of "row major" order).
- * 
- * @param <U> data type for {@code product()} output
+ * A should be sorted in order of increasing dimension 1 (i.e., &quot;column major&quot;
+ * order instead of &quot;row major&quot; order).
+ *
+ * @param <U> data type for {@code product} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.SparseTensorDenseMatMul}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param adjointA Use the adjoint of A in the matrix multiply.  If A is complex, this
-     * is transpose(conj(A)).  Otherwise it's transpose(A).
-     */
-    public Options adjointA(Boolean adjointA) {
-      this.adjointA = adjointA;
-      return this;
-    }
-    
-    /**
-     * @param adjointB Use the adjoint of B in the matrix multiply.  If B is complex, this
-     * is transpose(conj(B)).  Otherwise it's transpose(B).
-     */
-    public Options adjointB(Boolean adjointB) {
-      this.adjointB = adjointB;
-      return this;
-    }
-    
-    private Boolean adjointA;
-    private Boolean adjointB;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "SparseTensorDenseMatMul";
+
+  private Output<U> product;
+
+  private SparseTensorDenseMatMul(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    product = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new SparseTensorDenseMatMul operation.
-   * 
+   *
    * @param scope current scope
-   * @param aIndices 2-D.  The `indices` of the `SparseTensor`, size `[nnz, 2]` Matrix.
-   * @param aValues 1-D.  The `values` of the `SparseTensor`, size `[nnz]` Vector.
-   * @param aShape 1-D.  The `shape` of the `SparseTensor`, size `[2]` Vector.
+   * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor}, size {@code [nnz, 2]} Matrix.
+   * @param aValues 1-D.  The {@code values} of the {@code SparseTensor}, size {@code [nnz]} Vector.
+   * @param aShape 1-D.  The {@code shape} of the {@code SparseTensor}, size {@code [2]} Vector.
    * @param b 2-D.  A dense Matrix.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code SparseTensorDenseMatMul} output and operands
    * @return a new instance of SparseTensorDenseMatMul
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> SparseTensorDenseMatMul<U> create(Scope scope, Operand<? extends TNumber> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> SparseTensorDenseMatMul<U> create(Scope scope,
+      Operand<? extends TNumber> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseMatMul", scope.makeOpName("SparseTensorDenseMatMul"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
@@ -106,44 +93,78 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
         }
       }
     }
-    return new SparseTensorDenseMatMul<U>(opBuilder.build());
+    return new SparseTensorDenseMatMul<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the adjointA option.
+   *
    * @param adjointA Use the adjoint of A in the matrix multiply.  If A is complex, this
    * is transpose(conj(A)).  Otherwise it's transpose(A).
+   * @return this Options instance.
    */
   public static Options adjointA(Boolean adjointA) {
     return new Options().adjointA(adjointA);
   }
-  
+
   /**
+   * Sets the adjointB option.
+   *
    * @param adjointB Use the adjoint of B in the matrix multiply.  If B is complex, this
    * is transpose(conj(B)).  Otherwise it's transpose(B).
+   * @return this Options instance.
    */
   public static Options adjointB(Boolean adjointB) {
     return new Options().adjointB(adjointB);
   }
-  
+
   /**
+   * Gets product.
+   *
+   * @return product.
    */
   public Output<U> product() {
     return product;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return product;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseTensorDenseMatMul";
-  
-  private Output<U> product;
-  
-  private SparseTensorDenseMatMul(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    product = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.SparseTensorDenseMatMul}
+   */
+  public static class Options {
+    private Boolean adjointA;
+
+    private Boolean adjointB;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the adjointA option.
+     *
+     * @param adjointA Use the adjoint of A in the matrix multiply.  If A is complex, this
+     * is transpose(conj(A)).  Otherwise it's transpose(A).
+     * @return this Options instance.
+     */
+    public Options adjointA(Boolean adjointA) {
+      this.adjointA = adjointA;
+      return this;
+    }
+
+    /**
+     * Sets the adjointB option.
+     *
+     * @param adjointB Use the adjoint of B in the matrix multiply.  If B is complex, this
+     * is transpose(conj(B)).  Otherwise it's transpose(B).
+     * @return this Options instance.
+     */
+    public Options adjointB(Boolean adjointB) {
+      this.adjointB = adjointB;
+      return this;
+    }
   }
 }

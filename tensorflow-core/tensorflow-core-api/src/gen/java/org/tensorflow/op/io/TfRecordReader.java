@@ -30,56 +30,34 @@ import org.tensorflow.types.family.TType;
 /**
  * A Reader that outputs the records from a TensorFlow Records file.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class TfRecordReader extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.TfRecordReader}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container If non-empty, this reader is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this reader is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    /**
-     * @param compressionType 
-     */
-    public Options compressionType(String compressionType) {
-      this.compressionType = compressionType;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    private String compressionType;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TFRecordReaderV2";
+
+  private Output<? extends TType> readerHandle;
+
+  @SuppressWarnings("unchecked")
+  private TfRecordReader(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    readerHandle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new TfRecordReader operation.
-   * 
+   * Factory method to create a class wrapping a new TFRecordReaderV2 operation.
+   *
    * @param scope current scope
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of TfRecordReader
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TfRecordReader create(Scope scope, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TFRecordReaderV2", scope.makeOpName("TfRecordReader"));
     opBuilder = scope.apply(opBuilder);
@@ -98,51 +76,100 @@ public final class TfRecordReader extends RawOp implements Operand<TType> {
     }
     return new TfRecordReader(opBuilder.build());
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this reader is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this reader is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
-   * @param compressionType 
+   * Sets the compressionType option.
+   *
+   * @param compressionType the compressionType option
+   * @return this Options instance.
    */
   public static Options compressionType(String compressionType) {
     return new Options().compressionType(compressionType);
   }
-  
+
   /**
+   * Gets readerHandle.
    * The handle to reference the Reader.
+   * @return readerHandle.
    */
-  public Output<?> readerHandle() {
+  public Output<? extends TType> readerHandle() {
     return readerHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) readerHandle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TFRecordReaderV2";
-  
-  private Output<?> readerHandle;
-  
-  private TfRecordReader(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    readerHandle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.TfRecordReader}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private String compressionType;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
+
+    /**
+     * Sets the compressionType option.
+     *
+     * @param compressionType the compressionType option
+     * @return this Options instance.
+     */
+    public Options compressionType(String compressionType) {
+      this.compressionType = compressionType;
+      return this;
+    }
   }
 }

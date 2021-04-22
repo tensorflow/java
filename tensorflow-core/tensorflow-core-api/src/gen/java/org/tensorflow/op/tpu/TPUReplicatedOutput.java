@@ -27,66 +27,74 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Connects N outputs from an N-way replicated TPU computation.
- * <p>
- * This operation holds a replicated output from a `tpu.replicate()` computation subgraph.
+ * This operation holds a replicated output from a {@code tpu.replicate()} computation subgraph.
  * Each replicated output has the same shape and type alongside the input.
- * <p>
- * For example:
- * <pre>{@code
- * %computation = "tf.Computation"()
- * %replicated_output:2 = "tf.TPUReplicatedOutput"(%computation)
- * }</pre>
- * The above computation has a replicated output of two replicas.
- * 
- * @param <T> data type for {@code outputs()} output
+ * <p>For example:
+ * <pre>
+ * %computation = &quot;tf.Computation&quot;()
+ * %replicated_output:2 = &quot;tf.TPUReplicatedOutput&quot;(%computation)
+ * </pre>
+ * <p>The above computation has a replicated output of two replicas.
+ *
+ * @param <T> data type for {@code outputs} output
+ *
+ * @deprecated use {@link org.tensorflow.op.tpu.ReplicatedOutput} instead
  */
+@Deprecated
 public final class TPUReplicatedOutput<T extends TType> extends RawOp implements Iterable<Operand<T>> {
-  
   /**
-   * Factory method to create a class wrapping a new TPUReplicatedOutput operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param numReplicas 
-   * @return a new instance of TPUReplicatedOutput
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input, Long numReplicas) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("num_replicas", numReplicas);
-    return new TPUReplicatedOutput<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public List<Output<T>> outputs() {
-    return outputs;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<T>> iterator() {
-    return (Iterator) outputs.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "TPUReplicatedOutput";
-  
+
   private List<Output<T>> outputs;
-  
+
   @SuppressWarnings("unchecked")
   private TPUReplicatedOutput(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList((Output<T>[])operation.outputList(outputIdx, outputsLength));
+    outputs = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputsLength));
     outputIdx += outputsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TPUReplicatedOutput operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param numReplicas the value of the numReplicas property
+   * @param <T> data type for {@code TPUReplicatedOutput} output and operands
+   * @return a new instance of TPUReplicatedOutput
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TPUReplicatedOutput<T> create(Scope scope, Operand<T> input,
+      Long numReplicas) {
+    OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedOutput", scope.makeOpName("TPUReplicatedOutput"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("num_replicas", numReplicas);
+    return new TPUReplicatedOutput<>(opBuilder.build());
+  }
+
+  /**
+   * Gets outputs.
+   *
+   * @return outputs.
+   */
+  public List<Output<T>> outputs() {
+    return outputs;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<T>> iterator() {
+    return (Iterator) outputs.iterator();
   }
 }

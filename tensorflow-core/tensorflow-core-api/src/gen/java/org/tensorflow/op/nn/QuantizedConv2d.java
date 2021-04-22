@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -28,63 +29,66 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes a 2D convolution given quantized 4D input and filter tensors.
- * <p>
  * The inputs are quantized tensors where the lowest value represents the real
  * number of the associated minimum, and the highest represents the maximum.
  * This means that you can only interpret the quantized output in the same way, by
  * taking the returned minimum and maximum values into account.
- * 
- * @param <V> data type for {@code output()} output
+ *
+ * @param <V> data type for {@code output} output
  */
-@Operator(group = "nn")
-public final class QuantizedConv2d<V extends TType> extends RawOp {
-  
+@Operator(
+    group = "nn"
+)
+public final class QuantizedConv2d<V extends TNumber> extends RawOp {
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2d}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
-     * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
-     * depth dimensions must be 1.
-     */
-    public Options dilations(List<Long> dilations) {
-      this.dilations = dilations;
-      return this;
-    }
-    
-    private List<Long> dilations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "QuantizedConv2D";
+
+  private Output<V> output;
+
+  private Output<TFloat32> minOutput;
+
+  private Output<TFloat32> maxOutput;
+
+  private QuantizedConv2d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+    minOutput = operation.output(outputIdx++);
+    maxOutput = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new QuantizedConv2d operation.
-   * 
+   * Factory method to create a class wrapping a new QuantizedConv2D operation.
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @param filter filter's input_depth dimension must match input's depth dimensions.
    * @param minInput The float value that the lowest quantized input value represents.
    * @param maxInput The float value that the highest quantized input value represents.
    * @param minFilter The float value that the lowest quantized filter value represents.
    * @param maxFilter The float value that the highest quantized filter value represents.
-   * @param outType 
+   * @param outType the value of the outType property
    * @param strides The stride of the sliding window for each dimension of the input
    * tensor.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code QuantizedConv2D} output and operands
    * @return a new instance of QuantizedConv2d
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TType> QuantizedConv2d<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TType> filter, Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> QuantizedConv2d<V> create(Scope scope,
+      Operand<? extends TNumber> input, Operand<? extends TNumber> filter,
+      Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
+      Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2D", scope.makeOpName("QuantizedConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
@@ -95,7 +99,7 @@ public final class QuantizedConv2d<V extends TType> extends RawOp {
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -104,59 +108,108 @@ public final class QuantizedConv2d<V extends TType> extends RawOp {
       for (Options opts : options) {
         if (opts.dilations != null) {
           long[] dilationsArray = new long[opts.dilations.size()];
-          for (int i = 0; i < dilationsArray.length; ++i) {
+          for (int i = 0 ; i < dilationsArray.length ; i++) {
             dilationsArray[i] = opts.dilations.get(i);
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
       }
     }
-    return new QuantizedConv2d<V>(opBuilder.build());
+    return new QuantizedConv2d<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
    * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
-   * `input`. If set to k > 1, there will be k-1 skipped cells between each
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
    * filter element on that dimension. The dimension order is determined by the
-   * value of `data_format`, see above for details. Dilations in the batch and
+   * value of {@code data_format}, see above for details. Dilations in the batch and
    * depth dimensions must be 1.
+   * @return this Options instance.
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
+   * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+   * filter element on that dimension. The dimension order is determined by the
+   * value of {@code data_format}, see above for details. Dilations in the batch and
+   * depth dimensions must be 1.
+   * @return this Options instance.
+   */
+  public static Options dilations(Long[] dilations) {
+    return new Options().dilations(dilations);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   /**
+   * Gets minOutput.
    * The float value that the lowest quantized output value represents.
+   * @return minOutput.
    */
   public Output<TFloat32> minOutput() {
     return minOutput;
   }
-  
+
   /**
+   * Gets maxOutput.
    * The float value that the highest quantized output value represents.
+   * @return maxOutput.
    */
   public Output<TFloat32> maxOutput() {
     return maxOutput;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedConv2D";
-  
-  private Output<V> output;
-  private Output<TFloat32> minOutput;
-  private Output<TFloat32> maxOutput;
-  
-  private QuantizedConv2d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
-    minOutput = operation.output(outputIdx++);
-    maxOutput = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.QuantizedConv2d}
+   */
+  public static class Options {
+    private List<Long> dilations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(List<Long> dilations) {
+      this.dilations = dilations;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(Long... dilations) {
+      this.dilations = Arrays.asList(dilations);
+      return this;
+    }
   }
 }

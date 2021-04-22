@@ -27,29 +27,54 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
- * 
- * @param <U> data type for {@code activations()} output
+ * Computes Quantized Rectified Linear X: {@code min(max(features, 0), max_value)}
+ *
+ * @param <U> data type for {@code activations} output
  */
-@Operator(group = "nn")
-public final class QuantizedReluX<U extends TType> extends RawOp {
-  
+@Operator(
+    group = "nn"
+)
+public final class QuantizedReluX<U extends TNumber> extends RawOp {
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "QuantizedReluX";
+
+  private Output<U> activations;
+
+  private Output<TFloat32> minActivations;
+
+  private Output<TFloat32> maxActivations;
+
+  private QuantizedReluX(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    activations = operation.output(outputIdx++);
+    minActivations = operation.output(outputIdx++);
+    maxActivations = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new QuantizedReluX operation.
-   * 
+   *
    * @param scope current scope
-   * @param features 
-   * @param maxValue 
+   * @param features the features value
+   * @param maxValue the maxValue value
    * @param minFeatures The float value that the lowest quantized value represents.
    * @param maxFeatures The float value that the highest quantized value represents.
-   * @param outType 
+   * @param outType the value of the outType property
+   * @param <U> data type for {@code QuantizedReluX} output and operands
    * @return a new instance of QuantizedReluX
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> QuantizedReluX<U> create(Scope scope, Operand<? extends TType> features, Operand<TFloat32> maxValue, Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> QuantizedReluX<U> create(Scope scope,
+      Operand<? extends TNumber> features, Operand<TFloat32> maxValue,
+      Operand<TFloat32> minFeatures, Operand<TFloat32> maxFeatures, Class<U> outType) {
     OperationBuilder opBuilder = scope.env().opBuilder("QuantizedReluX", scope.makeOpName("QuantizedReluX"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(maxValue.asOutput());
@@ -57,42 +82,33 @@ public final class QuantizedReluX<U extends TType> extends RawOp {
     opBuilder.addInput(maxFeatures.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
-    return new QuantizedReluX<U>(opBuilder.build());
+    return new QuantizedReluX<>(opBuilder.build());
   }
-  
+
   /**
-   * Has the same output shape as "features".
+   * Gets activations.
+   * Has the same output shape as &quot;features&quot;.
+   * @return activations.
    */
   public Output<U> activations() {
     return activations;
   }
-  
+
   /**
+   * Gets minActivations.
    * The float value that the lowest quantized value represents.
+   * @return minActivations.
    */
   public Output<TFloat32> minActivations() {
     return minActivations;
   }
-  
+
   /**
+   * Gets maxActivations.
    * The float value that the highest quantized value represents.
+   * @return maxActivations.
    */
   public Output<TFloat32> maxActivations() {
     return maxActivations;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "QuantizedReluX";
-  
-  private Output<U> activations;
-  private Output<TFloat32> minActivations;
-  private Output<TFloat32> maxActivations;
-  
-  private QuantizedReluX(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    activations = operation.output(outputIdx++);
-    minActivations = operation.output(outputIdx++);
-    maxActivations = operation.output(outputIdx++);
   }
 }

@@ -29,42 +29,43 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code output()} output
+ * The BatchMatrixSolveLs operation
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolveLs}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param fast 
-     */
-    public Options fast(Boolean fast) {
-      this.fast = fast;
-      return this;
-    }
-    
-    private Boolean fast;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "BatchMatrixSolveLs";
+
+  private Output<T> output;
+
+  private BatchMatrixSolveLs(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new BatchMatrixSolveLs operation.
-   * 
+   *
    * @param scope current scope
-   * @param matrix 
-   * @param rhs 
-   * @param l2Regularizer 
-   * @param options carries optional attributes values
+   * @param matrix the matrix value
+   * @param rhs the rhs value
+   * @param l2Regularizer the l2Regularizer value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code BatchMatrixSolveLs} output and operands
    * @return a new instance of BatchMatrixSolveLs
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix,
+      Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolveLs", scope.makeOpName("BatchMatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -77,35 +78,51 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implement
         }
       }
     }
-    return new BatchMatrixSolveLs<T>(opBuilder.build());
+    return new BatchMatrixSolveLs<>(opBuilder.build());
   }
-  
+
   /**
-   * @param fast 
+   * Sets the fast option.
+   *
+   * @param fast the fast option
+   * @return this Options instance.
    */
   public static Options fast(Boolean fast) {
     return new Options().fast(fast);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "BatchMatrixSolveLs";
-  
-  private Output<T> output;
-  
-  private BatchMatrixSolveLs(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.BatchMatrixSolveLs}
+   */
+  public static class Options {
+    private Boolean fast;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the fast option.
+     *
+     * @param fast the fast option
+     * @return this Options instance.
+     */
+    public Options fast(Boolean fast) {
+      this.fast = fast;
+      return this;
+    }
   }
 }

@@ -24,51 +24,56 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Checks whether a quantile stream has been initialized.
- * <p>
  * An Op that checks if quantile stream resource is initialized.
  */
 public final class IsBoostedTreesQuantileStreamResourceInitialized extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IsBoostedTreesQuantileStreamResourceInitialized";
+
+  private Output<TBool> isInitialized;
+
+  private IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    isInitialized = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IsBoostedTreesQuantileStreamResourceInitialized operation.
-   * 
+   *
    * @param scope current scope
    * @param quantileStreamResourceHandle resource; The reference to quantile stream resource handle.
    * @return a new instance of IsBoostedTreesQuantileStreamResourceInitialized
    */
-  @Endpoint(describeByClass = true)
-  public static IsBoostedTreesQuantileStreamResourceInitialized create(Scope scope, Operand<?> quantileStreamResourceHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IsBoostedTreesQuantileStreamResourceInitialized create(Scope scope,
+      Operand<? extends TType> quantileStreamResourceHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsBoostedTreesQuantileStreamResourceInitialized", scope.makeOpName("IsBoostedTreesQuantileStreamResourceInitialized"));
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IsBoostedTreesQuantileStreamResourceInitialized(opBuilder.build());
   }
-  
+
   /**
+   * Gets isInitialized.
    * bool; True if the resource is initialized, False otherwise.
+   * @return isInitialized.
    */
   public Output<TBool> isInitialized() {
     return isInitialized;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return isInitialized;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IsBoostedTreesQuantileStreamResourceInitialized";
-  
-  private Output<TBool> isInitialized;
-  
-  private IsBoostedTreesQuantileStreamResourceInitialized(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    isInitialized = operation.output(outputIdx++);
   }
 }

@@ -29,54 +29,49 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Retrieve multiple values from the computation outfeed.
- * <p>
- * This operation will block indefinitely until data is available. Output `i`
- * corresponds to XLA tuple element `i`.
+ * This operation will block indefinitely until data is available. Output {@code i}
+ * corresponds to XLA tuple element {@code i}.
  */
 public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.OutfeedDequeueTuple}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
-     * is running on a TPU device, and >= 0 when the Op is running on the CPU
-     * device.
-     */
-    public Options deviceOrdinal(Long deviceOrdinal) {
-      this.deviceOrdinal = deviceOrdinal;
-      return this;
-    }
-    
-    private Long deviceOrdinal;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "OutfeedDequeueTuple";
+
+  private List<Output<?>> outputs;
+
+  @SuppressWarnings("unchecked")
+  private OutfeedDequeueTuple(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputsLength = operation.outputListLength("outputs");
+    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
+    outputIdx += outputsLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new OutfeedDequeueTuple operation.
-   * 
+   *
    * @param scope current scope
-   * @param dtypes The element types of each element in `outputs`.
-   * @param shapes The shapes of each tensor in `outputs`.
-   * @param options carries optional attributes values
+   * @param dtypes The element types of each element in {@code outputs}.
+   * @param shapes The shapes of each tensor in {@code outputs}.
+   * @param options carries optional attribute values
    * @return a new instance of OutfeedDequeueTuple
    */
-  @Endpoint(describeByClass = true)
-  public static OutfeedDequeueTuple create(Scope scope, List<Class<? extends TType>> dtypes, List<Shape> shapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static OutfeedDequeueTuple create(Scope scope, List<Class<? extends TType>> dtypes,
+      List<Shape> shapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("OutfeedDequeueTuple", scope.makeOpName("OutfeedDequeueTuple"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     Shape[] shapesArray = new Shape[shapes.size()];
-    for (int i = 0; i < shapesArray.length; ++i) {
+    for (int i = 0 ; i < shapesArray.length ; i++) {
       shapesArray[i] = shapes.get(i);
     }
     opBuilder.setAttr("shapes", shapesArray);
@@ -89,39 +84,54 @@ public final class OutfeedDequeueTuple extends RawOp implements Iterable<Operand
     }
     return new OutfeedDequeueTuple(opBuilder.build());
   }
-  
+
   /**
+   * Sets the deviceOrdinal option.
+   *
    * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
-   * is running on a TPU device, and >= 0 when the Op is running on the CPU
+   * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
    * device.
+   * @return this Options instance.
    */
   public static Options deviceOrdinal(Long deviceOrdinal) {
     return new Options().deviceOrdinal(deviceOrdinal);
   }
-  
+
   /**
+   * Gets outputs.
    * A list of tensors that will be read from the outfeed.
+   * @return outputs.
    */
   public List<Output<?>> outputs() {
     return outputs;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) outputs.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OutfeedDequeueTuple";
-  
-  private List<Output<?>> outputs;
-  
-  private OutfeedDequeueTuple(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputsLength = operation.outputListLength("outputs");
-    outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
-    outputIdx += outputsLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.OutfeedDequeueTuple}
+   */
+  public static class Options {
+    private Long deviceOrdinal;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the deviceOrdinal option.
+     *
+     * @param deviceOrdinal The TPU device to use. This should be -1 when the Op
+     * is running on a TPU device, and &gt;= 0 when the Op is running on the CPU
+     * device.
+     * @return this Options instance.
+     */
+    public Options deviceOrdinal(Long deviceOrdinal) {
+      this.deviceOrdinal = deviceOrdinal;
+      return this;
+    }
   }
 }

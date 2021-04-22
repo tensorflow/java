@@ -27,59 +27,55 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that changes the batch size.
- * <p>
  * Creates a dataset that changes the batch size of the dataset to current batch
  * size // num_workers.
  */
 public final class RebatchDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.RebatchDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useFallback 
-     */
-    public Options useFallback(Boolean useFallback) {
-      this.useFallback = useFallback;
-      return this;
-    }
-    
-    private Boolean useFallback;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RebatchDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private RebatchDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RebatchDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the input dataset.
    * @param numReplicas A scalar representing the number of replicas to distribute this batch across. As
    * a result of this transformation the current batch size would end up being
    * divided  by this parameter.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of RebatchDataset
    */
-  @Endpoint(describeByClass = true)
-  public static RebatchDataset create(Scope scope, Operand<?> inputDataset, Operand<TInt64> numReplicas, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RebatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TInt64> numReplicas, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RebatchDataset", scope.makeOpName("RebatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numReplicas.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -92,34 +88,50 @@ public final class RebatchDataset extends RawOp implements Operand<TType> {
     }
     return new RebatchDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param useFallback 
+   * Sets the useFallback option.
+   *
+   * @param useFallback the useFallback option
+   * @return this Options instance.
    */
   public static Options useFallback(Boolean useFallback) {
     return new Options().useFallback(useFallback);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RebatchDataset";
-  
-  private Output<?> handle;
-  
-  private RebatchDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.RebatchDataset}
+   */
+  public static class Options {
+    private Boolean useFallback;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useFallback option.
+     *
+     * @param useFallback the useFallback option
+     * @return this Options instance.
+     */
+    public Options useFallback(Boolean useFallback) {
+      this.useFallback = useFallback;
+      return this;
+    }
   }
 }

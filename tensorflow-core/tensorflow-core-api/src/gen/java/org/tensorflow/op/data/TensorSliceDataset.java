@@ -31,52 +31,62 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that emits each dim-0 slice of `components` once.
+ * Creates a dataset that emits each dim-0 slice of {@code components} once.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class TensorSliceDataset extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorSliceDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private TensorSliceDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TensorSliceDataset operation.
-   * 
+   *
    * @param scope current scope
-   * @param components 
-   * @param outputShapes 
+   * @param components the components value
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of TensorSliceDataset
    */
-  @Endpoint(describeByClass = true)
-  public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorSliceDataset create(Scope scope, Iterable<Operand<?>> components,
+      List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorSliceDataset", scope.makeOpName("TensorSliceDataset"));
     opBuilder.addInputList(Operands.asOutputs(components));
     opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new TensorSliceDataset(opBuilder.build());
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorSliceDataset";
-  
-  private Output<?> handle;
-  
-  private TensorSliceDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 }

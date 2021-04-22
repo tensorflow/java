@@ -25,76 +25,85 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Outputs random values from a uniform distribution.
- * <p>
- * The generated values follow a uniform distribution in the range `[0, 1)`. The
+ * The generated values follow a uniform distribution in the range {@code [0, 1)}. The
  * lower bound 0 is included in the range, while the upper bound 1 is excluded.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
 public final class StatefulUniform<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StatefulUniform";
+
+  private Output<U> output;
+
+  private StatefulUniform(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StatefulUniform operation.
-   * 
+   *
    * @param scope current scope
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
    * @param dtype The type of the output.
+   * @param <U> data type for {@code StatefulUniform} output and operands
    * @return a new instance of StatefulUniform
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType> StatefulUniform<U> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape, Class<U> dtype) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> StatefulUniform<U> create(Scope scope,
+      Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
+      Class<U> dtype) {
     OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
-    return new StatefulUniform<U>(opBuilder.build());
+    return new StatefulUniform<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new StatefulUniform operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new StatefulUniform operation, with the default output types.
+   *
    * @param scope current scope
    * @param resource The handle of the resource variable that stores the state of the RNG.
    * @param algorithm The RNG algorithm.
    * @param shape The shape of the output tensor.
-   * @return a new instance of StatefulUniform
+   * @return a new instance of StatefulUniform, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static StatefulUniform<TFloat32> create(Scope scope, Operand<?> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static StatefulUniform<TFloat32> create(Scope scope, Operand<? extends TType> resource,
+      Operand<TInt64> algorithm, Operand<? extends TType> shape) {
     return create(scope, resource, algorithm, shape, TFloat32.class);
   }
-  
+
   /**
+   * Gets output.
    * Random values with specified shape.
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StatefulUniform";
-  
-  private Output<U> output;
-  
-  private StatefulUniform(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

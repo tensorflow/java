@@ -28,56 +28,62 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Compute the polygamma function \\(\psi^{(n)}(x)\\).
- * <p>
+ * Compute the polygamma function \(\psi^{(n)}(x)\).
  * The polygamma function is defined as:
- * <p>
- * \\(\psi^{(a)}(x) = \frac{d^a}{dx^a} \psi(x)\\)
- * <p>
- * where \\(\psi(x)\\) is the digamma function.
- * The polygamma function is defined only for non-negative integer orders \\a\\.
- * 
- * @param <T> data type for {@code z()} output
+ * <p>\(\psi^{(a)}(x) = \frac{d^a}{dx^a} \psi(x)\)
+ * <p>where \(\psi(x)\) is the digamma function.
+ * The polygamma function is defined only for non-negative integer orders \a\.
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Polygamma<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Polygamma";
+
+  private Output<T> z;
+
+  private Polygamma(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Polygamma operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param x 
+   * @param a the a value
+   * @param x the x value
+   * @param <T> data type for {@code Polygamma} output and operands
    * @return a new instance of Polygamma
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Polygamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Polygamma<T>(opBuilder.build());
+    return new Polygamma<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Polygamma";
-  
-  private Output<T> z;
-  
-  private Polygamma(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

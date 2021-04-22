@@ -29,46 +29,55 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op which shards the input based on the given sharding attribute.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Sharding<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Sharding operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of Sharding
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSharding", scope.makeOpName("Sharding"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Sharding<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "XlaSharding";
-  
+
   private Output<T> output;
-  
+
   private Sharding(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaSharding operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code XlaSharding} output and operands
+   * @return a new instance of Sharding
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("XlaSharding", scope.makeOpName("Sharding"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Sharding<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

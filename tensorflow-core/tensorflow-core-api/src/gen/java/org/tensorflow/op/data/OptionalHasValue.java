@@ -26,47 +26,56 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.family.TType;
 
 /**
  * Returns true if and only if the given Optional variant has a value.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class OptionalHasValue extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "OptionalHasValue";
+
+  private Output<TBool> hasValue;
+
+  private OptionalHasValue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    hasValue = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new OptionalHasValue operation.
-   * 
+   *
    * @param scope current scope
-   * @param optional 
+   * @param optional the optional value
    * @return a new instance of OptionalHasValue
    */
-  @Endpoint(describeByClass = true)
-  public static OptionalHasValue create(Scope scope, Operand<?> optional) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static OptionalHasValue create(Scope scope, Operand<? extends TType> optional) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalHasValue", scope.makeOpName("OptionalHasValue"));
     opBuilder.addInput(optional.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new OptionalHasValue(opBuilder.build());
   }
-  
+
   /**
+   * Gets hasValue.
+   *
+   * @return hasValue.
    */
   public Output<TBool> hasValue() {
     return hasValue;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return hasValue;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OptionalHasValue";
-  
-  private Output<TBool> hasValue;
-  
-  private OptionalHasValue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    hasValue = operation.output(outputIdx++);
   }
 }

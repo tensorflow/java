@@ -24,55 +24,61 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes rectified linear 6 gradients for a Relu6 operation.
- * 
- * @param <T> data type for {@code backprops()} output
+ *
+ * @param <T> data type for {@code backprops} output
  */
 public final class Relu6Grad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Relu6Grad operation.
-   * 
-   * @param scope current scope
-   * @param gradients The backpropagated gradients to the corresponding Relu6 operation.
-   * @param features The features passed as input to the corresponding Relu6 operation, or
-   * its output; using either one produces the same result.
-   * @return a new instance of Relu6Grad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Relu6Grad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Relu6Grad", scope.makeOpName("Relu6Grad"));
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Relu6Grad<T>(opBuilder.build());
-  }
-  
-  /**
-   * The gradients:
-   * `gradients * (features > 0) * (features < 6)`.
-   */
-  public Output<T> backprops() {
-    return backprops;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return backprops;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Relu6Grad";
-  
+
   private Output<T> backprops;
-  
+
   private Relu6Grad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Relu6Grad operation.
+   *
+   * @param scope current scope
+   * @param gradients The backpropagated gradients to the corresponding Relu6 operation.
+   * @param features The features passed as input to the corresponding Relu6 operation, or
+   * its output; using either one produces the same result.
+   * @param <T> data type for {@code Relu6Grad} output and operands
+   * @return a new instance of Relu6Grad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Relu6Grad<T> create(Scope scope, Operand<T> gradients,
+      Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Relu6Grad", scope.makeOpName("Relu6Grad"));
+    opBuilder.addInput(gradients.asOutput());
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Relu6Grad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets backprops.
+   * The gradients:
+   * {@code gradients * (features > 0) * (features < 6)}.
+   * @return backprops.
+   */
+  public Output<T> backprops() {
+    return backprops;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return backprops;
   }
 }

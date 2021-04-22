@@ -29,62 +29,71 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sign and the log of the absolute value of the determinant of
- * <p>
  * one or more square matrices.
- * <p>
- * The input is a tensor of shape `[N, M, M]` whose inner-most 2 dimensions
+ * <p>The input is a tensor of shape {@code [N, M, M]} whose inner-most 2 dimensions
  * form square matrices. The outputs are two tensors containing the signs and
  * absolute values of the log determinants for all N input submatrices
- * `[..., :, :]` such that `determinant = sign*exp(log_abs_determinant)`.
- * The `log_abs_determinant` is computed as `det(P)*sum(log(diag(LU)))` where `LU`
- * is the `LU` decomposition of the input and `P` is the corresponding
+ * {@code [..., :, :]} such that {@code determinant = sign*exp(log_abs_determinant)}.
+ * The {@code log_abs_determinant} is computed as {@code det(P)*sum(log(diag(LU)))} where {@code LU}
+ * is the {@code LU} decomposition of the input and {@code P} is the corresponding
  * permutation matrix.
- * 
- * @param <T> data type for {@code sign()} output
+ *
+ * @param <T> data type for {@code sign} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class LogMatrixDeterminant<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new LogMatrixDeterminant operation.
-   * 
-   * @param scope current scope
-   * @param input Shape is `[N, M, M]`.
-   * @return a new instance of LogMatrixDeterminant
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> LogMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LogMatrixDeterminant", scope.makeOpName("LogMatrixDeterminant"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new LogMatrixDeterminant<T>(opBuilder.build());
-  }
-  
-  /**
-   * The signs of the log determinants of the inputs. Shape is `[N]`.
-   */
-  public Output<T> sign() {
-    return sign;
-  }
-  
-  /**
-   * The logs of the absolute values of the determinants
-   * of the N input matrices.  Shape is `[N]`.
-   */
-  public Output<T> logAbsDeterminant() {
-    return logAbsDeterminant;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LogMatrixDeterminant";
-  
+
   private Output<T> sign;
+
   private Output<T> logAbsDeterminant;
-  
+
   private LogMatrixDeterminant(Operation operation) {
     super(operation);
     int outputIdx = 0;
     sign = operation.output(outputIdx++);
     logAbsDeterminant = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LogMatrixDeterminant operation.
+   *
+   * @param scope current scope
+   * @param input Shape is {@code [N, M, M]}.
+   * @param <T> data type for {@code LogMatrixDeterminant} output and operands
+   * @return a new instance of LogMatrixDeterminant
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> LogMatrixDeterminant<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("LogMatrixDeterminant", scope.makeOpName("LogMatrixDeterminant"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new LogMatrixDeterminant<>(opBuilder.build());
+  }
+
+  /**
+   * Gets sign.
+   * The signs of the log determinants of the inputs. Shape is {@code [N]}.
+   * @return sign.
+   */
+  public Output<T> sign() {
+    return sign;
+  }
+
+  /**
+   * Gets logAbsDeterminant.
+   * The logs of the absolute values of the determinants
+   * of the N input matrices.  Shape is {@code [N]}.
+   * @return logAbsDeterminant.
+   */
+  public Output<T> logAbsDeterminant() {
+    return logAbsDeterminant;
   }
 }

@@ -36,48 +36,64 @@ import org.tensorflow.types.family.TType;
 /**
  * Transforms a scalar brain.SequenceExample proto (as strings) into typed tensors.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class ParseSingleSequenceExample extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.ParseSingleSequenceExample}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
-     * each context Feature given in context_dense_keys.
-     * The number of elements in the Feature corresponding to context_dense_key[j]
-     * must always equal context_dense_shapes[j].NumEntries().
-     * The shape of context_dense_values[j] will match context_dense_shapes[j].
-     */
-    public Options contextDenseShapes(List<Shape> contextDenseShapes) {
-      this.contextDenseShapes = contextDenseShapes;
-      return this;
-    }
-    
-    /**
-     * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
-     * data in each FeatureList given in feature_list_dense_keys.
-     * The shape of each Feature in the FeatureList corresponding to
-     * feature_list_dense_key[j] must always equal
-     * feature_list_dense_shapes[j].NumEntries().
-     */
-    public Options featureListDenseShapes(List<Shape> featureListDenseShapes) {
-      this.featureListDenseShapes = featureListDenseShapes;
-      return this;
-    }
-    
-    private List<Shape> contextDenseShapes;
-    private List<Shape> featureListDenseShapes;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ParseSingleSequenceExample";
+
+  private List<Output<TInt64>> contextSparseIndices;
+
+  private List<Output<?>> contextSparseValues;
+
+  private List<Output<TInt64>> contextSparseShapes;
+
+  private List<Output<?>> contextDenseValues;
+
+  private List<Output<TInt64>> featureListSparseIndices;
+
+  private List<Output<?>> featureListSparseValues;
+
+  private List<Output<TInt64>> featureListSparseShapes;
+
+  private List<Output<?>> featureListDenseValues;
+
+  @SuppressWarnings("unchecked")
+  private ParseSingleSequenceExample(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int contextSparseIndicesLength = operation.outputListLength("context_sparse_indices");
+    contextSparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, contextSparseIndicesLength));
+    outputIdx += contextSparseIndicesLength;
+    int contextSparseValuesLength = operation.outputListLength("context_sparse_values");
+    contextSparseValues = Arrays.asList(operation.outputList(outputIdx, contextSparseValuesLength));
+    outputIdx += contextSparseValuesLength;
+    int contextSparseShapesLength = operation.outputListLength("context_sparse_shapes");
+    contextSparseShapes = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, contextSparseShapesLength));
+    outputIdx += contextSparseShapesLength;
+    int contextDenseValuesLength = operation.outputListLength("context_dense_values");
+    contextDenseValues = Arrays.asList(operation.outputList(outputIdx, contextDenseValuesLength));
+    outputIdx += contextDenseValuesLength;
+    int featureListSparseIndicesLength = operation.outputListLength("feature_list_sparse_indices");
+    featureListSparseIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, featureListSparseIndicesLength));
+    outputIdx += featureListSparseIndicesLength;
+    int featureListSparseValuesLength = operation.outputListLength("feature_list_sparse_values");
+    featureListSparseValues = Arrays.asList(operation.outputList(outputIdx, featureListSparseValuesLength));
+    outputIdx += featureListSparseValuesLength;
+    int featureListSparseShapesLength = operation.outputListLength("feature_list_sparse_shapes");
+    featureListSparseShapes = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, featureListSparseShapesLength));
+    outputIdx += featureListSparseShapesLength;
+    int featureListDenseValuesLength = operation.outputListLength("feature_list_dense_values");
+    featureListDenseValues = Arrays.asList(operation.outputList(outputIdx, featureListDenseValuesLength));
+    outputIdx += featureListDenseValuesLength;
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ParseSingleSequenceExample operation.
-   * 
+   *
    * @param scope current scope
    * @param serialized A scalar containing a binary serialized SequenceExample proto.
    * @param featureListDenseMissingAssumedEmpty A vector listing the
@@ -113,16 +129,25 @@ public final class ParseSingleSequenceExample extends RawOp {
    * each context Feature given in context_sparse_keys.
    * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
-   * @param featureListDenseTypes 
+   * @param featureListDenseTypes the value of the featureListDenseTypes property
    * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
    * of data in each FeatureList given in feature_list_sparse_keys.
    * Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
    * DT_INT64 (Int64List), and DT_STRING (BytesList).
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of ParseSingleSequenceExample
    */
-  @Endpoint(describeByClass = true)
-  public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized, Operand<TString> featureListDenseMissingAssumedEmpty, Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys, Iterable<Operand<TString>> featureListSparseKeys, Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults, Operand<TString> debugName, List<Class<? extends TType>> contextSparseTypes, List<Class<? extends TType>> featureListDenseTypes, List<Class<? extends TType>> featureListSparseTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ParseSingleSequenceExample create(Scope scope, Operand<TString> serialized,
+      Operand<TString> featureListDenseMissingAssumedEmpty,
+      Iterable<Operand<TString>> contextSparseKeys, Iterable<Operand<TString>> contextDenseKeys,
+      Iterable<Operand<TString>> featureListSparseKeys,
+      Iterable<Operand<TString>> featureListDenseKeys, Iterable<Operand<?>> contextDenseDefaults,
+      Operand<TString> debugName, List<Class<? extends TType>> contextSparseTypes,
+      List<Class<? extends TType>> featureListDenseTypes,
+      List<Class<? extends TType>> featureListSparseTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleSequenceExample", scope.makeOpName("ParseSingleSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
@@ -138,16 +163,28 @@ public final class ParseSingleSequenceExample extends RawOp {
     opBuilder.setAttr("feature_list_sparse_types", Operands.toDataTypes(featureListSparseTypes));
     if (options != null) {
       for (Options opts : options) {
+        if (opts.NcontextSparse != null) {
+          opBuilder.setAttr("Ncontext_sparse", opts.NcontextSparse);
+        }
+        if (opts.NcontextDense != null) {
+          opBuilder.setAttr("Ncontext_dense", opts.NcontextDense);
+        }
+        if (opts.NfeatureListSparse != null) {
+          opBuilder.setAttr("Nfeature_list_sparse", opts.NfeatureListSparse);
+        }
+        if (opts.NfeatureListDense != null) {
+          opBuilder.setAttr("Nfeature_list_dense", opts.NfeatureListDense);
+        }
         if (opts.contextDenseShapes != null) {
           Shape[] contextDenseShapesArray = new Shape[opts.contextDenseShapes.size()];
-          for (int i = 0; i < contextDenseShapesArray.length; ++i) {
+          for (int i = 0 ; i < contextDenseShapesArray.length ; i++) {
             contextDenseShapesArray[i] = opts.contextDenseShapes.get(i);
           }
           opBuilder.setAttr("context_dense_shapes", contextDenseShapesArray);
         }
         if (opts.featureListDenseShapes != null) {
           Shape[] featureListDenseShapesArray = new Shape[opts.featureListDenseShapes.size()];
-          for (int i = 0; i < featureListDenseShapesArray.length; ++i) {
+          for (int i = 0 ; i < featureListDenseShapesArray.length ; i++) {
             featureListDenseShapesArray[i] = opts.featureListDenseShapes.get(i);
           }
           opBuilder.setAttr("feature_list_dense_shapes", featureListDenseShapesArray);
@@ -156,116 +193,296 @@ public final class ParseSingleSequenceExample extends RawOp {
     }
     return new ParseSingleSequenceExample(opBuilder.build());
   }
-  
+
   /**
+   * Sets the NcontextSparse option.
+   *
+   * @param NcontextSparse the NcontextSparse option
+   * @return this Options instance.
+   */
+  public static Options NcontextSparse(Long NcontextSparse) {
+    return new Options().NcontextSparse(NcontextSparse);
+  }
+
+  /**
+   * Sets the NcontextDense option.
+   *
+   * @param NcontextDense the NcontextDense option
+   * @return this Options instance.
+   */
+  public static Options NcontextDense(Long NcontextDense) {
+    return new Options().NcontextDense(NcontextDense);
+  }
+
+  /**
+   * Sets the NfeatureListSparse option.
+   *
+   * @param NfeatureListSparse the NfeatureListSparse option
+   * @return this Options instance.
+   */
+  public static Options NfeatureListSparse(Long NfeatureListSparse) {
+    return new Options().NfeatureListSparse(NfeatureListSparse);
+  }
+
+  /**
+   * Sets the NfeatureListDense option.
+   *
+   * @param NfeatureListDense the NfeatureListDense option
+   * @return this Options instance.
+   */
+  public static Options NfeatureListDense(Long NfeatureListDense) {
+    return new Options().NfeatureListDense(NfeatureListDense);
+  }
+
+  /**
+   * Sets the contextDenseShapes option.
+   *
    * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
    * each context Feature given in context_dense_keys.
    * The number of elements in the Feature corresponding to context_dense_key[j]
    * must always equal context_dense_shapes[j].NumEntries().
    * The shape of context_dense_values[j] will match context_dense_shapes[j].
+   * @return this Options instance.
    */
   public static Options contextDenseShapes(List<Shape> contextDenseShapes) {
     return new Options().contextDenseShapes(contextDenseShapes);
   }
-  
+
   /**
+   * Sets the contextDenseShapes option.
+   *
+   * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
+   * each context Feature given in context_dense_keys.
+   * The number of elements in the Feature corresponding to context_dense_key[j]
+   * must always equal context_dense_shapes[j].NumEntries().
+   * The shape of context_dense_values[j] will match context_dense_shapes[j].
+   * @return this Options instance.
+   */
+  public static Options contextDenseShapes(Shape[] contextDenseShapes) {
+    return new Options().contextDenseShapes(contextDenseShapes);
+  }
+
+  /**
+   * Sets the featureListDenseShapes option.
+   *
    * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
    * data in each FeatureList given in feature_list_dense_keys.
    * The shape of each Feature in the FeatureList corresponding to
    * feature_list_dense_key[j] must always equal
    * feature_list_dense_shapes[j].NumEntries().
+   * @return this Options instance.
    */
   public static Options featureListDenseShapes(List<Shape> featureListDenseShapes) {
     return new Options().featureListDenseShapes(featureListDenseShapes);
   }
-  
+
   /**
+   * Sets the featureListDenseShapes option.
+   *
+   * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
+   * data in each FeatureList given in feature_list_dense_keys.
+   * The shape of each Feature in the FeatureList corresponding to
+   * feature_list_dense_key[j] must always equal
+   * feature_list_dense_shapes[j].NumEntries().
+   * @return this Options instance.
+   */
+  public static Options featureListDenseShapes(Shape[] featureListDenseShapes) {
+    return new Options().featureListDenseShapes(featureListDenseShapes);
+  }
+
+  /**
+   * Gets contextSparseIndices.
+   *
+   * @return contextSparseIndices.
    */
   public List<Output<TInt64>> contextSparseIndices() {
     return contextSparseIndices;
   }
-  
+
   /**
+   * Gets contextSparseValues.
+   *
+   * @return contextSparseValues.
    */
   public List<Output<?>> contextSparseValues() {
     return contextSparseValues;
   }
-  
+
   /**
+   * Gets contextSparseShapes.
+   *
+   * @return contextSparseShapes.
    */
   public List<Output<TInt64>> contextSparseShapes() {
     return contextSparseShapes;
   }
-  
+
   /**
+   * Gets contextDenseValues.
+   *
+   * @return contextDenseValues.
    */
   public List<Output<?>> contextDenseValues() {
     return contextDenseValues;
   }
-  
+
   /**
+   * Gets featureListSparseIndices.
+   *
+   * @return featureListSparseIndices.
    */
   public List<Output<TInt64>> featureListSparseIndices() {
     return featureListSparseIndices;
   }
-  
+
   /**
+   * Gets featureListSparseValues.
+   *
+   * @return featureListSparseValues.
    */
   public List<Output<?>> featureListSparseValues() {
     return featureListSparseValues;
   }
-  
+
   /**
+   * Gets featureListSparseShapes.
+   *
+   * @return featureListSparseShapes.
    */
   public List<Output<TInt64>> featureListSparseShapes() {
     return featureListSparseShapes;
   }
-  
+
   /**
+   * Gets featureListDenseValues.
+   *
+   * @return featureListDenseValues.
    */
   public List<Output<?>> featureListDenseValues() {
     return featureListDenseValues;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ParseSingleSequenceExample";
-  
-  private List<Output<TInt64>> contextSparseIndices;
-  private List<Output<?>> contextSparseValues;
-  private List<Output<TInt64>> contextSparseShapes;
-  private List<Output<?>> contextDenseValues;
-  private List<Output<TInt64>> featureListSparseIndices;
-  private List<Output<?>> featureListSparseValues;
-  private List<Output<TInt64>> featureListSparseShapes;
-  private List<Output<?>> featureListDenseValues;
-  
-  @SuppressWarnings("unchecked")
-  private ParseSingleSequenceExample(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int contextSparseIndicesLength = operation.outputListLength("context_sparse_indices");
-    contextSparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, contextSparseIndicesLength));
-    outputIdx += contextSparseIndicesLength;
-    int contextSparseValuesLength = operation.outputListLength("context_sparse_values");
-    contextSparseValues = Arrays.asList(operation.outputList(outputIdx, contextSparseValuesLength));
-    outputIdx += contextSparseValuesLength;
-    int contextSparseShapesLength = operation.outputListLength("context_sparse_shapes");
-    contextSparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, contextSparseShapesLength));
-    outputIdx += contextSparseShapesLength;
-    int contextDenseValuesLength = operation.outputListLength("context_dense_values");
-    contextDenseValues = Arrays.asList(operation.outputList(outputIdx, contextDenseValuesLength));
-    outputIdx += contextDenseValuesLength;
-    int featureListSparseIndicesLength = operation.outputListLength("feature_list_sparse_indices");
-    featureListSparseIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListSparseIndicesLength));
-    outputIdx += featureListSparseIndicesLength;
-    int featureListSparseValuesLength = operation.outputListLength("feature_list_sparse_values");
-    featureListSparseValues = Arrays.asList(operation.outputList(outputIdx, featureListSparseValuesLength));
-    outputIdx += featureListSparseValuesLength;
-    int featureListSparseShapesLength = operation.outputListLength("feature_list_sparse_shapes");
-    featureListSparseShapes = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, featureListSparseShapesLength));
-    outputIdx += featureListSparseShapesLength;
-    int featureListDenseValuesLength = operation.outputListLength("feature_list_dense_values");
-    featureListDenseValues = Arrays.asList(operation.outputList(outputIdx, featureListDenseValuesLength));
-    outputIdx += featureListDenseValuesLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.ParseSingleSequenceExample}
+   */
+  public static class Options {
+    private Long NcontextSparse;
+
+    private Long NcontextDense;
+
+    private Long NfeatureListSparse;
+
+    private Long NfeatureListDense;
+
+    private List<Shape> contextDenseShapes;
+
+    private List<Shape> featureListDenseShapes;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the NcontextSparse option.
+     *
+     * @param NcontextSparse the NcontextSparse option
+     * @return this Options instance.
+     */
+    public Options NcontextSparse(Long NcontextSparse) {
+      this.NcontextSparse = NcontextSparse;
+      return this;
+    }
+
+    /**
+     * Sets the NcontextDense option.
+     *
+     * @param NcontextDense the NcontextDense option
+     * @return this Options instance.
+     */
+    public Options NcontextDense(Long NcontextDense) {
+      this.NcontextDense = NcontextDense;
+      return this;
+    }
+
+    /**
+     * Sets the NfeatureListSparse option.
+     *
+     * @param NfeatureListSparse the NfeatureListSparse option
+     * @return this Options instance.
+     */
+    public Options NfeatureListSparse(Long NfeatureListSparse) {
+      this.NfeatureListSparse = NfeatureListSparse;
+      return this;
+    }
+
+    /**
+     * Sets the NfeatureListDense option.
+     *
+     * @param NfeatureListDense the NfeatureListDense option
+     * @return this Options instance.
+     */
+    public Options NfeatureListDense(Long NfeatureListDense) {
+      this.NfeatureListDense = NfeatureListDense;
+      return this;
+    }
+
+    /**
+     * Sets the contextDenseShapes option.
+     *
+     * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
+     * each context Feature given in context_dense_keys.
+     * The number of elements in the Feature corresponding to context_dense_key[j]
+     * must always equal context_dense_shapes[j].NumEntries().
+     * The shape of context_dense_values[j] will match context_dense_shapes[j].
+     * @return this Options instance.
+     */
+    public Options contextDenseShapes(List<Shape> contextDenseShapes) {
+      this.contextDenseShapes = contextDenseShapes;
+      return this;
+    }
+
+    /**
+     * Sets the contextDenseShapes option.
+     *
+     * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
+     * each context Feature given in context_dense_keys.
+     * The number of elements in the Feature corresponding to context_dense_key[j]
+     * must always equal context_dense_shapes[j].NumEntries().
+     * The shape of context_dense_values[j] will match context_dense_shapes[j].
+     * @return this Options instance.
+     */
+    public Options contextDenseShapes(Shape... contextDenseShapes) {
+      this.contextDenseShapes = Arrays.asList(contextDenseShapes);
+      return this;
+    }
+
+    /**
+     * Sets the featureListDenseShapes option.
+     *
+     * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
+     * data in each FeatureList given in feature_list_dense_keys.
+     * The shape of each Feature in the FeatureList corresponding to
+     * feature_list_dense_key[j] must always equal
+     * feature_list_dense_shapes[j].NumEntries().
+     * @return this Options instance.
+     */
+    public Options featureListDenseShapes(List<Shape> featureListDenseShapes) {
+      this.featureListDenseShapes = featureListDenseShapes;
+      return this;
+    }
+
+    /**
+     * Sets the featureListDenseShapes option.
+     *
+     * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
+     * data in each FeatureList given in feature_list_dense_keys.
+     * The shape of each Feature in the FeatureList corresponding to
+     * feature_list_dense_key[j] must always equal
+     * feature_list_dense_shapes[j].NumEntries().
+     * @return this Options instance.
+     */
+    public Options featureListDenseShapes(Shape... featureListDenseShapes) {
+      this.featureListDenseShapes = Arrays.asList(featureListDenseShapes);
+      return this;
+    }
   }
 }

@@ -24,81 +24,70 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the LSTM cell forward propagation for 1 time step.
- * <p>
  * This implementation uses 1 weight matrix and 1 bias vector, and there's an
  * optional peephole connection.
- * <p>
- * This kernel op implements the following mathematical equations:
- * <pre>{@code
+ * <p>This kernel op implements the following mathematical equations:
+ * <pre>
  * xh = [x, h_prev]
  * [i, f, ci, o] = xh * w + b
  * f = f + forget_bias
- * 
+ *
  * if not use_peephole:
  *   wci = wcf = wco = 0
- * 
+ *
  * i = sigmoid(cs_prev * wci + i)
  * f = sigmoid(cs_prev * wcf + f)
  * ci = tanh(ci)
- * 
+ *
  * cs = ci .* i + cs_prev .* f
  * cs = clip(cs, cell_clip)
- * 
+ *
  * o = sigmoid(cs * wco + o)
  * co = tanh(cs)
  * h = co .* o
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code i()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code i} output
  */
 public final class LSTMBlockCell<T extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.LSTMBlockCell}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param forgetBias The forget gate bias.
-     */
-    public Options forgetBias(Float forgetBias) {
-      this.forgetBias = forgetBias;
-      return this;
-    }
-    
-    /**
-     * @param cellClip Value to clip the 'cs' value to.
-     */
-    public Options cellClip(Float cellClip) {
-      this.cellClip = cellClip;
-      return this;
-    }
-    
-    /**
-     * @param usePeephole Whether to use peephole weights.
-     */
-    public Options usePeephole(Boolean usePeephole) {
-      this.usePeephole = usePeephole;
-      return this;
-    }
-    
-    private Float forgetBias;
-    private Float cellClip;
-    private Boolean usePeephole;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LSTMBlockCell";
+
+  private Output<T> i;
+
+  private Output<T> cs;
+
+  private Output<T> f;
+
+  private Output<T> o;
+
+  private Output<T> ci;
+
+  private Output<T> co;
+
+  private Output<T> h;
+
+  private LSTMBlockCell(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    i = operation.output(outputIdx++);
+    cs = operation.output(outputIdx++);
+    f = operation.output(outputIdx++);
+    o = operation.output(outputIdx++);
+    ci = operation.output(outputIdx++);
+    co = operation.output(outputIdx++);
+    h = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new LSTMBlockCell operation.
-   * 
+   *
    * @param scope current scope
    * @param x The input to the LSTM cell, shape (batch_size, num_inputs).
    * @param csPrev Value of the cell state at previous time step.
@@ -108,11 +97,16 @@ public final class LSTMBlockCell<T extends TNumber> extends RawOp {
    * @param wcf The weight matrix for forget gate peephole connection.
    * @param wco The weight matrix for output gate peephole connection.
    * @param b The bias vector.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LSTMBlockCell} output and operands
    * @return a new instance of LSTMBlockCell
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x,
+      Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
+      Operand<T> wco, Operand<T> b, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());
@@ -136,99 +130,146 @@ public final class LSTMBlockCell<T extends TNumber> extends RawOp {
         }
       }
     }
-    return new LSTMBlockCell<T>(opBuilder.build());
+    return new LSTMBlockCell<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the forgetBias option.
+   *
    * @param forgetBias The forget gate bias.
+   * @return this Options instance.
    */
   public static Options forgetBias(Float forgetBias) {
     return new Options().forgetBias(forgetBias);
   }
-  
+
   /**
+   * Sets the cellClip option.
+   *
    * @param cellClip Value to clip the 'cs' value to.
+   * @return this Options instance.
    */
   public static Options cellClip(Float cellClip) {
     return new Options().cellClip(cellClip);
   }
-  
+
   /**
+   * Sets the usePeephole option.
+   *
    * @param usePeephole Whether to use peephole weights.
+   * @return this Options instance.
    */
   public static Options usePeephole(Boolean usePeephole) {
     return new Options().usePeephole(usePeephole);
   }
-  
+
   /**
+   * Gets i.
    * The input gate.
+   * @return i.
    */
   public Output<T> i() {
     return i;
   }
-  
+
   /**
+   * Gets cs.
    * The cell state before the tanh.
+   * @return cs.
    */
   public Output<T> cs() {
     return cs;
   }
-  
+
   /**
+   * Gets f.
    * The forget gate.
+   * @return f.
    */
   public Output<T> f() {
     return f;
   }
-  
+
   /**
+   * Gets o.
    * The output gate.
+   * @return o.
    */
   public Output<T> o() {
     return o;
   }
-  
+
   /**
+   * Gets ci.
    * The cell input.
+   * @return ci.
    */
   public Output<T> ci() {
     return ci;
   }
-  
+
   /**
+   * Gets co.
    * The cell after the tanh.
+   * @return co.
    */
   public Output<T> co() {
     return co;
   }
-  
+
   /**
+   * Gets h.
    * The output h vector.
+   * @return h.
    */
   public Output<T> h() {
     return h;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LSTMBlockCell";
-  
-  private Output<T> i;
-  private Output<T> cs;
-  private Output<T> f;
-  private Output<T> o;
-  private Output<T> ci;
-  private Output<T> co;
-  private Output<T> h;
-  
-  private LSTMBlockCell(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    i = operation.output(outputIdx++);
-    cs = operation.output(outputIdx++);
-    f = operation.output(outputIdx++);
-    o = operation.output(outputIdx++);
-    ci = operation.output(outputIdx++);
-    co = operation.output(outputIdx++);
-    h = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.LSTMBlockCell}
+   */
+  public static class Options {
+    private Float forgetBias;
+
+    private Float cellClip;
+
+    private Boolean usePeephole;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the forgetBias option.
+     *
+     * @param forgetBias The forget gate bias.
+     * @return this Options instance.
+     */
+    public Options forgetBias(Float forgetBias) {
+      this.forgetBias = forgetBias;
+      return this;
+    }
+
+    /**
+     * Sets the cellClip option.
+     *
+     * @param cellClip Value to clip the 'cs' value to.
+     * @return this Options instance.
+     */
+    public Options cellClip(Float cellClip) {
+      this.cellClip = cellClip;
+      return this;
+    }
+
+    /**
+     * Sets the usePeephole option.
+     *
+     * @param usePeephole Whether to use peephole weights.
+     * @return this Options instance.
+     */
+    public Options usePeephole(Boolean usePeephole) {
+      this.usePeephole = usePeephole;
+      return this;
+    }
   }
 }

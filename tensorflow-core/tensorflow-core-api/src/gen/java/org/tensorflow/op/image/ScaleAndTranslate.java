@@ -30,54 +30,45 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
 /**
+ * The ScaleAndTranslate operation
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.ScaleAndTranslate}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param kernelType 
-     */
-    public Options kernelType(String kernelType) {
-      this.kernelType = kernelType;
-      return this;
-    }
-    
-    /**
-     * @param antialias 
-     */
-    public Options antialias(Boolean antialias) {
-      this.antialias = antialias;
-      return this;
-    }
-    
-    private String kernelType;
-    private Boolean antialias;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ScaleAndTranslate";
+
+  private Output<TFloat32> resizedImages;
+
+  private ScaleAndTranslate(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    resizedImages = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ScaleAndTranslate operation.
-   * 
+   *
    * @param scope current scope
-   * @param images 
-   * @param size 
-   * @param scale 
-   * @param translation 
-   * @param options carries optional attributes values
+   * @param images the images value
+   * @param sizeOutput the sizeOutput value
+   * @param scale the scale value
+   * @param translation the translation value
+   * @param options carries optional attribute values
    * @return a new instance of ScaleAndTranslate
    */
-  @Endpoint(describeByClass = true)
-  public static ScaleAndTranslate create(Scope scope, Operand<? extends TNumber> images, Operand<TInt32> size, Operand<TFloat32> scale, Operand<TFloat32> translation, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ScaleAndTranslate create(Scope scope, Operand<? extends TNumber> images,
+      Operand<TInt32> sizeOutput, Operand<TFloat32> scale, Operand<TFloat32> translation,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslate", scope.makeOpName("ScaleAndTranslate"));
     opBuilder.addInput(images.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(translation.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -93,40 +84,72 @@ public final class ScaleAndTranslate extends RawOp implements Operand<TFloat32> 
     }
     return new ScaleAndTranslate(opBuilder.build());
   }
-  
+
   /**
-   * @param kernelType 
+   * Sets the kernelType option.
+   *
+   * @param kernelType the kernelType option
+   * @return this Options instance.
    */
   public static Options kernelType(String kernelType) {
     return new Options().kernelType(kernelType);
   }
-  
+
   /**
-   * @param antialias 
+   * Sets the antialias option.
+   *
+   * @param antialias the antialias option
+   * @return this Options instance.
    */
   public static Options antialias(Boolean antialias) {
     return new Options().antialias(antialias);
   }
-  
+
   /**
+   * Gets resizedImages.
+   *
+   * @return resizedImages.
    */
   public Output<TFloat32> resizedImages() {
     return resizedImages;
   }
-  
+
   @Override
   public Output<TFloat32> asOutput() {
     return resizedImages;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ScaleAndTranslate";
-  
-  private Output<TFloat32> resizedImages;
-  
-  private ScaleAndTranslate(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    resizedImages = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.ScaleAndTranslate}
+   */
+  public static class Options {
+    private String kernelType;
+
+    private Boolean antialias;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the kernelType option.
+     *
+     * @param kernelType the kernelType option
+     * @return this Options instance.
+     */
+    public Options kernelType(String kernelType) {
+      this.kernelType = kernelType;
+      return this;
+    }
+
+    /**
+     * Sets the antialias option.
+     *
+     * @param antialias the antialias option
+     * @return this Options instance.
+     */
+    public Options antialias(Boolean antialias) {
+      this.antialias = antialias;
+      return this;
+    }
   }
 }

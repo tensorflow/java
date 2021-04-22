@@ -28,55 +28,62 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns element-wise remainder of division. When `x < 0` xor `y < 0` is
- * <p>
+ * Returns element-wise remainder of division. When {@code x < 0} xor {@code y < 0} is
  * true, this follows Python semantics in that the result here is consistent
- * with a flooring divide. E.g. `floor(x / y) * y + mod(x, y) = x`.
- * <p>
- * <i>NOTE</i>: `math.FloorMod` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * 
- * @param <T> data type for {@code z()} output
+ * with a flooring divide. E.g. {@code floor(x / y) * y + mod(x, y) = x}.
+ * <p><em>NOTE</em>: {@code math.FloorMod} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class FloorMod<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "FloorMod";
+
+  private Output<T> z;
+
+  private FloorMod(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new FloorMod operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code FloorMod} output and operands
    * @return a new instance of FloorMod
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("FloorMod", scope.makeOpName("FloorMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new FloorMod<T>(opBuilder.build());
+    return new FloorMod<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FloorMod";
-  
-  private Output<T> z;
-  
-  private FloorMod(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

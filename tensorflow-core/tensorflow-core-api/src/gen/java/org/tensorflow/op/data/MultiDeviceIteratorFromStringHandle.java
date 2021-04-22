@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.data;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -27,7 +28,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -35,37 +35,34 @@ import org.tensorflow.types.family.TType;
  * Generates a MultiDeviceIterator resource from its provided string handle.
  */
 public final class MultiDeviceIteratorFromStringHandle extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param outputShapes The list of shapes being produced.
-     */
-    public Options outputShapes(List<Shape> outputShapes) {
-      this.outputShapes = outputShapes;
-      return this;
-    }
-    
-    private List<Shape> outputShapes;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MultiDeviceIteratorFromStringHandle";
+
+  private Output<? extends TType> multiDeviceIterator;
+
+  @SuppressWarnings("unchecked")
+  private MultiDeviceIteratorFromStringHandle(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    multiDeviceIterator = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MultiDeviceIteratorFromStringHandle operation.
-   * 
+   *
    * @param scope current scope
    * @param stringHandle String representing the resource.
    * @param outputTypes The type list for the return values.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of MultiDeviceIteratorFromStringHandle
    */
-  @Endpoint(describeByClass = true)
-  public static MultiDeviceIteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle, List<Class<? extends TType>> outputTypes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MultiDeviceIteratorFromStringHandle create(Scope scope,
+      Operand<TString> stringHandle, List<Class<? extends TType>> outputTypes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorFromStringHandle", scope.makeOpName("MultiDeviceIteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -74,7 +71,7 @@ public final class MultiDeviceIteratorFromStringHandle extends RawOp implements 
       for (Options opts : options) {
         if (opts.outputShapes != null) {
           Shape[] outputShapesArray = new Shape[opts.outputShapes.size()];
-          for (int i = 0; i < outputShapesArray.length; ++i) {
+          for (int i = 0 ; i < outputShapesArray.length ; i++) {
             outputShapesArray[i] = opts.outputShapes.get(i);
           }
           opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -83,35 +80,71 @@ public final class MultiDeviceIteratorFromStringHandle extends RawOp implements 
     }
     return new MultiDeviceIteratorFromStringHandle(opBuilder.build());
   }
-  
+
   /**
+   * Sets the outputShapes option.
+   *
    * @param outputShapes The list of shapes being produced.
+   * @return this Options instance.
    */
   public static Options outputShapes(List<Shape> outputShapes) {
     return new Options().outputShapes(outputShapes);
   }
-  
+
   /**
-   * A MultiDeviceIterator resource.
+   * Sets the outputShapes option.
+   *
+   * @param outputShapes The list of shapes being produced.
+   * @return this Options instance.
    */
-  public Output<?> multiDeviceIterator() {
+  public static Options outputShapes(Shape[] outputShapes) {
+    return new Options().outputShapes(outputShapes);
+  }
+
+  /**
+   * Gets multiDeviceIterator.
+   * A MultiDeviceIterator resource.
+   * @return multiDeviceIterator.
+   */
+  public Output<? extends TType> multiDeviceIterator() {
     return multiDeviceIterator;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) multiDeviceIterator;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MultiDeviceIteratorFromStringHandle";
-  
-  private Output<?> multiDeviceIterator;
-  
-  private MultiDeviceIteratorFromStringHandle(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    multiDeviceIterator = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.MultiDeviceIteratorFromStringHandle}
+   */
+  public static class Options {
+    private List<Shape> outputShapes;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the outputShapes option.
+     *
+     * @param outputShapes The list of shapes being produced.
+     * @return this Options instance.
+     */
+    public Options outputShapes(List<Shape> outputShapes) {
+      this.outputShapes = outputShapes;
+      return this;
+    }
+
+    /**
+     * Sets the outputShapes option.
+     *
+     * @param outputShapes The list of shapes being produced.
+     * @return this Options instance.
+     */
+    public Options outputShapes(Shape... outputShapes) {
+      this.outputShapes = Arrays.asList(outputShapes);
+      return this;
+    }
   }
 }

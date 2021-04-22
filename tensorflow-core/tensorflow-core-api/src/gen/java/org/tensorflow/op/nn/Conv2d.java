@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -29,115 +30,74 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes a 2-D convolution given 4-D `input` and `filter` tensors.
- * <p>
- * Given an input tensor of shape `[batch, in_height, in_width, in_channels]`
+ * Computes a 2-D convolution given 4-D {@code input} and {@code filter} tensors.
+ * Given an input tensor of shape {@code [batch, in_height, in_width, in_channels]}
  * and a filter / kernel tensor of shape
- * `[filter_height, filter_width, in_channels, out_channels]`, this op
+ * {@code [filter_height, filter_width, in_channels, out_channels]}, this op
  * performs the following:
- * <p>
- * 1. Flattens the filter to a 2-D matrix with shape
- *    `[filter_height * filter_width * in_channels, output_channels]`.
- * 2. Extracts image patches from the input tensor to form a <i>virtual</i>
- *    tensor of shape `[batch, out_height, out_width,
- *    filter_height * filter_width * in_channels]`.
- * 3. For each patch, right-multiplies the filter matrix and the image patch
- *    vector.
- * <p>
- * In detail, with the default NHWC format,
- * <p>
- *     output[b, i, j, k] =
- *         sum_{di, dj, q} input[b, strides[1] * i + di, strides[2] * j + dj, q] *
- *                         filter[di, dj, q, k]
- * <p>
- * Must have `strides[0] = strides[3] = 1`.  For the most common case of the same
- * horizontal and vertices strides, `strides = [1, stride, stride, 1]`.
- * 
- * @param <T> data type for {@code output()} output
+ * <ol>
+ * <li>Flattens the filter to a 2-D matrix with shape
+ * {@code [filter_height * filter_width * in_channels, output_channels]}.</li>
+ * <li>Extracts image patches from the input tensor to form a <em>virtual</em>
+ * tensor of shape {@code [batch, out_height, out_width, filter_height * filter_width * in_channels]}.</li>
+ * <li>For each patch, right-multiplies the filter matrix and the image patch
+ * vector.</li>
+ * </ol>
+ * <p>In detail, with the default NHWC format,
+ * <pre>
+ * output[b, i, j, k] =
+ *     sum_{di, dj, q} input[b, strides[1] * i + di, strides[2] * j + dj, q] *
+ *                     filter[di, dj, q, k]
+ * </pre>
+ * <p>Must have {@code strides[0] = strides[3] = 1}.  For the most common case of the same
+ * horizontal and vertices strides, {@code strides = [1, stride, stride, 1]}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv2d}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useCudnnOnGpu 
-     */
-    public Options useCudnnOnGpu(Boolean useCudnnOnGpu) {
-      this.useCudnnOnGpu = useCudnnOnGpu;
-      return this;
-    }
-    
-    /**
-     * @param explicitPaddings If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
-     * dimension, the amount of padding inserted before and after the dimension is
-     * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
-     * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
-     */
-    public Options explicitPaddings(List<Long> explicitPaddings) {
-      this.explicitPaddings = explicitPaddings;
-      return this;
-    }
-    
-    /**
-     * @param dataFormat Specify the data format of the input and output data. With the
-     * default format "NHWC", the data is stored in the order of:
-     *     [batch, height, width, channels].
-     * Alternatively, the format could be "NCHW", the data storage order of:
-     *     [batch, channels, height, width].
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    /**
-     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
-     * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
-     * depth dimensions must be 1.
-     */
-    public Options dilations(List<Long> dilations) {
-      this.dilations = dilations;
-      return this;
-    }
-    
-    private Boolean useCudnnOnGpu;
-    private List<Long> explicitPaddings;
-    private String dataFormat;
-    private List<Long> dilations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Conv2D";
+
+  private Output<T> output;
+
+  private Conv2d(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Conv2d operation.
-   * 
+   * Factory method to create a class wrapping a new Conv2D operation.
+   *
    * @param scope current scope
    * @param input A 4-D tensor. The dimension order is interpreted according to the value
-   * of `data_format`, see below for details.
+   * of {@code data_format}, see below for details.
    * @param filter A 4-D tensor of shape
-   * `[filter_height, filter_width, in_channels, out_channels]`
+   * {@code [filter_height, filter_width, in_channels, out_channels]}
    * @param strides 1-D tensor of length 4.  The stride of the sliding window for each
-   * dimension of `input`. The dimension order is determined by the value of
-   * `data_format`, see below for details.
+   * dimension of {@code input}. The dimension order is determined by the value of
+   * {@code data_format}, see below for details.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Conv2D} output and operands
    * @return a new instance of Conv2d
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Conv2d<T> create(Scope scope, Operand<T> input, Operand<T> filter, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Conv2d<T> create(Scope scope, Operand<T> input,
+      Operand<T> filter, List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv2D", scope.makeOpName("Conv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -149,7 +109,7 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
         }
         if (opts.explicitPaddings != null) {
           long[] explicitPaddingsArray = new long[opts.explicitPaddings.size()];
-          for (int i = 0; i < explicitPaddingsArray.length; ++i) {
+          for (int i = 0 ; i < explicitPaddingsArray.length ; i++) {
             explicitPaddingsArray[i] = opts.explicitPaddings.get(i);
           }
           opBuilder.setAttr("explicit_paddings", explicitPaddingsArray);
@@ -159,76 +119,206 @@ public final class Conv2d<T extends TNumber> extends RawOp implements Operand<T>
         }
         if (opts.dilations != null) {
           long[] dilationsArray = new long[opts.dilations.size()];
-          for (int i = 0; i < dilationsArray.length; ++i) {
+          for (int i = 0 ; i < dilationsArray.length ; i++) {
             dilationsArray[i] = opts.dilations.get(i);
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
       }
     }
-    return new Conv2d<T>(opBuilder.build());
+    return new Conv2d<>(opBuilder.build());
   }
-  
+
   /**
-   * @param useCudnnOnGpu 
+   * Sets the useCudnnOnGpu option.
+   *
+   * @param useCudnnOnGpu the useCudnnOnGpu option
+   * @return this Options instance.
    */
   public static Options useCudnnOnGpu(Boolean useCudnnOnGpu) {
     return new Options().useCudnnOnGpu(useCudnnOnGpu);
   }
-  
+
   /**
-   * @param explicitPaddings If `padding` is `"EXPLICIT"`, the list of explicit padding amounts. For the ith
+   * Sets the explicitPaddings option.
+   *
+   * @param explicitPaddings If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
    * dimension, the amount of padding inserted before and after the dimension is
-   * `explicit_paddings[2 * i]` and `explicit_paddings[2 * i + 1]`, respectively. If
-   * `padding` is not `"EXPLICIT"`, `explicit_paddings` must be empty.
+   * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+   * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
+   * @return this Options instance.
    */
   public static Options explicitPaddings(List<Long> explicitPaddings) {
     return new Options().explicitPaddings(explicitPaddings);
   }
-  
+
   /**
+   * Sets the explicitPaddings option.
+   *
+   * @param explicitPaddings If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
+   * dimension, the amount of padding inserted before and after the dimension is
+   * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+   * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
+   * @return this Options instance.
+   */
+  public static Options explicitPaddings(Long[] explicitPaddings) {
+    return new Options().explicitPaddings(explicitPaddings);
+  }
+
+  /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat Specify the data format of the input and output data. With the
-   * default format "NHWC", the data is stored in the order of:
-   *     [batch, height, width, channels].
-   * Alternatively, the format could be "NCHW", the data storage order of:
-   *     [batch, channels, height, width].
+   * default format &quot;NHWC&quot;, the data is stored in the order of:
+   * [batch, height, width, channels].
+   * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+   * [batch, channels, height, width].
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
    * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
-   * `input`. If set to k > 1, there will be k-1 skipped cells between each
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
    * filter element on that dimension. The dimension order is determined by the
-   * value of `data_format`, see above for details. Dilations in the batch and
+   * value of {@code data_format}, see above for details. Dilations in the batch and
    * depth dimensions must be 1.
+   * @return this Options instance.
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
+   * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+   * filter element on that dimension. The dimension order is determined by the
+   * value of {@code data_format}, see above for details. Dilations in the batch and
+   * depth dimensions must be 1.
+   * @return this Options instance.
+   */
+  public static Options dilations(Long[] dilations) {
+    return new Options().dilations(dilations);
+  }
+
+  /**
+   * Gets output.
    * A 4-D tensor. The dimension order is determined by the value of
-   * `data_format`, see below for details.
+   * {@code data_format}, see below for details.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Conv2D";
-  
-  private Output<T> output;
-  
-  private Conv2d(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv2d}
+   */
+  public static class Options {
+    private Boolean useCudnnOnGpu;
+
+    private List<Long> explicitPaddings;
+
+    private String dataFormat;
+
+    private List<Long> dilations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useCudnnOnGpu option.
+     *
+     * @param useCudnnOnGpu the useCudnnOnGpu option
+     * @return this Options instance.
+     */
+    public Options useCudnnOnGpu(Boolean useCudnnOnGpu) {
+      this.useCudnnOnGpu = useCudnnOnGpu;
+      return this;
+    }
+
+    /**
+     * Sets the explicitPaddings option.
+     *
+     * @param explicitPaddings If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
+     * dimension, the amount of padding inserted before and after the dimension is
+     * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+     * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
+     * @return this Options instance.
+     */
+    public Options explicitPaddings(List<Long> explicitPaddings) {
+      this.explicitPaddings = explicitPaddings;
+      return this;
+    }
+
+    /**
+     * Sets the explicitPaddings option.
+     *
+     * @param explicitPaddings If {@code padding} is {@code "EXPLICIT"}, the list of explicit padding amounts. For the ith
+     * dimension, the amount of padding inserted before and after the dimension is
+     * {@code explicit_paddings[2 * i]} and {@code explicit_paddings[2 * i + 1]}, respectively. If
+     * {@code padding} is not {@code "EXPLICIT"}, {@code explicit_paddings} must be empty.
+     * @return this Options instance.
+     */
+    public Options explicitPaddings(Long... explicitPaddings) {
+      this.explicitPaddings = Arrays.asList(explicitPaddings);
+      return this;
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat Specify the data format of the input and output data. With the
+     * default format &quot;NHWC&quot;, the data is stored in the order of:
+     * [batch, height, width, channels].
+     * Alternatively, the format could be &quot;NCHW&quot;, the data storage order of:
+     * [batch, channels, height, width].
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(List<Long> dilations) {
+      this.dilations = dilations;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 4.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(Long... dilations) {
+      this.dilations = Arrays.asList(dilations);
+      return this;
+    }
   }
 }

@@ -29,58 +29,64 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Fetches multiple values from infeed as an XLA tuple.
  */
 public final class InfeedDequeueTuple extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new InfeedDequeueTuple operation.
-   * 
-   * @param scope current scope
-   * @param dtypes The element types of each element in `outputs`.
-   * @param shapes The shapes of each tensor in `outputs`.
-   * @return a new instance of InfeedDequeueTuple
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static InfeedDequeueTuple create(Scope scope, List<Class<? extends TType>> dtypes, List<Shape> shapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeueTuple", scope.makeOpName("InfeedDequeueTuple"));
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
-    Shape[] shapesArray = new Shape[shapes.size()];
-    for (int i = 0; i < shapesArray.length; ++i) {
-      shapesArray[i] = shapes.get(i);
-    }
-    opBuilder.setAttr("shapes", shapesArray);
-    return new InfeedDequeueTuple(opBuilder.build());
-  }
-  
-  /**
-   * A list of tensors that will be provided using the infeed mechanism.
-   */
-  public List<Output<?>> outputs() {
-    return outputs;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) outputs.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "InfeedDequeueTuple";
-  
+
   private List<Output<?>> outputs;
-  
+
+  @SuppressWarnings("unchecked")
   private InfeedDequeueTuple(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputsLength = operation.outputListLength("outputs");
     outputs = Arrays.asList(operation.outputList(outputIdx, outputsLength));
     outputIdx += outputsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new InfeedDequeueTuple operation.
+   *
+   * @param scope current scope
+   * @param dtypes The element types of each element in {@code outputs}.
+   * @param shapes The shapes of each tensor in {@code outputs}.
+   * @return a new instance of InfeedDequeueTuple
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static InfeedDequeueTuple create(Scope scope, List<Class<? extends TType>> dtypes,
+      List<Shape> shapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeueTuple", scope.makeOpName("InfeedDequeueTuple"));
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
+    Shape[] shapesArray = new Shape[shapes.size()];
+    for (int i = 0 ; i < shapesArray.length ; i++) {
+      shapesArray[i] = shapes.get(i);
+    }
+    opBuilder.setAttr("shapes", shapesArray);
+    return new InfeedDequeueTuple(opBuilder.build());
+  }
+
+  /**
+   * Gets outputs.
+   * A list of tensors that will be provided using the infeed mechanism.
+   * @return outputs.
+   */
+  public List<Output<?>> outputs() {
+    return outputs;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) outputs.iterator();
   }
 }

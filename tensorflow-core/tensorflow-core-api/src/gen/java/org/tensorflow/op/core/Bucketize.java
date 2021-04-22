@@ -31,66 +31,69 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Bucketizes 'input' based on 'boundaries'.
- * <p>
  * For example, if the inputs are
- *     boundaries = [0, 10, 100]
- *     input = [[-5, 10000]
- *              [150,   10]
- *              [5,    100]]
- * <p>
- * then the output will be
- *     output = [[0, 3]
- *               [3, 2]
- *               [1, 3]]
+ * boundaries = [0, 10, 100]
+ * input = [[-5, 10000]
+ * [150,   10]
+ * [5,    100]]
+ * <p>then the output will be
+ * output = [[0, 3]
+ * [3, 2]
+ * [1, 3]]
  */
 @Operator
 public final class Bucketize extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Bucketize";
+
+  private Output<TInt32> output;
+
+  private Bucketize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Bucketize operation.
-   * 
+   *
    * @param scope current scope
    * @param input Any shape of Tensor contains with int or float type.
    * @param boundaries A sorted list of floats gives the boundary of the buckets.
    * @return a new instance of Bucketize
    */
-  @Endpoint(describeByClass = true)
-  public static Bucketize create(Scope scope, Operand<? extends TNumber> input, List<Float> boundaries) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Bucketize create(Scope scope, Operand<? extends TNumber> input,
+      List<Float> boundaries) {
     OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     float[] boundariesArray = new float[boundaries.size()];
-    for (int i = 0; i < boundariesArray.length; ++i) {
+    for (int i = 0 ; i < boundariesArray.length ; i++) {
       boundariesArray[i] = boundaries.get(i);
     }
     opBuilder.setAttr("boundaries", boundariesArray);
     return new Bucketize(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
    * Same shape with 'input', each value of input replaced with bucket index.
-   * <p>
-   * @compatibility(numpy)
+   * <p>{@literal @}compatibility(numpy)<br>
    * Equivalent to np.digitize.
-   * @end_compatibility
+   * <br>{@literal @}end_compatibility
+   * @return output.
    */
   public Output<TInt32> output() {
     return output;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Bucketize";
-  
-  private Output<TInt32> output;
-  
-  private Bucketize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

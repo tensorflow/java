@@ -24,54 +24,59 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Identity op for gradient debugging.
- * <p>
  * This op is hidden from public in Python. It is used by TensorFlow Debugger to
  * register gradient tensors for gradient debugging.
  * This op operates on non-reference-type tensors.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 public final class DebugGradientIdentity<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new DebugGradientIdentity operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @return a new instance of DebugGradientIdentity
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> DebugGradientIdentity<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientIdentity", scope.makeOpName("DebugGradientIdentity"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new DebugGradientIdentity<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DebugGradientIdentity";
-  
+
   private Output<T> output;
-  
+
   private DebugGradientIdentity(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DebugGradientIdentity operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param <T> data type for {@code DebugGradientIdentity} output and operands
+   * @return a new instance of DebugGradientIdentity
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> DebugGradientIdentity<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientIdentity", scope.makeOpName("DebugGradientIdentity"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new DebugGradientIdentity<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

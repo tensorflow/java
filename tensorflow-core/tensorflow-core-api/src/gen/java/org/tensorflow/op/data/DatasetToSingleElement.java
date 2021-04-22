@@ -29,60 +29,66 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Outputs the single element from the given dataset.
  */
 public final class DatasetToSingleElement extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new DatasetToSingleElement operation.
-   * 
-   * @param scope current scope
-   * @param dataset A handle to a dataset that contains a single element.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @return a new instance of DatasetToSingleElement
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static DatasetToSingleElement create(Scope scope, Operand<?> dataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DatasetToSingleElement", scope.makeOpName("DatasetToSingleElement"));
-    opBuilder.addInput(dataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
-    Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
-      outputShapesArray[i] = outputShapes.get(i);
-    }
-    opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new DatasetToSingleElement(opBuilder.build());
-  }
-  
-  /**
-   * The components of the single element of `input`.
-   */
-  public List<Output<?>> components() {
-    return components;
-  }
-  
-  @Override
-  @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) components.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DatasetToSingleElement";
-  
+
   private List<Output<?>> components;
-  
+
+  @SuppressWarnings("unchecked")
   private DatasetToSingleElement(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int componentsLength = operation.outputListLength("components");
     components = Arrays.asList(operation.outputList(outputIdx, componentsLength));
     outputIdx += componentsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DatasetToSingleElement operation.
+   *
+   * @param scope current scope
+   * @param dataset A handle to a dataset that contains a single element.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of DatasetToSingleElement
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DatasetToSingleElement create(Scope scope, Operand<? extends TType> dataset,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DatasetToSingleElement", scope.makeOpName("DatasetToSingleElement"));
+    opBuilder.addInput(dataset.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    Shape[] outputShapesArray = new Shape[outputShapes.size()];
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
+      outputShapesArray[i] = outputShapes.get(i);
+    }
+    opBuilder.setAttr("output_shapes", outputShapesArray);
+    return new DatasetToSingleElement(opBuilder.build());
+  }
+
+  /**
+   * Gets components.
+   * The components of the single element of {@code input}.
+   * @return components.
+   */
+  public List<Output<?>> components() {
+    return components;
+  }
+
+  @Override
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  public Iterator<Operand<TType>> iterator() {
+    return (Iterator) components.iterator();
   }
 }

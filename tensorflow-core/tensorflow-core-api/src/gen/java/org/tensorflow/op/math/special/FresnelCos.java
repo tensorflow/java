@@ -24,48 +24,56 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * @param <T> data type for {@code y()} output
+ * The FresnelCos operation
+ *
+ * @param <T> data type for {@code y} output
  */
 public final class FresnelCos<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new FresnelCos operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of FresnelCos
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> FresnelCos<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FresnelCos", scope.makeOpName("FresnelCos"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new FresnelCos<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "FresnelCos";
-  
+
   private Output<T> y;
-  
+
   private FresnelCos(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new FresnelCos operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code FresnelCos} output and operands
+   * @return a new instance of FresnelCos
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> FresnelCos<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("FresnelCos", scope.makeOpName("FresnelCos"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new FresnelCos<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

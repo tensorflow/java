@@ -24,48 +24,55 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
+ * The WrapDatasetVariant operation
  */
 public final class WrapDatasetVariant extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "WrapDatasetVariant";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private WrapDatasetVariant(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new WrapDatasetVariant operation.
-   * 
+   *
    * @param scope current scope
-   * @param inputHandle 
+   * @param inputHandle the inputHandle value
    * @return a new instance of WrapDatasetVariant
    */
-  @Endpoint(describeByClass = true)
-  public static WrapDatasetVariant create(Scope scope, Operand<?> inputHandle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static WrapDatasetVariant create(Scope scope, Operand<? extends TType> inputHandle) {
     OperationBuilder opBuilder = scope.env().opBuilder("WrapDatasetVariant", scope.makeOpName("WrapDatasetVariant"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new WrapDatasetVariant(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "WrapDatasetVariant";
-  
-  private Output<?> outputHandle;
-  
-  private WrapDatasetVariant(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

@@ -29,57 +29,63 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Destroys the temporary variable and returns its final value.
- * <p>
  * Sets output to the value of the Tensor pointed to by 'ref', then destroys
  * the temporary variable called 'var_name'.
- * All other uses of 'ref' <i>must</i> have executed before this op.
+ * All other uses of 'ref' <em>must</em> have executed before this op.
  * This is typically achieved by chaining the ref through each assign op, or by
  * using control dependencies.
- * <p>
- * Outputs the final value of the tensor pointed to by 'ref'.
- * 
- * @param <T> data type for {@code value()} output
+ * <p>Outputs the final value of the tensor pointed to by 'ref'.
+ *
+ * @param <T> data type for {@code value} output
  */
 @Operator
 public final class DestroyTemporaryVariable<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new DestroyTemporaryVariable operation.
-   * 
-   * @param scope current scope
-   * @param ref A reference to the temporary variable tensor.
-   * @param varName Name of the temporary variable, usually the name of the matching
-   * 'TemporaryVariable' op.
-   * @return a new instance of DestroyTemporaryVariable
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref, String varName) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DestroyTemporaryVariable", scope.makeOpName("DestroyTemporaryVariable"));
-    opBuilder.addInput(ref.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("var_name", varName);
-    return new DestroyTemporaryVariable<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> value() {
-    return value;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return value;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "DestroyTemporaryVariable";
-  
+
   private Output<T> value;
-  
+
   private DestroyTemporaryVariable(Operation operation) {
     super(operation);
     int outputIdx = 0;
     value = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new DestroyTemporaryVariable operation.
+   *
+   * @param scope current scope
+   * @param ref A reference to the temporary variable tensor.
+   * @param varName Name of the temporary variable, usually the name of the matching
+   * 'TemporaryVariable' op.
+   * @param <T> data type for {@code DestroyTemporaryVariable} output and operands
+   * @return a new instance of DestroyTemporaryVariable
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> DestroyTemporaryVariable<T> create(Scope scope, Operand<T> ref,
+      String varName) {
+    OperationBuilder opBuilder = scope.env().opBuilder("DestroyTemporaryVariable", scope.makeOpName("DestroyTemporaryVariable"));
+    opBuilder.addInput(ref.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("var_name", varName);
+    return new DestroyTemporaryVariable<>(opBuilder.build());
+  }
+
+  /**
+   * Gets value.
+   *
+   * @return value.
+   */
+  public Output<T> value() {
+    return value;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return value;
   }
 }

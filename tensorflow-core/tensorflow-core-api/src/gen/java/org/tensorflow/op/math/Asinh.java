@@ -29,56 +29,62 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes inverse hyperbolic sine of x element-wise.
- * <p>
- *   Given an input tensor, this function computes inverse hyperbolic sine
- *   for every element in the tensor. Both input and output has a range of
- *   `[-inf, inf]`.
- * <p>
- *   <pre>{@code
- *   x = tf.constant([-float("inf"), -2, -0.5, 1, 1.2, 200, 10000, float("inf")])
- *   tf.math.asinh(x) ==> [-inf -1.4436355 -0.4812118 0.8813736 1.0159732 5.991471 9.903487 inf]
- *   }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Given an input tensor, this function computes inverse hyperbolic sine
+ * for every element in the tensor. Both input and output has a range of
+ * {@code [-inf, inf]}.
+ * <pre>
+ * x = tf.constant([-float(&quot;inf&quot;), -2, -0.5, 1, 1.2, 200, 10000, float(&quot;inf&quot;)])
+ * tf.math.asinh(x) ==&gt; [-inf -1.4436355 -0.4812118 0.8813736 1.0159732 5.991471 9.903487 inf]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Asinh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Asinh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Asinh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Asinh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Asinh", scope.makeOpName("Asinh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Asinh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Asinh";
-  
+
   private Output<T> y;
-  
+
   private Asinh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Asinh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Asinh} output and operands
+   * @return a new instance of Asinh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Asinh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Asinh", scope.makeOpName("Asinh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Asinh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

@@ -24,7 +24,6 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -32,45 +31,52 @@ import org.tensorflow.types.family.TType;
  * Converts a dense tensor to a (possibly batched) CSRSparseMatrix.
  */
 public final class DenseToCSRSparseMatrix extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "DenseToCSRSparseMatrix";
+
+  private Output<? extends TType> sparseOutput;
+
+  @SuppressWarnings("unchecked")
+  private DenseToCSRSparseMatrix(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    sparseOutput = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new DenseToCSRSparseMatrix operation.
-   * 
+   *
    * @param scope current scope
    * @param denseInput A Dense tensor.
    * @param indices Indices of nonzero elements.
    * @return a new instance of DenseToCSRSparseMatrix
    */
-  @Endpoint(describeByClass = true)
-  public static DenseToCSRSparseMatrix create(Scope scope, Operand<? extends TType> denseInput, Operand<TInt64> indices) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DenseToCSRSparseMatrix create(Scope scope, Operand<? extends TType> denseInput,
+      Operand<TInt64> indices) {
     OperationBuilder opBuilder = scope.env().opBuilder("DenseToCSRSparseMatrix", scope.makeOpName("DenseToCSRSparseMatrix"));
     opBuilder.addInput(denseInput.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DenseToCSRSparseMatrix(opBuilder.build());
   }
-  
+
   /**
+   * Gets sparseOutput.
    * A (possibly batched) CSRSparseMatrix.
+   * @return sparseOutput.
    */
-  public Output<?> sparseOutput() {
+  public Output<? extends TType> sparseOutput() {
     return sparseOutput;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) sparseOutput;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DenseToCSRSparseMatrix";
-  
-  private Output<?> sparseOutput;
-  
-  private DenseToCSRSparseMatrix(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    sparseOutput = operation.output(outputIdx++);
   }
 }

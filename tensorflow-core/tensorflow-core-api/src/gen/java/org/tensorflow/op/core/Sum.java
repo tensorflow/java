@@ -30,48 +30,44 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the sum of elements across dimensions of a tensor.
- * <p>
- * Reduces `input` along the dimensions given in `axis`. Unless
- * `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
- * `axis`. If `keep_dims` is true, the reduced dimensions are
+ * Reduces {@code input} along the dimensions given in {@code axis}. Unless
+ * {@code keep_dims} is true, the rank of the tensor is reduced by 1 for each entry in
+ * {@code axis}. If {@code keep_dims} is true, the reduced dimensions are
  * retained with length 1.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Sum<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Sum}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param keepDims If true, retain reduced dimensions with length 1.
-     */
-    public Options keepDims(Boolean keepDims) {
-      this.keepDims = keepDims;
-      return this;
-    }
-    
-    private Boolean keepDims;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Sum";
+
+  private Output<T> output;
+
+  private Sum(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Sum operation.
-   * 
+   *
    * @param scope current scope
    * @param input The tensor to reduce.
    * @param axis The dimensions to reduce. Must be in the range
-   * `[-rank(input), rank(input))`.
-   * @param options carries optional attributes values
+   * {@code [-rank(input), rank(input))}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code Sum} output and operands
    * @return a new instance of Sum
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sum<T> create(Scope scope, Operand<T> input, Operand<? extends TNumber> axis, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sum<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> axis, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Sum", scope.makeOpName("Sum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
@@ -83,36 +79,51 @@ public final class Sum<T extends TType> extends RawOp implements Operand<T> {
         }
       }
     }
-    return new Sum<T>(opBuilder.build());
+    return new Sum<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the keepDims option.
+   *
    * @param keepDims If true, retain reduced dimensions with length 1.
+   * @return this Options instance.
    */
   public static Options keepDims(Boolean keepDims) {
     return new Options().keepDims(keepDims);
   }
-  
+
   /**
+   * Gets output.
    * The reduced tensor.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Sum";
-  
-  private Output<T> output;
-  
-  private Sum(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Sum}
+   */
+  public static class Options {
+    private Boolean keepDims;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the keepDims option.
+     *
+     * @param keepDims If true, retain reduced dimensions with length 1.
+     * @return this Options instance.
+     */
+    public Options keepDims(Boolean keepDims) {
+      this.keepDims = keepDims;
+      return this;
+    }
   }
 }

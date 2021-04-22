@@ -30,86 +30,35 @@ import org.tensorflow.types.family.TType;
 /**
  * A Reader that outputs fixed-length records from a file.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class FixedLengthRecordReader extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.FixedLengthRecordReader}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param headerBytes Number of bytes in the header, defaults to 0.
-     */
-    public Options headerBytes(Long headerBytes) {
-      this.headerBytes = headerBytes;
-      return this;
-    }
-    
-    /**
-     * @param footerBytes Number of bytes in the footer, defaults to 0.
-     */
-    public Options footerBytes(Long footerBytes) {
-      this.footerBytes = footerBytes;
-      return this;
-    }
-    
-    /**
-     * @param hopBytes Number of bytes to hop before each read. Default of 0 means using
-     * record_bytes.
-     */
-    public Options hopBytes(Long hopBytes) {
-      this.hopBytes = hopBytes;
-      return this;
-    }
-    
-    /**
-     * @param container If non-empty, this reader is placed in the given container.
-     * Otherwise, a default container is used.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName If non-empty, this reader is named in the given bucket
-     * with this shared_name. Otherwise, the node name is used instead.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    /**
-     * @param encoding The type of encoding for the file. Currently ZLIB and GZIP
-     * are supported. Defaults to none.
-     */
-    public Options encoding(String encoding) {
-      this.encoding = encoding;
-      return this;
-    }
-    
-    private Long headerBytes;
-    private Long footerBytes;
-    private Long hopBytes;
-    private String container;
-    private String sharedName;
-    private String encoding;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "FixedLengthRecordReaderV2";
+
+  private Output<? extends TType> readerHandle;
+
+  @SuppressWarnings("unchecked")
+  private FixedLengthRecordReader(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    readerHandle = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new FixedLengthRecordReader operation.
-   * 
+   * Factory method to create a class wrapping a new FixedLengthRecordReaderV2 operation.
+   *
    * @param scope current scope
    * @param recordBytes Number of bytes in the record.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of FixedLengthRecordReader
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static FixedLengthRecordReader create(Scope scope, Long recordBytes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordReaderV2", scope.makeOpName("FixedLengthRecordReader"));
     opBuilder = scope.apply(opBuilder);
@@ -138,74 +87,173 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
     }
     return new FixedLengthRecordReader(opBuilder.build());
   }
-  
+
   /**
+   * Sets the headerBytes option.
+   *
    * @param headerBytes Number of bytes in the header, defaults to 0.
+   * @return this Options instance.
    */
   public static Options headerBytes(Long headerBytes) {
     return new Options().headerBytes(headerBytes);
   }
-  
+
   /**
+   * Sets the footerBytes option.
+   *
    * @param footerBytes Number of bytes in the footer, defaults to 0.
+   * @return this Options instance.
    */
   public static Options footerBytes(Long footerBytes) {
     return new Options().footerBytes(footerBytes);
   }
-  
+
   /**
+   * Sets the hopBytes option.
+   *
    * @param hopBytes Number of bytes to hop before each read. Default of 0 means using
    * record_bytes.
+   * @return this Options instance.
    */
   public static Options hopBytes(Long hopBytes) {
     return new Options().hopBytes(hopBytes);
   }
-  
+
   /**
+   * Sets the container option.
+   *
    * @param container If non-empty, this reader is placed in the given container.
    * Otherwise, a default container is used.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
+   * Sets the sharedName option.
+   *
    * @param sharedName If non-empty, this reader is named in the given bucket
    * with this shared_name. Otherwise, the node name is used instead.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
+   * Sets the encoding option.
+   *
    * @param encoding The type of encoding for the file. Currently ZLIB and GZIP
    * are supported. Defaults to none.
+   * @return this Options instance.
    */
   public static Options encoding(String encoding) {
     return new Options().encoding(encoding);
   }
-  
+
   /**
+   * Gets readerHandle.
    * The handle to reference the Reader.
+   * @return readerHandle.
    */
-  public Output<?> readerHandle() {
+  public Output<? extends TType> readerHandle() {
     return readerHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) readerHandle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "FixedLengthRecordReaderV2";
-  
-  private Output<?> readerHandle;
-  
-  private FixedLengthRecordReader(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    readerHandle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.FixedLengthRecordReader}
+   */
+  public static class Options {
+    private Long headerBytes;
+
+    private Long footerBytes;
+
+    private Long hopBytes;
+
+    private String container;
+
+    private String sharedName;
+
+    private String encoding;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the headerBytes option.
+     *
+     * @param headerBytes Number of bytes in the header, defaults to 0.
+     * @return this Options instance.
+     */
+    public Options headerBytes(Long headerBytes) {
+      this.headerBytes = headerBytes;
+      return this;
+    }
+
+    /**
+     * Sets the footerBytes option.
+     *
+     * @param footerBytes Number of bytes in the footer, defaults to 0.
+     * @return this Options instance.
+     */
+    public Options footerBytes(Long footerBytes) {
+      this.footerBytes = footerBytes;
+      return this;
+    }
+
+    /**
+     * Sets the hopBytes option.
+     *
+     * @param hopBytes Number of bytes to hop before each read. Default of 0 means using
+     * record_bytes.
+     * @return this Options instance.
+     */
+    public Options hopBytes(Long hopBytes) {
+      this.hopBytes = hopBytes;
+      return this;
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container If non-empty, this reader is placed in the given container.
+     * Otherwise, a default container is used.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName If non-empty, this reader is named in the given bucket
+     * with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
+
+    /**
+     * Sets the encoding option.
+     *
+     * @param encoding The type of encoding for the file. Currently ZLIB and GZIP
+     * are supported. Defaults to none.
+     * @return this Options instance.
+     */
+    public Options encoding(String encoding) {
+      this.encoding = encoding;
+      return this;
+    }
   }
 }

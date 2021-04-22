@@ -29,67 +29,70 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the matrix square root of one or more square matrices:
- * <p>
  * matmul(sqrtm(A), sqrtm(A)) = A
- * <p>
- * The input matrix should be invertible. If the input matrix is real, it should
+ * <p>The input matrix should be invertible. If the input matrix is real, it should
  * have no eigenvalues which are real and negative (pairs of complex conjugate
  * eigenvalues are allowed).
- * <p>
- * The matrix square root is computed by first reducing the matrix to
+ * <p>The matrix square root is computed by first reducing the matrix to
  * quasi-triangular form with the real Schur decomposition. The square root
  * of the quasi-triangular matrix is then computed directly. Details of
- * the algorithm can be found in: Nicholas J. Higham, "Computing real
- * square roots of a real matrix", Linear Algebra Appl., 1987.
- * <p>
- * The input is a tensor of shape `[..., M, M]` whose inner-most 2 dimensions
+ * the algorithm can be found in: Nicholas J. Higham, &quot;Computing real
+ * square roots of a real matrix&quot;, Linear Algebra Appl., 1987.
+ * <p>The input is a tensor of shape {@code [..., M, M]} whose inner-most 2 dimensions
  * form square matrices. The output is a tensor of the same shape as the input
- * containing the matrix square root for all input submatrices `[..., :, :]`.
- * 
- * @param <T> data type for {@code output()} output
+ * containing the matrix square root for all input submatrices {@code [..., :, :]}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class Sqrtm<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Sqrtm operation.
-   * 
-   * @param scope current scope
-   * @param input Shape is `[..., M, M]`.
-   * @return a new instance of Sqrtm
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MatrixSquareRoot", scope.makeOpName("Sqrtm"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Sqrtm<T>(opBuilder.build());
-  }
-  
-  /**
-   * Shape is `[..., M, M]`.
-   * <p>
-   * @compatibility(scipy)
-   * Equivalent to scipy.linalg.sqrtm
-   * @end_compatibility
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "MatrixSquareRoot";
-  
+
   private Output<T> output;
-  
+
   private Sqrtm(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new MatrixSquareRoot operation.
+   *
+   * @param scope current scope
+   * @param input Shape is {@code [..., M, M]}.
+   * @param <T> data type for {@code MatrixSquareRoot} output and operands
+   * @return a new instance of Sqrtm
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Sqrtm<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("MatrixSquareRoot", scope.makeOpName("Sqrtm"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Sqrtm<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Shape is {@code [..., M, M]}.
+   * <p>{@literal @}compatibility(scipy)<br>
+   * Equivalent to scipy.linalg.sqrtm
+   * <br>{@literal @}end_compatibility
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

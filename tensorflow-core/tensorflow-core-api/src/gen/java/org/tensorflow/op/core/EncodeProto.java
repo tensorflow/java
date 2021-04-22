@@ -32,89 +32,89 @@ import org.tensorflow.types.TString;
 
 /**
  * The op serializes protobuf messages provided in the input tensors.
- * <p>
- * The types of the tensors in `values` must match the schema for the fields
- * specified in `field_names`. All the tensors in `values` must have a common
- * shape prefix, <i>batch_shape</i>.
- * <p>
- * The `sizes` tensor specifies repeat counts for each field.  The repeat count
- * (last dimension) of a each tensor in `values` must be greater than or equal
- * to corresponding repeat count in `sizes`.
- * <p>
- * A `message_type` name must be provided to give context for the field names.
+ * The types of the tensors in {@code values} must match the schema for the fields
+ * specified in {@code field_names}. All the tensors in {@code values} must have a common
+ * shape prefix, <em>batch_shape</em>.
+ * <p>The {@code sizes} tensor specifies repeat counts for each field.  The repeat count
+ * (last dimension) of a each tensor in {@code values} must be greater than or equal
+ * to corresponding repeat count in {@code sizes}.
+ * <p>A {@code message_type} name must be provided to give context for the field names.
  * The actual message descriptor can be looked up either in the linked-in
  * descriptor pool or a filename provided by the caller using the
- * `descriptor_source` attribute.
- * <p>
- * For the most part, the mapping between Proto field types and TensorFlow dtypes
+ * {@code descriptor_source} attribute.
+ * <p>For the most part, the mapping between Proto field types and TensorFlow dtypes
  * is straightforward. However, there are a few special cases:
- * <p>
- * - A proto field that contains a submessage or group can only be converted
- * to `DT_STRING` (the serialized submessage). This is to reduce the complexity
+ * <ul>
+ * <li>
+ * <p>A proto field that contains a submessage or group can only be converted
+ * to {@code DT_STRING} (the serialized submessage). This is to reduce the complexity
  * of the API. The resulting string can be used as input to another instance of
  * the decode_proto op.
- * <p>
- * - TensorFlow lacks support for unsigned integers. The ops represent uint64
- * types as a `DT_INT64` with the same twos-complement bit pattern (the obvious
+ * </li>
+ * <li>
+ * <p>TensorFlow lacks support for unsigned integers. The ops represent uint64
+ * types as a {@code DT_INT64} with the same twos-complement bit pattern (the obvious
  * way). Unsigned int32 values can be represented exactly by specifying type
- * `DT_INT64`, or using twos-complement if the caller specifies `DT_INT32` in
- * the `output_types` attribute.
- * <p>
- * The `descriptor_source` attribute selects the source of protocol
- * descriptors to consult when looking up `message_type`. This may be:
- * <p>
- * - An empty string  or "local://", in which case protocol descriptors are
+ * {@code DT_INT64}, or using twos-complement if the caller specifies {@code DT_INT32} in
+ * the {@code output_types} attribute.
+ * </li>
+ * </ul>
+ * <p>The {@code descriptor_source} attribute selects the source of protocol
+ * descriptors to consult when looking up {@code message_type}. This may be:
+ * <ul>
+ * <li>
+ * <p>An empty string  or &quot;local://&quot;, in which case protocol descriptors are
  * created for C++ (not Python) proto definitions linked to the binary.
- * <p>
- * - A file, in which case protocol descriptors are created from the file,
- * which is expected to contain a `FileDescriptorSet` serialized as a string.
- * NOTE: You can build a `descriptor_source` file using the `--descriptor_set_out`
- * and `--include_imports` options to the protocol compiler `protoc`.
- * <p>
- * - A "bytes://<bytes>", in which protocol descriptors are created from `<bytes>`,
- * which is expected to be a `FileDescriptorSet` serialized as a string.
+ * </li>
+ * <li>
+ * <p>A file, in which case protocol descriptors are created from the file,
+ * which is expected to contain a {@code FileDescriptorSet} serialized as a string.
+ * NOTE: You can build a {@code descriptor_source} file using the {@code --descriptor_set_out}
+ * and {@code --include_imports} options to the protocol compiler {@code protoc}.
+ * </li>
+ * <li>
+ * <p>A &quot;bytes://&lt;bytes&gt;&quot;, in which protocol descriptors are created from {@code <bytes>},
+ * which is expected to be a {@code FileDescriptorSet} serialized as a string.
+ * </li>
+ * </ul>
  */
 @Operator
 public final class EncodeProto extends RawOp implements Operand<TString> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.EncodeProto}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param descriptorSource 
-     */
-    public Options descriptorSource(String descriptorSource) {
-      this.descriptorSource = descriptorSource;
-      return this;
-    }
-    
-    private String descriptorSource;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "EncodeProto";
+
+  private Output<TString> bytes;
+
+  private EncodeProto(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    bytes = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new EncodeProto operation.
-   * 
+   *
    * @param scope current scope
-   * @param sizes Tensor of int32 with shape `[batch_shape, len(field_names)]`.
+   * @param sizes Tensor of int32 with shape {@code [batch_shape, len(field_names)]}.
    * @param values List of tensors containing values for the corresponding field.
    * @param fieldNames List of strings containing proto field names.
    * @param messageType Name of the proto message type to decode.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of EncodeProto
    */
-  @Endpoint(describeByClass = true)
-  public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values, List<String> fieldNames, String messageType, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values,
+      List<String> fieldNames, String messageType, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.apply(opBuilder);
     String[] fieldNamesArray = new String[fieldNames.size()];
-    for (int i = 0; i < fieldNamesArray.length; ++i) {
+    for (int i = 0 ; i < fieldNamesArray.length ; i++) {
       fieldNamesArray[i] = fieldNames.get(i);
     }
     opBuilder.setAttr("field_names", fieldNamesArray);
@@ -128,34 +128,49 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
     }
     return new EncodeProto(opBuilder.build());
   }
-  
+
   /**
-   * @param descriptorSource 
+   * Sets the descriptorSource option.
+   *
+   * @param descriptorSource the descriptorSource option
+   * @return this Options instance.
    */
   public static Options descriptorSource(String descriptorSource) {
     return new Options().descriptorSource(descriptorSource);
   }
-  
+
   /**
-   * Tensor of serialized protos with shape `batch_shape`.
+   * Gets bytes.
+   * Tensor of serialized protos with shape {@code batch_shape}.
+   * @return bytes.
    */
   public Output<TString> bytes() {
     return bytes;
   }
-  
+
   @Override
   public Output<TString> asOutput() {
     return bytes;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "EncodeProto";
-  
-  private Output<TString> bytes;
-  
-  private EncodeProto(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    bytes = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.EncodeProto}
+   */
+  public static class Options {
+    private String descriptorSource;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the descriptorSource option.
+     *
+     * @param descriptorSource the descriptorSource option
+     * @return this Options instance.
+     */
+    public Options descriptorSource(String descriptorSource) {
+      this.descriptorSource = descriptorSource;
+      return this;
+    }
   }
 }

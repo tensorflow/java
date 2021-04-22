@@ -24,18 +24,32 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes requantization range per channel.
  */
 public final class RequantizationRangePerChannel extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RequantizationRangePerChannel";
+
+  private Output<TFloat32> outputMin;
+
+  private Output<TFloat32> outputMax;
+
+  private RequantizationRangePerChannel(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputMin = operation.output(outputIdx++);
+    outputMax = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RequantizationRangePerChannel operation.
-   * 
+   *
    * @param scope current scope
    * @param input The original input tensor.
    * @param inputMin The minimum value of the input tensor
@@ -44,8 +58,11 @@ public final class RequantizationRangePerChannel extends RawOp {
    * Example: set this to 6 for Relu6.
    * @return a new instance of RequantizationRangePerChannel
    */
-  @Endpoint(describeByClass = true)
-  public static RequantizationRangePerChannel create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static RequantizationRangePerChannel create(Scope scope, Operand<? extends TNumber> input,
+      Operand<TFloat32> inputMin, Operand<TFloat32> inputMax, Float clipValueMax) {
     OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRangePerChannel", scope.makeOpName("RequantizationRangePerChannel"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
@@ -54,31 +71,22 @@ public final class RequantizationRangePerChannel extends RawOp {
     opBuilder.setAttr("clip_value_max", clipValueMax);
     return new RequantizationRangePerChannel(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputMin.
    * The minimum value of the final output tensor
+   * @return outputMin.
    */
   public Output<TFloat32> outputMin() {
     return outputMin;
   }
-  
+
   /**
+   * Gets outputMax.
    * The maximum value of the final output tensor.
+   * @return outputMax.
    */
   public Output<TFloat32> outputMax() {
     return outputMax;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RequantizationRangePerChannel";
-  
-  private Output<TFloat32> outputMin;
-  private Output<TFloat32> outputMax;
-  
-  private RequantizationRangePerChannel(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputMin = operation.output(outputIdx++);
-    outputMax = operation.output(outputIdx++);
   }
 }

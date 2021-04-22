@@ -30,82 +30,75 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Solves one or more linear least-squares problems.
- * <p>
- * `matrix` is a tensor of shape `[..., M, N]` whose inner-most 2 dimensions
- * form real or complex matrices of size `[M, N]`. `Rhs` is a tensor of the same
- * type as `matrix` and shape `[..., M, K]`.
- * The output is a tensor shape `[..., N, K]` where each output matrix solves
+ * {@code matrix} is a tensor of shape {@code [..., M, N]} whose inner-most 2 dimensions
+ * form real or complex matrices of size {@code [M, N]}. {@code Rhs} is a tensor of the same
+ * type as {@code matrix} and shape {@code [..., M, K]}.
+ * The output is a tensor shape {@code [..., N, K]} where each output matrix solves
  * each of the equations
- * `matrix[..., :, :]` * `output[..., :, :]` = `rhs[..., :, :]`
+ * {@code matrix[..., :, :]} * {@code output[..., :, :]} = {@code rhs[..., :, :]}
  * in the least squares sense.
- * <p>
- * We use the following notation for (complex) matrix and right-hand sides
+ * <p>We use the following notation for (complex) matrix and right-hand sides
  * in the batch:
- * <p>
- * `matrix`=\\(A \in \mathbb{C}^{m \times n}\\),
- * `rhs`=\\(B  \in \mathbb{C}^{m \times k}\\),
- * `output`=\\(X  \in \mathbb{C}^{n \times k}\\),
- * `l2_regularizer`=\\(\lambda \in \mathbb{R}\\).
- * <p>
- * If `fast` is `True`, then the solution is computed by solving the normal
- * equations using Cholesky decomposition. Specifically, if \\(m \ge n\\) then
- * \\(X = (A^H A + \lambda I)^{-1} A^H B\\), which solves the least-squares
- * problem \\(X = \mathrm{argmin}_{Z \in \Re^{n \times k} } ||A Z - B||_F^2 + \lambda ||Z||_F^2\\).
- * If \\(m \lt n\\) then `output` is computed as
- * \\(X = A^H (A A^H + \lambda I)^{-1} B\\), which (for \\(\lambda = 0\\)) is the
+ * <p>{@code matrix}=\(A \in \mathbb{C}^{m \times n}\),
+ * {@code rhs}=\(B  \in \mathbb{C}^{m \times k}\),
+ * {@code output}=\(X  \in \mathbb{C}^{n \times k}\),
+ * {@code l2_regularizer}=\(\lambda \in \mathbb{R}\).
+ * <p>If {@code fast} is {@code True}, then the solution is computed by solving the normal
+ * equations using Cholesky decomposition. Specifically, if \(m \ge n\) then
+ * \(X = (A^H A + \lambda I)^{-1} A^H B\), which solves the least-squares
+ * problem \(X = \mathrm{argmin}_{Z \in \Re^{n \times k} } ||A Z - B||_F^2 + \lambda ||Z||<em>F^2\).
+ * If \(m \lt n\) then {@code output} is computed as
+ * \(X = A^H (A A^H + \lambda I)^{-1} B\), which (for \(\lambda = 0\)) is the
  * minimum-norm solution to the under-determined linear system, i.e.
- * \\(X = \mathrm{argmin}_{Z \in \mathbb{C}^{n \times k} } ||Z||_F^2 \\),
- * subject to \\(A Z = B\\). Notice that the fast path is only numerically stable
- * when \\(A\\) is numerically full rank and has a condition number
- * \\(\mathrm{cond}(A) \lt \frac{1}{\sqrt{\epsilon_{mach} } }\\) or \\(\lambda\\) is
+ * \(X = \mathrm{argmin}</em>{Z \in \mathbb{C}^{n \times k} } ||Z||<em>F^2 \),
+ * subject to \(A Z = B\). Notice that the fast path is only numerically stable
+ * when \(A\) is numerically full rank and has a condition number
+ * \(\mathrm{cond}(A) \lt \frac{1}{\sqrt{\epsilon</em>{mach} } }\) or \(\lambda\) is
  * sufficiently large.
- * <p>
- * If `fast` is `False` an algorithm based on the numerically robust complete
+ * <p>If {@code fast} is {@code False} an algorithm based on the numerically robust complete
  * orthogonal decomposition is used. This computes the minimum-norm
- * least-squares solution, even when \\(A\\) is rank deficient. This path is
- * typically 6-7 times slower than the fast path. If `fast` is `False` then
- * `l2_regularizer` is ignored.
- * 
- * @param <T> data type for {@code output()} output
+ * least-squares solution, even when \(A\) is rank deficient. This path is
+ * typically 6-7 times slower than the fast path. If {@code fast} is {@code False} then
+ * {@code l2_regularizer} is ignored.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class MatrixSolveLs<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.linalg.MatrixSolveLs}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param fast 
-     */
-    public Options fast(Boolean fast) {
-      this.fast = fast;
-      return this;
-    }
-    
-    private Boolean fast;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MatrixSolveLs";
+
+  private Output<T> output;
+
+  private MatrixSolveLs(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MatrixSolveLs operation.
-   * 
+   *
    * @param scope current scope
-   * @param matrix Shape is `[..., M, N]`.
-   * @param rhs Shape is `[..., M, K]`.
+   * @param matrix Shape is {@code [..., M, N]}.
+   * @param rhs Shape is {@code [..., M, K]}.
    * @param l2Regularizer Scalar tensor.
-   * <p>
-   * @compatibility(numpy)
+   * <p>{@literal @}compatibility(numpy)<br>
    * Equivalent to np.linalg.lstsq
-   * @end_compatibility
-   * @param options carries optional attributes values
+   * <br>{@literal @}end_compatibility
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code MatrixSolveLs} output and operands
    * @return a new instance of MatrixSolveLs
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix,
+      Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixSolveLs", scope.makeOpName("MatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
@@ -118,36 +111,51 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
         }
       }
     }
-    return new MatrixSolveLs<T>(opBuilder.build());
+    return new MatrixSolveLs<>(opBuilder.build());
   }
-  
+
   /**
-   * @param fast 
+   * Sets the fast option.
+   *
+   * @param fast the fast option
+   * @return this Options instance.
    */
   public static Options fast(Boolean fast) {
     return new Options().fast(fast);
   }
-  
+
   /**
-   * Shape is `[..., N, K]`.
+   * Gets output.
+   * Shape is {@code [..., N, K]}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MatrixSolveLs";
-  
-  private Output<T> output;
-  
-  private MatrixSolveLs(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.linalg.MatrixSolveLs}
+   */
+  public static class Options {
+    private Boolean fast;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the fast option.
+     *
+     * @param fast the fast option
+     * @return this Options instance.
+     */
+    public Options fast(Boolean fast) {
+      this.fast = fast;
+      return this;
+    }
   }
 }

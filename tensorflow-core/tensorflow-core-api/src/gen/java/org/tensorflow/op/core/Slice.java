@@ -30,61 +30,68 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Return a slice from 'input'.
- * <p>
  * The output tensor is a tensor with dimensions described by 'size'
  * whose values are extracted from 'input' starting at the offsets in
  * 'begin'.
- * <p>
- * <i>Requirements</i>:
- *   0 <= begin[i] <= begin[i] + size[i] <= Di  for i in [0, n)
- * 
- * @param <T> data type for {@code output()} output
+ * <p><em>Requirements</em>:
+ * 0 &lt;= begin[i] &lt;= begin[i] + size[i] &lt;= Di  for i in [0, n)
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class Slice<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Slice operation.
-   * 
-   * @param scope current scope
-   * @param input 
-   * @param begin begin[i] specifies the offset into the 'i'th dimension of
-   * 'input' to slice from.
-   * @param size size[i] specifies the number of elements of the 'i'th dimension
-   * of 'input' to slice. If size[i] is -1, all remaining elements in dimension
-   * i are included in the slice (i.e. this is equivalent to setting
-   * size[i] = input.dim_size(i) - begin[i]).
-   * @return a new instance of Slice
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input, Operand<U> begin, Operand<U> size) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Slice", scope.makeOpName("Slice"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(begin.asOutput());
-    opBuilder.addInput(size.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Slice<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Slice";
-  
+
   private Output<T> output;
-  
+
   private Slice(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Slice operation.
+   *
+   * @param scope current scope
+   * @param input the input value
+   * @param begin begin[i] specifies the offset into the 'i'th dimension of
+   * 'input' to slice from.
+   * @param sizeOutput size[i] specifies the number of elements of the 'i'th dimension
+   * of 'input' to slice. If size[i] is -1, all remaining elements in dimension
+   * i are included in the slice (i.e. this is equivalent to setting
+   * size[i] = input.dim_size(i) - begin[i]).
+   * @param <T> data type for {@code Slice} output and operands
+   * @param <U> data type for {@code Slice} output and operands
+   * @return a new instance of Slice
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input,
+      Operand<U> begin, Operand<U> sizeOutput) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Slice", scope.makeOpName("Slice"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(begin.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Slice<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

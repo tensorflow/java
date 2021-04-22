@@ -29,55 +29,61 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Inverse fast Fourier transform.
- * <p>
  * Computes the inverse 1-dimensional discrete Fourier transform over the
- * inner-most dimension of `input`.
- * 
- * @param <T> data type for {@code output()} output
+ * inner-most dimension of {@code input}.
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "signal")
+@Operator(
+    group = "signal"
+)
 public final class Ifft<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Ifft operation.
-   * 
-   * @param scope current scope
-   * @param input A complex tensor.
-   * @return a new instance of Ifft
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Ifft<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IFFT", scope.makeOpName("Ifft"));
-    opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Ifft<T>(opBuilder.build());
-  }
-  
-  /**
-   * A complex tensor of the same shape as `input`. The inner-most
-   *   dimension of `input` is replaced with its inverse 1D Fourier transform.
-   * <p>
-   * @compatibility(numpy)
-   * Equivalent to np.fft.ifft
-   * @end_compatibility
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "IFFT";
-  
+
   private Output<T> output;
-  
+
   private Ifft(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new IFFT operation.
+   *
+   * @param scope current scope
+   * @param input A complex tensor.
+   * @param <T> data type for {@code IFFT} output and operands
+   * @return a new instance of Ifft
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Ifft<T> create(Scope scope, Operand<T> input) {
+    OperationBuilder opBuilder = scope.env().opBuilder("IFFT", scope.makeOpName("Ifft"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Ifft<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * A complex tensor of the same shape as {@code input}. The inner-most
+   * dimension of {@code input} is replaced with its inverse 1D Fourier transform.
+   * <p>{@literal @}compatibility(numpy)<br>
+   * Equivalent to np.fft.ifft
+   * <br>{@literal @}end_compatibility
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

@@ -29,56 +29,63 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns element-wise integer closest to x.
- * <p>
  * If the result is midway between two representable values,
  * the even representable is chosen.
  * For example:
- * <pre>{@code
- * rint(-1.5) ==> -2.0
- * rint(0.5000001) ==> 1.0
- * rint([-1.7, -1.5, -0.2, 0.2, 1.5, 1.7, 2.0]) ==> [-2., -2., -0., 0., 2., 2., 2.]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * <pre>
+ * rint(-1.5) ==&gt; -2.0
+ * rint(0.5000001) ==&gt; 1.0
+ * rint([-1.7, -1.5, -0.2, 0.2, 1.5, 1.7, 2.0]) ==&gt; [-2., -2., -0., 0., 2., 2., 2.]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Rint<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Rint operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Rint
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Rint<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Rint", scope.makeOpName("Rint"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Rint<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Rint";
-  
+
   private Output<T> y;
-  
+
   private Rint(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Rint operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Rint} output and operands
+   * @return a new instance of Rint
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Rint<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Rint", scope.makeOpName("Rint"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Rint<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

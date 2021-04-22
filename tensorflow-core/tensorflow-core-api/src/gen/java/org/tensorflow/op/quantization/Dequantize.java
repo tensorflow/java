@@ -28,116 +28,91 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TNumber;
-import org.tensorflow.types.family.TType;
 
 /**
  * Dequantize the 'input' tensor into a float or bfloat16 Tensor.
- * <p>
  * [min_range, max_range] are scalar floats that specify the range for
  * the output. The 'mode' attribute controls exactly which calculations are
  * used to convert the float values to their quantized equivalents.
- * <p>
- * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
- * <pre>{@code
+ * <p>In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
+ * <pre>
  * if T == qint8: in[i] += (range(T) + 1)/ 2.0
  * out[i] = min_range + (in[i]* (max_range - min_range) / range(T))
- * }</pre>
- * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
- * <p>
- * <i>MIN_COMBINED Mode Example</i>
- * <p>
- * If the input comes from a QuantizedRelu6, the output type is
+ * </pre>
+ * <p>here {@code range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()}
+ * <p><em>MIN_COMBINED Mode Example</em>
+ * <p>If the input comes from a QuantizedRelu6, the output type is
  * quint8 (range of 0-255) but the possible range of QuantizedRelu6 is
  * 0-6.  The min_range and max_range values are therefore 0.0 and 6.0.
  * Dequantize on quint8 will take each value, cast to float, and multiply
  * by 6 / 255.
  * Note that if quantizedtype is qint8, the operation will additionally add
  * each value by 128 prior to casting.
- * <p>
- * If the mode is 'MIN_FIRST', then this approach is used:
- * <pre>{@code
- * num_discrete_values = 1 << (# of bits in T)
+ * <p>If the mode is 'MIN_FIRST', then this approach is used:
+ * <pre>
+ * num_discrete_values = 1 &lt;&lt; (# of bits in T)
  * range_adjust = num_discrete_values / (num_discrete_values - 1)
  * range = (range_max - range_min) * range_adjust
  * range_scale = range / num_discrete_values
- * const double offset_input = static_cast<double>(input) - lowest_quantized;
- * result = range_min + ((input - numeric_limits<T>::min()) * range_scale)
- * }</pre>
- * If the mode is `SCALED`, dequantization is performed by multiplying each
+ * const double offset_input = static_cast&lt;double&gt;(input) - lowest_quantized;
+ * result = range_min + ((input - numeric_limits&lt;T&gt;::min()) * range_scale)
+ * </pre>
+ * <p>If the mode is {@code SCALED}, dequantization is performed by multiplying each
  * input value by a scaling_factor. (Thus an input of 0 always maps to 0.0).
- * <p>
- * The scaling_factor is determined from `min_range`, `max_range`, and
- * `narrow_range` in a way that is compatible with `QuantizeAndDequantize{V2|V3}`
- * and `QuantizeV2`, using the following algorithm:
- * <pre>{@code
- *   const int min_expected_T = std::numeric_limits<T>::min() +
+ * <p>The scaling_factor is determined from {@code min_range}, {@code max_range}, and
+ * {@code narrow_range} in a way that is compatible with {@code QuantizeAndDequantize{V2|V3}}
+ * and {@code QuantizeV2}, using the following algorithm:
+ * <pre>
+ *
+ *   const int min_expected_T = std::numeric_limits&lt;T&gt;::min() +
  *     (narrow_range ? 1 : 0);
- *   const int max_expected_T = std::numeric_limits<T>::max();
- *   const float max_expected_T = std::numeric_limits<float>::max();
- * 
+ *   const int max_expected_T = std::numeric_limits&lt;T&gt;::max();
+ *   const float max_expected_T = std::numeric_limits&lt;float&gt;::max();
+ *
  *   const float scale_factor =
- *     (std::numeric_limits<T>::min() == 0) ? (max_range / max_expected_T)
+ *     (std::numeric_limits&lt;T&gt;::min() == 0) ? (max_range / max_expected_T)
  *                                          : std::max(min_range / min_expected_T,
  *                                                     max_range / max_expected_T);
- * }</pre>
- * 
- * 
- * @param <U> data type for {@code output()} output
+ * </pre>
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "quantization")
+@Operator(
+    group = "quantization"
+)
 public final class Dequantize<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param mode 
-     */
-    public Options mode(String mode) {
-      this.mode = mode;
-      return this;
-    }
-    
-    /**
-     * @param narrowRange 
-     */
-    public Options narrowRange(Boolean narrowRange) {
-      this.narrowRange = narrowRange;
-      return this;
-    }
-    
-    /**
-     * @param axis 
-     */
-    public Options axis(Long axis) {
-      this.axis = axis;
-      return this;
-    }
-    
-    private String mode;
-    private Boolean narrowRange;
-    private Long axis;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Dequantize";
+
+  private Output<U> output;
+
+  private Dequantize(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new Dequantize operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
    * @param dtype Type of the output tensor. Currently Dequantize supports float and bfloat16.
    * If 'dtype' is 'bfloat16', it only supports 'MIN_COMBINED' mode.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code Dequantize} output and operands
    * @return a new instance of Dequantize
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> Dequantize<U> create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<U> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> Dequantize<U> create(Scope scope,
+      Operand<? extends TNumber> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange,
+      Class<U> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
@@ -157,64 +132,115 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
         }
       }
     }
-    return new Dequantize<U>(opBuilder.build());
+    return new Dequantize<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Dequantize operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new Dequantize operation, with the default output types.
+   *
    * @param scope current scope
-   * @param input 
+   * @param input the input value
    * @param minRange The minimum scalar value possibly produced for the input.
    * @param maxRange The maximum scalar value possibly produced for the input.
-   * @param options carries optional attributes values
-   * @return a new instance of Dequantize
+   * @param options carries optional attribute values
+   * @return a new instance of Dequantize, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static Dequantize<TFloat32> create(Scope scope, Operand<? extends TType> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Dequantize<TFloat32> create(Scope scope, Operand<? extends TNumber> input,
+      Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Options[] options) {
     return create(scope, input, minRange, maxRange, TFloat32.class, options);
   }
-  
+
   /**
-   * @param mode 
+   * Sets the mode option.
+   *
+   * @param mode the mode option
+   * @return this Options instance.
    */
   public static Options mode(String mode) {
     return new Options().mode(mode);
   }
-  
+
   /**
-   * @param narrowRange 
+   * Sets the narrowRange option.
+   *
+   * @param narrowRange the narrowRange option
+   * @return this Options instance.
    */
   public static Options narrowRange(Boolean narrowRange) {
     return new Options().narrowRange(narrowRange);
   }
-  
+
   /**
-   * @param axis 
+   * Sets the axis option.
+   *
+   * @param axis the axis option
+   * @return this Options instance.
    */
   public static Options axis(Long axis) {
     return new Options().axis(axis);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Dequantize";
-  
-  private Output<U> output;
-  
-  private Dequantize(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.quantization.Dequantize}
+   */
+  public static class Options {
+    private String mode;
+
+    private Boolean narrowRange;
+
+    private Long axis;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the mode option.
+     *
+     * @param mode the mode option
+     * @return this Options instance.
+     */
+    public Options mode(String mode) {
+      this.mode = mode;
+      return this;
+    }
+
+    /**
+     * Sets the narrowRange option.
+     *
+     * @param narrowRange the narrowRange option
+     * @return this Options instance.
+     */
+    public Options narrowRange(Boolean narrowRange) {
+      this.narrowRange = narrowRange;
+      return this;
+    }
+
+    /**
+     * Sets the axis option.
+     *
+     * @param axis the axis option
+     * @return this Options instance.
+     */
+    public Options axis(Long axis) {
+      this.axis = axis;
+      return this;
+    }
   }
 }

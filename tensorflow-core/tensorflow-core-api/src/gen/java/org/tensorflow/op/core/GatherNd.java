@@ -29,144 +29,147 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Gather slices from `params` into a Tensor with shape specified by `indices`.
- * <p>
- * `indices` is a K-dimensional integer tensor, best thought of as a
- * (K-1)-dimensional tensor of indices into `params`, where each element defines a
- * slice of `params`:
- * <p>
- *     output[\\(i_0, ..., i_{K-2}\\)] = params[indices[\\(i_0, ..., i_{K-2}\\)]]
- * <p>
- * Whereas in `tf.gather` `indices` defines slices into the `axis`
- * dimension of `params`, in `tf.gather_nd`, `indices` defines slices into the
- * first `N` dimensions of `params`, where `N = indices.shape[-1]`.
- * <p>
- * The last dimension of `indices` can be at most the rank of
- * `params`:
- * <p>
- *     indices.shape[-1] <= params.rank
- * <p>
- * The last dimension of `indices` corresponds to elements
- * (if `indices.shape[-1] == params.rank`) or slices
- * (if `indices.shape[-1] < params.rank`) along dimension `indices.shape[-1]`
- * of `params`.  The output tensor has shape
- * <p>
- *     indices.shape[:-1] + params.shape[indices.shape[-1]:]
- * <p>
- * Note that on CPU, if an out of bound index is found, an error is returned.
+ * Gather slices from {@code params} into a Tensor with shape specified by {@code indices}.
+ * {@code indices} is a K-dimensional integer tensor, best thought of as a
+ * (K-1)-dimensional tensor of indices into {@code params}, where each element defines a
+ * slice of {@code params}:
+ * <pre>
+ * output[\\(i_0, ..., i_{K-2}\\)] = params[indices[\\(i_0, ..., i_{K-2}\\)]]
+ * </pre>
+ * <p>Whereas in {@code tf.gather} {@code indices} defines slices into the {@code axis}
+ * dimension of {@code params}, in {@code tf.gather_nd}, {@code indices} defines slices into the
+ * first {@code N} dimensions of {@code params}, where {@code N = indices.shape[-1]}.
+ * <p>The last dimension of {@code indices} can be at most the rank of
+ * {@code params}:
+ * <pre>
+ * indices.shape[-1] &lt;= params.rank
+ * </pre>
+ * <p>The last dimension of {@code indices} corresponds to elements
+ * (if {@code indices.shape[-1] == params.rank}) or slices
+ * (if {@code indices.shape[-1] < params.rank}) along dimension {@code indices.shape[-1]}
+ * of {@code params}.  The output tensor has shape
+ * <pre>
+ * indices.shape[:-1] + params.shape[indices.shape[-1]:]
+ * </pre>
+ * <p>Note that on CPU, if an out of bound index is found, an error is returned.
  * On GPU, if an out of bound index is found, a 0 is stored in the
  * corresponding output value.
- * <p>
- * Some examples below.
- * <p>
- * Simple indexing into a matrix:
- * <pre>{@code
+ * <p>Some examples below.
+ * <p>Simple indexing into a matrix:
+ * <pre>
  *     indices = [[0, 0], [1, 1]]
  *     params = [['a', 'b'], ['c', 'd']]
  *     output = ['a', 'd']
- * }</pre>
- * Slice indexing into a matrix:
- * <pre>{@code
+ * </pre>
+ * <p>Slice indexing into a matrix:
+ * <pre>
  *     indices = [[1], [0]]
  *     params = [['a', 'b'], ['c', 'd']]
  *     output = [['c', 'd'], ['a', 'b']]
- * }</pre>
- * Indexing into a 3-tensor:
- * <pre>{@code
+ * </pre>
+ * <p>Indexing into a 3-tensor:
+ * <pre>
  *     indices = [[1]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = [[['a1', 'b1'], ['c1', 'd1']]]
- * 
- * 
+ *
+ *
  *     indices = [[0, 1], [1, 0]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = [['c0', 'd0'], ['a1', 'b1']]
- * 
- * 
+ *
+ *
  *     indices = [[0, 0, 1], [1, 0, 1]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = ['b0', 'b1']
- * }</pre>
- * Batched indexing into a matrix:
- * <pre>{@code
+ * </pre>
+ * <p>Batched indexing into a matrix:
+ * <pre>
  *     indices = [[[0, 0]], [[0, 1]]]
  *     params = [['a', 'b'], ['c', 'd']]
  *     output = [['a'], ['b']]
- * }</pre>
- * Batched slice indexing into a matrix:
- * <pre>{@code
+ * </pre>
+ * <p>Batched slice indexing into a matrix:
+ * <pre>
  *     indices = [[[1]], [[0]]]
  *     params = [['a', 'b'], ['c', 'd']]
  *     output = [[['c', 'd']], [['a', 'b']]]
- * }</pre>
- * Batched indexing into a 3-tensor:
- * <pre>{@code
+ * </pre>
+ * <p>Batched indexing into a 3-tensor:
+ * <pre>
  *     indices = [[[1]], [[0]]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = [[[['a1', 'b1'], ['c1', 'd1']]],
  *               [[['a0', 'b0'], ['c0', 'd0']]]]
- * 
+ *
  *     indices = [[[0, 1], [1, 0]], [[0, 0], [1, 1]]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = [[['c0', 'd0'], ['a1', 'b1']],
  *               [['a0', 'b0'], ['c1', 'd1']]]
- * 
- * 
+ *
+ *
  *     indices = [[[0, 0, 1], [1, 0, 1]], [[0, 1, 1], [1, 1, 0]]]
  *     params = [[['a0', 'b0'], ['c0', 'd0']],
  *               [['a1', 'b1'], ['c1', 'd1']]]
  *     output = [['b0', 'b1'], ['d0', 'c1']]
- * }</pre>
- * See also `tf.gather` and `tf.batch_gather`.
- * 
- * @param <T> data type for {@code output()} output
+ * </pre>
+ * <p>See also {@code tf.gather} and {@code tf.batch_gather}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class GatherNd<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new GatherNd operation.
-   * 
-   * @param scope current scope
-   * @param params The tensor from which to gather values.
-   * @param indices Index tensor.
-   * @return a new instance of GatherNd
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> GatherNd<T> create(Scope scope, Operand<T> params, Operand<? extends TNumber> indices) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
-    opBuilder.addInput(params.asOutput());
-    opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new GatherNd<T>(opBuilder.build());
-  }
-  
-  /**
-   * Values from `params` gathered from indices given by `indices`, with
-   * shape `indices.shape[:-1] + params.shape[indices.shape[-1]:]`.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "GatherNd";
-  
+
   private Output<T> output;
-  
+
   private GatherNd(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new GatherNd operation.
+   *
+   * @param scope current scope
+   * @param params The tensor from which to gather values.
+   * @param indices Index tensor.
+   * @param <T> data type for {@code GatherNd} output and operands
+   * @return a new instance of GatherNd
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> GatherNd<T> create(Scope scope, Operand<T> params,
+      Operand<? extends TNumber> indices) {
+    OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
+    opBuilder.addInput(params.asOutput());
+    opBuilder.addInput(indices.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new GatherNd<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * Values from {@code params} gathered from indices given by {@code indices}, with
+   * shape {@code indices.shape[:-1] + params.shape[indices.shape[-1]:]}.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

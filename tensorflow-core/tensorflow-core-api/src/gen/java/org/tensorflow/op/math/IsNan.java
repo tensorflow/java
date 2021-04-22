@@ -30,55 +30,60 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Returns which elements of x are NaN.
- * <p>
- * @compatibility(numpy)
+ * {@literal @}compatibility(numpy)<br>
  * Equivalent to np.isnan
- * @end_compatibility
- * <p>
- * Example:
- * <pre>{@code
+ * <br>{@literal @}end_compatibility
+ * <p>Example:
+ * <pre>
  * x = tf.constant([5.0, np.nan, 6.8, np.nan, np.inf])
- * tf.math.is_nan(x) ==> [False, True, False, True, False]
- * }</pre>
- * 
+ * tf.math.is_nan(x) ==&gt; [False, True, False, True, False]
+ * </pre>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class IsNan extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IsNan";
+
+  private Output<TBool> y;
+
+  private IsNan(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IsNan operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
+   * @param x the x value
    * @return a new instance of IsNan
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static IsNan create(Scope scope, Operand<? extends TNumber> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("IsNan", scope.makeOpName("IsNan"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new IsNan(opBuilder.build());
   }
-  
+
   /**
+   * Gets y.
+   *
+   * @return y.
    */
   public Output<TBool> y() {
     return y;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IsNan";
-  
-  private Output<TBool> y;
-  
-  private IsNan(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
   }
 }

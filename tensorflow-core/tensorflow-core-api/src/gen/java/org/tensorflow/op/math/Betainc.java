@@ -28,62 +28,67 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Compute the regularized incomplete beta integral \\(I_x(a, b)\\).
- * <p>
+ * Compute the regularized incomplete beta integral \(I_x(a, b)\).
  * The regularized incomplete beta integral is defined as:
- * <p>
- * \\(I_x(a, b) = \frac{B(x; a, b)}{B(a, b)}\\)
- * <p>
- * where
- * <p>
- * \\(B(x; a, b) = \int_0^x t^{a-1} (1 - t)^{b-1} dt\\)
- * <p>
- * is the incomplete beta function and \\(B(a, b)\\) is the <i>complete</i>
+ * <p>\(I_x(a, b) = \frac{B(x; a, b)}{B(a, b)}\)
+ * <p>where
+ * <p>\(B(x; a, b) = \int_0^x t^{a-1} (1 - t)^{b-1} dt\)
+ * <p>is the incomplete beta function and \(B(a, b)\) is the <em>complete</em>
  * beta function.
- * 
- * @param <T> data type for {@code z()} output
+ *
+ * @param <T> data type for {@code z} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Betainc<T extends TNumber> extends RawOp implements Operand<T> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Betainc";
+
+  private Output<T> z;
+
+  private Betainc(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Betainc operation.
-   * 
+   *
    * @param scope current scope
-   * @param a 
-   * @param b 
-   * @param x 
+   * @param a the a value
+   * @param b the b value
+   * @param x the x value
+   * @param <T> data type for {@code Betainc} output and operands
    * @return a new instance of Betainc
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> Betainc<T> create(Scope scope, Operand<T> a, Operand<T> b, Operand<T> x) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> Betainc<T> create(Scope scope, Operand<T> a, Operand<T> b,
+      Operand<T> x) {
     OperationBuilder opBuilder = scope.env().opBuilder("Betainc", scope.makeOpName("Betainc"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new Betainc<T>(opBuilder.build());
+    return new Betainc<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<T> z() {
     return z;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Betainc";
-  
-  private Output<T> z;
-  
-  private Betainc(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

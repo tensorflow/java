@@ -25,92 +25,105 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns a `RaggedTensor` containing the specified sequences of numbers.
- * <p>
- * 
- * Returns a `RaggedTensor` `result` composed from `rt_dense_values` and
- * `rt_nested_splits`, such that
- * `result[i] = range(starts[i], limits[i], deltas[i])`.
- * <pre>{@code
+ * Returns a {@code RaggedTensor} containing the specified sequences of numbers.
+ * Returns a {@code RaggedTensor} {@code result} composed from {@code rt_dense_values} and
+ * {@code rt_nested_splits}, such that
+ * {@code result[i] = range(starts[i], limits[i], deltas[i])}.
+ * <pre>
  * (rt_nested_splits, rt_dense_values) = ragged_range(
  *       starts=[2, 5, 8], limits=[3, 5, 12], deltas=1)
  * result = tf.ragged.from_row_splits(rt_dense_values, rt_nested_splits)
  * print(result)
- * <tf.RaggedTensor [[2], [], [8, 9, 10, 11]] >
- * }</pre>
- * The input tensors `starts`, `limits`, and `deltas` may be scalars or vectors.
+ * &lt;tf.RaggedTensor [[2], [], [8, 9, 10, 11]] &gt;
+ * </pre>
+ * <p>The input tensors {@code starts}, {@code limits}, and {@code deltas} may be scalars or vectors.
  * The vector inputs must all have the same size.  Scalar inputs are broadcast
  * to match the size of the vector inputs.
- * 
- * @param <U> data type for {@code rtNestedSplits()} output
- * @param <T> data type for {@code rtDenseValues()} output
+ *
+ * @param <U> data type for {@code rt_nested_splits} output
+ *
+ * @param <T> data type for {@code rt_dense_values} output
  */
 public final class RaggedRange<U extends TNumber, T extends TNumber> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RaggedRange";
+
+  private Output<U> rtNestedSplits;
+
+  private Output<T> rtDenseValues;
+
+  private RaggedRange(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    rtNestedSplits = operation.output(outputIdx++);
+    rtDenseValues = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RaggedRange operation.
-   * 
+   *
    * @param scope current scope
    * @param starts The starts of each range.
    * @param limits The limits of each range.
    * @param deltas The deltas of each range.
-   * @param Tsplits 
+   * @param Tsplits the value of the Tsplits property
+   * @param <U> data type for {@code RaggedRange} output and operands
+   * @param <T> data type for {@code RaggedRange} output and operands
    * @return a new instance of RaggedRange
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas, Class<U> Tsplits) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope,
+      Operand<T> starts, Operand<T> limits, Operand<T> deltas, Class<U> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput());
     opBuilder.addInput(limits.asOutput());
     opBuilder.addInput(deltas.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tsplits", Operands.toDataType(Tsplits));
-    return new RaggedRange<U, T>(opBuilder.build());
+    return new RaggedRange<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new RaggedRange operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new RaggedRange operation, with the default output types.
+   *
    * @param scope current scope
    * @param starts The starts of each range.
    * @param limits The limits of each range.
    * @param deltas The deltas of each range.
-   * @return a new instance of RaggedRange
+   * @param <T> data type for {@code RaggedRange} output and operands
+   * @return a new instance of RaggedRange, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts, Operand<T> limits, Operand<T> deltas) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> RaggedRange<TInt64, T> create(Scope scope, Operand<T> starts,
+      Operand<T> limits, Operand<T> deltas) {
     return create(scope, starts, limits, deltas, TInt64.class);
   }
-  
+
   /**
-   * The `row_splits` for the returned `RaggedTensor`.
+   * Gets rtNestedSplits.
+   * The {@code row_splits} for the returned {@code RaggedTensor}.
+   * @return rtNestedSplits.
    */
   public Output<U> rtNestedSplits() {
     return rtNestedSplits;
   }
-  
+
   /**
-   * The `flat_values` for the returned `RaggedTensor`.
+   * Gets rtDenseValues.
+   * The {@code flat_values} for the returned {@code RaggedTensor}.
+   * @return rtDenseValues.
    */
   public Output<T> rtDenseValues() {
     return rtDenseValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RaggedRange";
-  
-  private Output<U> rtNestedSplits;
-  private Output<T> rtDenseValues;
-  
-  private RaggedRange(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    rtNestedSplits = operation.output(outputIdx++);
-    rtDenseValues = operation.output(outputIdx++);
   }
 }

@@ -31,34 +31,49 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Creates a TensorList by indexing into a Tensor.
- * <p>
  * Each member of the TensorList corresponds to one row of the input tensor,
- * specified by the given index (see `tf.gather`).
- * <p>
- * tensor: The input tensor.
+ * specified by the given index (see {@code tf.gather}).
+ * <p>tensor: The input tensor.
  * indices: The indices used to index into the list.
  * element_shape: The shape of the elements in the list (can be less specified than
- *   the shape of the tensor).
+ * the shape of the tensor).
  * num_elements: The size of the output list. Must be large enough to accommodate
- *   the largest index in indices. If -1, the list is just large enough to include
- *   the largest index in indices.
+ * the largest index in indices. If -1, the list is just large enough to include
+ * the largest index in indices.
  * output_handle: The TensorList.
  */
 @Operator
 public final class TensorListScatter extends RawOp implements Operand<TType> {
-  
   /**
-   * Factory method to create a class wrapping a new TensorListScatter operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorListScatterV2";
+
+  private Output<? extends TType> outputHandle;
+
+  @SuppressWarnings("unchecked")
+  private TensorListScatter(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    outputHandle = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorListScatterV2 operation.
+   *
    * @param scope current scope
-   * @param tensor 
-   * @param indices 
-   * @param elementShape 
-   * @param numElements 
+   * @param tensor the tensor value
+   * @param indices the indices value
+   * @param elementShape the elementShape value
+   * @param numElements the numElements value
    * @return a new instance of TensorListScatter
    */
-  @Endpoint(describeByClass = true)
-  public static TensorListScatter create(Scope scope, Operand<? extends TType> tensor, Operand<TInt32> indices, Operand<? extends TNumber> elementShape, Operand<TInt32> numElements) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorListScatter create(Scope scope, Operand<? extends TType> tensor,
+      Operand<TInt32> indices, Operand<? extends TNumber> elementShape,
+      Operand<TInt32> numElements) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatter"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
@@ -67,27 +82,19 @@ public final class TensorListScatter extends RawOp implements Operand<TType> {
     opBuilder = scope.apply(opBuilder);
     return new TensorListScatter(opBuilder.build());
   }
-  
+
   /**
+   * Gets outputHandle.
+   *
+   * @return outputHandle.
    */
-  public Output<?> outputHandle() {
+  public Output<? extends TType> outputHandle() {
     return outputHandle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) outputHandle;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorListScatterV2";
-  
-  private Output<?> outputHandle;
-  
-  private TensorListScatter(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    outputHandle = operation.output(outputIdx++);
   }
 }

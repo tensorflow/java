@@ -23,38 +23,42 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
+import org.tensorflow.types.family.TType;
 
 /**
  * Writes the given dataset to the given file using the TFRecord format.
  */
 public final class DatasetToTFRecord extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new DatasetToTFRecord operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ExperimentalDatasetToTFRecord";
+
+  private DatasetToTFRecord(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new ExperimentalDatasetToTFRecord operation.
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the dataset to write.
    * @param filename A scalar string tensor representing the filename to use.
    * @param compressionType A scalar string tensor containing either (i) the empty string (no
-   * compression), (ii) "ZLIB", or (iii) "GZIP".
+   * compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
    * @return a new instance of DatasetToTFRecord
    */
-  @Endpoint(describeByClass = true)
-  public static DatasetToTFRecord create(Scope scope, Operand<?> inputDataset, Operand<TString> filename, Operand<TString> compressionType) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DatasetToTFRecord create(Scope scope, Operand<? extends TType> inputDataset,
+      Operand<TString> filename, Operand<TString> compressionType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDatasetToTFRecord", scope.makeOpName("DatasetToTFRecord"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DatasetToTFRecord(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ExperimentalDatasetToTFRecord";
-  
-  private DatasetToTFRecord(Operation operation) {
-    super(operation);
   }
 }

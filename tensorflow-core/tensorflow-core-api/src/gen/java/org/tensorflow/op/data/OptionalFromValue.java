@@ -31,44 +31,53 @@ import org.tensorflow.types.family.TType;
 /**
  * Constructs an Optional variant from a tuple of tensors.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class OptionalFromValue extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "OptionalFromValue";
+
+  private Output<? extends TType> optional;
+
+  @SuppressWarnings("unchecked")
+  private OptionalFromValue(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    optional = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new OptionalFromValue operation.
-   * 
+   *
    * @param scope current scope
-   * @param components 
+   * @param components the components value
    * @return a new instance of OptionalFromValue
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static OptionalFromValue create(Scope scope, Iterable<Operand<?>> components) {
     OperationBuilder opBuilder = scope.env().opBuilder("OptionalFromValue", scope.makeOpName("OptionalFromValue"));
     opBuilder.addInputList(Operands.asOutputs(components));
     opBuilder = scope.apply(opBuilder);
     return new OptionalFromValue(opBuilder.build());
   }
-  
+
   /**
+   * Gets optional.
+   *
+   * @return optional.
    */
-  public Output<?> optional() {
+  public Output<? extends TType> optional() {
     return optional;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) optional;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "OptionalFromValue";
-  
-  private Output<?> optional;
-  
-  private OptionalFromValue(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    optional = operation.output(outputIdx++);
   }
 }

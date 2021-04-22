@@ -27,47 +27,69 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Decodes a `variant` Tensor into a `RaggedTensor`.
- * <p>
- * Decodes the given `variant` Tensor and returns a `RaggedTensor`. The input
- * could be a scalar, meaning it encodes a single `RaggedTensor` with ragged_rank
- * `output_ragged_rank`. It could also have an arbitrary rank, in which case each
- * element is decoded into a `RaggedTensor` with ragged_rank `input_ragged_rank`
+ * Decodes a {@code variant} Tensor into a {@code RaggedTensor}.
+ * Decodes the given {@code variant} Tensor and returns a {@code RaggedTensor}. The input
+ * could be a scalar, meaning it encodes a single {@code RaggedTensor} with ragged_rank
+ * {@code output_ragged_rank}. It could also have an arbitrary rank, in which case each
+ * element is decoded into a {@code RaggedTensor} with ragged_rank {@code input_ragged_rank}
  * and these are then stacked according to the input shape to output a single
- * `RaggedTensor` with ragged_rank `output_ragged_rank`. Each `variant` element in
- * the input Tensor is decoded by retrieving from the element a 1-D `variant`
- * Tensor with `input_ragged_rank + 1` Tensors, corresponding to the splits and
- * values of the decoded `RaggedTensor`. If `input_ragged_rank` is -1, then it is
- * inferred as `output_ragged_rank` - `rank(encoded_ragged)`. See
- * `RaggedTensorToVariant` for the corresponding encoding logic.
- * 
- * 
- * @param <U> data type for {@code outputNestedSplits()} output
- * @param <T> data type for {@code outputDenseValues()} output
+ * {@code RaggedTensor} with ragged_rank {@code output_ragged_rank}. Each {@code variant} element in
+ * the input Tensor is decoded by retrieving from the element a 1-D {@code variant}
+ * Tensor with {@code input_ragged_rank + 1} Tensors, corresponding to the splits and
+ * values of the decoded {@code RaggedTensor}. If {@code input_ragged_rank} is -1, then it is
+ * inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}. See
+ * {@code RaggedTensorToVariant} for the corresponding encoding logic.
+ *
+ * @param <T> data type for {@code output_nested_splits} output
+ *
+ * @param <U> data type for {@code output_dense_values} output
  */
-public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> extends RawOp {
-  
+public final class RaggedTensorFromVariant<T extends TNumber, U extends TType> extends RawOp {
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RaggedTensorFromVariant";
+
+  private List<Output<T>> outputNestedSplits;
+
+  private Output<U> outputDenseValues;
+
+  @SuppressWarnings("unchecked")
+  private RaggedTensorFromVariant(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
+    outputNestedSplits = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputNestedSplitsLength));
+    outputIdx += outputNestedSplitsLength;
+    outputDenseValues = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new RaggedTensorFromVariant operation.
-   * 
+   *
    * @param scope current scope
-   * @param encodedRagged A `variant` Tensor containing encoded `RaggedTensor`s.
-   * @param inputRaggedRank The ragged rank of each encoded `RaggedTensor` component in the input. If set to
-   * -1, this is inferred as `output_ragged_rank` - `rank(encoded_ragged)`
-   * @param outputRaggedRank The expected ragged rank of the output `RaggedTensor`. The following must hold:
-   * `output_ragged_rank = rank(encoded_ragged) + input_ragged_rank`.
-   * @param Tvalues 
-   * @param Tsplits 
+   * @param encodedRagged A {@code variant} Tensor containing encoded {@code RaggedTensor}s.
+   * @param inputRaggedRank The ragged rank of each encoded {@code RaggedTensor} component in the input. If set to
+   * -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
+   * @param outputRaggedRank The expected ragged rank of the output {@code RaggedTensor}. The following must hold:
+   * {@code output_ragged_rank = rank(encoded_ragged) + input_ragged_rank}.
+   * @param Tvalues the value of the Tvalues property
+   * @param Tsplits the value of the Tsplits property
+   * @param <T> data type for {@code RaggedTensorFromVariant} output and operands
+   * @param <U> data type for {@code RaggedTensorFromVariant} output and operands
    * @return a new instance of RaggedTensorFromVariant
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TType> RaggedTensorFromVariant<U, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, Class<T> Tvalues, Class<U> Tsplits) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber, U extends TType> RaggedTensorFromVariant<T, U> create(
+      Scope scope, Operand<? extends TType> encodedRagged, Long inputRaggedRank,
+      Long outputRaggedRank, Class<U> Tvalues, Class<T> Tsplits) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedTensorFromVariant", scope.makeOpName("RaggedTensorFromVariant"));
     opBuilder.addInput(encodedRagged.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -75,54 +97,47 @@ public final class RaggedTensorFromVariant<U extends TNumber, T extends TType> e
     opBuilder.setAttr("output_ragged_rank", outputRaggedRank);
     opBuilder.setAttr("Tvalues", Operands.toDataType(Tvalues));
     opBuilder.setAttr("Tsplits", Operands.toDataType(Tsplits));
-    return new RaggedTensorFromVariant<U, T>(opBuilder.build());
+    return new RaggedTensorFromVariant<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new RaggedTensorFromVariant operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new RaggedTensorFromVariant operation, with the default output types.
+   *
    * @param scope current scope
-   * @param encodedRagged A `variant` Tensor containing encoded `RaggedTensor`s.
-   * @param inputRaggedRank The ragged rank of each encoded `RaggedTensor` component in the input. If set to
-   * -1, this is inferred as `output_ragged_rank` - `rank(encoded_ragged)`
-   * @param outputRaggedRank The expected ragged rank of the output `RaggedTensor`. The following must hold:
-   * `output_ragged_rank = rank(encoded_ragged) + input_ragged_rank`.
-   * @param Tvalues 
-   * @return a new instance of RaggedTensorFromVariant
+   * @param encodedRagged A {@code variant} Tensor containing encoded {@code RaggedTensor}s.
+   * @param inputRaggedRank The ragged rank of each encoded {@code RaggedTensor} component in the input. If set to
+   * -1, this is inferred as {@code output_ragged_rank} - {@code rank(encoded_ragged)}
+   * @param outputRaggedRank The expected ragged rank of the output {@code RaggedTensor}. The following must hold:
+   * {@code output_ragged_rank = rank(encoded_ragged) + input_ragged_rank}.
+   * @param Tvalues the value of the Tvalues property
+   * @param <U> data type for {@code RaggedTensorFromVariant} output and operands
+   * @return a new instance of RaggedTensorFromVariant, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> RaggedTensorFromVariant<TInt64, T> create(Scope scope, Operand<?> encodedRagged, Long inputRaggedRank, Long outputRaggedRank, Class<T> Tvalues) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType> RaggedTensorFromVariant<TInt64, U> create(Scope scope,
+      Operand<? extends TType> encodedRagged, Long inputRaggedRank, Long outputRaggedRank,
+      Class<U> Tvalues) {
     return create(scope, encodedRagged, inputRaggedRank, outputRaggedRank, Tvalues, TInt64.class);
   }
-  
+
   /**
+   * Gets outputNestedSplits.
    * A list of one or more Tensors representing the splits of the output
-   * `RaggedTensor`.
+   * {@code RaggedTensor}.
+   * @return outputNestedSplits.
    */
-  public List<Output<U>> outputNestedSplits() {
+  public List<Output<T>> outputNestedSplits() {
     return outputNestedSplits;
   }
-  
+
   /**
-   * A Tensor representing the values of the output `RaggedTensor`.
+   * Gets outputDenseValues.
+   * A Tensor representing the values of the output {@code RaggedTensor}.
+   * @return outputDenseValues.
    */
-  public Output<T> outputDenseValues() {
+  public Output<U> outputDenseValues() {
     return outputDenseValues;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RaggedTensorFromVariant";
-  
-  private List<Output<U>> outputNestedSplits;
-  private Output<T> outputDenseValues;
-  
-  @SuppressWarnings("unchecked")
-  private RaggedTensorFromVariant(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputNestedSplitsLength = operation.outputListLength("output_nested_splits");
-    outputNestedSplits = Arrays.asList((Output<U>[])operation.outputList(outputIdx, outputNestedSplitsLength));
-    outputIdx += outputNestedSplitsLength;
-    outputDenseValues = operation.output(outputIdx++);
   }
 }

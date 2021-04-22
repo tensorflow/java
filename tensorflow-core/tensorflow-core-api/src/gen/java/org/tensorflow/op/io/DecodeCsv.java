@@ -34,76 +34,47 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Convert CSV records to tensors. Each column maps to one tensor.
- * <p>
  * RFC 4180 format is expected for the CSV records.
  * (https://tools.ietf.org/html/rfc4180)
  * Note that we allow leading and trailing spaces with int or float field.
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.DecodeCsv}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param fieldDelim char delimiter to separate fields in a record.
-     */
-    public Options fieldDelim(String fieldDelim) {
-      this.fieldDelim = fieldDelim;
-      return this;
-    }
-    
-    /**
-     * @param useQuoteDelim If false, treats double quotation marks as regular
-     * characters inside of the string fields (ignoring RFC 4180, Section 2,
-     * Bullet 5).
-     */
-    public Options useQuoteDelim(Boolean useQuoteDelim) {
-      this.useQuoteDelim = useQuoteDelim;
-      return this;
-    }
-    
-    /**
-     * @param naValue Additional string to recognize as NA/NaN.
-     */
-    public Options naValue(String naValue) {
-      this.naValue = naValue;
-      return this;
-    }
-    
-    /**
-     * @param selectCols 
-     */
-    public Options selectCols(List<Long> selectCols) {
-      this.selectCols = selectCols;
-      return this;
-    }
-    
-    private String fieldDelim;
-    private Boolean useQuoteDelim;
-    private String naValue;
-    private List<Long> selectCols;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodeCSV";
+
+  private List<Output<?>> output;
+
+  @SuppressWarnings("unchecked")
+  private DecodeCsv(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputLength = operation.outputListLength("output");
+    output = Arrays.asList(operation.outputList(outputIdx, outputLength));
+    outputIdx += outputLength;
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new DecodeCsv operation.
-   * 
+   * Factory method to create a class wrapping a new DecodeCSV operation.
+   *
    * @param scope current scope
    * @param records Each string is a record/row in the csv and all records should have
    * the same format.
    * @param recordDefaults One tensor per column of the input record, with either a
    * scalar default value for that column or an empty vector if the column is
    * required.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of DecodeCsv
    */
-  @Endpoint(describeByClass = true)
-  public static DecodeCsv create(Scope scope, Operand<TString> records, Iterable<Operand<?>> recordDefaults, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static DecodeCsv create(Scope scope, Operand<TString> records,
+      Iterable<Operand<?>> recordDefaults, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
@@ -121,7 +92,7 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
         }
         if (opts.selectCols != null) {
           long[] selectColsArray = new long[opts.selectCols.size()];
-          for (int i = 0; i < selectColsArray.length; ++i) {
+          for (int i = 0 ; i < selectColsArray.length ; i++) {
             selectColsArray[i] = opts.selectCols.get(i);
           }
           opBuilder.setAttr("select_cols", selectColsArray);
@@ -130,60 +101,144 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
     }
     return new DecodeCsv(opBuilder.build());
   }
-  
+
   /**
+   * Sets the fieldDelim option.
+   *
    * @param fieldDelim char delimiter to separate fields in a record.
+   * @return this Options instance.
    */
   public static Options fieldDelim(String fieldDelim) {
     return new Options().fieldDelim(fieldDelim);
   }
-  
+
   /**
+   * Sets the useQuoteDelim option.
+   *
    * @param useQuoteDelim If false, treats double quotation marks as regular
    * characters inside of the string fields (ignoring RFC 4180, Section 2,
    * Bullet 5).
+   * @return this Options instance.
    */
   public static Options useQuoteDelim(Boolean useQuoteDelim) {
     return new Options().useQuoteDelim(useQuoteDelim);
   }
-  
+
   /**
+   * Sets the naValue option.
+   *
    * @param naValue Additional string to recognize as NA/NaN.
+   * @return this Options instance.
    */
   public static Options naValue(String naValue) {
     return new Options().naValue(naValue);
   }
-  
+
   /**
-   * @param selectCols 
+   * Sets the selectCols option.
+   *
+   * @param selectCols the selectCols option
+   * @return this Options instance.
    */
   public static Options selectCols(List<Long> selectCols) {
     return new Options().selectCols(selectCols);
   }
-  
+
   /**
+   * Sets the selectCols option.
+   *
+   * @param selectCols the selectCols option
+   * @return this Options instance.
+   */
+  public static Options selectCols(Long[] selectCols) {
+    return new Options().selectCols(selectCols);
+  }
+
+  /**
+   * Gets output.
    * Each tensor will have the same shape as records.
+   * @return output.
    */
   public List<Output<?>> output() {
     return output;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodeCSV";
-  
-  private List<Output<?>> output;
-  
-  private DecodeCsv(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputLength = operation.outputListLength("output");
-    output = Arrays.asList(operation.outputList(outputIdx, outputLength));
-    outputIdx += outputLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.DecodeCsv}
+   */
+  public static class Options {
+    private String fieldDelim;
+
+    private Boolean useQuoteDelim;
+
+    private String naValue;
+
+    private List<Long> selectCols;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the fieldDelim option.
+     *
+     * @param fieldDelim char delimiter to separate fields in a record.
+     * @return this Options instance.
+     */
+    public Options fieldDelim(String fieldDelim) {
+      this.fieldDelim = fieldDelim;
+      return this;
+    }
+
+    /**
+     * Sets the useQuoteDelim option.
+     *
+     * @param useQuoteDelim If false, treats double quotation marks as regular
+     * characters inside of the string fields (ignoring RFC 4180, Section 2,
+     * Bullet 5).
+     * @return this Options instance.
+     */
+    public Options useQuoteDelim(Boolean useQuoteDelim) {
+      this.useQuoteDelim = useQuoteDelim;
+      return this;
+    }
+
+    /**
+     * Sets the naValue option.
+     *
+     * @param naValue Additional string to recognize as NA/NaN.
+     * @return this Options instance.
+     */
+    public Options naValue(String naValue) {
+      this.naValue = naValue;
+      return this;
+    }
+
+    /**
+     * Sets the selectCols option.
+     *
+     * @param selectCols the selectCols option
+     * @return this Options instance.
+     */
+    public Options selectCols(List<Long> selectCols) {
+      this.selectCols = selectCols;
+      return this;
+    }
+
+    /**
+     * Sets the selectCols option.
+     *
+     * @param selectCols the selectCols option
+     * @return this Options instance.
+     */
+    public Options selectCols(Long... selectCols) {
+      this.selectCols = Arrays.asList(selectCols);
+      return this;
+    }
   }
 }

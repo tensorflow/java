@@ -42,13 +42,11 @@ public final class BitwiseOps {
   }
 
   /**
-   * Elementwise computes the bitwise AND of `x` and `y`.
-   *  <p>
-   *  The result will have those bits set, that are set in both `x` and `y`. The
-   *  computation is performed on the underlying representations of `x` and `y`.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
+   * Elementwise computes the bitwise AND of {@code x} and {@code y}.
+   *  The result will have those bits set, that are set in both {@code x} and {@code y}. The
+   *  computation is performed on the underlying representations of {@code x} and {@code y}.
+   *  <p>For example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *  dtype_list = [tf.int8, tf.int16, tf.int32, tf.int64,
@@ -61,11 +59,12 @@ public final class BitwiseOps {
    *
    *    res = bitwise_ops.bitwise_and(lhs, rhs)
    *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
-   *  }</pre>
+   *  </pre>
    *
-   * @param <T> data type for {@code z()} output
-   * @param x
-   * @param y
+   * @param <T> data type for {@code z} output
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code BitwiseAnd} output and operands
    * @return a new instance of BitwiseAnd
    */
   public <T extends TNumber> BitwiseAnd<T> bitwiseAnd(Operand<T> x, Operand<T> y) {
@@ -73,13 +72,11 @@ public final class BitwiseOps {
   }
 
   /**
-   * Elementwise computes the bitwise OR of `x` and `y`.
-   *  <p>
-   *  The result will have those bits set, that are set in `x`, `y` or both. The
-   *  computation is performed on the underlying representations of `x` and `y`.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
+   * Elementwise computes the bitwise OR of {@code x} and {@code y}.
+   *  The result will have those bits set, that are set in {@code x}, {@code y} or both. The
+   *  computation is performed on the underlying representations of {@code x} and {@code y}.
+   *  <p>For example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *  dtype_list = [tf.int8, tf.int16, tf.int32, tf.int64,
@@ -92,11 +89,12 @@ public final class BitwiseOps {
    *
    *    res = bitwise_ops.bitwise_or(lhs, rhs)
    *    tf.assert_equal(tf.cast(res,  tf.float32), exp)  # TRUE
-   *  }</pre>
+   *  </pre>
    *
-   * @param <T> data type for {@code z()} output
-   * @param x
-   * @param y
+   * @param <T> data type for {@code z} output
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code BitwiseOr} output and operands
    * @return a new instance of BitwiseOr
    */
   public <T extends TNumber> BitwiseOr<T> bitwiseOr(Operand<T> x, Operand<T> y) {
@@ -104,13 +102,11 @@ public final class BitwiseOps {
   }
 
   /**
-   * Elementwise computes the bitwise XOR of `x` and `y`.
-   *  <p>
-   *  The result will have those bits set, that are different in `x` and `y`. The
-   *  computation is performed on the underlying representations of `x` and `y`.
-   *  <p>
-   *  For example:
-   *  <pre>{@code
+   * Elementwise computes the bitwise XOR of {@code x} and {@code y}.
+   *  The result will have those bits set, that are different in {@code x} and {@code y}. The
+   *  computation is performed on the underlying representations of {@code x} and {@code y}.
+   *  <p>For example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *  dtype_list = [tf.int8, tf.int16, tf.int32, tf.int64,
@@ -123,11 +119,12 @@ public final class BitwiseOps {
    *
    *    res = bitwise_ops.bitwise_xor(lhs, rhs)
    *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
-   *  }</pre>
+   *  </pre>
    *
-   * @param <T> data type for {@code z()} output
-   * @param x
-   * @param y
+   * @param <T> data type for {@code z} output
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code BitwiseXor} output and operands
    * @return a new instance of BitwiseXor
    */
   public <T extends TNumber> BitwiseXor<T> bitwiseXor(Operand<T> x, Operand<T> y) {
@@ -135,13 +132,11 @@ public final class BitwiseOps {
   }
 
   /**
-   * Invert (flip) each bit of supported types; for example, type `uint8` value 01010101 becomes 10101010.
-   *  <p>
-   *  Flip each bit of supported types.  For example, type `int8` (decimal 2) binary 00000010 becomes (decimal -3) binary 11111101.
-   *  This operation is performed on each element of the tensor argument `x`.
-   *  <p>
-   *  Example:
-   *  <pre>{@code
+   * Invert (flip) each bit of supported types; for example, type {@code uint8} value 01010101 becomes 10101010.
+   *  Flip each bit of supported types.  For example, type {@code int8} (decimal 2) binary 00000010 becomes (decimal -3) binary 11111101.
+   *  This operation is performed on each element of the tensor argument {@code x}.
+   *  <p>Example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *
@@ -175,10 +170,11 @@ public final class BitwiseOps {
    *      inverted = bitwise_ops.invert(input_tensor)
    *      expected = tf.constant([dtype.max - x for x in inputs], dtype=tf.float32)
    *      tf.assert_equal(tf.cast(inverted, tf.float32), tf.cast(expected, tf.float32))
-   *  }</pre>
+   *  </pre>
    *
-   * @param <T> data type for {@code y()} output
-   * @param x
+   * @param <T> data type for {@code y} output
+   * @param x the x value
+   * @param <T> data type for {@code Invert} output and operands
    * @return a new instance of Invert
    */
   public <T extends TNumber> Invert<T> invert(Operand<T> x) {
@@ -186,13 +182,11 @@ public final class BitwiseOps {
   }
 
   /**
-   * Elementwise computes the bitwise left-shift of `x` and `y`.
-   *  <p>
-   *  If `y` is negative, or greater than or equal to the width of `x` in bits the
+   * Elementwise computes the bitwise left-shift of {@code x} and {@code y}.
+   *  If {@code y} is negative, or greater than or equal to the width of {@code x} in bits the
    *  result is implementation defined.
-   *  <p>
-   *  Example:
-   *  <pre>{@code
+   *  <p>Example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *  import numpy as np
@@ -215,12 +209,13 @@ public final class BitwiseOps {
    *  lhs = np.array([-2, 64, 101, 32], dtype=np.int8)
    *  rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
    *  bitwise_ops.left_shift(lhs, rhs)
-   *  # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
-   *  }</pre>
+   *  # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
+   *  </pre>
    *
-   * @param <T> data type for {@code z()} output
-   * @param x
-   * @param y
+   * @param <T> data type for {@code z} output
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code LeftShift} output and operands
    * @return a new instance of LeftShift
    */
   public <T extends TNumber> LeftShift<T> leftShift(Operand<T> x, Operand<T> y) {
@@ -228,16 +223,13 @@ public final class BitwiseOps {
   }
 
   /**
-   * Elementwise computes the bitwise right-shift of `x` and `y`.
-   *  <p>
+   * Elementwise computes the bitwise right-shift of {@code x} and {@code y}.
    *  Performs a logical shift for unsigned integer types, and an arithmetic shift
    *  for signed integer types.
-   *  <p>
-   *  If `y` is negative, or greater than or equal to than the width of `x` in bits
+   *  <p>If {@code y} is negative, or greater than or equal to than the width of {@code x} in bits
    *  the result is implementation defined.
-   *  <p>
-   *  Example:
-   *  <pre>{@code
+   *  <p>Example:
+   *  <pre>
    *  import tensorflow as tf
    *  from tensorflow.python.ops import bitwise_ops
    *  import numpy as np
@@ -260,12 +252,13 @@ public final class BitwiseOps {
    *  lhs = np.array([-2, 64, 101, 32], dtype=np.int8)
    *  rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
    *  bitwise_ops.right_shift(lhs, rhs)
-   *  # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
-   *  }</pre>
+   *  # &lt;tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)&gt;
+   *  </pre>
    *
-   * @param <T> data type for {@code z()} output
-   * @param x
-   * @param y
+   * @param <T> data type for {@code z} output
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code RightShift} output and operands
    * @return a new instance of RightShift
    */
   public <T extends TNumber> RightShift<T> rightShift(Operand<T> x, Operand<T> y) {

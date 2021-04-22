@@ -30,89 +30,92 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Copy a tensor setting everything outside a central band in each innermost matrix to zero.
- * <p>
- * The `band` part is computed as follows:
- * Assume `input` has `k` dimensions `[I, J, K, ..., M, N]`, then the output is a
+ * The {@code band} part is computed as follows:
+ * Assume {@code input} has {@code k} dimensions {@code [I, J, K, ..., M, N]}, then the output is a
  * tensor with the same shape where
- * <p>
- * `band[i, j, k, ..., m, n] = in_band(m, n) * input[i, j, k, ..., m, n]`.
- * <p>
- * The indicator function
- * <p>
- * `in_band(m, n) = (num_lower < 0 || (m-n) <= num_lower)) &&
- *                  (num_upper < 0 || (n-m) <= num_upper)`.
- * <p>
- * For example:
- * <pre>{@code
+ * <p>{@code band[i, j, k, ..., m, n] = in_band(m, n) * input[i, j, k, ..., m, n]}.
+ * <p>The indicator function
+ * <p>{@code in_band(m, n) = (num_lower < 0 || (m-n) <= num_lower)) && (num_upper < 0 || (n-m) <= num_upper)}.
+ * <p>For example:
+ * <pre>
  * # if 'input' is [[ 0,  1,  2, 3]
  *                  [-1,  0,  1, 2]
  *                  [-2, -1,  0, 1]
  *                  [-3, -2, -1, 0]],
- * 
- * tf.matrix_band_part(input, 1, -1) ==> [[ 0,  1,  2, 3]
+ *
+ * tf.matrix_band_part(input, 1, -1) ==&gt; [[ 0,  1,  2, 3]
  *                                        [-1,  0,  1, 2]
  *                                        [ 0, -1,  0, 1]
  *                                        [ 0,  0, -1, 0]],
- * 
- * tf.matrix_band_part(input, 2, 1) ==> [[ 0,  1,  0, 0]
+ *
+ * tf.matrix_band_part(input, 2, 1) ==&gt; [[ 0,  1,  0, 0]
  *                                       [-1,  0,  1, 0]
  *                                       [-2, -1,  0, 1]
  *                                       [ 0, -2, -1, 0]]
- * }</pre>
- * Useful special cases:
- * <pre>{@code
- *  tf.matrix_band_part(input, 0, -1) ==> Upper triangular part.
- *  tf.matrix_band_part(input, -1, 0) ==> Lower triangular part.
- *  tf.matrix_band_part(input, 0, 0) ==> Diagonal.
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code band()} output
+ * </pre>
+ * <p>Useful special cases:
+ * <pre>
+ *  tf.matrix_band_part(input, 0, -1) ==&gt; Upper triangular part.
+ *  tf.matrix_band_part(input, -1, 0) ==&gt; Lower triangular part.
+ *  tf.matrix_band_part(input, 0, 0) ==&gt; Diagonal.
+ * </pre>
+ *
+ * @param <T> data type for {@code band} output
  */
-@Operator(group = "linalg")
+@Operator(
+    group = "linalg"
+)
 public final class BandPart<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new BandPart operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "MatrixBandPart";
+
+  private Output<T> band;
+
+  private BandPart(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    band = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new MatrixBandPart operation.
+   *
    * @param scope current scope
-   * @param input Rank `k` tensor.
+   * @param input Rank {@code k} tensor.
    * @param numLower 0-D tensor. Number of subdiagonals to keep. If negative, keep entire
    * lower triangle.
    * @param numUpper 0-D tensor. Number of superdiagonals to keep. If negative, keep
    * entire upper triangle.
+   * @param <T> data type for {@code MatrixBandPart} output and operands
+   * @param <U> data type for {@code MatrixBandPart} output and operands
    * @return a new instance of BandPart
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType, U extends TNumber> BandPart<T> create(Scope scope, Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType, U extends TNumber> BandPart<T> create(Scope scope,
+      Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
     OperationBuilder opBuilder = scope.env().opBuilder("MatrixBandPart", scope.makeOpName("BandPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new BandPart<T>(opBuilder.build());
+    return new BandPart<>(opBuilder.build());
   }
-  
+
   /**
-   * Rank `k` tensor of the same shape as input. The extracted banded tensor.
+   * Gets band.
+   * Rank {@code k} tensor of the same shape as input. The extracted banded tensor.
+   * @return band.
    */
   public Output<T> band() {
     return band;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return band;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MatrixBandPart";
-  
-  private Output<T> band;
-  
-  private BandPart(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    band = operation.output(outputIdx++);
   }
 }

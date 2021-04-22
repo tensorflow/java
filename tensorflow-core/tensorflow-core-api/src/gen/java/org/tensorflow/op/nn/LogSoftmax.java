@@ -29,51 +29,59 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes log softmax activations.
- * <p>
- * For each batch `i` and class `j` we have
- * <p>
- *     logsoftmax[i, j] = logits[i, j] - log(sum(exp(logits[i])))
- * 
- * @param <T> data type for {@code logsoftmax()} output
+ * For each batch {@code i} and class {@code j} we have
+ * <pre>
+ * logsoftmax[i, j] = logits[i, j] - log(sum(exp(logits[i])))
+ * </pre>
+ *
+ * @param <T> data type for {@code logsoftmax} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class LogSoftmax<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new LogSoftmax operation.
-   * 
-   * @param scope current scope
-   * @param logits 2-D with shape `[batch_size, num_classes]`.
-   * @return a new instance of LogSoftmax
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
-    opBuilder.addInput(logits.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new LogSoftmax<T>(opBuilder.build());
-  }
-  
-  /**
-   * Same shape as `logits`.
-   */
-  public Output<T> logsoftmax() {
-    return logsoftmax;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return logsoftmax;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "LogSoftmax";
-  
+
   private Output<T> logsoftmax;
-  
+
   private LogSoftmax(Operation operation) {
     super(operation);
     int outputIdx = 0;
     logsoftmax = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new LogSoftmax operation.
+   *
+   * @param scope current scope
+   * @param logits 2-D with shape {@code [batch_size, num_classes]}.
+   * @param <T> data type for {@code LogSoftmax} output and operands
+   * @return a new instance of LogSoftmax
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
+    OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
+    opBuilder.addInput(logits.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new LogSoftmax<>(opBuilder.build());
+  }
+
+  /**
+   * Gets logsoftmax.
+   * Same shape as {@code logits}.
+   * @return logsoftmax.
+   */
+  public Output<T> logsoftmax() {
+    return logsoftmax;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return logsoftmax;
   }
 }

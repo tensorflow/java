@@ -33,52 +33,62 @@ import org.tensorflow.types.family.TType;
 /**
  * Gets the next output from the given iterator as an Optional variant.
  */
-@Operator(group = "data")
+@Operator(
+    group = "data"
+)
 public final class IteratorGetNextAsOptional extends RawOp implements Operand<TType> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "IteratorGetNextAsOptional";
+
+  private Output<? extends TType> optional;
+
+  @SuppressWarnings("unchecked")
+  private IteratorGetNextAsOptional(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    optional = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new IteratorGetNextAsOptional operation.
-   * 
+   *
    * @param scope current scope
-   * @param iterator 
-   * @param outputTypes 
-   * @param outputShapes 
+   * @param iterator the iterator value
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
    * @return a new instance of IteratorGetNextAsOptional
    */
-  @Endpoint(describeByClass = true)
-  public static IteratorGetNextAsOptional create(Scope scope, Operand<?> iterator, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static IteratorGetNextAsOptional create(Scope scope, Operand<? extends TType> iterator,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextAsOptional", scope.makeOpName("IteratorGetNextAsOptional"));
     opBuilder.addInput(iterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
     return new IteratorGetNextAsOptional(opBuilder.build());
   }
-  
+
   /**
+   * Gets optional.
+   *
+   * @return optional.
    */
-  public Output<?> optional() {
+  public Output<? extends TType> optional() {
     return optional;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) optional;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "IteratorGetNextAsOptional";
-  
-  private Output<?> optional;
-  
-  private IteratorGetNextAsOptional(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    optional = operation.output(outputIdx++);
   }
 }

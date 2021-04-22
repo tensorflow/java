@@ -28,49 +28,30 @@ import org.tensorflow.types.TString;
 
 /**
  * Prints a string scalar.
- * <p>
  * Prints a string scalar to the desired output_stream.
  */
 @Operator
 public final class Print extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Print}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param outputStream A string specifying the output stream or logging level to print to.
-     */
-    public Options outputStream(String outputStream) {
-      this.outputStream = outputStream;
-      return this;
-    }
-    
-    /**
-     * @param end 
-     */
-    public Options end(String end) {
-      this.end = end;
-      return this;
-    }
-    
-    private String outputStream;
-    private String end;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "PrintV2";
+
+  private Print(Operation operation) {
+    super(operation);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Print operation.
-   * 
+   * Factory method to create a class wrapping a new PrintV2 operation.
+   *
    * @param scope current scope
    * @param input The string scalar to print.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of Print
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Print create(Scope scope, Operand<TString> input, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("PrintV2", scope.makeOpName("Print"));
     opBuilder.addInput(input.asOutput());
@@ -87,25 +68,58 @@ public final class Print extends RawOp {
     }
     return new Print(opBuilder.build());
   }
-  
+
   /**
+   * Sets the outputStream option.
+   *
    * @param outputStream A string specifying the output stream or logging level to print to.
+   * @return this Options instance.
    */
   public static Options outputStream(String outputStream) {
     return new Options().outputStream(outputStream);
   }
-  
+
   /**
-   * @param end 
+   * Sets the end option.
+   *
+   * @param end the end option
+   * @return this Options instance.
    */
   public static Options end(String end) {
     return new Options().end(end);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "PrintV2";
-  
-  private Print(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Print}
+   */
+  public static class Options {
+    private String outputStream;
+
+    private String end;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the outputStream option.
+     *
+     * @param outputStream A string specifying the output stream or logging level to print to.
+     * @return this Options instance.
+     */
+    public Options outputStream(String outputStream) {
+      this.outputStream = outputStream;
+      return this;
+    }
+
+    /**
+     * Sets the end option.
+     *
+     * @param end the end option
+     * @return this Options instance.
+     */
+    public Options end(String end) {
+      this.end = end;
+      return this;
+    }
   }
 }

@@ -30,23 +30,21 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns locations of nonzero / true values in a tensor.
- * <p>
- * This operation returns the coordinates of true elements in `condition`. The
+ * This operation returns the coordinates of true elements in {@code condition}. The
  * coordinates are returned in a 2-D tensor where the first dimension (rows)
  * represents the number of true elements, and the second dimension (columns)
  * represents the coordinates of the true elements. Keep in mind, the shape of
  * the output tensor can vary depending on how many true values there are in
- * `condition`. Indices are output in row-major order.
- * <p>
- * For example:
- * <pre>{@code
+ * {@code condition}. Indices are output in row-major order.
+ * <p>For example:
+ * <pre>
  * # 'input' tensor is [[True, False]
  * #                    [True, False]]
  * # 'input' has two true values, so output has two coordinates.
  * # 'input' has rank of 2, so coordinates have two indices.
- * where(input) ==> [[0, 0],
+ * where(input) ==&gt; [[0, 0],
  *                   [1, 0]]
- * 
+ *
  * # `condition` tensor is [[[True, False]
  * #                     [True, False]]
  * #                    [[False, True]
@@ -55,12 +53,12 @@ import org.tensorflow.types.family.TType;
  * #                     [False, True]]]
  * # 'input' has 5 true values, so output has 5 coordinates.
  * # 'input' has rank of 3, so coordinates have three indices.
- * where(input) ==> [[0, 0, 0],
+ * where(input) ==&gt; [[0, 0, 0],
  *                   [0, 1, 0],
  *                   [1, 0, 1],
  *                   [1, 1, 1],
  *                   [2, 1, 1]]
- * 
+ *
  * # `condition` tensor is [[[1.5,  0.0]
  * #                     [-0.5, 0.0]]
  * #                    [[0.0,  0.25]
@@ -69,12 +67,12 @@ import org.tensorflow.types.family.TType;
  * #                     [0.0,  0.01]]]
  * # 'input' has 5 nonzero values, so output has 5 coordinates.
  * # 'input' has rank of 3, so coordinates have three indices.
- * where(input) ==> [[0, 0, 0],
+ * where(input) ==&gt; [[0, 0, 0],
  *                   [0, 1, 0],
  *                   [1, 0, 1],
  *                   [1, 1, 1],
  *                   [2, 1, 1]]
- * 
+ *
  * # `condition` tensor is [[[1.5 + 0.0j, 0.0  + 0.0j]
  * #                     [0.0 + 0.5j, 0.0  + 0.0j]]
  * #                    [[0.0 + 0.0j, 0.25 + 1.5j]
@@ -83,51 +81,56 @@ import org.tensorflow.types.family.TType;
  * #                     [0.0 + 0.0j, 0.01 + 0.0j]]]
  * # 'input' has 5 nonzero magnitude values, so output has 5 coordinates.
  * # 'input' has rank of 3, so coordinates have three indices.
- * where(input) ==> [[0, 0, 0],
+ * where(input) ==&gt; [[0, 0, 0],
  *                   [0, 1, 0],
  *                   [1, 0, 1],
  *                   [1, 1, 1],
  *                   [2, 1, 1]]
- * }</pre>
- * 
+ * </pre>
  */
 @Operator
 public final class Where extends RawOp implements Operand<TInt64> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Where";
+
+  private Output<TInt64> index;
+
+  private Where(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    index = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Where operation.
-   * 
+   *
    * @param scope current scope
-   * @param condition 
+   * @param condition the condition value
    * @return a new instance of Where
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static Where create(Scope scope, Operand<? extends TType> condition) {
     OperationBuilder opBuilder = scope.env().opBuilder("Where", scope.makeOpName("Where"));
     opBuilder.addInput(condition.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Where(opBuilder.build());
   }
-  
+
   /**
+   * Gets index.
+   *
+   * @return index.
    */
   public Output<TInt64> index() {
     return index;
   }
-  
+
   @Override
   public Output<TInt64> asOutput() {
     return index;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Where";
-  
-  private Output<TInt64> index;
-  
-  private Where(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    index = operation.output(outputIdx++);
   }
 }

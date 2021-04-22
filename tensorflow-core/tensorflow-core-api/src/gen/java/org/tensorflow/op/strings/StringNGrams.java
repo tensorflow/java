@@ -31,24 +31,40 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Creates ngrams from ragged string data.
- * <p>
  * This op accepts a ragged tensor with 1 ragged dimension containing only
  * strings and outputs a ragged tensor with 1 ragged dimension containing ngrams
  * of that string, joined along the innermost axis.
- * 
- * @param <T> data type for {@code ngramsSplits()} output
+ *
+ * @param <T> data type for {@code ngrams_splits} output
  */
-@Operator(group = "strings")
+@Operator(
+    group = "strings"
+)
 public final class StringNGrams<T extends TNumber> extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "StringNGrams";
+
+  private Output<TString> ngrams;
+
+  private Output<T> ngramsSplits;
+
+  private StringNGrams(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    ngrams = operation.output(outputIdx++);
+    ngramsSplits = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new StringNGrams operation.
-   * 
+   *
    * @param scope current scope
    * @param data The values tensor of the ragged string tensor to make ngrams out of. Must be a
    * 1D string tensor.
    * @param dataSplits The splits tensor of the ragged string tensor to make ngrams out of.
-   * @param separator The string to append between elements of the token. Use "" for no separator.
+   * @param separator The string to append between elements of the token. Use &quot;&quot; for no separator.
    * @param ngramWidths The sizes of the ngrams to create.
    * @param leftPad The string to use to pad the left side of the ngram sequence. Only used if
    * pad_width != 0.
@@ -56,20 +72,25 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
    * pad_width != 0.
    * @param padWidth The number of padding elements to add to each side of each
    * sequence. Note that padding will never be greater than 'ngram_widths'-1
-   * regardless of this value. If `pad_width=-1`, then add `max(ngram_widths)-1`
+   * regardless of this value. If {@code pad_width=-1}, then add {@code max(ngram_widths)-1}
    * elements.
-   * @param preserveShortSequences 
+   * @param preserveShortSequences the value of the preserveShortSequences property
+   * @param <T> data type for {@code StringNGrams} output and operands
    * @return a new instance of StringNGrams
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data, Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad, String rightPad, Long padWidth, Boolean preserveShortSequences) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data,
+      Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad,
+      String rightPad, Long padWidth, Boolean preserveShortSequences) {
     OperationBuilder opBuilder = scope.env().opBuilder("StringNGrams", scope.makeOpName("StringNGrams"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(dataSplits.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("separator", separator);
     long[] ngramWidthsArray = new long[ngramWidths.size()];
-    for (int i = 0; i < ngramWidthsArray.length; ++i) {
+    for (int i = 0 ; i < ngramWidthsArray.length ; i++) {
       ngramWidthsArray[i] = ngramWidths.get(i);
     }
     opBuilder.setAttr("ngram_widths", ngramWidthsArray);
@@ -77,33 +98,24 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
     opBuilder.setAttr("right_pad", rightPad);
     opBuilder.setAttr("pad_width", padWidth);
     opBuilder.setAttr("preserve_short_sequences", preserveShortSequences);
-    return new StringNGrams<T>(opBuilder.build());
+    return new StringNGrams<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets ngrams.
    * The values tensor of the output ngrams ragged tensor.
+   * @return ngrams.
    */
   public Output<TString> ngrams() {
     return ngrams;
   }
-  
+
   /**
+   * Gets ngramsSplits.
    * The splits tensor of the output ngrams ragged tensor.
+   * @return ngramsSplits.
    */
   public Output<T> ngramsSplits() {
     return ngramsSplits;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "StringNGrams";
-  
-  private Output<TString> ngrams;
-  private Output<T> ngramsSplits;
-  
-  private StringNGrams(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    ngrams = operation.output(outputIdx++);
-    ngramsSplits = operation.output(outputIdx++);
   }
 }

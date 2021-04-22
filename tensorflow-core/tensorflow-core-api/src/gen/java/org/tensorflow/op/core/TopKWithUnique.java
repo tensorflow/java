@@ -30,7 +30,6 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Returns the TopK values in the array in sorted order. This is a combination
- * <p>
  * of MakeUnique and TopKUnique. The returned top-K will have its lower bits
  * replaced by iota, thus it will be close to the original value but not exactly
  * the same. The running time is proportional to the product of K and the input
@@ -38,16 +37,33 @@ import org.tensorflow.types.TInt32;
  */
 @Operator
 public final class TopKWithUnique extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TopKWithUnique";
+
+  private Output<TFloat32> topk;
+
+  private Output<TInt32> topkIndices;
+
+  private TopKWithUnique(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    topk = operation.output(outputIdx++);
+    topkIndices = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new TopKWithUnique operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param k 
+   * @param input the input value
+   * @param k the value of the k property
    * @return a new instance of TopKWithUnique
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static TopKWithUnique create(Scope scope, Operand<TFloat32> input, Long k) {
     OperationBuilder opBuilder = scope.env().opBuilder("TopKWithUnique", scope.makeOpName("TopKWithUnique"));
     opBuilder.addInput(input.asOutput());
@@ -55,29 +71,22 @@ public final class TopKWithUnique extends RawOp {
     opBuilder.setAttr("k", k);
     return new TopKWithUnique(opBuilder.build());
   }
-  
+
   /**
+   * Gets topk.
+   *
+   * @return topk.
    */
   public Output<TFloat32> topk() {
     return topk;
   }
-  
+
   /**
+   * Gets topkIndices.
+   *
+   * @return topkIndices.
    */
   public Output<TInt32> topkIndices() {
     return topkIndices;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TopKWithUnique";
-  
-  private Output<TFloat32> topk;
-  private Output<TInt32> topkIndices;
-  
-  private TopKWithUnique(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    topk = operation.output(outputIdx++);
-    topkIndices = operation.output(outputIdx++);
   }
 }

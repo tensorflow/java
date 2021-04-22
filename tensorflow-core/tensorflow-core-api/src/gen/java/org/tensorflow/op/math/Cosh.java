@@ -29,56 +29,62 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes hyperbolic cosine of x element-wise.
- * <p>
- *   Given an input tensor, this function computes hyperbolic cosine of every
- *   element in the tensor. Input range is `[-inf, inf]` and output range
- *   is `[1, inf]`.
- * <p>
- *   <pre>{@code
- *   x = tf.constant([-float("inf"), -9, -0.5, 1, 1.2, 2, 10, float("inf")])
- *   tf.math.cosh(x) ==> [inf 4.0515420e+03 1.1276259e+00 1.5430807e+00 1.8106556e+00 3.7621956e+00 1.1013233e+04 inf]
- *   }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * Given an input tensor, this function computes hyperbolic cosine of every
+ * element in the tensor. Input range is {@code [-inf, inf]} and output range
+ * is {@code [1, inf]}.
+ * <pre>
+ * x = tf.constant([-float(&quot;inf&quot;), -9, -0.5, 1, 1.2, 2, 10, float(&quot;inf&quot;)])
+ * tf.math.cosh(x) ==&gt; [inf 4.0515420e+03 1.1276259e+00 1.5430807e+00 1.8106556e+00 3.7621956e+00 1.1013233e+04 inf]
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Cosh<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Cosh operation.
-   * 
-   * @param scope current scope
-   * @param x 
-   * @return a new instance of Cosh
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Cosh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Cosh", scope.makeOpName("Cosh"));
-    opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new Cosh<T>(opBuilder.build());
-  }
-  
-  /**
-   */
-  public Output<T> y() {
-    return y;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return y;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "Cosh";
-  
+
   private Output<T> y;
-  
+
   private Cosh(Operation operation) {
     super(operation);
     int outputIdx = 0;
     y = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new Cosh operation.
+   *
+   * @param scope current scope
+   * @param x the x value
+   * @param <T> data type for {@code Cosh} output and operands
+   * @return a new instance of Cosh
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Cosh<T> create(Scope scope, Operand<T> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("Cosh", scope.makeOpName("Cosh"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new Cosh<>(opBuilder.build());
+  }
+
+  /**
+   * Gets y.
+   *
+   * @return y.
+   */
+  public Output<T> y() {
+    return y;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return y;
   }
 }

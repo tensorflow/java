@@ -28,42 +28,41 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes rectified linear: `max(features, features * alpha)`.
- * 
- * @param <T> data type for {@code activations()} output
+ * Computes rectified linear: {@code max(features, features * alpha)}.
+ *
+ * @param <T> data type for {@code activations} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.LeakyRelu}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param alpha 
-     */
-    public Options alpha(Float alpha) {
-      this.alpha = alpha;
-      return this;
-    }
-    
-    private Float alpha;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LeakyRelu";
+
+  private Output<T> activations;
+
+  private LeakyRelu(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    activations = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new LeakyRelu operation.
-   * 
+   *
    * @param scope current scope
-   * @param features 
-   * @param options carries optional attributes values
+   * @param features the features value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code LeakyRelu} output and operands
    * @return a new instance of LeakyRelu
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -74,35 +73,51 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
         }
       }
     }
-    return new LeakyRelu<T>(opBuilder.build());
+    return new LeakyRelu<>(opBuilder.build());
   }
-  
+
   /**
-   * @param alpha 
+   * Sets the alpha option.
+   *
+   * @param alpha the alpha option
+   * @return this Options instance.
    */
   public static Options alpha(Float alpha) {
     return new Options().alpha(alpha);
   }
-  
+
   /**
+   * Gets activations.
+   *
+   * @return activations.
    */
   public Output<T> activations() {
     return activations;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return activations;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LeakyRelu";
-  
-  private Output<T> activations;
-  
-  private LeakyRelu(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    activations = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.LeakyRelu}
+   */
+  public static class Options {
+    private Float alpha;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the alpha option.
+     *
+     * @param alpha the alpha option
+     * @return this Options instance.
+     */
+    public Options alpha(Float alpha) {
+      this.alpha = alpha;
+      return this;
+    }
   }
 }

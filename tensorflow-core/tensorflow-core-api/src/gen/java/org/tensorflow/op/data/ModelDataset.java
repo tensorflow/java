@@ -27,71 +27,48 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Identity transformation that models performance.
- * <p>
  * Identity transformation that models performance.
  */
 public final class ModelDataset extends RawOp implements Operand<TType> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.ModelDataset}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param algorithm 
-     */
-    public Options algorithm(Long algorithm) {
-      this.algorithm = algorithm;
-      return this;
-    }
-    
-    /**
-     * @param cpuBudget 
-     */
-    public Options cpuBudget(Long cpuBudget) {
-      this.cpuBudget = cpuBudget;
-      return this;
-    }
-    
-    /**
-     * @param ramBudget 
-     */
-    public Options ramBudget(Long ramBudget) {
-      this.ramBudget = ramBudget;
-      return this;
-    }
-    
-    private Long algorithm;
-    private Long cpuBudget;
-    private Long ramBudget;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ModelDataset";
+
+  private Output<? extends TType> handle;
+
+  @SuppressWarnings("unchecked")
+  private ModelDataset(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    handle = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ModelDataset operation.
-   * 
+   *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the input dataset.
-   * @param outputTypes 
-   * @param outputShapes 
-   * @param options carries optional attributes values
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of ModelDataset
    */
-  @Endpoint(describeByClass = true)
-  public static ModelDataset create(Scope scope, Operand<?> inputDataset, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ModelDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ModelDataset", scope.makeOpName("ModelDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
-    for (int i = 0; i < outputShapesArray.length; ++i) {
+    for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
@@ -110,48 +87,96 @@ public final class ModelDataset extends RawOp implements Operand<TType> {
     }
     return new ModelDataset(opBuilder.build());
   }
-  
+
   /**
-   * @param algorithm 
+   * Sets the algorithm option.
+   *
+   * @param algorithm the algorithm option
+   * @return this Options instance.
    */
   public static Options algorithm(Long algorithm) {
     return new Options().algorithm(algorithm);
   }
-  
+
   /**
-   * @param cpuBudget 
+   * Sets the cpuBudget option.
+   *
+   * @param cpuBudget the cpuBudget option
+   * @return this Options instance.
    */
   public static Options cpuBudget(Long cpuBudget) {
     return new Options().cpuBudget(cpuBudget);
   }
-  
+
   /**
-   * @param ramBudget 
+   * Sets the ramBudget option.
+   *
+   * @param ramBudget the ramBudget option
+   * @return this Options instance.
    */
   public static Options ramBudget(Long ramBudget) {
     return new Options().ramBudget(ramBudget);
   }
-  
+
   /**
+   * Gets handle.
+   *
+   * @return handle.
    */
-  public Output<?> handle() {
+  public Output<? extends TType> handle() {
     return handle;
   }
-  
+
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ModelDataset";
-  
-  private Output<?> handle;
-  
-  private ModelDataset(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.ModelDataset}
+   */
+  public static class Options {
+    private Long algorithm;
+
+    private Long cpuBudget;
+
+    private Long ramBudget;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the algorithm option.
+     *
+     * @param algorithm the algorithm option
+     * @return this Options instance.
+     */
+    public Options algorithm(Long algorithm) {
+      this.algorithm = algorithm;
+      return this;
+    }
+
+    /**
+     * Sets the cpuBudget option.
+     *
+     * @param cpuBudget the cpuBudget option
+     * @return this Options instance.
+     */
+    public Options cpuBudget(Long cpuBudget) {
+      this.cpuBudget = cpuBudget;
+      return this;
+    }
+
+    /**
+     * Sets the ramBudget option.
+     *
+     * @param ramBudget the ramBudget option
+     * @return this Options instance.
+     */
+    public Options ramBudget(Long ramBudget) {
+      this.ramBudget = ramBudget;
+      return this;
+    }
   }
 }

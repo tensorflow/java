@@ -34,27 +34,43 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Restores tensors from a V2 checkpoint.
- * <p>
  * For backward compatibility with the V1 format, this Op currently allows
  * restoring from a V1 checkpoint as well:
- *   - This Op first attempts to find the V2 index file pointed to by "prefix", and
- *     if found proceed to read it as a V2 checkpoint;
- *   - Otherwise the V1 read path is invoked.
+ * <ul>
+ * <li>This Op first attempts to find the V2 index file pointed to by &quot;prefix&quot;, and
+ * if found proceed to read it as a V2 checkpoint;</li>
+ * <li>Otherwise the V1 read path is invoked.
  * Relying on this behavior is not recommended, as the ability to fall back to read
- * V1 might be deprecated and eventually removed.
- * <p>
- * By default, restores the named tensors in full.  If the caller wishes to restore
- * specific slices of stored tensors, "shape_and_slices" should be non-empty
+ * V1 might be deprecated and eventually removed.</li>
+ * </ul>
+ * <p>By default, restores the named tensors in full.  If the caller wishes to restore
+ * specific slices of stored tensors, &quot;shape_and_slices&quot; should be non-empty
  * strings and correspondingly well-formed.
- * <p>
- * Callers must ensure all the named tensors are indeed stored in the checkpoint.
+ * <p>Callers must ensure all the named tensors are indeed stored in the checkpoint.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class Restore extends RawOp implements Iterable<Operand<TType>> {
-  
   /**
-   * Factory method to create a class wrapping a new Restore operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "RestoreV2";
+
+  private List<Output<?>> tensors;
+
+  @SuppressWarnings("unchecked")
+  private Restore(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int tensorsLength = operation.outputListLength("tensors");
+    tensors = Arrays.asList(operation.outputList(outputIdx, tensorsLength));
+    outputIdx += tensorsLength;
+  }
+
+  /**
+   * Factory method to create a class wrapping a new RestoreV2 operation.
+   *
    * @param scope current scope
    * @param prefix Must have a single element.  The prefix of a V2 checkpoint.
    * @param tensorNames shape {N}.  The names of the tensors to be restored.
@@ -64,8 +80,11 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
    * those stored in the checkpoint.
    * @return a new instance of Restore
    */
-  @Endpoint(describeByClass = true)
-  public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames, Operand<TString> shapeAndSlices, List<Class<? extends TType>> dtypes) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames,
+      Operand<TString> shapeAndSlices, List<Class<? extends TType>> dtypes) {
     OperationBuilder opBuilder = scope.env().opBuilder("RestoreV2", scope.makeOpName("Restore"));
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
@@ -74,31 +93,20 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     return new Restore(opBuilder.build());
   }
-  
+
   /**
+   * Gets tensors.
    * shape {N}.  The restored tensors, whose shapes are read from the
    * checkpoint directly.
+   * @return tensors.
    */
   public List<Output<?>> tensors() {
     return tensors;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) tensors.iterator();
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RestoreV2";
-  
-  private List<Output<?>> tensors;
-  
-  private Restore(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int tensorsLength = operation.outputListLength("tensors");
-    tensors = Arrays.asList(operation.outputList(outputIdx, tensorsLength));
-    outputIdx += tensorsLength;
   }
 }

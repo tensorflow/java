@@ -30,58 +30,57 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Counts the number of occurrences of each value in an integer array.
- * <p>
- * Outputs a vector with length `size` and the same dtype as `weights`. If
- * `weights` are empty, then index `i` stores the number of times the value `i` is
- * counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
- * the value in `weights` at each index where the corresponding value in `arr` is
- * `i`.
- * <p>
- * Values in `arr` outside of the range [0, size) are ignored.
- * 
- * @param <U> data type for {@code output()} output
+ * Outputs a vector with length {@code size} and the same dtype as {@code weights}. If
+ * {@code weights} are empty, then index {@code i} stores the number of times the value {@code i} is
+ * counted in {@code arr}. If {@code weights} are non-empty, then index {@code i} stores the sum of
+ * the value in {@code weights} at each index where the corresponding value in {@code arr} is
+ * {@code i}.
+ * <p>Values in {@code arr} outside of the range [0, size) are ignored.
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "ragged")
+@Operator(
+    group = "ragged"
+)
 public final class RaggedBincount<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.ragged.RaggedBincount}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param binaryOutput bool; Whether the kernel should count the appearance or number of occurrences.
-     */
-    public Options binaryOutput(Boolean binaryOutput) {
-      this.binaryOutput = binaryOutput;
-      return this;
-    }
-    
-    private Boolean binaryOutput;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "RaggedBincount";
+
+  private Output<U> output;
+
+  private RaggedBincount(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new RaggedBincount operation.
-   * 
+   *
    * @param scope current scope
-   * @param splits 1D int64 `Tensor`.
-   * @param values 2D int `Tensor`.
-   * @param size non-negative int scalar `Tensor`.
-   * @param weights is an int32, int64, float32, or float64 `Tensor` with the same
-   * shape as `input`, or a length-0 `Tensor`, in which case it acts as all weights
+   * @param splits 1D int64 {@code Tensor}.
+   * @param values 2D int {@code Tensor}.
+   * @param sizeOutput non-negative int scalar {@code Tensor}.
+   * @param weights is an int32, int64, float32, or float64 {@code Tensor} with the same
+   * shape as {@code input}, or a length-0 {@code Tensor}, in which case it acts as all weights
    * equal to 1.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code RaggedBincount} output and operands
+   * @param <T> data type for {@code RaggedBincount} output and operands
    * @return a new instance of RaggedBincount
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber, T extends TNumber> RaggedBincount<U> create(Scope scope, Operand<TInt64> splits, Operand<T> values, Operand<T> size, Operand<U> weights, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber, T extends TNumber> RaggedBincount<U> create(Scope scope,
+      Operand<TInt64> splits, Operand<T> values, Operand<T> sizeOutput, Operand<U> weights,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("RaggedBincount", scope.makeOpName("RaggedBincount"));
     opBuilder.addInput(splits.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder.addInput(size.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(weights.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
@@ -91,37 +90,52 @@ public final class RaggedBincount<U extends TNumber> extends RawOp implements Op
         }
       }
     }
-    return new RaggedBincount<U>(opBuilder.build());
+    return new RaggedBincount<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the binaryOutput option.
+   *
    * @param binaryOutput bool; Whether the kernel should count the appearance or number of occurrences.
+   * @return this Options instance.
    */
   public static Options binaryOutput(Boolean binaryOutput) {
     return new Options().binaryOutput(binaryOutput);
   }
-  
+
   /**
-   * 1D `Tensor` with length equal to `size` or 2D `Tensor` with [batch_size, `size`].
+   * Gets output.
+   * 1D {@code Tensor} with length equal to {@code size} or 2D {@code Tensor} with [batch_size, {@code size}].
    * The counts or summed weights for each value in the range [0, size).
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "RaggedBincount";
-  
-  private Output<U> output;
-  
-  private RaggedBincount(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.ragged.RaggedBincount}
+   */
+  public static class Options {
+    private Boolean binaryOutput;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the binaryOutput option.
+     *
+     * @param binaryOutput bool; Whether the kernel should count the appearance or number of occurrences.
+     * @return this Options instance.
+     */
+    public Options binaryOutput(Boolean binaryOutput) {
+      this.binaryOutput = binaryOutput;
+      return this;
+    }
   }
 }

@@ -33,50 +33,64 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Performs beam search decoding on the logits given in input.
- * <p>
  * A note about the attribute merge_repeated: For the beam search decoder,
  * this means that if consecutive entries in a beam are the same, only
- * the first of these is emitted.  That is, when the top path is "A B B B B",
- * "A B" is returned if merge_repeated = True but "A B B B B" is
+ * the first of these is emitted.  That is, when the top path is &quot;A B B B B&quot;,
+ * &quot;A B&quot; is returned if merge_repeated = True but &quot;A B B B B&quot; is
  * returned if merge_repeated = False.
- * 
- * @param <T> data type for {@code logProbability()} output
+ *
+ * @param <T> data type for {@code log_probability} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.CtcBeamSearchDecoder}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param mergeRepeated If true, merge repeated classes in output.
-     */
-    public Options mergeRepeated(Boolean mergeRepeated) {
-      this.mergeRepeated = mergeRepeated;
-      return this;
-    }
-    
-    private Boolean mergeRepeated;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CTCBeamSearchDecoder";
+
+  private List<Output<TInt64>> decodedIndices;
+
+  private List<Output<TInt64>> decodedValues;
+
+  private List<Output<TInt64>> decodedShape;
+
+  private Output<T> logProbability;
+
+  @SuppressWarnings("unchecked")
+  private CtcBeamSearchDecoder(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int decodedIndicesLength = operation.outputListLength("decoded_indices");
+    decodedIndices = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, decodedIndicesLength));
+    outputIdx += decodedIndicesLength;
+    int decodedValuesLength = operation.outputListLength("decoded_values");
+    decodedValues = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, decodedValuesLength));
+    outputIdx += decodedValuesLength;
+    int decodedShapeLength = operation.outputListLength("decoded_shape");
+    decodedShape = Arrays.asList((Output<TInt64>[]) operation.outputList(outputIdx, decodedShapeLength));
+    outputIdx += decodedShapeLength;
+    logProbability = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new CtcBeamSearchDecoder operation.
-   * 
+   * Factory method to create a class wrapping a new CTCBeamSearchDecoder operation.
+   *
    * @param scope current scope
-   * @param inputs 3-D, shape: `(max_time x batch_size x num_classes)`, the logits.
-   * @param sequenceLength A vector containing sequence lengths, size `(batch)`.
-   * @param beamWidth A scalar >= 0 (beam search beam width).
-   * @param topPaths A scalar >= 0, <= beam_width (controls output size).
-   * @param options carries optional attributes values
+   * @param inputs 3-D, shape: {@code (max_time x batch_size x num_classes)}, the logits.
+   * @param sequenceLength A vector containing sequence lengths, size {@code (batch)}.
+   * @param beamWidth A scalar &gt;= 0 (beam search beam width).
+   * @param topPaths A scalar &gt;= 0, &lt;= beam_width (controls output size).
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code CTCBeamSearchDecoder} output and operands
    * @return a new instance of CtcBeamSearchDecoder
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> CtcBeamSearchDecoder<T> create(Scope scope, Operand<T> inputs, Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> CtcBeamSearchDecoder<T> create(Scope scope, Operand<T> inputs,
+      Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CTCBeamSearchDecoder", scope.makeOpName("CtcBeamSearchDecoder"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
@@ -90,72 +104,80 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
         }
       }
     }
-    return new CtcBeamSearchDecoder<T>(opBuilder.build());
+    return new CtcBeamSearchDecoder<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the mergeRepeated option.
+   *
    * @param mergeRepeated If true, merge repeated classes in output.
+   * @return this Options instance.
    */
   public static Options mergeRepeated(Boolean mergeRepeated) {
     return new Options().mergeRepeated(mergeRepeated);
   }
-  
+
   /**
+   * Gets decodedIndices.
    * A list (length: top_paths) of indices matrices.  Matrix j,
-   * size `(total_decoded_outputs[j] x 2)`, has indices of a
-   * `SparseTensor<int64, 2>`.  The rows store: [batch, time].
+   * size {@code (total_decoded_outputs[j] x 2)}, has indices of a
+   * {@code SparseTensor<int64, 2>}.  The rows store: [batch, time].
+   * @return decodedIndices.
    */
   public List<Output<TInt64>> decodedIndices() {
     return decodedIndices;
   }
-  
+
   /**
+   * Gets decodedValues.
    * A list (length: top_paths) of values vectors.  Vector j,
-   * size `(length total_decoded_outputs[j])`, has the values of a
-   * `SparseTensor<int64, 2>`.  The vector stores the decoded classes for beam j.
+   * size {@code (length total_decoded_outputs[j])}, has the values of a
+   * {@code SparseTensor<int64, 2>}.  The vector stores the decoded classes for beam j.
+   * @return decodedValues.
    */
   public List<Output<TInt64>> decodedValues() {
     return decodedValues;
   }
-  
+
   /**
+   * Gets decodedShape.
    * A list (length: top_paths) of shape vector.  Vector j,
-   * size `(2)`, stores the shape of the decoded `SparseTensor[j]`.
-   * Its values are: `[batch_size, max_decoded_length[j]]`.
+   * size {@code (2)}, stores the shape of the decoded {@code SparseTensor[j]}.
+   * Its values are: {@code [batch_size, max_decoded_length[j]]}.
+   * @return decodedShape.
    */
   public List<Output<TInt64>> decodedShape() {
     return decodedShape;
   }
-  
+
   /**
-   * A matrix, shaped: `(batch_size x top_paths)`.  The
+   * Gets logProbability.
+   * A matrix, shaped: {@code (batch_size x top_paths)}.  The
    * sequence log-probabilities.
+   * @return logProbability.
    */
   public Output<T> logProbability() {
     return logProbability;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CTCBeamSearchDecoder";
-  
-  private List<Output<TInt64>> decodedIndices;
-  private List<Output<TInt64>> decodedValues;
-  private List<Output<TInt64>> decodedShape;
-  private Output<T> logProbability;
-  
-  @SuppressWarnings("unchecked")
-  private CtcBeamSearchDecoder(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int decodedIndicesLength = operation.outputListLength("decoded_indices");
-    decodedIndices = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedIndicesLength));
-    outputIdx += decodedIndicesLength;
-    int decodedValuesLength = operation.outputListLength("decoded_values");
-    decodedValues = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedValuesLength));
-    outputIdx += decodedValuesLength;
-    int decodedShapeLength = operation.outputListLength("decoded_shape");
-    decodedShape = Arrays.asList((Output<TInt64>[])operation.outputList(outputIdx, decodedShapeLength));
-    outputIdx += decodedShapeLength;
-    logProbability = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.CtcBeamSearchDecoder}
+   */
+  public static class Options {
+    private Boolean mergeRepeated;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the mergeRepeated option.
+     *
+     * @param mergeRepeated If true, merge repeated classes in output.
+     * @return this Options instance.
+     */
+    public Options mergeRepeated(Boolean mergeRepeated) {
+      this.mergeRepeated = mergeRepeated;
+      return this;
+    }
   }
 }

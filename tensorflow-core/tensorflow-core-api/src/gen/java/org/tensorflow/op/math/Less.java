@@ -29,35 +29,49 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Returns the truth value of (x < y) element-wise.
- * <p>
- * <i>NOTE</i>: `math.Less` supports broadcasting. More about broadcasting
- * [here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
- * <p>
- * Example:
- * <pre>{@code
+ * Returns the truth value of (x &lt; y) element-wise.
+ * <em>NOTE</em>: {@code math.Less} supports broadcasting. More about broadcasting
+ *  <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> 
+ * <p>Example:
+ * <pre>
  * x = tf.constant([5, 4, 6])
  * y = tf.constant([5])
- * tf.math.less(x, y) ==> [False, True, False]
- * 
+ * tf.math.less(x, y) ==&gt; [False, True, False]
+ *
  * x = tf.constant([5, 4, 6])
  * y = tf.constant([5, 6, 7])
- * tf.math.less(x, y) ==> [False, True, True]
- * }</pre>
- * 
+ * tf.math.less(x, y) ==&gt; [False, True, True]
+ * </pre>
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class Less extends RawOp implements Operand<TBool> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "Less";
+
+  private Output<TBool> z;
+
+  private Less(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new Less operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code Less} output and operands
    * @return a new instance of Less
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static <T extends TNumber> Less create(Scope scope, Operand<T> x, Operand<T> y) {
     OperationBuilder opBuilder = scope.env().opBuilder("Less", scope.makeOpName("Less"));
     opBuilder.addInput(x.asOutput());
@@ -65,26 +79,18 @@ public final class Less extends RawOp implements Operand<TBool> {
     opBuilder = scope.apply(opBuilder);
     return new Less(opBuilder.build());
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<TBool> z() {
     return z;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return z;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Less";
-  
-  private Output<TBool> z;
-  
-  private Less(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
   }
 }

@@ -30,7 +30,6 @@ import org.tensorflow.types.TInt32;
 
 /**
  * Greedily selects a subset of bounding boxes in descending order of score,
- * <p>
  * This operation performs non_max_suppression on the inputs per batch, across
  * all classes.
  * Prunes away boxes that have high intersection-over-union (IOU) overlap
@@ -45,51 +44,40 @@ import org.tensorflow.types.TInt32;
  * The output of this operation is the final boxes, scores and classes tensor
  * returned after performing non_max_suppression.
  */
-@Operator(group = "image")
+@Operator(
+    group = "image"
+)
 public final class CombinedNonMaxSuppression extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.image.CombinedNonMaxSuppression}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param padPerClass If false, the output nmsed boxes, scores and classes
-     * are padded/clipped to `max_total_size`. If true, the
-     * output nmsed boxes, scores and classes are padded to be of length
-     * `max_size_per_class`*`num_classes`, unless it exceeds `max_total_size` in
-     * which case it is clipped to `max_total_size`. Defaults to false.
-     */
-    public Options padPerClass(Boolean padPerClass) {
-      this.padPerClass = padPerClass;
-      return this;
-    }
-    
-    /**
-     * @param clipBoxes If true, assume the box coordinates are between [0, 1] and clip the output boxes
-     * if they fall beyond [0, 1]. If false, do not do clipping and output the box
-     * coordinates as it is.
-     */
-    public Options clipBoxes(Boolean clipBoxes) {
-      this.clipBoxes = clipBoxes;
-      return this;
-    }
-    
-    private Boolean padPerClass;
-    private Boolean clipBoxes;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "CombinedNonMaxSuppression";
+
+  private Output<TFloat32> nmsedBoxes;
+
+  private Output<TFloat32> nmsedScores;
+
+  private Output<TFloat32> nmsedClasses;
+
+  private Output<TInt32> validDetections;
+
+  private CombinedNonMaxSuppression(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    nmsedBoxes = operation.output(outputIdx++);
+    nmsedScores = operation.output(outputIdx++);
+    nmsedClasses = operation.output(outputIdx++);
+    validDetections = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new CombinedNonMaxSuppression operation.
-   * 
+   *
    * @param scope current scope
-   * @param boxes A 4-D float tensor of shape `[batch_size, num_boxes, q, 4]`. If `q` is 1 then
-   * same boxes are used for all classes otherwise, if `q` is equal to number of
+   * @param boxes A 4-D float tensor of shape {@code [batch_size, num_boxes, q, 4]}. If {@code q} is 1 then
+   * same boxes are used for all classes otherwise, if {@code q} is equal to number of
    * classes, class-specific boxes are used.
-   * @param scores A 3-D float tensor of shape `[batch_size, num_boxes, num_classes]`
+   * @param scores A 3-D float tensor of shape {@code [batch_size, num_boxes, num_classes]}
    * representing a single score corresponding to each box (each row of boxes).
    * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of
    * boxes to be selected by non max suppression per class
@@ -98,11 +86,15 @@ public final class CombinedNonMaxSuppression extends RawOp {
    * boxes overlap too much with respect to IOU.
    * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to remove
    * boxes based on score.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of CombinedNonMaxSuppression
    */
-  @Endpoint(describeByClass = true)
-  public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat32> boxes, Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize, Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static CombinedNonMaxSuppression create(Scope scope, Operand<TFloat32> boxes,
+      Operand<TFloat32> scores, Operand<TInt32> maxOutputSizePerClass, Operand<TInt32> maxTotalSize,
+      Operand<TFloat32> iouThreshold, Operand<TFloat32> scoreThreshold, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CombinedNonMaxSuppression", scope.makeOpName("CombinedNonMaxSuppression"));
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(scores.asOutput());
@@ -123,75 +115,112 @@ public final class CombinedNonMaxSuppression extends RawOp {
     }
     return new CombinedNonMaxSuppression(opBuilder.build());
   }
-  
+
   /**
+   * Sets the padPerClass option.
+   *
    * @param padPerClass If false, the output nmsed boxes, scores and classes
-   * are padded/clipped to `max_total_size`. If true, the
+   * are padded/clipped to {@code max_total_size}. If true, the
    * output nmsed boxes, scores and classes are padded to be of length
-   * `max_size_per_class`*`num_classes`, unless it exceeds `max_total_size` in
-   * which case it is clipped to `max_total_size`. Defaults to false.
+   * {@code max_size_per_class}*{@code num_classes}, unless it exceeds {@code max_total_size} in
+   * which case it is clipped to {@code max_total_size}. Defaults to false.
+   * @return this Options instance.
    */
   public static Options padPerClass(Boolean padPerClass) {
     return new Options().padPerClass(padPerClass);
   }
-  
+
   /**
+   * Sets the clipBoxes option.
+   *
    * @param clipBoxes If true, assume the box coordinates are between [0, 1] and clip the output boxes
    * if they fall beyond [0, 1]. If false, do not do clipping and output the box
    * coordinates as it is.
+   * @return this Options instance.
    */
   public static Options clipBoxes(Boolean clipBoxes) {
     return new Options().clipBoxes(clipBoxes);
   }
-  
+
   /**
+   * Gets nmsedBoxes.
    * A [batch_size, max_detections, 4] float32 tensor
    * containing the non-max suppressed boxes.
+   * @return nmsedBoxes.
    */
   public Output<TFloat32> nmsedBoxes() {
     return nmsedBoxes;
   }
-  
+
   /**
+   * Gets nmsedScores.
    * A [batch_size, max_detections] float32 tensor
    * containing the scores for the boxes.
+   * @return nmsedScores.
    */
   public Output<TFloat32> nmsedScores() {
     return nmsedScores;
   }
-  
+
   /**
+   * Gets nmsedClasses.
    * A [batch_size, max_detections] float32 tensor
    * containing the classes for the boxes.
+   * @return nmsedClasses.
    */
   public Output<TFloat32> nmsedClasses() {
     return nmsedClasses;
   }
-  
+
   /**
+   * Gets validDetections.
    * A [batch_size] int32 tensor indicating the number of
    * valid detections per batch item. Only the top num_detections[i] entries in
    * nms_boxes[i], nms_scores[i] and nms_class[i] are valid. The rest of the
    * entries are zero paddings.
+   * @return validDetections.
    */
   public Output<TInt32> validDetections() {
     return validDetections;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "CombinedNonMaxSuppression";
-  
-  private Output<TFloat32> nmsedBoxes;
-  private Output<TFloat32> nmsedScores;
-  private Output<TFloat32> nmsedClasses;
-  private Output<TInt32> validDetections;
-  
-  private CombinedNonMaxSuppression(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    nmsedBoxes = operation.output(outputIdx++);
-    nmsedScores = operation.output(outputIdx++);
-    nmsedClasses = operation.output(outputIdx++);
-    validDetections = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.image.CombinedNonMaxSuppression}
+   */
+  public static class Options {
+    private Boolean padPerClass;
+
+    private Boolean clipBoxes;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the padPerClass option.
+     *
+     * @param padPerClass If false, the output nmsed boxes, scores and classes
+     * are padded/clipped to {@code max_total_size}. If true, the
+     * output nmsed boxes, scores and classes are padded to be of length
+     * {@code max_size_per_class}*{@code num_classes}, unless it exceeds {@code max_total_size} in
+     * which case it is clipped to {@code max_total_size}. Defaults to false.
+     * @return this Options instance.
+     */
+    public Options padPerClass(Boolean padPerClass) {
+      this.padPerClass = padPerClass;
+      return this;
+    }
+
+    /**
+     * Sets the clipBoxes option.
+     *
+     * @param clipBoxes If true, assume the box coordinates are between [0, 1] and clip the output boxes
+     * if they fall beyond [0, 1]. If false, do not do clipping and output the box
+     * coordinates as it is.
+     * @return this Options instance.
+     */
+    public Options clipBoxes(Boolean clipBoxes) {
+      this.clipBoxes = clipBoxes;
+      return this;
+    }
   }
 }

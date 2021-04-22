@@ -24,35 +24,38 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.family.TType;
 
 /**
  * Delete the TensorArray from its resource container.
- * <p>
  * This enables the user to close and release the resource in the middle
  * of a step/run.
  */
 @Operator
 public final class TensorArrayClose extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new TensorArrayClose operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "TensorArrayCloseV3";
+
+  private TensorArrayClose(Operation operation) {
+    super(operation);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new TensorArrayCloseV3 operation.
+   *
    * @param scope current scope
    * @param handle The handle to a TensorArray (output of TensorArray or TensorArrayGrad).
    * @return a new instance of TensorArrayClose
    */
-  @Endpoint(describeByClass = true)
-  public static TensorArrayClose create(Scope scope, Operand<?> handle) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static TensorArrayClose create(Scope scope, Operand<? extends TType> handle) {
     OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayCloseV3", scope.makeOpName("TensorArrayClose"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorArrayClose(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TensorArrayCloseV3";
-  
-  private TensorArrayClose(Operation operation) {
-    super(operation);
   }
 }

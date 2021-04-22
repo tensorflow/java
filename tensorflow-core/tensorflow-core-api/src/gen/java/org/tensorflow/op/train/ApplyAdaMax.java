@@ -24,44 +24,33 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the AdaMax algorithm.
- * <p>
- * m_t <- beta1 * m_{t-1} + (1 - beta1) * g
- * v_t <- max(beta2 * v_{t-1}, abs(g))
- * variable <- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
- * 
- * @param <T> data type for {@code out()} output
+ * m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+ * v_t &lt;- max(beta2 * v_{t-1}, abs(g))
+ * variable &lt;- variable - learning_rate / (1 - beta1^t) * m_t / (v_t + epsilon)
+ *
+ * @param <T> data type for {@code out} output
  */
 public final class ApplyAdaMax<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdaMax}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
-     * by a lock; otherwise the behavior is undefined, but may exhibit less
-     * contention.
-     */
-    public Options useLocking(Boolean useLocking) {
-      this.useLocking = useLocking;
-      return this;
-    }
-    
-    private Boolean useLocking;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApplyAdaMax";
+
+  private Output<T> out;
+
+  private ApplyAdaMax(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    out = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ApplyAdaMax operation.
-   * 
+   *
    * @param scope current scope
    * @param var Should be from a Variable().
    * @param m Should be from a Variable().
@@ -72,11 +61,16 @@ public final class ApplyAdaMax<T extends TType> extends RawOp implements Operand
    * @param beta2 Momentum factor. Must be a scalar.
    * @param epsilon Ridge term. Must be a scalar.
    * @param grad The gradient.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApplyAdaMax} output and operands
    * @return a new instance of ApplyAdaMax
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApplyAdaMax<T> create(Scope scope, Operand<T> var, Operand<T> m, Operand<T> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApplyAdaMax<T> create(Scope scope, Operand<T> var, Operand<T> m,
+      Operand<T> v, Operand<T> beta1Power, Operand<T> lr, Operand<T> beta1, Operand<T> beta2,
+      Operand<T> epsilon, Operand<T> grad, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdaMax", scope.makeOpName("ApplyAdaMax"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
@@ -95,38 +89,55 @@ public final class ApplyAdaMax<T extends TType> extends RawOp implements Operand
         }
       }
     }
-    return new ApplyAdaMax<T>(opBuilder.build());
+    return new ApplyAdaMax<>(opBuilder.build());
   }
-  
+
   /**
-   * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+   * Sets the useLocking option.
+   *
+   * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
    * by a lock; otherwise the behavior is undefined, but may exhibit less
    * contention.
+   * @return this Options instance.
    */
   public static Options useLocking(Boolean useLocking) {
     return new Options().useLocking(useLocking);
   }
-  
+
   /**
-   * Same as "var".
+   * Gets out.
+   * Same as &quot;var&quot;.
+   * @return out.
    */
   public Output<T> out() {
     return out;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return out;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApplyAdaMax";
-  
-  private Output<T> out;
-  
-  private ApplyAdaMax(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    out = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.ApplyAdaMax}
+   */
+  public static class Options {
+    private Boolean useLocking;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the useLocking option.
+     *
+     * @param useLocking If {@code True}, updating of the var, m, and v tensors will be protected
+     * by a lock; otherwise the behavior is undefined, but may exhibit less
+     * contention.
+     * @return this Options instance.
+     */
+    public Options useLocking(Boolean useLocking) {
+      this.useLocking = useLocking;
+      return this;
+    }
   }
 }

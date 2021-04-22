@@ -32,45 +32,44 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Reinterpret the bytes of a string as a vector of numbers.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "io")
+@Operator(
+    group = "io"
+)
 public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.io.DecodePaddedRaw}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
-     * `out_type` values that are stored in a single byte, like `uint8`
-     */
-    public Options littleEndian(Boolean littleEndian) {
-      this.littleEndian = littleEndian;
-      return this;
-    }
-    
-    private Boolean littleEndian;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DecodePaddedRaw";
+
+  private Output<T> output;
+
+  private DecodePaddedRaw(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DecodePaddedRaw operation.
-   * 
+   *
    * @param scope current scope
    * @param inputBytes Tensor of string to be decoded.
    * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
    * of the size of the output type.
-   * @param outType 
-   * @param options carries optional attributes values
+   * @param outType the value of the outType property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DecodePaddedRaw} output and operands
    * @return a new instance of DecodePaddedRaw
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope, Operand<TString> inputBytes, Operand<TInt32> fixedLength, Class<T> outType, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> DecodePaddedRaw<T> create(Scope scope,
+      Operand<TString> inputBytes, Operand<TInt32> fixedLength, Class<T> outType,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DecodePaddedRaw", scope.makeOpName("DecodePaddedRaw"));
     opBuilder.addInput(inputBytes.asOutput());
     opBuilder.addInput(fixedLength.asOutput());
@@ -83,39 +82,55 @@ public final class DecodePaddedRaw<T extends TNumber> extends RawOp implements O
         }
       }
     }
-    return new DecodePaddedRaw<T>(opBuilder.build());
+    return new DecodePaddedRaw<>(opBuilder.build());
   }
-  
+
   /**
-   * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
-   * `out_type` values that are stored in a single byte, like `uint8`
+   * Sets the littleEndian option.
+   *
+   * @param littleEndian Whether the input {@code input_bytes} is in little-endian order. Ignored for
+   * {@code out_type} values that are stored in a single byte, like {@code uint8}
+   * @return this Options instance.
    */
   public static Options littleEndian(Boolean littleEndian) {
     return new Options().littleEndian(littleEndian);
   }
-  
+
   /**
-   * A Tensor with one more dimension than the input `bytes`. The added dimension
-   * will have size equal to the length of the elements of `bytes` divided by the
-   * number of bytes to represent `out_type`.
+   * Gets output.
+   * A Tensor with one more dimension than the input {@code bytes}. The added dimension
+   * will have size equal to the length of the elements of {@code bytes} divided by the
+   * number of bytes to represent {@code out_type}.
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DecodePaddedRaw";
-  
-  private Output<T> output;
-  
-  private DecodePaddedRaw(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.io.DecodePaddedRaw}
+   */
+  public static class Options {
+    private Boolean littleEndian;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the littleEndian option.
+     *
+     * @param littleEndian Whether the input {@code input_bytes} is in little-endian order. Ignored for
+     * {@code out_type} values that are stored in a single byte, like {@code uint8}
+     * @return this Options instance.
+     */
+    public Options littleEndian(Boolean littleEndian) {
+      this.littleEndian = littleEndian;
+      return this;
+    }
   }
 }

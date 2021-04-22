@@ -22,32 +22,33 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 
 /**
  * Shuts down a running distributed TPU system.
- * <p>
  * The op returns an error if no system is running.
  */
 public final class ShutdownDistributedTPU extends RawOp {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ShutdownDistributedTPU";
+
+  private ShutdownDistributedTPU(Operation operation) {
+    super(operation);
+  }
+
   /**
    * Factory method to create a class wrapping a new ShutdownDistributedTPU operation.
-   * 
+   *
    * @param scope current scope
    * @return a new instance of ShutdownDistributedTPU
    */
-  @Endpoint(describeByClass = true)
+  @Endpoint(
+      describeByClass = true
+  )
   public static ShutdownDistributedTPU create(Scope scope) {
     OperationBuilder opBuilder = scope.env().opBuilder("ShutdownDistributedTPU", scope.makeOpName("ShutdownDistributedTPU"));
     opBuilder = scope.apply(opBuilder);
     return new ShutdownDistributedTPU(opBuilder.build());
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ShutdownDistributedTPU";
-  
-  private ShutdownDistributedTPU(Operation operation) {
-    super(operation);
   }
 }

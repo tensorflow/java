@@ -29,55 +29,64 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Wraps the XLA DotGeneral operator, documented at
- * <p>
- *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+ * https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
  * .
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class Dot<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new Dot operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaDot";
+
+  private Output<T> output;
+
+  private Dot(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaDot operation.
+   *
    * @param scope current scope
    * @param lhs the LHS tensor
    * @param rhs the RHS tensor
    * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param <T> data type for {@code XlaDot} output and operands
    * @return a new instance of Dot
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs, String dimensionNumbers, String precisionConfig) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs,
+      String dimensionNumbers, String precisionConfig) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaDot", scope.makeOpName("Dot"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
-    return new Dot<T>(opBuilder.build());
+    return new Dot<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<T> output() {
     return output;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaDot";
-  
-  private Output<T> output;
-  
-  private Dot(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

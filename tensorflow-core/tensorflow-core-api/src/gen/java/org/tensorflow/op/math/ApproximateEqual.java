@@ -29,41 +29,40 @@ import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TType;
 
 /**
- * Returns the truth value of abs(x-y) < tolerance element-wise.
+ * Returns the truth value of abs(x-y) &lt; tolerance element-wise.
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class ApproximateEqual extends RawOp implements Operand<TBool> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.math.ApproximateEqual}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param tolerance 
-     */
-    public Options tolerance(Float tolerance) {
-      this.tolerance = tolerance;
-      return this;
-    }
-    
-    private Float tolerance;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "ApproximateEqual";
+
+  private Output<TBool> z;
+
+  private ApproximateEqual(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new ApproximateEqual operation.
-   * 
+   *
    * @param scope current scope
-   * @param x 
-   * @param y 
-   * @param options carries optional attributes values
+   * @param x the x value
+   * @param y the y value
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code ApproximateEqual} output and operands
    * @return a new instance of ApproximateEqual
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("ApproximateEqual", scope.makeOpName("ApproximateEqual"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
@@ -77,33 +76,49 @@ public final class ApproximateEqual extends RawOp implements Operand<TBool> {
     }
     return new ApproximateEqual(opBuilder.build());
   }
-  
+
   /**
-   * @param tolerance 
+   * Sets the tolerance option.
+   *
+   * @param tolerance the tolerance option
+   * @return this Options instance.
    */
   public static Options tolerance(Float tolerance) {
     return new Options().tolerance(tolerance);
   }
-  
+
   /**
+   * Gets z.
+   *
+   * @return z.
    */
   public Output<TBool> z() {
     return z;
   }
-  
+
   @Override
   public Output<TBool> asOutput() {
     return z;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ApproximateEqual";
-  
-  private Output<TBool> z;
-  
-  private ApproximateEqual(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    z = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.math.ApproximateEqual}
+   */
+  public static class Options {
+    private Float tolerance;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the tolerance option.
+     *
+     * @param tolerance the tolerance option
+     * @return this Options instance.
+     */
+    public Options tolerance(Float tolerance) {
+      this.tolerance = tolerance;
+      return this;
+    }
   }
 }

@@ -30,50 +30,57 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * Forwards the `index`th element of `inputs` to `output`.
- * 
- * @param <T> data type for {@code output()} output
+ * Forwards the {@code index}th element of {@code inputs} to {@code output}.
+ *
+ * @param <T> data type for {@code output} output
  */
 @Operator
 public final class RefSelect<T extends TType> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new RefSelect operation.
-   * 
-   * @param scope current scope
-   * @param index A scalar that determines the input that gets selected.
-   * @param inputs A list of ref tensors, one of which will be forwarded to `output`.
-   * @return a new instance of RefSelect
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index, Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
-    opBuilder.addInput(index.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
-    return new RefSelect<T>(opBuilder.build());
-  }
-  
-  /**
-   * The forwarded tensor.
-   */
-  public Output<T> output() {
-    return output;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "RefSelect";
-  
+
   private Output<T> output;
-  
+
   private RefSelect(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new RefSelect operation.
+   *
+   * @param scope current scope
+   * @param index A scalar that determines the input that gets selected.
+   * @param inputs A list of ref tensors, one of which will be forwarded to {@code output}.
+   * @param <T> data type for {@code RefSelect} output and operands
+   * @return a new instance of RefSelect
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> RefSelect<T> create(Scope scope, Operand<TInt32> index,
+      Iterable<Operand<T>> inputs) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RefSelect", scope.makeOpName("RefSelect"));
+    opBuilder.addInput(index.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(inputs));
+    opBuilder = scope.apply(opBuilder);
+    return new RefSelect<>(opBuilder.build());
+  }
+
+  /**
+   * Gets output.
+   * The forwarded tensor.
+   * @return output.
+   */
+  public Output<T> output() {
+    return output;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return output;
   }
 }

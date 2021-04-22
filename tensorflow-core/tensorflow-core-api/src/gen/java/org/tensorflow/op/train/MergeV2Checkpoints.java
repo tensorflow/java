@@ -28,50 +28,41 @@ import org.tensorflow.types.TString;
 
 /**
  * V2 format specific: merges the metadata files of sharded checkpoints.  The
- * <p>
  * result is one logical checkpoint, with one physical metadata file and renamed
  * data files.
- * <p>
- * Intended for "grouping" multiple checkpoints in a sharded checkpoint setup.
- * <p>
- * If delete_old_dirs is true, attempts to delete recursively the dirname of each
+ * <p>Intended for &quot;grouping&quot; multiple checkpoints in a sharded checkpoint setup.
+ * <p>If delete_old_dirs is true, attempts to delete recursively the dirname of each
  * path in the input checkpoint_prefixes.  This is useful when those paths are non
  * user-facing temporary locations.
  */
-@Operator(group = "train")
+@Operator(
+    group = "train"
+)
 public final class MergeV2Checkpoints extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.train.MergeV2Checkpoints}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param deleteOldDirs see above.
-     */
-    public Options deleteOldDirs(Boolean deleteOldDirs) {
-      this.deleteOldDirs = deleteOldDirs;
-      return this;
-    }
-    
-    private Boolean deleteOldDirs;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "MergeV2Checkpoints";
+
+  private MergeV2Checkpoints(Operation operation) {
+    super(operation);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new MergeV2Checkpoints operation.
-   * 
+   *
    * @param scope current scope
    * @param checkpointPrefixes prefixes of V2 checkpoints to merge.
    * @param destinationPrefix scalar.  The desired final prefix.  Allowed to be the same
    * as one of the checkpoint_prefixes.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of MergeV2Checkpoints
    */
-  @Endpoint(describeByClass = true)
-  public static MergeV2Checkpoints create(Scope scope, Operand<TString> checkpointPrefixes, Operand<TString> destinationPrefix, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static MergeV2Checkpoints create(Scope scope, Operand<TString> checkpointPrefixes,
+      Operand<TString> destinationPrefix, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("MergeV2Checkpoints", scope.makeOpName("MergeV2Checkpoints"));
     opBuilder.addInput(checkpointPrefixes.asOutput());
     opBuilder.addInput(destinationPrefix.asOutput());
@@ -85,18 +76,35 @@ public final class MergeV2Checkpoints extends RawOp {
     }
     return new MergeV2Checkpoints(opBuilder.build());
   }
-  
+
   /**
+   * Sets the deleteOldDirs option.
+   *
    * @param deleteOldDirs see above.
+   * @return this Options instance.
    */
   public static Options deleteOldDirs(Boolean deleteOldDirs) {
     return new Options().deleteOldDirs(deleteOldDirs);
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "MergeV2Checkpoints";
-  
-  private MergeV2Checkpoints(Operation operation) {
-    super(operation);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.train.MergeV2Checkpoints}
+   */
+  public static class Options {
+    private Boolean deleteOldDirs;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the deleteOldDirs option.
+     *
+     * @param deleteOldDirs see above.
+     * @return this Options instance.
+     */
+    public Options deleteOldDirs(Boolean deleteOldDirs) {
+      this.deleteOldDirs = deleteOldDirs;
+      return this;
+    }
   }
 }

@@ -30,53 +30,40 @@ import org.tensorflow.types.TInt64;
 
 /**
  * Generates labels for candidate sampling with a log-uniform distribution.
- * <p>
  * See explanations of candidate sampling and the data formats at
  * go/candidate-sampling.
- * <p>
- * For each batch, this op picks a single set of sampled candidate labels.
- * <p>
- * The advantages of sampling candidates per-batch are simplicity and the
+ * <p>For each batch, this op picks a single set of sampled candidate labels.
+ * <p>The advantages of sampling candidates per-batch are simplicity and the
  * possibility of efficient dense matrix multiplication. The disadvantage is that
  * the sampled candidates must be chosen independently of the context and of the
  * true labels.
  */
-@Operator(group = "random")
+@Operator(
+    group = "random"
+)
 public final class LogUniformCandidateSampler extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.random.LogUniformCandidateSampler}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param seed If either seed or seed2 are set to be non-zero, the random number
-     * generator is seeded by the given seed.  Otherwise, it is seeded by a
-     * random seed.
-     */
-    public Options seed(Long seed) {
-      this.seed = seed;
-      return this;
-    }
-    
-    /**
-     * @param seed2 An second seed to avoid seed collision.
-     */
-    public Options seed2(Long seed2) {
-      this.seed2 = seed2;
-      return this;
-    }
-    
-    private Long seed;
-    private Long seed2;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "LogUniformCandidateSampler";
+
+  private Output<TInt64> sampledCandidates;
+
+  private Output<TFloat32> trueExpectedCount;
+
+  private Output<TFloat32> sampledExpectedCount;
+
+  private LogUniformCandidateSampler(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    sampledCandidates = operation.output(outputIdx++);
+    trueExpectedCount = operation.output(outputIdx++);
+    sampledExpectedCount = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new LogUniformCandidateSampler operation.
-   * 
+   *
    * @param scope current scope
    * @param trueClasses A batch_size * num_true matrix, in which each row contains the
    * IDs of the num_true target_classes in the corresponding original label.
@@ -86,11 +73,14 @@ public final class LogUniformCandidateSampler extends RawOp {
    * candidates in a batch are unique. This requires some approximation to
    * estimate the post-rejection sampling probabilities.
    * @param rangeMax The sampler will sample integers from the interval [0, range_max).
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
    * @return a new instance of LogUniformCandidateSampler
    */
-  @Endpoint(describeByClass = true)
-  public static LogUniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static LogUniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses,
+      Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("LogUniformCandidateSampler", scope.makeOpName("LogUniformCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -110,62 +100,95 @@ public final class LogUniformCandidateSampler extends RawOp {
     }
     return new LogUniformCandidateSampler(opBuilder.build());
   }
-  
+
   /**
+   * Sets the seed option.
+   *
    * @param seed If either seed or seed2 are set to be non-zero, the random number
    * generator is seeded by the given seed.  Otherwise, it is seeded by a
    * random seed.
+   * @return this Options instance.
    */
   public static Options seed(Long seed) {
     return new Options().seed(seed);
   }
-  
+
   /**
+   * Sets the seed2 option.
+   *
    * @param seed2 An second seed to avoid seed collision.
+   * @return this Options instance.
    */
   public static Options seed2(Long seed2) {
     return new Options().seed2(seed2);
   }
-  
+
   /**
+   * Gets sampledCandidates.
    * A vector of length num_sampled, in which each element is
    * the ID of a sampled candidate.
+   * @return sampledCandidates.
    */
   public Output<TInt64> sampledCandidates() {
     return sampledCandidates;
   }
-  
+
   /**
+   * Gets trueExpectedCount.
    * A batch_size * num_true matrix, representing
    * the number of times each candidate is expected to occur in a batch
    * of sampled candidates. If unique=true, then this is a probability.
+   * @return trueExpectedCount.
    */
   public Output<TFloat32> trueExpectedCount() {
     return trueExpectedCount;
   }
-  
+
   /**
+   * Gets sampledExpectedCount.
    * A vector of length num_sampled, for each sampled
    * candidate representing the number of times the candidate is expected
    * to occur in a batch of sampled candidates.  If unique=true, then this is a
    * probability.
+   * @return sampledExpectedCount.
    */
   public Output<TFloat32> sampledExpectedCount() {
     return sampledExpectedCount;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "LogUniformCandidateSampler";
-  
-  private Output<TInt64> sampledCandidates;
-  private Output<TFloat32> trueExpectedCount;
-  private Output<TFloat32> sampledExpectedCount;
-  
-  private LogUniformCandidateSampler(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    sampledCandidates = operation.output(outputIdx++);
-    trueExpectedCount = operation.output(outputIdx++);
-    sampledExpectedCount = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.random.LogUniformCandidateSampler}
+   */
+  public static class Options {
+    private Long seed;
+
+    private Long seed2;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the seed option.
+     *
+     * @param seed If either seed or seed2 are set to be non-zero, the random number
+     * generator is seeded by the given seed.  Otherwise, it is seeded by a
+     * random seed.
+     * @return this Options instance.
+     */
+    public Options seed(Long seed) {
+      this.seed = seed;
+      return this;
+    }
+
+    /**
+     * Sets the seed2 option.
+     *
+     * @param seed2 An second seed to avoid seed collision.
+     * @return this Options instance.
+     */
+    public Options seed2(Long seed2) {
+      this.seed2 = seed2;
+      return this;
+    }
   }
 }

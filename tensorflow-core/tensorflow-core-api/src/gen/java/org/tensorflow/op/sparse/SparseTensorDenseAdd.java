@@ -29,55 +29,65 @@ import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Adds up a `SparseTensor` and a dense `Tensor`, producing a dense `Tensor`.
- * <p>
- * This Op does not require `a_indices` be sorted in standard lexicographic order.
- * 
- * @param <U> data type for {@code output()} output
+ * Adds up a {@code SparseTensor} and a dense {@code Tensor}, producing a dense {@code Tensor}.
+ * This Op does not require {@code a_indices} be sorted in standard lexicographic order.
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class SparseTensorDenseAdd<U extends TType> extends RawOp implements Operand<U> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseTensorDenseAdd";
+
+  private Output<U> output;
+
+  private SparseTensorDenseAdd(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseTensorDenseAdd operation.
-   * 
+   *
    * @param scope current scope
-   * @param aIndices 2-D.  The `indices` of the `SparseTensor`, with shape `[nnz, ndims]`.
-   * @param aValues 1-D.  The `values` of the `SparseTensor`, with shape `[nnz]`.
-   * @param aShape 1-D.  The `shape` of the `SparseTensor`, with shape `[ndims]`.
-   * @param b `ndims`-D Tensor.  With shape `a_shape`.
+   * @param aIndices 2-D.  The {@code indices} of the {@code SparseTensor}, with shape {@code [nnz, ndims]}.
+   * @param aValues 1-D.  The {@code values} of the {@code SparseTensor}, with shape {@code [nnz]}.
+   * @param aShape 1-D.  The {@code shape} of the {@code SparseTensor}, with shape {@code [ndims]}.
+   * @param b {@code ndims}-D Tensor.  With shape {@code a_shape}.
+   * @param <U> data type for {@code SparseTensorDenseAdd} output and operands
+   * @param <T> data type for {@code SparseTensorDenseAdd} output and operands
    * @return a new instance of SparseTensorDenseAdd
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope, Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope,
+      Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new SparseTensorDenseAdd<U>(opBuilder.build());
+    return new SparseTensorDenseAdd<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseTensorDenseAdd";
-  
-  private Output<U> output;
-  
-  private SparseTensorDenseAdd(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

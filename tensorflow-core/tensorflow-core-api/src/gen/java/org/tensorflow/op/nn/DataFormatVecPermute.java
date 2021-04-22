@@ -28,73 +28,60 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Permute input tensor from `src_format` to `dst_format`.
- * <p>
+ * Permute input tensor from {@code src_format} to {@code dst_format}.
  * Input tensor must be a vector of size 4, or a 4x2 tensor.
- * <p>
- * For example, with `src_format` of `NHWC`, `dst_format` of `NCHW`, and inputs:
- * <pre>{@code
+ * <p>For example, with {@code src_format} of {@code NHWC}, {@code dst_format} of {@code NCHW}, and inputs:
+ * <pre>
  * [1, 2, 3, 4]
- * }</pre>
- * and
- * <pre>{@code
+ * </pre>
+ * <p>and
+ * <pre>
  * [[1, 2, 3, 4],
  *  [5, 6, 7, 8]]
- * }</pre>
- * , the outputs will be (respectively):
- * <pre>{@code
+ * </pre>
+ * <p>, the outputs will be (respectively):
+ * <pre>
  * [1, 4, 2, 3]
- * }</pre>
- * and
- * <pre>{@code
+ * </pre>
+ * <p>and
+ * <pre>
  * [[1, 4, 2, 3],
  *  [5, 8, 6, 7]]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code y()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code y} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class DataFormatVecPermute<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.DataFormatVecPermute}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param srcFormat source data format.
-     */
-    public Options srcFormat(String srcFormat) {
-      this.srcFormat = srcFormat;
-      return this;
-    }
-    
-    /**
-     * @param dstFormat destination data format.
-     */
-    public Options dstFormat(String dstFormat) {
-      this.dstFormat = dstFormat;
-      return this;
-    }
-    
-    private String srcFormat;
-    private String dstFormat;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "DataFormatVecPermute";
+
+  private Output<T> y;
+
+  private DataFormatVecPermute(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    y = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new DataFormatVecPermute operation.
-   * 
+   *
    * @param scope current scope
    * @param x Vector of size 4 or Tensor of shape (4, 2) in source data format.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code DataFormatVecPermute} output and operands
    * @return a new instance of DataFormatVecPermute
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> DataFormatVecPermute<T> create(Scope scope, Operand<T> x,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("DataFormatVecPermute", scope.makeOpName("DataFormatVecPermute"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -108,43 +95,74 @@ public final class DataFormatVecPermute<T extends TNumber> extends RawOp impleme
         }
       }
     }
-    return new DataFormatVecPermute<T>(opBuilder.build());
+    return new DataFormatVecPermute<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the srcFormat option.
+   *
    * @param srcFormat source data format.
+   * @return this Options instance.
    */
   public static Options srcFormat(String srcFormat) {
     return new Options().srcFormat(srcFormat);
   }
-  
+
   /**
+   * Sets the dstFormat option.
+   *
    * @param dstFormat destination data format.
+   * @return this Options instance.
    */
   public static Options dstFormat(String dstFormat) {
     return new Options().dstFormat(dstFormat);
   }
-  
+
   /**
+   * Gets y.
    * Vector of size 4 or Tensor of shape (4, 2) in destination data format.
+   * @return y.
    */
   public Output<T> y() {
     return y;
   }
-  
+
   @Override
   public Output<T> asOutput() {
     return y;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "DataFormatVecPermute";
-  
-  private Output<T> y;
-  
-  private DataFormatVecPermute(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    y = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.DataFormatVecPermute}
+   */
+  public static class Options {
+    private String srcFormat;
+
+    private String dstFormat;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the srcFormat option.
+     *
+     * @param srcFormat source data format.
+     * @return this Options instance.
+     */
+    public Options srcFormat(String srcFormat) {
+      this.srcFormat = srcFormat;
+      return this;
+    }
+
+    /**
+     * Sets the dstFormat option.
+     *
+     * @param dstFormat destination data format.
+     * @return this Options instance.
+     */
+    public Options dstFormat(String dstFormat) {
+      this.dstFormat = dstFormat;
+      return this;
+    }
   }
 }

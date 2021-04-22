@@ -17,18 +17,29 @@ jobs:
   quick-build:
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: ubuntu-latest
+    container: centos:7
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
-      - name: Setup Java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 8 
+      - name: Install environment
+        run: |
+          yum -y update
+          yum -y install centos-release-scl-rh epel-release
+          yum -y install java-11-openjdk-devel devtoolset-7
+          echo Downloading Maven
+          curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
+          tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
+          ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
       - name: Build project
         run: |
-          git --version
+          source scl_source enable devtoolset-7 || true 
+          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
+          echo $JAVA_HOME
           mvn -version
-          mvn clean install -Pdev -B -U -e
+          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true
+      - name: Run lint checks
+        run: |
+          mvn compiler:compile -Pdev,jdk11 -B -U -e
   prepare:
     runs-on: ubuntu-latest
     outputs:
@@ -217,6 +228,7 @@ jobs:
           )          
           df -h
           wmic pagefile list /format:list
+          set "SKIP_EXPORT=true"
           echo Executing Maven %MAVEN_PHASE%
           call mvn clean %MAVEN_PHASE% -B -U -e -Djavacpp.platform=windows-x86_64 -Djavacpp.platform.extension=${{ matrix.ext }} -pl %NATIVE_BUILD_PROJECTS% -am -DstagingRepositoryId=${{ needs.prepare.outputs.stagingRepositoryId }} "-Dnative.build.flags=%BAZEL_CACHE%"
           if ERRORLEVEL 1 exit /b

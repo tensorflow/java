@@ -24,49 +24,54 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TType;
 
 /**
- * Returns the number of nonzeroes of `sparse_matrix`.
+ * Returns the number of nonzeroes of {@code sparse_matrix}.
  */
 public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "SparseMatrixNNZ";
+
+  private Output<TInt32> nnz;
+
+  private SparseMatrixNNZ(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    nnz = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new SparseMatrixNNZ operation.
-   * 
+   *
    * @param scope current scope
    * @param sparseMatrix A CSRSparseMatrix.
    * @return a new instance of SparseMatrixNNZ
    */
-  @Endpoint(describeByClass = true)
-  public static SparseMatrixNNZ create(Scope scope, Operand<?> sparseMatrix) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static SparseMatrixNNZ create(Scope scope, Operand<? extends TType> sparseMatrix) {
     OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixNNZ", scope.makeOpName("SparseMatrixNNZ"));
     opBuilder.addInput(sparseMatrix.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new SparseMatrixNNZ(opBuilder.build());
   }
-  
+
   /**
-   * The number of nonzeroes of `sparse_matrix`.
+   * Gets nnz.
+   * The number of nonzeroes of {@code sparse_matrix}.
+   * @return nnz.
    */
   public Output<TInt32> nnz() {
     return nnz;
   }
-  
+
   @Override
   public Output<TInt32> asOutput() {
     return nnz;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "SparseMatrixNNZ";
-  
-  private Output<TInt32> nnz;
-  
-  private SparseMatrixNNZ(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    nnz = operation.output(outputIdx++);
   }
 }

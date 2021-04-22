@@ -29,69 +29,79 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Computes the eigen decomposition of a batch of self-adjoint matrices
- * <p>
  * (Note: Only real inputs are supported).
- * <p>
- * Computes the eigenvalues and eigenvectors of the innermost N-by-N matrices in
+ * <p>Computes the eigenvalues and eigenvectors of the innermost N-by-N matrices in
  * tensor such that tensor[...,:,:] * v[..., :,i] = e[..., i] * v[...,:,i], for
  * i=0...N-1.
- * 
- * @param <T> data type for {@code w()} output
+ *
+ * @param <T> data type for {@code w} output
  */
-@Operator(group = "xla")
+@Operator(
+    group = "xla"
+)
 public final class SelfAdjointEig<T extends TType> extends RawOp {
-  
   /**
-   * Factory method to create a class wrapping a new SelfAdjointEig operation.
-   * 
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "XlaSelfAdjointEig";
+
+  private Output<T> w;
+
+  private Output<T> v;
+
+  private SelfAdjointEig(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    w = operation.output(outputIdx++);
+    v = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new XlaSelfAdjointEig operation.
+   *
    * @param scope current scope
    * @param a the input tensor.
    * @param lower a boolean specifies whether the calculation is done with the lower
    * triangular part or the upper triangular part.
    * @param maxIter maximum number of sweep update, i.e., the whole lower triangular
    * part or upper triangular part based on parameter lower. Heuristically, it has
-   * been argued that approximately logN sweeps are needed in practice (Ref: Golub &
-   * van Loan "Matrix Computation").
+   * been argued that approximately logN sweeps are needed in practice (Ref: Golub &amp;
+   * van Loan &quot;Matrix Computation&quot;).
    * @param epsilon the tolerance ratio.
+   * @param <T> data type for {@code XlaSelfAdjointEig} output and operands
    * @return a new instance of SelfAdjointEig
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower, Long maxIter, Float epsilon) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower,
+      Long maxIter, Float epsilon) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSelfAdjointEig", scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(a.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("lower", lower);
     opBuilder.setAttr("max_iter", maxIter);
     opBuilder.setAttr("epsilon", epsilon);
-    return new SelfAdjointEig<T>(opBuilder.build());
+    return new SelfAdjointEig<>(opBuilder.build());
   }
-  
+
   /**
+   * Gets w.
    * The eigenvalues in ascending order, each repeated according to its
    * multiplicity.
+   * @return w.
    */
   public Output<T> w() {
     return w;
   }
-  
+
   /**
+   * Gets v.
    * The column v[..., :, i] is the normalized eigenvector corresponding to the
    * eigenvalue w[..., i].
+   * @return v.
    */
   public Output<T> v() {
     return v;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "XlaSelfAdjointEig";
-  
-  private Output<T> w;
-  private Output<T> v;
-  
-  private SelfAdjointEig(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    w = operation.output(outputIdx++);
-    v = operation.output(outputIdx++);
   }
 }

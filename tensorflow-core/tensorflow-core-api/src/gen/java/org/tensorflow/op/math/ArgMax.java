@@ -32,80 +32,90 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Returns the index with the largest value across dimensions of a tensor.
- * <p>
  * Note that in case of ties the identity of the return value is not guaranteed.
- * <p>
- * Usage:
- *   <pre>{@code
- *   import tensorflow as tf
- *   a = [1, 10, 26.9, 2.8, 166.32, 62.3]
- *   b = tf.math.argmax(input = a)
- *   c = tf.keras.backend.eval(b)
- *   # c = 4
- *   # here a[4] = 166.32 which is the largest element of a across axis 0
- *   }</pre>
- * 
- * 
- * @param <V> data type for {@code output()} output
+ * <p>Usage:
+ * <pre>
+ * import tensorflow as tf
+ * a = [1, 10, 26.9, 2.8, 166.32, 62.3]
+ * b = tf.math.argmax(input = a)
+ * c = tf.keras.backend.eval(b)
+ * # c = 4
+ * # here a[4] = 166.32 which is the largest element of a across axis 0
+ * </pre>
+ *
+ * @param <V> data type for {@code output} output
  */
-@Operator(group = "math")
+@Operator(
+    group = "math"
+)
 public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V> {
-  
+  /**
+   * The name of this op, as known by TensorFlow core engine
+   */
+  public static final String OP_NAME = "ArgMax";
+
+  private Output<V> output;
+
+  private ArgMax(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
+  }
+
   /**
    * Factory method to create a class wrapping a new ArgMax operation.
-   * 
+   *
    * @param scope current scope
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @param input the input value
+   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
-   * @param outputType 
+   * @param outputType the value of the outputType property
+   * @param <V> data type for {@code ArgMax} output and operands
    * @return a new instance of ArgMax
    */
-  @Endpoint(describeByClass = true)
-  public static <V extends TNumber> ArgMax<V> create(Scope scope, Operand<? extends TType> input, Operand<? extends TNumber> dimension, Class<V> outputType) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <V extends TNumber> ArgMax<V> create(Scope scope, Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension, Class<V> outputType) {
     OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_type", Operands.toDataType(outputType));
-    return new ArgMax<V>(opBuilder.build());
+    return new ArgMax<>(opBuilder.build());
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new ArgMax operation using default output types.
-   * 
+   * Factory method to create a class wrapping a new ArgMax operation, with the default output types.
+   *
    * @param scope current scope
-   * @param input 
-   * @param dimension int32 or int64, must be in the range `[-rank(input), rank(input))`.
+   * @param input the input value
+   * @param dimension int32 or int64, must be in the range {@code [-rank(input), rank(input))}.
    * Describes which dimension of the input Tensor to reduce across. For vectors,
    * use dimension = 0.
-   * @return a new instance of ArgMax
+   * @return a new instance of ArgMax, with default output types
    */
-  @Endpoint(describeByClass = true)
-  public static ArgMax<TInt64> create(Scope scope, Operand<? extends TType> input, Operand<? extends TNumber> dimension) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static ArgMax<TInt64> create(Scope scope, Operand<? extends TType> input,
+      Operand<? extends TNumber> dimension) {
     return create(scope, input, dimension, TInt64.class);
   }
-  
+
   /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<V> output() {
     return output;
   }
-  
+
   @Override
   public Output<V> asOutput() {
     return output;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "ArgMax";
-  
-  private Output<V> output;
-  
-  private ArgMax(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
   }
 }

@@ -24,53 +24,59 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes softplus gradients for a softplus operation.
- * 
- * @param <T> data type for {@code backprops()} output
+ *
+ * @param <T> data type for {@code backprops} output
  */
 public final class SoftplusGrad<T extends TNumber> extends RawOp implements Operand<T> {
-  
   /**
-   * Factory method to create a class wrapping a new SoftplusGrad operation.
-   * 
-   * @param scope current scope
-   * @param gradients The backpropagated gradients to the corresponding softplus operation.
-   * @param features The features passed as input to the corresponding softplus operation.
-   * @return a new instance of SoftplusGrad
+   * The name of this op, as known by TensorFlow core engine
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TNumber> SoftplusGrad<T> create(Scope scope, Operand<T> gradients, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SoftplusGrad", scope.makeOpName("SoftplusGrad"));
-    opBuilder.addInput(gradients.asOutput());
-    opBuilder.addInput(features.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    return new SoftplusGrad<T>(opBuilder.build());
-  }
-  
-  /**
-   * The gradients: `gradients / (1 + exp(-features))`.
-   */
-  public Output<T> backprops() {
-    return backprops;
-  }
-  
-  @Override
-  public Output<T> asOutput() {
-    return backprops;
-  }
-  
-  /** The name of this op, as known by TensorFlow core engine */
   public static final String OP_NAME = "SoftplusGrad";
-  
+
   private Output<T> backprops;
-  
+
   private SoftplusGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     backprops = operation.output(outputIdx++);
+  }
+
+  /**
+   * Factory method to create a class wrapping a new SoftplusGrad operation.
+   *
+   * @param scope current scope
+   * @param gradients The backpropagated gradients to the corresponding softplus operation.
+   * @param features The features passed as input to the corresponding softplus operation.
+   * @param <T> data type for {@code SoftplusGrad} output and operands
+   * @return a new instance of SoftplusGrad
+   */
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TNumber> SoftplusGrad<T> create(Scope scope, Operand<T> gradients,
+      Operand<T> features) {
+    OperationBuilder opBuilder = scope.env().opBuilder("SoftplusGrad", scope.makeOpName("SoftplusGrad"));
+    opBuilder.addInput(gradients.asOutput());
+    opBuilder.addInput(features.asOutput());
+    opBuilder = scope.apply(opBuilder);
+    return new SoftplusGrad<>(opBuilder.build());
+  }
+
+  /**
+   * Gets backprops.
+   * The gradients: {@code gradients / (1 + exp(-features))}.
+   * @return backprops.
+   */
+  public Output<T> backprops() {
+    return backprops;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return backprops;
   }
 }

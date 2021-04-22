@@ -32,44 +32,45 @@ import org.tensorflow.types.family.TType;
 
 /**
  * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
- * <p>
  * outputs outside the XLA computation.
- * 
- * @param <T> data type for {@code output()} output
+ *
+ * @param <T> data type for {@code output} output
  */
-@Operator(group = "tpu")
+@Operator(
+    group = "tpu"
+)
 public final class PartitionedOutput<T extends TType> extends RawOp implements Iterable<Operand<T>> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.tpu.PartitionedOutput}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param partitionDim An integer describles which dimension is partitioned.
-     */
-    public Options partitionDim(Long partitionDim) {
-      this.partitionDim = partitionDim;
-      return this;
-    }
-    
-    private Long partitionDim;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TPUPartitionedOutput";
+
+  private List<Output<T>> output;
+
+  @SuppressWarnings("unchecked")
+  private PartitionedOutput(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    int outputLength = operation.outputListLength("output");
+    output = Arrays.asList((Output<T>[]) operation.outputList(outputIdx, outputLength));
+    outputIdx += outputLength;
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new PartitionedOutput operation.
-   * 
+   * Factory method to create a class wrapping a new TPUPartitionedOutput operation.
+   *
    * @param scope current scope
    * @param inputs A tensor which represents the full shape of partitioned tensors.
-   * @param numSplits 
-   * @param options carries optional attributes values
+   * @param numSplits the value of the numSplits property
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TPUPartitionedOutput} output and operands
    * @return a new instance of PartitionedOutput
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> PartitionedOutput<T> create(Scope scope, Operand<T> inputs, Long numSplits, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> PartitionedOutput<T> create(Scope scope, Operand<T> inputs,
+      Long numSplits, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TPUPartitionedOutput", scope.makeOpName("PartitionedOutput"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -81,40 +82,52 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
         }
       }
     }
-    return new PartitionedOutput<T>(opBuilder.build());
+    return new PartitionedOutput<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the partitionDim option.
+   *
    * @param partitionDim An integer describles which dimension is partitioned.
+   * @return this Options instance.
    */
   public static Options partitionDim(Long partitionDim) {
     return new Options().partitionDim(partitionDim);
   }
-  
+
   /**
+   * Gets output.
    * A list of partitioned inputs which must have the same shape.
+   * @return output.
    */
   public List<Output<T>> output() {
     return output;
   }
-  
+
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<T>> iterator() {
     return (Iterator) output.iterator();
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TPUPartitionedOutput";
-  
-  private List<Output<T>> output;
-  
-  @SuppressWarnings("unchecked")
-  private PartitionedOutput(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputLength = operation.outputListLength("output");
-    output = Arrays.asList((Output<T>[])operation.outputList(outputIdx, outputLength));
-    outputIdx += outputLength;
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.tpu.PartitionedOutput}
+   */
+  public static class Options {
+    private Long partitionDim;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the partitionDim option.
+     *
+     * @param partitionDim An integer describles which dimension is partitioned.
+     * @return this Options instance.
+     */
+    public Options partitionDim(Long partitionDim) {
+      this.partitionDim = partitionDim;
+      return this;
+    }
   }
 }

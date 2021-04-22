@@ -30,43 +30,39 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
- * Read `SparseTensors` from a `SparseTensorsMap` and concatenate them.
- * <p>
- * The input `sparse_handles` must be an `int64` matrix of shape `[N, 1]` where
- * `N` is the minibatch size and the rows correspond to the output handles of
- * `AddSparseToTensorsMap` or `AddManySparseToTensorsMap`.  The ranks of the
- * original `SparseTensor` objects that went into the given input ops must all
- * match.  When the final `SparseTensor` is created, it has rank one
- * higher than the ranks of the incoming `SparseTensor` objects
+ * Read {@code SparseTensors} from a {@code SparseTensorsMap} and concatenate them.
+ * The input {@code sparse_handles} must be an {@code int64} matrix of shape {@code [N, 1]} where
+ * {@code N} is the minibatch size and the rows correspond to the output handles of
+ * {@code AddSparseToTensorsMap} or {@code AddManySparseToTensorsMap}.  The ranks of the
+ * original {@code SparseTensor} objects that went into the given input ops must all
+ * match.  When the final {@code SparseTensor} is created, it has rank one
+ * higher than the ranks of the incoming {@code SparseTensor} objects
  * (they have been concatenated along a new row dimension on the left).
- * <p>
- * The output `SparseTensor` object's shape values for all dimensions but the
- * first are the max across the input `SparseTensor` objects' shape values
- * for the corresponding dimensions.  Its first shape value is `N`, the minibatch
+ * <p>The output {@code SparseTensor} object's shape values for all dimensions but the
+ * first are the max across the input {@code SparseTensor} objects' shape values
+ * for the corresponding dimensions.  Its first shape value is {@code N}, the minibatch
  * size.
- * <p>
- * The input `SparseTensor` objects' indices are assumed ordered in
+ * <p>The input {@code SparseTensor} objects' indices are assumed ordered in
  * standard lexicographic order.  If this is not the case, after this
- * step run `SparseReorder` to restore index ordering.
- * <p>
- * For example, if the handles represent an input, which is a `[2, 3]` matrix
- * representing two original `SparseTensor` objects:
- * <pre>{@code
+ * step run {@code SparseReorder} to restore index ordering.
+ * <p>For example, if the handles represent an input, which is a {@code [2, 3]} matrix
+ * representing two original {@code SparseTensor} objects:
+ * <pre>
  *     index = [ 0]
  *             [10]
  *             [20]
  *     values = [1, 2, 3]
  *     shape = [50]
- * }</pre>
- * and
- * <pre>{@code
+ * </pre>
+ * <p>and
+ * <pre>
  *     index = [ 2]
  *             [10]
  *     values = [4, 5]
  *     shape = [30]
- * }</pre>
- * then the final `SparseTensor` will be:
- * <pre>{@code
+ * </pre>
+ * <p>then the final {@code SparseTensor} will be:
+ * <pre>
  *     index = [0  0]
  *             [0 10]
  *             [0 20]
@@ -74,57 +70,50 @@ import org.tensorflow.types.family.TType;
  *             [1 10]
  *     values = [1, 2, 3, 4, 5]
  *     shape = [2 50]
- * }</pre>
- * 
- * 
- * @param <T> data type for {@code sparseValues()} output
+ * </pre>
+ *
+ * @param <T> data type for {@code sparse_values} output
  */
-@Operator(group = "sparse")
+@Operator(
+    group = "sparse"
+)
 public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.sparse.TakeManySparseFromTensorsMap}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param container The container name for the `SparseTensorsMap` read by this op.
-     */
-    public Options container(String container) {
-      this.container = container;
-      return this;
-    }
-    
-    /**
-     * @param sharedName The shared name for the `SparseTensorsMap` read by this op.
-     * It should not be blank; rather the `shared_name` or unique Operation name
-     * of the Op that created the original `SparseTensorsMap` should be used.
-     */
-    public Options sharedName(String sharedName) {
-      this.sharedName = sharedName;
-      return this;
-    }
-    
-    private String container;
-    private String sharedName;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "TakeManySparseFromTensorsMap";
+
+  private Output<TInt64> sparseIndices;
+
+  private Output<T> sparseValues;
+
+  private Output<TInt64> sparseShape;
+
+  private TakeManySparseFromTensorsMap(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    sparseIndices = operation.output(outputIdx++);
+    sparseValues = operation.output(outputIdx++);
+    sparseShape = operation.output(outputIdx++);
   }
-  
+
   /**
    * Factory method to create a class wrapping a new TakeManySparseFromTensorsMap operation.
-   * 
+   *
    * @param scope current scope
-   * @param sparseHandles 1-D, The `N` serialized `SparseTensor` objects.
-   * Shape: `[N]`.
-   * @param dtype The `dtype` of the `SparseTensor` objects stored in the
-   * `SparseTensorsMap`.
-   * @param options carries optional attributes values
+   * @param sparseHandles 1-D, The {@code N} serialized {@code SparseTensor} objects.
+   * Shape: {@code [N]}.
+   * @param dtype The {@code dtype} of the {@code SparseTensor} objects stored in the
+   * {@code SparseTensorsMap}.
+   * @param options carries optional attribute values
+   * @param <T> data type for {@code TakeManySparseFromTensorsMap} output and operands
    * @return a new instance of TakeManySparseFromTensorsMap
    */
-  @Endpoint(describeByClass = true)
-  public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope, Operand<TInt64> sparseHandles, Class<T> dtype, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <T extends TType> TakeManySparseFromTensorsMap<T> create(Scope scope,
+      Operand<TInt64> sparseHandles, Class<T> dtype, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("TakeManySparseFromTensorsMap", scope.makeOpName("TakeManySparseFromTensorsMap"));
     opBuilder.addInput(sparseHandles.asOutput());
     opBuilder = scope.apply(opBuilder);
@@ -139,58 +128,91 @@ public final class TakeManySparseFromTensorsMap<T extends TType> extends RawOp {
         }
       }
     }
-    return new TakeManySparseFromTensorsMap<T>(opBuilder.build());
+    return new TakeManySparseFromTensorsMap<>(opBuilder.build());
   }
-  
+
   /**
-   * @param container The container name for the `SparseTensorsMap` read by this op.
+   * Sets the container option.
+   *
+   * @param container The container name for the {@code SparseTensorsMap} read by this op.
+   * @return this Options instance.
    */
   public static Options container(String container) {
     return new Options().container(container);
   }
-  
+
   /**
-   * @param sharedName The shared name for the `SparseTensorsMap` read by this op.
-   * It should not be blank; rather the `shared_name` or unique Operation name
-   * of the Op that created the original `SparseTensorsMap` should be used.
+   * Sets the sharedName option.
+   *
+   * @param sharedName The shared name for the {@code SparseTensorsMap} read by this op.
+   * It should not be blank; rather the {@code shared_name} or unique Operation name
+   * of the Op that created the original {@code SparseTensorsMap} should be used.
+   * @return this Options instance.
    */
   public static Options sharedName(String sharedName) {
     return new Options().sharedName(sharedName);
   }
-  
+
   /**
-   * 2-D.  The `indices` of the minibatch `SparseTensor`.
+   * Gets sparseIndices.
+   * 2-D.  The {@code indices} of the minibatch {@code SparseTensor}.
+   * @return sparseIndices.
    */
   public Output<TInt64> sparseIndices() {
     return sparseIndices;
   }
-  
+
   /**
-   * 1-D.  The `values` of the minibatch `SparseTensor`.
+   * Gets sparseValues.
+   * 1-D.  The {@code values} of the minibatch {@code SparseTensor}.
+   * @return sparseValues.
    */
   public Output<T> sparseValues() {
     return sparseValues;
   }
-  
+
   /**
-   * 1-D.  The `shape` of the minibatch `SparseTensor`.
+   * Gets sparseShape.
+   * 1-D.  The {@code shape} of the minibatch {@code SparseTensor}.
+   * @return sparseShape.
    */
   public Output<TInt64> sparseShape() {
     return sparseShape;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "TakeManySparseFromTensorsMap";
-  
-  private Output<TInt64> sparseIndices;
-  private Output<T> sparseValues;
-  private Output<TInt64> sparseShape;
-  
-  private TakeManySparseFromTensorsMap(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    sparseIndices = operation.output(outputIdx++);
-    sparseValues = operation.output(outputIdx++);
-    sparseShape = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.sparse.TakeManySparseFromTensorsMap}
+   */
+  public static class Options {
+    private String container;
+
+    private String sharedName;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the container option.
+     *
+     * @param container The container name for the {@code SparseTensorsMap} read by this op.
+     * @return this Options instance.
+     */
+    public Options container(String container) {
+      this.container = container;
+      return this;
+    }
+
+    /**
+     * Sets the sharedName option.
+     *
+     * @param sharedName The shared name for the {@code SparseTensorsMap} read by this op.
+     * It should not be blank; rather the {@code shared_name} or unique Operation name
+     * of the Op that created the original {@code SparseTensorsMap} should be used.
+     * @return this Options instance.
+     */
+    public Options sharedName(String sharedName) {
+      this.sharedName = sharedName;
+      return this;
+    }
   }
 }

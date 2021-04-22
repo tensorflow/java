@@ -17,6 +17,7 @@ limitations under the License.
 
 package org.tensorflow.op.nn;
 
+import java.util.Arrays;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -30,74 +31,56 @@ import org.tensorflow.types.family.TNumber;
 
 /**
  * Computes the gradients of 3-D convolution with respect to the input.
- * 
- * @param <U> data type for {@code output()} output
+ *
+ * @param <U> data type for {@code output} output
  */
-@Operator(group = "nn")
+@Operator(
+    group = "nn"
+)
 public final class Conv3dBackpropInput<U extends TNumber> extends RawOp implements Operand<U> {
-  
   /**
-   * Optional attributes for {@link org.tensorflow.op.nn.Conv3dBackpropInput}
+   * The name of this op, as known by TensorFlow core engine
    */
-  public static class Options {
-    
-    /**
-     * @param dataFormat The data format of the input and output data. With the
-     * default format "NDHWC", the data is stored in the order of:
-     *     [batch, in_depth, in_height, in_width, in_channels].
-     * Alternatively, the format could be "NCDHW", the data storage order is:
-     *     [batch, in_channels, in_depth, in_height, in_width].
-     */
-    public Options dataFormat(String dataFormat) {
-      this.dataFormat = dataFormat;
-      return this;
-    }
-    
-    /**
-     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
-     * `input`. If set to k > 1, there will be k-1 skipped cells between each
-     * filter element on that dimension. The dimension order is determined by the
-     * value of `data_format`, see above for details. Dilations in the batch and
-     * depth dimensions must be 1.
-     */
-    public Options dilations(List<Long> dilations) {
-      this.dilations = dilations;
-      return this;
-    }
-    
-    private String dataFormat;
-    private List<Long> dilations;
-    
-    private Options() {
-    }
+  public static final String OP_NAME = "Conv3DBackpropInputV2";
+
+  private Output<U> output;
+
+  private Conv3dBackpropInput(Operation operation) {
+    super(operation);
+    int outputIdx = 0;
+    output = operation.output(outputIdx++);
   }
-  
+
   /**
-   * Factory method to create a class wrapping a new Conv3dBackpropInput operation.
-   * 
+   * Factory method to create a class wrapping a new Conv3DBackpropInputV2 operation.
+   *
    * @param scope current scope
-   * @param inputSizes An integer vector representing the tensor shape of `input`,
-   * where `input` is a 5-D
-   * `[batch, depth, rows, cols, in_channels]` tensor.
-   * @param filter Shape `[depth, rows, cols, in_channels, out_channels]`.
-   * `in_channels` must match between `input` and `filter`.
-   * @param outBackprop Backprop signal of shape `[batch, out_depth, out_rows, out_cols,
-   * out_channels]`.
+   * @param inputSizes An integer vector representing the tensor shape of {@code input},
+   * where {@code input} is a 5-D
+   * {@code [batch, depth, rows, cols, in_channels]} tensor.
+   * @param filter Shape {@code [depth, rows, cols, in_channels, out_channels]}.
+   * {@code in_channels} must match between {@code input} and {@code filter}.
+   * @param outBackprop Backprop signal of shape {@code [batch, out_depth, out_rows, out_cols, out_channels]}.
    * @param strides 1-D tensor of length 5. The stride of the sliding window for each
-   * dimension of `input`. Must have `strides[0] = strides[4] = 1`.
+   * dimension of {@code input}. Must have {@code strides[0] = strides[4] = 1}.
    * @param padding The type of padding algorithm to use.
-   * @param options carries optional attributes values
+   * @param options carries optional attribute values
+   * @param <U> data type for {@code Conv3DBackpropInputV2} output and operands
    * @return a new instance of Conv3dBackpropInput
    */
-  @Endpoint(describeByClass = true)
-  public static <U extends TNumber> Conv3dBackpropInput<U> create(Scope scope, Operand<? extends TNumber> inputSizes, Operand<U> filter, Operand<U> outBackprop, List<Long> strides, String padding, Options... options) {
+  @Endpoint(
+      describeByClass = true
+  )
+  public static <U extends TNumber> Conv3dBackpropInput<U> create(Scope scope,
+      Operand<? extends TNumber> inputSizes, Operand<U> filter, Operand<U> outBackprop,
+      List<Long> strides, String padding, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("Conv3DBackpropInputV2", scope.makeOpName("Conv3dBackpropInput"));
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
-    for (int i = 0; i < stridesArray.length; ++i) {
+    for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);
     }
     opBuilder.setAttr("strides", stridesArray);
@@ -109,57 +92,126 @@ public final class Conv3dBackpropInput<U extends TNumber> extends RawOp implemen
         }
         if (opts.dilations != null) {
           long[] dilationsArray = new long[opts.dilations.size()];
-          for (int i = 0; i < dilationsArray.length; ++i) {
+          for (int i = 0 ; i < dilationsArray.length ; i++) {
             dilationsArray[i] = opts.dilations.get(i);
           }
           opBuilder.setAttr("dilations", dilationsArray);
         }
       }
     }
-    return new Conv3dBackpropInput<U>(opBuilder.build());
+    return new Conv3dBackpropInput<>(opBuilder.build());
   }
-  
+
   /**
+   * Sets the dataFormat option.
+   *
    * @param dataFormat The data format of the input and output data. With the
-   * default format "NDHWC", the data is stored in the order of:
-   *     [batch, in_depth, in_height, in_width, in_channels].
-   * Alternatively, the format could be "NCDHW", the data storage order is:
-   *     [batch, in_channels, in_depth, in_height, in_width].
+   * default format &quot;NDHWC&quot;, the data is stored in the order of:
+   * [batch, in_depth, in_height, in_width, in_channels].
+   * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+   * [batch, in_channels, in_depth, in_height, in_width].
+   * @return this Options instance.
    */
   public static Options dataFormat(String dataFormat) {
     return new Options().dataFormat(dataFormat);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
    * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
-   * `input`. If set to k > 1, there will be k-1 skipped cells between each
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
    * filter element on that dimension. The dimension order is determined by the
-   * value of `data_format`, see above for details. Dilations in the batch and
+   * value of {@code data_format}, see above for details. Dilations in the batch and
    * depth dimensions must be 1.
+   * @return this Options instance.
    */
   public static Options dilations(List<Long> dilations) {
     return new Options().dilations(dilations);
   }
-  
+
   /**
+   * Sets the dilations option.
+   *
+   * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+   * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+   * filter element on that dimension. The dimension order is determined by the
+   * value of {@code data_format}, see above for details. Dilations in the batch and
+   * depth dimensions must be 1.
+   * @return this Options instance.
+   */
+  public static Options dilations(Long[] dilations) {
+    return new Options().dilations(dilations);
+  }
+
+  /**
+   * Gets output.
+   *
+   * @return output.
    */
   public Output<U> output() {
     return output;
   }
-  
+
   @Override
   public Output<U> asOutput() {
     return output;
   }
-  
-  /** The name of this op, as known by TensorFlow core engine */
-  public static final String OP_NAME = "Conv3DBackpropInputV2";
-  
-  private Output<U> output;
-  
-  private Conv3dBackpropInput(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    output = operation.output(outputIdx++);
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.nn.Conv3dBackpropInput}
+   */
+  public static class Options {
+    private String dataFormat;
+
+    private List<Long> dilations;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the dataFormat option.
+     *
+     * @param dataFormat The data format of the input and output data. With the
+     * default format &quot;NDHWC&quot;, the data is stored in the order of:
+     * [batch, in_depth, in_height, in_width, in_channels].
+     * Alternatively, the format could be &quot;NCDHW&quot;, the data storage order is:
+     * [batch, in_channels, in_depth, in_height, in_width].
+     * @return this Options instance.
+     */
+    public Options dataFormat(String dataFormat) {
+      this.dataFormat = dataFormat;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(List<Long> dilations) {
+      this.dilations = dilations;
+      return this;
+    }
+
+    /**
+     * Sets the dilations option.
+     *
+     * @param dilations 1-D tensor of length 5.  The dilation factor for each dimension of
+     * {@code input}. If set to k &gt; 1, there will be k-1 skipped cells between each
+     * filter element on that dimension. The dimension order is determined by the
+     * value of {@code data_format}, see above for details. Dilations in the batch and
+     * depth dimensions must be 1.
+     * @return this Options instance.
+     */
+    public Options dilations(Long... dilations) {
+      this.dilations = Arrays.asList(dilations);
+      return this;
+    }
   }
 }
