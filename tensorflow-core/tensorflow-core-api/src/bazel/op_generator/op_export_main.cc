@@ -103,15 +103,11 @@ int main(int argc, char* argv[]) {
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
 
   tensorflow::Env* env = tensorflow::Env::Default();
-  void* ops_libs_handles[50];
-  for (int i = 1; i < argc; ++i) {
-    TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[i - 1]));
-  }
+  void* ops_libs_handles[1];
+  TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
   TF_CHECK_OK(tensorflow::java::UpdateOpDefs(&ops, api_dirs, env));
-
-  printf("Exporting %i ops", ops.op_size());
 
   std::ostream & out = std::cout;
   ops.SerializeToOstream(&out);
