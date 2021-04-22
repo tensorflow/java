@@ -70,9 +70,8 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
       }
     }
   }
+
   api_map.UpdateDocs();
-
-
 
   for (int i = 0 ; i < op_list->op_size() ; i++) {
     OpDef *op_def = op_list->mutable_op(i);
@@ -103,6 +102,7 @@ int main(int argc, char* argv[]) {
       api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
 
   tensorflow::Env* env = tensorflow::Env::Default();
+  std::cerr << "Env Type: " << typeid(env).name()) << "\n";
   void* ops_libs_handles[1];
   TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
   tensorflow::OpList ops;
