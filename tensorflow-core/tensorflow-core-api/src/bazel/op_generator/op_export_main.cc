@@ -72,6 +72,8 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
   }
   api_map.UpdateDocs();
 
+
+
   for (int i = 0 ; i < op_list->op_size() ; i++) {
     OpDef *op_def = op_list->mutable_op(i);
     const ApiDef* api_def = api_map.GetApiDef(op_def->name());
@@ -109,6 +111,7 @@ int main(int argc, char* argv[]) {
   tensorflow::OpRegistry::Global()->Export(false, &ops);
   TF_CHECK_OK(tensorflow::java::UpdateOpDefs(&ops, api_dirs, env));
 
+  printf("Exporting %i ops", ops.op_size());
 
   std::ostream & out = std::cout;
   ops.SerializeToOstream(&out);
