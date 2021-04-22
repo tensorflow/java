@@ -84,12 +84,15 @@ mkdir -p $GEN_RESOURCE_DIR
 
 if [[ -z "${SKIP_EXPORT:-}" ]]; then
   # Export op defs
-  echo "Exporting Ops"
+  echo "Exporting Ops to $GEN_RESOURCE_DIR:"
+  ls -l $GEN_RESOURCE_DIR
   $BAZEL_BIN/java_op_exporter \
       --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
       $TENSORFLOW_LIB > $GEN_RESOURCE_DIR/ops.pb
+  echo "Exported:"
+  ls -l $GEN_RESOURCE_DIR
 else
-  echo "Skiping Op export"
+  echo "Skipping Op export"
 fi
 
 
