@@ -56,7 +56,7 @@ public fun Signature(
     methodName: String,
     inputs: Map<String, Operand<*>>,
     outputs: Map<String, Operand<*>>,
-    key: String = Signature.DEFAULT_KEY
+    key: String = Signature.DEFAULT_KEY,
 ): Signature =
     Signature.builder().methodName(methodName).key(key).inputs(inputs).outputs(outputs).build()
 
@@ -67,7 +67,7 @@ public fun Signature(
     methodName: String,
     inputs: Operand<*>,
     outputs: Map<String, Operand<*>>,
-    key: String = Signature.DEFAULT_KEY
+    key: String = Signature.DEFAULT_KEY,
 ): Signature =
     Signature.builder().methodName(methodName).key(key).input("input", inputs).outputs(outputs).build()
 
@@ -78,7 +78,7 @@ public fun Signature(
     methodName: String,
     inputs: Map<String, Operand<*>>,
     outputs: Operand<*>,
-    key: String = Signature.DEFAULT_KEY
+    key: String = Signature.DEFAULT_KEY,
 ): Signature =
     Signature.builder().methodName(methodName).key(key).inputs(inputs).output("output", outputs).build()
 
@@ -89,7 +89,7 @@ public fun Signature(
     methodName: String,
     inputs: Operand<*>,
     outputs: Operand<*>,
-    key: String = Signature.DEFAULT_KEY
+    key: String = Signature.DEFAULT_KEY,
 ): Signature =
     Signature.builder().methodName(methodName).key(key).input("input", inputs).output("output", outputs).build()
 

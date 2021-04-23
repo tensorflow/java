@@ -27,8 +27,8 @@
   <artifactId>tensorflow-kotlin</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Framework Kotlin Library</name>
-  <description>Kotlin API wrappers for the TensorFlow Framework Java library</description>
+  <name>TensorFlow Kotlin Library</name>
+  <description>Kotlin API wrappers for the TensorFlow Java library</description>
 
   <properties>
     <javacpp.platform.extension></javacpp.platform.extension>
