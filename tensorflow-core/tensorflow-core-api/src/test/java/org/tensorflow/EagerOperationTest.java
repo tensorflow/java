@@ -55,8 +55,8 @@ public class EagerOperationTest {
               .setAttr("value", t)
               .build();
       assertEquals(DataType.DT_INT32, op.dtype(0));
-      assertEquals(2, op.shape(0).size(0));
-      assertEquals(3, op.shape(0).size(1));
+      assertEquals(2, op.shape(0).get(0));
+      assertEquals(3, op.shape(0).get(1));
     }
   }
 

@@ -75,7 +75,7 @@ public class ND {
     int numDims = shape.numDimensions();
     int i = numDims - 1;
     for (; i >= 0; i--) {
-      long size = shape.size(i);
+      long size = shape.get(i);
       long mod = index % size;
       coordinates[i] = mod;
       index -= mod;
@@ -676,7 +676,7 @@ public class ND {
     int nDims = shape.numDimensions();
     int xis = nDims - 1 - axis;
     long totalSize = shape.size();
-    long axisSize = shape.size(xis);
+    long axisSize = shape.get(xis);
     final float[] sums = new float[(int) axisSize];
 
     a.scalars()
@@ -767,7 +767,7 @@ public class ND {
     int nDims = shape.numDimensions();
     int xis = nDims - 1 - axis;
     long totalSize = shape.size();
-    long axisSize = shape.size(xis);
+    long axisSize = shape.get(xis);
     final double[] sums = new double[(int) axisSize];
 
     a.scalars()

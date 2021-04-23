@@ -144,8 +144,8 @@ public class GraphOperationBuilderTest {
               .build()
               .output(0);
       assertEquals(2, n.shape().numDimensions());
-      assertEquals(-1, n.shape().size(0));
-      assertEquals(784, n.shape().size(1));
+      assertEquals(-1, n.shape().get(0));
+      assertEquals(784, n.shape().get(1));
       assertEquals(DataType.DT_FLOAT, n.dataType());
     }
   }

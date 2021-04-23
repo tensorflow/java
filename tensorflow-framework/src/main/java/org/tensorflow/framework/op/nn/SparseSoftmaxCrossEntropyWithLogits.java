@@ -139,7 +139,7 @@ public class SparseSoftmaxCrossEntropyWithLogits {
     }
 
     // Reshape logits to 2 dims, labels to 1 dim.
-    long numClassses = logitsShape.size(-1);
+    long numClassses = logitsShape.get(-1);
 
     preciseLogits = Reshape.create(scope, preciseLogits, Constant.arrayOf(scope, -1L, numClassses));
     labels = Reshape.create(scope, labels, Constant.scalarOf(scope, -1));

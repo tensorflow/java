@@ -200,7 +200,7 @@ public class SavedModelBundleTest {
       assertNotNull(inputInfo);
       assertEquals(xyShape.numDimensions(), inputInfo.getTensorShape().getDimCount());
       for (int i = 0; i < xyShape.numDimensions(); ++i) {
-        assertEquals(xyShape.size(i), inputInfo.getTensorShape().getDim(i).getSize());
+        assertEquals(xyShape.get(i), inputInfo.getTensorShape().getDim(i).getSize());
       }
 
       TensorInfo outputInfo = signatureDef.getOutputsMap().get("reducedSum");

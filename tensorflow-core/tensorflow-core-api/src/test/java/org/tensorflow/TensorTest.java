@@ -325,7 +325,7 @@ public class TensorTest {
       assertEquals(TFloat64.class, t.type());
       assertEquals(DataType.DT_DOUBLE, t.dataType());
       assertEquals(1, t.shape().numDimensions());
-      assertEquals(3, t.shape().size(0));
+      assertEquals(3, t.shape().get(0));
       assertEquals(vector, t);
     }
 
@@ -334,8 +334,8 @@ public class TensorTest {
       assertEquals(TInt32.class, t.type());
       assertEquals(DataType.DT_INT32, t.dataType());
       assertEquals(2, t.shape().numDimensions());
-      assertEquals(2, t.shape().size(0));
-      assertEquals(3, t.shape().size(1));
+      assertEquals(2, t.shape().get(0));
+      assertEquals(3, t.shape().get(1));
       assertEquals(matrix, t);
     }
 
@@ -346,9 +346,9 @@ public class TensorTest {
       assertEquals(TInt64.class, t.type());
       assertEquals(DataType.DT_INT64, t.dataType());
       assertEquals(3, t.shape().numDimensions());
-      assertEquals(2, t.shape().size(0));
-      assertEquals(5, t.shape().size(1));
-      assertEquals(1, t.shape().size(2));
+      assertEquals(2, t.shape().get(0));
+      assertEquals(5, t.shape().get(1));
+      assertEquals(1, t.shape().get(2));
       assertEquals(threeD, t);
     }
 
@@ -361,10 +361,10 @@ public class TensorTest {
       assertEquals(TBool.class, t.type());
       assertEquals(DataType.DT_BOOL, t.dataType());
       assertEquals(4, t.shape().numDimensions());
-      assertEquals(3, t.shape().size(0));
-      assertEquals(1, t.shape().size(1));
-      assertEquals(2, t.shape().size(2));
-      assertEquals(4, t.shape().size(3));
+      assertEquals(3, t.shape().get(0));
+      assertEquals(1, t.shape().get(1));
+      assertEquals(2, t.shape().get(2));
+      assertEquals(4, t.shape().get(3));
       assertEquals(fourD, t);
     }
   }
@@ -381,8 +381,8 @@ public class TensorTest {
       assertEquals(TString.class, t.type());
       assertEquals(DataType.DT_STRING, t.dataType());
       assertEquals(2, t.shape().numDimensions());
-      assertEquals(4, t.shape().size(0));
-      assertEquals(3, t.shape().size(1));
+      assertEquals(4, t.shape().get(0));
+      assertEquals(3, t.shape().get(1));
       assertEquals(matrix, t);
     }
 
@@ -392,8 +392,8 @@ public class TensorTest {
       assertEquals(TString.class, t.type());
       assertEquals(DataType.DT_STRING, t.dataType());
       assertEquals(2, t.shape().numDimensions());
-      assertEquals(4, t.shape().size(0));
-      assertEquals(3, t.shape().size(1));
+      assertEquals(4, t.shape().get(0));
+      assertEquals(3, t.shape().get(1));
       assertEquals(byteMatrix, t.asBytes());
       assertEquals(matrix, t);
     }
@@ -406,7 +406,7 @@ public class TensorTest {
       assertEquals(TUint8.class, t.type());
       assertEquals(DataType.DT_UINT8, t.dataType());
       assertEquals(1, t.shape().numDimensions());
-      assertEquals(4, t.shape().size(0));
+      assertEquals(4, t.shape().get(0));
 
       byte[] got = new byte[4];
       t.read(DataBuffers.of(got));
@@ -421,7 +421,7 @@ public class TensorTest {
       assertEquals(TInt32.class, t.type());
       assertEquals(DataType.DT_INT32, t.dataType());
       assertEquals(1, t.shape().numDimensions());
-      assertEquals(4, t.shape().size(0));
+      assertEquals(4, t.shape().get(0));
 
       Integer[] got = new Integer[4];
       t.read(DataBuffers.ofObjects(got));

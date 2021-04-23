@@ -66,8 +66,8 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
     }
-    boolean isSquare = shape.size(0) == shape.size(1);
-    long diagSize = Math.min(shape.size(0), shape.size(1));
+    boolean isSquare = shape.get(0) == shape.get(1);
+    long diagSize = Math.min(shape.get(0), shape.get(1));
     Shape diagShape = Shape.of(diagSize);
 
     Operand<T> op;
@@ -79,8 +79,8 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
           tf.linalg.matrixDiag(
               diagOnes,
               tf.constant(0), // don't cast here, expecting TInt32
-              tf.constant((int) shape.size(0)),
-              tf.constant((int) shape.size(1)),
+              tf.constant((int) shape.get(0)),
+              tf.constant((int) shape.get(1)),
               zero);
     } else {
       Operand<T> zeroMatrix = tf.zeros(dims, type);
