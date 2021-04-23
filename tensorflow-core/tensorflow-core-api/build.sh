@@ -90,7 +90,7 @@ if [[ -z "${SKIP_EXPORT:-}" ]]; then
   ls -l $TENSORFLOW_LIB
   $BAZEL_BIN/java_op_exporter \
       --api_dirs=$BAZEL_SRCS/external/org_tensorflow/tensorflow/core/api_def/base_api,src/bazel/api_def \
-      $TENSORFLOW_BIN/tensorflow_cc.lib > $GEN_RESOURCE_DIR/ops.pb
+      $TENSORFLOW_BIN/tensorflow_cc.dll.if.lib > $GEN_RESOURCE_DIR/ops.pb
   echo "Exported:"
   ls -l $GEN_RESOURCE_DIR
 else
