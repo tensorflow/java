@@ -48,7 +48,8 @@ public class TpuOps(
     /**
      * Asserts that compilation succeeded. This op produces no output and closes the
      *  device during failure to ensure all pending device interactions fail.
-     *  'compilation_status' is a serialized CompilationResultProto.
+     *
+     * 'compilation_status' is a serialized CompilationResultProto.
      *
      * @param compilationStatus the compilationStatus value
      * @return a new instance of CompileSucceededAssert
@@ -114,10 +115,10 @@ public class TpuOps(
     /**
      * An op that groups a list of partitioned inputs together. This op
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param inputs A list of partitioned inputs which must have the same shape.
      * @param options carries optional attribute values
-     * @param T data type for ` TPUPartitionedInput` output and operands
+     * @param <T> data type for `TPUPartitionedInput` output and operands
      * @return a new instance of PartitionedInput
      * @see org.tensorflow.op.TpuOps.partitionedInput
      * @param partitionDim Sets the partitionDim option.
@@ -141,11 +142,11 @@ public class TpuOps(
      * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
      *  outputs outside the XLA computation.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param inputs A tensor which represents the full shape of partitioned tensors.
      * @param numSplits the value of the numSplits property
      * @param options carries optional attribute values
-     * @param T data type for ` TPUPartitionedOutput` output and operands
+     * @param <T> data type for `TPUPartitionedOutput` output and operands
      * @return a new instance of PartitionedOutput
      * @see org.tensorflow.op.TpuOps.partitionedOutput
      * @param partitionDim Sets the partitionDim option.

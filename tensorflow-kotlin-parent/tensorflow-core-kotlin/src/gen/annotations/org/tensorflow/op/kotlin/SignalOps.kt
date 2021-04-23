@@ -129,11 +129,11 @@ public class SignalOps(
     /**
      * Fast Fourier transform.
      *  Computes the 1-dimensional discrete Fourier transform over the inner-most
-     *  dimension of ``` input```.
+     *  dimension of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` FFT` output and operands
+     * @param <T> data type for `FFT` output and operands
      * @return a new instance of Fft
      * @see org.tensorflow.op.SignalOps.fft
      */
@@ -144,11 +144,11 @@ public class SignalOps(
     /**
      * 2D fast Fourier transform.
      *  Computes the 2-dimensional discrete Fourier transform over the inner-most
-     *  2 dimensions of ``` input```.
+     *  2 dimensions of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` FFT2D` output and operands
+     * @param <T> data type for `FFT2D` output and operands
      * @return a new instance of Fft2d
      * @see org.tensorflow.op.SignalOps.fft2d
      */
@@ -159,11 +159,11 @@ public class SignalOps(
     /**
      * 3D fast Fourier transform.
      *  Computes the 3-dimensional discrete Fourier transform over the inner-most 3
-     *  dimensions of ``` input```.
+     *  dimensions of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` FFT3D` output and operands
+     * @param <T> data type for `FFT3D` output and operands
      * @return a new instance of Fft3d
      * @see org.tensorflow.op.SignalOps.fft3d
      */
@@ -174,11 +174,11 @@ public class SignalOps(
     /**
      * Inverse fast Fourier transform.
      *  Computes the inverse 1-dimensional discrete Fourier transform over the
-     *  inner-most dimension of ``` input```.
+     *  inner-most dimension of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` IFFT` output and operands
+     * @param <T> data type for `IFFT` output and operands
      * @return a new instance of Ifft
      * @see org.tensorflow.op.SignalOps.ifft
      */
@@ -189,11 +189,11 @@ public class SignalOps(
     /**
      * Inverse 2D fast Fourier transform.
      *  Computes the inverse 2-dimensional discrete Fourier transform over the
-     *  inner-most 2 dimensions of ``` input```.
+     *  inner-most 2 dimensions of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` IFFT2D` output and operands
+     * @param <T> data type for `IFFT2D` output and operands
      * @return a new instance of Ifft2d
      * @see org.tensorflow.op.SignalOps.ifft2d
      */
@@ -204,11 +204,11 @@ public class SignalOps(
     /**
      * Inverse 3D fast Fourier transform.
      *  Computes the inverse 3-dimensional discrete Fourier transform over the
-     *  inner-most 3 dimensions of ``` input```.
+     *  inner-most 3 dimensions of `input`.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param input A complex tensor.
-     * @param T data type for ` IFFT3D` output and operands
+     * @param <T> data type for `IFFT3D` output and operands
      * @return a new instance of Ifft3d
      * @see org.tensorflow.op.SignalOps.ifft3d
      */
@@ -219,20 +219,22 @@ public class SignalOps(
     /**
      * Inverse real-valued fast Fourier transform.
      *  Computes the inverse 1-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most dimension of ``` input```.
-     *  The inner-most dimension of ``` input``` is assumed to be the result of ``` RFFT```: the
-     *  ``` fft_length / 2 + 1``` unique components of the DFT of a real-valued signal. If
-     *  ``` fft_length``` is not provided, it is computed from the size of the inner-most
-     *  dimension of ``` input``` (``` fft_length = 2 * (inner - 1)```). If the FFT length used to
-     *  compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most dimension of `input`.
+     *
+     * The inner-most dimension of `input` is assumed to be the result of `RFFT`: the
+     *  `fft_length / 2 + 1` unique components of the DFT of a real-valued signal. If
+     *  `fft_length` is not provided, it is computed from the size of the inner-most
+     *  dimension of `input` (`fft_length = 2 * (inner - 1)`). If the FFT length used to
+     *  compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along the axis ``` signal.Irfft``` is computed on, if ``` fft_length / 2 + 1``` is smaller
-     *  than the corresponding dimension of ``` input```, the dimension is cropped. If it is
+     *
+     * Along the axis `signal.Irfft` is computed on, if `fft_length / 2 + 1` is smaller
+     *  than the corresponding dimension of `input`, the dimension is cropped. If it is
      *  larger, the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;1]. The FFT length.
+     * @param fftLength An int32 tensor of shape [1]. The FFT length.
      * @return a new instance of Irfft, with default output types
      * @see org.tensorflow.op.SignalOps.irfft
      */
@@ -245,22 +247,24 @@ public class SignalOps(
     /**
      * Inverse real-valued fast Fourier transform.
      *  Computes the inverse 1-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most dimension of ``` input```.
-     *  The inner-most dimension of ``` input``` is assumed to be the result of ``` RFFT```: the
-     *  ``` fft_length / 2 + 1``` unique components of the DFT of a real-valued signal. If
-     *  ``` fft_length``` is not provided, it is computed from the size of the inner-most
-     *  dimension of ``` input``` (``` fft_length = 2 * (inner - 1)```). If the FFT length used to
-     *  compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most dimension of `input`.
+     *
+     * The inner-most dimension of `input` is assumed to be the result of `RFFT`: the
+     *  `fft_length / 2 + 1` unique components of the DFT of a real-valued signal. If
+     *  `fft_length` is not provided, it is computed from the size of the inner-most
+     *  dimension of `input` (`fft_length = 2 * (inner - 1)`). If the FFT length used to
+     *  compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along the axis ``` signal.Irfft``` is computed on, if ``` fft_length / 2 + 1``` is smaller
-     *  than the corresponding dimension of ``` input```, the dimension is cropped. If it is
+     *
+     * Along the axis `signal.Irfft` is computed on, if `fft_length / 2 + 1` is smaller
+     *  than the corresponding dimension of `input`, the dimension is cropped. If it is
      *  larger, the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;1]. The FFT length.
+     * @param fftLength An int32 tensor of shape [1]. The FFT length.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT` output and operands
+     * @param <U> data type for `IRFFT` output and operands
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
      */
@@ -277,21 +281,23 @@ public class SignalOps(
     /**
      * Inverse 2D real-valued fast Fourier transform.
      *  Computes the inverse 2-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 2 dimensions of ``` input```.
-     *  The inner-most 2 dimensions of ``` input``` are assumed to be the result of ``` RFFT2D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 2 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 2 dimensions of `input`.
+     *
+     * The inner-most 2 dimensions of `input` are assumed to be the result of `RFFT2D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 2 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft2d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft2d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;2]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
      * @return a new instance of Irfft2d, with default output types
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
@@ -304,23 +310,25 @@ public class SignalOps(
     /**
      * Inverse 2D real-valued fast Fourier transform.
      *  Computes the inverse 2-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 2 dimensions of ``` input```.
-     *  The inner-most 2 dimensions of ``` input``` are assumed to be the result of ``` RFFT2D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 2 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 2 dimensions of `input`.
+     *
+     * The inner-most 2 dimensions of `input` are assumed to be the result of `RFFT2D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 2 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft2d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft2d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;2]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT2D` output and operands
+     * @param <U> data type for `IRFFT2D` output and operands
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
@@ -337,21 +345,23 @@ public class SignalOps(
     /**
      * Inverse 3D real-valued fast Fourier transform.
      *  Computes the inverse 3-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 3 dimensions of ``` input```.
-     *  The inner-most 3 dimensions of ``` input``` are assumed to be the result of ``` RFFT3D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 3 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 3 dimensions of `input`.
+     *
+     * The inner-most 3 dimensions of `input` are assumed to be the result of `RFFT3D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 3 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft3d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft3d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;3]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
      * @return a new instance of Irfft3d, with default output types
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
@@ -364,23 +374,25 @@ public class SignalOps(
     /**
      * Inverse 3D real-valued fast Fourier transform.
      *  Computes the inverse 3-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 3 dimensions of ``` input```.
-     *  The inner-most 3 dimensions of ``` input``` are assumed to be the result of ``` RFFT3D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 3 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 3 dimensions of `input`.
+     *
+     * The inner-most 3 dimensions of `input` are assumed to be the result of `RFFT3D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 3 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft3d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft3d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;3]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT3D` output and operands
+     * @param <U> data type for `IRFFT3D` output and operands
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
@@ -397,19 +409,21 @@ public class SignalOps(
     /**
      * Real-valued fast Fourier transform.
      *  Computes the 1-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most dimension of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft``` only returns the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT: the zero-frequency term,
-     *  followed by the ``` fft_length / 2``` positive-frequency terms.
-     *  Along the axis ``` signal.Rfft``` is computed on, if ``` fft_length``` is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *  over the inner-most dimension of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT: the zero-frequency term,
+     *  followed by the `fft_length / 2` positive-frequency terms.
+     *
+     * Along the axis `signal.Rfft` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;1]. The FFT length.
+     * @param fftLength An int32 tensor of shape [1]. The FFT length.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT` output and operands
+     * @param <U> data type for `RFFT` output and operands
      * @return a new instance of Rfft
      * @see org.tensorflow.op.SignalOps.rfft
      */
@@ -426,22 +440,22 @@ public class SignalOps(
     /**
      * 2D real-valued fast Fourier transform.
      *  Computes the 2-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most 2 dimensions of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft2d``` only returns
-     * the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT for the inner-most dimension
-     *  of ``` output```: the zero-frequency term, followed by the ``` fft_length / 2```
+     *  over the inner-most 2 dimensions of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft2d` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT for the inner-most dimension
+     *  of `output`: the zero-frequency term, followed by the `fft_length / 2`
      *  positive-frequency terms.
-     *  Along each axis ``` signal.Rfft2d``` is computed on, if ``` fft_length``` is smaller than
-     * the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Rfft2d` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;2]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT2D` output and operands
+     * @param <U> data type for `RFFT2D` output and operands
      * @return a new instance of Rfft2d
      * @see org.tensorflow.op.SignalOps.rfft2d
      */
@@ -458,22 +472,22 @@ public class SignalOps(
     /**
      * 3D real-valued fast Fourier transform.
      *  Computes the 3-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most 3 dimensions of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft3d``` only returns
-     * the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT for the inner-most dimension
-     *  of ``` output```: the zero-frequency term, followed by the ``` fft_length / 2```
+     *  over the inner-most 3 dimensions of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft3d` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT for the inner-most dimension
+     *  of `output`: the zero-frequency term, followed by the `fft_length / 2`
      *  positive-frequency terms.
-     *  Along each axis ``` signal.Rfft3d``` is computed on, if ``` fft_length``` is smaller than
-     * the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Rfft3d` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;3]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT3D` output and operands
+     * @param <U> data type for `RFFT3D` output and operands
      * @return a new instance of Rfft3d
      * @see org.tensorflow.op.SignalOps.rfft3d
      */
@@ -490,22 +504,24 @@ public class SignalOps(
     /**
      * Inverse real-valued fast Fourier transform.
      *  Computes the inverse 1-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most dimension of ``` input```.
-     *  The inner-most dimension of ``` input``` is assumed to be the result of ``` RFFT```: the
-     *  ``` fft_length / 2 + 1``` unique components of the DFT of a real-valued signal. If
-     *  ``` fft_length``` is not provided, it is computed from the size of the inner-most
-     *  dimension of ``` input``` (``` fft_length = 2 * (inner - 1)```). If the FFT length used to
-     *  compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most dimension of `input`.
+     *
+     * The inner-most dimension of `input` is assumed to be the result of `RFFT`: the
+     *  `fft_length / 2 + 1` unique components of the DFT of a real-valued signal. If
+     *  `fft_length` is not provided, it is computed from the size of the inner-most
+     *  dimension of `input` (`fft_length = 2 * (inner - 1)`). If the FFT length used to
+     *  compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along the axis ``` signal.Irfft``` is computed on, if ``` fft_length / 2 + 1``` is smaller
-     *  than the corresponding dimension of ``` input```, the dimension is cropped. If it is
+     *
+     * Along the axis `signal.Irfft` is computed on, if `fft_length / 2 + 1` is smaller
+     *  than the corresponding dimension of `input`, the dimension is cropped. If it is
      *  larger, the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;1]. The FFT length.
+     * @param fftLength An int32 tensor of shape [1]. The FFT length.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT` output and operands
+     * @param <U> data type for `IRFFT` output and operands
      * @return a new instance of Irfft
      * @see org.tensorflow.op.SignalOps.irfft
      */
@@ -518,23 +534,25 @@ public class SignalOps(
     /**
      * Inverse 2D real-valued fast Fourier transform.
      *  Computes the inverse 2-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 2 dimensions of ``` input```.
-     *  The inner-most 2 dimensions of ``` input``` are assumed to be the result of ``` RFFT2D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 2 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 2 dimensions of `input`.
+     *
+     * The inner-most 2 dimensions of `input` are assumed to be the result of `RFFT2D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 2 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft2d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft2d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;2]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT2D` output and operands
+     * @param <U> data type for `IRFFT2D` output and operands
      * @return a new instance of Irfft2d
      * @see org.tensorflow.op.SignalOps.irfft2d
      */
@@ -547,23 +565,25 @@ public class SignalOps(
     /**
      * Inverse 3D real-valued fast Fourier transform.
      *  Computes the inverse 3-dimensional discrete Fourier transform of a real-valued
-     *  signal over the inner-most 3 dimensions of ``` input```.
-     *  The inner-most 3 dimensions of ``` input``` are assumed to be the result of ``` RFFT3D```:
-     *  The inner-most dimension contains the ``` fft_length / 2 + 1``` unique components of
-     *  the DFT of a real-valued signal. If ``` fft_length``` is not provided, it is computed
-     *  from the size of the inner-most 3 dimensions of ``` input```. If the FFT length used
-     *  to compute ``` input``` is odd, it should be provided since it cannot be inferred
+     *  signal over the inner-most 3 dimensions of `input`.
+     *
+     * The inner-most 3 dimensions of `input` are assumed to be the result of `RFFT3D`:
+     *  The inner-most dimension contains the `fft_length / 2 + 1` unique components of
+     *  the DFT of a real-valued signal. If `fft_length` is not provided, it is computed
+     *  from the size of the inner-most 3 dimensions of `input`. If the FFT length used
+     *  to compute `input` is odd, it should be provided since it cannot be inferred
      *  properly.
-     *  Along each axis ``` signal.Irfft3d``` is computed on, if ``` fft_length``` (or
-     *  ``` fft_length / 2 + 1``` for the inner-most dimension) is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Irfft3d` is computed on, if `fft_length` (or
+     *  `fft_length / 2 + 1` for the inner-most dimension) is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A complex tensor.
-     * @param fftLength An int32 tensor of shape &#91;3]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
      * @param Treal the value of the Treal property
-     * @param U data type for ` IRFFT3D` output and operands
+     * @param <U> data type for `IRFFT3D` output and operands
      * @return a new instance of Irfft3d
      * @see org.tensorflow.op.SignalOps.irfft3d
      */
@@ -576,19 +596,21 @@ public class SignalOps(
     /**
      * Real-valued fast Fourier transform.
      *  Computes the 1-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most dimension of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft``` only returns the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT: the zero-frequency term,
-     *  followed by the ``` fft_length / 2``` positive-frequency terms.
-     *  Along the axis ``` signal.Rfft``` is computed on, if ``` fft_length``` is smaller than the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *  over the inner-most dimension of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT: the zero-frequency term,
+     *  followed by the `fft_length / 2` positive-frequency terms.
+     *
+     * Along the axis `signal.Rfft` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;1]. The FFT length.
+     * @param fftLength An int32 tensor of shape [1]. The FFT length.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT` output and operands
+     * @param <U> data type for `RFFT` output and operands
      * @return a new instance of Rfft
      * @see org.tensorflow.op.SignalOps.rfft
      */
@@ -601,22 +623,22 @@ public class SignalOps(
     /**
      * 2D real-valued fast Fourier transform.
      *  Computes the 2-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most 2 dimensions of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft2d``` only returns
-     * the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT for the inner-most dimension
-     *  of ``` output```: the zero-frequency term, followed by the ``` fft_length / 2```
+     *  over the inner-most 2 dimensions of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft2d` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT for the inner-most dimension
+     *  of `output`: the zero-frequency term, followed by the `fft_length / 2`
      *  positive-frequency terms.
-     *  Along each axis ``` signal.Rfft2d``` is computed on, if ``` fft_length``` is smaller than
-     * the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Rfft2d` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;2]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [2]. The FFT length for each dimension.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT2D` output and operands
+     * @param <U> data type for `RFFT2D` output and operands
      * @return a new instance of Rfft2d
      * @see org.tensorflow.op.SignalOps.rfft2d
      */
@@ -629,22 +651,22 @@ public class SignalOps(
     /**
      * 3D real-valued fast Fourier transform.
      *  Computes the 3-dimensional discrete Fourier transform of a real-valued signal
-     *  over the inner-most 3 dimensions of ``` input```.
-     *  Since the DFT of a real signal is Hermitian-symmetric, ``` signal.Rfft3d``` only returns
-     * the
-     *  ``` fft_length / 2 + 1``` unique components of the FFT for the inner-most dimension
-     *  of ``` output```: the zero-frequency term, followed by the ``` fft_length / 2```
+     *  over the inner-most 3 dimensions of `input`.
+     *
+     * Since the DFT of a real signal is Hermitian-symmetric, `signal.Rfft3d` only returns the
+     *  `fft_length / 2 + 1` unique components of the FFT for the inner-most dimension
+     *  of `output`: the zero-frequency term, followed by the `fft_length / 2`
      *  positive-frequency terms.
-     *  Along each axis ``` signal.Rfft3d``` is computed on, if ``` fft_length``` is smaller than
-     * the
-     *  corresponding dimension of ``` input```, the dimension is cropped. If it is larger,
+     *
+     * Along each axis `signal.Rfft3d` is computed on, if `fft_length` is smaller than the
+     *  corresponding dimension of `input`, the dimension is cropped. If it is larger,
      *  the dimension is padded with zeros.
      *
-     * @param U data type for ` output` output
+     * @param <U> data type for `output` output
      * @param input A float32 tensor.
-     * @param fftLength An int32 tensor of shape &#91;3]. The FFT length for each dimension.
+     * @param fftLength An int32 tensor of shape [3]. The FFT length for each dimension.
      * @param Tcomplex the value of the Tcomplex property
-     * @param U data type for ` RFFT3D` output and operands
+     * @param <U> data type for `RFFT3D` output and operands
      * @return a new instance of Rfft3d
      * @see org.tensorflow.op.SignalOps.rfft3d
      */

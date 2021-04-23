@@ -121,7 +121,6 @@
             <configuration>
               <sourceDirs>
                 <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                <sourceDir>${project.basedir}/src/gen/annotations</sourceDir>
                 <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/java</sourceDir>
                 <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/gen/annotations</sourceDir>
                 <sourceDir>${project.basedir}/../../tensorflow-core/tensorflow-core-api/src/main/java</sourceDir>

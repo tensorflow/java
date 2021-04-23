@@ -131,40 +131,6 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         return adjusted
     }
 
-    private fun adjustJavadocLine(line: String): String {
-        var line = line
-        if (line.startsWith("@param")) {
-            line = line.replace("```", "`") // https://youtrack.jetbrains.com/issue/KT-43787
-
-            val parts = line.split(" ").toMutableList()
-            if (parts[1].startsWith("<") && parts[1].endsWith(">")) {
-                parts[1] = parts[1].substring(1, parts[1].length - 1)
-            }
-            line = parts.joinToString(" ")
-        }
-        return line
-    }
-
-    private fun adjustJavadoc(text: String): String {
-        return text
-            .replace("[", "&#91;")
-            .replace("<p>", "")
-            .replace("\\{@link([^@]+)\\}".toRegex()) {
-                "[${it.groupValues[1]}]"
-            }
-            .replace("\\{@code([^@]+)\\}".toRegex()) {
-                val code = it.groupValues[1].replace("&#91;", "[")
-                if ("\n" in code)
-                    "```$code```\n"
-                else
-                    "```$code```"
-            }
-            .replace("<pre>", "")
-            .replace("</pre>", "")
-            .split("\n")
-            .joinToString("\n") { adjustJavadocLine(it) }
-    }
-
     private fun List<OpMethod>.toKotlin(javaOpsClass: ClassName): List<FunSpec> {
         val methods = map { it.toKotlin(javaOpsClass) }.toMutableList()
         methods += methods.mapNotNull { makeCopyWithReified(it) }
@@ -252,7 +218,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
                 ParameterSpec.builder(it.simpleName.toString(),
                     adjustType(it.parameters.single().asType().asTypeName()).copy(nullable = true))
                     .addKdoc("%L",
-                        adjustJavadoc(parseJavadoc(it).toText()).trim().removePrefix("@param ${it.simpleName} "))
+                        parseJavadoc(it).toKDoc().removePrefix("@param ${it.simpleName} "))
                     .defaultValue("null").build()
             }.toMutableList()
 
@@ -311,7 +277,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         javadoc.addBlockTag("see", "${javaOpsClass.canonicalName}.$name")
 
 
-        builder.addKdoc("%L", adjustJavadoc(javadoc.toText()))
+        builder.addKdoc("%L", javadoc.toKDoc())
 
         return builder.build()
     }
@@ -456,7 +422,7 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
             PropertySpec.builder("tf", T_KOTLIN_OPS)
                 .initializer("this")
                 .addModifiers(KModifier.OVERRIDE)
-                .addKdoc("Get the [ " + T_KOTLIN_OPS.simpleName + "] object.")
+                .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
                 .build()
         )
 

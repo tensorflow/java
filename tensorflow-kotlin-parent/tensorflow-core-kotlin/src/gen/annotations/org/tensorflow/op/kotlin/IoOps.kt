@@ -106,11 +106,12 @@ public class IoOps(
 
     /**
      * Decompress strings.
-     *  This op decompresses each element of the ``` bytes``` input ``` Tensor```, which
-     *  is assumed to be compressed using the given ``` compression_type```.
-     *  The ``` output``` is a string ``` Tensor``` of the same shape as ``` bytes```,
+     *  This op decompresses each element of the `bytes` input `Tensor`, which
+     *  is assumed to be compressed using the given `compression_type`.
+     *
+     * The `output` is a string `Tensor` of the same shape as `bytes`,
      *  each element containing the decompressed data from the corresponding
-     *  element in ``` bytes```.
+     *  element in `bytes`.
      *
      * @param bytes A Tensor of string which is compressed.
      * @param options carries optional attribute values
@@ -184,9 +185,8 @@ public class IoOps(
     /**
      * Convert JSON-encoded Example records to binary protocol buffer strings.
      *  This op translates a tensor containing Example records, encoded using
-     *  the  <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">standard
-     * JSON
-     *  mapping</a> ,
+     *  the  [standard JSON
+     *  mapping](https://developers.google.com/protocol-buffers/docs/proto3#json) ,
      *  into a tensor containing the same records encoded as binary protocol
      *  buffers. The resulting tensor can then be fed to any of the other
      *  Example-parsing ops.
@@ -204,20 +204,19 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param inputBytes Tensor of string to be decoded.
-     * @param fixedLength Length in bytes for each element of the decoded output. Must be a
-     * multiple
+     * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
      *  of the size of the output type.
      * @param outType the value of the outType property
      * @param options carries optional attribute values
-     * @param T data type for ` DecodePaddedRaw` output and operands
+     * @param <T> data type for `DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
      * @see org.tensorflow.op.IoOps.decodePaddedRaw
      * @param littleEndian Sets the littleEndian option.
      *
-     * @param littleEndian Whether the input ` input_bytes` is in little-endian order. Ignored for
-     *  ``` out_type``` values that are stored in a single byte, like ``` uint8```
+     * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
+     *  `out_type` values that are stored in a single byte, like `uint8`
      * @return this Options instance.
      */
     public fun <T : TNumber> decodePaddedRaw(
@@ -237,18 +236,18 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param bytes All the elements must have the same length.
      * @param outType the value of the outType property
      * @param options carries optional attribute values
-     * @param T data type for ` DecodeRaw` output and operands
+     * @param <T> data type for `DecodeRaw` output and operands
      * @return a new instance of DecodeRaw
      * @see org.tensorflow.op.IoOps.decodeRaw
      * @param littleEndian Sets the littleEndian option.
      *
-     * @param littleEndian Whether the input ` bytes` are in little-endian order.
-     *  Ignored for ``` out_type``` values that are stored in a single byte like
-     *  ``` uint8```.
+     * @param littleEndian Whether the input `bytes` are in little-endian order.
+     *  Ignored for `out_type` values that are stored in a single byte like
+     *  `uint8`.
      * @return this Options instance.
      */
     public fun <T : TType> decodeRaw(
@@ -264,52 +263,60 @@ public class IoOps(
     )
 
     /**
-     * Deserialize and concatenate ``` SparseTensors``` from a serialized minibatch.
-     *  The input ``` serialized_sparse``` must be a string matrix of shape ``` [N x 3]``` where
-     *  ``` N``` is the minibatch size and the rows correspond to packed outputs of
-     *  ``` SerializeSparse```.  The ranks of the original ``` SparseTensor``` objects
-     *  must all match.  When the final ``` SparseTensor``` is created, it has rank one
-     *  higher than the ranks of the incoming ``` SparseTensor``` objects
+     * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
+     *  The input `serialized_sparse` must be a string matrix of shape `&#91;N x 3&#93;` where
+     *  `N` is the minibatch size and the rows correspond to packed outputs of
+     *  `SerializeSparse`.  The ranks of the original `SparseTensor` objects
+     *  must all match.  When the final `SparseTensor` is created, it has rank one
+     *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension).
-     *  The output ``` SparseTensor``` object's shape values for all dimensions but the
-     *  first are the max across the input ``` SparseTensor``` objects' shape values
-     *  for the corresponding dimensions.  Its first shape value is ``` N```, the minibatch
+     *
+     * The output `SparseTensor` object's shape values for all dimensions but the
+     *  first are the max across the input `SparseTensor` objects' shape values
+     *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *  The input ``` SparseTensor``` objects' indices are assumed ordered in
+     *
+     * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
-     *  step run ``` SparseReorder``` to restore index ordering.
-     *  For example, if the serialized input is a ``` [2 x 3]``` matrix representing two
-     *  original ``` SparseTensor``` objects:
+     *  step run `SparseReorder` to restore index ordering.
      *
-     *  index = &#91; 0]
-     *          &#91;10]
-     *          &#91;20]
-     *  values = &#91;1, 2, 3]
-     *  shape = &#91;50]
+     * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
+     *  original `SparseTensor` objects:
+     *  ```
+     * index = [ 0]
+     *          [10]
+     *          [20]
+     *  values = [1, 2, 3]
+     *  shape = [50]
      *
-     *  and
+     * ```
      *
-     *  index = &#91; 2]
-     *          &#91;10]
-     *  values = &#91;4, 5]
-     *  shape = &#91;30]
+     * and
+     *  ```
+     * index = [ 2]
+     *          [10]
+     *  values = [4, 5]
+     *  shape = [30]
      *
-     *  then the final deserialized ``` SparseTensor``` will be:
+     * ```
      *
-     *  index = &#91;0  0]
-     *          &#91;0 10]
-     *          &#91;0 20]
-     *          &#91;1  2]
-     *          &#91;1 10]
-     *  values = &#91;1, 2, 3, 4, 5]
-     *  shape = &#91;2 50]
+     * then the final deserialized `SparseTensor` will be:
+     *  ```
+     * index = [0  0]
+     *          [0 10]
+     *          [0 20]
+     *          [1  2]
+     *          [1 10]
+     *  values = [1, 2, 3, 4, 5]
+     *  shape = [2 50]
      *
+     * ```
      *
-     * @param T data type for ` sparse_values` output
-     * @param serializedSparse 2-D, The ` N` serialized ` SparseTensor` objects.
+     * @param <T> data type for `sparse_values` output
+     * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
      *  Must have 3 columns.
-     * @param dtype The ` dtype` of the serialized ` SparseTensor` objects.
-     * @param T data type for ` DeserializeManySparse` output and operands
+     * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+     * @param <T> data type for `DeserializeManySparse` output and operands
      * @return a new instance of DeserializeManySparse
      * @see org.tensorflow.op.IoOps.deserializeManySparse
      */
@@ -327,7 +334,8 @@ public class IoOps(
      *  en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
      *  end so that the encoded has length multiple of 4. See Padding section of the
      *  link above.
-     *  Web-safe means that the encoder uses - and _ instead of + and /.
+     *
+     * Web-safe means that the encoder uses - and _ instead of + and /.
      *
      * @param input Strings to be encoded.
      * @param options carries optional attribute values
@@ -574,7 +582,7 @@ public class IoOps(
      *
      * @param serialized A scalar or vector containing binary serialized Example protos.
      * @param names A tensor containing the names of the serialized protos.
-     *  Corresponds 1:1 with the ``` serialized``` tensor.
+     *  Corresponds 1:1 with the `serialized` tensor.
      *  May contain, for example, table key (descriptive) names for the
      *  corresponding serialized protos.  These are purely useful for debugging
      *  purposes, and the presence of values here has no effect on the output.
@@ -586,40 +594,39 @@ public class IoOps(
      *  The keys expected in the Examples' features associated with dense values.
      * @param raggedKeys Vector of strings.
      *  The keys expected in the Examples' features associated with ragged values.
-     * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with `
-     * dense_keys`.
-     *  dense_defaults&#91;j] provides default values
-     *  when the example's feature_map lacks dense_key&#91;j].  If an empty Tensor is
-     *  provided for dense_defaults&#91;j], then the Feature dense_keys&#91;j] is required.
-     *  The input type is inferred from dense_defaults&#91;j], even when it's empty.
-     *  If dense_defaults&#91;j] is not empty, and dense_shapes&#91;j] is fully defined,
-     *  then the shape of dense_defaults&#91;j] must match that of dense_shapes&#91;j].
-     *  If dense_shapes&#91;j] has an undefined major dimension (variable strides dense
-     *  feature), dense_defaults&#91;j] must contain a single element:
+     * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with
+     * `dense_keys`.
+     *  dense_defaults[j] provides default values
+     *  when the example's feature_map lacks dense_key[j].  If an empty Tensor is
+     *  provided for dense_defaults[j], then the Feature dense_keys[j] is required.
+     *  The input type is inferred from dense_defaults[j], even when it's empty.
+     *  If dense_defaults[j] is not empty, and dense_shapes[j] is fully defined,
+     *  then the shape of dense_defaults[j] must match that of dense_shapes[j].
+     *  If dense_shapes[j] has an undefined major dimension (variable strides dense
+     *  feature), dense_defaults[j] must contain a single element:
      *  the padding element.
      * @param numSparse The number of sparse keys.
-     * @param sparseTypes A list of ` num_sparse` types; the data types of data in each Feature
+     * @param sparseTypes A list of `num_sparse` types; the data types of data in each Feature
      *  given in sparse_keys.
      *  Currently the ParseExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param raggedValueTypes A list of ` num_ragged` types; the data types of data in each
-     * Feature
-     *  given in ragged_keys (where ``` num_ragged = sparse_keys.size()```).
+     * @param raggedValueTypes A list of `num_ragged` types; the data types of data in each Feature
+     *  given in ragged_keys (where `num_ragged = sparse_keys.size()`).
      *  Currently the ParseExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param raggedSplitTypes A list of ` num_ragged` types; the data types of row_splits in each
+     * @param raggedSplitTypes A list of `num_ragged` types; the data types of row_splits in each
      * Feature
-     *  given in ragged_keys (where ``` num_ragged = sparse_keys.size()```).
+     *  given in ragged_keys (where `num_ragged = sparse_keys.size()`).
      *  May be DT_INT32 or DT_INT64.
-     * @param denseShapes A list of ` num_dense` shapes; the shapes of data in each Feature
-     *  given in dense_keys (where ``` num_dense = dense_keys.size()```).
-     *  The number of elements in the Feature corresponding to dense_key&#91;j]
-     *  must always equal dense_shapes&#91;j].NumEntries().
-     *  If dense_shapes&#91;j] == (D0, D1, ..., DN) then the shape of output
-     *  Tensor dense_values&#91;j] will be (|serialized|, D0, D1, ..., DN):
+     * @param denseShapes A list of `num_dense` shapes; the shapes of data in each Feature
+     *  given in dense_keys (where `num_dense = dense_keys.size()`).
+     *  The number of elements in the Feature corresponding to dense_key[j]
+     *  must always equal dense_shapes[j].NumEntries().
+     *  If dense_shapes[j] == (D0, D1, ..., DN) then the shape of output
+     *  Tensor dense_values[j] will be (|serialized|, D0, D1, ..., DN):
      *  The dense outputs are just the inputs row-stacked by batch.
-     *  This works for dense_shapes&#91;j] = (-1, D1, ..., DN).  In this case
-     *  the shape of the output Tensor dense_values&#91;j] will be
+     *  This works for dense_shapes[j] = (-1, D1, ..., DN).  In this case
+     *  the shape of the output Tensor dense_values[j] will be
      *  (|serialized|, M, D1, .., DN), where M is the maximum number of blocks
      *  of elements of length D1 * .... * DN, across all minibatch entries
      *  in the input.  Any minibatch entry with less than M blocks of elements of
@@ -685,20 +692,19 @@ public class IoOps(
      *  features may be missing from the SequenceExamples.  If the associated
      *  FeatureList is missing, it is treated as empty.
      * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
-     *  context_dense_defaults&#91;j] provides default values
-     *  when the SequenceExample's context map lacks context_dense_key&#91;j].
-     *  If an empty Tensor is provided for context_dense_defaults&#91;j],
-     *  then the Feature context_dense_keys&#91;j] is required.
-     *  The input type is inferred from context_dense_defaults&#91;j], even when it's
-     *  empty.  If context_dense_defaults&#91;j] is not empty, its shape must match
-     *  context_dense_shapes&#91;j].
+     *  context_dense_defaults[j] provides default values
+     *  when the SequenceExample's context map lacks context_dense_key[j].
+     *  If an empty Tensor is provided for context_dense_defaults[j],
+     *  then the Feature context_dense_keys[j] is required.
+     *  The input type is inferred from context_dense_defaults[j], even when it's
+     *  empty.  If context_dense_defaults[j] is not empty, its shape must match
+     *  context_dense_shapes[j].
      * @param contextSparseTypes A list of Ncontext_sparse types; the data types of data in
      *  each context Feature given in context_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
      * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
-     * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context
-     * features.
+     * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context features.
      * @param featureListDenseTypes the value of the featureListDenseTypes property
      * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
      *  of data in each FeatureList given in feature_list_sparse_keys.
@@ -719,9 +725,9 @@ public class IoOps(
      *
      * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
      *  each context Feature given in context_dense_keys.
-     *  The number of elements in the Feature corresponding to context_dense_key&#91;j]
-     *  must always equal context_dense_shapes&#91;j].NumEntries().
-     *  The shape of context_dense_values&#91;j] will match context_dense_shapes&#91;j].
+     *  The number of elements in the Feature corresponding to context_dense_key[j]
+     *  must always equal context_dense_shapes[j].NumEntries().
+     *  The shape of context_dense_values[j] will match context_dense_shapes[j].
      * @return this Options instance.
      * @param NfeatureListSparse Sets the NfeatureListSparse option.
      *
@@ -736,8 +742,8 @@ public class IoOps(
      * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
      *  data in each FeatureList given in feature_list_dense_keys.
      *  The shape of each Feature in the FeatureList corresponding to
-     *  feature_list_dense_key&#91;j] must always equal
-     *  feature_list_dense_shapes&#91;j].NumEntries().
+     *  feature_list_dense_key[j] must always equal
+     *  feature_list_dense_shapes[j].NumEntries().
      * @return this Options instance.
      */
     public fun parseSequenceExample(
@@ -797,32 +803,32 @@ public class IoOps(
      *
      * @param serialized A vector containing a batch of binary serialized Example protos.
      * @param denseDefaults A list of Tensors (some may be empty), whose length matches
-     *  the length of ``` dense_keys```. dense_defaults&#91;j] provides default values
-     *  when the example's feature_map lacks dense_key&#91;j].  If an empty Tensor is
-     *  provided for dense_defaults&#91;j], then the Feature dense_keys&#91;j] is required.
-     *  The input type is inferred from dense_defaults&#91;j], even when it's empty.
-     *  If dense_defaults&#91;j] is not empty, and dense_shapes&#91;j] is fully defined,
-     *  then the shape of dense_defaults&#91;j] must match that of dense_shapes&#91;j].
-     *  If dense_shapes&#91;j] has an undefined major dimension (variable strides dense
-     *  feature), dense_defaults&#91;j] must contain a single element:
+     *  the length of `dense_keys`. dense_defaults[j] provides default values
+     *  when the example's feature_map lacks dense_key[j].  If an empty Tensor is
+     *  provided for dense_defaults[j], then the Feature dense_keys[j] is required.
+     *  The input type is inferred from dense_defaults[j], even when it's empty.
+     *  If dense_defaults[j] is not empty, and dense_shapes[j] is fully defined,
+     *  then the shape of dense_defaults[j] must match that of dense_shapes[j].
+     *  If dense_shapes[j] has an undefined major dimension (variable strides dense
+     *  feature), dense_defaults[j] must contain a single element:
      *  the padding element.
      * @param numSparse The number of sparse features to be parsed from the example. This
-     *  must match the lengths of ``` sparse_keys``` and ``` sparse_types```.
-     * @param sparseKeys A list of ` num_sparse` strings.
+     *  must match the lengths of `sparse_keys` and `sparse_types`.
+     * @param sparseKeys A list of `num_sparse` strings.
      *  The keys expected in the Examples' features associated with sparse values.
      * @param denseKeys The keys expected in the Examples' features associated with dense
      *  values.
-     * @param sparseTypes A list of ` num_sparse` types; the data types of data in each
+     * @param sparseTypes A list of `num_sparse` types; the data types of data in each
      *  Feature given in sparse_keys.
      *  Currently the ParseSingleExample op supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
      * @param denseShapes The shapes of data in each Feature given in dense_keys.
-     *  The length of this list must match the length of ``` dense_keys```.  The
-     *  number of elements in the Feature corresponding to dense_key&#91;j] must
-     *  always equal dense_shapes&#91;j].NumEntries().  If dense_shapes&#91;j] ==
-     *  (D0, D1, ..., DN) then the shape of output Tensor dense_values&#91;j]
-     *  will be (D0, D1, ..., DN): In the case dense_shapes&#91;j] = (-1, D1,
-     *  ..., DN), the shape of the output Tensor dense_values&#91;j] will be (M,
+     *  The length of this list must match the length of `dense_keys`.  The
+     *  number of elements in the Feature corresponding to dense_key[j] must
+     *  always equal dense_shapes[j].NumEntries().  If dense_shapes[j] ==
+     *  (D0, D1, ..., DN) then the shape of output Tensor dense_values[j]
+     *  will be (D0, D1, ..., DN): In the case dense_shapes[j] = (-1, D1,
+     *  ..., DN), the shape of the output Tensor dense_values[j] will be (M,
      *  D1, .., DN), where M is the number of blocks of elements of length
      *  D1 * .... * DN, in the input.
      * @return a new instance of ParseSingleExample
@@ -867,13 +873,13 @@ public class IoOps(
      *  The keys expected in the SequenceExamples' feature_lists associated
      *  with lists of dense values.
      * @param contextDenseDefaults A list of Ncontext_dense Tensors (some may be empty).
-     *  context_dense_defaults&#91;j] provides default values
-     *  when the SequenceExample's context map lacks context_dense_key&#91;j].
-     *  If an empty Tensor is provided for context_dense_defaults&#91;j],
-     *  then the Feature context_dense_keys&#91;j] is required.
-     *  The input type is inferred from context_dense_defaults&#91;j], even when it's
-     *  empty.  If context_dense_defaults&#91;j] is not empty, its shape must match
-     *  context_dense_shapes&#91;j].
+     *  context_dense_defaults[j] provides default values
+     *  when the SequenceExample's context map lacks context_dense_key[j].
+     *  If an empty Tensor is provided for context_dense_defaults[j],
+     *  then the Feature context_dense_keys[j] is required.
+     *  The input type is inferred from context_dense_defaults[j], even when it's
+     *  empty.  If context_dense_defaults[j] is not empty, its shape must match
+     *  context_dense_shapes[j].
      * @param debugName A scalar containing the name of the serialized proto.
      *  May contain, for example, table key (descriptive) name for the
      *  corresponding serialized proto.  This is purely useful for debugging
@@ -911,17 +917,17 @@ public class IoOps(
      *
      * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
      *  each context Feature given in context_dense_keys.
-     *  The number of elements in the Feature corresponding to context_dense_key&#91;j]
-     *  must always equal context_dense_shapes&#91;j].NumEntries().
-     *  The shape of context_dense_values&#91;j] will match context_dense_shapes&#91;j].
+     *  The number of elements in the Feature corresponding to context_dense_key[j]
+     *  must always equal context_dense_shapes[j].NumEntries().
+     *  The shape of context_dense_values[j] will match context_dense_shapes[j].
      * @return this Options instance.
      * @param featureListDenseShapes Sets the featureListDenseShapes option.
      *
      * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
      *  data in each FeatureList given in feature_list_dense_keys.
      *  The shape of each Feature in the FeatureList corresponding to
-     *  feature_list_dense_key&#91;j] must always equal
-     *  feature_list_dense_shapes&#91;j].NumEntries().
+     *  feature_list_dense_key[j] must always equal
+     *  feature_list_dense_shapes[j].NumEntries().
      * @return this Options instance.
      */
     public fun parseSingleSequenceExample(
@@ -975,11 +981,11 @@ public class IoOps(
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param serialized A scalar string containing a serialized TensorProto proto.
      * @param outType The type of the serialized tensor.  The provided type must match the
      *  type of the serialized tensor and no implicit conversion will take place.
-     * @param T data type for ` ParseTensor` output and operands
+     * @param <T> data type for `ParseTensor` output and operands
      * @return a new instance of ParseTensor
      * @see org.tensorflow.op.IoOps.parseTensor
      */
@@ -1068,7 +1074,8 @@ public class IoOps(
      *  This operation has k outputs, where k is the number of components
      *  in the tuples stored in the given queue, and output i is the ith
      *  component of the dequeued tuple.
-     *  N.B. If the queue is empty, this operation will block until an element
+     *
+     * N.B. If the queue is empty, this operation will block until an element
      *  has been dequeued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
@@ -1096,16 +1103,19 @@ public class IoOps(
     )
 
     /**
-     * Dequeues ``` n``` tuples of one or more tensors from the given queue.
-     *  If the queue is closed and there are fewer than ``` n``` elements, then an
+     * Dequeues `n` tuples of one or more tensors from the given queue.
+     *  If the queue is closed and there are fewer than `n` elements, then an
      *  OutOfRange error is returned.
-     *  This operation concatenates queue-element component tensors along the
+     *
+     * This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
-     *  in the dequeued tuple will have size ``` n``` in the 0th dimension.
-     *  This operation has ``` k``` outputs, where ``` k``` is the number of components in
-     *  the tuples stored in the given queue, and output ``` i``` is the ith
+     *  in the dequeued tuple will have size `n` in the 0th dimension.
+     *
+     * This operation has `k` outputs, where `k` is the number of components in
+     *  the tuples stored in the given queue, and output `i` is the ith
      *  component of the dequeued tuple.
-     *  N.B. If the queue is empty, this operation will block until ``` n``` elements
+     *
+     * N.B. If the queue is empty, this operation will block until `n` elements
      *  have been dequeued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
@@ -1136,20 +1146,23 @@ public class IoOps(
     )
 
     /**
-     * Dequeues ``` n``` tuples of one or more tensors from the given queue.
+     * Dequeues `n` tuples of one or more tensors from the given queue.
      *  This operation is not supported by all queues.  If a queue does not support
      *  DequeueUpTo, then an Unimplemented error is returned.
-     *  If the queue is closed and there are more than 0 but less than ``` n```
+     *
+     * If the queue is closed and there are more than 0 but less than `n`
      *  elements remaining, then instead of returning an OutOfRange error like
-     *  QueueDequeueMany, less than ``` n``` elements are returned immediately.  If
+     *  QueueDequeueMany, less than `n` elements are returned immediately.  If
      *  the queue is closed and there are 0 elements left in the queue, then
      *  an OutOfRange error is returned just like in QueueDequeueMany.
      *  Otherwise the behavior is identical to QueueDequeueMany:
-     *  This operation concatenates queue-element component tensors along the
+     *
+     * This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
      *  in the dequeued tuple will have size n in the 0th dimension.
-     *  This operation has ``` k``` outputs, where ``` k``` is the number of components in
-     *  the tuples stored in the given queue, and output ``` i``` is the ith
+     *
+     * This operation has `k` outputs, where `k` is the number of components in
+     *  the tuples stored in the given queue, and output `i` is the ith
      *  component of the dequeued tuple.
      *
      * @param handle The handle to a queue.
@@ -1183,7 +1196,8 @@ public class IoOps(
      * Enqueues a tuple of one or more tensors in the given queue.
      *  The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *  N.B. If the queue is full, this operation will block until the given
+     *
+     * N.B. If the queue is full, this operation will block until the given
      *  element has been enqueued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
@@ -1215,9 +1229,11 @@ public class IoOps(
      *  This operation slices each component tensor along the 0th dimension to
      *  make multiple queue elements. All of the tuple components must have the
      *  same size in the 0th dimension.
-     *  The components input has k elements, which correspond to the components of
+     *
+     * The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *  N.B. If the queue is full, this operation will block until the given
+     *
+     * N.B. If the queue is full, this operation will block until the given
      *  elements have been enqueued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
@@ -1391,15 +1407,15 @@ public class IoOps(
     )
 
     /**
-     * Returns up to ``` num_records``` (key, value) pairs produced by a Reader.
+     * Returns up to `num_records` (key, value) pairs produced by a Reader.
      *  Will dequeue from the input queue if necessary (e.g. when the
      *  Reader needs to start reading from a new file since it has finished
      *  with the previous file).
-     *  It may return less than ``` num_records``` even before the last batch.
+     *  It may return less than `num_records` even before the last batch.
      *
-     * @param readerHandle Handle to a ` Reader`.
-     * @param queueHandle Handle to a ` Queue`, with string work items.
-     * @param numRecords number of records to read from ` Reader`.
+     * @param readerHandle Handle to a `Reader`.
+     * @param queueHandle Handle to a `Queue`, with string work items.
+     * @param numRecords number of records to read from `Reader`.
      * @return a new instance of ReaderReadUpTo
      * @see org.tensorflow.op.IoOps.readerReadUpTo
      */
@@ -1456,19 +1472,19 @@ public class IoOps(
         )
 
     /**
-     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
-     * object.
-     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
+     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3&#93;` `Tensor` object.
+     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
-     *  rank ``` R-1```.
-     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
+     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
+     *  rank `R-1`.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
+     * The minibatch size `N` is extracted from `sparse_shape[0]`.
+     *
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
      * @return a new instance of SerializeManySparse, with default output types
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
@@ -1483,22 +1499,22 @@ public class IoOps(
     )
 
     /**
-     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
-     * object.
-     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
+     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3&#93;` `Tensor` object.
+     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
-     *  rank ``` R-1```.
-     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
+     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
+     *  rank `R-1`.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
-     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
-     *  (default) and ``` variant```.
-     * @param U data type for ` SerializeManySparse` output and operands
+     * The minibatch size `N` is extracted from `sparse_shape[0]`.
+     *
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+     * @param outType The `dtype` to use for serialization; the supported types are `string`
+     *  (default) and `variant`.
+     * @param <U> data type for `SerializeManySparse` output and operands
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
@@ -1515,12 +1531,12 @@ public class IoOps(
     )
 
     /**
-     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
+     * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
      * @return a new instance of SerializeSparse, with default output types
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
@@ -1535,15 +1551,15 @@ public class IoOps(
     )
 
     /**
-     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
+     * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
-     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
-     *  (default) and ``` variant```.
-     * @param U data type for ` SerializeSparse` output and operands
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+     * @param outType The `dtype` to use for serialization; the supported types are `string`
+     *  (default) and `variant`.
+     * @param <U> data type for `SerializeSparse` output and operands
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
@@ -1562,7 +1578,7 @@ public class IoOps(
     /**
      * Transforms a Tensor into a serialized TensorProto proto.
      *
-     * @param tensor A Tensor of type ` T`.
+     * @param tensor A Tensor of type `T`.
      * @return a new instance of SerializeTensor
      * @see org.tensorflow.op.IoOps.serializeTensor
      */
@@ -1718,20 +1734,19 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param inputBytes Tensor of string to be decoded.
-     * @param fixedLength Length in bytes for each element of the decoded output. Must be a
-     * multiple
+     * @param fixedLength Length in bytes for each element of the decoded output. Must be a multiple
      *  of the size of the output type.
      * @param outType the value of the outType property
      * @param options carries optional attribute values
-     * @param T data type for ` DecodePaddedRaw` output and operands
+     * @param <T> data type for `DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
      * @see org.tensorflow.op.IoOps.decodePaddedRaw
      * @param littleEndian Sets the littleEndian option.
      *
-     * @param littleEndian Whether the input ` input_bytes` is in little-endian order. Ignored for
-     *  ``` out_type``` values that are stored in a single byte, like ``` uint8```
+     * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
+     *  `out_type` values that are stored in a single byte, like `uint8`
      * @return this Options instance.
      */
     @JvmName("decodePaddedRawReified")
@@ -1744,18 +1759,18 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param bytes All the elements must have the same length.
      * @param outType the value of the outType property
      * @param options carries optional attribute values
-     * @param T data type for ` DecodeRaw` output and operands
+     * @param <T> data type for `DecodeRaw` output and operands
      * @return a new instance of DecodeRaw
      * @see org.tensorflow.op.IoOps.decodeRaw
      * @param littleEndian Sets the littleEndian option.
      *
-     * @param littleEndian Whether the input ` bytes` are in little-endian order.
-     *  Ignored for ``` out_type``` values that are stored in a single byte like
-     *  ``` uint8```.
+     * @param littleEndian Whether the input `bytes` are in little-endian order.
+     *  Ignored for `out_type` values that are stored in a single byte like
+     *  `uint8`.
      * @return this Options instance.
      */
     @JvmName("decodeRawReified")
@@ -1766,52 +1781,60 @@ public class IoOps(
     ): DecodeRaw<T> = decodeRaw<T>(bytes, T::class.java, littleEndian)
 
     /**
-     * Deserialize and concatenate ``` SparseTensors``` from a serialized minibatch.
-     *  The input ``` serialized_sparse``` must be a string matrix of shape ``` [N x 3]``` where
-     *  ``` N``` is the minibatch size and the rows correspond to packed outputs of
-     *  ``` SerializeSparse```.  The ranks of the original ``` SparseTensor``` objects
-     *  must all match.  When the final ``` SparseTensor``` is created, it has rank one
-     *  higher than the ranks of the incoming ``` SparseTensor``` objects
+     * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
+     *  The input `serialized_sparse` must be a string matrix of shape `&#91;N x 3&#93;` where
+     *  `N` is the minibatch size and the rows correspond to packed outputs of
+     *  `SerializeSparse`.  The ranks of the original `SparseTensor` objects
+     *  must all match.  When the final `SparseTensor` is created, it has rank one
+     *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension).
-     *  The output ``` SparseTensor``` object's shape values for all dimensions but the
-     *  first are the max across the input ``` SparseTensor``` objects' shape values
-     *  for the corresponding dimensions.  Its first shape value is ``` N```, the minibatch
+     *
+     * The output `SparseTensor` object's shape values for all dimensions but the
+     *  first are the max across the input `SparseTensor` objects' shape values
+     *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *  The input ``` SparseTensor``` objects' indices are assumed ordered in
+     *
+     * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
-     *  step run ``` SparseReorder``` to restore index ordering.
-     *  For example, if the serialized input is a ``` [2 x 3]``` matrix representing two
-     *  original ``` SparseTensor``` objects:
+     *  step run `SparseReorder` to restore index ordering.
      *
-     *  index = &#91; 0]
-     *          &#91;10]
-     *          &#91;20]
-     *  values = &#91;1, 2, 3]
-     *  shape = &#91;50]
+     * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
+     *  original `SparseTensor` objects:
+     *  ```
+     * index = [ 0]
+     *          [10]
+     *          [20]
+     *  values = [1, 2, 3]
+     *  shape = [50]
      *
-     *  and
+     * ```
      *
-     *  index = &#91; 2]
-     *          &#91;10]
-     *  values = &#91;4, 5]
-     *  shape = &#91;30]
+     * and
+     *  ```
+     * index = [ 2]
+     *          [10]
+     *  values = [4, 5]
+     *  shape = [30]
      *
-     *  then the final deserialized ``` SparseTensor``` will be:
+     * ```
      *
-     *  index = &#91;0  0]
-     *          &#91;0 10]
-     *          &#91;0 20]
-     *          &#91;1  2]
-     *          &#91;1 10]
-     *  values = &#91;1, 2, 3, 4, 5]
-     *  shape = &#91;2 50]
+     * then the final deserialized `SparseTensor` will be:
+     *  ```
+     * index = [0  0]
+     *          [0 10]
+     *          [0 20]
+     *          [1  2]
+     *          [1 10]
+     *  values = [1, 2, 3, 4, 5]
+     *  shape = [2 50]
      *
+     * ```
      *
-     * @param T data type for ` sparse_values` output
-     * @param serializedSparse 2-D, The ` N` serialized ` SparseTensor` objects.
+     * @param <T> data type for `sparse_values` output
+     * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
      *  Must have 3 columns.
-     * @param dtype The ` dtype` of the serialized ` SparseTensor` objects.
-     * @param T data type for ` DeserializeManySparse` output and operands
+     * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+     * @param <T> data type for `DeserializeManySparse` output and operands
      * @return a new instance of DeserializeManySparse
      * @see org.tensorflow.op.IoOps.deserializeManySparse
      */
@@ -1822,11 +1845,11 @@ public class IoOps(
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
      *
-     * @param T data type for ` output` output
+     * @param <T> data type for `output` output
      * @param serialized A scalar string containing a serialized TensorProto proto.
      * @param outType The type of the serialized tensor.  The provided type must match the
      *  type of the serialized tensor and no implicit conversion will take place.
-     * @param T data type for ` ParseTensor` output and operands
+     * @param <T> data type for `ParseTensor` output and operands
      * @return a new instance of ParseTensor
      * @see org.tensorflow.op.IoOps.parseTensor
      */
@@ -1835,22 +1858,22 @@ public class IoOps(
         parseTensor<T>(serialized, T::class.java)
 
     /**
-     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
-     * object.
-     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
+     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3&#93;` `Tensor` object.
+     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
-     *  rank ``` R-1```.
-     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
+     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
+     *  rank `R-1`.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
-     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
-     *  (default) and ``` variant```.
-     * @param U data type for ` SerializeManySparse` output and operands
+     * The minibatch size `N` is extracted from `sparse_shape[0]`.
+     *
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
+     * @param outType The `dtype` to use for serialization; the supported types are `string`
+     *  (default) and `variant`.
+     * @param <U> data type for `SerializeManySparse` output and operands
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
@@ -1865,15 +1888,15 @@ public class IoOps(
     )
 
     /**
-     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
+     * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
      *
-     * @param U data type for ` serialized_sparse` output
-     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
-     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
-     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
-     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
-     *  (default) and ``` variant```.
-     * @param U data type for ` SerializeSparse` output and operands
+     * @param <U> data type for `serialized_sparse` output
+     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
+     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
+     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
+     * @param outType The `dtype` to use for serialization; the supported types are `string`
+     *  (default) and `variant`.
+     * @param <U> data type for `SerializeSparse` output and operands
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */

@@ -64,16 +64,14 @@ public class StringsOps(
     /**
      * Joins the strings in the given list of string tensors into one tensor;
      *  with the given separator (default is an empty separator).
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  s = &#91;&quot;hello&quot;, &quot;world&quot;, &quot;tensorflow&quot;]
+     *
+     * Examples:
+     *  ```
+     *
+     * s = [&quot;hello&quot;, &quot;world&quot;, &quot;tensorflow&quot;]
      *  tf.strings.join(s, &quot; &quot;)
-     *  &lt;tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  <tf.Tensor: shape=(), dtype=string, numpy=b'hello world tensorflow'>
+     * ```
      *
      * @param inputs A list of string tensors.  The tensors must all have the same shape,
      *  or be scalars.  Scalars may be mixed in; these will be broadcast to the shape
@@ -97,14 +95,11 @@ public class StringsOps(
     /**
      * Converts all uppercase characters into their respective lowercase replacements.
      *  Example:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.lower(&quot;CamelCase string and ALL CAPS&quot;)
-     *  &lt;tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  ```
+     *
+     * tf.strings.lower(&quot;CamelCase string and ALL CAPS&quot;)
+     *  <tf.Tensor: shape=(), dtype=string, numpy=b'camelcase string and all caps'>
+     * ```
      *
      * @param input the input value
      * @param options carries optional attribute values
@@ -125,40 +120,39 @@ public class StringsOps(
     /**
      * Joins a string Tensor across the given dimensions.
      *  Computes the string join across dimensions in the given string Tensor of shape
-     *  ``` [\\(d_0, d_1, ..., d_{n-1}\\)]```.  Returns a new Tensor created by joining the input
+     *  `[\`\(d_0, d_1, ..., d_{n-1`\\)`]}.  Returns a new Tensor created by joining the input
      *  strings with the given separator (default: empty string).  Negative indices are
-     *  counted backwards from the end, with ``` -1``` being equivalent to ``` n - 1```.  If
-     *  indices are not specified, joins across all dimensions beginning from ``` n - 1```
-     *  through ``` 0```.
-     *  For example:
+     *  counted backwards from the end, with `-1` being equivalent to `n - 1`.  If
+     *  indices are not specified, joins across all dimensions beginning from `n - 1`
+     *  through `0`.
      *
-     *  # tensor `a` is &#91;&#91;&quot;a&quot;, &quot;b&quot;], &#91;&quot;c&quot;,
-     * &quot;d&quot;]]
-     *  tf.reduce_join(a, 0) ==&gt; &#91;&quot;ac&quot;, &quot;bd&quot;]
-     *  tf.reduce_join(a, 1) ==&gt; &#91;&quot;ab&quot;, &quot;cd&quot;]
-     *  tf.reduce_join(a, -2) = tf.reduce_join(a, 0) ==&gt; &#91;&quot;ac&quot;, &quot;bd&quot;]
-     *  tf.reduce_join(a, -1) = tf.reduce_join(a, 1) ==&gt; &#91;&quot;ab&quot;, &quot;cd&quot;]
-     *  tf.reduce_join(a, 0, keep_dims=True) ==&gt; &#91;&#91;&quot;ac&quot;, &quot;bd&quot;]]
-     *  tf.reduce_join(a, 1, keep_dims=True) ==&gt; &#91;&#91;&quot;ab&quot;],
-     * &#91;&quot;cd&quot;]]
-     *  tf.reduce_join(a, 0, separator=&quot;.&quot;) ==&gt; &#91;&quot;a.c&quot;, &quot;b.d&quot;]
-     *  tf.reduce_join(a, &#91;0, 1]) ==&gt; &quot;acbd&quot;
-     *  tf.reduce_join(a, &#91;1, 0]) ==&gt; &quot;abcd&quot;
-     *  tf.reduce_join(a, &#91;]) ==&gt; &#91;&#91;&quot;a&quot;, &quot;b&quot;],
-     * &#91;&quot;c&quot;, &quot;d&quot;]]
-     *  tf.reduce_join(a) = tf.reduce_join(a, &#91;1, 0]) ==&gt; &quot;abcd&quot;
+     * For example:
+     *  ```
+     * # tensor `a` is [[&quot;a&quot;, &quot;b&quot;], [&quot;c&quot;, &quot;d&quot;]]
+     *  tf.reduce_join(a, 0) ==> [&quot;ac&quot;, &quot;bd&quot;]
+     *  tf.reduce_join(a, 1) ==> [&quot;ab&quot;, &quot;cd&quot;]
+     *  tf.reduce_join(a, -2) = tf.reduce_join(a, 0) ==> [&quot;ac&quot;, &quot;bd&quot;]
+     *  tf.reduce_join(a, -1) = tf.reduce_join(a, 1) ==> [&quot;ab&quot;, &quot;cd&quot;]
+     *  tf.reduce_join(a, 0, keep_dims=True) ==> [[&quot;ac&quot;, &quot;bd&quot;]]
+     *  tf.reduce_join(a, 1, keep_dims=True) ==> [[&quot;ab&quot;], [&quot;cd&quot;]]
+     *  tf.reduce_join(a, 0, separator=&quot;.&quot;) ==> [&quot;a.c&quot;, &quot;b.d&quot;]
+     *  tf.reduce_join(a, [0, 1]) ==> &quot;acbd&quot;
+     *  tf.reduce_join(a, [1, 0]) ==> &quot;abcd&quot;
+     *  tf.reduce_join(a, []) ==> [[&quot;a&quot;, &quot;b&quot;], [&quot;c&quot;, &quot;d&quot;]]
+     *  tf.reduce_join(a) = tf.reduce_join(a, [1, 0]) ==> &quot;abcd&quot;
      *
+     * ```
      *
      * @param inputs The input to be joined.  All reduced indices must have non-zero size.
      * @param reductionIndices The dimensions to reduce over.  Dimensions are reduced in the
-     *  order specified.  Omitting ``` reduction_indices``` is equivalent to passing
-     *  ``` [n-1, n-2, ..., 0]```.  Negative indices from ``` -n``` to ``` -1``` are supported.
+     *  order specified.  Omitting `reduction_indices` is equivalent to passing
+     *  `&#91;n-1, n-2, ..., 0&#93;`.  Negative indices from `-n` to `-1` are supported.
      * @param options carries optional attribute values
      * @return a new instance of ReduceJoin
      * @see org.tensorflow.op.StringsOps.reduceJoin
      * @param keepDims Sets the keepDims option.
      *
-     * @param keepDims If ` True`, retain reduced dimensions with length ` 1`.
+     * @param keepDims If `True`, retain reduced dimensions with length `1`.
      * @return this Options instance.
      * @param separator Sets the separator option.
      *
@@ -185,20 +179,17 @@ public class StringsOps(
      *  string tensor which is applied to every element of the input tensor.
      *  The boolean values (True or False) of the output tensor indicate
      *  if the input matches the regex pattern provided.
-     *  The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.regex_full_match(&#91;&quot;TF lib&quot;, &quot;lib TF&quot;],
-     * &quot;.*lib$&quot;)
-     *  &lt;tf.Tensor: shape=(2,), dtype=bool, numpy=array(&#91; True, False])&gt;
-     *  tf.strings.regex_full_match(&#91;&quot;TF lib&quot;, &quot;lib TF&quot;],
-     * &quot;.*TF$&quot;)
-     *  &lt;tf.Tensor: shape=(2,), dtype=bool, numpy=array(&#91;False,  True])&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *
+     * The pattern follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.regex_full_match([&quot;TF lib&quot;, &quot;lib TF&quot;], &quot;.*lib$&quot;)
+     *  <tf.Tensor: shape=(2,), dtype=bool, numpy=array([ True, False])>
+     *  tf.strings.regex_full_match([&quot;TF lib&quot;, &quot;lib TF&quot;], &quot;.*TF$&quot;)
+     *  <tf.Tensor: shape=(2,), dtype=bool, numpy=array([False,  True])>
+     * ```
      *
      * @param input A string tensor of the text to be processed.
      * @param pattern A scalar string tensor containing the regular expression to match the input.
@@ -212,24 +203,23 @@ public class StringsOps(
         )
 
     /**
-     * Replaces matches of the ``` pattern``` regular expression in ``` input``` with the
-     *  replacement string provided in ``` rewrite```.
+     * Replaces matches of the `pattern` regular expression in `input` with the
+     *  replacement string provided in `rewrite`.
      *  It follows the re2 syntax (https://github.com/google/re2/wiki/Syntax)
      *
      * @param input The text to be processed.
-     * @param pattern The regular expression to be matched in the ` input` strings.
-     * @param rewrite The rewrite string to be substituted for the ` pattern` expression where it
-     * is
-     *  matched in the ``` input``` strings.
+     * @param pattern The regular expression to be matched in the `input` strings.
+     * @param rewrite The rewrite string to be substituted for the `pattern` expression where it is
+     *  matched in the `input` strings.
      * @param options carries optional attribute values
      * @return a new instance of RegexReplace
      * @see org.tensorflow.op.StringsOps.regexReplace
      * @param replaceGlobal Sets the replaceGlobal option.
      *
-     * @param replaceGlobal If True, the replacement is global (that is, all matches of the `
-     * pattern` regular
-     *  expression in each input string are rewritten), otherwise the ``` rewrite```
-     *  substitution is only made for the first ``` pattern``` match.
+     * @param replaceGlobal If True, the replacement is global (that is, all matches of the
+     * `pattern` regular
+     *  expression in each input string are rewritten), otherwise the `rewrite`
+     *  substitution is only made for the first `pattern` match.
      * @return this Options instance.
      */
     public fun regexReplace(
@@ -284,19 +274,16 @@ public class StringsOps(
     )
 
     /**
-     * String lengths of ``` input```.
+     * String lengths of `input`.
      *  Computes the length of each string given in the input tensor.
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  strings = tf.constant(&#91;'Hello','TensorFlow', '\U0001F642'])
+     *  ```
+     *
+     * strings = tf.constant(['Hello','TensorFlow', '\U0001F642'])
      *  tf.strings.length(strings).numpy() # default counts bytes
-     *  array(&#91; 5, 10, 4], dtype=int32)
+     *  array([ 5, 10, 4], dtype=int32)
      *  tf.strings.length(strings, unit=&quot;UTF8_CHAR&quot;).numpy()
-     *  array(&#91; 5, 10, 1], dtype=int32)
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  array([ 5, 10, 1], dtype=int32)
+     * ```
      *
      * @param input The strings for which to compute the length for each element.
      * @param options carries optional attribute values
@@ -304,10 +291,10 @@ public class StringsOps(
      * @see org.tensorflow.op.StringsOps.stringLength
      * @param unit Sets the unit option.
      *
-     * @param unit The unit that is counted to compute string length.  One of: ` "BYTE"` (for
-     *  the number of bytes in each string) or ``` "UTF8_CHAR"``` (for the number of UTF-8
+     * @param unit The unit that is counted to compute string length.  One of: `"BYTE"` (for
+     *  the number of bytes in each string) or `"UTF8_CHAR"` (for the number of UTF-8
      *  encoded Unicode code points in each string).  Results are undefined
-     *  if ``` unit=UTF8_CHAR``` and the ``` input``` strings do not contain structurally
+     *  if `unit=UTF8_CHAR` and the `input` strings do not contain structurally
      *  valid UTF-8.
      * @return this Options instance.
      */
@@ -325,7 +312,7 @@ public class StringsOps(
      *  strings and outputs a ragged tensor with 1 ragged dimension containing ngrams
      *  of that string, joined along the innermost axis.
      *
-     * @param T data type for ` ngrams_splits` output
+     * @param <T> data type for `ngrams_splits` output
      * @param data The values tensor of the ragged string tensor to make ngrams out of. Must be a
      *  1D string tensor.
      * @param dataSplits The splits tensor of the ragged string tensor to make ngrams out of.
@@ -338,10 +325,10 @@ public class StringsOps(
      *  pad_width != 0.
      * @param padWidth The number of padding elements to add to each side of each
      *  sequence. Note that padding will never be greater than 'ngram_widths'-1
-     *  regardless of this value. If ``` pad_width=-1```, then add ``` max(ngram_widths)-1```
+     *  regardless of this value. If `pad_width=-1`, then add `max(ngram_widths)-1`
      *  elements.
      * @param preserveShortSequences the value of the preserveShortSequences property
-     * @param T data type for ` StringNGrams` output and operands
+     * @param <T> data type for `StringNGrams` output and operands
      * @return a new instance of StringNGrams
      * @see org.tensorflow.op.StringsOps.stringNGrams
      */
@@ -366,37 +353,41 @@ public class StringsOps(
     )
 
     /**
-     * Split elements of ``` source``` based on ``` sep``` into a ``` SparseTensor```.
+     * Split elements of `source` based on `sep` into a `SparseTensor`.
      *  Let N be the size of source (typically N will be the batch size). Split each
-     *  element of ``` source``` based on ``` sep``` and return a ``` SparseTensor```
+     *  element of `source` based on `sep` and return a `SparseTensor`
      *  containing the split tokens. Empty tokens are ignored.
-     *  For example, N = 2, source&#91;0] is 'hello world' and source&#91;1] is 'a b c',
-     *  then the output will be
      *
-     *  st.indices = &#91;0, 0;
+     * For example, N = 2, source[0] is 'hello world' and source[1] is 'a b c',
+     *  then the output will be
+     *  ```
+     * st.indices = [0, 0;
      *                0, 1;
      *                1, 0;
      *                1, 1;
      *                1, 2]
-     *  st.shape = &#91;2, 3]
-     *  st.values = &#91;'hello', 'world', 'a', 'b', 'c']
+     *  st.shape = [2, 3]
+     *  st.values = ['hello', 'world', 'a', 'b', 'c']
      *
-     *  If ``` sep``` is given, consecutive delimiters are not grouped together and are
-     *  deemed to delimit empty strings. For example, source of ``` "1<>2<><>3"``` and
-     *  sep of ``` "<>"``` returns ``` ["1", "2", "", "3"]```. If ``` sep``` is None or an empty
+     * ```
+     *
+     * If `sep` is given, consecutive delimiters are not grouped together and are
+     *  deemed to delimit empty strings. For example, source of `"1<>2<><>3"` and
+     *  sep of `"<>"` returns `&#91;"1", "2", "", "3"&#93;`. If `sep` is None or an empty
      *  string, consecutive whitespace are regarded as a single separator, and the
      *  result will contain no empty strings at the startor end if the string has
      *  leading or trailing whitespace.
-     *  Note that the above mentioned behavior matches python's str.split.
      *
-     * @param input ` 1-D` string ` Tensor`, the strings to split.
-     * @param sep ` 0-D` string ` Tensor`, the delimiter character.
+     * Note that the above mentioned behavior matches python's str.split.
+     *
+     * @param input `1-D` string `Tensor`, the strings to split.
+     * @param sep `0-D` string `Tensor`, the delimiter character.
      * @param options carries optional attribute values
      * @return a new instance of StringSplit
      * @see org.tensorflow.op.StringsOps.stringSplit
      * @param maxsplit Sets the maxsplit option.
      *
-     * @param maxsplit An ` int`. If ` maxsplit > 0`, limit of the split of the result.
+     * @param maxsplit An `int`. If `maxsplit > 0`, limit of the split of the result.
      * @return this Options instance.
      */
     public fun stringSplit(
@@ -414,7 +405,7 @@ public class StringsOps(
     /**
      * Strip leading and trailing whitespaces from the Tensor.
      *
-     * @param input A string ` Tensor` of any shape.
+     * @param input A string `Tensor` of any shape.
      * @return a new instance of Strip
      * @see org.tensorflow.op.StringsOps.strip
      */
@@ -423,89 +414,102 @@ public class StringsOps(
     )
 
     /**
-     * Return substrings from ``` Tensor``` of strings.
-     *  For each string in the input ``` Tensor```, creates a substring starting at index
-     *  ``` pos``` with a total length of ``` len```.
-     *  If ``` len``` defines a substring that would extend beyond the length of the input
-     *  string, or if ``` len``` is negative, then as many characters as possible are used.
-     *  A negative ``` pos``` indicates distance within the string backwards from the end.
-     *  If ``` pos``` specifies an index which is out of range for any of the input strings,
-     *  then an ``` InvalidArgumentError``` is thrown.
-     *  ``` pos``` and ``` len``` must have the same shape, otherwise a ``` ValueError``` is thrown
-     * on
-     *  Op creation.
-     *  <em>NOTE</em>: ``` strings.Substr``` supports broadcasting up to two dimensions. More about
-     *  broadcasting
-     *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a>
-     *  <hr />
-     *  Examples
-     *  Using scalar ``` pos``` and ``` len```:
+     * Return substrings from `Tensor` of strings.
+     *  For each string in the input `Tensor`, creates a substring starting at index
+     *  `pos` with a total length of `len`.
      *
-     *  input = &#91;b'Hello', b'World']
+     * If `len` defines a substring that would extend beyond the length of the input
+     *  string, or if `len` is negative, then as many characters as possible are used.
+     *
+     * A negative `pos` indicates distance within the string backwards from the end.
+     *
+     * If `pos` specifies an index which is out of range for any of the input strings,
+     *  then an `InvalidArgumentError` is thrown.
+     *
+     * `pos` and `len` must have the same shape, otherwise a `ValueError` is thrown on
+     *  Op creation.
+     *
+     * _NOTE_: `strings.Substr` supports broadcasting up to two dimensions. More about
+     *  broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html)
+     *  <hr />
+     *
+     * Examples
+     *
+     * Using scalar `pos` and `len`:
+     *  ```
+     * input = [b'Hello', b'World']
      *  position = 1
      *  length = 3
      *
-     *  output = &#91;b'ell', b'orl']
+     *  output = [b'ell', b'orl']
      *
-     *  Using ``` pos``` and ``` len``` with same shape as ``` input```:
+     * ```
      *
-     *  input = &#91;&#91;b'ten', b'eleven', b'twelve'],
-     *           &#91;b'thirteen', b'fourteen', b'fifteen'],
-     *           &#91;b'sixteen', b'seventeen', b'eighteen']]
-     *  position = &#91;&#91;1, 2, 3],
-     *              &#91;1, 2, 3],
-     *              &#91;1, 2, 3]]
-     *  length =   &#91;&#91;2, 3, 4],
-     *              &#91;4, 3, 2],
-     *              &#91;5, 5, 5]]
+     * Using `pos` and `len` with same shape as `input`:
+     *  ```
+     * input = [[b'ten', b'eleven', b'twelve'],
+     *           [b'thirteen', b'fourteen', b'fifteen'],
+     *           [b'sixteen', b'seventeen', b'eighteen']]
+     *  position = [[1, 2, 3],
+     *              [1, 2, 3],
+     *              [1, 2, 3]]
+     *  length =   [[2, 3, 4],
+     *              [4, 3, 2],
+     *              [5, 5, 5]]
      *
-     *  output = &#91;&#91;b'en', b'eve', b'lve'],
-     *            &#91;b'hirt', b'urt', b'te'],
-     *            &#91;b'ixtee', b'vente', b'hteen']]
+     *  output = [[b'en', b'eve', b'lve'],
+     *            [b'hirt', b'urt', b'te'],
+     *            [b'ixtee', b'vente', b'hteen']]
      *
-     *  Broadcasting ``` pos``` and ``` len``` onto ``` input```:
+     * ```
      *
-     *  input = &#91;&#91;b'ten', b'eleven', b'twelve'],
-     *           &#91;b'thirteen', b'fourteen', b'fifteen'],
-     *           &#91;b'sixteen', b'seventeen', b'eighteen'],
-     *           &#91;b'nineteen', b'twenty', b'twentyone']]
-     *  position = &#91;1, 2, 3]
-     *  length =   &#91;1, 2, 3]
+     * Broadcasting `pos` and `len` onto `input`:
+     *  ```
+     * input = [[b'ten', b'eleven', b'twelve'],
+     *           [b'thirteen', b'fourteen', b'fifteen'],
+     *           [b'sixteen', b'seventeen', b'eighteen'],
+     *           [b'nineteen', b'twenty', b'twentyone']]
+     *  position = [1, 2, 3]
+     *  length =   [1, 2, 3]
      *
-     *  output = &#91;&#91;b'e', b'ev', b'lve'],
-     *            &#91;b'h', b'ur', b'tee'],
-     *            &#91;b'i', b've', b'hte'],
-     *            &#91;b'i', b'en', b'nty']]
+     *  output = [[b'e', b'ev', b'lve'],
+     *            [b'h', b'ur', b'tee'],
+     *            [b'i', b've', b'hte'],
+     *            [b'i', b'en', b'nty']]
      *
-     *  Broadcasting ``` input``` onto ``` pos``` and ``` len```:
+     * ```
      *
-     *  input = b'thirteen'
-     *  position = &#91;1, 5, 7]
-     *  length =   &#91;3, 2, 1]
+     * Broadcasting `input` onto `pos` and `len`:
+     *  ```
+     * input = b'thirteen'
+     *  position = [1, 5, 7]
+     *  length =   [3, 2, 1]
      *
-     *  output = &#91;b'hir', b'ee', b'n']
+     *  output = [b'hir', b'ee', b'n']
      *
-     *  Raises:
+     * ```
+     *
+     * Raises:
      *  <ul>
-     *  <li>``` ValueError```: If the first argument cannot be converted to a
-     *  Tensor of ``` dtype string```.</li>
-     *  <li>``` InvalidArgumentError```: If indices are out of range.</li>
-     *  <li>``` ValueError```: If ``` pos``` and ``` len``` are not the same shape.</li>
+     *  <li>`ValueError`: If the first argument cannot be converted to a
+     *  Tensor of `dtype string`.</li>
+     *  <li>`InvalidArgumentError`: If indices are out of range.</li>
+     *  <li>`ValueError`: If `pos` and `len` are not the same shape.</li>
      *  </ul>
      *
      * @param input Tensor of strings
      * @param pos Scalar defining the position of first character in each substring
      * @param len Scalar defining the number of characters to include in each substring
      * @param options carries optional attribute values
-     * @param T data type for ` Substr` output and operands
+     * @param <T> data type for `Substr` output and operands
      * @return a new instance of Substr
      * @see org.tensorflow.op.StringsOps.substr
      * @param unit Sets the unit option.
      *
-     * @param unit The unit that is used to create the substring.  One of: ` "BYTE"` (for
-     *  defining position and length by bytes) or ``` "UTF8_CHAR"``` (for the UTF-8
-     *  encoded Unicode code points).  The default is ``` "BYTE"```. Results are undefined if
-     *  ``` unit=UTF8_CHAR``` and the ``` input``` strings do not contain structurally valid
+     * @param unit The unit that is used to create the substring.  One of: `"BYTE"` (for
+     *  defining position and length by bytes) or `"UTF8_CHAR"` (for the UTF-8
+     *  encoded Unicode code points).  The default is `"BYTE"`. Results are undefined if
+     *  `unit=UTF8_CHAR` and the `input` strings do not contain structurally valid
      *  UTF-8.
      * @return this Options instance.
      */
@@ -527,9 +531,10 @@ public class StringsOps(
      * Converts each string in the input Tensor to its hash mod by a number of buckets.
      *  The hash function is deterministic on the content of the string within the
      *  process.
-     *  Note that the hash function may change from time to time.
+     *
+     * Note that the hash function may change from time to time.
      *  This functionality will be deprecated and it's recommended to use
-     *  ``` tf.string_to_hash_bucket_fast()``` or ``` tf.string_to_hash_bucket_strong()```.
+     *  `tf.string_to_hash_bucket_fast()` or `tf.string_to_hash_bucket_strong()`.
      *
      * @param stringTensor the stringTensor value
      * @param numBuckets The number of buckets.
@@ -549,17 +554,15 @@ public class StringsOps(
      *  This function may be used when CPU time is scarce and inputs are trusted or
      *  unimportant. There is a risk of adversaries constructing inputs that all hash
      *  to the same bucket. To prevent this problem, use a strong hash function with
-     *  ``` tf.string_to_hash_bucket_strong```.
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.to_hash_bucket_fast(&#91;&quot;Hello&quot;, &quot;TensorFlow&quot;,
-     * &quot;2.x&quot;], 3).numpy()
-     *  array(&#91;0, 2, 2])
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  `tf.string_to_hash_bucket_strong`.
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.to_hash_bucket_fast([&quot;Hello&quot;, &quot;TensorFlow&quot;, &quot;2.x&quot;],
+     * 3).numpy()
+     *  array([0, 2, 2])
+     * ```
      *
      * @param input The strings to assign a hash bucket.
      * @param numBuckets The number of buckets.
@@ -575,26 +578,25 @@ public class StringsOps(
     /**
      * Converts each string in the input Tensor to its hash mod by a number of buckets.
      *  The hash function is deterministic on the content of the string within the
-     *  process. The hash function is a keyed hash function, where attribute ``` key```
-     *  defines the key of the hash function. ``` key``` is an array of 2 elements.
-     *  A strong hash is important when inputs may be malicious, e.g. URLs with
+     *  process. The hash function is a keyed hash function, where attribute `key`
+     *  defines the key of the hash function. `key` is an array of 2 elements.
+     *
+     * A strong hash is important when inputs may be malicious, e.g. URLs with
      *  additional components. Adversaries could try to make their inputs hash to the
      *  same bucket for a denial-of-service attack or to skew the results. A strong
      *  hash can be used to make it difficult to find inputs with a skewed hash value
      *  distribution over buckets. This requires that the hash function is
      *  seeded by a high-entropy (random) &quot;key&quot; unknown to the adversary.
-     *  The additional robustness comes at a cost of roughly 4x higher compute
-     *  time than ``` tf.string_to_hash_bucket_fast```.
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.to_hash_bucket_strong(&#91;&quot;Hello&quot;, &quot;TF&quot;], 3, &#91;1,
-     * 2]).numpy()
-     *  array(&#91;2, 0])
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *
+     * The additional robustness comes at a cost of roughly 4x higher compute
+     *  time than `tf.string_to_hash_bucket_fast`.
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.to_hash_bucket_strong([&quot;Hello&quot;, &quot;TF&quot;], 3, [1, 2]).numpy()
+     *  array([2, 0])
+     * ```
      *
      * @param input The strings to assign a hash bucket.
      * @param numBuckets The number of buckets.
@@ -617,18 +619,16 @@ public class StringsOps(
      * Converts each string in the input Tensor to the specified numeric type.
      *  (Note that int32 overflow results in an error while float overflow
      *  results in a rounded value.)
-     *  Example:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  strings = &#91;&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
-     *  tf.strings.to_number(strings)
-     *  &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array(&#91;5., 3., 7.], dtype=float32)&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
      *
-     * @param T data type for ` output` output
+     * Example:
+     *  ```
+     *
+     * strings = [&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
+     *  tf.strings.to_number(strings)
+     *  <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
+     * ```
+     *
+     * @param <T> data type for `output` output
      * @param stringTensor the stringTensor value
      * @return a new instance of ToNumber, with default output types
      * @see org.tensorflow.op.StringsOps.toNumber
@@ -641,21 +641,19 @@ public class StringsOps(
      * Converts each string in the input Tensor to the specified numeric type.
      *  (Note that int32 overflow results in an error while float overflow
      *  results in a rounded value.)
-     *  Example:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  strings = &#91;&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
-     *  tf.strings.to_number(strings)
-     *  &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array(&#91;5., 3., 7.], dtype=float32)&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
      *
-     * @param T data type for ` output` output
+     * Example:
+     *  ```
+     *
+     * strings = [&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
+     *  tf.strings.to_number(strings)
+     *  <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
+     * ```
+     *
+     * @param <T> data type for `output` output
      * @param stringTensor the stringTensor value
-     * @param outType The numeric type to interpret each string in ` string_tensor` as.
-     * @param T data type for ` StringToNumber` output and operands
+     * @param outType The numeric type to interpret each string in `string_tensor` as.
+     * @param <T> data type for `StringToNumber` output and operands
      * @return a new instance of ToNumber
      * @see org.tensorflow.op.StringsOps.toNumber
      */
@@ -670,22 +668,22 @@ public class StringsOps(
      *  This operation converts Unicode code points to script codes corresponding to
      *  each code point. Script codes correspond to International Components for
      *  Unicode (ICU) UScriptCode values.
-     *  See
-     *   <a href="http://icu-project.org/apiref/icu4c/uscript_8h.html">ICU project docs</a>
+     *
+     * See[ICU project docs](http://icu-project.org/apiref/icu4c/uscript_8h.html)
      *  for more details on script codes.
-     *  For an example, see the unicode strings guide on &#91;unicode scripts]
+     *
+     * For an example, see the unicode strings guide on &#91;unicode scripts&#93;
      *  (https://www.tensorflow.org/tutorials/load_data/unicode#representing_unicode).
-     *  Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
+     *
+     * Returns -1 (USCRIPT_INVALID_CODE) for invalid codepoints. Output shape will
      *  match input shape.
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.unicode_script(&#91;1, 31, 38])
-     *  &lt;tf.Tensor: shape=(3,), dtype=int32, numpy=array(&#91;0, 0, 0], dtype=int32)&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.unicode_script([1, 31, 38])
+     *  <tf.Tensor: shape=(3,), dtype=int32, numpy=array([0, 0, 0], dtype=int32)>
+     * ```
      *
      * @param input A Tensor of int32 Unicode code points.
      * @return a new instance of UnicodeScript
@@ -700,47 +698,48 @@ public class StringsOps(
      *  The input is a string tensor of any shape. The output is a string tensor of
      *  the same shape containing the transcoded strings. Output strings are always
      *  valid unicode. If the input contains invalid encoding positions, the
-     *  ``` errors``` attribute sets the policy for how to deal with them. If the default
+     *  `errors` attribute sets the policy for how to deal with them. If the default
      *  error-handling policy is used, invalid formatting will be substituted in the
-     *  output by the ``` replacement_char```. If the errors policy is to ``` ignore```, any
+     *  output by the `replacement_char`. If the errors policy is to `ignore`, any
      *  invalid encoding positions in the input are skipped and not included in the
-     *  output. If it set to ``` strict``` then any invalid formatting will result in an
+     *  output. If it set to `strict` then any invalid formatting will result in an
      *  InvalidArgument error.
-     *  This operation can be used with ``` output_encoding = input_encoding``` to enforce
+     *
+     * This operation can be used with `output_encoding = input_encoding` to enforce
      *  correct formatting for inputs even if they are already in the desired encoding.
-     *  If the input is prefixed by a Byte Order Mark needed to determine encoding
+     *
+     * If the input is prefixed by a Byte Order Mark needed to determine encoding
      *  (e.g. if the encoding is UTF-16 and the BOM indicates big-endian), then that
      *  BOM will be consumed and not emitted into the output. If the input encoding
      *  is marked with an explicit endianness (e.g. UTF-16-BE), then the BOM is
      *  interpreted as a non-breaking-space and is preserved in the output (including
      *  always for UTF-8).
-     *  The end result is that if the input is marked as an explicit endianness the
+     *
+     * The end result is that if the input is marked as an explicit endianness the
      *  transcoding is faithful to all codepoints in the source. If it is not marked
      *  with an explicit endianness, the BOM is not considered part of the string itself
      *  but as metadata, and so is not preserved in the output.
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.unicode_transcode(&#91;&quot;Hello&quot;, &quot;TensorFlow&quot;,
-     * &quot;2.x&quot;], &quot;UTF-8&quot;, &quot;UTF-16-BE&quot;)
-     *  &lt;tf.Tensor: shape=(3,), dtype=string, numpy=
-     *  array(&#91;b'\x00H\x00e\x00l\x00l\x00o',
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.unicode_transcode([&quot;Hello&quot;, &quot;TensorFlow&quot;, &quot;2.x&quot;],
+     * &quot;UTF-8&quot;, &quot;UTF-16-BE&quot;)
+     *  <tf.Tensor: shape=(3,), dtype=string, numpy=
+     *  array([b'\x00H\x00e\x00l\x00l\x00o',
      *  b'\x00T\x00e\x00n\x00s\x00o\x00r\x00F\x00l\x00o\x00w',
-     *  b'\x002\x00.\x00x'], dtype=object)&gt;
-     *  tf.strings.unicode_transcode(&#91;&quot;A&quot;, &quot;B&quot;, &quot;C&quot;], &quot;US
+     *  b'\x002\x00.\x00x'], dtype=object)>
+     *  tf.strings.unicode_transcode([&quot;A&quot;, &quot;B&quot;, &quot;C&quot;], &quot;US
      * ASCII&quot;, &quot;UTF-8&quot;).numpy()
-     *  array(&#91;b'A', b'B', b'C'], dtype=object)
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  array([b'A', b'B', b'C'], dtype=object)
+     * ```
      *
      * @param input The text to be processed. Can have any shape.
      * @param inputEncoding Text encoding of the input strings. This is any of the encodings
      * supported
-     *  by ICU ucnv algorithmic converters. Examples: ``` "UTF-16", "US ASCII", "UTF-8"```.
+     *  by ICU ucnv algorithmic converters. Examples: `"UTF-16", "US ASCII", "UTF-8"`.
      * @param outputEncoding The unicode encoding to use in the output. Must be one of
-     *  ``` "UTF-8", "UTF-16-BE", "UTF-32-BE"```. Multi-byte encodings will be big-endian.
+     *  `"UTF-8", "UTF-16-BE", "UTF-32-BE"`. Multi-byte encodings will be big-endian.
      * @param options carries optional attribute values
      * @return a new instance of UnicodeTranscode
      * @see org.tensorflow.op.StringsOps.unicodeTranscode
@@ -750,27 +749,26 @@ public class StringsOps(
      *  The value of 'strict' will cause the operation to produce a InvalidArgument
      *  error on any invalid input formatting. A value of 'replace' (the default) will
      *  cause the operation to replace any invalid formatting in the input with the
-     *  ``` replacement_char``` codepoint. A value of 'ignore' will cause the operation to
+     *  `replacement_char` codepoint. A value of 'ignore' will cause the operation to
      *  skip any invalid formatting in the input and produce no corresponding output
      *  character.
      * @return this Options instance.
      * @param replacementChar Sets the replacementChar option.
      *
-     * @param replacementChar The replacement character codepoint to be used in place of any
-     * invalid
-     *  formatting in the input when ``` errors='replace'```. Any valid unicode codepoint may
+     * @param replacementChar The replacement character codepoint to be used in place of any invalid
+     *  formatting in the input when `errors='replace'`. Any valid unicode codepoint may
      *  be used. The default value is the default unicode replacement character is
      *  0xFFFD or U+65533.)
-     *  Note that for UTF-8, passing a replacement character expressible in 1 byte, such
+     *
+     * Note that for UTF-8, passing a replacement character expressible in 1 byte, such
      *  as ' ', will preserve string alignment to the source since invalid bytes will be
      *  replaced with a 1-byte replacement. For UTF-16-BE and UTF-16-LE, any 1 or 2 byte
      *  replacement character will preserve byte alignment to the source.
      * @return this Options instance.
      * @param replaceControlCharacters Sets the replaceControlCharacters option.
      *
-     * @param replaceControlCharacters Whether to replace the C0 control characters (00-1F) with
-     * the
-     *  ``` replacement_char```. Default is false.
+     * @param replaceControlCharacters Whether to replace the C0 control characters (00-1F) with the
+     *  `replacement_char`. Default is false.
      * @return this Options instance.
      */
     public fun unicodeTranscode(
@@ -794,31 +792,35 @@ public class StringsOps(
     )
 
     /**
-     * Joins the elements of ``` inputs``` based on ``` segment_ids```.
+     * Joins the elements of `inputs` based on `segment_ids`.
      *  Computes the string join along segments of a tensor.
-     *  Given ``` segment_ids``` with rank ``` N``` and ``` data``` with rank ``` N+M```:
+     *  Given `segment_ids` with rank `N` and `data` with rank `N+M`:
+     *  ```
+     * `output[i, k1...kM] = strings.join([data[j1...jN, k1...kM])`
      *
-     *  `output&#91;i, k1...kM] = strings.join(&#91;data&#91;j1...jN, k1...kM])`
+     * ```
      *
-     *  where the join is over all &#91;j1...jN] such that segment_ids&#91;j1...jN] = i.
+     * where the join is over all &#91;j1...jN&#93; such that segment_ids&#91;j1...jN&#93; = i.
      *  Strings are joined in row-major order.
-     *  For example:
      *
-     *  inputs = &#91;&#91;'Y', 'q', 'c'], &#91;'Y', '6', '6'], &#91;'p', 'G', 'a']]
+     * For example:
+     *  ```
+     * inputs = [['Y', 'q', 'c'], ['Y', '6', '6'], ['p', 'G', 'a']]
      *  output_array = string_ops.unsorted_segment_join(inputs=inputs,
-     *                                                  segment_ids=&#91;1, 0, 1],
+     *                                                  segment_ids=[1, 0, 1],
      *                                                  num_segments=2,
      *                                                  separator=':'))
-     *  # output_array ==&gt; &#91;&#91;'Y', '6', '6'], &#91;'Y:p', 'q:G', 'c:a']]
+     *  # output_array ==> [['Y', '6', '6'], ['Y:p', 'q:G', 'c:a']]
      *
      *
-     *  inputs = &#91;'this', 'is', 'a', 'test']
+     *  inputs = ['this', 'is', 'a', 'test']
      *  output_array = string_ops.unsorted_segment_join(inputs=inputs,
-     *                                                  segment_ids=&#91;0, 0, 0, 0],
+     *                                                  segment_ids=[0, 0, 0, 0],
      *                                                  num_segments=1,
      *                                                  separator=':'))
-     *  # output_array ==&gt; &#91;'this:is:a:test']
+     *  # output_array ==> ['this:is:a:test']
      *
+     * ```
      *
      * @param inputs The input to be joined.
      * @param segmentIds A tensor whose shape is a prefix of data.shape.  Negative segment ids are
@@ -850,14 +852,11 @@ public class StringsOps(
     /**
      * Converts all lowercase characters into their respective uppercase replacements.
      *  Example:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.upper(&quot;CamelCase string and ALL CAPS&quot;)
-     *  &lt;tf.Tensor: shape=(), dtype=string, numpy=b'CAMELCASE STRING AND ALL CAPS'&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *  ```
+     *
+     * tf.strings.upper(&quot;CamelCase string and ALL CAPS&quot;)
+     *  <tf.Tensor: shape=(), dtype=string, numpy=b'CAMELCASE STRING AND ALL CAPS'>
+     * ```
      *
      * @param input the input value
      * @param options carries optional attribute values
@@ -879,21 +878,19 @@ public class StringsOps(
      * Converts each string in the input Tensor to the specified numeric type.
      *  (Note that int32 overflow results in an error while float overflow
      *  results in a rounded value.)
-     *  Example:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  strings = &#91;&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
-     *  tf.strings.to_number(strings)
-     *  &lt;tf.Tensor: shape=(3,), dtype=float32, numpy=array(&#91;5., 3., 7.], dtype=float32)&gt;
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
      *
-     * @param T data type for ` output` output
+     * Example:
+     *  ```
+     *
+     * strings = [&quot;5.0&quot;, &quot;3.0&quot;, &quot;7.0&quot;]
+     *  tf.strings.to_number(strings)
+     *  <tf.Tensor: shape=(3,), dtype=float32, numpy=array([5., 3., 7.], dtype=float32)>
+     * ```
+     *
+     * @param <T> data type for `output` output
      * @param stringTensor the stringTensor value
-     * @param outType The numeric type to interpret each string in ` string_tensor` as.
-     * @param T data type for ` StringToNumber` output and operands
+     * @param outType The numeric type to interpret each string in `string_tensor` as.
+     * @param <T> data type for `StringToNumber` output and operands
      * @return a new instance of ToNumber
      * @see org.tensorflow.op.StringsOps.toNumber
      */

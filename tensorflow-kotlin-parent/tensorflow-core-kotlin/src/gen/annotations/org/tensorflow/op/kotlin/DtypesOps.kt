@@ -46,21 +46,20 @@ public class DtypesOps(
     /**
      * Converts each entry in the given tensor to strings.
      *  Supports many numeric types and boolean.
-     *  For Unicode, see the
-     *  &#91;https://www.tensorflow.org/tutorials/representation/unicode](Working with Unicode
+     *
+     * For Unicode, see the
+     *  &#91;https://www.tensorflow.org/tutorials/representation/unicode&#93;(Working with Unicode
      * text)
      *  tutorial.
-     *  Examples:
-     *  <blockquote>
-     *  <blockquote>
-     *  <blockquote>
-     *  tf.strings.as_string(&#91;3, 2])
-     *  &lt;tf.Tensor: shape=(2,), dtype=string, numpy=array(&#91;b'3', b'2'], dtype=object)&gt;
-     *  tf.strings.as_string(&#91;3.1415926, 2.71828], precision=2).numpy()
-     *  array(&#91;b'3.14', b'2.72'], dtype=object)
-     *  </blockquote>
-     *  </blockquote>
-     *  </blockquote>
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.strings.as_string([3, 2])
+     *  <tf.Tensor: shape=(2,), dtype=string, numpy=array([b'3', b'2'], dtype=object)>
+     *  tf.strings.as_string([3.1415926, 2.71828], precision=2).numpy()
+     *  array([b'3.14', b'2.72'], dtype=object)
+     * ```
      *
      * @param input the input value
      * @param options carries optional attribute values
@@ -69,7 +68,7 @@ public class DtypesOps(
      * @param precision Sets the precision option.
      *
      * @param precision The post-decimal precision to use for floating point numbers.
-     *  Only used if precision &gt; -1.
+     *  Only used if precision > -1.
      * @return this Options instance.
      * @param scientific Sets the scientific option.
      *
@@ -84,11 +83,11 @@ public class DtypesOps(
      *
      * @param width Pad pre-decimal numbers to this width.
      *  Applies to both floating point and integer numbers.
-     *  Only used if width &gt; -1.
+     *  Only used if width > -1.
      * @return this Options instance.
      * @param fill Sets the fill option.
      *
-     * @param fill The value to pad if width &gt; -1.  If empty, pads with spaces.
+     * @param fill The value to pad if width > -1.  If empty, pads with spaces.
      *  Another typical value is '0'.  String cannot be longer than 1 character.
      * @return this Options instance.
      */
@@ -113,11 +112,11 @@ public class DtypesOps(
     /**
      * Cast x of type SrcT to y of DstT.
      *
-     * @param U data type for ` y` output
+     * @param <U> data type for `y` output
      * @param x the x value
      * @param DstT the value of the DstT property
      * @param options carries optional attribute values
-     * @param U data type for ` Cast` output and operands
+     * @param <U> data type for `Cast` output and operands
      * @return a new instance of Cast
      * @see org.tensorflow.op.DtypesOps.cast
      * @param Truncate Sets the Truncate option.
@@ -139,24 +138,27 @@ public class DtypesOps(
 
     /**
      * Converts two real numbers to a complex number.
-     *  Given a tensor ``` real``` representing the real part of a complex number, and a
-     *  tensor ``` imag``` representing the imaginary part of a complex number, this
-     *  operation returns complex numbers elementwise of the form \(a + bj\), where
-     *  <em>a</em> represents the ``` real``` part and <em>b</em> represents the ``` imag``` part.
-     *  The input tensors ``` real``` and ``` imag``` must have the same shape.
-     *  For example:
+     *  Given a tensor `real` representing the real part of a complex number, and a
+     *  tensor `imag` representing the imaginary part of a complex number, this
+     *  operation returns complex numbers elementwise of the form `\(a + bj\)`, where
+     *  _a_ represents the `real` part and _b_ represents the `imag` part.
      *
-     *  # tensor 'real' is &#91;2.25, 3.25]
-     *  # tensor `imag` is &#91;4.75, 5.75]
-     *  tf.complex(real, imag) ==&gt; &#91;&#91;2.25 + 4.75j], &#91;3.25 + 5.75j]]
+     * The input tensors `real` and `imag` must have the same shape.
      *
+     * For example:
+     *  ```
+     * # tensor 'real' is [2.25, 3.25]
+     *  # tensor `imag` is [4.75, 5.75]
+     *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
      *
-     * @param U data type for ` out` output
+     * ```
+     *
+     * @param <U> data type for `out` output
      * @param real the real value
      * @param imag the imag value
      * @param Tout the value of the Tout property
-     * @param U data type for ` Complex` output and operands
-     * @param T data type for ` Complex` output and operands
+     * @param <U> data type for `Complex` output and operands
+     * @param <T> data type for `Complex` output and operands
      * @return a new instance of Complex
      * @see org.tensorflow.op.DtypesOps.complex
      */
@@ -173,11 +175,11 @@ public class DtypesOps(
     /**
      * Cast x of type SrcT to y of DstT.
      *
-     * @param U data type for ` y` output
+     * @param <U> data type for `y` output
      * @param x the x value
      * @param DstT the value of the DstT property
      * @param options carries optional attribute values
-     * @param U data type for ` Cast` output and operands
+     * @param <U> data type for `Cast` output and operands
      * @return a new instance of Cast
      * @see org.tensorflow.op.DtypesOps.cast
      * @param Truncate Sets the Truncate option.
@@ -191,24 +193,27 @@ public class DtypesOps(
 
     /**
      * Converts two real numbers to a complex number.
-     *  Given a tensor ``` real``` representing the real part of a complex number, and a
-     *  tensor ``` imag``` representing the imaginary part of a complex number, this
-     *  operation returns complex numbers elementwise of the form \(a + bj\), where
-     *  <em>a</em> represents the ``` real``` part and <em>b</em> represents the ``` imag``` part.
-     *  The input tensors ``` real``` and ``` imag``` must have the same shape.
-     *  For example:
+     *  Given a tensor `real` representing the real part of a complex number, and a
+     *  tensor `imag` representing the imaginary part of a complex number, this
+     *  operation returns complex numbers elementwise of the form `\(a + bj\)`, where
+     *  _a_ represents the `real` part and _b_ represents the `imag` part.
      *
-     *  # tensor 'real' is &#91;2.25, 3.25]
-     *  # tensor `imag` is &#91;4.75, 5.75]
-     *  tf.complex(real, imag) ==&gt; &#91;&#91;2.25 + 4.75j], &#91;3.25 + 5.75j]]
+     * The input tensors `real` and `imag` must have the same shape.
      *
+     * For example:
+     *  ```
+     * # tensor 'real' is [2.25, 3.25]
+     *  # tensor `imag` is [4.75, 5.75]
+     *  tf.complex(real, imag) ==> [[2.25 + 4.75j], [3.25 + 5.75j]]
      *
-     * @param U data type for ` out` output
+     * ```
+     *
+     * @param <U> data type for `out` output
      * @param real the real value
      * @param imag the imag value
      * @param Tout the value of the Tout property
-     * @param U data type for ` Complex` output and operands
-     * @param T data type for ` Complex` output and operands
+     * @param <U> data type for `Complex` output and operands
+     * @param <T> data type for `Complex` output and operands
      * @return a new instance of Complex
      * @see org.tensorflow.op.DtypesOps.complex
      */

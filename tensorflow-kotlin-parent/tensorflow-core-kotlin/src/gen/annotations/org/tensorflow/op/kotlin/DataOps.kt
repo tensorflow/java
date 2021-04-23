@@ -84,7 +84,7 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that batches ``` batch_size``` elements from ``` input_dataset```.
+     * Creates a dataset that batches `batch_size` elements from `input_dataset`.
      *
      * @param inputDataset the inputDataset value
      * @param batchSize A scalar representing the number of elements to accumulate in a batch.
@@ -120,7 +120,7 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that concatenates ``` input_dataset``` with ``` another_dataset```.
+     * Creates a dataset that concatenates `input_dataset` with `another_dataset`.
      *
      * @param inputDataset the inputDataset value
      * @param anotherDataset the anotherDataset value
@@ -257,7 +257,7 @@ public class DataOps(
     )
 
     /**
-     * Converts the given ``` resource_handle``` representing an iterator to a string.
+     * Converts the given `resource_handle` representing an iterator to a string.
      *
      * @param resourceHandle A handle to an iterator resource.
      * @return a new instance of IteratorToStringHandle
@@ -269,9 +269,9 @@ public class DataOps(
         )
 
     /**
-     * Makes a new iterator from the given ``` dataset``` and stores it in ``` iterator```.
+     * Makes a new iterator from the given `dataset` and stores it in `iterator`.
      *  This operation may be executed multiple times. Each execution will reset the
-     *  iterator in ``` iterator``` to the first element of ``` dataset```.
+     *  iterator in `iterator` to the first element of `dataset`.
      *
      * @param dataset the dataset value
      * @param iterator the iterator value
@@ -361,11 +361,11 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that emits the outputs of ``` input_dataset``` ``` count``` times.
+     * Creates a dataset that emits the outputs of `input_dataset` `count` times.
      *
      * @param inputDataset the inputDataset value
-     * @param count A scalar representing the number of times that ` input_dataset` should
-     *  be repeated. A value of ``` -1``` indicates that it should be repeated infinitely.
+     * @param count A scalar representing the number of times that `input_dataset` should
+     *  be repeated. A value of `-1` indicates that it should be repeated infinitely.
      * @param outputTypes the value of the outputTypes property
      * @param outputShapes the value of the outputShapes property
      * @return a new instance of RepeatDataset
@@ -384,7 +384,7 @@ public class DataOps(
     )
 
     /**
-     * Converts the given ``` resource_handle``` representing an iterator to a variant tensor.
+     * Converts the given `resource_handle` representing an iterator to a variant tensor.
      *
      * @param resourceHandle A handle to an iterator resource.
      * @param options carries optional attribute values
@@ -407,10 +407,10 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that skips ``` count``` elements from the ``` input_dataset```.
+     * Creates a dataset that skips `count` elements from the `input_dataset`.
      *
      * @param inputDataset the inputDataset value
-     * @param count A scalar representing the number of elements from the ` input_dataset`
+     * @param count A scalar representing the number of elements from the `input_dataset`
      *  that should be skipped.  If count is -1, skips everything.
      * @param outputTypes the value of the outputTypes property
      * @param outputShapes the value of the outputShapes property
@@ -430,11 +430,11 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that contains ``` count``` elements from the ``` input_dataset```.
+     * Creates a dataset that contains `count` elements from the `input_dataset`.
      *
      * @param inputDataset the inputDataset value
-     * @param count A scalar representing the number of elements from the ` input_dataset`
-     *  that should be taken. A value of ``` -1``` indicates that all of ``` input_dataset```
+     * @param count A scalar representing the number of elements from the `input_dataset`
+     *  that should be taken. A value of `-1` indicates that all of `input_dataset`
      *  is taken.
      * @param outputTypes the value of the outputTypes property
      * @param outputShapes the value of the outputShapes property
@@ -454,7 +454,7 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that emits each dim-0 slice of ``` components``` once.
+     * Creates a dataset that emits each dim-0 slice of `components` once.
      *
      * @param components the components value
      * @param outputShapes the value of the outputShapes property
@@ -511,14 +511,14 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that zips together ``` input_datasets```.
+     * Creates a dataset that zips together `input_datasets`.
      *  The elements of the resulting dataset are created by zipping corresponding
      *  elements from each of the input datasets.
-     *  The size of the resulting dataset will match the size of the smallest input
+     *
+     * The size of the resulting dataset will match the size of the smallest input
      *  dataset, and no error will be raised if input datasets have different sizes.
      *
-     * @param inputDatasets List of ` N` variant Tensors representing datasets to be zipped
-     * together.
+     * @param inputDatasets List of `N` variant Tensors representing datasets to be zipped together.
      * @param outputTypes the value of the outputTypes property
      * @param outputShapes the value of the outputShapes property
      * @return a new instance of ZipDataset

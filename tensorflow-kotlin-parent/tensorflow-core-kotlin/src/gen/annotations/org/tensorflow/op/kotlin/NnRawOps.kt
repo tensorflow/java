@@ -45,12 +45,12 @@ public class NnRawOps(
      * Computes softmax cross entropy cost and gradients to backpropagate.
      *  Inputs are the logits, not probabilities.
      *
-     * @param T data type for ` loss` output
+     * @param <T> data type for `loss` output
      * @param features batch_size x num_classes matrix
      * @param labels batch_size x num_classes matrix
      *  The caller must ensure that each batch of labels represents a valid
      *  probability distribution.
-     * @param T data type for ` SoftmaxCrossEntropyWithLogits` output and operands
+     * @param <T> data type for `SoftmaxCrossEntropyWithLogits` output and operands
      * @return a new instance of SoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnRawOps.softmaxCrossEntropyWithLogits
      */
@@ -65,17 +65,18 @@ public class NnRawOps(
 
     /**
      * Computes softmax cross entropy cost and gradients to backpropagate.
-     *  Unlike ``` SoftmaxCrossEntropyWithLogits```, this operation does not accept
+     *  Unlike `SoftmaxCrossEntropyWithLogits`, this operation does not accept
      *  a matrix of label probabilities, but rather a single label per row
      *  of features.  This label is considered to have probability 1.0 for the
      *  given row.
-     *  Inputs are the logits, not probabilities.
      *
-     * @param T data type for ` loss` output
+     * Inputs are the logits, not probabilities.
+     *
+     * @param <T> data type for `loss` output
      * @param features batch_size x num_classes matrix
-     * @param labels batch_size vector with values in &#91;0, num_classes).
+     * @param labels batch_size vector with values in [0, num_classes).
      *  This is the label for the given minibatch entry.
-     * @param T data type for ` SparseSoftmaxCrossEntropyWithLogits` output and operands
+     * @param <T> data type for `SparseSoftmaxCrossEntropyWithLogits` output and operands
      * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnRawOps.sparseSoftmaxCrossEntropyWithLogits
      */
