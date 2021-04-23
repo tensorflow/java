@@ -17,7 +17,6 @@
 package org.tensorflow
 
 import org.tensorflow.ndarray.Shape
-import org.tensorflow.ndarray.get
 import org.tensorflow.op.kotlin.KotlinOps
 import org.tensorflow.op.kotlin.tf
 import org.tensorflow.op.kotlin.withSubScope

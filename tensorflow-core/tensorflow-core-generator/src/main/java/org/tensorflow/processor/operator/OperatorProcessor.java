@@ -15,20 +15,10 @@ limitations under the License.
 */
 package org.tensorflow.processor.operator;
 
-import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.javadoc.Javadoc;
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.TypeVariableName;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,17 +41,6 @@ import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.NoType;
-import javax.lang.model.type.TypeMirror;
-import javax.lang.model.type.TypeVariable;
-import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
-import javax.tools.Diagnostic.Kind;
 import org.tensorflow.Names;
 
 /**
@@ -76,8 +55,6 @@ import org.tensorflow.Names;
  * class.
  */
 public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
-
-  private static final TypeName T_DEVICE_SPEC = ClassName.get("org.tensorflow", "DeviceSpec");
 
   @Override
   protected void write(TypeSpec spec) {

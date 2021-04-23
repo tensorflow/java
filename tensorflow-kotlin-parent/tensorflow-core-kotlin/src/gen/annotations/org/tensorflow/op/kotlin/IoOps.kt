@@ -82,7 +82,7 @@ public class IoOps(
     /**
      * Get the parent [KotlinOps] object.
      */
-    public val ops: KotlinOps,
+    public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.IoOps = ops.java.io
 
@@ -93,7 +93,6 @@ public class IoOps(
 
     /**
      * Decode web-safe base64-encoded strings.
-     *
      *  Input may or may not have padding at the end. See EncodeBase64 for padding.
      *  Web-safe means that input must use - and _ instead of + and /.
      *
@@ -107,20 +106,21 @@ public class IoOps(
 
     /**
      * Decompress strings.
-     *
-     *  This op decompresses each element of the `bytes` input `Tensor`, which
-     *  is assumed to be compressed using the given `compression_type`.
-     *
-     *  The `output` is a string `Tensor` of the same shape as `bytes`,
+     *  This op decompresses each element of the ``` bytes``` input ``` Tensor```, which
+     *  is assumed to be compressed using the given ``` compression_type```.
+     *  The ``` output``` is a string ``` Tensor``` of the same shape as ``` bytes```,
      *  each element containing the decompressed data from the corresponding
-     *  element in `bytes`.
+     *  element in ``` bytes```.
      *
      * @param bytes A Tensor of string which is compressed.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of DecodeCompressed
      * @see org.tensorflow.op.IoOps.decodeCompressed
+     * @param compressionType Sets the compressionType option.
+     *
      * @param compressionType A scalar containing either (i) the empty string (no
-     *  compression), (ii) "ZLIB", or (iii) "GZIP".
+     *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
+     * @return this Options instance.
      */
     public fun decodeCompressed(bytes: Operand<TString>, compressionType: String? = null):
         DecodeCompressed = java.decodeCompressed(
@@ -132,7 +132,6 @@ public class IoOps(
 
     /**
      * Convert CSV records to tensors. Each column maps to one tensor.
-     *
      *  RFC 4180 format is expected for the CSV records.
      *  (https://tools.ietf.org/html/rfc4180)
      *  Note that we allow leading and trailing spaces with int or float field.
@@ -142,15 +141,27 @@ public class IoOps(
      * @param recordDefaults One tensor per column of the input record, with either a
      *  scalar default value for that column or an empty vector if the column is
      *  required.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of DecodeCsv
      * @see org.tensorflow.op.IoOps.decodeCsv
+     * @param fieldDelim Sets the fieldDelim option.
+     *
      * @param fieldDelim char delimiter to separate fields in a record.
+     * @return this Options instance.
+     * @param useQuoteDelim Sets the useQuoteDelim option.
+     *
      * @param useQuoteDelim If false, treats double quotation marks as regular
      *  characters inside of the string fields (ignoring RFC 4180, Section 2,
      *  Bullet 5).
+     * @return this Options instance.
+     * @param naValue Sets the naValue option.
+     *
      * @param naValue Additional string to recognize as NA/NaN.
-     * @param selectCols @param selectCols
+     * @return this Options instance.
+     * @param selectCols Sets the selectCols option.
+     *
+     * @param selectCols the selectCols option
+     * @return this Options instance.
      */
     public fun decodeCsv(
         records: Operand<TString>,
@@ -158,7 +169,7 @@ public class IoOps(
         fieldDelim: String? = null,
         useQuoteDelim: Boolean? = null,
         naValue: String? = null,
-        selectCols: List<Long>? = null,
+        selectCols: List<Long>? = null
     ): DecodeCsv = java.decodeCsv(
         records,
         recordDefaults,
@@ -172,10 +183,10 @@ public class IoOps(
 
     /**
      * Convert JSON-encoded Example records to binary protocol buffer strings.
-     *
      *  This op translates a tensor containing Example records, encoded using
-     *  the &#91;standard JSON
-     *  mapping](https://developers.google.com/protocol-buffers/docs/proto3#json),
+     *  the  <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">standard
+     * JSON
+     *  mapping</a> ,
      *  into a tensor containing the same records encoded as binary protocol
      *  buffers. The resulting tensor can then be fed to any of the other
      *  Example-parsing ops.
@@ -193,23 +204,27 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param inputBytes Tensor of string to be decoded.
      * @param fixedLength Length in bytes for each element of the decoded output. Must be a
      * multiple
      *  of the size of the output type.
-     * @param outType
-     * @param options carries optional attributes values
+     * @param outType the value of the outType property
+     * @param options carries optional attribute values
+     * @param T data type for ` DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
      * @see org.tensorflow.op.IoOps.decodePaddedRaw
-     * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
-     *  `out_type` values that are stored in a single byte, like `uint8`
+     * @param littleEndian Sets the littleEndian option.
+     *
+     * @param littleEndian Whether the input ` input_bytes` is in little-endian order. Ignored for
+     *  ``` out_type``` values that are stored in a single byte, like ``` uint8```
+     * @return this Options instance.
      */
     public fun <T : TNumber> decodePaddedRaw(
         inputBytes: Operand<TString>,
         fixedLength: Operand<TInt32>,
         outType: Class<T>,
-        littleEndian: Boolean? = null,
+        littleEndian: Boolean? = null
     ): DecodePaddedRaw<T> = java.decodePaddedRaw<T>(
         inputBytes,
         fixedLength,
@@ -222,20 +237,24 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param bytes All the elements must have the same length.
-     * @param outType
-     * @param options carries optional attributes values
+     * @param outType the value of the outType property
+     * @param options carries optional attribute values
+     * @param T data type for ` DecodeRaw` output and operands
      * @return a new instance of DecodeRaw
      * @see org.tensorflow.op.IoOps.decodeRaw
-     * @param littleEndian Whether the input `bytes` are in little-endian order.
-     *  Ignored for `out_type` values that are stored in a single byte like
-     *  `uint8`.
+     * @param littleEndian Sets the littleEndian option.
+     *
+     * @param littleEndian Whether the input ` bytes` are in little-endian order.
+     *  Ignored for ``` out_type``` values that are stored in a single byte like
+     *  ``` uint8```.
+     * @return this Options instance.
      */
     public fun <T : TType> decodeRaw(
         bytes: Operand<TString>,
         outType: Class<T>,
-        littleEndian: Boolean? = null,
+        littleEndian: Boolean? = null
     ): DecodeRaw<T> = java.decodeRaw<T>(
         bytes,
         outType,
@@ -245,60 +264,58 @@ public class IoOps(
     )
 
     /**
-     * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
-     *
-     *  The input `serialized_sparse` must be a string matrix of shape `&#91;N x 3]` where
-     *  `N` is the minibatch size and the rows correspond to packed outputs of
-     *  `SerializeSparse`.  The ranks of the original `SparseTensor` objects
-     *  must all match.  When the final `SparseTensor` is created, it has rank one
-     *  higher than the ranks of the incoming `SparseTensor` objects
+     * Deserialize and concatenate ``` SparseTensors``` from a serialized minibatch.
+     *  The input ``` serialized_sparse``` must be a string matrix of shape ``` [N x 3]``` where
+     *  ``` N``` is the minibatch size and the rows correspond to packed outputs of
+     *  ``` SerializeSparse```.  The ranks of the original ``` SparseTensor``` objects
+     *  must all match.  When the final ``` SparseTensor``` is created, it has rank one
+     *  higher than the ranks of the incoming ``` SparseTensor``` objects
      *  (they have been concatenated along a new row dimension).
-     *
-     *  The output `SparseTensor` object's shape values for all dimensions but the
-     *  first are the max across the input `SparseTensor` objects' shape values
-     *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
+     *  The output ``` SparseTensor``` object's shape values for all dimensions but the
+     *  first are the max across the input ``` SparseTensor``` objects' shape values
+     *  for the corresponding dimensions.  Its first shape value is ``` N```, the minibatch
      *  size.
-     *
-     *  The input `SparseTensor` objects' indices are assumed ordered in
+     *  The input ``` SparseTensor``` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
-     *  step run `SparseReorder` to restore index ordering.
+     *  step run ``` SparseReorder``` to restore index ordering.
+     *  For example, if the serialized input is a ``` [2 x 3]``` matrix representing two
+     *  original ``` SparseTensor``` objects:
      *
-     *  For example, if the serialized input is a `&#91;2 x 3]` matrix representing two
-     *  original `SparseTensor` objects:
-     *
-     *      index = &#91; 0]
-     *              &#91;10]
-     *              &#91;20]
-     *      values = &#91;1, 2, 3]
-     *      shape = &#91;50]
+     *  index = &#91; 0]
+     *          &#91;10]
+     *          &#91;20]
+     *  values = &#91;1, 2, 3]
+     *  shape = &#91;50]
      *
      *  and
      *
-     *      index = &#91; 2]
-     *              &#91;10]
-     *      values = &#91;4, 5]
-     *      shape = &#91;30]
+     *  index = &#91; 2]
+     *          &#91;10]
+     *  values = &#91;4, 5]
+     *  shape = &#91;30]
      *
-     *  then the final deserialized `SparseTensor` will be:
+     *  then the final deserialized ``` SparseTensor``` will be:
      *
-     *      index = &#91;0  0]
-     *              &#91;0 10]
-     *              &#91;0 20]
-     *              &#91;1  2]
-     *              &#91;1 10]
-     *      values = &#91;1, 2, 3, 4, 5]
-     *      shape = &#91;2 50]
+     *  index = &#91;0  0]
+     *          &#91;0 10]
+     *          &#91;0 20]
+     *          &#91;1  2]
+     *          &#91;1 10]
+     *  values = &#91;1, 2, 3, 4, 5]
+     *  shape = &#91;2 50]
      *
-     * @param T data type for ` sparseValues()` output
-     * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
+     *
+     * @param T data type for ` sparse_values` output
+     * @param serializedSparse 2-D, The ` N` serialized ` SparseTensor` objects.
      *  Must have 3 columns.
-     * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+     * @param dtype The ` dtype` of the serialized ` SparseTensor` objects.
+     * @param T data type for ` DeserializeManySparse` output and operands
      * @return a new instance of DeserializeManySparse
      * @see org.tensorflow.op.IoOps.deserializeManySparse
      */
     public fun <T : TType> deserializeManySparse(
         serializedSparse: Operand<TString>,
-        dtype: Class<T>,
+        dtype: Class<T>
     ): DeserializeManySparse<T> = java.deserializeManySparse<T>(
         serializedSparse,
         dtype
@@ -306,19 +323,20 @@ public class IoOps(
 
     /**
      * Encode strings into web-safe base64 format.
-     *
      *  Refer to the following article for more information on base64 format:
      *  en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
      *  end so that the encoded has length multiple of 4. See Padding section of the
      *  link above.
-     *
      *  Web-safe means that the encoder uses - and _ instead of + and /.
      *
      * @param input Strings to be encoded.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of EncodeBase64
      * @see org.tensorflow.op.IoOps.encodeBase64
+     * @param pad Sets the pad option.
+     *
      * @param pad Bool whether padding is applied at the ends.
+     * @return this Options instance.
      */
     public fun encodeBase64(input: Operand<TString>, pad: Boolean? = null): EncodeBase64 =
         java.encodeBase64(
@@ -332,26 +350,38 @@ public class IoOps(
      * A queue that produces elements in first-in first-out order.
      *
      * @param componentTypes The type of each component in a value.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of FifoQueue
      * @see org.tensorflow.op.IoOps.fifoQueue
+     * @param shapes Sets the shapes option.
+     *
      * @param shapes The shape of each component in a value. The length of this attr must
      *  be either 0 or the same as the length of component_types. If the length of
      *  this attr is 0, the shapes of queue elements are not constrained, and
      *  only one element may be dequeued at a time.
+     * @return this Options instance.
+     * @param capacity Sets the capacity option.
+     *
      * @param capacity The upper bound on the number of elements in this queue.
      *  Negative numbers mean no limit.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this queue is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this queue will be shared under the given name
      *  across multiple sessions.
+     * @return this Options instance.
      */
     public fun fifoQueue(
         componentTypes: List<Class<out TType>>,
         shapes: List<Shape>? = null,
         capacity: Long? = null,
         container: String? = null,
-        sharedName: String? = null,
+        sharedName: String? = null
     ): FifoQueue = java.fifoQueue(
         componentTypes,
         *listOfNotNull(
@@ -366,19 +396,37 @@ public class IoOps(
      * A Reader that outputs fixed-length records from a file.
      *
      * @param recordBytes Number of bytes in the record.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of FixedLengthRecordReader
      * @see org.tensorflow.op.IoOps.fixedLengthRecordReader
+     * @param headerBytes Sets the headerBytes option.
+     *
      * @param headerBytes Number of bytes in the header, defaults to 0.
+     * @return this Options instance.
+     * @param footerBytes Sets the footerBytes option.
+     *
      * @param footerBytes Number of bytes in the footer, defaults to 0.
+     * @return this Options instance.
+     * @param hopBytes Sets the hopBytes option.
+     *
      * @param hopBytes Number of bytes to hop before each read. Default of 0 means using
      *  record_bytes.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
+     * @param encoding Sets the encoding option.
+     *
      * @param encoding The type of encoding for the file. Currently ZLIB and GZIP
      *  are supported. Defaults to none.
+     * @return this Options instance.
      */
     public fun fixedLengthRecordReader(
         recordBytes: Long,
@@ -387,7 +435,7 @@ public class IoOps(
         hopBytes: Long? = null,
         container: String? = null,
         sharedName: String? = null,
-        encoding: String? = null,
+        encoding: String? = null
     ): FixedLengthRecordReader = java.fixedLengthRecordReader(
         recordBytes,
         *listOfNotNull(
@@ -402,18 +450,23 @@ public class IoOps(
 
     /**
      * A Reader that outputs the queued work as both the key and value.
-     *
      *  To use, enqueue strings in a Queue.  ReaderRead will take the front
      *  work string and output (work, work).
      *
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of IdentityReader
      * @see org.tensorflow.op.IoOps.identityReader
      *
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
      */
     public fun identityReader(container: String? = null, sharedName: String? = null): IdentityReader =
         java.identityReader(
@@ -426,14 +479,20 @@ public class IoOps(
     /**
      * A Reader that outputs the records from a LMDB file.
      *
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of LmdbReader
      * @see org.tensorflow.op.IoOps.lmdbReader
      *
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
      */
     public fun lmdbReader(container: String? = null, sharedName: String? = null): LmdbReader =
         java.lmdbReader(
@@ -445,7 +504,6 @@ public class IoOps(
 
     /**
      * Returns the set of files matching one or more glob patterns.
-     *
      *  Note that this routine only supports wildcard characters in the
      *  basename portion of the pattern, not in the directory portion.
      *  Note also that the order of filenames returned is deterministic.
@@ -460,15 +518,16 @@ public class IoOps(
 
     /**
      * A queue that produces elements in first-in first-out order.
-     *
      *  Variable-size shapes are allowed by setting the corresponding shape dimensions
      *  to 0 in the shape attr.  In this case DequeueMany will pad up to the maximum
      *  size of any given element in the minibatch.  See below for details.
      *
      * @param componentTypes The type of each component in a value.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of PaddingFifoQueue
      * @see org.tensorflow.op.IoOps.paddingFifoQueue
+     * @param shapes Sets the shapes option.
+     *
      * @param shapes The shape of each component in a value. The length of this attr must
      *  be either 0 or the same as the length of component_types.
      *  Shapes of fixed rank but variable size are allowed by setting
@@ -477,19 +536,29 @@ public class IoOps(
      *  zeros up to the maximum shape of all elements in the given batch.
      *  If the length of this attr is 0, different queue elements may have
      *  different ranks and shapes, but only one element may be dequeued at a time.
+     * @return this Options instance.
+     * @param capacity Sets the capacity option.
+     *
      * @param capacity The upper bound on the number of elements in this queue.
      *  Negative numbers mean no limit.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this queue is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this queue will be shared under the given name
      *  across multiple sessions.
+     * @return this Options instance.
      */
     public fun paddingFifoQueue(
         componentTypes: List<Class<out TType>>,
         shapes: List<Shape>? = null,
         capacity: Long? = null,
         container: String? = null,
-        sharedName: String? = null,
+        sharedName: String? = null
     ): PaddingFifoQueue = java.paddingFifoQueue(
         componentTypes,
         *listOfNotNull(
@@ -505,20 +574,20 @@ public class IoOps(
      *
      * @param serialized A scalar or vector containing binary serialized Example protos.
      * @param names A tensor containing the names of the serialized protos.
-     *  Corresponds 1:1 with the `serialized` tensor.
+     *  Corresponds 1:1 with the ``` serialized``` tensor.
      *  May contain, for example, table key (descriptive) names for the
      *  corresponding serialized protos.  These are purely useful for debugging
      *  purposes, and the presence of values here has no effect on the output.
      *  May also be an empty vector if no names are available.
-     *  If non-empty, this tensor must have the same shape as "serialized".
+     *  If non-empty, this tensor must have the same shape as &quot;serialized&quot;.
      * @param sparseKeys Vector of strings.
      *  The keys expected in the Examples' features associated with sparse values.
      * @param denseKeys Vector of strings.
      *  The keys expected in the Examples' features associated with dense values.
      * @param raggedKeys Vector of strings.
      *  The keys expected in the Examples' features associated with ragged values.
-     * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with
-     * `dense_keys`.
+     * @param denseDefaults A list of Tensors (some may be empty).  Corresponds 1:1 with `
+     * dense_keys`.
      *  dense_defaults&#91;j] provides default values
      *  when the example's feature_map lacks dense_key&#91;j].  If an empty Tensor is
      *  provided for dense_defaults&#91;j], then the Feature dense_keys&#91;j] is required.
@@ -529,20 +598,21 @@ public class IoOps(
      *  feature), dense_defaults&#91;j] must contain a single element:
      *  the padding element.
      * @param numSparse The number of sparse keys.
-     * @param sparseTypes A list of `num_sparse` types; the data types of data in each Feature
+     * @param sparseTypes A list of ` num_sparse` types; the data types of data in each Feature
      *  given in sparse_keys.
      *  Currently the ParseExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param raggedValueTypes A list of `num_ragged` types; the data types of data in each Feature
-     *  given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+     * @param raggedValueTypes A list of ` num_ragged` types; the data types of data in each
+     * Feature
+     *  given in ragged_keys (where ``` num_ragged = sparse_keys.size()```).
      *  Currently the ParseExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param raggedSplitTypes A list of `num_ragged` types; the data types of row_splits in each
+     * @param raggedSplitTypes A list of ` num_ragged` types; the data types of row_splits in each
      * Feature
-     *  given in ragged_keys (where `num_ragged = sparse_keys.size()`).
+     *  given in ragged_keys (where ``` num_ragged = sparse_keys.size()```).
      *  May be DT_INT32 or DT_INT64.
-     * @param denseShapes A list of `num_dense` shapes; the shapes of data in each Feature
-     *  given in dense_keys (where `num_dense = dense_keys.size()`).
+     * @param denseShapes A list of ` num_dense` shapes; the shapes of data in each Feature
+     *  given in dense_keys (where ``` num_dense = dense_keys.size()```).
      *  The number of elements in the Feature corresponding to dense_key&#91;j]
      *  must always equal dense_shapes&#91;j].NumEntries().
      *  If dense_shapes&#91;j] == (D0, D1, ..., DN) then the shape of output
@@ -569,7 +639,7 @@ public class IoOps(
         sparseTypes: List<Class<out TType>>,
         raggedValueTypes: List<Class<out TType>>,
         raggedSplitTypes: List<Class<out TNumber>>,
-        denseShapes: List<Shape>,
+        denseShapes: List<Shape>
     ): ParseExample = java.parseExample(
         serialized,
         names,
@@ -629,7 +699,7 @@ public class IoOps(
      * @param contextRaggedValueTypes RaggedTensor.value dtypes for the ragged context features.
      * @param contextRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged context
      * features.
-     * @param featureListDenseTypes
+     * @param featureListDenseTypes the value of the featureListDenseTypes property
      * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
      *  of data in each FeatureList given in feature_list_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
@@ -638,22 +708,37 @@ public class IoOps(
      * features.
      * @param featureListRaggedSplitTypes RaggedTensor.row_split dtypes for the ragged FeatureList
      * features.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of ParseSequenceExample
      * @see org.tensorflow.op.IoOps.parseSequenceExample
-     * @param NcontextSparse @param NcontextSparse
+     * @param NcontextSparse Sets the NcontextSparse option.
+     *
+     * @param NcontextSparse the NcontextSparse option
+     * @return this Options instance.
+     * @param contextDenseShapes Sets the contextDenseShapes option.
+     *
      * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
      *  each context Feature given in context_dense_keys.
      *  The number of elements in the Feature corresponding to context_dense_key&#91;j]
      *  must always equal context_dense_shapes&#91;j].NumEntries().
      *  The shape of context_dense_values&#91;j] will match context_dense_shapes&#91;j].
-     * @param NfeatureListSparse @param NfeatureListSparse
-     * @param NfeatureListDense @param NfeatureListDense
+     * @return this Options instance.
+     * @param NfeatureListSparse Sets the NfeatureListSparse option.
+     *
+     * @param NfeatureListSparse the NfeatureListSparse option
+     * @return this Options instance.
+     * @param NfeatureListDense Sets the NfeatureListDense option.
+     *
+     * @param NfeatureListDense the NfeatureListDense option
+     * @return this Options instance.
+     * @param featureListDenseShapes Sets the featureListDenseShapes option.
+     *
      * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
      *  data in each FeatureList given in feature_list_dense_keys.
      *  The shape of each Feature in the FeatureList corresponding to
      *  feature_list_dense_key&#91;j] must always equal
      *  feature_list_dense_shapes&#91;j].NumEntries().
+     * @return this Options instance.
      */
     public fun parseSequenceExample(
         serialized: Operand<TString>,
@@ -677,7 +762,7 @@ public class IoOps(
         contextDenseShapes: List<Shape>? = null,
         NfeatureListSparse: Long? = null,
         NfeatureListDense: Long? = null,
-        featureListDenseShapes: List<Shape>? = null,
+        featureListDenseShapes: List<Shape>? = null
     ): ParseSequenceExample = java.parseSequenceExample(
         serialized,
         debugName,
@@ -712,7 +797,7 @@ public class IoOps(
      *
      * @param serialized A vector containing a batch of binary serialized Example protos.
      * @param denseDefaults A list of Tensors (some may be empty), whose length matches
-     *  the length of `dense_keys`. dense_defaults&#91;j] provides default values
+     *  the length of ``` dense_keys```. dense_defaults&#91;j] provides default values
      *  when the example's feature_map lacks dense_key&#91;j].  If an empty Tensor is
      *  provided for dense_defaults&#91;j], then the Feature dense_keys&#91;j] is required.
      *  The input type is inferred from dense_defaults&#91;j], even when it's empty.
@@ -722,17 +807,17 @@ public class IoOps(
      *  feature), dense_defaults&#91;j] must contain a single element:
      *  the padding element.
      * @param numSparse The number of sparse features to be parsed from the example. This
-     *  must match the lengths of `sparse_keys` and `sparse_types`.
-     * @param sparseKeys A list of `num_sparse` strings.
+     *  must match the lengths of ``` sparse_keys``` and ``` sparse_types```.
+     * @param sparseKeys A list of ` num_sparse` strings.
      *  The keys expected in the Examples' features associated with sparse values.
      * @param denseKeys The keys expected in the Examples' features associated with dense
      *  values.
-     * @param sparseTypes A list of `num_sparse` types; the data types of data in each
+     * @param sparseTypes A list of ` num_sparse` types; the data types of data in each
      *  Feature given in sparse_keys.
      *  Currently the ParseSingleExample op supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
      * @param denseShapes The shapes of data in each Feature given in dense_keys.
-     *  The length of this list must match the length of `dense_keys`.  The
+     *  The length of this list must match the length of ``` dense_keys```.  The
      *  number of elements in the Feature corresponding to dense_key&#91;j] must
      *  always equal dense_shapes&#91;j].NumEntries().  If dense_shapes&#91;j] ==
      *  (D0, D1, ..., DN) then the shape of output Tensor dense_values&#91;j]
@@ -750,7 +835,7 @@ public class IoOps(
         sparseKeys: List<String>,
         denseKeys: List<String>,
         sparseTypes: List<Class<out TType>>,
-        denseShapes: List<Shape>,
+        denseShapes: List<Shape>
     ): ParseSingleExample = java.parseSingleExample(
         serialized,
         denseDefaults,
@@ -798,24 +883,46 @@ public class IoOps(
      *  each context Feature given in context_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param featureListDenseTypes
+     * @param featureListDenseTypes the value of the featureListDenseTypes property
      * @param featureListSparseTypes A list of Nfeature_list_sparse types; the data types
      *  of data in each FeatureList given in feature_list_sparse_keys.
      *  Currently the ParseSingleSequenceExample supports DT_FLOAT (FloatList),
      *  DT_INT64 (Int64List), and DT_STRING (BytesList).
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of ParseSingleSequenceExample
      * @see org.tensorflow.op.IoOps.parseSingleSequenceExample
+     * @param NcontextSparse Sets the NcontextSparse option.
+     *
+     * @param NcontextSparse the NcontextSparse option
+     * @return this Options instance.
+     * @param NcontextDense Sets the NcontextDense option.
+     *
+     * @param NcontextDense the NcontextDense option
+     * @return this Options instance.
+     * @param NfeatureListSparse Sets the NfeatureListSparse option.
+     *
+     * @param NfeatureListSparse the NfeatureListSparse option
+     * @return this Options instance.
+     * @param NfeatureListDense Sets the NfeatureListDense option.
+     *
+     * @param NfeatureListDense the NfeatureListDense option
+     * @return this Options instance.
+     * @param contextDenseShapes Sets the contextDenseShapes option.
+     *
      * @param contextDenseShapes A list of Ncontext_dense shapes; the shapes of data in
      *  each context Feature given in context_dense_keys.
      *  The number of elements in the Feature corresponding to context_dense_key&#91;j]
      *  must always equal context_dense_shapes&#91;j].NumEntries().
      *  The shape of context_dense_values&#91;j] will match context_dense_shapes&#91;j].
+     * @return this Options instance.
+     * @param featureListDenseShapes Sets the featureListDenseShapes option.
+     *
      * @param featureListDenseShapes A list of Nfeature_list_dense shapes; the shapes of
      *  data in each FeatureList given in feature_list_dense_keys.
      *  The shape of each Feature in the FeatureList corresponding to
      *  feature_list_dense_key&#91;j] must always equal
      *  feature_list_dense_shapes&#91;j].NumEntries().
+     * @return this Options instance.
      */
     public fun parseSingleSequenceExample(
         serialized: Operand<TString>,
@@ -829,8 +936,12 @@ public class IoOps(
         contextSparseTypes: List<Class<out TType>>,
         featureListDenseTypes: List<Class<out TType>>,
         featureListSparseTypes: List<Class<out TType>>,
+        NcontextSparse: Long? = null,
+        NcontextDense: Long? = null,
+        NfeatureListSparse: Long? = null,
+        NfeatureListDense: Long? = null,
         contextDenseShapes: List<Shape>? = null,
-        featureListDenseShapes: List<Shape>? = null,
+        featureListDenseShapes: List<Shape>? = null
     ): ParseSingleSequenceExample = java.parseSingleSequenceExample(
         serialized,
         featureListDenseMissingAssumedEmpty,
@@ -844,6 +955,14 @@ public class IoOps(
         featureListDenseTypes,
         featureListSparseTypes,
         *listOfNotNull(
+            NcontextSparse?.let { org.tensorflow.op.io.ParseSingleSequenceExample.NcontextSparse(it) },
+            NcontextDense?.let { org.tensorflow.op.io.ParseSingleSequenceExample.NcontextDense(it) },
+            NfeatureListSparse?.let {
+                org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListSparse(it)
+            },
+            NfeatureListDense?.let {
+                org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListDense(it)
+            },
             contextDenseShapes?.let {
                 org.tensorflow.op.io.ParseSingleSequenceExample.contextDenseShapes(it)
             },
@@ -856,10 +975,11 @@ public class IoOps(
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param serialized A scalar string containing a serialized TensorProto proto.
      * @param outType The type of the serialized tensor.  The provided type must match the
      *  type of the serialized tensor and no implicit conversion will take place.
+     * @param T data type for ` ParseTensor` output and operands
      * @return a new instance of ParseTensor
      * @see org.tensorflow.op.IoOps.parseTensor
      */
@@ -871,7 +991,6 @@ public class IoOps(
 
     /**
      * A queue that produces elements sorted by the first component value.
-     *
      *  Note that the PriorityQueue requires the first component of any element
      *  to be a scalar int64, in addition to the other elements declared by
      *  component_types.  Therefore calls to Enqueue and EnqueueMany (resp. Dequeue
@@ -883,22 +1002,31 @@ public class IoOps(
      *  be either 0 or the same as the length of component_types. If the length of
      *  this attr is 0, the shapes of queue elements are not constrained, and
      *  only one element may be dequeued at a time.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of PriorityQueue
      * @see org.tensorflow.op.IoOps.priorityQueue
+     * @param capacity Sets the capacity option.
+     *
      * @param capacity The upper bound on the number of elements in this queue.
      *  Negative numbers mean no limit.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this queue is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this queue will be shared under the given name
      *  across multiple sessions.
+     * @return this Options instance.
      */
     public fun priorityQueue(
         componentTypes: List<Class<out TType>>,
         shapes: List<Shape>,
         capacity: Long? = null,
         container: String? = null,
-        sharedName: String? = null,
+        sharedName: String? = null
     ): PriorityQueue = java.priorityQueue(
         componentTypes,
         shapes,
@@ -911,7 +1039,6 @@ public class IoOps(
 
     /**
      * Closes the given queue.
-     *
      *  This operation signals that no more elements will be enqueued in the
      *  given queue. Subsequent Enqueue(Many) operations will fail.
      *  Subsequent Dequeue(Many) operations will continue to succeed if
@@ -919,43 +1046,47 @@ public class IoOps(
      *  operations that would block will fail immediately.
      *
      * @param handle The handle to a queue.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueClose
      * @see org.tensorflow.op.IoOps.queueClose
+     * @param cancelPendingEnqueues Sets the cancelPendingEnqueues option.
+     *
      * @param cancelPendingEnqueues If true, all pending enqueue requests that are
      *  blocked on the given queue will be canceled.
+     * @return this Options instance.
      */
-    public fun queueClose(handle: Operand<*>, cancelPendingEnqueues: Boolean? = null): QueueClose =
-        java.queueClose(
-            handle,
-            *listOfNotNull(
-                cancelPendingEnqueues?.let { org.tensorflow.op.io.QueueClose.cancelPendingEnqueues(it) }
-            ).toTypedArray()
-        )
+    public fun queueClose(handle: Operand<out TType>, cancelPendingEnqueues: Boolean? = null):
+        QueueClose = java.queueClose(
+        handle,
+        *listOfNotNull(
+            cancelPendingEnqueues?.let { org.tensorflow.op.io.QueueClose.cancelPendingEnqueues(it) }
+        ).toTypedArray()
+    )
 
     /**
      * Dequeues a tuple of one or more tensors from the given queue.
-     *
      *  This operation has k outputs, where k is the number of components
      *  in the tuples stored in the given queue, and output i is the ith
      *  component of the dequeued tuple.
-     *
      *  N.B. If the queue is empty, this operation will block until an element
      *  has been dequeued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
      * @param componentTypes The type of each component in a tuple.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueDequeue
      * @see org.tensorflow.op.IoOps.queueDequeue
+     * @param timeoutMs Sets the timeoutMs option.
+     *
      * @param timeoutMs If the queue is empty, this operation will block for up to
      *  timeout_ms milliseconds.
      *  Note: This option is not supported yet.
+     * @return this Options instance.
      */
     public fun queueDequeue(
-        handle: Operand<*>,
+        handle: Operand<out TType>,
         componentTypes: List<Class<out TType>>,
-        timeoutMs: Long? = null,
+        timeoutMs: Long? = null
     ): QueueDequeue = java.queueDequeue(
         handle,
         componentTypes,
@@ -965,37 +1096,36 @@ public class IoOps(
     )
 
     /**
-     * Dequeues `n` tuples of one or more tensors from the given queue.
-     *
-     *  If the queue is closed and there are fewer than `n` elements, then an
+     * Dequeues ``` n``` tuples of one or more tensors from the given queue.
+     *  If the queue is closed and there are fewer than ``` n``` elements, then an
      *  OutOfRange error is returned.
-     *
      *  This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
-     *  in the dequeued tuple will have size `n` in the 0th dimension.
-     *
-     *  This operation has `k` outputs, where `k` is the number of components in
-     *  the tuples stored in the given queue, and output `i` is the ith
+     *  in the dequeued tuple will have size ``` n``` in the 0th dimension.
+     *  This operation has ``` k``` outputs, where ``` k``` is the number of components in
+     *  the tuples stored in the given queue, and output ``` i``` is the ith
      *  component of the dequeued tuple.
-     *
-     *  N.B. If the queue is empty, this operation will block until `n` elements
+     *  N.B. If the queue is empty, this operation will block until ``` n``` elements
      *  have been dequeued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
      * @param n The number of tuples to dequeue.
      * @param componentTypes The type of each component in a tuple.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueDequeueMany
      * @see org.tensorflow.op.IoOps.queueDequeueMany
+     * @param timeoutMs Sets the timeoutMs option.
+     *
      * @param timeoutMs If the queue has fewer than n elements, this operation
      *  will block for up to timeout_ms milliseconds.
      *  Note: This option is not supported yet.
+     * @return this Options instance.
      */
     public fun queueDequeueMany(
-        handle: Operand<*>,
+        handle: Operand<out TType>,
         n: Operand<TInt32>,
         componentTypes: List<Class<out TType>>,
-        timeoutMs: Long? = null,
+        timeoutMs: Long? = null
     ): QueueDequeueMany = java.queueDequeueMany(
         handle,
         n,
@@ -1006,41 +1136,40 @@ public class IoOps(
     )
 
     /**
-     * Dequeues `n` tuples of one or more tensors from the given queue.
-     *
+     * Dequeues ``` n``` tuples of one or more tensors from the given queue.
      *  This operation is not supported by all queues.  If a queue does not support
      *  DequeueUpTo, then an Unimplemented error is returned.
-     *
-     *  If the queue is closed and there are more than 0 but less than `n`
+     *  If the queue is closed and there are more than 0 but less than ``` n```
      *  elements remaining, then instead of returning an OutOfRange error like
-     *  QueueDequeueMany, less than `n` elements are returned immediately.  If
+     *  QueueDequeueMany, less than ``` n``` elements are returned immediately.  If
      *  the queue is closed and there are 0 elements left in the queue, then
      *  an OutOfRange error is returned just like in QueueDequeueMany.
      *  Otherwise the behavior is identical to QueueDequeueMany:
-     *
      *  This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
      *  in the dequeued tuple will have size n in the 0th dimension.
-     *
-     *  This operation has `k` outputs, where `k` is the number of components in
-     *  the tuples stored in the given queue, and output `i` is the ith
+     *  This operation has ``` k``` outputs, where ``` k``` is the number of components in
+     *  the tuples stored in the given queue, and output ``` i``` is the ith
      *  component of the dequeued tuple.
      *
      * @param handle The handle to a queue.
      * @param n The number of tuples to dequeue.
      * @param componentTypes The type of each component in a tuple.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueDequeueUpTo
      * @see org.tensorflow.op.IoOps.queueDequeueUpTo
+     * @param timeoutMs Sets the timeoutMs option.
+     *
      * @param timeoutMs If the queue has fewer than n elements, this operation
      *  will block for up to timeout_ms milliseconds.
      *  Note: This option is not supported yet.
+     * @return this Options instance.
      */
     public fun queueDequeueUpTo(
-        handle: Operand<*>,
+        handle: Operand<out TType>,
         n: Operand<TInt32>,
         componentTypes: List<Class<out TType>>,
-        timeoutMs: Long? = null,
+        timeoutMs: Long? = null
     ): QueueDequeueUpTo = java.queueDequeueUpTo(
         handle,
         n,
@@ -1052,26 +1181,27 @@ public class IoOps(
 
     /**
      * Enqueues a tuple of one or more tensors in the given queue.
-     *
      *  The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *
      *  N.B. If the queue is full, this operation will block until the given
      *  element has been enqueued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
      * @param components One or more tensors from which the enqueued tensors should be taken.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueEnqueue
      * @see org.tensorflow.op.IoOps.queueEnqueue
+     * @param timeoutMs Sets the timeoutMs option.
+     *
      * @param timeoutMs If the queue is full, this operation will block for up to
      *  timeout_ms milliseconds.
      *  Note: This option is not supported yet.
+     * @return this Options instance.
      */
     public fun queueEnqueue(
-        handle: Operand<*>,
+        handle: Operand<out TType>,
         components: Iterable<Operand<*>>,
-        timeoutMs: Long? = null,
+        timeoutMs: Long? = null
     ): QueueEnqueue = java.queueEnqueue(
         handle,
         components,
@@ -1082,31 +1212,31 @@ public class IoOps(
 
     /**
      * Enqueues zero or more tuples of one or more tensors in the given queue.
-     *
      *  This operation slices each component tensor along the 0th dimension to
      *  make multiple queue elements. All of the tuple components must have the
      *  same size in the 0th dimension.
-     *
      *  The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *
      *  N.B. If the queue is full, this operation will block until the given
      *  elements have been enqueued (or 'timeout_ms' elapses, if specified).
      *
      * @param handle The handle to a queue.
      * @param components One or more tensors from which the enqueued tensors should
      *  be taken.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of QueueEnqueueMany
      * @see org.tensorflow.op.IoOps.queueEnqueueMany
+     * @param timeoutMs Sets the timeoutMs option.
+     *
      * @param timeoutMs If the queue is too full, this operation will block for up
      *  to timeout_ms milliseconds.
      *  Note: This option is not supported yet.
+     * @return this Options instance.
      */
     public fun queueEnqueueMany(
-        handle: Operand<*>,
+        handle: Operand<out TType>,
         components: Iterable<Operand<*>>,
-        timeoutMs: Long? = null,
+        timeoutMs: Long? = null
     ): QueueEnqueueMany = java.queueEnqueueMany(
         handle,
         components,
@@ -1117,7 +1247,6 @@ public class IoOps(
 
     /**
      * Returns true if queue is closed.
-     *
      *  This operation returns true if the queue is closed and false if the queue
      *  is open.
      *
@@ -1125,7 +1254,7 @@ public class IoOps(
      * @return a new instance of QueueIsClosed
      * @see org.tensorflow.op.IoOps.queueIsClosed
      */
-    public fun queueIsClosed(handle: Operand<*>): QueueIsClosed = java.queueIsClosed(
+    public fun queueIsClosed(handle: Operand<out TType>): QueueIsClosed = java.queueIsClosed(
         handle
     )
 
@@ -1136,7 +1265,7 @@ public class IoOps(
      * @return a new instance of QueueSize
      * @see org.tensorflow.op.IoOps.queueSize
      */
-    public fun queueSize(handle: Operand<*>): QueueSize = java.queueSize(
+    public fun queueSize(handle: Operand<out TType>): QueueSize = java.queueSize(
         handle
     )
 
@@ -1144,25 +1273,46 @@ public class IoOps(
      * A queue that randomizes the order of elements.
      *
      * @param componentTypes The type of each component in a value.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of RandomShuffleQueue
      * @see org.tensorflow.op.IoOps.randomShuffleQueue
+     * @param shapes Sets the shapes option.
+     *
      * @param shapes The shape of each component in a value. The length of this attr must
      *  be either 0 or the same as the length of component_types. If the length of
      *  this attr is 0, the shapes of queue elements are not constrained, and
      *  only one element may be dequeued at a time.
+     * @return this Options instance.
+     * @param capacity Sets the capacity option.
+     *
      * @param capacity The upper bound on the number of elements in this queue.
      *  Negative numbers mean no limit.
+     * @return this Options instance.
+     * @param minAfterDequeue Sets the minAfterDequeue option.
+     *
      * @param minAfterDequeue Dequeue will block unless there would be this
      *  many elements after the dequeue or the queue is closed. This
      *  ensures a minimum level of mixing of elements.
+     * @return this Options instance.
+     * @param seed Sets the seed option.
+     *
      * @param seed If either seed or seed2 is set to be non-zero, the random number
      *  generator is seeded by the given seed.  Otherwise, a random seed is used.
+     * @return this Options instance.
+     * @param seed2 Sets the seed2 option.
+     *
      * @param seed2 A second seed to avoid seed collision.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this queue is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this queue will be shared under the given name
      *  across multiple sessions.
+     * @return this Options instance.
      */
     public fun randomShuffleQueue(
         componentTypes: List<Class<out TType>>,
@@ -1172,7 +1322,7 @@ public class IoOps(
         seed: Long? = null,
         seed2: Long? = null,
         container: String? = null,
-        sharedName: String? = null,
+        sharedName: String? = null
     ): RandomShuffleQueue = java.randomShuffleQueue(
         componentTypes,
         *listOfNotNull(
@@ -1189,7 +1339,7 @@ public class IoOps(
     /**
      * Reads and outputs the entire contents of the input filename.
      *
-     * @param filename
+     * @param filename the filename value
      * @return a new instance of ReadFile
      * @see org.tensorflow.op.IoOps.readFile
      */
@@ -1199,7 +1349,6 @@ public class IoOps(
 
     /**
      * Returns the number of records this Reader has produced.
-     *
      *  This is the same as the number of ReaderRead executions that have
      *  succeeded.
      *
@@ -1207,7 +1356,7 @@ public class IoOps(
      * @return a new instance of ReaderNumRecordsProduced
      * @see org.tensorflow.op.IoOps.readerNumRecordsProduced
      */
-    public fun readerNumRecordsProduced(readerHandle: Operand<*>): ReaderNumRecordsProduced =
+    public fun readerNumRecordsProduced(readerHandle: Operand<out TType>): ReaderNumRecordsProduced =
         java.readerNumRecordsProduced(
             readerHandle
         )
@@ -1219,14 +1368,13 @@ public class IoOps(
      * @return a new instance of ReaderNumWorkUnitsCompleted
      * @see org.tensorflow.op.IoOps.readerNumWorkUnitsCompleted
      */
-    public fun readerNumWorkUnitsCompleted(readerHandle: Operand<*>): ReaderNumWorkUnitsCompleted =
-        java.readerNumWorkUnitsCompleted(
-            readerHandle
-        )
+    public fun readerNumWorkUnitsCompleted(readerHandle: Operand<out TType>):
+        ReaderNumWorkUnitsCompleted = java.readerNumWorkUnitsCompleted(
+        readerHandle
+    )
 
     /**
      * Returns the next record (key, value pair) produced by a Reader.
-     *
      *  Will dequeue from the input queue if necessary (e.g. when the
      *  Reader needs to start reading from a new file since it has finished
      *  with the previous file).
@@ -1236,30 +1384,29 @@ public class IoOps(
      * @return a new instance of ReaderRead
      * @see org.tensorflow.op.IoOps.readerRead
      */
-    public fun readerRead(readerHandle: Operand<*>, queueHandle: Operand<*>): ReaderRead =
-        java.readerRead(
-            readerHandle,
-            queueHandle
-        )
+    public fun readerRead(readerHandle: Operand<out TType>, queueHandle: Operand<out TType>):
+        ReaderRead = java.readerRead(
+        readerHandle,
+        queueHandle
+    )
 
     /**
-     * Returns up to `num_records` (key, value) pairs produced by a Reader.
-     *
+     * Returns up to ``` num_records``` (key, value) pairs produced by a Reader.
      *  Will dequeue from the input queue if necessary (e.g. when the
      *  Reader needs to start reading from a new file since it has finished
      *  with the previous file).
-     *  It may return less than `num_records` even before the last batch.
+     *  It may return less than ``` num_records``` even before the last batch.
      *
-     * @param readerHandle Handle to a `Reader`.
-     * @param queueHandle Handle to a `Queue`, with string work items.
-     * @param numRecords number of records to read from `Reader`.
+     * @param readerHandle Handle to a ` Reader`.
+     * @param queueHandle Handle to a ` Queue`, with string work items.
+     * @param numRecords number of records to read from ` Reader`.
      * @return a new instance of ReaderReadUpTo
      * @see org.tensorflow.op.IoOps.readerReadUpTo
      */
     public fun readerReadUpTo(
-        readerHandle: Operand<*>,
-        queueHandle: Operand<*>,
-        numRecords: Operand<TInt64>,
+        readerHandle: Operand<out TType>,
+        queueHandle: Operand<out TType>,
+        numRecords: Operand<TInt64>
     ): ReaderReadUpTo = java.readerReadUpTo(
         readerHandle,
         queueHandle,
@@ -1273,13 +1420,12 @@ public class IoOps(
      * @return a new instance of ReaderReset
      * @see org.tensorflow.op.IoOps.readerReset
      */
-    public fun readerReset(readerHandle: Operand<*>): ReaderReset = java.readerReset(
+    public fun readerReset(readerHandle: Operand<out TType>): ReaderReset = java.readerReset(
         readerHandle
     )
 
     /**
      * Restore a reader to a previously saved state.
-     *
      *  Not all Readers support being restored, so this can produce an
      *  Unimplemented error.
      *
@@ -1289,7 +1435,7 @@ public class IoOps(
      * @return a new instance of ReaderRestoreState
      * @see org.tensorflow.op.IoOps.readerRestoreState
      */
-    public fun readerRestoreState(readerHandle: Operand<*>, state: Operand<TString>):
+    public fun readerRestoreState(readerHandle: Operand<out TType>, state: Operand<TString>):
         ReaderRestoreState = java.readerRestoreState(
         readerHandle,
         state
@@ -1297,7 +1443,6 @@ public class IoOps(
 
     /**
      * Produce a string tensor that encodes the state of a Reader.
-     *
      *  Not all Readers support being serialized, so this can produce an
      *  Unimplemented error.
      *
@@ -1305,33 +1450,32 @@ public class IoOps(
      * @return a new instance of ReaderSerializeState
      * @see org.tensorflow.op.IoOps.readerSerializeState
      */
-    public fun readerSerializeState(readerHandle: Operand<*>): ReaderSerializeState =
+    public fun readerSerializeState(readerHandle: Operand<out TType>): ReaderSerializeState =
         java.readerSerializeState(
             readerHandle
         )
 
     /**
-     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3]` `Tensor` object.
-     *
-     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
+     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
+     * object.
+     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
-     *  rank `R-1`.
+     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
+     *  rank ``` R-1```.
+     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
      *
-     *  The minibatch size `N` is extracted from `sparse_shape&#91;0]`.
-     *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-     * @return a new instance of SerializeManySparse
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
+     * @return a new instance of SerializeManySparse, with default output types
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
     public fun serializeManySparse(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
-        sparseShape: Operand<TInt64>,
+        sparseShape: Operand<TInt64>
     ): SerializeManySparse<TString> = java.serializeManySparse(
         sparseIndices,
         sparseValues,
@@ -1339,22 +1483,22 @@ public class IoOps(
     )
 
     /**
-     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3]` `Tensor` object.
-     *
-     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
+     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
+     * object.
+     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
-     *  rank `R-1`.
+     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
+     *  rank ``` R-1```.
+     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
      *
-     *  The minibatch size `N` is extracted from `sparse_shape&#91;0]`.
-     *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-     * @param outType The `dtype` to use for serialization; the supported types are `string`
-     *  (default) and `variant`.
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
+     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
+     *  (default) and ``` variant```.
+     * @param U data type for ` SerializeManySparse` output and operands
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
@@ -1362,7 +1506,7 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
-        outType: Class<U>,
+        outType: Class<U>
     ): SerializeManySparse<U> = java.serializeManySparse<U>(
         sparseIndices,
         sparseValues,
@@ -1371,19 +1515,19 @@ public class IoOps(
     )
 
     /**
-     * Serialize a `SparseTensor` into a `&#91;3]` `Tensor` object.
+     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
      *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-     * @return a new instance of SerializeSparse
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
+     * @return a new instance of SerializeSparse, with default output types
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
     public fun serializeSparse(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
-        sparseShape: Operand<TInt64>,
+        sparseShape: Operand<TInt64>
     ): SerializeSparse<TString> = java.serializeSparse(
         sparseIndices,
         sparseValues,
@@ -1391,14 +1535,15 @@ public class IoOps(
     )
 
     /**
-     * Serialize a `SparseTensor` into a `&#91;3]` `Tensor` object.
+     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
      *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-     * @param outType The `dtype` to use for serialization; the supported types are `string`
-     *  (default) and `variant`.
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
+     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
+     *  (default) and ``` variant```.
+     * @param U data type for ` SerializeSparse` output and operands
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
@@ -1406,7 +1551,7 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
-        outType: Class<U>,
+        outType: Class<U>
     ): SerializeSparse<U> = java.serializeSparse<U>(
         sparseIndices,
         sparseValues,
@@ -1417,7 +1562,7 @@ public class IoOps(
     /**
      * Transforms a Tensor into a serialized TensorProto proto.
      *
-     * @param tensor A Tensor of type `T`.
+     * @param tensor A Tensor of type ` T`.
      * @return a new instance of SerializeTensor
      * @see org.tensorflow.op.IoOps.serializeTensor
      */
@@ -1427,19 +1572,18 @@ public class IoOps(
 
     /**
      * Generate a sharded filename. The filename is printf formatted as
+     *  %s-%05d-of-%05d, basename, shard, num_shards.
      *
-     *     %s-%05d-of-%05d, basename, shard, num_shards.
-     *
-     * @param basename
-     * @param shard
-     * @param numShards
+     * @param basename the basename value
+     * @param shard the shard value
+     * @param numShards the numShards value
      * @return a new instance of ShardedFilename
      * @see org.tensorflow.op.IoOps.shardedFilename
      */
     public fun shardedFilename(
         basename: Operand<TString>,
         shard: Operand<TInt32>,
-        numShards: Operand<TInt32>,
+        numShards: Operand<TInt32>
     ): ShardedFilename = java.shardedFilename(
         basename,
         shard,
@@ -1449,8 +1593,8 @@ public class IoOps(
     /**
      * Generate a glob pattern matching all sharded file names.
      *
-     * @param basename
-     * @param numShards
+     * @param basename the basename value
+     * @param numShards the numShards value
      * @return a new instance of ShardedFilespec
      * @see org.tensorflow.op.IoOps.shardedFilespec
      */
@@ -1463,20 +1607,29 @@ public class IoOps(
     /**
      * A Reader that outputs the lines of a file delimited by '\n'.
      *
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of TextLineReader
      * @see org.tensorflow.op.IoOps.textLineReader
      *
+     * @param skipHeaderLines Sets the skipHeaderLines option.
+     *
      * @param skipHeaderLines Number of lines to skip from the beginning of every file.
+     * @return this Options instance.
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
      */
     public fun textLineReader(
         skipHeaderLines: Long? = null,
         container: String? = null,
-        sharedName: String? = null,
+        sharedName: String? = null
     ): TextLineReader = java.textLineReader(
         *listOfNotNull(
             skipHeaderLines?.let { org.tensorflow.op.io.TextLineReader.skipHeaderLines(it) },
@@ -1488,20 +1641,29 @@ public class IoOps(
     /**
      * A Reader that outputs the records from a TensorFlow Records file.
      *
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of TfRecordReader
      * @see org.tensorflow.op.IoOps.tfRecordReader
      *
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
-     * @param compressionType @param compressionType
+     * @return this Options instance.
+     * @param compressionType Sets the compressionType option.
+     *
+     * @param compressionType the compressionType option
+     * @return this Options instance.
      */
     public fun tfRecordReader(
         container: String? = null,
         sharedName: String? = null,
-        compressionType: String? = null,
+        compressionType: String? = null
     ): TfRecordReader = java.tfRecordReader(
         *listOfNotNull(
             container?.let { org.tensorflow.op.io.TfRecordReader.container(it) },
@@ -1512,18 +1674,23 @@ public class IoOps(
 
     /**
      * A Reader that outputs the entire contents of a file as a value.
-     *
      *  To use, enqueue filenames in a Queue.  The output of ReaderRead will
      *  be a filename (key) and the contents of that file (value).
      *
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of WholeFileReader
      * @see org.tensorflow.op.IoOps.wholeFileReader
      *
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this reader is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this reader is named in the given bucket
      *  with this shared_name. Otherwise, the node name is used instead.
+     * @return this Options instance.
      */
     public fun wholeFileReader(container: String? = null, sharedName: String? = null):
         WholeFileReader = java.wholeFileReader(
@@ -1535,7 +1702,6 @@ public class IoOps(
 
     /**
      * Writes contents to the file at input filename. Creates file and recursively
-     *
      *  creates directory if not existing.
      *
      * @param filename scalar. The name of the file to which we write the contents.
@@ -1552,94 +1718,100 @@ public class IoOps(
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param inputBytes Tensor of string to be decoded.
      * @param fixedLength Length in bytes for each element of the decoded output. Must be a
      * multiple
      *  of the size of the output type.
-     * @param outType
-     * @param options carries optional attributes values
+     * @param outType the value of the outType property
+     * @param options carries optional attribute values
+     * @param T data type for ` DecodePaddedRaw` output and operands
      * @return a new instance of DecodePaddedRaw
      * @see org.tensorflow.op.IoOps.decodePaddedRaw
-     * @param littleEndian Whether the input `input_bytes` is in little-endian order. Ignored for
-     *  `out_type` values that are stored in a single byte, like `uint8`
+     * @param littleEndian Sets the littleEndian option.
+     *
+     * @param littleEndian Whether the input ` input_bytes` is in little-endian order. Ignored for
+     *  ``` out_type``` values that are stored in a single byte, like ``` uint8```
+     * @return this Options instance.
      */
     @JvmName("decodePaddedRawReified")
     public inline fun <reified T : TNumber> decodePaddedRaw(
         inputBytes: Operand<TString>,
         fixedLength: Operand<TInt32>,
-        littleEndian: Boolean? = null,
+        littleEndian: Boolean? = null
     ): DecodePaddedRaw<T> = decodePaddedRaw<T>(inputBytes, fixedLength, T::class.java, littleEndian)
 
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param bytes All the elements must have the same length.
-     * @param outType
-     * @param options carries optional attributes values
+     * @param outType the value of the outType property
+     * @param options carries optional attribute values
+     * @param T data type for ` DecodeRaw` output and operands
      * @return a new instance of DecodeRaw
      * @see org.tensorflow.op.IoOps.decodeRaw
-     * @param littleEndian Whether the input `bytes` are in little-endian order.
-     *  Ignored for `out_type` values that are stored in a single byte like
-     *  `uint8`.
+     * @param littleEndian Sets the littleEndian option.
+     *
+     * @param littleEndian Whether the input ` bytes` are in little-endian order.
+     *  Ignored for ``` out_type``` values that are stored in a single byte like
+     *  ``` uint8```.
+     * @return this Options instance.
      */
     @JvmName("decodeRawReified")
     public inline fun <reified T : TType> decodeRaw(
         bytes: Operand<TString>,
         littleEndian: Boolean? =
-            null,
+            null
     ): DecodeRaw<T> = decodeRaw<T>(bytes, T::class.java, littleEndian)
 
     /**
-     * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
-     *
-     *  The input `serialized_sparse` must be a string matrix of shape `&#91;N x 3]` where
-     *  `N` is the minibatch size and the rows correspond to packed outputs of
-     *  `SerializeSparse`.  The ranks of the original `SparseTensor` objects
-     *  must all match.  When the final `SparseTensor` is created, it has rank one
-     *  higher than the ranks of the incoming `SparseTensor` objects
+     * Deserialize and concatenate ``` SparseTensors``` from a serialized minibatch.
+     *  The input ``` serialized_sparse``` must be a string matrix of shape ``` [N x 3]``` where
+     *  ``` N``` is the minibatch size and the rows correspond to packed outputs of
+     *  ``` SerializeSparse```.  The ranks of the original ``` SparseTensor``` objects
+     *  must all match.  When the final ``` SparseTensor``` is created, it has rank one
+     *  higher than the ranks of the incoming ``` SparseTensor``` objects
      *  (they have been concatenated along a new row dimension).
-     *
-     *  The output `SparseTensor` object's shape values for all dimensions but the
-     *  first are the max across the input `SparseTensor` objects' shape values
-     *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
+     *  The output ``` SparseTensor``` object's shape values for all dimensions but the
+     *  first are the max across the input ``` SparseTensor``` objects' shape values
+     *  for the corresponding dimensions.  Its first shape value is ``` N```, the minibatch
      *  size.
-     *
-     *  The input `SparseTensor` objects' indices are assumed ordered in
+     *  The input ``` SparseTensor``` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
-     *  step run `SparseReorder` to restore index ordering.
+     *  step run ``` SparseReorder``` to restore index ordering.
+     *  For example, if the serialized input is a ``` [2 x 3]``` matrix representing two
+     *  original ``` SparseTensor``` objects:
      *
-     *  For example, if the serialized input is a `&#91;2 x 3]` matrix representing two
-     *  original `SparseTensor` objects:
-     *
-     *      index = &#91; 0]
-     *              &#91;10]
-     *              &#91;20]
-     *      values = &#91;1, 2, 3]
-     *      shape = &#91;50]
+     *  index = &#91; 0]
+     *          &#91;10]
+     *          &#91;20]
+     *  values = &#91;1, 2, 3]
+     *  shape = &#91;50]
      *
      *  and
      *
-     *      index = &#91; 2]
-     *              &#91;10]
-     *      values = &#91;4, 5]
-     *      shape = &#91;30]
+     *  index = &#91; 2]
+     *          &#91;10]
+     *  values = &#91;4, 5]
+     *  shape = &#91;30]
      *
-     *  then the final deserialized `SparseTensor` will be:
+     *  then the final deserialized ``` SparseTensor``` will be:
      *
-     *      index = &#91;0  0]
-     *              &#91;0 10]
-     *              &#91;0 20]
-     *              &#91;1  2]
-     *              &#91;1 10]
-     *      values = &#91;1, 2, 3, 4, 5]
-     *      shape = &#91;2 50]
+     *  index = &#91;0  0]
+     *          &#91;0 10]
+     *          &#91;0 20]
+     *          &#91;1  2]
+     *          &#91;1 10]
+     *  values = &#91;1, 2, 3, 4, 5]
+     *  shape = &#91;2 50]
      *
-     * @param T data type for ` sparseValues()` output
-     * @param serializedSparse 2-D, The `N` serialized `SparseTensor` objects.
+     *
+     * @param T data type for ` sparse_values` output
+     * @param serializedSparse 2-D, The ` N` serialized ` SparseTensor` objects.
      *  Must have 3 columns.
-     * @param dtype The `dtype` of the serialized `SparseTensor` objects.
+     * @param dtype The ` dtype` of the serialized ` SparseTensor` objects.
+     * @param T data type for ` DeserializeManySparse` output and operands
      * @return a new instance of DeserializeManySparse
      * @see org.tensorflow.op.IoOps.deserializeManySparse
      */
@@ -1650,10 +1822,11 @@ public class IoOps(
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param serialized A scalar string containing a serialized TensorProto proto.
      * @param outType The type of the serialized tensor.  The provided type must match the
      *  type of the serialized tensor and no implicit conversion will take place.
+     * @param T data type for ` ParseTensor` output and operands
      * @return a new instance of ParseTensor
      * @see org.tensorflow.op.IoOps.parseTensor
      */
@@ -1662,22 +1835,22 @@ public class IoOps(
         parseTensor<T>(serialized, T::class.java)
 
     /**
-     * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3]` `Tensor` object.
-     *
-     *  The `SparseTensor` must have rank `R` greater than 1, and the first dimension
-     *  is treated as the minibatch dimension.  Elements of the `SparseTensor`
+     * Serialize an ``` N```-minibatch ``` SparseTensor``` into an ``` [N, 3]``` ``` Tensor```
+     * object.
+     *  The ``` SparseTensor``` must have rank ``` R``` greater than 1, and the first dimension
+     *  is treated as the minibatch dimension.  Elements of the ``` SparseTensor```
      *  must be sorted in increasing order of this first dimension.  The serialized
-     *  `SparseTensor` objects going into each row of `serialized_sparse` will have
-     *  rank `R-1`.
+     *  ``` SparseTensor``` objects going into each row of ``` serialized_sparse``` will have
+     *  rank ``` R-1```.
+     *  The minibatch size ``` N``` is extracted from ``` sparse_shape[0]```.
      *
-     *  The minibatch size `N` is extracted from `sparse_shape&#91;0]`.
-     *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the minibatch `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the minibatch `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the minibatch `SparseTensor`.
-     * @param outType The `dtype` to use for serialization; the supported types are `string`
-     *  (default) and `variant`.
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the minibatch ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the minibatch ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the minibatch ` SparseTensor`.
+     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
+     *  (default) and ``` variant```.
+     * @param U data type for ` SerializeManySparse` output and operands
      * @return a new instance of SerializeManySparse
      * @see org.tensorflow.op.IoOps.serializeManySparse
      */
@@ -1685,21 +1858,22 @@ public class IoOps(
     public inline fun <reified U : TType> serializeManySparseTyped(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
-        sparseShape: Operand<TInt64>,
+        sparseShape: Operand<TInt64>
     ): SerializeManySparse<U> = serializeManySparse<U>(
         sparseIndices, sparseValues, sparseShape,
         U::class.java
     )
 
     /**
-     * Serialize a `SparseTensor` into a `&#91;3]` `Tensor` object.
+     * Serialize a ``` SparseTensor``` into a ``` [3]``` ``` Tensor``` object.
      *
-     * @param U data type for ` serializedSparse()` output
-     * @param sparseIndices 2-D.  The `indices` of the `SparseTensor`.
-     * @param sparseValues 1-D.  The `values` of the `SparseTensor`.
-     * @param sparseShape 1-D.  The `shape` of the `SparseTensor`.
-     * @param outType The `dtype` to use for serialization; the supported types are `string`
-     *  (default) and `variant`.
+     * @param U data type for ` serialized_sparse` output
+     * @param sparseIndices 2-D.  The ` indices` of the ` SparseTensor`.
+     * @param sparseValues 1-D.  The ` values` of the ` SparseTensor`.
+     * @param sparseShape 1-D.  The ` shape` of the ` SparseTensor`.
+     * @param outType The ` dtype` to use for serialization; the supported types are ` string`
+     *  (default) and ``` variant```.
+     * @param U data type for ` SerializeSparse` output and operands
      * @return a new instance of SerializeSparse
      * @see org.tensorflow.op.IoOps.serializeSparse
      */
@@ -1707,7 +1881,7 @@ public class IoOps(
     public inline fun <reified U : TType> serializeSparseTyped(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
-        sparseShape: Operand<TInt64>,
+        sparseShape: Operand<TInt64>
     ): SerializeSparse<U> = serializeSparse<U>(
         sparseIndices, sparseValues, sparseShape,
         U::class.java

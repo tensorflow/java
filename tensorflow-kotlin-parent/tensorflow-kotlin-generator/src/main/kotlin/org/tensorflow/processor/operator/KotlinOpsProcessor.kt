@@ -16,6 +16,7 @@ package org.tensorflow.processor.operator
 
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import org.tensorflow.Names
 import java.io.File
 import java.io.IOException
 import javax.annotation.processing.ProcessingEnvironment
@@ -30,8 +31,9 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
     private val T_KOTLIN_OPS = ClassName("org.tensorflow.op.kotlin", "KotlinOps")
     private val T_KOTLIN_OPS_BASE = ClassName("org.tensorflow.op.kotlin", "OpsBase")
     private val PACKAGE = "org.tensorflow.op.kotlin"
-    private val T_OPERAND = ClassName("org.tensorflow", "Operand")
+    private val T_OPERAND = Names.Operand.kotlin
     private val T_CLASS = ClassName("java.lang", "Class")
+    private val T_JAVA_LIST = ClassName("java.util", "List")
 
     private lateinit var sourceDir: File
 
@@ -245,15 +247,25 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
 
         val opClassSpec = (optionsClass?.enclosingElement as TypeElement?)?.asClassName()
 
-        val optionParams = if (optionsClass != null)
-            ElementFilter.methodsIn(optionsClass.enclosedElements).map {
+        val optionParams = if (optionsClass != null) {
+            val params = ElementFilter.methodsIn(optionsClass.enclosedElements).map {
                 ParameterSpec.builder(it.simpleName.toString(),
                     adjustType(it.parameters.single().asType().asTypeName()).copy(nullable = true))
                     .addKdoc("%L",
                         adjustJavadoc(parseJavadoc(it).toText()).trim().removePrefix("@param ${it.simpleName} "))
                     .defaultValue("null").build()
-            }.toSet()
-        else
+            }.toMutableList()
+
+            // ensure vararg options are the ones that get removed
+            params.toList().forEach { param ->
+                val type = param.type
+                if(type is ParameterizedTypeName && type.rawType == T_JAVA_LIST){
+                    params.removeAll { it.name == param.name && it != param }
+                }
+            }
+
+            params.distinctBy { it.name }.toSet()
+        } else
             emptySet()
 
         if (optionParams.isNotEmpty())

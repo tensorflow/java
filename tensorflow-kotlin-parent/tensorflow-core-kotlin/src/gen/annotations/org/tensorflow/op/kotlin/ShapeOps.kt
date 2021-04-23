@@ -34,7 +34,7 @@ public class ShapeOps(
     /**
      * Get the parent [KotlinOps] object.
      */
-    public val ops: KotlinOps,
+    public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.ShapeOps = ops.java.shape
 
@@ -306,7 +306,7 @@ public class ShapeOps(
     public fun <T : TType, U : TNumber> reduceDims(
         operand: Operand<T>,
         axis: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<T> = java.reduceDims<T, U>(
         operand,
         axis,
@@ -327,7 +327,7 @@ public class ShapeOps(
     public fun <U : TNumber> reduceDims(
         shape: Shape<U>,
         axis: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<U> = java.reduceDims<U>(
         shape,
         axis,
@@ -404,7 +404,7 @@ public class ShapeOps(
     public fun <T : TType, U : TNumber> size(
         input: Operand<T>,
         dim: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<U> = java.size<T, U>(
         input,
         dim,
@@ -425,7 +425,7 @@ public class ShapeOps(
     public fun <U : TNumber> size(
         shape: Shape<U>,
         dim: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<U> = java.size<U>(
         shape,
         dim,
@@ -529,7 +529,7 @@ public class ShapeOps(
     public fun <U : TNumber> take(
         shape: Shape<U>,
         n: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<U> = java.take<U>(
         shape,
         n,
@@ -575,7 +575,7 @@ public class ShapeOps(
     public fun <U : TNumber> takeLast(
         shape: Shape<U>,
         n: Operand<U>,
-        type: Class<U>,
+        type: Class<U>
     ): Operand<U> = java.takeLast<U>(
         shape,
         n,
@@ -658,7 +658,7 @@ public class ShapeOps(
     @JvmName("reduceDimsReified")
     public inline fun <T : TType, reified U : TNumber> reduceDims(
         operand: Operand<T>,
-        axis: Operand<U>,
+        axis: Operand<U>
     ): Operand<T> = reduceDims<T, U>(operand, axis, U::class.java)
 
     /**

@@ -58,7 +58,7 @@ public class DataOps(
     /**
      * Get the parent [KotlinOps] object.
      */
-    public val ops: KotlinOps,
+    public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.DataOps = ops.java.data
 
@@ -72,8 +72,8 @@ public class DataOps(
     /**
      * A container for an iterator resource.
      *
-     * @param outputTypes
-     * @param outputShapes
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of AnonymousIterator
      * @see org.tensorflow.op.DataOps.anonymousIterator
      */
@@ -84,27 +84,30 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that batches `batch_size` elements from `input_dataset`.
+     * Creates a dataset that batches ``` batch_size``` elements from ``` input_dataset```.
      *
-     * @param inputDataset
+     * @param inputDataset the inputDataset value
      * @param batchSize A scalar representing the number of elements to accumulate in a batch.
      * @param dropRemainder A scalar representing whether the last batch should be dropped in case
      * its size
      *  is smaller than desired.
-     * @param outputTypes
-     * @param outputShapes
-     * @param options carries optional attributes values
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
+     * @param options carries optional attribute values
      * @return a new instance of BatchDataset
      * @see org.tensorflow.op.DataOps.batchDataset
-     * @param parallelCopy @param parallelCopy
+     * @param parallelCopy Sets the parallelCopy option.
+     *
+     * @param parallelCopy the parallelCopy option
+     * @return this Options instance.
      */
     public fun batchDataset(
-        inputDataset: Operand<*>,
+        inputDataset: Operand<out TType>,
         batchSize: Operand<TInt64>,
         dropRemainder: Operand<TBool>,
         outputTypes: List<Class<out TType>>,
         outputShapes: List<Shape>,
-        parallelCopy: Boolean? = null,
+        parallelCopy: Boolean? = null
     ): BatchDataset = java.batchDataset(
         inputDataset,
         batchSize,
@@ -117,20 +120,20 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that concatenates `input_dataset` with `another_dataset`.
+     * Creates a dataset that concatenates ``` input_dataset``` with ``` another_dataset```.
      *
-     * @param inputDataset
-     * @param anotherDataset
-     * @param outputTypes
-     * @param outputShapes
+     * @param inputDataset the inputDataset value
+     * @param anotherDataset the anotherDataset value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of ConcatenateDataset
      * @see org.tensorflow.op.DataOps.concatenateDataset
      */
     public fun concatenateDataset(
-        inputDataset: Operand<*>,
-        anotherDataset: Operand<*>,
+        inputDataset: Operand<out TType>,
+        anotherDataset: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): ConcatenateDataset = java.concatenateDataset(
         inputDataset,
         anotherDataset,
@@ -146,11 +149,11 @@ public class DataOps(
      * @return a new instance of DeleteIterator
      * @see org.tensorflow.op.DataOps.deleteIterator
      */
-    public fun deleteIterator(handle: Operand<*>, deleter: Operand<*>): DeleteIterator =
-        java.deleteIterator(
-            handle,
-            deleter
-        )
+    public fun deleteIterator(handle: Operand<out TType>, deleter: Operand<out TType>):
+        DeleteIterator = java.deleteIterator(
+        handle,
+        deleter
+    )
 
     /**
      * Converts the given variant tensor to an iterator and stores it in the given resource.
@@ -161,18 +164,22 @@ public class DataOps(
      * @return a new instance of DeserializeIterator
      * @see org.tensorflow.op.DataOps.deserializeIterator
      */
-    public fun deserializeIterator(resourceHandle: Operand<*>, serialized: Operand<*>):
-        DeserializeIterator = java.deserializeIterator(
+    public fun deserializeIterator(
+        resourceHandle: Operand<out TType>,
+        serialized: Operand<out
+            TType>
+    ): DeserializeIterator = java.deserializeIterator(
         resourceHandle,
         serialized
     )
 
     /**
+     * The IteratorV2 operation
      *
-     * @param sharedName
-     * @param container
-     * @param outputTypes
-     * @param outputShapes
+     * @param sharedName the value of the sharedName property
+     * @param container the value of the container property
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of Iterator
      * @see org.tensorflow.op.DataOps.iterator
      */
@@ -180,7 +187,7 @@ public class DataOps(
         sharedName: String,
         container: String,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): Iterator = java.iterator(
         sharedName,
         container,
@@ -191,16 +198,16 @@ public class DataOps(
     /**
      * Gets the next output from the given iterator .
      *
-     * @param iterator
-     * @param outputTypes
-     * @param outputShapes
+     * @param iterator the iterator value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of IteratorGetNext
      * @see org.tensorflow.op.DataOps.iteratorGetNext
      */
     public fun iteratorGetNext(
-        iterator: Operand<*>,
+        iterator: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): IteratorGetNext = java.iteratorGetNext(
         iterator,
         outputTypes,
@@ -210,16 +217,16 @@ public class DataOps(
     /**
      * Gets the next output from the given iterator as an Optional variant.
      *
-     * @param iterator
-     * @param outputTypes
-     * @param outputShapes
+     * @param iterator the iterator value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of IteratorGetNextAsOptional
      * @see org.tensorflow.op.DataOps.iteratorGetNextAsOptional
      */
     public fun iteratorGetNextAsOptional(
-        iterator: Operand<*>,
+        iterator: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): IteratorGetNextAsOptional = java.iteratorGetNextAsOptional(
         iterator,
         outputTypes,
@@ -228,22 +235,21 @@ public class DataOps(
 
     /**
      * Gets the next output from the given iterator.
-     *
      *  This operation is a synchronous version IteratorGetNext. It should only be used
      *  in situations where the iterator does not block the calling thread, or where
      *  the calling thread is not a member of the thread pool used to execute parallel
      *  operations (e.g. in eager mode).
      *
-     * @param iterator
-     * @param outputTypes
-     * @param outputShapes
+     * @param iterator the iterator value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of IteratorGetNextSync
      * @see org.tensorflow.op.DataOps.iteratorGetNextSync
      */
     public fun iteratorGetNextSync(
-        iterator: Operand<*>,
+        iterator: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): IteratorGetNextSync = java.iteratorGetNextSync(
         iterator,
         outputTypes,
@@ -251,29 +257,28 @@ public class DataOps(
     )
 
     /**
-     * Converts the given `resource_handle` representing an iterator to a string.
+     * Converts the given ``` resource_handle``` representing an iterator to a string.
      *
      * @param resourceHandle A handle to an iterator resource.
      * @return a new instance of IteratorToStringHandle
      * @see org.tensorflow.op.DataOps.iteratorToStringHandle
      */
-    public fun iteratorToStringHandle(resourceHandle: Operand<*>): IteratorToStringHandle =
+    public fun iteratorToStringHandle(resourceHandle: Operand<out TType>): IteratorToStringHandle =
         java.iteratorToStringHandle(
             resourceHandle
         )
 
     /**
-     * Makes a new iterator from the given `dataset` and stores it in `iterator`.
-     *
+     * Makes a new iterator from the given ``` dataset``` and stores it in ``` iterator```.
      *  This operation may be executed multiple times. Each execution will reset the
-     *  iterator in `iterator` to the first element of `dataset`.
+     *  iterator in ``` iterator``` to the first element of ``` dataset```.
      *
-     * @param dataset
-     * @param iterator
+     * @param dataset the dataset value
+     * @param iterator the iterator value
      * @return a new instance of MakeIterator
      * @see org.tensorflow.op.DataOps.makeIterator
      */
-    public fun makeIterator(dataset: Operand<*>, iterator: Operand<*>): MakeIterator =
+    public fun makeIterator(dataset: Operand<out TType>, iterator: Operand<out TType>): MakeIterator =
         java.makeIterator(
             dataset,
             iterator
@@ -282,7 +287,7 @@ public class DataOps(
     /**
      * Constructs an Optional variant from a tuple of tensors.
      *
-     * @param components
+     * @param components the components value
      * @return a new instance of OptionalFromValue
      * @see org.tensorflow.op.DataOps.optionalFromValue
      */
@@ -294,16 +299,16 @@ public class DataOps(
     /**
      * Returns the value stored in an Optional variant or raises an error if none exists.
      *
-     * @param optional
-     * @param outputTypes
-     * @param outputShapes
+     * @param optional the optional value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of OptionalGetValue
      * @see org.tensorflow.op.DataOps.optionalGetValue
      */
     public fun optionalGetValue(
-        optional: Operand<*>,
+        optional: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): OptionalGetValue = java.optionalGetValue(
         optional,
         outputTypes,
@@ -313,13 +318,14 @@ public class DataOps(
     /**
      * Returns true if and only if the given Optional variant has a value.
      *
-     * @param optional
+     * @param optional the optional value
      * @return a new instance of OptionalHasValue
      * @see org.tensorflow.op.DataOps.optionalHasValue
      */
-    public fun optionalHasValue(optional: Operand<*>): OptionalHasValue = java.optionalHasValue(
-        optional
-    )
+    public fun optionalHasValue(optional: Operand<out TType>): OptionalHasValue =
+        java.optionalHasValue(
+            optional
+        )
 
     /**
      * Creates an Optional variant with no value.
@@ -335,8 +341,8 @@ public class DataOps(
      * @param start corresponds to start in python's xrange().
      * @param stop corresponds to stop in python's xrange().
      * @param step corresponds to step in python's xrange().
-     * @param outputTypes
-     * @param outputShapes
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of RangeDataset
      * @see org.tensorflow.op.DataOps.rangeDataset
      */
@@ -345,7 +351,7 @@ public class DataOps(
         stop: Operand<TInt64>,
         step: Operand<TInt64>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): RangeDataset = java.rangeDataset(
         start,
         stop,
@@ -355,21 +361,21 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that emits the outputs of `input_dataset` `count` times.
+     * Creates a dataset that emits the outputs of ``` input_dataset``` ``` count``` times.
      *
-     * @param inputDataset
-     * @param count A scalar representing the number of times that `input_dataset` should
-     *  be repeated. A value of `-1` indicates that it should be repeated infinitely.
-     * @param outputTypes
-     * @param outputShapes
+     * @param inputDataset the inputDataset value
+     * @param count A scalar representing the number of times that ` input_dataset` should
+     *  be repeated. A value of ``` -1``` indicates that it should be repeated infinitely.
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of RepeatDataset
      * @see org.tensorflow.op.DataOps.repeatDataset
      */
     public fun repeatDataset(
-        inputDataset: Operand<*>,
+        inputDataset: Operand<out TType>,
         count: Operand<TInt64>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): RepeatDataset = java.repeatDataset(
         inputDataset,
         count,
@@ -378,16 +384,22 @@ public class DataOps(
     )
 
     /**
-     * Converts the given `resource_handle` representing an iterator to a variant tensor.
+     * Converts the given ``` resource_handle``` representing an iterator to a variant tensor.
      *
      * @param resourceHandle A handle to an iterator resource.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of SerializeIterator
      * @see org.tensorflow.op.DataOps.serializeIterator
-     * @param externalStatePolicy @param externalStatePolicy
+     * @param externalStatePolicy Sets the externalStatePolicy option.
+     *
+     * @param externalStatePolicy the externalStatePolicy option
+     * @return this Options instance.
      */
-    public fun serializeIterator(resourceHandle: Operand<*>, externalStatePolicy: Long? = null):
-        SerializeIterator = java.serializeIterator(
+    public fun serializeIterator(
+        resourceHandle: Operand<out TType>,
+        externalStatePolicy: Long? =
+            null
+    ): SerializeIterator = java.serializeIterator(
         resourceHandle,
         *listOfNotNull(
             externalStatePolicy?.let { org.tensorflow.op.data.SerializeIterator.externalStatePolicy(it) }
@@ -395,21 +407,21 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that skips `count` elements from the `input_dataset`.
+     * Creates a dataset that skips ``` count``` elements from the ``` input_dataset```.
      *
-     * @param inputDataset
-     * @param count A scalar representing the number of elements from the `input_dataset`
+     * @param inputDataset the inputDataset value
+     * @param count A scalar representing the number of elements from the ` input_dataset`
      *  that should be skipped.  If count is -1, skips everything.
-     * @param outputTypes
-     * @param outputShapes
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of SkipDataset
      * @see org.tensorflow.op.DataOps.skipDataset
      */
     public fun skipDataset(
-        inputDataset: Operand<*>,
+        inputDataset: Operand<out TType>,
         count: Operand<TInt64>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): SkipDataset = java.skipDataset(
         inputDataset,
         count,
@@ -418,22 +430,22 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that contains `count` elements from the `input_dataset`.
+     * Creates a dataset that contains ``` count``` elements from the ``` input_dataset```.
      *
-     * @param inputDataset
-     * @param count A scalar representing the number of elements from the `input_dataset`
-     *  that should be taken. A value of `-1` indicates that all of `input_dataset`
+     * @param inputDataset the inputDataset value
+     * @param count A scalar representing the number of elements from the ` input_dataset`
+     *  that should be taken. A value of ``` -1``` indicates that all of ``` input_dataset```
      *  is taken.
-     * @param outputTypes
-     * @param outputShapes
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of TakeDataset
      * @see org.tensorflow.op.DataOps.takeDataset
      */
     public fun takeDataset(
-        inputDataset: Operand<*>,
+        inputDataset: Operand<out TType>,
         count: Operand<TInt64>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): TakeDataset = java.takeDataset(
         inputDataset,
         count,
@@ -442,10 +454,10 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that emits each dim-0 slice of `components` once.
+     * Creates a dataset that emits each dim-0 slice of ``` components``` once.
      *
-     * @param components
-     * @param outputShapes
+     * @param components the components value
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of TensorSliceDataset
      * @see org.tensorflow.op.DataOps.tensorSliceDataset
      */
@@ -461,7 +473,7 @@ public class DataOps(
      * @param filenames A scalar or a vector containing the name(s) of the file(s) to be
      *  read.
      * @param compressionType A scalar containing either (i) the empty string (no
-     *  compression), (ii) "ZLIB", or (iii) "GZIP".
+     *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
      * @param bufferSize A scalar containing the number of bytes to buffer.
      * @return a new instance of TextLineDataset
      * @see org.tensorflow.op.DataOps.textLineDataset
@@ -469,7 +481,7 @@ public class DataOps(
     public fun textLineDataset(
         filenames: Operand<TString>,
         compressionType: Operand<TString>,
-        bufferSize: Operand<TInt64>,
+        bufferSize: Operand<TInt64>
     ): TextLineDataset = java.textLineDataset(
         filenames,
         compressionType,
@@ -482,7 +494,7 @@ public class DataOps(
      * @param filenames A scalar or vector containing the name(s) of the file(s) to be
      *  read.
      * @param compressionType A scalar containing either (i) the empty string (no
-     *  compression), (ii) "ZLIB", or (iii) "GZIP".
+     *  compression), (ii) &quot;ZLIB&quot;, or (iii) &quot;GZIP&quot;.
      * @param bufferSize A scalar representing the number of bytes to buffer. A value of
      *  0 means no buffering will be performed.
      * @return a new instance of TfRecordDataset
@@ -491,7 +503,7 @@ public class DataOps(
     public fun tfRecordDataset(
         filenames: Operand<TString>,
         compressionType: Operand<TString>,
-        bufferSize: Operand<TInt64>,
+        bufferSize: Operand<TInt64>
     ): TfRecordDataset = java.tfRecordDataset(
         filenames,
         compressionType,
@@ -499,25 +511,23 @@ public class DataOps(
     )
 
     /**
-     * Creates a dataset that zips together `input_datasets`.
-     *
+     * Creates a dataset that zips together ``` input_datasets```.
      *  The elements of the resulting dataset are created by zipping corresponding
      *  elements from each of the input datasets.
-     *
      *  The size of the resulting dataset will match the size of the smallest input
      *  dataset, and no error will be raised if input datasets have different sizes.
      *
-     * @param inputDatasets List of `N` variant Tensors representing datasets to be zipped
+     * @param inputDatasets List of ` N` variant Tensors representing datasets to be zipped
      * together.
-     * @param outputTypes
-     * @param outputShapes
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
      * @return a new instance of ZipDataset
      * @see org.tensorflow.op.DataOps.zipDataset
      */
     public fun zipDataset(
-        inputDatasets: Iterable<Operand<*>>,
+        inputDatasets: Iterable<Operand<out TType>>,
         outputTypes: List<Class<out TType>>,
-        outputShapes: List<Shape>,
+        outputShapes: List<Shape>
     ): ZipDataset = java.zipDataset(
         inputDatasets,
         outputTypes,

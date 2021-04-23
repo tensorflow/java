@@ -98,7 +98,7 @@ public class TrainOps(
     /**
      * Get the parent [KotlinOps] object.
      */
-    public val ops: KotlinOps,
+    public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.TrainOps = ops.java.train
 
@@ -109,7 +109,6 @@ public class TrainOps(
 
     /**
      * Applies a gradient to a given accumulator.
-     *
      *  Does not add if local_step is lesser than the accumulator's global_step.
      *
      * @param handle The handle to a accumulator.
@@ -121,7 +120,7 @@ public class TrainOps(
     public fun accumulatorApplyGradient(
         handle: Operand<TString>,
         localStep: Operand<TInt64>,
-        gradient: Operand<out TType>,
+        gradient: Operand<out TType>
     ): AccumulatorApplyGradient = java.accumulatorApplyGradient(
         handle,
         localStep,
@@ -142,7 +141,6 @@ public class TrainOps(
 
     /**
      * Updates the accumulator with a new value for global_step.
-     *
      *  Logs warning if the accumulator's value is already higher than
      *  new_global_step.
      *
@@ -159,25 +157,25 @@ public class TrainOps(
 
     /**
      * Extracts the average gradient in the given ConditionalAccumulator.
-     *
      *  The op blocks until sufficient (i.e., more than num_required)
      *  gradients have been accumulated.  If the accumulator has already
      *  aggregated more than num_required gradients, it returns the average of
      *  the accumulated gradients.  Also automatically increments the recorded
      *  global_step in the accumulator by 1, and resets the aggregate to 0.
      *
-     * @param T data type for ` average()` output
+     * @param T data type for ` average` output
      * @param handle The handle to an accumulator.
      * @param numRequired Number of gradients required before we return an aggregate.
      * @param dtype The data type of accumulated gradients. Needs to correspond to the type
      *  of the accumulator.
+     * @param T data type for ` AccumulatorTakeGradient` output and operands
      * @return a new instance of AccumulatorTakeGradient
      * @see org.tensorflow.op.TrainOps.accumulatorTakeGradient
      */
     public fun <T : TType> accumulatorTakeGradient(
         handle: Operand<TString>,
         numRequired: Operand<TInt32>,
-        dtype: Class<T>,
+        dtype: Class<T>
     ): AccumulatorTakeGradient<T> = java.accumulatorTakeGradient<T>(
         handle,
         numRequired,
@@ -186,13 +184,12 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the adadelta scheme.
-     *
      *  accum = rho() * accum + (1 - rho()) * grad.square();
      *  update = (update_accum + epsilon).sqrt() * (accum + epsilon()).rsqrt() * grad;
      *  update_accum = rho() * update_accum + (1 - rho()) * update.square();
      *  var -= update;
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param accumUpdate Should be from a Variable().
@@ -200,12 +197,16 @@ public class TrainOps(
      * @param rho Decay factor. Must be a scalar.
      * @param epsilon Constant factor. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyAdadelta` output and operands
      * @return a new instance of ApplyAdadelta
      * @see org.tensorflow.op.TrainOps.applyAdadelta
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var, accum and update_accum tensors will be
      * protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyAdadelta(
         `var`: Operand<T>,
@@ -215,7 +216,7 @@ public class TrainOps(
         rho: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyAdadelta<T> = java.applyAdadelta<T>(
         `var`,
         accum,
@@ -231,22 +232,28 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the adagrad scheme.
-     *
      *  accum += grad * grad
      *  var -= lr * grad * (1 / sqrt(accum))
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyAdagrad` output and operands
      * @return a new instance of ApplyAdagrad
      * @see org.tensorflow.op.TrainOps.applyAdagrad
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param updateSlots @param updateSlots
+     * @return this Options instance.
+     * @param updateSlots Sets the updateSlots option.
+     *
+     * @param updateSlots the updateSlots option
+     * @return this Options instance.
      */
     public fun <T : TType> applyAdagrad(
         `var`: Operand<T>,
@@ -254,7 +261,7 @@ public class TrainOps(
         lr: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null,
-        updateSlots: Boolean? = null,
+        updateSlots: Boolean? = null
     ): ApplyAdagrad<T> = java.applyAdagrad<T>(
         `var`,
         accum,
@@ -269,7 +276,7 @@ public class TrainOps(
     /**
      * Update '*var' according to the proximal adagrad scheme.
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param gradientAccumulator Should be from a Variable().
      * @param gradientSquaredAccumulator Should be from a Variable().
@@ -278,11 +285,15 @@ public class TrainOps(
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param globalStep Training step number. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyAdagradDA` output and operands
      * @return a new instance of ApplyAdagradDa
      * @see org.tensorflow.op.TrainOps.applyAdagradDa
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyAdagradDa(
         `var`: Operand<T>,
@@ -293,7 +304,7 @@ public class TrainOps(
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyAdagradDa<T> = java.applyAdagradDa<T>(
         `var`,
         gradientAccumulator,
@@ -310,13 +321,12 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Adam algorithm.
-     *
-     *  $$lr_t := \text{learning\_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
+     *  $$lr_t := \text{learning_rate} * \sqrt{1 - beta_2^t} / (1 - beta_1^t)$$
      *  $$m_t := beta_1 * m_{t-1} + (1 - beta_1) * g$$
      *  $$v_t := beta_2 * v_{t-1} + (1 - beta_2) * g * g$$
      *  $$variable := variable - lr_t * m_t / (\sqrt{v_t} + \epsilon)$$
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
      * @param v Should be from a Variable().
@@ -327,13 +337,20 @@ public class TrainOps(
      * @param beta2 Momentum factor. Must be a scalar.
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyAdam` output and operands
      * @return a new instance of ApplyAdam
      * @see org.tensorflow.op.TrainOps.applyAdam
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, m, and v tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, uses the nesterov update.
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, uses the nesterov update.
+     * @return this Options instance.
      */
     public fun <T : TType> applyAdam(
         `var`: Operand<T>,
@@ -347,7 +364,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ApplyAdam<T> = java.applyAdam<T>(
         `var`,
         m,
@@ -367,12 +384,11 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the AddSign update.
+     *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+     *  update &lt;- (alpha + sign_decay * sign(g) *sign(m)) * g
+     *  variable &lt;- variable - lr_t * update
      *
-     *  m_t <- beta1 * m_{t-1} + (1 - beta1) * g
-     *  update <- (alpha + sign_decay * sign(g) *sign(m)) * g
-     *  variable <- variable - lr_t * update
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
@@ -380,12 +396,16 @@ public class TrainOps(
      * @param signDecay Must be a scalar.
      * @param beta Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyAddSign` output and operands
      * @return a new instance of ApplyAddSign
      * @see org.tensorflow.op.TrainOps.applyAddSign
-     * @param useLocking If `True`, updating of the var and m tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and m tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyAddSign(
         `var`: Operand<T>,
@@ -395,7 +415,7 @@ public class TrainOps(
         signDecay: Operand<T>,
         beta: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyAddSign<T> = java.applyAddSign<T>(
         `var`,
         m,
@@ -411,27 +431,22 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
-     *
      *  The centered RMSProp algorithm uses an estimate of the centered second moment
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
      *  Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
-     *
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
+     *  mg &lt;- rho * mg_{t-1} + (1-rho) * grad
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
+     *  var &lt;- var - mom
      *
-     *  mg <- rho * mg_{t-1} + (1-rho) * grad
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
-     *  var <- var - mom
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param mg Should be from a Variable().
      * @param ms Should be from a Variable().
@@ -441,12 +456,16 @@ public class TrainOps(
      * @param momentum Momentum Scale. Must be a scalar.
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyCenteredRMSProp` output and operands
      * @return a new instance of ApplyCenteredRmsProp
      * @see org.tensorflow.op.TrainOps.applyCenteredRmsProp
-     * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, mg, ms, and mom tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyCenteredRmsProp(
         `var`: Operand<T>,
@@ -458,7 +477,7 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyCenteredRmsProp<T> = java.applyCenteredRmsProp<T>(
         `var`,
         mg,
@@ -476,16 +495,15 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Ftrl-proximal scheme.
-     *
      *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
      *  accum_new = accum + grad * grad
      *  linear += grad_with_shrinkage -
-     *      (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+     *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
      *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
-     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
      *  accum = accum_new
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param linear Should be from a Variable().
@@ -493,15 +511,22 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage
+     * @param l2Shrinkage the l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyFtrlV2` output and operands
      * @return a new instance of ApplyFtrl
      * @see org.tensorflow.op.TrainOps.applyFtrl
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param multiplyLinearByLr @param multiplyLinearByLr
+     * @return this Options instance.
+     * @param multiplyLinearByLr Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
      */
     public fun <T : TType> applyFtrl(
         `var`: Operand<T>,
@@ -514,7 +539,7 @@ public class TrainOps(
         l2Shrinkage: Operand<T>,
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
-        multiplyLinearByLr: Boolean? = null,
+        multiplyLinearByLr: Boolean? = null
     ): ApplyFtrl<T> = java.applyFtrl<T>(
         `var`,
         accum,
@@ -534,21 +559,25 @@ public class TrainOps(
     /**
      * Update '*var' by subtracting 'alpha' * 'delta' from it.
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
      * @param delta The change.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyGradientDescent` output and operands
      * @return a new instance of ApplyGradientDescent
      * @see org.tensorflow.op.TrainOps.applyGradientDescent
-     * @param useLocking If `True`, the subtraction will be protected by a lock;
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyGradientDescent(
         `var`: Operand<T>,
         alpha: Operand<T>,
         delta: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyGradientDescent<T> = java.applyGradientDescent<T>(
         `var`,
         alpha,
@@ -560,27 +589,32 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  accum = accum * momentum + grad
      *  var -= lr * accum
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param grad The gradient.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyMomentum` output and operands
      * @return a new instance of ApplyMomentum
      * @see org.tensorflow.op.TrainOps.applyMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> applyMomentum(
         `var`: Operand<T>,
@@ -589,7 +623,7 @@ public class TrainOps(
         grad: Operand<T>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ApplyMomentum<T> = java.applyMomentum<T>(
         `var`,
         accum,
@@ -604,12 +638,11 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the AddSign update.
+     *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+     *  update &lt;- exp(logbase * sign_decay * sign(g) * sign(m_t)) * g
+     *  variable &lt;- variable - lr_t * update
      *
-     *  m_t <- beta1 * m_{t-1} + (1 - beta1) * g
-     *  update <- exp(logbase * sign_decay * sign(g) * sign(m_t)) * g
-     *  variable <- variable - lr_t * update
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
@@ -617,12 +650,16 @@ public class TrainOps(
      * @param signDecay Must be a scalar.
      * @param beta Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyPowerSign` output and operands
      * @return a new instance of ApplyPowerSign
      * @see org.tensorflow.op.TrainOps.applyPowerSign
-     * @param useLocking If `True`, updating of the var and m tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and m tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyPowerSign(
         `var`: Operand<T>,
@@ -632,7 +669,7 @@ public class TrainOps(
         signDecay: Operand<T>,
         beta: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyPowerSign<T> = java.applyPowerSign<T>(
         `var`,
         m,
@@ -648,23 +685,26 @@ public class TrainOps(
 
     /**
      * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
+     *  accum += grad * grad
+     *  prox_v = var - lr * grad * (1 / sqrt(accum))
+     *  var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
      *
-     *  accum += grad <i> grad
-     *  prox_v = var - lr </i> grad <i> (1 / sqrt(accum))
-     *  var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyProximalAdagrad` output and operands
      * @return a new instance of ApplyProximalAdagrad
      * @see org.tensorflow.op.TrainOps.applyProximalAdagrad
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyProximalAdagrad(
         `var`: Operand<T>,
@@ -673,7 +713,7 @@ public class TrainOps(
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyProximalAdagrad<T> = java.applyProximalAdagrad<T>(
         `var`,
         accum,
@@ -688,21 +728,24 @@ public class TrainOps(
 
     /**
      * Update '*var' as FOBOS algorithm with fixed learning rate.
+     *  prox_v = var - alpha * delta
+     *  var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
      *
-     *  prox_v = var - alpha <i> delta
-     *  var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param delta The change.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyProximalGradientDescent` output and operands
      * @return a new instance of ApplyProximalGradientDescent
      * @see org.tensorflow.op.TrainOps.applyProximalGradientDescent
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyProximalGradientDescent(
         `var`: Operand<T>,
@@ -710,7 +753,7 @@ public class TrainOps(
         l1: Operand<T>,
         l2: Operand<T>,
         delta: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyProximalGradientDescent<T> = java.applyProximalGradientDescent<T>(
         `var`,
         alpha,
@@ -724,33 +767,34 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the RMSProp algorithm.
-     *
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
+     *  var &lt;- var - mom
      *
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
-     *  var <- var - mom
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param ms Should be from a Variable().
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ApplyRMSProp` output and operands
      * @return a new instance of ApplyRmsProp
      * @see org.tensorflow.op.TrainOps.applyRmsProp
-     * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, ms, and mom tensors is protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> applyRmsProp(
         `var`: Operand<T>,
@@ -761,7 +805,7 @@ public class TrainOps(
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ApplyRmsProp<T> = java.applyRmsProp<T>(
         `var`,
         ms,
@@ -778,44 +822,48 @@ public class TrainOps(
 
     /**
      * Multiplies slices of two tensors in batches.
-     *
-     *  Multiplies all slices of `Tensor` `x` and `y` (each slice can be
+     *  Multiplies all slices of ``` Tensor``` ``` x``` and ``` y``` (each slice can be
      *  viewed as an element of a batch), and arranges the individual results
      *  in a single output tensor of the same batch size. Each of the
      *  individual slices can optionally be adjointed (to adjoint a matrix
      *  means to transpose and conjugate it) before multiplication by setting
-     *  the `adj_x` or `adj_y` flag to `True`, which are by default `False`.
+     *  the ``` adj_x``` or ``` adj_y``` flag to ``` True```, which are by default ``` False```.
+     *  The input tensors ``` x``` and ``` y``` are 2-D or higher with shape ``` [..., r_x, c_x]```
+     *  and ``` [..., r_y, c_y]```.
+     *  The output tensor is 2-D or higher with shape ``` [..., r_o, c_o]```, where:
      *
-     *  The input tensors `x` and `y` are 2-D or higher with shape `&#91;..., r_x, c_x]`
-     *  and `&#91;..., r_y, c_y]`.
-     *
-     *  The output tensor is 2-D or higher with shape `&#91;..., r_o, c_o]`, where:
-     *
-     *      r_o = c_x if adj_x else r_x
-     *      c_o = r_y if adj_y else c_y
+     *  r_o = c_x if adj_x else r_x
+     *  c_o = r_y if adj_y else c_y
      *
      *  It is computed as:
      *
-     *      output&#91;..., :, :] = matrix(x&#91;..., :, :]) * matrix(y&#91;..., :, :])
+     *  output&#91;..., :, :] = matrix(x&#91;..., :, :]) * matrix(y&#91;..., :, :])
      *
-     *  <i>NOTE</i>: `train.BatchMatMul` supports broadcasting in the batch dimensions. More
+     *  <em>NOTE</em>: ``` train.BatchMatMul``` supports broadcasting in the batch dimensions. More
      *  about broadcasting
-     *  &#91;here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html).
+     *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
      *
-     * @param T data type for ` output()` output
-     * @param x 2-D or higher with shape `&#91;..., r_x, c_x]`.
-     * @param y 2-D or higher with shape `&#91;..., r_y, c_y]`.
-     * @param options carries optional attributes values
+     * @param T data type for ` output` output
+     * @param x 2-D or higher with shape ` [..., r_x, c_x]`.
+     * @param y 2-D or higher with shape ` [..., r_y, c_y]`.
+     * @param options carries optional attribute values
+     * @param T data type for ` BatchMatMulV2` output and operands
      * @return a new instance of BatchMatMul
      * @see org.tensorflow.op.TrainOps.batchMatMul
-     * @param adjX If `True`, adjoint the slices of `x`. Defaults to `False`.
-     * @param adjY If `True`, adjoint the slices of `y`. Defaults to `False`.
+     * @param adjX Sets the adjX option.
+     *
+     * @param adjX If ` True`, adjoint the slices of ` x`. Defaults to ` False`.
+     * @return this Options instance.
+     * @param adjY Sets the adjY option.
+     *
+     * @param adjY If ` True`, adjoint the slices of ` y`. Defaults to ` False`.
+     * @return this Options instance.
      */
     public fun <T : TType> batchMatMul(
         x: Operand<T>,
         y: Operand<T>,
         adjX: Boolean? = null,
-        adjY: Boolean? = null,
+        adjY: Boolean? = null
     ): BatchMatMul<T> = java.batchMatMul<T>(
         x,
         y,
@@ -827,7 +875,6 @@ public class TrainOps(
 
     /**
      * A conditional accumulator for aggregating gradients.
-     *
      *  The accumulator accepts gradients marked with local_step greater or
      *  equal to the most recent global_step known to the accumulator. The
      *  average can be extracted from the accumulator, provided sufficient
@@ -837,21 +884,31 @@ public class TrainOps(
      *
      * @param dtype The type of the value being accumulated.
      * @param shape The shape of the values, can be &#91;], in which case shape is unknown.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ConditionalAccumulator` output and operands
      * @return a new instance of ConditionalAccumulator
      * @see org.tensorflow.op.TrainOps.conditionalAccumulator
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this accumulator is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this accumulator will be shared under the
      *  given name across multiple sessions.
-     * @param reductionType @param reductionType
+     * @return this Options instance.
+     * @param reductionType Sets the reductionType option.
+     *
+     * @param reductionType the reductionType option
+     * @return this Options instance.
      */
     public fun <T : TType> conditionalAccumulator(
         dtype: Class<T>,
         shape: Shape,
         container: String? = null,
         sharedName: String? = null,
-        reductionType: String? = null,
+        reductionType: String? = null
     ): ConditionalAccumulator = java.conditionalAccumulator<T>(
         dtype,
         shape,
@@ -864,28 +921,24 @@ public class TrainOps(
 
     /**
      * Given a path to new and old vocabulary files, returns a remapping Tensor of
-     *
-     *  length `num_new_vocab`, where `remapping&#91;i]` contains the row number in the old
-     *  vocabulary that corresponds to row `i` in the new vocabulary (starting at line
-     *  `new_vocab_offset` and up to `num_new_vocab` entities), or `-1` if entry `i`
+     *  length ``` num_new_vocab```, where ``` remapping[i]``` contains the row number in the old
+     *  vocabulary that corresponds to row ``` i``` in the new vocabulary (starting at line
+     *  ``` new_vocab_offset``` and up to ``` num_new_vocab``` entities), or ``` -1``` if entry ```
+     * i```
      *  in the new vocabulary is not in the old vocabulary.  The old vocabulary is
-     *  constrained to the first `old_vocab_size` entries if `old_vocab_size` is not the
+     *  constrained to the first ``` old_vocab_size``` entries if ``` old_vocab_size``` is not the
      *  default value of -1.
-     *
-     *  `num_vocab_offset` enables
+     *  ``` num_vocab_offset``` enables
      *  use in the partitioned variable case, and should generally be set through
      *  examining partitioning info.  The format of the files should be a text file,
      *  with each line containing a single entity within the vocabulary.
-     *
-     *  For example, with `new_vocab_file` a text file containing each of the following
-     *  elements on a single line: `&#91;f0, f1, f2, f3]`, old_vocab_file = &#91;f1, f0, f3],
-     *  `num_new_vocab = 3, new_vocab_offset = 1`, the returned remapping would be
-     *  `&#91;0, -1, 2]`.
-     *
+     *  For example, with ``` new_vocab_file``` a text file containing each of the following
+     *  elements on a single line: ``` [f0, f1, f2, f3]```, old_vocab_file = &#91;f1, f0, f3],
+     *  ``` num_new_vocab = 3, new_vocab_offset = 1```, the returned remapping would be
+     *  ``` [0, -1, 2]```.
      *  The op also returns a count of how many entries in the new vocabulary
      *  were present in the old vocabulary, which is used to calculate the number of
      *  values to initialize in a weight matrix remapping
-     *
      *  This functionality can be used to remap both row vocabularies (typically,
      *  features) and column vocabularies (typically, classes) from TensorFlow
      *  checkpoints.  Note that the partitioning logic relies on contiguous vocabularies
@@ -898,18 +951,21 @@ public class TrainOps(
      * @param oldVocabFile Path to the old vocab file.
      * @param newVocabOffset How many entries into the new vocab file to start reading.
      * @param numNewVocab Number of entries in the new vocab file to remap.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of GenerateVocabRemapping
      * @see org.tensorflow.op.TrainOps.generateVocabRemapping
+     * @param oldVocabSize Sets the oldVocabSize option.
+     *
      * @param oldVocabSize Number of entries in the old vocab file to consider.  If -1,
      *  use the entire old vocabulary.
+     * @return this Options instance.
      */
     public fun generateVocabRemapping(
         newVocabFile: Operand<TString>,
         oldVocabFile: Operand<TString>,
         newVocabOffset: Long,
         numNewVocab: Long,
-        oldVocabSize: Long? = null,
+        oldVocabSize: Long? = null
     ): GenerateVocabRemapping = java.generateVocabRemapping(
         newVocabFile,
         oldVocabFile,
@@ -922,12 +978,9 @@ public class TrainOps(
 
     /**
      * V2 format specific: merges the metadata files of sharded checkpoints.  The
-     *
      *  result is one logical checkpoint, with one physical metadata file and renamed
      *  data files.
-     *
-     *  Intended for "grouping" multiple checkpoints in a sharded checkpoint setup.
-     *
+     *  Intended for &quot;grouping&quot; multiple checkpoints in a sharded checkpoint setup.
      *  If delete_old_dirs is true, attempts to delete recursively the dirname of each
      *  path in the input checkpoint_prefixes.  This is useful when those paths are non
      *  user-facing temporary locations.
@@ -935,15 +988,18 @@ public class TrainOps(
      * @param checkpointPrefixes prefixes of V2 checkpoints to merge.
      * @param destinationPrefix scalar.  The desired final prefix.  Allowed to be the same
      *  as one of the checkpoint_prefixes.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
      * @return a new instance of MergeV2Checkpoints
      * @see org.tensorflow.op.TrainOps.mergeV2Checkpoints
+     * @param deleteOldDirs Sets the deleteOldDirs option.
+     *
      * @param deleteOldDirs see above.
+     * @return this Options instance.
      */
     public fun mergeV2Checkpoints(
         checkpointPrefixes: Operand<TString>,
         destinationPrefix: Operand<TString>,
-        deleteOldDirs: Boolean? = null,
+        deleteOldDirs: Boolean? = null
     ): MergeV2Checkpoints = java.mergeV2Checkpoints(
         checkpointPrefixes,
         destinationPrefix,
@@ -959,7 +1015,7 @@ public class TrainOps(
      * @param wOut output word embedding.
      * @param examples A vector of word ids.
      * @param labels A vector of word ids.
-     * @param lr
+     * @param lr the lr value
      * @param vocabCount Count of words in the vocabulary.
      * @param numNegativeSamples Number of negative samples per example.
      * @return a new instance of NegTrain
@@ -972,7 +1028,7 @@ public class TrainOps(
         labels: Operand<TInt32>,
         lr: Operand<TFloat32>,
         vocabCount: List<Long>,
-        numNegativeSamples: Long,
+        numNegativeSamples: Long
     ): NegTrain = java.negTrain(
         wIn,
         wOut,
@@ -985,22 +1041,24 @@ public class TrainOps(
 
     /**
      * An identity op that triggers an error if a gradient is requested.
-     *
      *  When executed in a graph, this op outputs its input tensor as-is.
-     *
      *  When building ops to compute gradients, the TensorFlow gradient system
      *  will return an error when trying to lookup the gradient of this op,
      *  because no gradient must ever be registered for this function.  This
      *  op exists to prevent subtle bugs from silently returning unimplemented
      *  gradients in some corner cases.
      *
-     * @param T data type for ` output()` output
+     * @param T data type for ` output` output
      * @param input any tensor.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` PreventGradient` output and operands
      * @return a new instance of PreventGradient
      * @see org.tensorflow.op.TrainOps.preventGradient
+     * @param message Sets the message option.
+     *
      * @param message Will be printed in the error when anyone tries to differentiate
      *  this operation.
+     * @return this Options instance.
      */
     public fun <T : TType> preventGradient(input: Operand<T>, message: String? = null):
         PreventGradient<T> = java.preventGradient<T>(
@@ -1012,7 +1070,6 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the adadelta scheme.
-     *
      *  accum = rho() * accum + (1 - rho()) * grad.square();
      *  update = (update_accum + epsilon).sqrt() * (accum + epsilon()).rsqrt() * grad;
      *  update_accum = rho() * update_accum + (1 - rho()) * update.square();
@@ -1025,22 +1082,26 @@ public class TrainOps(
      * @param rho Decay factor. Must be a scalar.
      * @param epsilon Constant factor. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyAdadelta` output and operands
      * @return a new instance of ResourceApplyAdadelta
      * @see org.tensorflow.op.TrainOps.resourceApplyAdadelta
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var, accum and update_accum tensors will be
      * protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyAdadelta(
-        `var`: Operand<*>,
-        accum: Operand<*>,
-        accumUpdate: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
+        accumUpdate: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyAdadelta = java.resourceApplyAdadelta<T>(
         `var`,
         accum,
@@ -1065,22 +1126,26 @@ public class TrainOps(
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param globalStep Training step number. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyAdagradDA` output and operands
      * @return a new instance of ResourceApplyAdagradDa
      * @see org.tensorflow.op.TrainOps.resourceApplyAdagradDa
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyAdagradDa(
-        `var`: Operand<*>,
-        gradientAccumulator: Operand<*>,
-        gradientSquaredAccumulator: Operand<*>,
+        `var`: Operand<out TType>,
+        gradientAccumulator: Operand<out TType>,
+        gradientSquaredAccumulator: Operand<out TType>,
         grad: Operand<T>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyAdagradDa = java.resourceApplyAdagradDa<T>(
         `var`,
         gradientAccumulator,
@@ -1097,9 +1162,8 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Adam algorithm.
-     *
-     *  $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
-     *  $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+     *  $$\text{lr}<em>t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+     *  $$m_t := \beta_1 * m</em>{t-1} + (1 - \beta_1) * g$$
      *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
      *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{v_t} + \epsilon)$$
      *
@@ -1113,18 +1177,25 @@ public class TrainOps(
      * @param beta2 Momentum factor. Must be a scalar.
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyAdam` output and operands
      * @return a new instance of ResourceApplyAdam
      * @see org.tensorflow.op.TrainOps.resourceApplyAdam
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, m, and v tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, uses the nesterov update.
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, uses the nesterov update.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyAdam(
-        `var`: Operand<*>,
-        m: Operand<*>,
-        v: Operand<*>,
+        `var`: Operand<out TType>,
+        m: Operand<out TType>,
+        v: Operand<out TType>,
         beta1Power: Operand<T>,
         beta2Power: Operand<T>,
         lr: Operand<T>,
@@ -1133,7 +1204,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ResourceApplyAdam = java.resourceApplyAdam<T>(
         `var`,
         m,
@@ -1153,11 +1224,10 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Adam algorithm.
-     *
-     *  $$\text{lr}_t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
-     *  $$m_t := \beta_1 * m_{t-1} + (1 - \beta_1) * g$$
+     *  $$\text{lr}<em>t := \mathrm{learning_rate} * \sqrt{1 - \beta_2^t} / (1 - \beta_1^t)$$
+     *  $$m_t := \beta_1 * m</em>{t-1} + (1 - \beta_1) * g$$
      *  $$v_t := \beta_2 * v_{t-1} + (1 - \beta_2) * g * g$$
-     *  $$\hat{v}_t := max{\hat{v}_{t-1}, v_t}$$
+     *  $$\hat{v}<em>t := max{\hat{v}</em>{t-1}, v_t}$$
      *  $$\text{variable} := \text{variable} - \text{lr}_t * m_t / (\sqrt{\hat{v}_t} + \epsilon)$$
      *
      * @param var Should be from a Variable().
@@ -1171,18 +1241,22 @@ public class TrainOps(
      * @param beta2 Momentum factor. Must be a scalar.
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyAdamWithAmsgrad` output and operands
      * @return a new instance of ResourceApplyAdamWithAmsgrad
      * @see org.tensorflow.op.TrainOps.resourceApplyAdamWithAmsgrad
-     * @param useLocking If `True`, updating of the var, m, and v tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, m, and v tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyAdamWithAmsgrad(
-        `var`: Operand<*>,
-        m: Operand<*>,
-        v: Operand<*>,
-        vhat: Operand<*>,
+        `var`: Operand<out TType>,
+        m: Operand<out TType>,
+        v: Operand<out TType>,
+        vhat: Operand<out TType>,
         beta1Power: Operand<T>,
         beta2Power: Operand<T>,
         lr: Operand<T>,
@@ -1190,7 +1264,7 @@ public class TrainOps(
         beta2: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyAdamWithAmsgrad = java.resourceApplyAdamWithAmsgrad<T>(
         `var`,
         m,
@@ -1210,10 +1284,9 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the AddSign update.
-     *
-     *  m_t <- beta1 * m_{t-1} + (1 - beta1) * g
-     *  update <- (alpha + sign_decay * sign(g) *sign(m)) * g
-     *  variable <- variable - lr_t * update
+     *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+     *  update &lt;- (alpha + sign_decay * sign(g) *sign(m)) * g
+     *  variable &lt;- variable - lr_t * update
      *
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
@@ -1222,22 +1295,26 @@ public class TrainOps(
      * @param signDecay Must be a scalar.
      * @param beta Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyAddSign` output and operands
      * @return a new instance of ResourceApplyAddSign
      * @see org.tensorflow.op.TrainOps.resourceApplyAddSign
-     * @param useLocking If `True`, updating of the var and m tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and m tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyAddSign(
-        `var`: Operand<*>,
-        m: Operand<*>,
+        `var`: Operand<out TType>,
+        m: Operand<out TType>,
         lr: Operand<T>,
         alpha: Operand<T>,
         signDecay: Operand<T>,
         beta: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyAddSign = java.resourceApplyAddSign<T>(
         `var`,
         m,
@@ -1253,25 +1330,20 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
-     *
      *  The centered RMSProp algorithm uses an estimate of the centered second moment
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
      *  Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
-     *
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
-     *  mg <- rho * mg_{t-1} + (1-rho) * grad
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
-     *  var <- var - mom
+     *  mg &lt;- rho * mg_{t-1} + (1-rho) * grad
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
+     *  var &lt;- var - mom
      *
      * @param var Should be from a Variable().
      * @param mg Should be from a Variable().
@@ -1282,24 +1354,28 @@ public class TrainOps(
      * @param momentum Momentum Scale. Must be a scalar.
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyCenteredRMSProp` output and operands
      * @return a new instance of ResourceApplyCenteredRmsProp
      * @see org.tensorflow.op.TrainOps.resourceApplyCenteredRmsProp
-     * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, mg, ms, and mom tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyCenteredRmsProp(
-        `var`: Operand<*>,
-        mg: Operand<*>,
-        ms: Operand<*>,
-        mom: Operand<*>,
+        `var`: Operand<out TType>,
+        mg: Operand<out TType>,
+        ms: Operand<out TType>,
+        mom: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyCenteredRmsProp = java.resourceApplyCenteredRmsProp<T>(
         `var`,
         mg,
@@ -1317,13 +1393,12 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the Ftrl-proximal scheme.
-     *
      *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
      *  accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
      *  linear += grad_with_shrinkage +
-     *      (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+     *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
      *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
-     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
      *  accum = accum_new
      *
      * @param var Should be from a Variable().
@@ -1333,20 +1408,27 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage
+     * @param l2Shrinkage the l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyFtrlV2` output and operands
      * @return a new instance of ResourceApplyFtrl
      * @see org.tensorflow.op.TrainOps.resourceApplyFtrl
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param multiplyLinearByLr @param multiplyLinearByLr
+     * @return this Options instance.
+     * @param multiplyLinearByLr Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyFtrl(
-        `var`: Operand<*>,
-        accum: Operand<*>,
-        linear: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
+        linear: Operand<out TType>,
         grad: Operand<T>,
         lr: Operand<T>,
         l1: Operand<T>,
@@ -1354,7 +1436,7 @@ public class TrainOps(
         l2Shrinkage: Operand<T>,
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
-        multiplyLinearByLr: Boolean? = null,
+        multiplyLinearByLr: Boolean? = null
     ): ResourceApplyFtrl = java.resourceApplyFtrl<T>(
         `var`,
         accum,
@@ -1377,17 +1459,21 @@ public class TrainOps(
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
      * @param delta The change.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyGradientDescent` output and operands
      * @return a new instance of ResourceApplyGradientDescent
      * @see org.tensorflow.op.TrainOps.resourceApplyGradientDescent
-     * @param useLocking If `True`, the subtraction will be protected by a lock;
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyGradientDescent(
-        `var`: Operand<*>,
+        `var`: Operand<out TType>,
         alpha: Operand<T>,
         delta: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyGradientDescent = java.resourceApplyGradientDescent<T>(
         `var`,
         alpha,
@@ -1399,9 +1485,7 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  accum = accum * momentum - lr * grad
      *  var += accum
      *
@@ -1410,24 +1494,31 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param grad The gradient.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyKerasMomentum` output and operands
      * @return a new instance of ResourceApplyKerasMomentum
      * @see org.tensorflow.op.TrainOps.resourceApplyKerasMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var + momentum * accum, so in the end, the var you get is actually
      *  var + momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyKerasMomentum(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         grad: Operand<T>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ResourceApplyKerasMomentum = java.resourceApplyKerasMomentum<T>(
         `var`,
         accum,
@@ -1442,9 +1533,7 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  accum = accum * momentum + grad
      *  var -= lr * accum
      *
@@ -1453,24 +1542,31 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param grad The gradient.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyMomentum` output and operands
      * @return a new instance of ResourceApplyMomentum
      * @see org.tensorflow.op.TrainOps.resourceApplyMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyMomentum(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         grad: Operand<T>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ResourceApplyMomentum = java.resourceApplyMomentum<T>(
         `var`,
         accum,
@@ -1485,10 +1581,9 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the AddSign update.
-     *
-     *  m_t <- beta1 * m_{t-1} + (1 - beta1) * g
-     *  update <- exp(logbase * sign_decay * sign(g) * sign(m_t)) * g
-     *  variable <- variable - lr_t * update
+     *  m_t &lt;- beta1 * m_{t-1} + (1 - beta1) * g
+     *  update &lt;- exp(logbase * sign_decay * sign(g) * sign(m_t)) * g
+     *  variable &lt;- variable - lr_t * update
      *
      * @param var Should be from a Variable().
      * @param m Should be from a Variable().
@@ -1497,22 +1592,26 @@ public class TrainOps(
      * @param signDecay Must be a scalar.
      * @param beta Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyPowerSign` output and operands
      * @return a new instance of ResourceApplyPowerSign
      * @see org.tensorflow.op.TrainOps.resourceApplyPowerSign
-     * @param useLocking If `True`, updating of the var and m tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and m tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyPowerSign(
-        `var`: Operand<*>,
-        m: Operand<*>,
+        `var`: Operand<out TType>,
+        m: Operand<out TType>,
         lr: Operand<T>,
         logbase: Operand<T>,
         signDecay: Operand<T>,
         beta: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyPowerSign = java.resourceApplyPowerSign<T>(
         `var`,
         m,
@@ -1528,10 +1627,9 @@ public class TrainOps(
 
     /**
      * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
-     *
-     *  accum += grad <i> grad
-     *  prox_v = var - lr </i> grad <i> (1 / sqrt(accum))
-     *  var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}
+     *  accum += grad * grad
+     *  prox_v = var - lr * grad * (1 / sqrt(accum))
+     *  var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
      *
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
@@ -1539,20 +1637,24 @@ public class TrainOps(
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyProximalAdagrad` output and operands
      * @return a new instance of ResourceApplyProximalAdagrad
      * @see org.tensorflow.op.TrainOps.resourceApplyProximalAdagrad
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyProximalAdagrad(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyProximalAdagrad = java.resourceApplyProximalAdagrad<T>(
         `var`,
         accum,
@@ -1567,28 +1669,31 @@ public class TrainOps(
 
     /**
      * Update '*var' as FOBOS algorithm with fixed learning rate.
-     *
-     *  prox_v = var - alpha <i> delta
-     *  var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}
+     *  prox_v = var - alpha * delta
+     *  var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
      *
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param delta The change.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyProximalGradientDescent` output and operands
      * @return a new instance of ResourceApplyProximalGradientDescent
      * @see org.tensorflow.op.TrainOps.resourceApplyProximalGradientDescent
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyProximalGradientDescent(
-        `var`: Operand<*>,
+        `var`: Operand<out TType>,
         alpha: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         delta: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyProximalGradientDescent = java.resourceApplyProximalGradientDescent<T>(
         `var`,
         alpha,
@@ -1602,43 +1707,44 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the RMSProp algorithm.
-     *
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
-     *  var <- var - mom
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
+     *  var &lt;- var - mom
      *
      * @param var Should be from a Variable().
      * @param ms Should be from a Variable().
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceApplyRMSProp` output and operands
      * @return a new instance of ResourceApplyRmsProp
      * @see org.tensorflow.op.TrainOps.resourceApplyRmsProp
-     * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, ms, and mom tensors is protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceApplyRmsProp(
-        `var`: Operand<*>,
-        ms: Operand<*>,
-        mom: Operand<*>,
+        `var`: Operand<out TType>,
+        ms: Operand<out TType>,
+        mom: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceApplyRmsProp = java.resourceApplyRmsProp<T>(
         `var`,
         ms,
@@ -1656,7 +1762,7 @@ public class TrainOps(
     /**
      * var: Should be from a Variable().
      *
-     * @param var
+     * @param var the var value
      * @param accum Should be from a Variable().
      * @param accumUpdate : Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
@@ -1664,22 +1770,26 @@ public class TrainOps(
      * @param epsilon Constant factor. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyAdadelta` output and operands
      * @return a new instance of ResourceSparseApplyAdadelta
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyAdadelta
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyAdadelta(
-        `var`: Operand<*>,
-        accum: Operand<*>,
-        accumUpdate: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
+        accumUpdate: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyAdadelta = java.resourceSparseApplyAdadelta<T>(
         `var`,
         accum,
@@ -1696,7 +1806,6 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
      *  accum += grad * grad
      *  var -= lr * grad * (1 / sqrt(accum))
@@ -1706,22 +1815,29 @@ public class TrainOps(
      * @param lr Learning rate. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyAdagrad` output and operands
      * @return a new instance of ResourceSparseApplyAdagrad
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyAdagrad
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param updateSlots @param updateSlots
+     * @return this Options instance.
+     * @param updateSlots Sets the updateSlots option.
+     *
+     * @param updateSlots the updateSlots option
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyAdagrad(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null,
-        updateSlots: Boolean? = null,
+        updateSlots: Boolean? = null
     ): ResourceSparseApplyAdagrad = java.resourceSparseApplyAdagrad<T>(
         `var`,
         accum,
@@ -1746,23 +1862,27 @@ public class TrainOps(
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param globalStep Training step number. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyAdagradDA` output and operands
      * @return a new instance of ResourceSparseApplyAdagradDa
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyAdagradDa
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyAdagradDa(
-        `var`: Operand<*>,
-        gradientAccumulator: Operand<*>,
-        gradientSquaredAccumulator: Operand<*>,
+        `var`: Operand<out TType>,
+        gradientAccumulator: Operand<out TType>,
+        gradientSquaredAccumulator: Operand<out TType>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyAdagradDa = java.resourceSparseApplyAdagradDa<T>(
         `var`,
         gradientAccumulator,
@@ -1780,23 +1900,19 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
-     *
      *  The centered RMSProp algorithm uses an estimate of the centered second moment
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
      *  Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
-     *  var <- var - mom
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
+     *  var &lt;- var - mom
      *
      * @param var Should be from a Variable().
      * @param mg Should be from a Variable().
@@ -1804,29 +1920,33 @@ public class TrainOps(
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyCenteredRMSProp` output and operands
      * @return a new instance of ResourceSparseApplyCenteredRmsProp
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyCenteredRmsProp
-     * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, mg, ms, and mom tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyCenteredRmsProp(
-        `var`: Operand<*>,
-        mg: Operand<*>,
-        ms: Operand<*>,
-        mom: Operand<*>,
+        `var`: Operand<out TType>,
+        mg: Operand<out TType>,
+        ms: Operand<out TType>,
+        mom: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyCenteredRmsProp = java.resourceSparseApplyCenteredRmsProp<T>(
         `var`,
         mg,
@@ -1845,14 +1965,13 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
-     *
      *  That is for rows we have grad for, we update var, accum and linear as follows:
      *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
      *  accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
      *  linear += grad_with_shrinkage +
-     *      (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+     *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
      *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
-     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
      *  accum = accum_new
      *
      * @param var Should be from a Variable().
@@ -1863,20 +1982,27 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage
+     * @param l2Shrinkage the l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyFtrlV2` output and operands
      * @return a new instance of ResourceSparseApplyFtrl
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyFtrl
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param multiplyLinearByLr @param multiplyLinearByLr
+     * @return this Options instance.
+     * @param multiplyLinearByLr Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyFtrl(
-        `var`: Operand<*>,
-        accum: Operand<*>,
-        linear: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
+        linear: Operand<out TType>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         lr: Operand<T>,
@@ -1885,7 +2011,7 @@ public class TrainOps(
         l2Shrinkage: Operand<T>,
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
-        multiplyLinearByLr: Boolean? = null,
+        multiplyLinearByLr: Boolean? = null
     ): ResourceSparseApplyFtrl = java.resourceSparseApplyFtrl<T>(
         `var`,
         accum,
@@ -1907,11 +2033,8 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
-     *
      *  accum = accum * momentum - lr * grad
      *  var += accum
      *
@@ -1921,25 +2044,32 @@ public class TrainOps(
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyKerasMomentum` output and operands
      * @return a new instance of ResourceSparseApplyKerasMomentum
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyKerasMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var + momentum * accum, so in the end, the var you get is actually
      *  var + momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyKerasMomentum(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ResourceSparseApplyKerasMomentum = java.resourceSparseApplyKerasMomentum<T>(
         `var`,
         accum,
@@ -1955,11 +2085,8 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
-     *
      *  accum = accum * momentum + grad
      *  var -= lr * accum
      *
@@ -1969,25 +2096,32 @@ public class TrainOps(
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyMomentum` output and operands
      * @return a new instance of ResourceSparseApplyMomentum
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyMomentum(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): ResourceSparseApplyMomentum = java.resourceSparseApplyMomentum<T>(
         `var`,
         accum,
@@ -2003,12 +2137,11 @@ public class TrainOps(
 
     /**
      * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
-     *  accum += grad <i> grad
+     *  accum += grad * grad
      *  prox_v = var
-     *  prox_v -= lr </i> grad <i> (1 / sqrt(accum))
-     *  var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}
+     *  prox_v -= lr * grad * (1 / sqrt(accum))
+     *  var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}
      *
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
@@ -2017,21 +2150,25 @@ public class TrainOps(
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyProximalAdagrad` output and operands
      * @return a new instance of ResourceSparseApplyProximalAdagrad
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyProximalAdagrad
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyProximalAdagrad(
-        `var`: Operand<*>,
-        accum: Operand<*>,
+        `var`: Operand<out TType>,
+        accum: Operand<out TType>,
         lr: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyProximalAdagrad = java.resourceSparseApplyProximalAdagrad<T>(
         `var`,
         accum,
@@ -2047,10 +2184,9 @@ public class TrainOps(
 
     /**
      * Sparse update '*var' as FOBOS algorithm with fixed learning rate.
-     *
      *  That is for rows we have grad for, we update var as follows:
-     *  prox_v = var - alpha <i> grad
-     *  var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}
+     *  prox_v = var - alpha * grad
+     *  var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}
      *
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
@@ -2058,20 +2194,24 @@ public class TrainOps(
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyProximalGradientDescent` output and operands
      * @return a new instance of ResourceSparseApplyProximalGradientDescent
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyProximalGradientDescent
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyProximalGradientDescent(
-        `var`: Operand<*>,
+        `var`: Operand<out TType>,
         alpha: Operand<T>,
         l1: Operand<T>,
         l2: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyProximalGradientDescent =
         java.resourceSparseApplyProximalGradientDescent<T>(
             `var`,
@@ -2089,45 +2229,46 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the RMSProp algorithm.
-     *
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
-     *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
-     *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
-     *  var <- var - mom
+     *  ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad
+     *  mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
+     *  var &lt;- var - mom
      *
      * @param var Should be from a Variable().
      * @param ms Should be from a Variable().
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ResourceSparseApplyRMSProp` output and operands
      * @return a new instance of ResourceSparseApplyRmsProp
      * @see org.tensorflow.op.TrainOps.resourceSparseApplyRmsProp
-     * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, ms, and mom tensors is protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> resourceSparseApplyRmsProp(
-        `var`: Operand<*>,
-        ms: Operand<*>,
-        mom: Operand<*>,
+        `var`: Operand<out TType>,
+        ms: Operand<out TType>,
+        mom: Operand<out TType>,
         lr: Operand<T>,
         rho: Operand<T>,
         momentum: Operand<T>,
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): ResourceSparseApplyRmsProp = java.resourceSparseApplyRmsProp<T>(
         `var`,
         ms,
@@ -2145,19 +2286,18 @@ public class TrainOps(
 
     /**
      * Restores tensors from a V2 checkpoint.
-     *
      *  For backward compatibility with the V1 format, this Op currently allows
      *  restoring from a V1 checkpoint as well:
-     *    - This Op first attempts to find the V2 index file pointed to by "prefix", and
-     *      if found proceed to read it as a V2 checkpoint;
-     *    - Otherwise the V1 read path is invoked.
+     *  <ul>
+     *  <li>This Op first attempts to find the V2 index file pointed to by &quot;prefix&quot;, and
+     *  if found proceed to read it as a V2 checkpoint;</li>
+     *  <li>Otherwise the V1 read path is invoked.
      *  Relying on this behavior is not recommended, as the ability to fall back to read
-     *  V1 might be deprecated and eventually removed.
-     *
+     *  V1 might be deprecated and eventually removed.</li>
+     *  </ul>
      *  By default, restores the named tensors in full.  If the caller wishes to restore
-     *  specific slices of stored tensors, "shape_and_slices" should be non-empty
+     *  specific slices of stored tensors, &quot;shape_and_slices&quot; should be non-empty
      *  strings and correspondingly well-formed.
-     *
      *  Callers must ensure all the named tensors are indeed stored in the checkpoint.
      *
      * @param prefix Must have a single element.  The prefix of a V2 checkpoint.
@@ -2173,7 +2313,7 @@ public class TrainOps(
         prefix: Operand<TString>,
         tensorNames: Operand<TString>,
         shapeAndSlices: Operand<TString>,
-        dtypes: List<Class<out TType>>,
+        dtypes: List<Class<out TType>>
     ): Restore = java.restore(
         prefix,
         tensorNames,
@@ -2183,15 +2323,13 @@ public class TrainOps(
 
     /**
      * Restores a tensor from checkpoint files.
-     *
-     *  This is like `Restore` except that restored tensor can be listed as filling
-     *  only a slice of a larger tensor.  `shape_and_slice` specifies the shape of the
+     *  This is like ``` Restore``` except that restored tensor can be listed as filling
+     *  only a slice of a larger tensor.  ``` shape_and_slice``` specifies the shape of the
      *  larger tensor and the slice that the restored tensor covers.
+     *  The ``` shape_and_slice``` input has the same format as the
+     *  elements of the ``` shapes_and_slices``` input of the ``` SaveSlices``` op.
      *
-     *  The `shape_and_slice` input has the same format as the
-     *  elements of the `shapes_and_slices` input of the `SaveSlices` op.
-     *
-     * @param T data type for ` tensor()` output
+     * @param T data type for ` tensor` output
      * @param filePattern Must have a single element. The pattern of the files from
      *  which we read the tensor.
      * @param tensorName Must have a single element. The name of the tensor to be
@@ -2199,18 +2337,22 @@ public class TrainOps(
      * @param shapeAndSlice Scalar. The shapes and slice specifications to use when
      *  restoring a tensors.
      * @param dt The type of the tensor to be restored.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` RestoreSlice` output and operands
      * @return a new instance of RestoreSlice
      * @see org.tensorflow.op.TrainOps.restoreSlice
+     * @param preferredShard Sets the preferredShard option.
+     *
      * @param preferredShard Index of file to open first if multiple files match
-     *  `file_pattern`. See the documentation for `Restore`.
+     *  ``` file_pattern```. See the documentation for ``` Restore```.
+     * @return this Options instance.
      */
     public fun <T : TType> restoreSlice(
         filePattern: Operand<TString>,
         tensorName: Operand<TString>,
         shapeAndSlice: Operand<TString>,
         dt: Class<T>,
-        preferredShard: Long? = null,
+        preferredShard: Long? = null
     ): RestoreSlice<T> = java.restoreSlice<T>(
         filePattern,
         tensorName,
@@ -2223,9 +2365,8 @@ public class TrainOps(
 
     /**
      * Saves tensors in V2 checkpoint format.
-     *
      *  By default, saves the named tensors in full.  If the caller wishes to save
-     *  specific slices of full tensors, "shape_and_slices" should be non-empty strings
+     *  specific slices of full tensors, &quot;shape_and_slices&quot; should be non-empty strings
      *  and correspondingly well-formed.
      *
      * @param prefix Must have a single element. The prefix of the V2 checkpoint to which we
@@ -2233,7 +2374,7 @@ public class TrainOps(
      * @param tensorNames shape {N}. The names of the tensors to be saved.
      * @param shapeAndSlices shape {N}.  The slice specs of the tensors to be saved.
      *  Empty strings indicate that they are non-partitioned tensors.
-     * @param tensors `N` tensors to save.
+     * @param tensors ` N` tensors to save.
      * @return a new instance of Save
      * @see org.tensorflow.op.TrainOps.save
      */
@@ -2241,7 +2382,7 @@ public class TrainOps(
         prefix: Operand<TString>,
         tensorNames: Operand<TString>,
         shapeAndSlices: Operand<TString>,
-        tensors: Iterable<Operand<*>>,
+        tensors: Iterable<Operand<*>>
     ): Save = java.save(
         prefix,
         tensorNames,
@@ -2251,43 +2392,33 @@ public class TrainOps(
 
     /**
      * Saves input tensors slices to disk.
-     *
-     *  This is like `Save` except that tensors can be listed in the saved file as being
-     *  a slice of a larger tensor.  `shapes_and_slices` specifies the shape of the
-     *  larger tensor and the slice that this tensor covers. `shapes_and_slices` must
-     *  have as many elements as `tensor_names`.
-     *
-     *  Elements of the `shapes_and_slices` input must either be:
+     *  This is like ``` Save``` except that tensors can be listed in the saved file as being
+     *  a slice of a larger tensor.  ``` shapes_and_slices``` specifies the shape of the
+     *  larger tensor and the slice that this tensor covers. ``` shapes_and_slices``` must
+     *  have as many elements as ``` tensor_names```.
+     *  Elements of the ``` shapes_and_slices``` input must either be:
      *  <ul>
-     *  <li>
-     *  The empty string, in which case the corresponding tensor is
-     *     saved normally.
-     *  </li>
-     *  <li>
-     *  A string of the form `dim0 dim1 ... dimN-1 slice-spec` where the
-     *     `dimI` are the dimensions of the larger tensor and `slice-spec`
-     *     specifies what part is covered by the tensor to save.
-     *  </li>
+     *  <li>The empty string, in which case the corresponding tensor is
+     *  saved normally.</li>
+     *  <li>A string of the form ``` dim0 dim1 ... dimN-1 slice-spec``` where the
+     *  ``` dimI``` are the dimensions of the larger tensor and ``` slice-spec```
+     *  specifies what part is covered by the tensor to save.</li>
      *  </ul>
-     *  `slice-spec` itself is a `:`-separated list: `slice0:slice1:...:sliceN-1`
-     *  where each `sliceI` is either:
+     *  ``` slice-spec``` itself is a ``` :```-separated list: ``` slice0:slice1:...:sliceN-1```
+     *  where each ``` sliceI``` is either:
      *  <ul>
-     *  <li>
-     *  The string `-` meaning that the slice covers all indices of this dimension
-     *  </li>
-     *  <li>
-     *  `start,length` where `start` and `length` are integers.  In that
-     *     case the slice covers `length` indices starting at `start`.
-     *  </li>
+     *  <li>The string ``` -``` meaning that the slice covers all indices of this dimension</li>
+     *  <li>``` start,length``` where ``` start``` and ``` length``` are integers.  In that
+     *  case the slice covers ``` length``` indices starting at ``` start```.</li>
      *  </ul>
-     *  See also `Save`.
+     *  See also ``` Save```.
      *
      * @param filename Must have a single element. The name of the file to which we write the
      *  tensor.
-     * @param tensorNames Shape `&#91;N]`. The names of the tensors to be saved.
-     * @param shapesAndSlices Shape `&#91;N]`.  The shapes and slice specifications to use when
+     * @param tensorNames Shape ` [N]`. The names of the tensors to be saved.
+     * @param shapesAndSlices Shape ` [N]`.  The shapes and slice specifications to use when
      *  saving the tensors.
-     * @param data `N` tensors to save.
+     * @param data ` N` tensors to save.
      * @return a new instance of SaveSlices
      * @see org.tensorflow.op.TrainOps.saveSlices
      */
@@ -2295,7 +2426,7 @@ public class TrainOps(
         filename: Operand<TString>,
         tensorNames: Operand<TString>,
         shapesAndSlices: Operand<TString>,
-        `data`: Iterable<Operand<*>>,
+        `data`: Iterable<Operand<*>>
     ): SaveSlices = java.saveSlices(
         filename,
         tensorNames,
@@ -2327,7 +2458,7 @@ public class TrainOps(
     public fun sdcaShrinkL1(
         weights: Iterable<Operand<TFloat32>>,
         l1: Float,
-        l2: Float,
+        l2: Float
     ): SdcaShrinkL1 = java.sdcaShrinkL1(
         weights,
         l1,
@@ -2337,8 +2468,8 @@ public class TrainOps(
     /**
      * var: Should be from a Variable().
      *
-     * @param T data type for ` out()` output
-     * @param var
+     * @param T data type for ` out` output
+     * @param var the var value
      * @param accum Should be from a Variable().
      * @param accumUpdate : Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
@@ -2346,11 +2477,15 @@ public class TrainOps(
      * @param epsilon Constant factor. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyAdadelta` output and operands
      * @return a new instance of SparseApplyAdadelta
      * @see org.tensorflow.op.TrainOps.sparseApplyAdadelta
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyAdadelta(
         `var`: Operand<T>,
@@ -2361,7 +2496,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyAdadelta<T> = java.sparseApplyAdadelta<T>(
         `var`,
         accum,
@@ -2379,7 +2514,7 @@ public class TrainOps(
     /**
      * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param gradientAccumulator Should be from a Variable().
      * @param gradientSquaredAccumulator Should be from a Variable().
@@ -2389,11 +2524,15 @@ public class TrainOps(
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param globalStep Training step number. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyAdagradDA` output and operands
      * @return a new instance of SparseApplyAdagradDa
      * @see org.tensorflow.op.TrainOps.sparseApplyAdagradDa
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyAdagradDa(
         `var`: Operand<T>,
@@ -2405,7 +2544,7 @@ public class TrainOps(
         l1: Operand<T>,
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyAdagradDa<T> = java.sparseApplyAdagradDa<T>(
         `var`,
         gradientAccumulator,
@@ -2423,41 +2562,41 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
-     *
      *  The centered RMSProp algorithm uses an estimate of the centered second moment
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
      *  Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
+     *  $$ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad$$
+     *  $$mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
+     *  $$var &lt;- var - mom$$
      *
-     *  $$ms <- rho * ms_{t-1} + (1-rho) * grad * grad$$
-     *  $$mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
-     *  $$var <- var - mom$$
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param mg Should be from a Variable().
      * @param ms Should be from a Variable().
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyCenteredRMSProp` output and operands
      * @return a new instance of SparseApplyCenteredRmsProp
      * @see org.tensorflow.op.TrainOps.sparseApplyCenteredRmsProp
-     * @param useLocking If `True`, updating of the var, mg, ms, and mom tensors is
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, mg, ms, and mom tensors is
      *  protected by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyCenteredRmsProp(
         `var`: Operand<T>,
@@ -2470,7 +2609,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyCenteredRmsProp<T> = java.sparseApplyCenteredRmsProp<T>(
         `var`,
         mg,
@@ -2489,17 +2628,16 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
-     *
      *  That is for rows we have grad for, we update var, accum and linear as follows:
      *  grad_with_shrinkage = grad + 2 * l2_shrinkage * var
      *  accum_new = accum + grad * grad
      *  linear += grad_with_shrinkage -
-     *      (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
+     *  (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
      *  quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
-     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| > l1 else 0.0
+     *  var = (sign(linear) * l1 - linear) / quadratic if |linear| &gt; l1 else 0.0
      *  accum = accum_new
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param linear Should be from a Variable().
@@ -2508,15 +2646,22 @@ public class TrainOps(
      * @param lr Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 shrinkage regularization. Must be a scalar.
-     * @param l2Shrinkage
+     * @param l2Shrinkage the l2Shrinkage value
      * @param lrPower Scaling factor. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyFtrlV2` output and operands
      * @return a new instance of SparseApplyFtrl
      * @see org.tensorflow.op.TrainOps.sparseApplyFtrl
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param multiplyLinearByLr @param multiplyLinearByLr
+     * @return this Options instance.
+     * @param multiplyLinearByLr Sets the multiplyLinearByLr option.
+     *
+     * @param multiplyLinearByLr the multiplyLinearByLr option
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyFtrl(
         `var`: Operand<T>,
@@ -2530,7 +2675,7 @@ public class TrainOps(
         l2Shrinkage: Operand<T>,
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
-        multiplyLinearByLr: Boolean? = null,
+        multiplyLinearByLr: Boolean? = null
     ): SparseApplyFtrl<T> = java.sparseApplyFtrl<T>(
         `var`,
         accum,
@@ -2550,30 +2695,34 @@ public class TrainOps(
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
-     *
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
-     *
      *  $$accum = accum * momentum + grad$$
      *  $$var -= lr * accum$$
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
      * @param momentum Momentum. Must be a scalar.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyMomentum` output and operands
      * @return a new instance of SparseApplyMomentum
      * @see org.tensorflow.op.TrainOps.sparseApplyMomentum
-     * @param useLocking If `True`, updating of the var and accum tensors will be protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var and accum tensors will be protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
-     * @param useNesterov If `True`, the tensor passed to compute grad will be
+     * @return this Options instance.
+     * @param useNesterov Sets the useNesterov option.
+     *
+     * @param useNesterov If ` True`, the tensor passed to compute grad will be
      *  var - lr * momentum * accum, so in the end, the var you get is actually
      *  var - lr * momentum * accum.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyMomentum(
         `var`: Operand<T>,
@@ -2583,7 +2732,7 @@ public class TrainOps(
         indices: Operand<out TNumber>,
         momentum: Operand<T>,
         useLocking: Boolean? = null,
-        useNesterov: Boolean? = null,
+        useNesterov: Boolean? = null
     ): SparseApplyMomentum<T> = java.sparseApplyMomentum<T>(
         `var`,
         accum,
@@ -2599,14 +2748,13 @@ public class TrainOps(
 
     /**
      * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
-     *
      *  That is for rows we have grad for, we update var and accum as follows:
-     *  $$accum += grad <i> grad$$
+     *  $$accum += grad * grad$$
      *  $$prox_v = var$$
-     *  $$prox_v -= lr </i> grad <i> (1 / sqrt(accum))$$
-     *  $$var = sign(prox_v)/(1+lr</i>l2) <i> max{|prox_v|-lr</i>l1,0}$$
+     *  $$prox_v -= lr * grad * (1 / sqrt(accum))$$
+     *  $$var = sign(prox_v)/(1+lr<em>l2) * max{|prox_v|-lr</em>l1,0}$$
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param accum Should be from a Variable().
      * @param lr Learning rate. Must be a scalar.
@@ -2614,11 +2762,15 @@ public class TrainOps(
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyProximalAdagrad` output and operands
      * @return a new instance of SparseApplyProximalAdagrad
      * @see org.tensorflow.op.TrainOps.sparseApplyProximalAdagrad
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, updating of the var and accum tensors will be protected by
      *  a lock; otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyProximalAdagrad(
         `var`: Operand<T>,
@@ -2628,7 +2780,7 @@ public class TrainOps(
         l2: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyProximalAdagrad<T> = java.sparseApplyProximalAdagrad<T>(
         `var`,
         accum,
@@ -2644,23 +2796,26 @@ public class TrainOps(
 
     /**
      * Sparse update '*var' as FOBOS algorithm with fixed learning rate.
-     *
      *  That is for rows we have grad for, we update var as follows:
-     *  $$prox_v = var - alpha <i> grad$$
-     *  $$var = sign(prox_v)/(1+alpha</i>l2) <i> max{|prox_v|-alpha</i>l1,0}$$
+     *  $$prox_v = var - alpha * grad$$
+     *  $$var = sign(prox_v)/(1+alpha<em>l2) * max{|prox_v|-alpha</em>l1,0}$$
      *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param alpha Scaling factor. Must be a scalar.
      * @param l1 L1 regularization. Must be a scalar.
      * @param l2 L2 regularization. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var and accum.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyProximalGradientDescent` output and operands
      * @return a new instance of SparseApplyProximalGradientDescent
      * @see org.tensorflow.op.TrainOps.sparseApplyProximalGradientDescent
+     * @param useLocking Sets the useLocking option.
+     *
      * @param useLocking If True, the subtraction will be protected by a lock;
      *  otherwise the behavior is undefined, but may exhibit less contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyProximalGradientDescent(
         `var`: Operand<T>,
@@ -2669,7 +2824,7 @@ public class TrainOps(
         l2: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyProximalGradientDescent<T> = java.sparseApplyProximalGradientDescent<T>(
         `var`,
         alpha,
@@ -2684,34 +2839,35 @@ public class TrainOps(
 
     /**
      * Update '*var' according to the RMSProp algorithm.
-     *
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
      *  mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
+     *  $$ms &lt;- rho * ms_{t-1} + (1-rho) * grad * grad$$
+     *  $$mom &lt;- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
+     *  $$var &lt;- var - mom$$
      *
-     *  $$ms <- rho * ms_{t-1} + (1-rho) * grad * grad$$
-     *  $$mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
-     *  $$var <- var - mom$$
-     *
-     * @param T data type for ` out()` output
+     * @param T data type for ` out` output
      * @param var Should be from a Variable().
      * @param ms Should be from a Variable().
      * @param mom Should be from a Variable().
      * @param lr Scaling factor. Must be a scalar.
      * @param rho Decay rate. Must be a scalar.
-     * @param momentum
+     * @param momentum the momentum value
      * @param epsilon Ridge term. Must be a scalar.
      * @param grad The gradient.
      * @param indices A vector of indices into the first dimension of var, ms and mom.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` SparseApplyRMSProp` output and operands
      * @return a new instance of SparseApplyRmsProp
      * @see org.tensorflow.op.TrainOps.sparseApplyRmsProp
-     * @param useLocking If `True`, updating of the var, ms, and mom tensors is protected
+     * @param useLocking Sets the useLocking option.
+     *
+     * @param useLocking If ` True`, updating of the var, ms, and mom tensors is protected
      *  by a lock; otherwise the behavior is undefined, but may exhibit less
      *  contention.
+     * @return this Options instance.
      */
     public fun <T : TType> sparseApplyRmsProp(
         `var`: Operand<T>,
@@ -2723,7 +2879,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         indices: Operand<out TNumber>,
-        useLocking: Boolean? = null,
+        useLocking: Boolean? = null
     ): SparseApplyRmsProp<T> = java.sparseApplyRmsProp<T>(
         `var`,
         ms,
@@ -2740,15 +2896,15 @@ public class TrainOps(
     )
 
     /**
-     * Returns the gradient of `Tile`.
+     * Returns the gradient of ``` Tile```.
+     *  Since ``` Tile``` takes an input and repeats the input ``` multiples``` times
+     *  along each dimension, ``` train.TileGrad``` takes in ``` multiples``` and aggregates
+     *  each repeated tile of ``` input``` into ``` output```.
      *
-     *  Since `Tile` takes an input and repeats the input `multiples` times
-     *  along each dimension, `train.TileGrad` takes in `multiples` and aggregates
-     *  each repeated tile of `input` into `output`.
-     *
-     * @param T data type for ` output()` output
-     * @param input
-     * @param multiples
+     * @param T data type for ` output` output
+     * @param input the input value
+     * @param multiples the multiples value
+     * @param T data type for ` TileGrad` output and operands
      * @return a new instance of TileGrad
      * @see org.tensorflow.op.TrainOps.tileGrad
      */
@@ -2760,31 +2916,30 @@ public class TrainOps(
 
     /**
      * Extracts the average gradient in the given ConditionalAccumulator.
-     *
      *  The op blocks until sufficient (i.e., more than num_required)
      *  gradients have been accumulated.  If the accumulator has already
      *  aggregated more than num_required gradients, it returns the average of
      *  the accumulated gradients.  Also automatically increments the recorded
      *  global_step in the accumulator by 1, and resets the aggregate to 0.
      *
-     * @param T data type for ` average()` output
+     * @param T data type for ` average` output
      * @param handle The handle to an accumulator.
      * @param numRequired Number of gradients required before we return an aggregate.
      * @param dtype The data type of accumulated gradients. Needs to correspond to the type
      *  of the accumulator.
+     * @param T data type for ` AccumulatorTakeGradient` output and operands
      * @return a new instance of AccumulatorTakeGradient
      * @see org.tensorflow.op.TrainOps.accumulatorTakeGradient
      */
     @JvmName("accumulatorTakeGradientReified")
     public inline fun <reified T : TType> accumulatorTakeGradient(
         handle: Operand<TString>,
-        numRequired: Operand<TInt32>,
+        numRequired: Operand<TInt32>
     ): AccumulatorTakeGradient<T> =
         accumulatorTakeGradient<T>(handle, numRequired, T::class.java)
 
     /**
      * A conditional accumulator for aggregating gradients.
-     *
      *  The accumulator accepts gradients marked with local_step greater or
      *  equal to the most recent global_step known to the accumulator. The
      *  average can be extracted from the accumulator, provided sufficient
@@ -2794,21 +2949,31 @@ public class TrainOps(
      *
      * @param dtype The type of the value being accumulated.
      * @param shape The shape of the values, can be &#91;], in which case shape is unknown.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` ConditionalAccumulator` output and operands
      * @return a new instance of ConditionalAccumulator
      * @see org.tensorflow.op.TrainOps.conditionalAccumulator
+     * @param container Sets the container option.
+     *
      * @param container If non-empty, this accumulator is placed in the given container.
      *  Otherwise, a default container is used.
+     * @return this Options instance.
+     * @param sharedName Sets the sharedName option.
+     *
      * @param sharedName If non-empty, this accumulator will be shared under the
      *  given name across multiple sessions.
-     * @param reductionType @param reductionType
+     * @return this Options instance.
+     * @param reductionType Sets the reductionType option.
+     *
+     * @param reductionType the reductionType option
+     * @return this Options instance.
      */
     @JvmName("conditionalAccumulatorReified")
     public inline fun <reified T : TType> conditionalAccumulator(
         shape: Shape,
         container: String? = null,
         sharedName: String? = null,
-        reductionType: String? = null,
+        reductionType: String? = null
     ): ConditionalAccumulator = conditionalAccumulator<T>(
         T::class.java, shape, container,
         sharedName, reductionType
@@ -2816,15 +2981,13 @@ public class TrainOps(
 
     /**
      * Restores a tensor from checkpoint files.
-     *
-     *  This is like `Restore` except that restored tensor can be listed as filling
-     *  only a slice of a larger tensor.  `shape_and_slice` specifies the shape of the
+     *  This is like ``` Restore``` except that restored tensor can be listed as filling
+     *  only a slice of a larger tensor.  ``` shape_and_slice``` specifies the shape of the
      *  larger tensor and the slice that the restored tensor covers.
+     *  The ``` shape_and_slice``` input has the same format as the
+     *  elements of the ``` shapes_and_slices``` input of the ``` SaveSlices``` op.
      *
-     *  The `shape_and_slice` input has the same format as the
-     *  elements of the `shapes_and_slices` input of the `SaveSlices` op.
-     *
-     * @param T data type for ` tensor()` output
+     * @param T data type for ` tensor` output
      * @param filePattern Must have a single element. The pattern of the files from
      *  which we read the tensor.
      * @param tensorName Must have a single element. The name of the tensor to be
@@ -2832,18 +2995,22 @@ public class TrainOps(
      * @param shapeAndSlice Scalar. The shapes and slice specifications to use when
      *  restoring a tensors.
      * @param dt The type of the tensor to be restored.
-     * @param options carries optional attributes values
+     * @param options carries optional attribute values
+     * @param T data type for ` RestoreSlice` output and operands
      * @return a new instance of RestoreSlice
      * @see org.tensorflow.op.TrainOps.restoreSlice
+     * @param preferredShard Sets the preferredShard option.
+     *
      * @param preferredShard Index of file to open first if multiple files match
-     *  `file_pattern`. See the documentation for `Restore`.
+     *  ``` file_pattern```. See the documentation for ``` Restore```.
+     * @return this Options instance.
      */
     @JvmName("restoreSliceReified")
     public inline fun <reified T : TType> restoreSlice(
         filePattern: Operand<TString>,
         tensorName: Operand<TString>,
         shapeAndSlice: Operand<TString>,
-        preferredShard: Long? = null,
+        preferredShard: Long? = null
     ): RestoreSlice<T> = restoreSlice<T>(
         filePattern, tensorName, shapeAndSlice, T::class.java,
         preferredShard

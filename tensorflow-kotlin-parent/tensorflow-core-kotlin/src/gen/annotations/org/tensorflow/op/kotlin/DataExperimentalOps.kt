@@ -34,7 +34,7 @@ public class DataExperimentalOps(
     /**
      * Get the parent [KotlinOps] object.
      */
-    public val ops: KotlinOps,
+    public val ops: KotlinOps
 ) {
     public val java: org.tensorflow.op.DataExperimentalOps = ops.java.data.experimental
 
@@ -44,20 +44,24 @@ public class DataExperimentalOps(
     public val scope: Scope = ops.scope
 
     /**
+     * The DataServiceDataset operation
      *
-     * @param datasetId
-     * @param processingMode
-     * @param address
-     * @param protocol
-     * @param jobName
-     * @param maxOutstandingRequests
-     * @param iterationCounter
-     * @param outputTypes
-     * @param outputShapes
-     * @param options carries optional attributes values
+     * @param datasetId the datasetId value
+     * @param processingMode the processingMode value
+     * @param address the address value
+     * @param protocol the protocol value
+     * @param jobName the jobName value
+     * @param maxOutstandingRequests the maxOutstandingRequests value
+     * @param iterationCounter the iterationCounter value
+     * @param outputTypes the value of the outputTypes property
+     * @param outputShapes the value of the outputShapes property
+     * @param options carries optional attribute values
      * @return a new instance of DataServiceDataset
      * @see org.tensorflow.op.DataExperimentalOps.dataServiceDataset
-     * @param taskRefreshIntervalHintMs @param taskRefreshIntervalHintMs
+     * @param taskRefreshIntervalHintMs Sets the taskRefreshIntervalHintMs option.
+     *
+     * @param taskRefreshIntervalHintMs the taskRefreshIntervalHintMs option
+     * @return this Options instance.
      */
     public fun dataServiceDataset(
         datasetId: Operand<TInt64>,
@@ -66,10 +70,10 @@ public class DataExperimentalOps(
         protocol: Operand<TString>,
         jobName: Operand<TString>,
         maxOutstandingRequests: Operand<TInt64>,
-        iterationCounter: Operand<*>,
+        iterationCounter: Operand<out TType>,
         outputTypes: List<Class<out TType>>,
         outputShapes: List<Shape>,
-        taskRefreshIntervalHintMs: Long? = null,
+        taskRefreshIntervalHintMs: Long? = null
     ): DataServiceDataset = java.dataServiceDataset(
         datasetId,
         processingMode,
