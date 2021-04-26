@@ -68,6 +68,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.AttributeMetadata;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
@@ -499,6 +500,16 @@ public final class GraphOperation extends AbstractOperation {
 
 
   /**
+   * Get the metadata of a n attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the metadata of the attribute
+   */
+  public AttributeMetadata getAttrMetadata(String name) {
+    return getAttrMetadata(unsafeNativeHandle, name);
+  }
+
+  /**
    * Get the value of an attribute of this operation as an {@link AttrValue} proto.
    *
    * @param name the name of the attribute
@@ -600,19 +611,19 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-  private static TF_AttrMetadata getAttrMetadata(TF_Operation handle, String name) {
+  private static AttributeMetadata getAttrMetadata(TF_Operation handle, String name) {
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_AttrMetadata r = TF_OperationGetAttrMetadata(handle, name, status);
       status.throwExceptionIfNotOK();
-      return r;
+      return new AttributeMetadata(r);
     }
   }
 
   private static String getAttrString(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).total_size();
+      long size = getAttrMetadata(handle, name).totalSize;
       BytePointer result = new BytePointer(size);
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrString(handle, name, result, size, status);
@@ -624,9 +635,9 @@ public final class GraphOperation extends AbstractOperation {
   private static String[] getAttrStringList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      TF_AttrMetadata metadata = getAttrMetadata(handle, name);
-      int listSize = (int) metadata.list_size();
-      int totalSize = (int) metadata.total_size();
+      AttributeMetadata metadata = getAttrMetadata(handle, name);
+      int listSize = (int) metadata.listSize;
+      int totalSize = (int) metadata.totalSize;
 
       PointerPointer<BytePointer> values = new PointerPointer<>(listSize);
       SizeTPointer lengths = new SizeTPointer(listSize);
@@ -668,7 +679,7 @@ public final class GraphOperation extends AbstractOperation {
   private static long[] getAttrIntList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).list_size();
+      long size = getAttrMetadata(handle, name).listSize;
       long[] result = new long[(int) size];
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrIntList(handle, name, result, result.length, status);
@@ -691,7 +702,7 @@ public final class GraphOperation extends AbstractOperation {
   private static float[] getAttrFloatList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).list_size();
+      long size = getAttrMetadata(handle, name).listSize;
       float[] result = new float[(int) size];
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrFloatList(handle, name, result, result.length, status);
@@ -714,7 +725,7 @@ public final class GraphOperation extends AbstractOperation {
   private static boolean[] getAttrBoolList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).list_size();
+      long size = getAttrMetadata(handle, name).listSize;
       byte[] byteResults = new byte[(int) size];
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrBoolList(handle, name, byteResults, byteResults.length, status);
@@ -744,7 +755,7 @@ public final class GraphOperation extends AbstractOperation {
   private static DataType[] getAttrTypeList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).list_size();
+      long size = getAttrMetadata(handle, name).listSize;
       int[] typeInts = new int[(int) size];
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrTypeList(handle, name, typeInts, typeInts.length, status);
@@ -774,7 +785,7 @@ public final class GraphOperation extends AbstractOperation {
   private static Tensor[] getAttrTensorList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).list_size();
+      long size = getAttrMetadata(handle, name).listSize;
       PointerPointer<TF_Tensor> pointers = new PointerPointer<>(size);
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrTensorList(handle, new BytePointer(name), pointers, (int) size, status);
@@ -792,7 +803,7 @@ public final class GraphOperation extends AbstractOperation {
   private static Shape getAttrShape(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      long size = getAttrMetadata(handle, name).total_size();
+      long size = getAttrMetadata(handle, name).totalSize;
 
       if (size == -1) {
         return Shape.unknown();
@@ -810,9 +821,9 @@ public final class GraphOperation extends AbstractOperation {
   private static Shape[] getAttrShapeList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
-      TF_AttrMetadata metadata = getAttrMetadata(handle, name);
-      int listSize = (int) metadata.list_size();
-      int totalSize = (int) metadata.total_size();
+      AttributeMetadata metadata = getAttrMetadata(handle, name);
+      int listSize = (int) metadata.listSize;
+      int totalSize = (int) metadata.totalSize;
 
       long[] dimPointers = new long[listSize];
       int[] numDims = new int[listSize];
