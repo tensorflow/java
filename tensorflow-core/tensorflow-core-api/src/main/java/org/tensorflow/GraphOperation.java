@@ -18,6 +18,21 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorNumDims;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetTensorShape;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationAllInputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrBool;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrBoolList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrFloat;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrInt;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrIntList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrMetadata;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrShape;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrShapeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrString;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrStringList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTensor;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTensorList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrType;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTypeList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInputListLength;
@@ -33,17 +48,22 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutput
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.bytedeco.javacpp.SizeTPointer;
+import org.tensorflow.internal.c_api.TF_AttrMetadata;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Input;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.proto.framework.DataType;
 
@@ -214,7 +234,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use this op's designated output as an input, not including control dependencies.
+   * Get the number of ops that use this op's designated output as an input, not including control
+   * dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -226,7 +247,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the ops that use this op's designated output as an input, not including control dependencies.
+   * Get the ops that use this op's designated output as an input, not including control
+   * dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -250,7 +272,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use any of this op's outputs as an input, not including control dependencies.
+   * Get the number of ops that use any of this op's outputs as an input, not including control
+   * dependencies.
    */
   public int numConsumers() {
     int all = 0;
@@ -330,6 +353,145 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
+  /**
+   * Get the value of a string attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public String getAttrString(String name) {
+    return getAttrString(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a string list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public String[] getAttrStringList(String name) {
+    return getAttrStringList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a int attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public long getAttrInt(String name) {
+    return getAttrInt(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a int list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public long[] getAttrIntList(String name) {
+    return getAttrIntList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a float attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public float getAttrFloat(String name) {
+    return getAttrFloat(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a float list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public float[] getAttrFloatList(String name) {
+    return getAttrFloatList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a boolean attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public boolean getAttrBool(String name) {
+    return getAttrBool(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a boolean list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public boolean[] getAttrBoolList(String name) {
+    return getAttrBoolList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a data type attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public DataType getAttrType(String name) {
+    return getAttrType(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a data type list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public DataType[] getAttrTypeList(String name) {
+    return getAttrTypeList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a tensor attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public Tensor getAttrTensor(String name) {
+    return getAttrTensor(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a tensor list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public Tensor[] getAttrTensorList(String name) {
+    return getAttrTensorList(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a shape attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public Shape getAttrShape(String name) {
+    return getAttrShape(unsafeNativeHandle, name);
+  }
+
+  /**
+   * Get the value of a shape list attribute of this operation.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute
+   */
+  public Shape[] getAttrShapeList(String name) {
+    return getAttrShapeList(unsafeNativeHandle, name);
+  }
 
   TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
@@ -341,7 +503,8 @@ public final class GraphOperation extends AbstractOperation {
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
-      throw new IllegalStateException("close() has been called on the Graph this Operation was a part of");
+      throw new IllegalStateException(
+          "close() has been called on the Graph this Operation was a part of");
     }
   }
 
@@ -397,7 +560,9 @@ public final class GraphOperation extends AbstractOperation {
       TF_Status status = TF_Status.newStatus();
       int numDims = TF_GraphGetTensorNumDims(graphHandle, output, status);
       status.throwExceptionIfNotOK();
-      if (numDims < 0) return null;
+      if (numDims < 0) {
+        return null;
+      }
       long[] dims = new long[numDims];
       TF_GraphGetTensorShape(graphHandle, output, dims, numDims, status);
       status.throwExceptionIfNotOK();
@@ -411,12 +576,266 @@ public final class GraphOperation extends AbstractOperation {
 
     int numOutputs = TF_OperationNumOutputs(opHandle);
     if (outputIndex < 0 || outputIndex >= numOutputs) {
-        throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
-            + ") for an operation that has " + numOutputs + " outputs");
+      throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
+          + ") for an operation that has " + numOutputs + " outputs");
     }
 
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationOutputType(new TF_Output().oper(opHandle).index(outputIndex));
+    }
+  }
+
+  private static TF_AttrMetadata getAttrMetadata(TF_Operation handle, String name) {
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_AttrMetadata r = TF_OperationGetAttrMetadata(handle, name, status);
+      status.throwExceptionIfNotOK();
+      return r;
+    }
+  }
+
+  private static String getAttrString(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).total_size();
+      BytePointer result = new BytePointer(size);
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrString(handle, name, result, size, status);
+      status.throwExceptionIfNotOK();
+      return result.getString();
+    }
+  }
+
+  private static String[] getAttrStringList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_AttrMetadata metadata = getAttrMetadata(handle, name);
+      int listSize = (int) metadata.list_size();
+      int totalSize = (int) metadata.total_size();
+
+      PointerPointer<BytePointer> values = new PointerPointer<>(listSize);
+      SizeTPointer lengths = new SizeTPointer(listSize);
+      BytePointer storage = new BytePointer(totalSize);
+
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrStringList(handle, name, values, lengths, listSize, storage, totalSize,
+          status);
+      status.throwExceptionIfNotOK();
+
+      String[] results = new String[listSize];
+
+      for (int i = 0; i < results.length; i++) {
+        int length = (int) lengths.get(i);
+
+        if (length == 0) {
+          results[i] = "";
+          continue;
+        }
+
+        results[i] = values.getString(i);
+      }
+
+      return results;
+    }
+  }
+
+  private static long getAttrInt(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long[] result = new long[1];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrInt(handle, name, result, status);
+      status.throwExceptionIfNotOK();
+      return result[0];
+    }
+  }
+
+  private static long[] getAttrIntList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).list_size();
+      long[] result = new long[(int) size];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrIntList(handle, name, result, result.length, status);
+      status.throwExceptionIfNotOK();
+      return result;
+    }
+  }
+
+  private static float getAttrFloat(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      float[] result = new float[1];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrFloat(handle, name, result, status);
+      status.throwExceptionIfNotOK();
+      return result[0];
+    }
+  }
+
+  private static float[] getAttrFloatList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).list_size();
+      float[] result = new float[(int) size];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrFloatList(handle, name, result, result.length, status);
+      status.throwExceptionIfNotOK();
+      return result;
+    }
+  }
+
+  private static boolean getAttrBool(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      byte[] result = new byte[1];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrBool(handle, name, result, status);
+      status.throwExceptionIfNotOK();
+      return result[0] == 1;
+    }
+  }
+
+  private static boolean[] getAttrBoolList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).list_size();
+      byte[] byteResults = new byte[(int) size];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrBoolList(handle, name, byteResults, byteResults.length, status);
+      status.throwExceptionIfNotOK();
+
+      boolean[] results = new boolean[byteResults.length];
+
+      for (int i = 0; i < results.length; i++) {
+        results[i] = byteResults[i] == 1;
+      }
+
+      return results;
+    }
+  }
+
+  private static DataType getAttrType(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      int[] result = new int[1];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrType(handle, name, result, status);
+      status.throwExceptionIfNotOK();
+      return DataType.forNumber(result[0]);
+    }
+  }
+
+  private static DataType[] getAttrTypeList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).list_size();
+      int[] typeInts = new int[(int) size];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrTypeList(handle, name, typeInts, typeInts.length, status);
+      status.throwExceptionIfNotOK();
+
+      DataType[] results = new DataType[typeInts.length];
+
+      for (int i = 0; i < results.length; i++) {
+        results[i] = DataType.forNumber(typeInts[i]);
+      }
+
+      return results;
+    }
+  }
+
+  private static Tensor getAttrTensor(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      PointerPointer<TF_Tensor> result = new PointerPointer<>(1);
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrTensor(handle, new BytePointer(name), result, status);
+      status.throwExceptionIfNotOK();
+      return RawTensor.fromHandle(result.get(TF_Tensor.class, 0).withDeallocator());
+    }
+  }
+
+  private static Tensor[] getAttrTensorList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).list_size();
+      PointerPointer<TF_Tensor> pointers = new PointerPointer<>(size);
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrTensorList(handle, new BytePointer(name), pointers, (int) size, status);
+      status.throwExceptionIfNotOK();
+
+      Tensor[] results = new Tensor[(int) size];
+      for (int i = 0; i < results.length; i++) {
+        results[i] = RawTensor.fromHandle(pointers.get(TF_Tensor.class, i).withDeallocator());
+      }
+
+      return results;
+    }
+  }
+
+  private static Shape getAttrShape(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      long size = getAttrMetadata(handle, name).total_size();
+
+      if (size == -1) {
+        return Shape.unknown();
+      }
+
+      long[] result = new long[(int) size];
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrShape(handle, name, result, result.length, status);
+      status.throwExceptionIfNotOK();
+      return Shape.of(result);
+    }
+  }
+
+  //TODO test
+  private static Shape[] getAttrShapeList(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_AttrMetadata metadata = getAttrMetadata(handle, name);
+      int listSize = (int) metadata.list_size();
+      int totalSize = (int) metadata.total_size();
+
+      long[] dimPointers = new long[listSize];
+      int[] numDims = new int[listSize];
+      long[] storage = new long[totalSize];
+
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrShapeList(handle, name, dimPointers, numDims, listSize, storage, totalSize,
+          status);
+      status.throwExceptionIfNotOK();
+
+      long minDimOffset = Long.MAX_VALUE;
+      for (int i = 0; i < listSize; i++) {
+        if (dimPointers[i] < minDimOffset) {
+          minDimOffset = dimPointers[i];
+        }
+      }
+
+      int[] dims = new int[listSize];
+      for (int i = 0; i < listSize; i++) {
+        dims[i] = (int) ((dimPointers[i] - minDimOffset) / 8);
+      }
+
+      Shape[] results = new Shape[listSize];
+
+      for (int i = 0; i < results.length; i++) {
+        int length = numDims[i];
+
+        if (length == -1) {
+          results[i] = Shape.unknown();
+          continue;
+        }
+
+        int start = dims[i];
+        long[] shape = Arrays.copyOfRange(storage, start, start + length);
+        results[i] = Shape.of(shape);
+      }
+
+      return results;
     }
   }
 }
