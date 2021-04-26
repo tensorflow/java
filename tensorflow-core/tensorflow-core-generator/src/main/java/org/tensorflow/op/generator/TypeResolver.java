@@ -21,18 +21,17 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Names;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one
@@ -42,7 +41,9 @@ final class TypeResolver {
 
   static TypeName WILDCARD = WildcardTypeName.subtypeOf(TypeName.OBJECT);
   static TypeName STRING = TypeName.get(java.lang.String.class);
-  /** Data types that are real numbers. */
+  /**
+   * Data types that are real numbers.
+   */
   private static final Set<DataType> realNumberTypes = new HashSet<>();
 
   static {
@@ -65,11 +66,17 @@ final class TypeResolver {
     realNumberTypes.add(DataType.DT_UINT64);
   }
 
-  /** The op def to get types for. */
+  /**
+   * The op def to get types for.
+   */
   private final OpDef op;
-  /** The processed argument types. */
+  /**
+   * The processed argument types.
+   */
   private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
-  /** Known types. Not simply a cache. */
+  /**
+   * Known types. Not simply a cache.
+   */
   private final Map<String, ResolvedType> known = new HashMap<>();
   /**
    * Attributes that were reached while getting the types of inputs.
@@ -84,7 +91,9 @@ final class TypeResolver {
     calculateArgTypes();
   }
 
-  /** Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one. */
+  /**
+   * Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one.
+   */
   static TypeName forDataType(DataType dataType) {
     switch (dataType) {
       case DT_STRING:
@@ -167,7 +176,9 @@ final class TypeResolver {
     return reachedFromInput.contains(attrName);
   }
 
-  /** Get a new generic letter. */
+  /**
+   * Get a new generic letter.
+   */
   private TypeVariableName nextGeneric() {
     char letter = nextGenericLetter++;
     if (nextGenericLetter > 'Z') {
@@ -176,7 +187,9 @@ final class TypeResolver {
     return TypeVariableName.get(String.valueOf(letter));
   }
 
-  /** Returns true if the attribute is a real number type or is limited to real number types. */
+  /**
+   * Returns true if the attribute is a real number type or is limited to real number types.
+   */
   private boolean isRealNumberTyped(AttrValue value) {
     if (!value.hasList()) {
       return realNumberTypes.contains(value.getType());
@@ -189,7 +202,9 @@ final class TypeResolver {
     return true;
   }
 
-  /** Get the family {@code TType} of an attribute, i.e. {@code TNumber} */
+  /**
+   * Get the family {@code TType} of an attribute, i.e. {@code TNumber}
+   */
   private TypeName typeFamily(AttrDef attr) {
     if (isRealNumberTyped(attr.getAllowedValues())) {
       return Names.TNumber;
@@ -198,7 +213,9 @@ final class TypeResolver {
     return Names.TType;
   }
 
-  /** Get the type of an attribute. */
+  /**
+   * Get the type of an attribute.
+   */
   ResolvedType typeOf(AttrDef attr) {
     return typeOf(attr, false);
   }
@@ -207,7 +224,7 @@ final class TypeResolver {
    * Get the type of an attribute
    *
    * @param fromInput whether we're calculating input types and should add this attr to {@link
-   *     #reachedFromInput}
+   *                  #reachedFromInput}
    */
   private ResolvedType typeOf(AttrDef attr, boolean fromInput) {
     if (known.containsKey(attr.getName())) {
@@ -225,30 +242,31 @@ final class TypeResolver {
 
     switch (typeName) {
       case "string":
-        types = new ResolvedType(STRING);
+        types = new ResolvedType(STRING, AttributeType.String);
         break;
       case "int":
-        types = new ResolvedType(TypeName.LONG);
+        types = new ResolvedType(TypeName.LONG, AttributeType.Int);
         break;
       case "float":
-        types = new ResolvedType(TypeName.FLOAT);
+        types = new ResolvedType(TypeName.FLOAT, AttributeType.Float);
         break;
       case "bool":
-        types = new ResolvedType(TypeName.BOOLEAN);
+        types = new ResolvedType(TypeName.BOOLEAN, AttributeType.Bool);
         break;
       case "shape":
-        types = new ResolvedType(Names.Shape);
+        types = new ResolvedType(Names.Shape, AttributeType.Shape);
         break;
       case "tensor":
-        types = new ResolvedType(Names.Tensor);
+        types = new ResolvedType(Names.Tensor, AttributeType.Tensor);
         break;
       case "type":
         TypeName family = typeFamily(attr);
         TypeName type =
             iterable ? WildcardTypeName.subtypeOf(family) : nextGeneric().withBounds(family);
-        types = new ResolvedType(type, TypeName.get(DataType.class));
+        types = new ResolvedType(type, TypeName.get(DataType.class), AttributeType.Type);
         break;
       case "func":
+        //TODO add attribute type once supported
         types = new ResolvedType(Names.ConcreteFunction);
         break;
       default:
@@ -263,7 +281,9 @@ final class TypeResolver {
     return types;
   }
 
-  /** Get the type of an argument (calculated in the constructor) */
+  /**
+   * Get the type of an argument (calculated in the constructor)
+   */
   ResolvedType typeOf(ArgDef arg) {
     return argTypes.get(arg);
   }

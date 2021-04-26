@@ -19,6 +19,7 @@ package org.tensorflow;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
+import java.util.Arrays;
 
 public class Names {
 
@@ -48,17 +49,22 @@ public class Names {
 
   public static final TypeName Op = ClassName.get(OpPackage, "Op");
   public static final ClassName RawOp = ClassName.get(OpPackage, "RawOp");
+  public static final ClassName RawOpInputs = ClassName.get(OpPackage, "RawOpInputs");
   public static final ClassName Operation = ClassName.get(TensorflowPackage, "Operation");
+  public static final ClassName GraphOperation = ClassName.get(TensorflowPackage, "GraphOperation");
   public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
-  public static final ClassName OperationBuilder = ClassName.get(TensorflowPackage, "OperationBuilder");
-  public static final TypeName IterableOp = ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
+  public static final ClassName OperationBuilder = ClassName
+      .get(TensorflowPackage, "OperationBuilder");
+  public static final TypeName IterableOp = ParameterizedTypeName
+      .get(ClassName.get(Iterable.class), Op);
 
   public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
   public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
 
   public static final ClassName Shape = ClassName.get(TensorflowPackage + ".ndarray", "Shape");
   public static final ClassName Tensor = ClassName.get(TensorflowPackage, "Tensor");
-  public static final ClassName ConcreteFunction = ClassName.get(TensorflowPackage, "ConcreteFunction");
+  public static final ClassName ConcreteFunction = ClassName
+      .get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
   public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
@@ -69,5 +75,6 @@ public class Names {
   public static final TypeName EagerSession = ClassName.get(TensorflowPackage, "EagerSession");
 
   public static final TypeName String = ClassName.get(String.class);
+  public static final TypeName Arrays = ClassName.get(Arrays.class);
 
 }
