@@ -16,18 +16,64 @@
  */
 package org.tensorflow.op;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.GraphOperation;
+import org.tensorflow.proto.framework.AttrValue;
 
 /**
  * A base class for operation input accessors.
  */
-public class RawOpInputs<T extends RawOp> {
+public abstract class RawOpInputs<T extends RawOp> {
 
   /**
    * The outputs of this operation.
    */
   public T getOutputs() {
     return outputs;
+  }
+
+  /**
+   * Get the names of this op's attributes
+   */
+  public Set<String> attributeNames() {
+    return attributeNames;
+  }
+
+  /**
+   * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be
+   * prefered when possible.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute, as an {@link AttrValue} proto
+   */
+  public AttrValue attributeValue(String name) {
+    return op.getAttrValueProto(name);
+  }
+
+  /**
+   * Get all attribute value protos
+   */
+  public Map<String, AttrValue> attributeValues() {
+    Map<String, AttrValue> values = new LinkedHashMap<>(attributeNames.size());
+    for (String name : attributeNames) {
+      values.put(name, attributeValue(name));
+    }
+    return values;
+  }
+
+  /**
+   * Get the metadata for an attribute
+   *
+   * @param name the name of the attribute
+   * @return the attribute's metadata
+   */
+  public AttributeMetadata attributeMetadata(String name) {
+    return op.getAttrMetadata(name);
   }
 
   @Override
@@ -53,13 +99,15 @@ public class RawOpInputs<T extends RawOp> {
     return String.format("Inputs of <%s '%s'>", op.type(), op.name());
   }
 
-  protected RawOpInputs(T outputs, GraphOperation op) {
+  protected RawOpInputs(T outputs, GraphOperation op, Collection<String> attributeNames) {
     this.outputs = outputs;
     this.op = op;
+    this.attributeNames = Collections.unmodifiableSet(new LinkedHashSet<>(attributeNames));
   }
 
   // don't expose, this will be converted to a ForwardOperation w/ new gradient support
   private final GraphOperation op;
   private final T outputs;
+  private final Set<String> attributeNames;
 
 }
