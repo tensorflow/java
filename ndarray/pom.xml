@@ -27,7 +27,7 @@
   <artifactId>ndarray</artifactId>
   <packaging>jar</packaging>
 
-  <name>Java NdArray Library</name>
+  <name>NdArray Java Library</name>
   <description>
     Utility library for N-dimensional data I/O operations in Java.
   </description>
