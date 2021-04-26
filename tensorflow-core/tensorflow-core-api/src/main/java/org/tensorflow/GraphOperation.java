@@ -36,6 +36,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAtt
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInput;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInputListLength;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationNumControlInputs;
@@ -214,6 +215,44 @@ public final class GraphOperation extends AbstractOperation {
    */
   public int numInputs() {
     return TF_OperationNumInputs(getUnsafeNativeHandle());
+  }
+
+  /**
+   * Gets the input at the given index
+   */
+  public Output<?> input(int idx) {
+    if (idx < 0) {
+      throw new IndexOutOfBoundsException("Can't get input with index < 0.");
+    }
+
+    int numInputs = numInputs();
+    if (idx >= numInputs) {
+      throw new IndexOutOfBoundsException(
+          "Can't get input with index " + idx + ", this op only has " + numInputs + " inputs.");
+    }
+
+    try (PointerScope scope = new PointerScope()) {
+      TF_Input input = new TF_Input().oper(getUnsafeNativeHandle()).index(idx);
+      TF_Output output = TF_OperationInput(input);
+      String opName = TF_OperationName(output.oper()).getString();
+      return graph.operation(opName).output(output.index());
+    }
+  }
+
+  /**
+   * Get the input list that starts at {@code idx} and has length {@code length}
+   *
+   * @param idx    the starting index of the list
+   * @param length the length of the list
+   * @return the input list
+   * @see #inputListLength(String)
+   */
+  public Output<?>[] inputList(int idx, int length) {
+    Output<?>[] inputs = new Output<?>[length];
+    for (int i = 0; i < length; ++i) {
+      inputs[i] = input(idx + i);
+    }
+    return inputs;
   }
 
   /**
