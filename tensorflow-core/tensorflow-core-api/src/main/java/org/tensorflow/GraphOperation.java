@@ -33,6 +33,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAtt
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTensorList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrType;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrTypeList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlInputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationGetControlOutputs;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationInputListLength;
@@ -47,6 +48,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutput
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputNumConsumers;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -58,6 +60,7 @@ import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.internal.c_api.TF_AttrMetadata;
+import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Input;
 import org.tensorflow.internal.c_api.TF_Operation;
@@ -65,6 +68,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
 /**
@@ -493,6 +497,17 @@ public final class GraphOperation extends AbstractOperation {
     return getAttrShapeList(unsafeNativeHandle, name);
   }
 
+
+  /**
+   * Get the value of an attribute of this operation as an {@link AttrValue} proto.
+   *
+   * @param name the name of the attribute
+   * @return the value of the attribute as an {@link AttrValue} proto
+   */
+  public AttrValue getAttrValueProto(String name) {
+    return getAttrValueProto(unsafeNativeHandle, name);
+  }
+
   TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
   }
@@ -836,6 +851,19 @@ public final class GraphOperation extends AbstractOperation {
       }
 
       return results;
+    }
+  }
+
+  private static AttrValue getAttrValueProto(TF_Operation handle, String name) {
+    requireHandle(handle);
+    try (PointerScope scope = new PointerScope()) {
+      TF_Buffer buffer = TF_Buffer.newBuffer();
+      TF_Status status = TF_Status.newStatus();
+      TF_OperationGetAttrValueProto(handle, name, buffer, status);
+      status.throwExceptionIfNotOK();
+      return AttrValue.parseFrom(buffer.dataAsByteBuffer());
+    } catch (InvalidProtocolBufferException e) {
+      throw new IllegalStateException("Invalud protobuf for attribute " + name, e);
     }
   }
 }
