@@ -380,6 +380,10 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .pointerTypes("TFE_TensorHandle")
                 .base("org.tensorflow.internal.c_api.AbstractTFE_TensorHandle"))
         .put(
+            new Info("SP_Stream")
+                .cast()
+                .pointerTypes("Pointer"))
+        .put(
             new Info(
                     "TF_ShapeInferenceContextDimValueKnown",
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)")

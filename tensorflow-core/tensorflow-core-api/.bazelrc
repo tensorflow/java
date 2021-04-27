@@ -151,8 +151,8 @@ build --define open_source_build=true
 test --define open_source_build=true
 
 # For workaround https://github.com/bazelbuild/bazel/issues/8772 with Bazel >= 0.29.1
-build --java_toolchain=@org_tensorflow//third_party/toolchains/java:tf_java_toolchain
-build --host_java_toolchain=@org_tensorflow//third_party/toolchains/java:tf_java_toolchain
+build --java_toolchain=@tf_toolchains//toolchains/java:tf_java_toolchain
+build --host_java_toolchain=@tf_toolchains//toolchains/java:tf_java_toolchain
 
 # Please note that MKL on MacOS or windows is still not supported.
 # If you would like to use a local MKL instead of downloading, please set the
@@ -616,3 +616,33 @@ build:release_gpu_linux_cuda_10_1 --config=release_gpu_linux
 build:release_gpu_linux_cuda_10_1 --action_env CUDA_TOOLKIT_PATH="/usr/local/cuda-10.1"
 build:release_gpu_linux_cuda_10_1 --action_env=TF_CUDA_VERSION="10"
 build:release_gpu_linux_cuda_10_1 --action_env=TF_CUDNN_VERSION="7"
+
+# Address sanitizer
+# CC=clang bazel build --config asan
+build:asan --strip=never
+build:asan --copt -fsanitize=address
+build:asan --copt -DADDRESS_SANITIZER
+build:asan --copt -g
+build:asan --copt -O3
+build:asan --copt -fno-omit-frame-pointer
+build:asan --linkopt -fsanitize=address
+
+# Memory sanitizer
+# CC=clang bazel build --config msan
+build:msan --strip=never
+build:msan --copt -fsanitize=memory
+build:msan --copt -DADDRESS_SANITIZER
+build:msan --copt -g
+build:msan --copt -O3
+build:msan --copt -fno-omit-frame-pointer
+build:msan --linkopt -fsanitize=memory
+
+# Undefined Behavior Sanitizer
+# CC=clang bazel build --config ubsan
+build:ubsan --strip=never
+build:ubsan --copt -fsanitize=undefined
+build:ubsan --copt -g
+build:ubsan --copt -O3
+build:ubsan --copt -fno-omit-frame-pointer
+build:ubsan --linkopt -fsanitize=undefined
+build:ubsan --linkopt -lubsan
