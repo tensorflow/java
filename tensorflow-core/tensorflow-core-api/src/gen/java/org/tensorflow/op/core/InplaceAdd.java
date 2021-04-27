@@ -29,9 +29,8 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * <pre>
  * Adds v into specified rows of x.
- *
+ * <pre>
  * Computes y = x; y[i, :] += v; return y.
  * </pre>
  *

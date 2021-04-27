@@ -37,7 +37,39 @@ import org.tensorflow.types.family.TType;
  * in the graph it inputs are masked from the gradient generator.  They are not
  * taken into account for computing gradients.
  * <p>This is useful any time you want to compute a value with TensorFlow but need
- * to pretend that the value was a constant. Some examples include:
+ * to pretend that the value was a constant. For example, the softmax function
+ * for a vector x can be written as
+ * <pre>
+ *
+ *   def softmax(x):
+ *     numerator = tf.exp(x)
+ *     denominator = tf.reduce_sum(numerator)
+ *     return numerator / denominator
+ * </pre>
+ * <p>This however is susceptible to overflow if the values in x are large. An
+ * alternative more stable way is to subtract the maximum of x from each of the
+ * values.
+ * <pre>
+ *
+ *   def stable_softmax(x):
+ *     z = x - tf.reduce_max(x)
+ *     numerator = tf.exp(z)
+ *     denominator = tf.reduce_sum(numerator)
+ *     return numerator / denominator
+ * </pre>
+ * <p>However, when we backprop through the softmax to x, we dont want to backprop
+ * through the {@code tf.reduce_max(x)} (if the max values are not unique then the
+ * gradient could flow to the wrong input) calculation and treat that as a
+ * constant. Therefore, we should write this out as
+ * <pre>
+ *
+ *   def stable_softmax(x):
+ *     z = x - tf.stop_gradient(tf.reduce_max(x))
+ *     numerator = tf.exp(z)
+ *     denominator = tf.reduce_sum(numerator)
+ *     return numerator / denominator
+ * </pre>
+ * <p>Some other examples include:
  * <ul>
  * <li>The <em>EM</em> algorithm where the <em>M-step</em> should not involve backpropagation
  * through the output of the <em>E-step</em>.</li>

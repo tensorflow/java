@@ -84,6 +84,9 @@ public final class InitializeTableFromTextFile extends RawOp {
         if (opts.delimiter != null) {
           opBuilder.setAttr("delimiter", opts.delimiter);
         }
+        if (opts.offset != null) {
+          opBuilder.setAttr("offset", opts.offset);
+        }
       }
     }
     return new InitializeTableFromTextFile(opBuilder.build());
@@ -110,12 +113,24 @@ public final class InitializeTableFromTextFile extends RawOp {
   }
 
   /**
+   * Sets the offset option.
+   *
+   * @param offset the offset option
+   * @return this Options instance.
+   */
+  public static Options offset(Long offset) {
+    return new Options().offset(offset);
+  }
+
+  /**
    * Optional attributes for {@link org.tensorflow.op.core.InitializeTableFromTextFile}
    */
   public static class Options {
     private Long vocabSize;
 
     private String delimiter;
+
+    private Long offset;
 
     private Options() {
     }
@@ -139,6 +154,17 @@ public final class InitializeTableFromTextFile extends RawOp {
      */
     public Options delimiter(String delimiter) {
       this.delimiter = delimiter;
+      return this;
+    }
+
+    /**
+     * Sets the offset option.
+     *
+     * @param offset the offset option
+     * @return this Options instance.
+     */
+    public Options offset(Long offset) {
+      this.offset = offset;
       return this;
     }
   }

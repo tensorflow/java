@@ -109,4 +109,29 @@ public interface XEventMetadataOrBuilder extends
    */
   org.tensorflow.proto.profiler.XStatOrBuilder getStatsOrBuilder(
       int index);
+
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  java.util.List<java.lang.Long> getChildIdList();
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  int getChildIdCount();
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  long getChildId(int index);
 }

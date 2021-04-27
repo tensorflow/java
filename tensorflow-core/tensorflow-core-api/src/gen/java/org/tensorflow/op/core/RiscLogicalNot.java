@@ -20,42 +20,57 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.TBool;
 
 /**
- * Deserializes a proto into the tree handle
+ * The RiscLogicalNot operation
  */
-public final class TensorForestTreeDeserialize extends RawOp {
+public final class RiscLogicalNot extends RawOp implements Operand<TBool> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TensorForestTreeDeserialize";
+  public static final String OP_NAME = "RiscLogicalNot";
 
-  private TensorForestTreeDeserialize(Operation operation) {
+  private Output<TBool> z;
+
+  private RiscLogicalNot(Operation operation) {
     super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new TensorForestTreeDeserialize operation.
+   * Factory method to create a class wrapping a new RiscLogicalNot operation.
    *
    * @param scope current scope
-   * @param treeHandle Handle to the tree resource to be restored.
-   * @param treeConfig Serialied proto string of the boosted_trees.Tree proto.
-   * @return a new instance of TensorForestTreeDeserialize
+   * @param x the x value
+   * @return a new instance of RiscLogicalNot
    */
   @Endpoint(
       describeByClass = true
   )
-  public static TensorForestTreeDeserialize create(Scope scope, Operand<? extends TType> treeHandle,
-      Operand<TString> treeConfig) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeDeserialize", scope.makeOpName("TensorForestTreeDeserialize"));
-    opBuilder.addInput(treeHandle.asOutput());
-    opBuilder.addInput(treeConfig.asOutput());
+  public static RiscLogicalNot create(Scope scope, Operand<TBool> x) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RiscLogicalNot", scope.makeOpName("RiscLogicalNot"));
+    opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorForestTreeDeserialize(opBuilder.build());
+    return new RiscLogicalNot(opBuilder.build());
+  }
+
+  /**
+   * Gets z.
+   *
+   * @return z.
+   */
+  public Output<TBool> z() {
+    return z;
+  }
+
+  @Override
+  public Output<TBool> asOutput() {
+    return z;
   }
 }

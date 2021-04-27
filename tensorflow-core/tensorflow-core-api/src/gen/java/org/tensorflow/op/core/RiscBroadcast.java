@@ -24,54 +24,60 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
- * Get the number of nodes in a tree
+ * The RiscBroadcast operation
+ *
+ * @param <T> data type for {@code output} output
  */
-public final class TensorForestTreeSize extends RawOp implements Operand<TInt32> {
+public final class RiscBroadcast<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TensorForestTreeSize";
+  public static final String OP_NAME = "RiscBroadcast";
 
-  private Output<TInt32> treeSize;
+  private Output<T> output;
 
-  private TensorForestTreeSize(Operation operation) {
+  private RiscBroadcast(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    treeSize = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new TensorForestTreeSize operation.
+   * Factory method to create a class wrapping a new RiscBroadcast operation.
    *
    * @param scope current scope
-   * @param treeHandle Handle to the tree resource.
-   * @return a new instance of TensorForestTreeSize
+   * @param input the input value
+   * @param shape the shape value
+   * @param <T> data type for {@code RiscBroadcast} output and operands
+   * @return a new instance of RiscBroadcast
    */
   @Endpoint(
       describeByClass = true
   )
-  public static TensorForestTreeSize create(Scope scope, Operand<? extends TType> treeHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSize", scope.makeOpName("TensorForestTreeSize"));
-    opBuilder.addInput(treeHandle.asOutput());
+  public static <T extends TType> RiscBroadcast<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> shape) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RiscBroadcast", scope.makeOpName("RiscBroadcast"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorForestTreeSize(opBuilder.build());
+    return new RiscBroadcast<>(opBuilder.build());
   }
 
   /**
-   * Gets treeSize.
-   * The size of the tree.
-   * @return treeSize.
+   * Gets output.
+   *
+   * @return output.
    */
-  public Output<TInt32> treeSize() {
-    return treeSize;
+  public Output<T> output() {
+    return output;
   }
 
   @Override
-  public Output<TInt32> asOutput() {
-    return treeSize;
+  public Output<T> asOutput() {
+    return output;
   }
 }

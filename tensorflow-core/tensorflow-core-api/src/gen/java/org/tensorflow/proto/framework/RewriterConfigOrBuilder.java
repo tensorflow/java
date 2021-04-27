@@ -329,6 +329,23 @@ public interface RewriterConfigOrBuilder extends
 
   /**
    * <pre>
+   * Optimizers registered by plugin (default is ON)
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+   */
+  int getUsePluginOptimizersValue();
+  /**
+   * <pre>
+   * Optimizers registered by plugin (default is ON)
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+   */
+  org.tensorflow.proto.framework.RewriterConfig.Toggle getUsePluginOptimizers();
+
+  /**
+   * <pre>
    * Controls how many times we run the optimizers in meta optimizer (default
    * is once).
    * </pre>
@@ -367,6 +384,20 @@ public interface RewriterConfigOrBuilder extends
    * <code>bool experimental_disable_compressed_tensor_optimization = 26;</code>
    */
   boolean getExperimentalDisableCompressedTensorOptimization();
+
+  /**
+   * <pre>
+   * Disable folding quantization emulation ops such as FakeQuantWithMinMax* and
+   * QuantizeAndDequantize*. Some compilers (e.g. the TF-to-tflite converter)
+   * have to extract quantization configs (e.g. min/max range, number of bits,
+   * and per-channel) from the quantization emulation ops. Note that this flag
+   * is experimental and may be removed in the future. See b/174138564 for more
+   * details.
+   * </pre>
+   *
+   * <code>bool experimental_disable_folding_quantization_emulation = 27;</code>
+   */
+  boolean getExperimentalDisableFoldingQuantizationEmulation();
 
   /**
    * <pre>

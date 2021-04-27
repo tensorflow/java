@@ -284,7 +284,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -296,7 +296,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -309,7 +309,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -321,7 +321,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -333,7 +333,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1347,7 +1347,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1363,7 +1363,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1379,7 +1379,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1395,7 +1395,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1418,7 +1418,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1438,7 +1438,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1460,7 +1460,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1483,7 +1483,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1503,7 +1503,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1523,7 +1523,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1544,7 +1544,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1563,7 +1563,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1582,7 +1582,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1595,7 +1595,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1611,7 +1611,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1628,7 +1628,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1641,7 +1641,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -1655,7 +1655,7 @@ private static final long serialVersionUID = 0L;
      * <pre>
      * Objects which this object depends on: named edges in the dependency
      * graph.
-     * Note: currently only valid if kind == "user_object".
+     * Note: currently only valid if kind == "user_object" or "resource".
      * </pre>
      *
      * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>

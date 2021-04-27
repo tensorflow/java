@@ -54,17 +54,36 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
    *
    * @param scope current scope
    * @param input the input value
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSharding} output and operands
    * @return a new instance of Sharding
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input) {
+  public static <T extends TType> Sharding<T> create(Scope scope, Operand<T> input,
+      Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("XlaSharding", scope.makeOpName("Sharding"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.sharding != null) {
+          opBuilder.setAttr("sharding", opts.sharding);
+        }
+      }
+    }
     return new Sharding<>(opBuilder.build());
+  }
+
+  /**
+   * Sets the sharding option.
+   *
+   * @param sharding the sharding option
+   * @return this Options instance.
+   */
+  public static Options sharding(String sharding) {
+    return new Options().sharding(sharding);
   }
 
   /**
@@ -79,5 +98,26 @@ public final class Sharding<T extends TType> extends RawOp implements Operand<T>
   @Override
   public Output<T> asOutput() {
     return output;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.xla.Sharding}
+   */
+  public static class Options {
+    private String sharding;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the sharding option.
+     *
+     * @param sharding the sharding option
+     * @return this Options instance.
+     */
+    public Options sharding(String sharding) {
+      this.sharding = sharding;
+      return this;
+    }
   }
 }

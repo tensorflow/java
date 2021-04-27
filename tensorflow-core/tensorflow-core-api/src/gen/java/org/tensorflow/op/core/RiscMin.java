@@ -20,42 +20,62 @@ package org.tensorflow.op.core;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
+import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Creates a tree resource and returns a handle to it.
+ * The RiscMin operation
+ *
+ * @param <T> data type for {@code z} output
  */
-public final class TensorForestCreateTreeVariable extends RawOp {
+public final class RiscMin<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TensorForestCreateTreeVariable";
+  public static final String OP_NAME = "RiscMin";
 
-  private TensorForestCreateTreeVariable(Operation operation) {
+  private Output<T> z;
+
+  private RiscMin(Operation operation) {
     super(operation);
+    int outputIdx = 0;
+    z = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new TensorForestCreateTreeVariable operation.
+   * Factory method to create a class wrapping a new RiscMin operation.
    *
    * @param scope current scope
-   * @param treeHandle Handle to the tree resource to be created.
-   * @param treeConfig Serialized proto string of the boosted_trees.Tree.
-   * @return a new instance of TensorForestCreateTreeVariable
+   * @param x the x value
+   * @param y the y value
+   * @param <T> data type for {@code RiscMin} output and operands
+   * @return a new instance of RiscMin
    */
   @Endpoint(
       describeByClass = true
   )
-  public static TensorForestCreateTreeVariable create(Scope scope,
-      Operand<? extends TType> treeHandle, Operand<TString> treeConfig) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorForestCreateTreeVariable", scope.makeOpName("TensorForestCreateTreeVariable"));
-    opBuilder.addInput(treeHandle.asOutput());
-    opBuilder.addInput(treeConfig.asOutput());
+  public static <T extends TNumber> RiscMin<T> create(Scope scope, Operand<T> x, Operand<T> y) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RiscMin", scope.makeOpName("RiscMin"));
+    opBuilder.addInput(x.asOutput());
+    opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorForestCreateTreeVariable(opBuilder.build());
+    return new RiscMin<>(opBuilder.build());
+  }
+
+  /**
+   * Gets z.
+   *
+   * @return z.
+   */
+  public Output<T> z() {
+    return z;
+  }
+
+  @Override
+  public Output<T> asOutput() {
+    return z;
   }
 }

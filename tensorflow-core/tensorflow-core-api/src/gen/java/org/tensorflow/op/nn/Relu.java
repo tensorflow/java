@@ -34,8 +34,8 @@ import org.tensorflow.types.family.TNumber;
  * <blockquote>
  * <blockquote>
  * <blockquote>
- * <p>tf.nn.relu([-2., 0., -0., 3.]).numpy()
- * array([ 0.,  0., -0.,  3.], dtype=float32)
+ * <p>tf.nn.relu([-2., 0., 3.]).numpy()
+ * array([0., 0., 3.], dtype=float32)
  * </blockquote>
  * </blockquote>
  * </blockquote>

@@ -143,7 +143,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
    * Sets the noise option.
    *
    * @param noise indicates if the noise should {@code uniform}, {@code gaussian}, or
-   * {@code zero}. The default is {@code uniform} which means the the noise type
+   * {@code zero}. The default is {@code uniform} which means the noise type
    * will be decided by {@code uniform_noise}.
    * @return this Options instance.
    */
@@ -221,7 +221,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
      * Sets the noise option.
      *
      * @param noise indicates if the noise should {@code uniform}, {@code gaussian}, or
-     * {@code zero}. The default is {@code uniform} which means the the noise type
+     * {@code zero}. The default is {@code uniform} which means the noise type
      * will be decided by {@code uniform_noise}.
      * @return this Options instance.
      */

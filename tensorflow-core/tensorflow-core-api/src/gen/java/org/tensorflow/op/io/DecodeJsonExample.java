@@ -29,12 +29,13 @@ import org.tensorflow.types.TString;
 
 /**
  * Convert JSON-encoded Example records to binary protocol buffer strings.
- * This op translates a tensor containing Example records, encoded using
- * the  <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">standard JSON
- * mapping</a> ,
- * into a tensor containing the same records encoded as binary protocol
- * buffers. The resulting tensor can then be fed to any of the other
- * Example-parsing ops.
+ * Note: This is <strong>not</strong> a general purpose JSON parsing op.
+ * <p>This op converts JSON-serialized
+ * {@code tf.train.Example} (created with {@code json_format.MessageToJson}, following the
+ *  <a href="https://developers.google.com/protocol-buffers/docs/proto3#json">standard JSON mapping</a> )
+ * to a binary-serialized {@code tf.train.Example} (equivalent to
+ * {@code Example.SerializeToString()}) suitable for conversion to tensors with
+ * {@code tf.io.parse_example}.
  */
 @Operator(
     group = "io"

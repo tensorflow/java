@@ -24,54 +24,61 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Serializes the tree handle to a proto
+ * The RiscPad operation
+ *
+ * @param <T> data type for {@code output} output
  */
-public final class TensorForestTreeSerialize extends RawOp implements Operand<TString> {
+public final class RiscPad<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TensorForestTreeSerialize";
+  public static final String OP_NAME = "RiscPad";
 
-  private Output<TString> treeConfig;
+  private Output<T> output;
 
-  private TensorForestTreeSerialize(Operation operation) {
+  private RiscPad(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    treeConfig = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new TensorForestTreeSerialize operation.
+   * Factory method to create a class wrapping a new RiscPad operation.
    *
    * @param scope current scope
-   * @param treeHandle Handle to the tree resource to be serialized.
-   * @return a new instance of TensorForestTreeSerialize
+   * @param input the input value
+   * @param paddings the paddings value
+   * @param constantValues the constantValues value
+   * @param <T> data type for {@code RiscPad} output and operands
+   * @return a new instance of RiscPad
    */
   @Endpoint(
       describeByClass = true
   )
-  public static TensorForestTreeSerialize create(Scope scope, Operand<? extends TType> treeHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeSerialize", scope.makeOpName("TensorForestTreeSerialize"));
-    opBuilder.addInput(treeHandle.asOutput());
+  public static <T extends TNumber> RiscPad<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> paddings, Operand<T> constantValues) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RiscPad", scope.makeOpName("RiscPad"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(paddings.asOutput());
+    opBuilder.addInput(constantValues.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorForestTreeSerialize(opBuilder.build());
+    return new RiscPad<>(opBuilder.build());
   }
 
   /**
-   * Gets treeConfig.
-   * Serialied proto string of the tree resource.
-   * @return treeConfig.
+   * Gets output.
+   *
+   * @return output.
    */
-  public Output<TString> treeConfig() {
-    return treeConfig;
+  public Output<T> output() {
+    return output;
   }
 
   @Override
-  public Output<TString> asOutput() {
-    return treeConfig;
+  public Output<T> asOutput() {
+    return output;
   }
 }

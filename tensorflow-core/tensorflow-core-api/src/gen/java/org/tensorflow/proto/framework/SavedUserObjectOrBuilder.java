@@ -52,6 +52,9 @@ public interface SavedUserObjectOrBuilder extends
 
   /**
    * <pre>
+   * Deprecated! At the time of deprecation, Keras was the only user of this
+   * field, and its saving and loading code will be updated shortly.
+   * Please save your application-specific metadata to separate file
    * Initialization-related metadata.
    * </pre>
    *
@@ -60,6 +63,9 @@ public interface SavedUserObjectOrBuilder extends
   java.lang.String getMetadata();
   /**
    * <pre>
+   * Deprecated! At the time of deprecation, Keras was the only user of this
+   * field, and its saving and loading code will be updated shortly.
+   * Please save your application-specific metadata to separate file
    * Initialization-related metadata.
    * </pre>
    *

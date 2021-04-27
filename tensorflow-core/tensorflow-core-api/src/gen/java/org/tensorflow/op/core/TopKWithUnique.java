@@ -29,11 +29,12 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
- * Returns the TopK values in the array in sorted order. This is a combination
- * of MakeUnique and TopKUnique. The returned top-K will have its lower bits
- * replaced by iota, thus it will be close to the original value but not exactly
- * the same. The running time is proportional to the product of K and the input
- * size. NaNs are never returned. Subnormal numbers are flushed to zero.
+ * Returns the TopK values in the array in sorted order.
+ * This is a combination of MakeUnique and TopKUnique. The returned top-K will
+ * have its lower bits replaced by iota, thus it will be close to the original
+ * value but not exactly the same. The running time is proportional to the product
+ * of K and the input size. NaNs are never returned. Subnormal numbers are flushed
+ * to zero.
  */
 @Operator
 public final class TopKWithUnique extends RawOp {

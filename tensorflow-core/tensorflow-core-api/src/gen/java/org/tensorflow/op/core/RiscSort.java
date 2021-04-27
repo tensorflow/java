@@ -24,55 +24,61 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Checks whether a tree has been initialized.
+ * The RiscSort operation
+ *
+ * @param <T> data type for {@code output} output
  */
-public final class TensorForestTreeIsInitializedOp extends RawOp implements Operand<TBool> {
+public final class RiscSort<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "TensorForestTreeIsInitializedOp";
+  public static final String OP_NAME = "RiscSort";
 
-  private Output<TBool> isInitialized;
+  private Output<T> output;
 
-  private TensorForestTreeIsInitializedOp(Operation operation) {
+  private RiscSort(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    isInitialized = operation.output(outputIdx++);
+    output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new TensorForestTreeIsInitializedOp operation.
+   * Factory method to create a class wrapping a new RiscSort operation.
    *
    * @param scope current scope
-   * @param treeHandle Handle to the tree.
-   * @return a new instance of TensorForestTreeIsInitializedOp
+   * @param input the input value
+   * @param axis the axis value
+   * @param direction the value of the direction property
+   * @param <T> data type for {@code RiscSort} output and operands
+   * @return a new instance of RiscSort
    */
   @Endpoint(
       describeByClass = true
   )
-  public static TensorForestTreeIsInitializedOp create(Scope scope,
-      Operand<? extends TType> treeHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorForestTreeIsInitializedOp", scope.makeOpName("TensorForestTreeIsInitializedOp"));
-    opBuilder.addInput(treeHandle.asOutput());
+  public static <T extends TNumber> RiscSort<T> create(Scope scope, Operand<T> input,
+      Operand<? extends TNumber> axis, String direction) {
+    OperationBuilder opBuilder = scope.env().opBuilder("RiscSort", scope.makeOpName("RiscSort"));
+    opBuilder.addInput(input.asOutput());
+    opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new TensorForestTreeIsInitializedOp(opBuilder.build());
+    opBuilder.setAttr("direction", direction);
+    return new RiscSort<>(opBuilder.build());
   }
 
   /**
-   * Gets isInitialized.
-   * Whether the tree is initialized.
-   * @return isInitialized.
+   * Gets output.
+   *
+   * @return output.
    */
-  public Output<TBool> isInitialized() {
-    return isInitialized;
+  public Output<T> output() {
+    return output;
   }
 
   @Override
-  public Output<TBool> asOutput() {
-    return isInitialized;
+  public Output<T> asOutput() {
+    return output;
   }
 }

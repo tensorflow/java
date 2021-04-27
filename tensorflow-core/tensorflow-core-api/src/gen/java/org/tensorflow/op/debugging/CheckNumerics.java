@@ -29,9 +29,9 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Checks a tensor for NaN, -Inf and +Inf values.
  * When run, reports an {@code InvalidArgument} error if {@code tensor} has any values
- * that are not a number (NaN) or infinity (Inf). Otherwise, passes {@code tensor} as-is.
- * Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf in the
- * errors it throws.
+ * that are not a number (NaN) or infinity (Inf). Otherwise, returns the input
+ * tensor. Unlike CheckNumerics (V1), CheckNumericsV2 distinguishes -Inf and +Inf
+ * in the errors it throws.
  *
  * @param <T> data type for {@code output} output
  */

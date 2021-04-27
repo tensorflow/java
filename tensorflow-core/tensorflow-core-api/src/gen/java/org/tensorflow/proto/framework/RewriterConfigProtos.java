@@ -54,7 +54,7 @@ public final class RewriterConfigProtos {
       "e/protobuf/verifier_config.proto\";\n\023Auto" +
       "ParallelOptions\022\016\n\006enable\030\001 \001(\010\022\024\n\014num_r" +
       "eplicas\030\002 \001(\005\"+\n\026ScopedAllocatorOptions\022" +
-      "\021\n\tenable_op\030\001 \003(\t\"\342\022\n\016RewriterConfig\022C\n" +
+      "\021\n\tenable_op\030\001 \003(\t\"\341\023\n\016RewriterConfig\022C\n" +
       "\025cpu_layout_conversion\0302 \001(\0162$.tensorflo" +
       "w.RewriterConfig.CpuLayout\022;\n\020layout_opt" +
       "imizer\030\001 \001(\0162!.tensorflow.RewriterConfig" +
@@ -82,43 +82,46 @@ public final class RewriterConfigProtos {
       "cision\030\027 \001(\0162!.tensorflow.RewriterConfig" +
       ".Toggle\022C\n\030auto_mixed_precision_mkl\030\031 \001(" +
       "\0162!.tensorflow.RewriterConfig.Toggle\022\036\n\026" +
-      "disable_meta_optimizer\030\023 \001(\010\022O\n\031meta_opt" +
-      "imizer_iterations\030\014 \001(\0162,.tensorflow.Rew" +
-      "riterConfig.NumIterationsType\022\027\n\017min_gra" +
-      "ph_nodes\030\021 \001(\005\022;\n3experimental_disable_c" +
-      "ompressed_tensor_optimization\030\032 \001(\010\022B\n\023m" +
-      "emory_optimization\030\004 \001(\0162%.tensorflow.Re" +
-      "writerConfig.MemOptType\022/\n\'memory_optimi" +
-      "zer_target_node_name_scope\030\006 \001(\t\022!\n\031meta" +
-      "_optimizer_timeout_ms\030\024 \001(\003\0226\n\rauto_para" +
-      "llel\030\005 \001(\0132\037.tensorflow.AutoParallelOpti" +
-      "ons\022 \n\030fail_on_optimizer_errors\030\025 \001(\010\022A\n" +
-      "\025scoped_allocator_opts\030\020 \001(\0132\".tensorflo" +
-      "w.ScopedAllocatorOptions\022\022\n\noptimizers\030d" +
-      " \003(\t\022K\n\021custom_optimizers\030\310\001 \003(\0132/.tenso" +
-      "rflow.RewriterConfig.CustomGraphOptimize" +
-      "r\022D\n\037inter_optimizer_verifier_config\030\254\002 " +
-      "\001(\0132\032.tensorflow.VerifierConfig\022F\n!post_" +
-      "optimization_verifier_config\030\255\002 \001(\0132\032.te" +
-      "nsorflow.VerifierConfig\032\312\001\n\024CustomGraphO" +
-      "ptimizer\022\014\n\004name\030\001 \001(\t\022X\n\rparameter_map\030" +
-      "\002 \003(\0132A.tensorflow.RewriterConfig.Custom" +
-      "GraphOptimizer.ParameterMapEntry\032J\n\021Para" +
-      "meterMapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005value\030\002 \001(" +
-      "\0132\025.tensorflow.AttrValue:\0028\001\"6\n\006Toggle\022\013" +
-      "\n\007DEFAULT\020\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002\022\016\n\nAGGRESSI" +
-      "VE\020\003\"I\n\tCpuLayout\022\030\n\024NO_CONVERSION_ON_CP" +
-      "U\020\000\022\020\n\014NCHW_TO_NHWC\020\001\022\020\n\014NHWC_TO_NCHW\020\002\"" +
-      "<\n\021NumIterationsType\022\025\n\021DEFAULT_NUM_ITER" +
-      "S\020\000\022\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"\237\001\n\nMemOptType\022\023\n\017" +
-      "DEFAULT_MEM_OPT\020\000\022\016\n\nNO_MEM_OPT\020\001\022\n\n\006MAN" +
-      "UAL\020\002\022\027\n\023SWAPPING_HEURISTICS\020\004\022\034\n\030RECOMP" +
-      "UTATION_HEURISTICS\020\005\022\031\n\025SCHEDULING_HEURI" +
-      "STICS\020\006\022\016\n\nHEURISTICS\020\003B\222\001\n\036org.tensorfl" +
-      "ow.proto.frameworkB\024RewriterConfigProtos" +
-      "P\001ZUgithub.com/tensorflow/tensorflow/ten" +
-      "sorflow/go/core/protobuf/for_core_protos" +
-      "_go_proto\370\001\001b\006proto3"
+      "disable_meta_optimizer\030\023 \001(\010\022@\n\025use_plug" +
+      "in_optimizers\030\034 \001(\0162!.tensorflow.Rewrite" +
+      "rConfig.Toggle\022O\n\031meta_optimizer_iterati" +
+      "ons\030\014 \001(\0162,.tensorflow.RewriterConfig.Nu" +
+      "mIterationsType\022\027\n\017min_graph_nodes\030\021 \001(\005" +
+      "\022;\n3experimental_disable_compressed_tens" +
+      "or_optimization\030\032 \001(\010\022;\n3experimental_di" +
+      "sable_folding_quantization_emulation\030\033 \001" +
+      "(\010\022B\n\023memory_optimization\030\004 \001(\0162%.tensor" +
+      "flow.RewriterConfig.MemOptType\022/\n\'memory" +
+      "_optimizer_target_node_name_scope\030\006 \001(\t\022" +
+      "!\n\031meta_optimizer_timeout_ms\030\024 \001(\003\0226\n\rau" +
+      "to_parallel\030\005 \001(\0132\037.tensorflow.AutoParal" +
+      "lelOptions\022 \n\030fail_on_optimizer_errors\030\025" +
+      " \001(\010\022A\n\025scoped_allocator_opts\030\020 \001(\0132\".te" +
+      "nsorflow.ScopedAllocatorOptions\022\022\n\noptim" +
+      "izers\030d \003(\t\022K\n\021custom_optimizers\030\310\001 \003(\0132" +
+      "/.tensorflow.RewriterConfig.CustomGraphO" +
+      "ptimizer\022D\n\037inter_optimizer_verifier_con" +
+      "fig\030\254\002 \001(\0132\032.tensorflow.VerifierConfig\022F" +
+      "\n!post_optimization_verifier_config\030\255\002 \001" +
+      "(\0132\032.tensorflow.VerifierConfig\032\312\001\n\024Custo" +
+      "mGraphOptimizer\022\014\n\004name\030\001 \001(\t\022X\n\rparamet" +
+      "er_map\030\002 \003(\0132A.tensorflow.RewriterConfig" +
+      ".CustomGraphOptimizer.ParameterMapEntry\032" +
+      "J\n\021ParameterMapEntry\022\013\n\003key\030\001 \001(\t\022$\n\005val" +
+      "ue\030\002 \001(\0132\025.tensorflow.AttrValue:\0028\001\"6\n\006T" +
+      "oggle\022\013\n\007DEFAULT\020\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002\022\016\n\nA" +
+      "GGRESSIVE\020\003\"I\n\tCpuLayout\022\030\n\024NO_CONVERSIO" +
+      "N_ON_CPU\020\000\022\020\n\014NCHW_TO_NHWC\020\001\022\020\n\014NHWC_TO_" +
+      "NCHW\020\002\"<\n\021NumIterationsType\022\025\n\021DEFAULT_N" +
+      "UM_ITERS\020\000\022\007\n\003ONE\020\001\022\007\n\003TWO\020\002\"\237\001\n\nMemOptT" +
+      "ype\022\023\n\017DEFAULT_MEM_OPT\020\000\022\016\n\nNO_MEM_OPT\020\001" +
+      "\022\n\n\006MANUAL\020\002\022\027\n\023SWAPPING_HEURISTICS\020\004\022\034\n" +
+      "\030RECOMPUTATION_HEURISTICS\020\005\022\031\n\025SCHEDULIN" +
+      "G_HEURISTICS\020\006\022\016\n\nHEURISTICS\020\003B\222\001\n\036org.t" +
+      "ensorflow.proto.frameworkB\024RewriterConfi" +
+      "gProtosP\001ZUgithub.com/tensorflow/tensorf" +
+      "low/tensorflow/go/core/protobuf/for_core" +
+      "_protos_go_proto\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -143,7 +146,7 @@ public final class RewriterConfigProtos {
     internal_static_tensorflow_RewriterConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_RewriterConfig_descriptor,
-        new java.lang.String[] { "CpuLayoutConversion", "LayoutOptimizer", "ConstantFolding", "ShapeOptimization", "Remapping", "CommonSubgraphElimination", "ArithmeticOptimization", "DependencyOptimization", "LoopOptimization", "FunctionOptimization", "DebugStripper", "DisableModelPruning", "ScopedAllocatorOptimization", "PinToHostOptimization", "ImplementationSelector", "AutoMixedPrecision", "AutoMixedPrecisionMkl", "DisableMetaOptimizer", "MetaOptimizerIterations", "MinGraphNodes", "ExperimentalDisableCompressedTensorOptimization", "MemoryOptimization", "MemoryOptimizerTargetNodeNameScope", "MetaOptimizerTimeoutMs", "AutoParallel", "FailOnOptimizerErrors", "ScopedAllocatorOpts", "Optimizers", "CustomOptimizers", "InterOptimizerVerifierConfig", "PostOptimizationVerifierConfig", });
+        new java.lang.String[] { "CpuLayoutConversion", "LayoutOptimizer", "ConstantFolding", "ShapeOptimization", "Remapping", "CommonSubgraphElimination", "ArithmeticOptimization", "DependencyOptimization", "LoopOptimization", "FunctionOptimization", "DebugStripper", "DisableModelPruning", "ScopedAllocatorOptimization", "PinToHostOptimization", "ImplementationSelector", "AutoMixedPrecision", "AutoMixedPrecisionMkl", "DisableMetaOptimizer", "UsePluginOptimizers", "MetaOptimizerIterations", "MinGraphNodes", "ExperimentalDisableCompressedTensorOptimization", "ExperimentalDisableFoldingQuantizationEmulation", "MemoryOptimization", "MemoryOptimizerTargetNodeNameScope", "MetaOptimizerTimeoutMs", "AutoParallel", "FailOnOptimizerErrors", "ScopedAllocatorOpts", "Optimizers", "CustomOptimizers", "InterOptimizerVerifierConfig", "PostOptimizationVerifierConfig", });
     internal_static_tensorflow_RewriterConfig_CustomGraphOptimizer_descriptor =
       internal_static_tensorflow_RewriterConfig_descriptor.getNestedTypes().get(0);
     internal_static_tensorflow_RewriterConfig_CustomGraphOptimizer_fieldAccessorTable = new

@@ -5,6 +5,7 @@ package org.tensorflow.proto.example;
 
 /**
  * <pre>
+ * LINT.IfChange
  * Containers to hold repeated fundamental values.
  * </pre>
  *
@@ -283,6 +284,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
+   * LINT.IfChange
    * Containers to hold repeated fundamental values.
    * </pre>
    *

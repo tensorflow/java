@@ -29,8 +29,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 /**
- * Returns the TopK unique values in the array in sorted order. The
- * running time is proportional to the product of K and the input
+ * Returns the TopK unique values in the array in sorted order.
+ * The running time is proportional to the product of K and the input
  * size. Sorting the whole array is more efficient for sufficiently large
  * values of K. The median-of-medians algorithm is probably faster, but
  * difficult to implement efficiently in XLA. If there are fewer than K

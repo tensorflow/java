@@ -28,8 +28,26 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes exponential linear: {@code exp(features) - 1} if &lt; 0, {@code features} otherwise.
- * See  <a href="http://arxiv.org/abs/1511.07289">Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
+ * Computes the exponential linear function.
+ * The ELU function is defined as:
+ * <ul>
+ * <li>$ e ^ x - 1 $ if $ x &lt; 0 $</li>
+ * <li>$ x $ if $ x &gt;= 0 $</li>
+ * </ul>
+ * <p>Examples:
+ * <blockquote>
+ * <blockquote>
+ * <blockquote>
+ * <p>tf.nn.elu(1.0)
+ * &lt;tf.Tensor: shape=(), dtype=float32, numpy=1.0&gt;
+ * tf.nn.elu(0.0)
+ * &lt;tf.Tensor: shape=(), dtype=float32, numpy=0.0&gt;
+ * tf.nn.elu(-1000.0)
+ * &lt;tf.Tensor: shape=(), dtype=float32, numpy=-1.0&gt;
+ * </blockquote>
+ * </blockquote>
+ * </blockquote>
+ * <p>See  <a href="http://arxiv.org/abs/1511.07289">Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
  * </a>
  *
  * @param <T> data type for {@code activations} output

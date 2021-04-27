@@ -222,7 +222,6 @@ private static final long serialVersionUID = 0L;
   private org.tensorflow.proto.framework.FunctionDefLibrary library_;
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.
@@ -253,7 +252,6 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.
@@ -284,7 +282,6 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.
@@ -1197,7 +1194,6 @@ private static final long serialVersionUID = 0L;
         org.tensorflow.proto.framework.FunctionDefLibrary, org.tensorflow.proto.framework.FunctionDefLibrary.Builder, org.tensorflow.proto.framework.FunctionDefLibraryOrBuilder> libraryBuilder_;
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1228,7 +1224,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1263,7 +1258,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1304,7 +1298,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1343,7 +1336,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1386,7 +1378,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1425,7 +1416,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1458,7 +1448,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.
@@ -1494,7 +1483,6 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
      * "library" provides user-defined functions.
      * Naming:
      *   * library.function.name are in a flat namespace.

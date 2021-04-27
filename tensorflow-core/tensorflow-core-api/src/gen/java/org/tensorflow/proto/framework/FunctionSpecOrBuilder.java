@@ -67,11 +67,11 @@ public interface FunctionSpecOrBuilder extends
   org.tensorflow.proto.framework.StructuredValueOrBuilder getInputSignatureOrBuilder();
 
   /**
-   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
    */
-  int getExperimentalCompileValue();
+  int getJitCompileValue();
   /**
-   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
    */
-  org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile getExperimentalCompile();
+  org.tensorflow.proto.framework.FunctionSpec.JitCompile getJitCompile();
 }

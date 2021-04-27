@@ -149,20 +149,20 @@ public final class SavedObjectGraphProtos {
       "sorflow.VariableAggregation\022\014\n\004name\030\006 \001(" +
       "\t\022\016\n\006device\030\007 \001(\t\022O\n,experimental_distri" +
       "buted_variable_components\030\010 \003(\0132\031.tensor" +
-      "flow.SavedVariable\"\226\002\n\014FunctionSpec\0220\n\013f" +
+      "flow.SavedVariable\"\373\001\n\014FunctionSpec\0220\n\013f" +
       "ullargspec\030\001 \001(\0132\033.tensorflow.Structured" +
       "Value\022\021\n\tis_method\030\002 \001(\010\0224\n\017input_signat" +
-      "ure\030\005 \001(\0132\033.tensorflow.StructuredValue\022J" +
-      "\n\024experimental_compile\030\006 \001(\0162,.tensorflo" +
-      "w.FunctionSpec.ExperimentalCompile\"3\n\023Ex" +
-      "perimentalCompile\022\013\n\007DEFAULT\020\000\022\006\n\002ON\020\001\022\007" +
-      "\n\003OFF\020\002J\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSavedResource\022\016\n\006" +
-      "device\030\001 \001(\t\"A\n\016SaveableObject\022\025\n\rsave_f" +
-      "unction\030\002 \001(\005\022\030\n\020restore_function\030\003 \001(\005B" +
-      "\224\001\n\036org.tensorflow.proto.frameworkB\026Save" +
-      "dObjectGraphProtosP\001ZUgithub.com/tensorf" +
-      "low/tensorflow/tensorflow/go/core/protob" +
-      "uf/for_core_protos_go_proto\370\001\001b\006proto3"
+      "ure\030\005 \001(\0132\033.tensorflow.StructuredValue\0228" +
+      "\n\013jit_compile\030\006 \001(\0162#.tensorflow.Functio" +
+      "nSpec.JitCompile\"*\n\nJitCompile\022\013\n\007DEFAUL" +
+      "T\020\000\022\006\n\002ON\020\001\022\007\n\003OFF\020\002J\004\010\003\020\004J\004\010\004\020\005\"\037\n\rSave" +
+      "dResource\022\016\n\006device\030\001 \001(\t\"A\n\016SaveableObj" +
+      "ect\022\025\n\rsave_function\030\002 \001(\005\022\030\n\020restore_fu" +
+      "nction\030\003 \001(\005B\224\001\n\036org.tensorflow.proto.fr" +
+      "ameworkB\026SavedObjectGraphProtosP\001ZUgithu" +
+      "b.com/tensorflow/tensorflow/tensorflow/g" +
+      "o/core/protobuf/for_core_protos_go_proto" +
+      "\370\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -245,7 +245,7 @@ public final class SavedObjectGraphProtos {
     internal_static_tensorflow_FunctionSpec_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_FunctionSpec_descriptor,
-        new java.lang.String[] { "Fullargspec", "IsMethod", "InputSignature", "ExperimentalCompile", });
+        new java.lang.String[] { "Fullargspec", "IsMethod", "InputSignature", "JitCompile", });
     internal_static_tensorflow_SavedResource_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_tensorflow_SavedResource_fieldAccessorTable = new

@@ -39,25 +39,25 @@ import org.tensorflow.types.family.TType;
  * <p>For example:
  * <pre>
  * # if 'input' is [[ 0,  1,  2, 3]
- *                  [-1,  0,  1, 2]
- *                  [-2, -1,  0, 1]
- *                  [-3, -2, -1, 0]],
+ * #                [-1,  0,  1, 2]
+ * #                [-2, -1,  0, 1]
+ * #                [-3, -2, -1, 0]],
  *
- * tf.matrix_band_part(input, 1, -1) ==&gt; [[ 0,  1,  2, 3]
+ * tf.linalg.band_part(input, 1, -1) ==&gt; [[ 0,  1,  2, 3]
  *                                        [-1,  0,  1, 2]
  *                                        [ 0, -1,  0, 1]
  *                                        [ 0,  0, -1, 0]],
  *
- * tf.matrix_band_part(input, 2, 1) ==&gt; [[ 0,  1,  0, 0]
+ * tf.linalg.band_part(input, 2, 1) ==&gt; [[ 0,  1,  0, 0]
  *                                       [-1,  0,  1, 0]
  *                                       [-2, -1,  0, 1]
  *                                       [ 0, -2, -1, 0]]
  * </pre>
  * <p>Useful special cases:
  * <pre>
- *  tf.matrix_band_part(input, 0, -1) ==&gt; Upper triangular part.
- *  tf.matrix_band_part(input, -1, 0) ==&gt; Lower triangular part.
- *  tf.matrix_band_part(input, 0, 0) ==&gt; Diagonal.
+ *  tf.linalg.band_part(input, 0, -1) ==&gt; Upper triangular part.
+ *  tf.linalg.band_part(input, -1, 0) ==&gt; Lower triangular part.
+ *  tf.linalg.band_part(input, 0, 0) ==&gt; Diagonal.
  * </pre>
  *
  * @param <T> data type for {@code band} output
