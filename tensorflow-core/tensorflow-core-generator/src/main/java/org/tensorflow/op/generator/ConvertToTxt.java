@@ -25,6 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import org.tensorflow.proto.framework.OpList;
 
+/**
+ * Utility to convert exported ops to diffable text.
+ * <p>
+ * Requires the input file as first argument. If the 2nd argument is present, uses it as the output
+ * file, otherwise outputs to a sibiling of the input names ops.pbtxt.
+ */
 public class ConvertToTxt {
 
   public static void main(String[] args) throws IOException {
