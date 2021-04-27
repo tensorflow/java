@@ -59,7 +59,8 @@ final class ClassGenerator {
   /** Return true if we can generate the operation class for {@code op}. */
   static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
-        && !op.getName().startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
+        && !op.getName()
+            .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
   enum RenderMode {
@@ -102,7 +103,8 @@ final class ClassGenerator {
   private final boolean isStateSubclass;
 
   /**
-   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has not been ran.
+   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has
+   * not been ran.
    */
   private TypeSpec optionsClass = null;
 
@@ -159,19 +161,28 @@ final class ClassGenerator {
             });
 
     for (AttrDef attr : op.getAttrList()) {
-      ApiDef.Attr api = apiDef.getAttrList().stream()
-          .filter(x -> x.getName().equals(attr.getName())).findFirst().get();
+      ApiDef.Attr api =
+          apiDef.getAttrList().stream()
+              .filter(x -> x.getName().equals(attr.getName()))
+              .findFirst()
+              .get();
       attrApis.put(attr, api);
     }
 
     for (ArgDef arg : op.getInputArgList()) {
-      ApiDef.Arg api = apiDef.getInArgList().stream().filter(x -> x.getName().equals(arg.getName()))
-          .findFirst().get();
+      ApiDef.Arg api =
+          apiDef.getInArgList().stream()
+              .filter(x -> x.getName().equals(arg.getName()))
+              .findFirst()
+              .get();
       argApis.put(arg, api);
     }
     for (ArgDef arg : op.getOutputArgList()) {
-      ApiDef.Arg api = apiDef.getOutArgList().stream()
-          .filter(x -> x.getName().equals(arg.getName())).findFirst().get();
+      ApiDef.Arg api =
+          apiDef.getOutArgList().stream()
+              .filter(x -> x.getName().equals(arg.getName()))
+              .findFirst()
+              .get();
       argApis.put(arg, api);
     }
   }
@@ -305,10 +316,9 @@ final class ClassGenerator {
     }
 
     if (!isStateSelector) {// add op name field
-    builder
-        .addField(FieldSpec
-            .builder(TypeResolver.STRING, OP_NAME_FIELD, Modifier.PUBLIC, Modifier.STATIC,
-                Modifier.FINAL)
+    builder.addField(
+        FieldSpec.builder(
+                TypeResolver.STRING, OP_NAME_FIELD, Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
             .initializer("$S", op.getName())
             .build());
@@ -316,9 +326,10 @@ final class ClassGenerator {
     // add output fields
     if (op.getOutputArgCount() > 0) {
       for (ArgDef output : op.getOutputArgList()) {
-        builder
-            .addField(resolver.typeOf(output).listIfIterable().javaType, getJavaName(output),
-                Modifier.PRIVATE);
+        builder.addField(
+            resolver.typeOf(output).listIfIterable().javaType,
+            getJavaName(output),
+            Modifier.PRIVATE);
       }
     }
 
@@ -334,8 +345,7 @@ final class ClassGenerator {
     }
 
     TypeSpec.Builder optionsBuilder =
-        TypeSpec.classBuilder("Options")
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        TypeSpec.classBuilder("Options").addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     optionsBuilder.addJavadoc("$L", "Optional attributes for {@link " + fullClassName() + "}");
 
     ClassName optionsClassName = ClassName.get(fullPackage, className, "Options");
@@ -398,13 +408,12 @@ final class ClassGenerator {
       }
 
       // add the field
-      optionsBuilder
-          .addField(field.build());
+      optionsBuilder.addField(
+          field.build());
     }
 
     // add a private constructor
-    optionsBuilder
-        .addMethod(
+    optionsBuilder.addMethod(
         MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
 
     optionsClass = optionsBuilder.build();
@@ -412,7 +421,8 @@ final class ClassGenerator {
   }
 
   /**
-   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link #buildFactoryMethods()}
+   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link
+   * #buildFactoryMethods()}
    *
    * @param body the body to write to
    * @param attr the attribute to set
@@ -420,8 +430,7 @@ final class ClassGenerator {
    * @param optional whether the attribute is optional
    */
   private void writeSetAttr(
-      CodeBlock.Builder body, AttrDef attr, ResolvedType type,
-      boolean optional) {
+      CodeBlock.Builder body, AttrDef attr, ResolvedType type, boolean optional) {
     String varName = optional ? "opts." + getJavaName(attr) : getJavaName(attr);
     if (type == null) {
       type = resolver.typeOf(attr);
@@ -438,8 +447,7 @@ final class ClassGenerator {
       if (type.iterable) {
         String arrayName = javaizeMemberName(attr.getName()) + "Array";
         body.addStatement(
-            "$T[] $L = new $T[$L.size()]", type.jniType, arrayName, type.jniType,
-            varName);
+            "$T[] $L = new $T[$L.size()]", type.jniType, arrayName, type.jniType, varName);
 
         body.beginControlFlow("for (int i = 0 ; i < $L.length ; i++)", arrayName);
 
@@ -463,8 +471,7 @@ final class ClassGenerator {
     TypeName returnType = ClassName.get(fullPackage, className);
     if (!typeParams.isEmpty()) {
       returnType =
-          ParameterizedTypeName
-          .get((ClassName) returnType, typeParams.toArray(new TypeName[0]));
+          ParameterizedTypeName.get((ClassName) returnType, typeParams.toArray(new TypeName[0]));
     }
     factoryBuilder.returns(returnType);
 
@@ -480,8 +487,7 @@ final class ClassGenerator {
     factoryBuilder.addAnnotation(endpointAnnotation.build());
 
     factoryBuilder.addJavadoc(
-        "Factory method to create a class wrapping a new $L operation.\n",
-        op.getName());
+        "Factory method to create a class wrapping a new $L operation.\n", op.getName());
 
     // we're going to build the body as add arguments
     CodeBlock.Builder body = CodeBlock.builder();
@@ -589,8 +595,9 @@ final class ClassGenerator {
       }
 
       factoryBuilder.addParameter(
-          ParameterSpec.builder(ArrayTypeName.of(optionsClassName),
-              "options").build());
+          ParameterSpec.builder(
+                  ArrayTypeName.of(optionsClassName), "options")
+              .build());
       paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values"));
       factoryBuilder.varargs();
 
@@ -608,7 +615,7 @@ final class ClassGenerator {
       body.endControlFlow();
 
       body.endControlFlow();
-    }
+}
 
     body.addStatement(
         "return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
@@ -676,21 +683,25 @@ final class ClassGenerator {
   }
 
   /** Add a secondary factory method with the provided default type maps */
-
-  private void buildSecondaryFactory(Map<AttrDef, TypeName> defaultTypes,
+  private void buildSecondaryFactory(
+      Map<AttrDef, TypeName> defaultTypes,
       Map<String, TypeName> defaultTypeVars,
-      MethodSpec mainFactory, Map<String, CodeBlock> paramTags) {
-    MethodSpec.Builder factoryBuilder = MethodSpec.methodBuilder(mainFactory.name)
-        .addModifiers(mainFactory.modifiers)
-        .returns(
-            ParameterizedTypeName.get(ClassName.get(fullPackage, className), typeParams.stream()
-                .map(x -> defaultTypeVars.getOrDefault(x.name, x)).toArray(TypeName[]::new)));
+      MethodSpec mainFactory,
+      Map<String, CodeBlock> paramTags) {
+    MethodSpec.Builder factoryBuilder =
+        MethodSpec.methodBuilder(mainFactory.name)
+            .addModifiers(mainFactory.modifiers)
+            .returns(
+                ParameterizedTypeName.get(
+                    ClassName.get(fullPackage, className),
+                    typeParams.stream()
+                        .map(x -> defaultTypeVars.getOrDefault(x.name, x))
+                        .toArray(TypeName[]::new)));
     factoryBuilder.addAnnotations(mainFactory.annotations);
 
-    factoryBuilder
-        .addJavadoc(
-            "Factory method to create a class wrapping a new $L operation, with the default output types.\n",
-            op.getName());
+    factoryBuilder.addJavadoc(
+        "Factory method to create a class wrapping a new $L operation, with the default output types.\n",
+        op.getName());
 
     CodeBlock.Builder body = CodeBlock.builder();
     body.add("return create(");
@@ -705,11 +716,14 @@ final class ClassGenerator {
         body.add(", ");
       }
 
-      AttrDef attr = op.getAttrList().stream().filter(x -> getJavaName(x).equals(param.name))
-          .findFirst()
-          .orElse(null);
-      if (attr != null && resolver.typeOf(attr).shouldWrapInClass() && defaultTypes
-          .containsKey(attr)) {
+      AttrDef attr =
+          op.getAttrList().stream()
+              .filter(x -> getJavaName(x).equals(param.name))
+              .findFirst()
+              .orElse(null);
+      if (attr != null
+          && resolver.typeOf(attr).shouldWrapInClass()
+          && defaultTypes.containsKey(attr)) {
         body.add("$T.class", defaultTypes.get(attr));
       } else {
         factoryBuilder.addParameter(param);
@@ -731,8 +745,7 @@ final class ClassGenerator {
               + "} output and operands");
     }
 
-    factoryBuilder
-        .addJavadoc(
+    factoryBuilder.addJavadoc(
         "\n@return a new instance of $L, with default output types", className);
 
     if (!isStateSelector) {
@@ -812,7 +825,8 @@ final class ClassGenerator {
         asOutput.addModifiers(Modifier.ABSTRACT);
       } else {if (uncheckedCast) {
         asOutput.addAnnotation(
-            AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked")
+            AnnotationSpec.builder(SuppressWarnings.class)
+                .addMember("value", "$S", "unchecked")
                 .build());
         asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
       } else {
@@ -824,14 +838,15 @@ final class ClassGenerator {
       TypeName operandType = ParameterizedTypeName.get(Names.Operand, outputTType);
       TypeName returnType = ParameterizedTypeName.get(ClassName.get(Iterator.class), operandType);
 
-      MethodSpec.Builder iterator = MethodSpec.methodBuilder("iterator")
-          .addModifiers(Modifier.PUBLIC)
-          .returns(returnType)
-          .addAnnotation(Override.class)
-          .addAnnotation(
-              AnnotationSpec.builder(SuppressWarnings.class)
-                  .addMember("value", "{$S, $S}", "rawtypes", "unchecked")
-                  .build());
+      MethodSpec.Builder iterator =
+          MethodSpec.methodBuilder("iterator")
+              .addModifiers(Modifier.PUBLIC)
+              .returns(returnType)
+              .addAnnotation(Override.class)
+              .addAnnotation(
+                  AnnotationSpec.builder(SuppressWarnings.class)
+                      .addMember("value", "{$S, $S}", "rawtypes", "unchecked")
+                      .build());
 
       if (isStateSelector) {
         iterator.addModifiers(Modifier.ABSTRACT);
@@ -899,8 +914,8 @@ final class ClassGenerator {
   }
 
   private void buildInputsClass() {
-    TypeSpec.Builder inputsBuilder = TypeSpec.classBuilder("Inputs")
-        .addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+    TypeSpec.Builder inputsBuilder =
+        TypeSpec.classBuilder("Inputs").addModifiers(Modifier.PUBLIC, Modifier.STATIC);
     MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC);
     ctor.addParameter(Names.GraphOperation, "op");
 
@@ -926,22 +941,25 @@ final class ClassGenerator {
               ? String.format("The %s input", name)
               : argDef.getDescription();
 
-      inputsBuilder.addField(FieldSpec.builder(javaType, name, Modifier.PUBLIC, Modifier.FINAL)
-          .addJavadoc("$L", parseDocumentation(description))
-          .build());
+      inputsBuilder.addField(
+          FieldSpec.builder(javaType, name, Modifier.PUBLIC, Modifier.FINAL)
+              .addJavadoc("$L", parseDocumentation(description))
+              .build());
 
       if (type.iterable) {
         String inputListLength = name + "Length";
-        fieldInits
-            .addStatement("int $L = op.inputListLength($S)", inputListLength, input.getName());
-        fieldInits
-            .addStatement("$L = $T.asList(($T) op.inputList(inputIndex, $L))", name, Names.Arrays,
-                ArrayTypeName.of(type.javaType), inputListLength);
+        fieldInits.addStatement(
+            "int $L = op.inputListLength($S)", inputListLength, input.getName());
+        fieldInits.addStatement(
+            "$L = $T.asList(($T) op.inputList(inputIndex, $L))",
+            name,
+            Names.Arrays,
+            ArrayTypeName.of(type.javaType),
+            inputListLength);
         fieldInits.addStatement("inputIndex += $L", inputListLength);
       } else {
         fieldInits.addStatement("$L = ($T) op.input(inputIndex++)", name, javaType);
       }
-
     }
 
     for (AttrDef attr : op.getAttrList()) {
@@ -967,8 +985,11 @@ final class ClassGenerator {
             FieldSpec.builder(javaType, name, Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("$L", description)
                 .build());
-        fieldInits.addStatement("$L = op.getAttr$L($S)", name,
-            type.attributeType.getterName(type.iterable), attr.getName());
+        fieldInits.addStatement(
+            "$L = op.getAttr$L($S)",
+            name,
+            type.attributeType.getterName(type.iterable),
+            attr.getName());
       }
     }
 
@@ -983,15 +1004,18 @@ final class ClassGenerator {
 
     TypeName outputClass = ClassName.get(fullPackage, className);
     if (!this.builder.typeVariables.isEmpty()) {
-      outputClass = ParameterizedTypeName
-          .get((ClassName) outputClass, sharedTypeVars.toArray(new TypeName[0]));
+      outputClass =
+          ParameterizedTypeName.get(
+              (ClassName) outputClass, sharedTypeVars.toArray(new TypeName[0]));
     }
 
     inputsBuilder.superclass(ParameterizedTypeName.get(Names.RawOpInputs, outputClass));
 
     CodeBlock.Builder body = CodeBlock.builder();
-    body.addStatement("super(new $L(op), op, $T.asList($L))",
-        this.builder.typeVariables.isEmpty() ? className : className + "<>", Names.Arrays,
+    body.addStatement(
+        "super(new $L(op), op, $T.asList($L))",
+        this.builder.typeVariables.isEmpty() ? className : className + "<>",
+        Names.Arrays,
         attrNames.toString());
 
     body.add(fieldInits.build());
@@ -1001,5 +1025,4 @@ final class ClassGenerator {
     inputsBuilder.addTypeVariables(typeVars);
     this.builder.addType(inputsBuilder.build());
   }
-
 }

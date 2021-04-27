@@ -38,9 +38,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
-/**
- * Unit tests for {@link org.tensorflow.GraphOperation}.
- */
+/** Unit tests for {@link org.tensorflow.GraphOperation}. */
 public class GraphOperationTest {
 
   @Test
@@ -157,8 +155,8 @@ public class GraphOperationTest {
       Ops tf = Ops.create(g);
       assertEquals(1, tf.split(tf.constant(0), tf.array(0, 1), 1L).op().outputListLength("output"));
       assertEquals(2, tf.split(tf.constant(0), tf.array(0, 1), 2L).op().outputListLength("output"));
-      assertEquals(3,
-          tf.split(tf.constant(0), tf.array(0, 1, 2), 3L).op().outputListLength("output"));
+      assertEquals(
+          3, tf.split(tf.constant(0), tf.array(0, 1, 2), 3L).op().outputListLength("output"));
     }
   }
 
@@ -166,8 +164,8 @@ public class GraphOperationTest {
   public void inputListLength() {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      assertEquals(1,
-          tf.split(tf.constant(0), tf.array(0, 1), 1L).op().inputListLength("split_dim"));
+      assertEquals(
+          1, tf.split(tf.constant(0), tf.array(0, 1), 1L).op().inputListLength("split_dim"));
       try {
         tf.split(tf.constant(0), tf.array(0, 1), 2L).op().inputListLength("inputs");
       } catch (TFInvalidArgumentException iae) {
@@ -275,23 +273,28 @@ public class GraphOperationTest {
       Ops tf = Ops.create(g);
 
       Operand<TFloat32> a = tf.array(1f);
-      Operand<TFloat32> c = DebugIdentity
-          .create(tf.scope(), a, DebugIdentity.debugUrls(Arrays.asList("a", "b")),
+      Operand<TFloat32> c =
+          DebugIdentity.create(
+              tf.scope(),
+              a,
+              DebugIdentity.debugUrls(Arrays.asList("a", "b")),
               DebugIdentity.outputSlot(0L));
-      Operand<TString> barrier = tf.barrier(Arrays.asList(TInt32.class, TInt32.class),
-          Barrier.shapes(Shape.of(1, 2), Shape.of(3, 4)));
+      Operand<TString> barrier =
+          tf.barrier(
+              Arrays.asList(TInt32.class, TInt32.class),
+              Barrier.shapes(Shape.of(1, 2), Shape.of(3, 4)));
 
       GraphOperation op1 = (GraphOperation) c.op();
 
       assertEquals(0, op1.getAttrInt("output_slot"));
-      assertArrayEquals(new String[]{"a", "b"}, op1.getAttrStringList("debug_urls"));
+      assertArrayEquals(new String[] {"a", "b"}, op1.getAttrStringList("debug_urls"));
 
       GraphOperation op2 = (GraphOperation) barrier.op();
-      assertArrayEquals(new DataType[]{DataType.DT_INT32, DataType.DT_INT32},
+      assertArrayEquals(
+          new DataType[] {DataType.DT_INT32, DataType.DT_INT32},
           op2.getAttrTypeList("component_types"));
-      assertArrayEquals(new Shape[]{Shape.of(1, 2), Shape.of(3, 4)},
-          op2.getAttrShapeList("shapes"));
-
+      assertArrayEquals(
+          new Shape[] {Shape.of(1, 2), Shape.of(3, 4)}, op2.getAttrShapeList("shapes"));
     }
   }
 }

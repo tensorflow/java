@@ -79,8 +79,8 @@ import org.tensorflow.proto.framework.DataType;
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.
  *
  * <p>GraphOperation instances are valid only as long as the {@link Graph} they are a part of is
- * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation instance may fail with an
- * {@code IllegalStateException}.
+ * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation
+ * instance may fail with an {@code IllegalStateException}.
  *
  * <p>GraphOperation instances are immutable and thread-safe.
  */
@@ -212,16 +212,12 @@ public final class GraphOperation extends AbstractOperation {
     throw new IllegalStateException("Graph tensors must be fetched by running a session");
   }
 
-  /**
-   * Get the number of inputs to the op, not including control inputs.
-   */
+  /** Get the number of inputs to the op, not including control inputs. */
   public int numInputs() {
     return TF_OperationNumInputs(getUnsafeNativeHandle());
   }
 
-  /**
-   * Gets the input at the given index
-   */
+  /** Gets the input at the given index */
   public Output<?> input(int idx) {
     if (idx < 0) {
       throw new IndexOutOfBoundsException("Can't get input with index < 0.");
@@ -257,9 +253,7 @@ public final class GraphOperation extends AbstractOperation {
     return inputs;
   }
 
-  /**
-   * Get the op's inputs, not including control inputs.
-   */
+  /** Get the op's inputs, not including control inputs. */
   public List<Operand<?>> inputs() {
     try (PointerScope scope = new PointerScope()) {
       int numInputs = numInputs();
@@ -280,7 +274,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use this op's designated output as an input, not including control dependencies.
+   * Get the number of ops that use this op's designated output as an input, not including control
+   * dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -292,7 +287,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the ops that use this op's designated output as an input, not including control dependencies.
+   * Get the ops that use this op's designated output as an input, not including control
+   * dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -316,7 +312,8 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use any of this op's outputs as an input, not including control dependencies.
+   * Get the number of ops that use any of this op's outputs as an input, not including control
+   * dependencies.
    */
   public int numConsumers() {
     int all = 0;
@@ -325,7 +322,6 @@ public final class GraphOperation extends AbstractOperation {
     }
     return all;
   }
-
 
   /**
    * Get the ops that use any of this op's outputs as an input, not including control dependencies.
@@ -338,18 +334,14 @@ public final class GraphOperation extends AbstractOperation {
     return all;
   }
 
-  /**
-   * Get the number of control inputs for this op.
-   */
+  /** Get the number of control inputs for this op. */
   public int numControlInputs() {
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationNumControlInputs(getUnsafeNativeHandle());
     }
   }
 
-  /**
-   * Get the control inputs of this op.
-   */
+  /** Get the control inputs of this op. */
   public Set<GraphOperation> controlInputs() {
     try (PointerScope scope = new PointerScope()) {
       int numInputs = numControlInputs();
@@ -367,18 +359,14 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-  /**
-   * Get the number of ops with this op as a control dependency.
-   */
+  /** Get the number of ops with this op as a control dependency. */
   public int numControlConsumers() {
     try (PointerScope scope = new PointerScope()) {
       return TF_OperationNumControlOutputs(getUnsafeNativeHandle());
     }
   }
 
-  /**
-   * Get the ops with this op as a control dependency.
-   */
+  /** Get the ops with this op as a control dependency. */
   public Set<GraphOperation> controlConsumers() {
     try (PointerScope scope = new PointerScope()) {
       int numConsumers = numControlConsumers();
@@ -536,7 +524,6 @@ public final class GraphOperation extends AbstractOperation {
     return getAttrShapeList(unsafeNativeHandle, name);
   }
 
-
   /**
    * Get the metadata of an attribute of this operation.
    *
@@ -615,8 +602,12 @@ public final class GraphOperation extends AbstractOperation {
 
     int numOutputs = TF_OperationNumOutputs(opHandle);
     if (outputIndex < 0 || outputIndex >= numOutputs) {
-      throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
-          + ") for an operation that has " + numOutputs + " outputs");
+      throw new IndexOutOfBoundsException(
+          "invalid output index ("
+              + outputIndex
+              + ") for an operation that has "
+              + numOutputs
+              + " outputs");
     }
 
     try (PointerScope scope = new PointerScope()) {
@@ -640,8 +631,12 @@ public final class GraphOperation extends AbstractOperation {
 
     int numOutputs = TF_OperationNumOutputs(opHandle);
     if (outputIndex < 0 || outputIndex >= numOutputs) {
-      throw new IndexOutOfBoundsException("invalid output index (" + outputIndex
-          + ") for an operation that has " + numOutputs + " outputs");
+      throw new IndexOutOfBoundsException(
+          "invalid output index ("
+              + outputIndex
+              + ") for an operation that has "
+              + numOutputs
+              + " outputs");
     }
 
     try (PointerScope scope = new PointerScope()) {
@@ -683,8 +678,8 @@ public final class GraphOperation extends AbstractOperation {
       BytePointer storage = new BytePointer(totalSize);
 
       TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrStringList(handle, new BytePointer(name), values, lengths, listSize,
-          storage, totalSize, status);
+      TF_OperationGetAttrStringList(
+          handle, new BytePointer(name), values, lengths, listSize, storage, totalSize, status);
       status.throwExceptionIfNotOK();
 
       String[] results = new String[listSize];
@@ -860,7 +855,7 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-  //TODO test
+  // TODO test
   private static Shape[] getAttrShapeList(TF_Operation handle, String name) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
@@ -873,8 +868,14 @@ public final class GraphOperation extends AbstractOperation {
       LongPointer storage = new LongPointer(totalSize);
 
       TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrShapeList(handle, new BytePointer(name), dimPointers, numDims, listSize,
-          storage, totalSize,
+      TF_OperationGetAttrShapeList(
+          handle,
+          new BytePointer(name),
+          dimPointers,
+          numDims,
+          listSize,
+          storage,
+          totalSize,
           status);
       status.throwExceptionIfNotOK();
 

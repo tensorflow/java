@@ -34,16 +34,14 @@ import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
 
 /**
- * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one with {@link
- * ClassGenerator} instances.
+ * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one
+ * with {@link ClassGenerator} instances.
  */
 final class TypeResolver {
 
   static TypeName WILDCARD = WildcardTypeName.subtypeOf(TypeName.OBJECT);
   static TypeName STRING = TypeName.get(java.lang.String.class);
-  /**
-   * Data types that are real numbers.
-   */
+  /** Data types that are real numbers. */
   private static final Set<DataType> realNumberTypes = new HashSet<>();
 
   static {
@@ -66,17 +64,11 @@ final class TypeResolver {
     realNumberTypes.add(DataType.DT_UINT64);
   }
 
-  /**
-   * The op def to get types for.
-   */
+  /** The op def to get types for. */
   private final OpDef op;
-  /**
-   * The processed argument types.
-   */
+  /** The processed argument types. */
   private final Map<ArgDef, ResolvedType> argTypes = new HashMap<>();
-  /**
-   * Known types. Not simply a cache.
-   */
+  /** Known types. Not simply a cache. */
   private final Map<String, ResolvedType> known = new HashMap<>();
   /**
    * Attributes that were reached while getting the types of inputs.
@@ -84,6 +76,7 @@ final class TypeResolver {
    * <p>These are excluded from factory methods.
    */
   private final Set<String> reachedFromInput = new HashSet<>();
+
   private char nextGenericLetter = 'T';
 
   TypeResolver(OpDef op) {
@@ -91,9 +84,7 @@ final class TypeResolver {
     calculateArgTypes();
   }
 
-  /**
-   * Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one.
-   */
+  /** Get the {@code TType} type for a datatype, or {@code ? extends TType} if there isn't one. */
   static TypeName forDataType(DataType dataType) {
     switch (dataType) {
       case DT_STRING:
@@ -169,15 +160,14 @@ final class TypeResolver {
   }
 
   /**
-   * Returns true if the attribute with name {@code attrName} was reached while calculating input types.
+   * Returns true if the attribute with name {@code attrName} was reached while calculating input
+   * types.
    */
   boolean partOfInput(String attrName) {
     return reachedFromInput.contains(attrName);
   }
 
-  /**
-   * Get a new generic letter.
-   */
+  /** Get a new generic letter. */
   private TypeVariableName nextGeneric() {
     char letter = nextGenericLetter++;
     if (nextGenericLetter > 'Z') {
@@ -186,9 +176,7 @@ final class TypeResolver {
     return TypeVariableName.get(String.valueOf(letter));
   }
 
-  /**
-   * Returns true if the attribute is a real number type or is limited to real number types.
-   */
+  /** Returns true if the attribute is a real number type or is limited to real number types. */
   private boolean isRealNumberTyped(AttrValue value) {
     if (!value.hasList()) {
       return realNumberTypes.contains(value.getType());
@@ -201,9 +189,7 @@ final class TypeResolver {
     return true;
   }
 
-  /**
-   * Get the family {@code TType} of an attribute, i.e. {@code TNumber}
-   */
+  /** Get the family {@code TType} of an attribute, i.e. {@code TNumber} */
   private TypeName typeFamily(AttrDef attr) {
     if (isRealNumberTyped(attr.getAllowedValues())) {
       return Names.TNumber;
@@ -212,9 +198,7 @@ final class TypeResolver {
     return Names.TType;
   }
 
-  /**
-   * Get the type of an attribute.
-   */
+  /** Get the type of an attribute. */
   ResolvedType typeOf(AttrDef attr) {
     return typeOf(attr, false);
   }
@@ -222,7 +206,8 @@ final class TypeResolver {
   /**
    * Get the type of an attribute
    *
-   * @param fromInput whether we're calculating input types and should add this attr to {@link #reachedFromInput}
+   * @param fromInput whether we're calculating input types and should add this attr to {@link
+   *     #reachedFromInput}
    */
   private ResolvedType typeOf(AttrDef attr, boolean fromInput) {
     if (known.containsKey(attr.getName())) {
@@ -240,31 +225,31 @@ final class TypeResolver {
 
     switch (typeName) {
       case "string":
-        types = new ResolvedType(STRING, AttributeType.String);
+        types = new ResolvedType(STRING, AttributeType.STRING);
         break;
       case "int":
-        types = new ResolvedType(TypeName.LONG, AttributeType.Int);
+        types = new ResolvedType(TypeName.LONG, AttributeType.INT);
         break;
       case "float":
-        types = new ResolvedType(TypeName.FLOAT, AttributeType.Float);
+        types = new ResolvedType(TypeName.FLOAT, AttributeType.FLOAT);
         break;
       case "bool":
-        types = new ResolvedType(TypeName.BOOLEAN, AttributeType.Bool);
+        types = new ResolvedType(TypeName.BOOLEAN, AttributeType.BOOL);
         break;
       case "shape":
-        types = new ResolvedType(Names.Shape, AttributeType.Shape);
+        types = new ResolvedType(Names.Shape, AttributeType.SHAPE);
         break;
       case "tensor":
-        types = new ResolvedType(Names.Tensor, AttributeType.Tensor);
+        types = new ResolvedType(Names.Tensor, AttributeType.TENSOR);
         break;
       case "type":
         TypeName family = typeFamily(attr);
         TypeName type =
             iterable ? WildcardTypeName.subtypeOf(family) : nextGeneric().withBounds(family);
-        types = new ResolvedType(type, TypeName.get(DataType.class), AttributeType.Type);
+        types = new ResolvedType(type, TypeName.get(DataType.class), AttributeType.TYPE);
         break;
       case "func":
-        //TODO add attribute type once supported
+        // TODO add attribute type once supported
         types = new ResolvedType(Names.ConcreteFunction);
         break;
       default:
@@ -279,9 +264,7 @@ final class TypeResolver {
     return types;
   }
 
-  /**
-   * Get the type of an argument (calculated in the constructor)
-   */
+  /** Get the type of an argument (calculated in the constructor) */
   ResolvedType typeOf(ArgDef arg) {
     return argTypes.get(arg);
   }
