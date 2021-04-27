@@ -79,8 +79,8 @@ import org.tensorflow.proto.framework.DataType;
  * Implementation for an {@link Operation} added as a node to a {@link Graph}.
  *
  * <p>GraphOperation instances are valid only as long as the {@link Graph} they are a part of is
- * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation
- * instance may fail with an {@code IllegalStateException}.
+ * valid. Thus, if {@link Graph#close()} has been invoked, then methods on the GraphOperation instance may fail with an
+ * {@code IllegalStateException}.
  *
  * <p>GraphOperation instances are immutable and thread-safe.
  */
@@ -244,7 +244,7 @@ public final class GraphOperation extends AbstractOperation {
   /**
    * Get the input list that starts at {@code idx} and has length {@code length}
    *
-   * @param idx    the starting index of the list
+   * @param idx the starting index of the list
    * @param length the length of the list
    * @return the input list
    * @see #inputListLength(String)
@@ -280,8 +280,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use this op's designated output as an input, not including control
-   * dependencies.
+   * Get the number of ops that use this op's designated output as an input, not including control dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -293,8 +292,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the ops that use this op's designated output as an input, not including control
-   * dependencies.
+   * Get the ops that use this op's designated output as an input, not including control dependencies.
    *
    * @param index the output to look for usages of
    */
@@ -318,8 +316,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   /**
-   * Get the number of ops that use any of this op's outputs as an input, not including control
-   * dependencies.
+   * Get the number of ops that use any of this op's outputs as an input, not including control dependencies.
    */
   public int numConsumers() {
     int all = 0;
@@ -541,7 +538,7 @@ public final class GraphOperation extends AbstractOperation {
 
 
   /**
-   * Get the metadata of a n attribute of this operation.
+   * Get the metadata of an attribute of this operation.
    *
    * @param name the name of the attribute
    * @return the metadata of the attribute
@@ -653,6 +650,7 @@ public final class GraphOperation extends AbstractOperation {
   }
 
   private static AttributeMetadata getAttrMetadata(TF_Operation handle, String name) {
+    requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       TF_AttrMetadata r = TF_OperationGetAttrMetadata(handle, name, status);
@@ -686,8 +684,7 @@ public final class GraphOperation extends AbstractOperation {
 
       TF_Status status = TF_Status.newStatus();
       TF_OperationGetAttrStringList(handle, new BytePointer(name), values, lengths, listSize,
-          storage, totalSize,
-          status);
+          storage, totalSize, status);
       status.throwExceptionIfNotOK();
 
       String[] results = new String[listSize];

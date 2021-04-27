@@ -175,8 +175,7 @@ final class ResolvedType {
   }
 
   /**
-   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a
-   * wildcard.
+   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a wildcard.
    */
   ResolvedType classIfGeneric() {
     TypeName newJType;
@@ -205,8 +204,7 @@ final class ResolvedType {
   }
 
   /**
-   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return
-   * {@code javaType}.
+   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return {@code javaType}.
    */
   TypeName unwrapArg() {
     if (javaType instanceof ParameterizedTypeName) {

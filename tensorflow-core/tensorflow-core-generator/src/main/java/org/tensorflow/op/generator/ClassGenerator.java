@@ -59,8 +59,7 @@ final class ClassGenerator {
   /** Return true if we can generate the operation class for {@code op}. */
   static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
-        && !op.getName()
-        .startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
+        && !op.getName().startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
   enum RenderMode {
@@ -103,8 +102,7 @@ final class ClassGenerator {
   private final boolean isStateSubclass;
 
   /**
-   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has
-   * not been ran.
+   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has not been ran.
    */
   private TypeSpec optionsClass = null;
 
@@ -414,12 +412,11 @@ final class ClassGenerator {
   }
 
   /**
-   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link
-   * #buildFactoryMethods()}
+   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link #buildFactoryMethods()}
    *
-   * @param body     the body to write to
-   * @param attr     the attribute to set
-   * @param type     the type of the attribute, or null to get it ourselves
+   * @param body the body to write to
+   * @param attr the attribute to set
+   * @param type the type of the attribute, or null to get it ourselves
    * @param optional whether the attribute is optional
    */
   private void writeSetAttr(

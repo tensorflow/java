@@ -45,8 +45,8 @@ public abstract class RawOpInputs<T extends RawOp> {
   }
 
   /**
-   * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be
-   * prefered when possible.
+   * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be prefered when
+   * possible.
    *
    * @param name the name of the attribute
    * @return the value of the attribute, as an {@link AttrValue} proto

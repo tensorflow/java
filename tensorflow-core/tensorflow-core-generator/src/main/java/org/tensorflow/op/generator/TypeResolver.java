@@ -34,8 +34,8 @@ import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
 
 /**
- * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one
- * with {@link ClassGenerator} instances.
+ * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one with {@link
+ * ClassGenerator} instances.
  */
 final class TypeResolver {
 
@@ -169,8 +169,7 @@ final class TypeResolver {
   }
 
   /**
-   * Returns true if the attribute with name {@code attrName} was reached while calculating input
-   * types.
+   * Returns true if the attribute with name {@code attrName} was reached while calculating input types.
    */
   boolean partOfInput(String attrName) {
     return reachedFromInput.contains(attrName);
@@ -223,8 +222,7 @@ final class TypeResolver {
   /**
    * Get the type of an attribute
    *
-   * @param fromInput whether we're calculating input types and should add this attr to {@link
-   *                  #reachedFromInput}
+   * @param fromInput whether we're calculating input types and should add this attr to {@link #reachedFromInput}
    */
   private ResolvedType typeOf(AttrDef attr, boolean fromInput) {
     if (known.containsKey(attr.getName())) {
