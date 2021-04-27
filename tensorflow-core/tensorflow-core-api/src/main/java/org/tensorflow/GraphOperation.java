@@ -50,12 +50,14 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutput
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationOutputType;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.javacpp.IntPointer;
+import org.bytedeco.javacpp.LongPointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -676,14 +678,15 @@ public final class GraphOperation extends AbstractOperation {
     try (PointerScope scope = new PointerScope()) {
       AttributeMetadata metadata = getAttrMetadata(handle, name);
       int listSize = (int) metadata.listSize;
-      int totalSize = (int) metadata.totalSize;
+      long totalSize = metadata.totalSize;
 
       PointerPointer<BytePointer> values = new PointerPointer<>(listSize);
       SizeTPointer lengths = new SizeTPointer(listSize);
       BytePointer storage = new BytePointer(totalSize);
 
       TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrStringList(handle, name, values, lengths, listSize, storage, totalSize,
+      TF_OperationGetAttrStringList(handle, new BytePointer(name), values, lengths, listSize,
+          storage, totalSize,
           status);
       status.throwExceptionIfNotOK();
 
@@ -697,7 +700,11 @@ public final class GraphOperation extends AbstractOperation {
           continue;
         }
 
-        results[i] = values.getString(i);
+        byte[] bytes = new byte[length];
+        BytePointer p = values.get(BytePointer.class, i);
+        p.get(bytes);
+
+        results[i] = new String(bytes, StandardCharsets.UTF_8);
       }
 
       return results;
@@ -864,39 +871,28 @@ public final class GraphOperation extends AbstractOperation {
       int listSize = (int) metadata.listSize;
       int totalSize = (int) metadata.totalSize;
 
-      long[] dimPointers = new long[listSize];
-      int[] numDims = new int[listSize];
-      long[] storage = new long[totalSize];
+      PointerPointer<LongPointer> dimPointers = new PointerPointer<>(listSize);
+      IntPointer numDims = new IntPointer(listSize);
+      LongPointer storage = new LongPointer(totalSize);
 
       TF_Status status = TF_Status.newStatus();
-      TF_OperationGetAttrShapeList(handle, name, dimPointers, numDims, listSize, storage, totalSize,
+      TF_OperationGetAttrShapeList(handle, new BytePointer(name), dimPointers, numDims, listSize,
+          storage, totalSize,
           status);
       status.throwExceptionIfNotOK();
-
-      long minDimOffset = Long.MAX_VALUE;
-      for (int i = 0; i < listSize; i++) {
-        if (dimPointers[i] < minDimOffset) {
-          minDimOffset = dimPointers[i];
-        }
-      }
-
-      int[] dims = new int[listSize];
-      for (int i = 0; i < listSize; i++) {
-        dims[i] = (int) ((dimPointers[i] - minDimOffset) / 8);
-      }
 
       Shape[] results = new Shape[listSize];
 
       for (int i = 0; i < results.length; i++) {
-        int length = numDims[i];
+        int length = numDims.get(i);
 
         if (length == -1) {
           results[i] = Shape.unknown();
           continue;
         }
 
-        int start = dims[i];
-        long[] shape = Arrays.copyOfRange(storage, start, start + length);
+        long[] shape = new long[length];
+        dimPointers.get(LongPointer.class, i).get(shape);
         results[i] = Shape.of(shape);
       }
 

@@ -765,6 +765,7 @@ final class ClassGenerator {
                         .returns(ClassName.get(fullPackage, className, "Options"))
                         .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                         .addCode("return new Options().$L($L);", method.name, argName)
+                        .varargs(method.varargs)
                         .build());
               });
     }
@@ -964,7 +965,7 @@ final class ClassGenerator {
           javaType = ArrayTypeName.of(javaType);
         }
 
-        attrNames.add(CodeBlock.of("$S", name).toString());
+        attrNames.add(CodeBlock.of("$S", attr.getName()).toString());
         inputsBuilder.addField(
             FieldSpec.builder(javaType, name, Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc("$L", description)
