@@ -74,15 +74,12 @@ public final class GraphOperationBuilder implements OperationBuilder {
     this.graph = graph;
     this.scope = scope;
     this.dangerousGradientBuilder = dangerousGradientBuilder;
-    Graph.Reference r = graph.ref();
-    try {
+    try (Graph.Reference r = graph.ref()) {
       if (dangerousGradientBuilder) {
         this.unsafeNativeHandle = allocateDangerousGradient(r.nativeHandle(), type, name);
       } else {
         this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
       }
-    } finally {
-      r.close();
     }
   }
 
