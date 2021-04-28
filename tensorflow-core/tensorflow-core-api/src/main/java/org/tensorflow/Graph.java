@@ -122,6 +122,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       delete(nativeHandle);
       nativeHandle = null;
+      allGraphs.remove(this);
     }
   }
 
@@ -1320,7 +1321,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public static Graph findGraphForPointer(NativeGraphPointer pointer) {
     for (Graph g : allGraphs) {
-      if (g.nativeHandle.graph().equals(pointer)) {
+      if (g.nativeHandle != null && !g.nativeHandle.isNull() && g.nativeHandle.graph().equals(pointer)) {
         return g;
       }
     }

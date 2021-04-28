@@ -287,7 +287,7 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         .put(new Info("TF_Graph::refiner", "TF_Graph::mu",
             "TF_Graph::sessions", "TF_Graph::delete_requested").skip())
         .put(new Info("std::unordered_map<tensorflow::string,tensorflow::Node*>")
-            .pointerTypes("NameMap").define())
+            .pointerTypes("NameMap").define().javaText("public native long erase(@StdString BytePointer key);"))
         .put(new Info("TF_Function")
           .pointerTypes("TF_Function")
           .base("org.tensorflow.internal.c_api.AbstractTF_Function"))

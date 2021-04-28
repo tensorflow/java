@@ -38,7 +38,7 @@ public class CustomGradientTest {
             Operand<?> out = gradInputs.get(0);
             Operand<?> a = tf.stridedSlice(out, Indices.slice(0, 1));
             Operand<?> b = tf.stridedSlice(out, Indices.slice(1, 2));
-            return Arrays.asList(a, b);
+            return Arrays.asList(a, b, tf.constant(0f));
           });
       Ops tf = Ops.create(g);
 
@@ -64,8 +64,8 @@ public class CustomGradientTest {
                   .run())) {
 
         assertEquals(2, outputs.size());
-        assertEquals(3.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
-        assertEquals(2.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);
+        assertEquals(6.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
+        assertEquals(4.0f, ((TFloat32) outputs.get(1)).getFloat(), 0.0f);
       }
     }
   }

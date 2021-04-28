@@ -22,6 +22,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperation
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishOperationLocked;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperation;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewOperationLocked;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_OperationName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetAttrFloat;
@@ -457,7 +458,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
       TF_Status status = TF_Status.newStatus();
       TF_Operation op = TF_FinishOperationLocked(handle, status);
       status.throwExceptionIfNotOK();
-//      g.name_map().put(TF_OperationName(op), null);
+      g.name_map().erase(TF_OperationName(op));
       return op;
     }
   }
