@@ -1,4 +1,6 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
@@ -12,7 +14,9 @@
   <packaging>jar</packaging>
 
   <name>TensorFlow Core API Library</name>
-  <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
+  <description>Platform-dependent native code and pure-Java code for the TensorFlow machine
+    intelligence library.
+  </description>
 
   <properties>
     <native.build.skip>false</native.build.skip>
@@ -45,15 +49,15 @@
       <artifactId>ndarray</artifactId>
       <version>${project.version}</version>
     </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <scope>test</scope>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
@@ -154,7 +158,8 @@
             <id>default-compile</id>
             <configuration>
               <annotationProcessors>
-                <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor</annotationProcessor>
+                <annotationProcessor>org.tensorflow.processor.operator.OperatorProcessor
+                </annotationProcessor>
               </annotationProcessors>
               <annotationProcessorPaths>
                 <annotationProcessorPath>
@@ -164,7 +169,8 @@
                 </annotationProcessorPath>
               </annotationProcessorPaths>
               <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
-              <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
+              <generatedSourcesDirectory>${project.basedir}/src/gen/annotations
+              </generatedSourcesDirectory>
             </configuration>
           </execution>
           <!--
@@ -209,7 +215,8 @@
           <classPath>${project.build.outputDirectory}</classPath>
           <includePaths>
             <includePath>${project.basedir}/</includePath>
-            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/
+            </includePath>
           </includePaths>
           <linkPaths>
             <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
@@ -217,12 +224,17 @@
           </linkPaths>
           <resourcePaths>
             <resourcePath>${project.basedir}/../../</resourcePath>
-            <resourcePath>${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/tools/lib_package/</resourcePath>
+            <resourcePath>
+              ${project.basedir}/bazel-bin/external/org_tensorflow/tensorflow/tools/lib_package/
+            </resourcePath>
           </resourcePaths>
           <preloadPaths>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_linux/lib/</preloadPath>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_darwin/lib/</preloadPath>
-            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_windows/lib/</preloadPath>
+            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_linux/lib/
+            </preloadPath>
+            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_darwin/lib/
+            </preloadPath>
+            <preloadPath>${project.basedir}/bazel-${project.artifactId}/external/mkl_windows/lib/
+            </preloadPath>
           </preloadPaths>
         </configuration>
         <executions>
@@ -312,7 +324,9 @@
               <goal>build</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/</outputDirectory>
+              <outputDirectory>
+                ${project.build.directory}/native/org/tensorflow/internal/c_api/${native.classifier}/
+              </outputDirectory>
               <skip>${javacpp.compiler.skip}</skip>
               <classOrPackageName>org.tensorflow.internal.c_api.**</classOrPackageName>
               <copyLibs>true</copyLibs>
@@ -359,7 +373,7 @@
           <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
           <arguments>
             <argument>${project.basedir}/src/gen/java</argument>
-            <argument>${project.basedir}/src/gen/resources/org/tensorflow/op/ops.pb</argument>
+            <argument>${project.basedir}/src/gen/resources/ops.pb</argument>
           </arguments>
         </configuration>
       </plugin>
@@ -423,15 +437,18 @@
           </execution>
         </executions>
         <configuration>
-            <!-- Activate the use of TCP to transmit events to the plugin -->
-            <!-- disabled as it appears to cause intermittent test failures in GitHub Actions
-            <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
-            -->
+          <!-- Activate the use of TCP to transmit events to the plugin -->
+          <!-- disabled as it appears to cause intermittent test failures in GitHub Actions
+          <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+          -->
           <additionalClasspathElements>
-            <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
+            <additionalClasspathElement>
+              ${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar
+            </additionalClasspathElement>
             <!-- Note: the following path is not accessible in deploying profile, so other libraries like
                        OpenMP must be installed manually when running the tests -->
-            <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
+            <additionalClasspathElement>${project.build.directory}/native/
+            </additionalClasspathElement>
           </additionalClasspathElements>
         </configuration>
       </plugin>
