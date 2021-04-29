@@ -319,6 +319,17 @@
             </licenseHeader>
           </java>
         </configuration>
+
+        <executions>
+          <execution>
+            <!-- Runs in initialize phase to fail fast in case of formatting issues (should be before codegen).-->
+            <id>spotless-check</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
     <pluginManagement>
