@@ -30,16 +30,24 @@ import java.util.Set;
 import java.util.StringJoiner;
 import org.tensorflow.Names;
 
-/** Holds type information for inputs, outputs, or attributes, and provides utilities. */
+/**
+ * Holds type information for inputs, outputs, or attributes, and provides utilities.
+ */
 final class ResolvedType {
 
-  /** The java level type. */
+  /**
+   * The java level type.
+   */
   final TypeName javaType;
 
-  /** The type for jni/attribute setting use. */
+  /**
+   * The type for jni/attribute setting use.
+   */
   final TypeName jniType;
 
-  /** The type of the attribute, for accessors, if supported. */
+  /**
+   * The type of the attribute, for accessors, if supported.
+   */
   final AttributeType attributeType;
 
   /**
@@ -102,12 +110,16 @@ final class ResolvedType {
     this(type, false);
   }
 
-  /** Returns a copy of this type with the specified {@code iterable} value. */
+  /**
+   * Returns a copy of this type with the specified {@code iterable} value.
+   */
   ResolvedType withIterable(boolean iterable) {
     return new ResolvedType(javaType, jniType, attributeType, iterable);
   }
 
-  /** Get the unboxed version of {@code javaType} if it is a boxed primitive. */
+  /**
+   * Get the unboxed version of {@code javaType} if it is a boxed primitive.
+   */
   TypeName unboxed() {
     if (javaType.isBoxedPrimitive()) {
       return javaType.unbox();
@@ -116,7 +128,9 @@ final class ResolvedType {
     }
   }
 
-  /** Return a copy, wrapping {@code javaType} in an array if this type is iterable. */
+  /**
+   * Return a copy, wrapping {@code javaType} in an array if this type is iterable.
+   */
   ResolvedType arrayIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -127,7 +141,9 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
-  /** Return a copy, wrapping {@code javaType} in {@link Iterable} if this type is iterable. */
+  /**
+   * Return a copy, wrapping {@code javaType} in {@link Iterable} if this type is iterable.
+   */
   ResolvedType iterableIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -138,7 +154,9 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
-  /** Return a copy, wrapping {@code javaType} in {@link List} if this type is iterable. */
+  /**
+   * Return a copy, wrapping {@code javaType} in {@link List} if this type is iterable.
+   */
   ResolvedType listIfIterable() {
     TypeName newJType;
     if (iterable) {
@@ -149,14 +167,15 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
-  /** True if wrapping will be done by {@link #classIfGeneric()} */
+  /**
+   * True if wrapping will be done by {@link #classIfGeneric()}
+   */
   boolean shouldWrapInClass() {
     return javaType instanceof TypeVariableName || javaType instanceof WildcardTypeName;
   }
 
   /**
-   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a
-   * wildcard.
+   * Return a copy, wrapping {@code javaType} in {@link Class} if it is a single type variable or a wildcard.
    */
   ResolvedType classIfGeneric() {
     TypeName newJType;
@@ -168,7 +187,9 @@ final class ResolvedType {
     return new ResolvedType(newJType, jniType, attributeType, iterable);
   }
 
-  /** Recursively get all type variable names in {@code javaType}. */
+  /**
+   * Recursively get all type variable names in {@code javaType}.
+   */
   Set<TypeVariableName> findGenerics() {
     if (javaType instanceof TypeVariableName) {
       return Collections.singleton((TypeVariableName) javaType);
@@ -183,8 +204,7 @@ final class ResolvedType {
   }
 
   /**
-   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return
-   * {@code javaType}.
+   * Return the type argument if {@code javaType} is {@code Operand} or {@code Output}, or return {@code javaType}.
    */
   TypeName unwrapArg() {
     if (javaType instanceof ParameterizedTypeName) {

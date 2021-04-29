@@ -25,22 +25,28 @@ import java.util.Set;
 import org.tensorflow.GraphOperation;
 import org.tensorflow.proto.framework.AttrValue;
 
-/** A base class for operation input accessors. */
+/**
+ * A base class for operation input accessors.
+ */
 public abstract class RawOpInputs<T extends RawOp> {
 
-  /** The outputs of this operation. */
+  /**
+   * The outputs of this operation.
+   */
   public T getOutputs() {
     return outputs;
   }
 
-  /** Get the names of this op's attributes */
+  /**
+   * Get the names of this op's attributes
+   */
   public Set<String> attributeNames() {
     return attributeNames;
   }
 
   /**
-   * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be
-   * prefered when possible.
+   * Get the value of an attribute as an {@link AttrValue} proto. The type-safe accessors should be prefered when
+   * possible.
    *
    * @param name the name of the attribute
    * @return the value of the attribute, as an {@link AttrValue} proto
@@ -49,7 +55,9 @@ public abstract class RawOpInputs<T extends RawOp> {
     return op.getAttrValueProto(name);
   }
 
-  /** Get all attribute value protos */
+  /**
+   * Get all attribute value protos
+   */
   public Map<String, AttrValue> attributeValues() {
     Map<String, AttrValue> values = new LinkedHashMap<>(attributeNames.size());
     for (String name : attributeNames) {

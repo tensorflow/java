@@ -38,7 +38,9 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TString;
 
-/** Unit tests for {@link org.tensorflow.GraphOperation}. */
+/**
+ * Unit tests for {@link org.tensorflow.GraphOperation}.
+ */
 public class GraphOperationTest {
 
   @Test
@@ -287,14 +289,14 @@ public class GraphOperationTest {
       GraphOperation op1 = (GraphOperation) c.op();
 
       assertEquals(0, op1.getAttrInt("output_slot"));
-      assertArrayEquals(new String[] {"a", "b"}, op1.getAttrStringList("debug_urls"));
+      assertArrayEquals(new String[]{"a", "b"}, op1.getAttrStringList("debug_urls"));
 
       GraphOperation op2 = (GraphOperation) barrier.op();
       assertArrayEquals(
-          new DataType[] {DataType.DT_INT32, DataType.DT_INT32},
+          new DataType[]{DataType.DT_INT32, DataType.DT_INT32},
           op2.getAttrTypeList("component_types"));
       assertArrayEquals(
-          new Shape[] {Shape.of(1, 2), Shape.of(3, 4)}, op2.getAttrShapeList("shapes"));
+          new Shape[]{Shape.of(1, 2), Shape.of(3, 4)}, op2.getAttrShapeList("shapes"));
     }
   }
 }
