@@ -177,8 +177,7 @@ public final class OperatorProcessor extends AbstractProcessor {
           return 0;
         };
     private static final Comparator<MethodSpec> METHOD_SPEC_COMPARATOR =
-        Comparator
-        .comparing((MethodSpec m) -> m.name).thenComparing(PARAMETER_SPEC_COMPARATOR);
+        Comparator.comparing((MethodSpec m) -> m.name).thenComparing(PARAMETER_SPEC_COMPARATOR);
 
     final String groupName;
     final String fieldName;
@@ -187,8 +186,7 @@ public final class OperatorProcessor extends AbstractProcessor {
     final List<OpsSpec> subGroups = new ArrayList<>();
 
     OpsSpec(
-        String groupName, String fieldName, ClassName className,
-        Collection<MethodSpec> methods) {
+        String groupName, String fieldName, ClassName className, Collection<MethodSpec> methods) {
       this.groupName = groupName;
       this.fieldName = fieldName;
       this.className = className;
@@ -287,8 +285,7 @@ public final class OperatorProcessor extends AbstractProcessor {
     String opName = getAnnotationElementValueAsString("name", operatorAnnot);
     if (Strings.isNullOrEmpty(opName)) {
       opName =
-          CaseFormat.UPPER_CAMEL
-          .to(CaseFormat.LOWER_CAMEL, ClassName.get(opClass).simpleName());
+          CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, ClassName.get(opClass).simpleName());
     }
     // Build an endpoint for each method annotated with @Endpoint, which takes in parameter a scope
     // and, optionally, a list of arguments
@@ -325,8 +322,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             getAnnotationElementValueAsBoolean("describeByClass", endpointAnnot, false);
         boolean deprecated = opMethod.getAnnotation(Deprecated.class) != null || opClassDeprecated;
         MethodSpec method =
-            buildOpMethod(endpointName, opClass, opMethod, describeByClass,
-            deprecated);
+            buildOpMethod(endpointName, opClass, opMethod, describeByClass, deprecated);
         groupedMethods.put(endpointGroup, method);
       }
     }
@@ -359,9 +355,7 @@ public final class OperatorProcessor extends AbstractProcessor {
     if (!NoType.class.isAssignableFrom(endpointMethod.getReturnType().getClass())) {
       call.append("return ");
     }
-    call.append("$T.")
-        .append(endpointMethod.getSimpleName())
-        .append("(scope");
+    call.append("$T.").append(endpointMethod.getSimpleName()).append("(scope");
     boolean first = true;
     for (VariableElement param : endpointMethod.getParameters()) {
       ParameterSpec p = ParameterSpec.get(param);
@@ -397,8 +391,7 @@ public final class OperatorProcessor extends AbstractProcessor {
         .forEach(
             t -> {
               if (!(t.getTagName().equals("param")
-                  && t.getName().map(s -> s.equals("scope"))
-          .orElse(false))) {
+                  && t.getName().map(s -> s.equals("scope")).orElse(false))) {
                 javadoc.addBlockTag(t);
               }
             });
@@ -407,8 +400,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static Collection<OpsSpec> collectGroupOps(
-      OpsSpec ops,
-      Multimap<String, MethodSpec> groupedMethods) {
+      OpsSpec ops, Multimap<String, MethodSpec> groupedMethods) {
     Map<String, OpsSpec> groups = new HashMap<>();
 
     // The `group` label added in the `@Operator` annotation has the same syntax as a package name,
@@ -433,18 +425,23 @@ public final class OperatorProcessor extends AbstractProcessor {
                 if (groupOps == null) {
                   String fieldName =
                       delimiterPos < 0
-                          ?group.substring(startPos) : group.substring(startPos, delimiterPos);
-          ClassName className = ClassName.get("org.tensorflow.op",
-              CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, groupName.replace('.', '_'))
-                  + "Ops");
-          groupOps = new OpsSpec(groupName, fieldName, className, groupedMethods.get(groupName));
-          parentClass.subGroups.add(groupOps);
-          groups.put(groupName, groupOps);
-        }
-        parentClass = groupOps;
-        startPos = delimiterPos + 1;
-      } while (startPos > 0);
-    });
+                          ? group.substring(startPos)
+                          : group.substring(startPos, delimiterPos);
+                  ClassName className =
+                      ClassName.get(
+                          "org.tensorflow.op",
+                          CaseFormat.LOWER_UNDERSCORE.to(
+                                  CaseFormat.UPPER_CAMEL, groupName.replace('.', '_'))
+                              + "Ops");
+                  groupOps =
+                      new OpsSpec(groupName, fieldName, className, groupedMethods.get(groupName));
+                  parentClass.subGroups.add(groupOps);
+                  groups.put(groupName, groupOps);
+                }
+                parentClass = groupOps;
+                startPos = delimiterPos + 1;
+              } while (startPos > 0);
+            });
 
     return groups.values();
   }
@@ -471,10 +468,10 @@ public final class OperatorProcessor extends AbstractProcessor {
 
     MethodSpec.Builder opsBuilder =
         MethodSpec.methodBuilder("ops")
-        .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-        .returns(Names.Ops)
-        .addJavadoc("Get the parent {@link " + Names.Ops.simpleName() + "} object.")
-        .addStatement("return ops");
+            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .returns(Names.Ops)
+            .addJavadoc("Get the parent {@link " + Names.Ops.simpleName() + "} object.")
+            .addStatement("return ops");
 
     builder.addMethod(opsBuilder.build());
 
@@ -499,7 +496,6 @@ public final class OperatorProcessor extends AbstractProcessor {
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
             .addParameter(Names.Scope, "scope")
-            .addModifiers(Modifier.PRIVATE)
             .addStatement("this.scope = scope", Names.Scope);
 
     TypeSpec.Builder opsBuilder =
@@ -679,7 +675,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .addParameter(Names.ExecutionEnvironment, "env")
             .returns(Names.Ops)
-            .addStatement("return new Ops(env.baseScope())", Names.JavaScope)
+            .addStatement("return new Ops(env.baseScope())")
             .addJavadoc(
                 "Creates an API for building operations in the provided execution environment\n")
             .build());
@@ -688,7 +684,7 @@ public final class OperatorProcessor extends AbstractProcessor {
         MethodSpec.methodBuilder("create")
             .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
             .returns(Names.Ops)
-            .addStatement("return create(new $T($T.getDefault()))", Names.JavaScope, Names.EagerSession)
+            .addStatement("return create($T.getDefault())", Names.EagerSession)
             .addJavadoc(
                 "Creates an API for building operations in the default eager execution environment\n\n"
                     + "<p>Invoking this method is equivalent to {@code Ops.create(EagerSession.getDefault())}.\n")
@@ -697,18 +693,24 @@ public final class OperatorProcessor extends AbstractProcessor {
     return opsBuilder.build();
   }
 
-  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder,
-      List<OpsSpec> groups, boolean isTopClass) {
-    groups.forEach(group -> {
-      classBuilder.addField(
-          FieldSpec.builder(group.className, group.fieldName)
-              .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-              .build());
+  private static void addGroupFields(
+      TypeSpec.Builder classBuilder,
+      MethodSpec.Builder ctorBuilder,
+      List<OpsSpec> groups,
+      boolean isTopClass) {
+    groups.forEach(
+        group -> {
+          classBuilder.addField(
+              FieldSpec.builder(group.className, group.fieldName)
+                  .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                  .build());
           ctorBuilder
-
-          .addStatement("$L = new $T(" + (isTopClass ? "this" : "ops") + ")", group.fieldName,
-              group.className).build();
-    });
+              .addStatement(
+                  "$L = new $T(" + (isTopClass ? "this" : "ops") + ")",
+                  group.fieldName,
+                  group.className)
+              .build();
+        });
   }
 
   private static AnnotationMirror getAnnotationMirror(Element element, Name annotationName) {
@@ -723,8 +725,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static AnnotationValue getAnnotationElementValue(
-      String elementName,
-      AnnotationMirror am) {
+      String elementName, AnnotationMirror am) {
     for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
         am.getElementValues().entrySet()) {
       if (entry.getKey().getSimpleName().contentEquals(elementName)) {
@@ -740,8 +741,7 @@ public final class OperatorProcessor extends AbstractProcessor {
   }
 
   private static boolean getAnnotationElementValueAsBoolean(
-      String elementName, AnnotationMirror am,
-      boolean defaultValue) {
+      String elementName, AnnotationMirror am, boolean defaultValue) {
     AnnotationValue value = getAnnotationElementValue(elementName, am);
     return value != null ? Boolean.parseBoolean(value.toString()) : defaultValue;
   }

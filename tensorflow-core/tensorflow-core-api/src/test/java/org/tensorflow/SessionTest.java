@@ -228,8 +228,7 @@ public class SessionTest {
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
             try (AutoCloseableList<Tensor> oldList =
-                    new AutoCloseableList<>(
-                s.runner().fetch("x").fetch("y").run());
+                    new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
                 AutoCloseableList<Tensor> newList =
                     new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())) {
               assertEquals(oldList.get(0), newList.get(0));

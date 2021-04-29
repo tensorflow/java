@@ -16,12 +16,14 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 
 /**
- * A Java implementation of {@link Scope}.  This is used in all cases except custom gradient
+ * A Java implementation of {@link Scope}. This is used in all cases except custom gradient
  * definitions.
  */
 public final class JavaScope implements Scope {
@@ -32,7 +34,7 @@ public final class JavaScope implements Scope {
    * @param env The execution environment used by the scope.
    */
   public JavaScope(ExecutionEnvironment env) {
-    this(env, new NameScope(), new ArrayList<>(), DeviceSpec.newBuilder().build());
+    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build(), false);
   }
 
   @Override
@@ -42,24 +44,33 @@ public final class JavaScope implements Scope {
 
   @Override
   public JavaScope withSubScope(String childScopeName) {
-    return new JavaScope(env, nameScope.withSubScope(childScopeName), controlDependencies,
-        deviceSpec);
+    return new JavaScope(
+        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec, isInit);
   }
 
   @Override
   public JavaScope withName(String opName) {
-    return new JavaScope(env, nameScope.withName(opName), controlDependencies, deviceSpec);
+    return new JavaScope(env, nameScope.withName(opName), controlDependencies, deviceSpec, isInit);
   }
 
   @Override
   public JavaScope withNameAsSubScope(String defaultName) {
-    return new JavaScope(env, nameScope.withSubScope(nameScope.makeOpName(defaultName)),
-        controlDependencies, deviceSpec);
+    return new JavaScope(
+        env,
+        nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
+        controlDependencies,
+        deviceSpec,
+        isInit);
   }
 
   @Override
   public JavaScope withDevice(DeviceSpec deviceSpec) {
-    return new JavaScope(env, nameScope, controlDependencies, deviceSpec);
+    return new JavaScope(env, nameScope, controlDependencies, deviceSpec, isInit);
+  }
+
+  @Override
+  public JavaScope withInitScope() {
+    return new JavaScope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
   @Override
@@ -67,50 +78,76 @@ public final class JavaScope implements Scope {
     return nameScope.makeOpName(defaultName);
   }
 
+  @Override
+  public String makeUnique(String id) {
+    return nameScope.makeUnique(id);
+  }
+
+  @Override
+  public void refreshNames() {
+    nameScope.importIdsFrom(env);
+  }
+
   private JavaScope(
-      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies,
-      DeviceSpec deviceSpec) {
+      ExecutionEnvironment env,
+      NameScope nameScope,
+      List<Operation> controlDependencies,
+      DeviceSpec deviceSpec,
+      boolean isInit) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
     this.deviceSpec = deviceSpec;
+    this.isInit = isInit;
   }
 
   @Override
-  public JavaScope withControlDependencies(Iterable<Op> controls) {
-    for (Op control : controls) {
+  public Scope withControlDependencyOps(Iterable<Operation> controls) {
+    ArrayList<Operation> toAdd = new ArrayList<>();
+    for (Operation control : controls) {
       env.checkInput(control);
+      if (isInit && !env.isInitOp(control)) {
+        throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
+      }
+      if (isInit || !env.isInitOp(control)) {
+        toAdd.add(control);
+      }
     }
-    return new JavaScope(env, nameScope, controls, deviceSpec);
+
+    return new JavaScope(env, nameScope, toAdd, deviceSpec, isInit);
   }
 
   @Override
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
-    return applyControlDependencies(builder);
-  }
-
-  /**
-   * Adds each Operand in controlDependencies as a control input to the provided builder.
-   *
-   * @param builder OperationBuilder to add control inputs to
-   */
-  private OperationBuilder applyControlDependencies(OperationBuilder builder) {
-    for (Op control : controlDependencies) {
-      builder = builder.addControlInput(control.op());
+    for (Operation control : controlDependencies) {
+      if (isInit || !env.isInitOp(control)) {
+        builder.addControlInput(control);
+      }
     }
     return builder;
   }
 
-  private final ExecutionEnvironment env;
-  private final Iterable<Op> controlDependencies;
-  private final NameScope nameScope;
-  private final DeviceSpec deviceSpec;
+  @Override
+  public void onOpCreated(Operation op) {
+    if (isInit) {
+      env.registerInitOp(op);
+    }
+  }
 
-  /**
-   * Returns device string from the scope.
-   */
+  @Override
+  public boolean isInit() {
+    return isInit;
+  }
+
+  @Override
   public String getDeviceString() {
     return deviceSpec.toString();
   }
+
+  private final ExecutionEnvironment env;
+  private final List<Operation> controlDependencies;
+  private final NameScope nameScope;
+  private final DeviceSpec deviceSpec;
+  private final boolean isInit;
 }

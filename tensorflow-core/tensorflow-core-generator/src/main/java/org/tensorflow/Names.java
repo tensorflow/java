@@ -54,11 +54,9 @@ public class Names {
   public static final ClassName GraphOperation = ClassName.get(TensorflowPackage, "GraphOperation");
   public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
   public static final ClassName OperationBuilder =
-      ClassName
-      .get(TensorflowPackage, "OperationBuilder");
+      ClassName.get(TensorflowPackage, "OperationBuilder");
   public static final TypeName IterableOp =
-      ParameterizedTypeName
-      .get(ClassName.get(Iterable.class), Op);
+      ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
   public static final TypeName IterableOperation =
       ParameterizedTypeName.get(ClassName.get(Iterable.class), Operation);
   public static final TypeName ArrayOp = ArrayTypeName.of(Op);
@@ -70,8 +68,7 @@ public class Names {
   public static final ClassName Shape = ClassName.get(TensorflowPackage + ".ndarray", "Shape");
   public static final ClassName Tensor = ClassName.get(TensorflowPackage, "Tensor");
   public static final ClassName ConcreteFunction =
-      ClassName
-      .get(TensorflowPackage, "ConcreteFunction");
+      ClassName.get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
   public static final ClassName JavaScope = ClassName.get(OpPackage, "JavaScope");

@@ -57,6 +57,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
@@ -84,13 +85,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /** Create an empty Graph. */
   public Graph() {
     this(allocate());
-    this.baseScope = new Scope(this);
   }
 
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
-    this.baseScope = new Scope(this);
+    this.baseScope = new JavaScope(this);
     allGraphs.add(this);
   }
 
@@ -164,8 +164,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Returns the output with the provided name, or {@code null} if there is no such output.
    *
    * <p>Names should be of the format {@code /scope/op}, with an optional index: {@code
-   * /scope/op:1}. {@code 0} is used if the
-   * index is not specified.
+   * /scope/op:1}. {@code 0} is used if the index is not specified.
    *
    * @param output the output to get
    * @return the output with this name, or null if there isn't one
@@ -199,8 +198,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * isn't one.
    *
    * <p>Names should be of the format {@code /scope/op}, with an optional index: {@code
-   * /scope/op:1}. {@code 0} is used if the
-   * index is not specified.
+   * /scope/op:1}. {@code 0} is used if the index is not specified.
    *
    * @param output the output to get
    * @return the output with this name
@@ -234,17 +232,17 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Finds the operations used to produce {@code outputs}, assuming {@code inputs} are provided.
    * Includes control dependencies.
    *
-   * <p>Note that this function can easily return ops upstream of inputs as part of the body. Depending
-   * on your use, the returned body should probably be filtered for {@code Placeholder}s, at least.
+   * <p>Note that this function can easily return ops upstream of inputs as part of the body.
+   * Depending on your use, the returned body should probably be filtered for {@code Placeholder}s,
+   * at least.
    *
-   * @param inputs  the inputs of the subgraph.  Must be from single output ops.  May not be null.
-   * @param outputs the outputs of the subgraph.  May not be null.
+   * @param inputs the inputs of the subgraph. Must be from single output ops. May not be null.
+   * @param outputs the outputs of the subgraph. May not be null.
    * @return the set of operations needed to calculate outputs from inputs, including outputs and
    *     inputs
    */
   public synchronized Set<GraphOperation> completeSubgraph(
-      Set<Operand<?>> inputs,
-      Set<Operand<?>> outputs) {
+      Set<Operand<?>> inputs, Set<Operand<?>> outputs) {
 
     if (inputs == null) {
       throw new IllegalArgumentException("Inputs can't be null.");
@@ -379,8 +377,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param name to refer to the created Operation in the graph.
    * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then
-   * some resources may leak.
+   *     then some resources may leak.
    */
   @Override
   public GraphOperationBuilder opBuilder(String type, String name, Scope scope) {
@@ -523,7 +520,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Import a representation of a TensorFlow graph.
    *
    * @param graphDef the representation of a TensorFlow graph.
-   * @param prefix   a prefix that will be prepended to names in graphDef
+   * @param prefix a prefix that will be prepended to names in graphDef
    * @throws IllegalArgumentException if graphDef is not a recognized serialization of a graph.
    * @see #importGraphDef(GraphDef)
    */
@@ -656,21 +653,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * <p>If {@code dx} is null, the implementation will use dx of {@link
    * org.tensorflow.op.core.OnesLike OnesLike} for all shapes in {@code y}.
    *
-   * <p>{@code prefix} is used as the name prefix applied to all nodes added to the graph to
-   * compute gradients. It must be unique within the provided graph or the operation will fail.
+   * <p>{@code prefix} is used as the name prefix applied to all nodes added to the graph to compute
+   * gradients. It must be unique within the provided graph or the operation will fail.
    *
    * <p>If {@code prefix} is null, then one will be chosen automatically.
    *
    * @param prefix unique string prefix applied before the names of nodes added to the graph to
-   *               compute gradients. If null, a default one will be chosen.
-   * @param y      output of the function to derive
-   * @param x      inputs of the function for which partial derivatives are computed
-   * @param dx     if not null, the partial derivatives of some loss function {@code L} w.r.t.
-   *               {@code y}
+   *     compute gradients. If null, a default one will be chosen.
+   * @param y output of the function to derive
+   * @param x inputs of the function for which partial derivatives are computed
+   * @param dx if not null, the partial derivatives of some loss function {@code L} w.r.t. {@code y}
    * @return the partial derivatives {@code dy} with the size of {@code x}
    */
-  public synchronized Output<?>[] addGradients(String prefix, Output<?>[] y, Output<?>[] x,
-      Output<?>[] dx) {
+  public synchronized Output<?>[] addGradients(
+      String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
     Output<?>[] dy = new Output<?>[x.length];
     final TF_Operation[] yHandles = new TF_Operation[y.length];
     final int[] yIndices = new int[y.length];
@@ -775,8 +771,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     /**
      * To be overridden by user with code to build conditional or body subgraph for a while loop
      *
-     * @param g       the subgraph
-     * @param inputs  subgraph inputs
+     * @param g the subgraph
+     * @param inputs subgraph inputs
      * @param outputs subgraph outputs
      */
     public void buildSubgraph(Graph g, Output<?>[] inputs, Output<?>[] outputs);
@@ -825,10 +821,10 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /**
    * Builds a while loop.
    *
-   * @param inputs    the loop inputs
+   * @param inputs the loop inputs
    * @param cgBuilder WhileSubgraphBuilder to build the conditional subgraph
    * @param bgBuilder WhileSubgraphBuilder to build the body subgraph
-   * @param name      name for the loop
+   * @param name name for the loop
    * @return list of loop outputs, of the same length as {@code inputs}
    */
   public Output<?>[] whileLoop(
@@ -864,7 +860,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /**
    * Return the {@link SaverDef} instance used to save the state of all variables present in this
    * graph.
+   *
    * <p>
+   *
    * <p>The first time this method is called it builds the {@link SaverDef}. If this graph already
    * contains a "save/restore_all" operation then it is assumed to contain all necessary saving and
    * restoring operations. If that operation does not exist then the graph is mutated to add all the
@@ -973,8 +971,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
         if (nativeReturn != null
             && nativeReturn[0] != null
-            && !((TF_Operation) nativeReturn[0])
-            .isNull()) {
+            && !((TF_Operation) nativeReturn[0]).isNull()) {
           this.operation = new GraphOperation(this.graph, (TF_Operation) nativeReturn[0]);
           this.position = (Integer) nativeReturn[1];
         }
@@ -1321,7 +1318,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    */
   public static Graph findGraphForPointer(NativeGraphPointer pointer) {
     for (Graph g : allGraphs) {
-      if (g.nativeHandle != null && !g.nativeHandle.isNull() && g.nativeHandle.graph().equals(pointer)) {
+      if (g.nativeHandle != null
+          && !g.nativeHandle.isNull()
+          && g.nativeHandle.graph().equals(pointer)) {
         return g;
       }
     }

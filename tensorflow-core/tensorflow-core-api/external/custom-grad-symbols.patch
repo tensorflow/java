@@ -1,0 +1,151 @@
+Index: tensorflow/tools/def_file_filter/BUILD
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tensorflow/tools/def_file_filter/BUILD b/tensorflow/tools/def_file_filter/BUILD
+--- a/tensorflow/tools/def_file_filter/BUILD	(revision 5e5cc35b4c0f629a1e092b540fdf2b63367aa5ad)
++++ b/tensorflow/tools/def_file_filter/BUILD	(date 1629063191558)
+@@ -12,3 +12,8 @@
+     name = "symbols_pybind",
+     srcs = ["symbols_pybind.txt"],
+ )
++
++filegroup(
++    name = "symbols_java",
++    srcs = ["symbols_java.txt"],
++)
+Index: tensorflow/BUILD
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+--- a/tensorflow/BUILD	(revision 5e5cc35b4c0f629a1e092b540fdf2b63367aa5ad)
++++ b/tensorflow/BUILD	(date 1629063361078)
+@@ -1069,13 +1069,20 @@
+ # the dynamic libraries of custom ops can find it at runtime.
+ genrule(
+     name = "tensorflow_filtered_def_file",
+-    srcs = [":tensorflow_def_file"],
++    srcs = [
++        ":tensorflow_def_file",
++        ":java_symbol_target_libs_file",
++        ":win_lib_files_for_java_exported_symbols",
++        "//tensorflow/tools/def_file_filter:symbols_java",
++    ],
+     outs = ["tensorflow_filtered_def_file.def"],
+     cmd = select({
+         "//tensorflow:windows": """
+               $(location @local_config_def_file_filter//:def_file_filter) \\
+               --input $(location :tensorflow_def_file) \\
+-              --output $@
++              --output $@ \\
++              --symbols $(location //tensorflow/tools/def_file_filter:symbols_java) \\
++              --lib_paths_file $(location :java_symbol_target_libs_file)
+           """,
+         "//conditions:default": "touch $@",  # Just a placeholder for Unix platforms
+     }),
+@@ -1083,6 +1090,34 @@
+     visibility = ["//visibility:public"],
+ )
+
++# Write to a file a list of all cc_library targets that we need for exporting symbols on Windows.
++genrule(
++    name = "java_symbol_target_libs_file",
++    srcs = [":win_lib_files_for_java_exported_symbols"],
++    outs = ["java_symbol_target_libs_file.txt"],
++    cmd = select({
++        "//tensorflow:windows": """
++            for SRC in $(SRCS); do
++              echo $$SRC | sed 's/third_party\\///g' >> $@
++            done
++          """,
++        "//conditions:default": "touch $@",  # Just a placeholder for Unix platforms
++    }),
++    visibility = ["//visibility:public"],
++)
++
++filegroup(
++    name = "win_lib_files_for_java_exported_symbols",
++    srcs = [
++        "//tensorflow/cc:scope",
++        "//tensorflow/cc:grad_op_registry",
++        "//tensorflow/c:tf_status_helper",
++        "//tensorflow/cc:ops"
++    ],
++    visibility = ["//visibility:private"],
++)
++
++
+ # The interface library (tensorflow.dll.if.lib) for linking tensorflow DLL library (tensorflow.dll) on Windows.
+ # To learn more about import library (called interface library in Bazel):
+ #     https://docs.microsoft.com/en-us/cpp/build/linking-an-executable-to-a-dll?view=vs-2017#linking-implicitly
+Index: tensorflow/tools/def_file_filter/BUILD.tpl
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tensorflow/tools/def_file_filter/BUILD.tpl b/tensorflow/tools/def_file_filter/BUILD.tpl
+--- a/tensorflow/tools/def_file_filter/BUILD.tpl	(revision 5e5cc35b4c0f629a1e092b540fdf2b63367aa5ad)
++++ b/tensorflow/tools/def_file_filter/BUILD.tpl	(date 1629063191583)
+@@ -18,3 +18,8 @@
+     name = "symbols_pybind",
+     srcs = ["symbols_pybind.txt"],
+ )
++
++filegroup(
++    name = "symbols_java",
++    srcs = ["symbols_java.txt"],
++)
+Index: tensorflow/tools/def_file_filter/symbols_java.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tensorflow/tools/def_file_filter/symbols_java.txt b/tensorflow/tools/def_file_filter/symbols_java.txt
+new file mode 100644
+--- /dev/null	(date 1629063607794)
++++ b/tensorflow/tools/def_file_filter/symbols_java.txt	(date 1629063607794)
+@@ -0,0 +1,26 @@
++[//tensorflow/cc:scope] # scope
++tensorflow::Scope::graph
++tensorflow::Scope::ok
++tensorflow::Scope::UpdateBuilder
++tensorflow::Scope::GetUniqueNameForOp
++tensorflow::Scope::ExitOnError
++tensorflow::Scope::WithDevice
++tensorflow::Scope::WithNoControlDependencies
++tensorflow::Scope::WithControlDependencies
++tensorflow::Scope::NewSubScope
++tensorflow::Scope::NewRootScope
++tensorflow::Scope::operator=
++tensorflow::Scope::~Scope
++tensorflow::Scope::Scope
++
++[//tensorflow/cc:ops]
++tensorflow::Operation::Operation
++
++[//tensorflow/cc:grad_op_registry] # custom gradients for graph
++tensorflow::ops::GradOpRegistry::Global
++tensorflow::ops::GradOpRegistry::Lookup
++tensorflow::ops::GradOpRegistry::Register
++
++[//tensorflow/c:tf_status_helper] # status helpers
++tensorflow::Set_TF_Status_from_Status
++tensorflow::StatusFromTF_Status
+===================================================================
+diff --git a/tensorflow/tools/def_file_filter/def_file_filter.py.tpl b/tensorflow/tools/def_file_filter/def_file_filter.py.tpl
+--- a/tensorflow/tools/def_file_filter/def_file_filter.py.tpl	(revision 919f693420e35d00c8d0a42100837ae3718f7927)
++++ b/tensorflow/tools/def_file_filter/def_file_filter.py.tpl	(date 1632048268359)
+@@ -143,8 +143,8 @@
+   re_filter_comp = re.compile(r"{}".format(re_filter))
+
+   # Filter out symbol from the split line (`sym_split` in the for loop below).
+-  sym_line_filter = r".*\s+\| (.*) \(.*"
+-  sym_line_filter_anomaly = r".*\s+\| (.*)"
++  sym_line_filter = r".*\s+\| (.*?) \(.*"
++  sym_line_filter_anomaly = r".*\s+\| (.*?)"
+
+   for sym_line in sym_split:
+     if re_filter_comp.search(sym_line):

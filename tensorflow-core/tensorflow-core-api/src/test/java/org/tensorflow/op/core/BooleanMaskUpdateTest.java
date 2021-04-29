@@ -1,25 +1,24 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
@@ -39,17 +38,17 @@ public class BooleanMaskUpdateTest {
         Session sess = new Session(g)) {
       Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant
-          .tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+      Operand<TInt32> input =
+          Constant.tensorOf(scope, new int[][] {{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
 
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
-      Operand<TInt32> value = Constant.tensorOf(scope, new int[][]{{-1, -1, -1}});
+      Operand<TInt32> value = Constant.tensorOf(scope, new int[][] {{-1, -1, -1}});
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
-      Operand<TInt32> bcastOutput = BooleanMaskUpdate
-          .create(scope, input, mask, Constant.scalarOf(scope, -1));
+      Operand<TInt32> bcastOutput =
+          BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
       List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
@@ -78,17 +77,17 @@ public class BooleanMaskUpdateTest {
         Session sess = new Session(g)) {
       Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant
-          .tensorOf(scope, new int[][]{{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
+      Operand<TInt32> input =
+          Constant.tensorOf(scope, new int[][] {{0, 0, 0}, {1, 1, 1}, {2, 2, 2}});
 
       Operand<TBool> mask = Constant.arrayOf(scope, true, false, false);
 
-      Operand<TInt32> value = Constant.vectorOf(scope, new int[]{-1, -1, -1});
+      Operand<TInt32> value = Constant.vectorOf(scope, new int[] {-1, -1, -1});
 
       Operand<TInt32> output = BooleanMaskUpdate.create(scope, input, mask, value);
 
-      Operand<TInt32> bcastOutput = BooleanMaskUpdate
-          .create(scope, input, mask, Constant.scalarOf(scope, -1));
+      Operand<TInt32> bcastOutput =
+          BooleanMaskUpdate.create(scope, input, mask, Constant.scalarOf(scope, -1));
 
       List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);
@@ -117,19 +116,20 @@ public class BooleanMaskUpdateTest {
         Session sess = new Session(g)) {
       Scope scope = new JavaScope(g);
 
-      Operand<TInt32> input = Constant
-          .tensorOf(scope, new int[][][]{{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});
+      Operand<TInt32> input =
+          Constant.tensorOf(scope, new int[][][] {{{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}}});
 
-      Operand<TBool> mask = Constant
-          .arrayOf(scope, true, true, false, false, true, true, true, false, false, false);
+      Operand<TBool> mask =
+          Constant.arrayOf(scope, true, true, false, false, true, true, true, false, false, false);
 
       Operand<TInt32> value = Constant.arrayOf(scope, -1, -1, -1, -1, -1);
 
-      Operand<TInt32> output = BooleanMaskUpdate
-          .create(scope, input, mask, value, BooleanMaskUpdate.axis(2));
+      Operand<TInt32> output =
+          BooleanMaskUpdate.create(scope, input, mask, value, BooleanMaskUpdate.axis(2));
 
-      Operand<TInt32> bcastOutput = BooleanMaskUpdate
-          .create(scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));
+      Operand<TInt32> bcastOutput =
+          BooleanMaskUpdate.create(
+              scope, input, mask, Constant.scalarOf(scope, -1), BooleanMaskUpdate.axis(2));
 
       List<Tensor> results = sess.runner().fetch(output).fetch(bcastOutput).run();
       try (TInt32 result = (TInt32) results.get(0);

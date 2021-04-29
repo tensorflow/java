@@ -29,6 +29,7 @@ import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
@@ -397,7 +398,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
 
-  private final Scope baseScope = new Scope(this);
+  private final Scope baseScope = new JavaScope(this);
 
   private EagerSession(Options options) {
     this.nativeResources = new WeakPointerScope();

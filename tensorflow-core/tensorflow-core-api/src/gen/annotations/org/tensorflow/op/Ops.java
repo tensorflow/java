@@ -8172,7 +8172,7 @@ public final class Ops {
    * Creates an API for building operations in the provided execution environment
    */
   public static Ops create(ExecutionEnvironment env) {
-    return new Ops(new JavaScope(env.baseScope())));
+    return new Ops(env.baseScope());
   }
 
   /**

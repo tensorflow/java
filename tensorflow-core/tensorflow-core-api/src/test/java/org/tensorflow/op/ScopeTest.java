@@ -26,9 +26,7 @@ import org.tensorflow.Session;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
-/**
- * Unit tests for {@link org.tensorflow.op.Scope}.
- */
+/** Unit tests for {@link org.tensorflow.op.Scope}. */
 public class ScopeTest {
 
   @Test
@@ -105,9 +103,9 @@ public class ScopeTest {
       Scope root = new JavaScope(g);
 
       final String[] invalid_names = {
-          "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
-          null, "", "a$", // Invalid characters
-          "a/b", // slashes not allowed
+        "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
+        null, "", "a$", // Invalid characters
+        "a/b", // slashes not allowed
       };
 
       for (String name : invalid_names) {
@@ -167,7 +165,7 @@ public class ScopeTest {
         Session sess = new Session(g)) {
       Scope s = new JavaScope(g);
       Output<TInt32> data =
-          Const.create(s.withName("data"), new int[]{600, 470, 170, 430, 300}).output();
+          Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
 
       // Create a composite op with a customized name
       Variance<TInt32> var1 = Variance.create(s.withName("example"), data);
@@ -275,7 +273,7 @@ public class ScopeTest {
       Output<TInt32> zero = Const.create(base, TInt32.scalarOf(0)).output();
       Output<TInt32> sqdiff =
           SquaredDifference.create(
-              s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
+                  s.withName("squared_deviation"), x, Mean.create(s, x, zero).output())
               .output();
 
       return new Variance<>(Mean.create(s.withName("variance"), sqdiff, zero).output());

@@ -37,23 +37,15 @@ import org.tensorflow.types.family.TType;
 public abstract class Optimizer {
 
   public static final String VARIABLE_V2 = "VariableV2";
-  /**
-   * Global state variables
-   */
+  /** Global state variables */
   // TODO make this be used.
   protected final List<Variable<?>> globals;
-  /**
-   * The Graph this optimizer is operating on.
-   */
+  /** The Graph this optimizer is operating on. */
   protected final Graph graph;
-  /**
-   * The ops builder for the graph.
-   */
+  /** The ops builder for the graph. */
   protected final Ops tf;
 
-  /**
-   * Top level map key is the variable name, lower level map key is the slot name.
-   */
+  /** Top level map key is the variable name, lower level map key is the slot name. */
   private final Map<String, Map<String, Variable<?>>> slots;
 
   /**
@@ -74,7 +66,7 @@ public abstract class Optimizer {
    * Builds an optimizer for the supplied graph.
    *
    * @param graph The graph to optimize.
-   * @param name  The base name for the operations.
+   * @param name The base name for the operations.
    */
   protected Optimizer(Graph graph, String name) {
     this.graph = graph;
@@ -130,7 +122,7 @@ public abstract class Optimizer {
    * Computes the gradients based on a loss operand.
    *
    * @param loss the loss operation
-   * @param <T>  the data type of the loss, gradients and variables.
+   * @param <T> the data type of the loss, gradients and variables.
    * @return the computed gradients
    */
   public <T extends TType> List<GradAndVar<?>> computeGradients(Operand<?> loss) {
@@ -168,7 +160,7 @@ public abstract class Optimizer {
    * Applies gradients to variables
    *
    * @param gradsAndVars the list of (gradient, variable) pairs.
-   * @param name         the name of the apply gradients operation
+   * @param name the name of the apply gradients operation
    * @return an Op that applies the gradients to the variables.
    */
   public Op applyGradients(List<GradAndVar<? extends TType>> gradsAndVars, String name) {
@@ -191,9 +183,9 @@ public abstract class Optimizer {
   /**
    * Gets the slot associated with the specified variable and slot name.
    *
-   * @param var      The variable to lookup.
+   * @param var The variable to lookup.
    * @param slotName The slot name.
-   * @param <T>      a tensor type
+   * @param <T> a tensor type
    * @return The slot or {@link Optional#empty}.
    */
   public <T extends TType> Optional<Variable<T>> getSlot(Output<T> var, String slotName) {
@@ -203,7 +195,7 @@ public abstract class Optimizer {
   /**
    * Gets the slot associated with the specified variable and slot name.
    *
-   * @param varName  The variable to lookup.
+   * @param varName The variable to lookup.
    * @param slotName The slot name.
    * @return The slot or {@link Optional#empty}.
    */
@@ -225,10 +217,10 @@ public abstract class Optimizer {
    * Creates a slot in the graph for the specified variable with the specified name. Adds the slot's
    * initializer to the graph's initializers, and the slot to the Optimizer's slot map.
    *
-   * @param variable    The variable to create the slot for.
-   * @param slotName    The name of the slot.
+   * @param variable The variable to create the slot for.
+   * @param slotName The name of the slot.
    * @param initializer The initializer for the slot.
-   * @param <T>         The type of the variable.
+   * @param <T> The type of the variable.
    */
   protected <T extends TType> void createSlot(
       Output<T> variable, String slotName, Operand<T> initializer) {
@@ -258,14 +250,13 @@ public abstract class Optimizer {
    *
    * @param variables The variables to create slots for.
    */
-  protected void createSlots(List<Output<? extends TType>> variables) {
-  }
+  protected void createSlots(List<Output<? extends TType>> variables) {}
 
   /**
    * Generates the gradient update operations for the specific variable and gradient.
    *
    * @param gradVarPair the list of (gradient, variable) pairs.
-   * @param <T>         the datatype of the gradients and variables.
+   * @param <T> the datatype of the gradients and variables.
    * @return An operand which applies the desired optimizer update to the variable.
    */
   private <T extends TType> Op applyDense(GradAndVar<T> gradVarPair) {
@@ -277,7 +268,7 @@ public abstract class Optimizer {
    *
    * @param gradient The gradient to use.
    * @param variable The variable to update.
-   * @param <T>      The type of the variable.
+   * @param <T> The type of the variable.
    * @return An operand which applies the desired optimizer update to the variable.
    */
   protected abstract <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable);
@@ -286,7 +277,7 @@ public abstract class Optimizer {
    * Gathers up the update operations into a single op that can be used as a run target.
    *
    * @param updateOperations The update operations.
-   * @param name             The name of the run target.
+   * @param name The name of the run target.
    * @return A NoOp with a control dependency on each update operation.
    */
   protected Op finish(List<Op> updateOperations, String name) {
@@ -303,21 +294,18 @@ public abstract class Optimizer {
    */
   public abstract String getOptimizerName();
 
-  /**
-   * Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer}
-   */
+  /** Optional attributes for {@link org.tensorflow.framework.optimizers.Optimizer} */
   public static class Options {
 
     protected String sharedName;
 
-    private Options() {
-    }
+    private Options() {}
 
     /**
      * Sets the shared name
      *
      * @param sharedName If non-empty, this variable is named in the given bucket with this
-     *                   sharedName. Otherwise, the node name is used instead.
+     *     sharedName. Otherwise, the node name is used instead.
      * @return this options instance
      */
     public Optimizer.Options sharedName(String sharedName) {

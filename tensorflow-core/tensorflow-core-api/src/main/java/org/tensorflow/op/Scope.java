@@ -15,8 +15,6 @@ limitations under the License.
 */
 package org.tensorflow.op;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.tensorflow.DeviceSpec;
@@ -54,9 +52,8 @@ import org.tensorflow.OperationBuilder;
  *
  * <p><b>Scope hierarchy:</b>
  *
- * <p>A {@code Scope} provides various {@code with()} methods that create a new scope. The new
- * scope typically has one property changed while other properties are inherited from the parent
- * scope.
+ * <p>A {@code Scope} provides various {@code with()} methods that create a new scope. The new scope
+ * typically has one property changed while other properties are inherited from the parent scope.
  *
  * <p>An example using {@code Constant} implemented as before:
  *
@@ -89,9 +86,8 @@ public interface Scope {
   /**
    * Returns a new scope where added operations will have the provided name prefix.
    *
-   * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The
-   * actual name will be unique in the returned scope. All other properties are inherited from the
-   * current
+   * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The actual
+   * name will be unique in the returned scope. All other properties are inherited from the current
    * scope.
    *
    * <p>The child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
@@ -145,6 +141,9 @@ public interface Scope {
    */
   Scope withDevice(DeviceSpec deviceSpec);
 
+  /** Get an extension of this scope that generates initialization ops. */
+  Scope withInitScope();
+
   /**
    * Create a unique name for an operator and reserves it, using a provided default if necessary.
    *
@@ -157,9 +156,8 @@ public interface Scope {
    * scope.env().opBuilder("Const", scope.makeOpName("Const"))...
    * }</pre>
    *
-   * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates
-   * a set of related operations by calling other operator building code), the provided name will
-   * act
+   * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates a
+   * set of related operations by calling other operator building code), the provided name will act
    * as a subscope to all underlying operators.
    *
    * @param defaultName name for the underlying operator.
@@ -168,11 +166,21 @@ public interface Scope {
    */
   String makeOpName(String defaultName);
 
+  /** Makes a unique name from {@code id} and reserves it. */
+  String makeUnique(String id);
+
+  /**
+   * Refresh the used name list (used for uniquifying names) from the underlying graph.
+   *
+   * <p>Should be used if you made changes to the graph from non-{@code Scope} APIs.
+   */
+  void refreshNames();
+
   /**
    * Returns a new scope where added operations will have the provided control dependencies.
    *
-   * <p>Ops created with this scope will have a control edge from each of the provided controls.
-   * All other properties are inherited from the current scope.
+   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
+   * other properties are inherited from the current scope.
    *
    * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
    * during session initialization.
@@ -180,7 +188,45 @@ public interface Scope {
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
    */
-  Scope withControlDependencies(Iterable<Op> controls);
+  default Scope withControlDependencies(Iterable<Op> controls) {
+    return withControlDependencyOps(
+        StreamSupport.stream(controls.spliterator(), false)
+            .map(Op::op)
+            .collect(Collectors.toList()));
+  }
+
+  /**
+   * Returns a new scope where added operations will have the provided control dependencies.
+   *
+   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
+   * other properties are inherited from the current scope.
+   *
+   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
+   * during session initialization.
+   *
+   * @param controls control dependencies for ops created with the returned scope
+   * @return a new scope with the provided control dependencies
+   */
+  Scope withControlDependencyOps(Iterable<Operation> controls);
+
+  /**
+   * Returns a builder to create a new {@link Operation}.
+   *
+   * <p>Note that {@code name} is automatically made unique.
+   *
+   * @param type of the Operation (i.e., identifies the computation to be performed)
+   * @param name to refer to the created Operation in this environment scope. Is uniquified.
+   * @return an {@link OperationBuilder} to create an Operation when {@link
+   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
+   *     then some resources may leak.
+   */
+  default OperationBuilder opBuilder(String type, String name) {
+    return env().opBuilder(type, makeOpName(name), this);
+  }
+
+  static boolean isValidOpName(String name) {
+    return NameScope.isValidName(name);
+  }
 
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
@@ -191,4 +237,17 @@ public interface Scope {
    * @param builder OperationBuilder to add control inputs and device specification to
    */
   OperationBuilder apply(OperationBuilder builder);
+
+  /**
+   * Handle op creation, like registering it as an init op if the scope is init.
+   *
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   */
+  void onOpCreated(Operation op);
+
+  /** Returns device string from the scope. */
+  String getDeviceString();
+
+  /** Get whether this scope is building init ops. */
+  boolean isInit();
 }

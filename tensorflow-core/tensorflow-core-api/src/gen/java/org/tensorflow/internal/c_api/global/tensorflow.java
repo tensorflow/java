@@ -13,7 +13,9 @@ public class tensorflow extends org.tensorflow.internal.c_api.presets.tensorflow
 
 // Targeting ../NativeOutputVector.java
 
+
 // Targeting ../NameMap.java
+
 
 // Parsed from tensorflow/core/platform/ctstring_internal.h
 
@@ -1004,9 +1006,10 @@ public static native TF_Graph TF_NewGraph();
 public static native void TF_DeleteGraph(TF_Graph arg0);
 
 // Operation being built. The underlying graph must outlive this.
-// Targeting ../TF_Operation.java
 
-
+// Operation that has been added to the graph. Valid until the graph is
+// deleted -- in particular adding a new operation to the graph does not
+// invalidate old TF_Operation* pointers.
 // Targeting ../TF_Input.java
 
 
@@ -1087,6 +1090,15 @@ public static native void TF_GraphGetTensorShape(TF_Graph graph,
                                                   @ByVal TF_Output output,
                                                   @Cast("int64_t*") long[] dims, int num_dims,
                                                   TF_Status status);
+
+// TF_NewOperation, but without locking the graph.
+// Should prefer TF_NewOperation when possible.
+public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
+                                                                     @Cast("const char*") BytePointer op_type,
+                                                                     @Cast("const char*") BytePointer oper_name);
+public static native TF_OperationDescription TF_NewOperationLocked(TF_Graph graph,
+                                                                     String op_type,
+                                                                     String oper_name);
 
 // Operation will only be added to *graph when TF_FinishOperation() is
 // called (assuming TF_FinishOperation() does not return an error).
@@ -1426,6 +1438,11 @@ public static native void TF_SetAttrValueProto(TF_OperationDescription desc,
                                                 @Const Pointer proto,
                                                 @Cast("size_t") long proto_len,
                                                 TF_Status status);
+
+// TF_FinishOperation, but without locking the graph.
+// TF_FinishOperation should be preferred when possible.
+public static native TF_Operation TF_FinishOperationLocked(TF_OperationDescription desc,
+                                                             TF_Status status);
 
 // If this function succeeds:
 //   * *status is set to an OK value,
@@ -5180,14 +5197,14 @@ limitations under the License.
 // #include <iosfwd>
 // #include <memory>
 // #include <string>
+// #include <unordered_map>
 
 // #include "tensorflow/core/platform/logging.h"
 // #include "tensorflow/core/platform/macros.h"
+// #include "tensorflow/core/platform/stack_frame.h"
 // #include "tensorflow/core/platform/stringpiece.h"
 // #include "tensorflow/core/platform/types.h"
 // #include "tensorflow/core/protobuf/error_codes.pb.h"
-
-// A struct representing a frame in a stack trace.
 
 // #if defined(__clang__)
 // Only clang supports warn_unused_result as a type annotation.
@@ -5245,6 +5262,13 @@ limitations under the License.
 // #endif  // TENSORFLOW_CORE_PLATFORM_STATUS_H_
 
 
+// Targeting ../Node.java
+
+
+
+// Stores debug information associated with the Node.
+
+
 // Parsed from tensorflow/c/tf_status_helper.h
 
 /* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
@@ -5279,6 +5303,58 @@ limitations under the License.
   // namespace tensorflow
 
 // #endif  // TENSORFLOW_C_TF_STATUS_HELPER_H_
+
+
+// Parsed from tensorflow/cc/framework/ops.h
+
+/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================*/
+
+// #ifndef TENSORFLOW_CC_FRAMEWORK_OPS_H_
+// #define TENSORFLOW_CC_FRAMEWORK_OPS_H_
+
+// #include <type_traits>
+
+// #include "tensorflow/core/framework/tensor.h"
+// #include "tensorflow/core/framework/tensor.pb.h"
+// #include "tensorflow/core/graph/graph.h"
+// #include "tensorflow/core/lib/hash/hash.h"
+// #include "tensorflow/core/lib/strings/strcat.h"
+
+/** \defgroup core Core Tensorflow API */
+// Targeting ../NativeOperation.java
+
+
+// Targeting ../NativeOutput.java
+
+
+
+/** Hash class that can be used for e.g. storing Outputs in an unordered_map */
+
+/** Represents a tensor value that can be used as an operand to an Operation. */
+
+/** A type for representing the output of ops that produce more than one output,
+ *  or a list of tensors. */
+
+/** A type for representing the input to ops that require a list of tensors. */
+
+/** \} */
+
+  // namespace tensorflow
+
+// #endif  // TENSORFLOW_CC_FRAMEWORK_OPS_H_
 
 
 // Targeting ../TF_Graph.java
@@ -5498,6 +5574,140 @@ public static native void TFE_OpSetAttrValueProto(@Const TFE_Op op,
 // tensors/ops/etc. and usable in APIs like OpSetDevice/ResetOp/etc.
 
 public static final int TFE_CUSTOM_DEVICE_VERSION = 4;
+
+// Struct to be filled in. Functions are required except where indicated.
+
+// Registers a custom device for use with eager execution.
+//
+// Eager operations may be placed on this device, e.g.  `with
+// tf.device("CUSTOM"):` from Python if `device_name` for this call is
+// "/job:localhost/replica:0/task:0/device:CUSTOM:0".
+//
+// The custom device defines copy operations for moving TensorHandles on and
+// off, and an execution operation for named operations. Often execution will
+// simply wrap op execution on one or more physical devices.
+//
+// device_info is an opaque caller-defined type stored with the custom device
+// which is passed to the functions referenced in the TFE_CustomDevice struct
+// `device` (execute, delete_device, etc.). It can for example contain the
+// names of wrapped devices.
+//
+// There are currently no graph semantics implemented for registered custom
+// devices, so executing tf.functions which contain operations placed on custom
+// devices will fail.
+//
+// `device_name` must not name an existing physical or custom device. It must
+// follow the format:
+//
+//    /job:<name>/replica:<replica>/task:<task>/device:<type>:<device_num>
+//
+// If the device is successfully registered, `status` is set to TF_OK. Otherwise
+// the device is not usable. In case of a bad status, `device.delete_device` is
+// still called on `device_info` (i.e. the caller does not retain ownership).
+//
+// This API is highly experimental, and in particular is expected to change when
+// it starts supporting operations with attributes and when tf.function support
+// is added.
+
+// Struct to be filled in to define a custom device tensor handle. Fields are
+// required except where indicated.
+
+// Creates a new TensorHandle from memory residing in a custom device. Takes
+// ownership of the memory pointed to by `tensor_handle_data`, and calls
+// `methods.deallocator` to release it after TF no longer needs it or in case of
+// an error.
+//
+// This call is similar to `TFE_NewTensorHandleFromDeviceMemory`, but supports
+// custom devices instead of physical devices and does not require blocking
+// waiting for exact shapes.
+
+public static native void TFE_ContextGetFunctionDef(TFE_Context ctx,
+                                                     @Cast("const char*") BytePointer function_name,
+                                                     TF_Buffer buf,
+                                                     TF_Status status);
+public static native void TFE_ContextGetFunctionDef(TFE_Context ctx,
+                                                     String function_name,
+                                                     TF_Buffer buf,
+                                                     TF_Status status);
+
+// Allocate and return a new Tensor on the host.
+//
+// The caller must set the Tensor values by writing them to the pointer returned
+// by TF_TensorData with length TF_TensorByteSize.
+public static native TF_Tensor TFE_AllocateHostTensor(TFE_Context ctx,
+                                                        @Cast("TF_DataType") int dtype,
+                                                        @Cast("const int64_t*") LongPointer dims,
+                                                        int num_dims,
+                                                        TF_Status status);
+public static native TF_Tensor TFE_AllocateHostTensor(TFE_Context ctx,
+                                                        @Cast("TF_DataType") int dtype,
+                                                        @Cast("const int64_t*") LongBuffer dims,
+                                                        int num_dims,
+                                                        TF_Status status);
+public static native TF_Tensor TFE_AllocateHostTensor(TFE_Context ctx,
+                                                        @Cast("TF_DataType") int dtype,
+                                                        @Cast("const int64_t*") long[] dims,
+                                                        int num_dims,
+                                                        TF_Status status);
+
+// Given a Tensor, wrap it with a TensorHandle
+//
+// Similar to TFE_NewTensorHandle, but includes a pointer to the TFE_Context.
+// The context should be identical to that of the Tensor.
+public static native TFE_TensorHandle TFE_NewTensorHandleFromTensor(
+    TFE_Context ctx, TF_Tensor t, TF_Status status);
+
+// Create a packed TensorHandle with the given list of TensorHandles.
+// If `handles` are on the same device, assign the same device to the packed
+// handle; if `handles` are on different deivces, assign a CompositeDevice to
+// it.
+public static native TFE_TensorHandle TFE_CreatePackedTensorHandle(
+    TFE_Context ctx, @Cast("TFE_TensorHandle**") PointerPointer handles, IntPointer num_handles,
+    TF_Status status);
+public static native TFE_TensorHandle TFE_CreatePackedTensorHandle(
+    TFE_Context ctx, @ByPtrPtr TFE_TensorHandle handles, IntPointer num_handles,
+    TF_Status status);
+public static native TFE_TensorHandle TFE_CreatePackedTensorHandle(
+    TFE_Context ctx, @ByPtrPtr TFE_TensorHandle handles, IntBuffer num_handles,
+    TF_Status status);
+public static native TFE_TensorHandle TFE_CreatePackedTensorHandle(
+    TFE_Context ctx, @ByPtrPtr TFE_TensorHandle handles, int[] num_handles,
+    TF_Status status);
+
+// Configure soft device placement policy for the eager executor. Note this
+// policy is applied to any subsequent op executions.
+public static native void TFE_ContextSetSoftDevicePlacement(TFE_Context ctx,
+                                                      @Cast("unsigned char") byte enable,
+                                                      TF_Status status);
+
+// Configure device placement policy logging for the eager executor. Note this
+// policy is applied to any subsequent op executions.
+public static native void TFE_ContextSetLogDevicePlacement(TFE_Context ctx,
+                                                     @Cast("unsigned char") byte enable,
+                                                     TF_Status status);
+
+// Returns the device type of the operation that produced `h`.
+public static native @Cast("const char*") BytePointer TFE_TensorHandleDeviceType(
+    TFE_TensorHandle h, TF_Status status);
+
+// Returns the device ID of the operation that produced `h`.
+public static native int TFE_TensorHandleDeviceID(TFE_TensorHandle h,
+                                                   TF_Status status);
+
+// Get a comma-separated list of op names executed in graph functions dispatched
+// to `ctx`. This feature is currently only enabled for TFRT debug builds, for
+// performance and simplicity reasons.
+public static native void TFE_GetExecutedOpNames(TFE_Context ctx,
+                                                  TF_Buffer buf,
+                                                  TF_Status status);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #endif
+
+// #endif  // TENSORFLOW_C_EAGER_C_API_EXPERIMENTAL_H_
+// Targeting ../TF_Operation.java
+
+
 
 
 }

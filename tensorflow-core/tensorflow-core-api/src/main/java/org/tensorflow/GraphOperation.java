@@ -383,7 +383,6 @@ public final class GraphOperation extends AbstractOperation {
     }
   }
 
-
   public TF_Operation getUnsafeNativeHandle() {
     return unsafeNativeHandle;
   }

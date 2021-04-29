@@ -70,7 +70,8 @@ import org.tensorflow.proto.framework.NameAttrList;
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  GraphOperationBuilder(Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
+  GraphOperationBuilder(
+      Graph graph, String type, String name, Scope scope, boolean dangerousGradientBuilder) {
     this.graph = graph;
     this.scope = scope;
     this.dangerousGradientBuilder = dangerousGradientBuilder;
@@ -428,9 +429,8 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return TF_NewOperation(graphHandle, type, name);
   }
 
-  private static TF_OperationDescription allocateDangerousGradient(TF_Graph graphHandle,
-      String type,
-      String name) {
+  private static TF_OperationDescription allocateDangerousGradient(
+      TF_Graph graphHandle, String type, String name) {
     if (graphHandle == null || graphHandle.isNull()) {
       throw new IllegalStateException("close() has been called on the Graph");
     }
@@ -470,8 +470,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void addInputList(
-      TF_OperationDescription handle, TF_Operation[] opHandles,
-      int[] indices) {
+      TF_OperationDescription handle, TF_Operation[] opHandles, int[] indices) {
     requireHandle(handle);
     if (indices.length != opHandles.length) {
       throw new IllegalArgumentException(
@@ -541,8 +540,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrBoolList(
-      TF_OperationDescription handle, String name,
-      boolean[] value) {
+      TF_OperationDescription handle, String name, boolean[] value) {
     requireHandle(handle);
     try (PointerScope scope = new PointerScope()) {
       TF_SetAttrBoolList(handle, name, new BytePointer(new BooleanPointer(value)), value.length);
@@ -560,8 +558,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrTensor(
-      TF_OperationDescription handle, String name,
-      TF_Tensor tensorHandle) {
+      TF_OperationDescription handle, String name, TF_Tensor tensorHandle) {
     requireHandle(handle);
     requireTensor(tensorHandle);
 
@@ -573,8 +570,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrTensorList(
-      TF_OperationDescription handle, String name,
-      TF_Tensor[] tensorHandles) {
+      TF_OperationDescription handle, String name, TF_Tensor[] tensorHandles) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {
@@ -586,15 +582,13 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
       TF_Status status = TF_Status.newStatus();
       TF_SetAttrTensorList(
-          handle, new BytePointer(name), tensors.position(0), tensorHandles.length,
-          status);
+          handle, new BytePointer(name), tensors.position(0), tensorHandles.length, status);
       status.throwExceptionIfNotOK();
     }
   }
 
   private static void setAttrShape(
-      TF_OperationDescription handle, String name, long[] shape,
-      int numDims) {
+      TF_OperationDescription handle, String name, long[] shape, int numDims) {
     requireHandle(handle);
 
     // num_dims and env->GetArrayLength(shape) are assumed to be consistent.
@@ -603,8 +597,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   }
 
   private static void setAttrShapeList(
-      TF_OperationDescription handle, String name, long[] shapes,
-      int[] numDims) {
+      TF_OperationDescription handle, String name, long[] shapes, int[] numDims) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {
@@ -615,14 +608,12 @@ public final class GraphOperationBuilder implements OperationBuilder {
         shapesPointer.position(shapesPointer.position() + numDims[i] * 8);
       }
       TF_SetAttrShapeList(
-          handle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-          numDims.length);
+          handle, new BytePointer(name), shapesPointers, new IntPointer(numDims), numDims.length);
     }
   }
 
   private static void setAttrStringList(
-      TF_OperationDescription handle, String name,
-      byte[][] value) {
+      TF_OperationDescription handle, String name, byte[][] value) {
     requireHandle(handle);
 
     try (PointerScope scope = new PointerScope()) {

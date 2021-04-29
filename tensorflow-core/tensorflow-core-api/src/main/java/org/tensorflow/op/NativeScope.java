@@ -1,19 +1,19 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow.op;
 
 import java.util.List;
@@ -28,9 +28,7 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.internal.c_api.NativeOperation;
 import org.tensorflow.internal.c_api.TF_Scope;
 
-/**
- * A {@link Scope} implementation backed by a native scope.  Only used for gradient declarations.
- */
+/** A {@link Scope} implementation backed by a native scope. Only used for gradient declarations. */
 public final class NativeScope implements Scope {
 
   @Override
@@ -59,15 +57,28 @@ public final class NativeScope implements Scope {
   }
 
   @Override
+  public Scope withInitScope() {
+    throw new IllegalStateException("Can't add init operations in a gradient scope");
+  }
+
+  @Override
   public String makeOpName(String defaultName) {
     String name = opName != null ? opName : defaultName;
     return nativeScope.GetUniqueNameForOp(name);
   }
 
   @Override
+  public String makeUnique(String id) {
+    return nativeScope.GetUniqueNameForOp(id);
+  }
+
+  @Override
+  public void refreshNames() {}
+
+  @Override
   public NativeScope withControlDependencies(Iterable<Op> controls) {
-    List<Op> controlDeps = StreamSupport.stream(controls.spliterator(), false)
-        .collect(Collectors.toList());
+    List<Op> controlDeps =
+        StreamSupport.stream(controls.spliterator(), false).collect(Collectors.toList());
     NativeOperation ops = new NativeOperation(controlDeps.size());
 
     for (int i = 0; i < controlDeps.size(); i++) {
@@ -83,8 +94,39 @@ public final class NativeScope implements Scope {
   }
 
   @Override
+  public Scope withControlDependencyOps(Iterable<Operation> controls) {
+    List<Operation> controlDeps =
+        StreamSupport.stream(controls.spliterator(), false).collect(Collectors.toList());
+    NativeOperation ops = new NativeOperation(controlDeps.size());
+
+    for (int i = 0; i < controlDeps.size(); i++) {
+      Operation op = controlDeps.get(i);
+      if (!(op instanceof GraphOperation)) {
+        throw new IllegalArgumentException("Can only add graph ops as control dependencies");
+      }
+      ops.position(i)
+          .put(new NativeOperation(((GraphOperation) op).getUnsafeNativeHandle().node()));
+    }
+
+    return new NativeScope(nativeScope.WithControlDependencies(new NativeOperation(ops)), graph);
+  }
+
+  @Override
   public OperationBuilder apply(OperationBuilder builder) {
     return builder;
+  }
+
+  @Override
+  public void onOpCreated(Operation op) {}
+
+  @Override
+  public String getDeviceString() {
+    throw new IllegalStateException("Can't get device string for gradient scope");
+  }
+
+  @Override
+  public boolean isInit() {
+    return false;
   }
 
   NativeScope(TF_Scope nativeScope, Graph graph) {

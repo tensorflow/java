@@ -36,9 +36,7 @@ import org.tensorflow.proto.framework.GraphDef;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/**
- * Unit tests for {@link org.tensorflow.Graph}.
- */
+/** Unit tests for {@link org.tensorflow.Graph}. */
 public class GraphTest {
 
   @Test
@@ -180,8 +178,7 @@ public class GraphTest {
       Ops tf = Ops.create(g);
       Operand<TInt32> control = tf.constant(0);
       Operand<TInt32> a =
-          tf.withControlDependencies(Collections.singletonList(control))
-          .constant(1);
+          tf.withControlDependencies(Collections.singletonList(control)).constant(1);
       Operand<TInt32> b = tf.constant(2);
       Operand<TInt32> c = tf.constant(3);
 
@@ -190,8 +187,7 @@ public class GraphTest {
 
       Set<GraphOperation> subgraph =
           g.completeSubgraph(
-              new LinkedHashSet<>(Arrays.asList(control, a, b, c)),
-              Collections.singleton(output));
+              new LinkedHashSet<>(Arrays.asList(control, a, b, c)), Collections.singleton(output));
 
       assertEquals(
           new LinkedHashSet<>(
@@ -206,8 +202,7 @@ public class GraphTest {
       Ops tf = Ops.create(g);
       Operand<TInt32> control = tf.constant(0);
       Operand<TInt32> a =
-          tf.withControlDependencies(Collections.singletonList(control))
-          .constant(1);
+          tf.withControlDependencies(Collections.singletonList(control)).constant(1);
       Operand<TInt32> b = tf.constant(2);
       Operand<TInt32> c = tf.constant(3);
 

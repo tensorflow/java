@@ -1,19 +1,19 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,16 +30,19 @@ import org.tensorflow.types.TFloat32;
 public class CustomGradientTest {
 
   @Test
-  public void addGradientsToGraph() {
+  public void testCustomConcat() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
-      TensorFlow.registerCustomGradient(Concat.class,
+
+      TensorFlow.registerCustomGradient(
+          Concat.class,
           (tf, op, gradInputs) -> {
             Operand<?> out = gradInputs.get(0);
             Operand<?> a = tf.stridedSlice(out, Indices.slice(0, 1));
             Operand<?> b = tf.stridedSlice(out, Indices.slice(1, 2));
             return Arrays.asList(a, b, tf.constant(0f));
           });
+
       Ops tf = Ops.create(g);
 
       Output<TFloat32> x1 = tf.placeholder(TFloat32.class).output();
@@ -55,13 +58,9 @@ public class CustomGradientTest {
 
       try (TFloat32 c1 = TFloat32.scalarOf(3.0f);
           TFloat32 c2 = TFloat32.scalarOf(2.0f);
-          AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(
-              s.runner()
-                  .feed(x1, c1)
-                  .feed(x2, c2)
-                  .fetch(grads0[0])
-                  .fetch(grads0[1])
-                  .run())) {
+          AutoCloseableList<Tensor> outputs =
+              new AutoCloseableList<>(
+                  s.runner().feed(x1, c1).feed(x2, c2).fetch(grads0[0]).fetch(grads0[1]).run())) {
 
         assertEquals(2, outputs.size());
         assertEquals(6.0f, ((TFloat32) outputs.get(0)).getFloat(), 0.0f);
