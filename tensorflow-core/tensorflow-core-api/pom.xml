@@ -428,8 +428,7 @@
           <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
           -->
           <additionalClasspathElements>
-            <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar
-            </additionalClasspathElement>
+            <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
             <!-- Note: the following path is not accessible in deploying profile, so other libraries like
                        OpenMP must be installed manually when running the tests -->
             <additionalClasspathElement>${project.build.directory}/native/</additionalClasspathElement>
