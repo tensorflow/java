@@ -53,25 +53,21 @@ public class Names {
   public static final ClassName Operation = ClassName.get(TensorflowPackage, "Operation");
   public static final ClassName GraphOperation = ClassName.get(TensorflowPackage, "GraphOperation");
   public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
-  public static final ClassName OperationBuilder = ClassName
-      .get(TensorflowPackage, "OperationBuilder");
-  public static final TypeName IterableOp = ParameterizedTypeName
-      .get(ClassName.get(Iterable.class), Op);
+  public static final ClassName OperationBuilder = ClassName.get(TensorflowPackage, "OperationBuilder");
+  public static final TypeName IterableOp = ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
 
   public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
   public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
 
   public static final ClassName Shape = ClassName.get(TensorflowPackage + ".ndarray", "Shape");
   public static final ClassName Tensor = ClassName.get(TensorflowPackage, "Tensor");
-  public static final ClassName ConcreteFunction = ClassName
-      .get(TensorflowPackage, "ConcreteFunction");
+  public static final ClassName ConcreteFunction = ClassName.get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
   public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
   public static final ClassName Ops = ClassName.get(OpPackage, "Ops");
 
-  public static final TypeName ExecutionEnvironment =
-      ClassName.get(TensorflowPackage, "ExecutionEnvironment");
+  public static final TypeName ExecutionEnvironment = ClassName.get(TensorflowPackage, "ExecutionEnvironment");
   public static final TypeName EagerSession = ClassName.get(TensorflowPackage, "EagerSession");
 
   public static final TypeName String = ClassName.get(String.class);
