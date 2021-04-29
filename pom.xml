@@ -1,5 +1,5 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -45,6 +45,7 @@
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <maven.source.skip>true</maven.source.skip>
     <gpg.skip>true</gpg.skip>
+    <spotless.version>2.10.3</spotless.version>
   </properties>
 
   <repositories>
@@ -103,19 +104,19 @@
         <artifactId>junit-jupiter-engine</artifactId>
         <version>${junit.version}</version>
         <scope>test</scope>
-    </dependency>
-	  <dependency>
-	    <groupId>org.openjdk.jmh</groupId>
-	    <artifactId>jmh-core</artifactId>
-	    <version>${jmh.version}</version>
-  	    <scope>test</scope>
-	  </dependency>
-	  <dependency>
-	    <groupId>org.openjdk.jmh</groupId>
-	    <artifactId>jmh-generator-annprocess</artifactId>
-	    <version>${jmh.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-core</artifactId>
+        <version>${jmh.version}</version>
         <scope>test</scope>
-	  </dependency>
+      </dependency>
+      <dependency>
+        <groupId>org.openjdk.jmh</groupId>
+        <artifactId>jmh-generator-annprocess</artifactId>
+        <version>${jmh.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -298,6 +299,25 @@
           <generateBackupPoms>false</generateBackupPoms>
           <processAllModules>true</processAllModules>
           <updateMatchingVersions>true</updateMatchingVersions>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <ratchetFrom>origin/master</ratchetFrom>
+
+          <lineEndings/>
+          <java>
+            <googleJavaFormat/>
+
+            <removeUnusedImports/>
+
+            <licenseHeader>
+              <file>./license-header</file>
+            </licenseHeader>
+          </java>
         </configuration>
       </plugin>
     </plugins>
