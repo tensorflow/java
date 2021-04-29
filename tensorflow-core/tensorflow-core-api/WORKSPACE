@@ -17,10 +17,10 @@ http_archive(
     patch_args = ["-p1"],
     patch_cmds = ["grep -rl 'java_package' tensorflow/core | xargs sed -i.bak 's/^\(.* java_package = \"org\.tensorflow\.\)\(.*\"\)/\\1proto.\\2'/"],
     urls = [
-       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.5.0-rc1.tar.gz",
+       "https://github.com/tensorflow/tensorflow/archive/refs/tags/v2.5.0-rc2.tar.gz",
     ],
-    sha256 = "354e58a2883210575ae7deacc9ab4a7ce00a3c60315151c2efbb734255e73713",
-    strip_prefix = "tensorflow-2.5.0-rc1"
+    sha256 = "9d42f759f859a98d760216be5c1660772d8e4905a0b681b010bc6159e6647fb5",
+    strip_prefix = "tensorflow-2.5.0-rc2"
 )
 
 # START: Upstream TensorFlow dependencies
