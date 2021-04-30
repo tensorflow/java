@@ -19,6 +19,7 @@ import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
+import org.tensorflow.op.train.ApplyAdagrad;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
 
@@ -41,6 +42,9 @@ public class AdaGrad extends Optimizer {
   public static final String ACCUMULATOR = "accumulator";
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
   public static final float INITIAL_ACCUMULATOR_DEFAULT = 0.01f;
+
+  private static final ApplyAdagrad.Options[] opts = new ApplyAdagrad.Options[]{
+          ApplyAdagrad.updateSlots(true),ApplyAdagrad.useLocking(true)};
 
   private final float learningRate;
 
@@ -140,7 +144,7 @@ public class AdaGrad extends Optimizer {
   protected <T extends TType> Op applyDense(Output<T> gradient, Output<T> variable) {
     Variable<T> slot = getSlot(variable, ACCUMULATOR).get();
     return tf.train.applyAdagrad(
-        variable, slot, tf.dtypes.cast(tf.constant(learningRate), gradient.type()), gradient);
+        variable, slot, tf.dtypes.cast(tf.constant(learningRate), gradient.type()), gradient, opts);
   }
 
   /** {@inheritDoc} */

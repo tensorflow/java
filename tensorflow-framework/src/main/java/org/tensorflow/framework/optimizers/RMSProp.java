@@ -20,6 +20,8 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.train.ApplyCenteredRmsProp;
+import org.tensorflow.op.train.ApplyRmsProp;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -202,7 +204,8 @@ public class RMSProp extends Optimizer {
           tf.dtypes.cast(tf.constant(decay), gradient.type()),
           tf.dtypes.cast(tf.constant(momentum), gradient.type()),
           tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
-          gradient);
+          gradient,
+          ApplyCenteredRmsProp.useLocking(true));
     }
     return tf.train.applyRmsProp(
         variable,
@@ -212,7 +215,8 @@ public class RMSProp extends Optimizer {
         tf.dtypes.cast(tf.constant(decay), gradient.type()),
         tf.dtypes.cast(tf.constant(momentum), gradient.type()),
         tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
-        gradient);
+        gradient,
+        ApplyRmsProp.useLocking(true));
   }
 
   /** {@inheritDoc} */

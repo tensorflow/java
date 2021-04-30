@@ -170,7 +170,8 @@ public class Adamax extends Optimizer {
         tf.dtypes.cast(betaOneConst, gradient.type()),
         tf.dtypes.cast(betaTwoConst, gradient.type()),
         tf.dtypes.cast(epsilonConst, gradient.type()),
-        gradient);
+        gradient,
+        ApplyAdaMax.useLocking(true));
   }
 
   /** {@inheritDoc} */
