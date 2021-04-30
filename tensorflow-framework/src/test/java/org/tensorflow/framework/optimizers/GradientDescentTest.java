@@ -7,6 +7,7 @@ import org.tensorflow.Tensor;
 import org.tensorflow.framework.initializers.Glorot;
 import org.tensorflow.framework.initializers.VarianceScaling;
 import org.tensorflow.framework.utils.TestSession;
+import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Op;
@@ -25,8 +26,10 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Test cases for GradientDescent Optimizer */
@@ -125,6 +128,7 @@ public class GradientDescentTest {
     GraphDef def;
     String initName;
     String trainName;
+    String lossName;
 
     String fcWeightName, fcBiasName, outputWeightName, outputBiasName;
 
@@ -159,8 +163,9 @@ public class GradientDescentTest {
       Mean<TFloat32> loss =
           tf.math.mean(
               tf.nn.raw.softmaxCrossEntropyWithLogits(output, placeholder).loss(), tf.constant(0));
+      lossName = loss.op().name();
 
-      GradientDescent gd = new GradientDescent(g, 0.1f);
+      GradientDescent gd = new GradientDescent(g, 10.0f);
       Op trainingOp = gd.minimize(loss);
       trainName = trainingOp.op().name();
 
@@ -177,12 +182,14 @@ public class GradientDescentTest {
           -14.0f, -15.0f, 0.16f, 0.17f, 0.18f, 1.9f, 0.2f
         };
     TFloat32 dataTensor = TFloat32.tensorOf(Shape.of(1, 20), DataBuffers.of(data));
-    float[] target = new float[] {0.0f, 1.0f};
+    float[] target = new float[] {0.2f, 0.8f};
     TFloat32 targetTensor = TFloat32.tensorOf(Shape.of(1, 2), DataBuffers.of(target));
 
-    int numRuns = 10;
+    int numRuns = 20;
     List<List<Tensor>> initialized = new ArrayList<>(numRuns);
     List<List<Tensor>> trained = new ArrayList<>(numRuns);
+    float[] initialLoss = new float[numRuns];
+    float[] postTrainingLoss = new float[numRuns];
 
     for (int i = 0; i < numRuns; i++) {
       try (Graph g = new Graph();
@@ -197,12 +204,16 @@ public class GradientDescentTest {
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
                 .run());
+        System.out.println("Initialized - " + ndArrToString((TFloat32)initialized.get(i).get(3)));
 
-        s.runner()
+        TFloat32 lossVal = (TFloat32) s.runner()
             .addTarget(trainName)
             .feed("input", dataTensor)
             .feed("output", targetTensor)
-            .run();
+            .fetch(lossName)
+            .run().get(0);
+        initialLoss[i] = lossVal.getFloat();
+        lossVal.close();
 
         trained.add(
             s.runner()
@@ -211,10 +222,25 @@ public class GradientDescentTest {
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
                 .run());
+        System.out.println("Initialized - " + ndArrToString((TFloat32)initialized.get(i).get(3)));
+        System.out.println("Trained - " + ndArrToString((TFloat32)trained.get(i).get(3)));
+
+        lossVal = (TFloat32) s.runner()
+                .addTarget(trainName)
+                .feed("input", dataTensor)
+                .feed("output", targetTensor)
+                .fetch(lossName)
+                .run().get(0);
+        postTrainingLoss[i] = lossVal.getFloat();
+        lossVal.close();
       }
     }
 
     for (int i = 1; i < numRuns; i++) {
+      assertEquals(initialLoss[0],initialLoss[i]);
+      assertEquals(postTrainingLoss[0],postTrainingLoss[i]);
+      // Because the weights are references not copies.
+      assertEquals(initialized.get(i),trained.get(i));
       assertEquals(
           initialized.get(0),
           initialized.get(i),
@@ -233,5 +259,11 @@ public class GradientDescentTest {
         t.close();
       }
     }
+  }
+
+  private static String ndArrToString(FloatNdArray ndarray) {
+    StringBuffer sb = new StringBuffer();
+    ndarray.scalars().forEachIndexed((idx,array) -> sb.append(Arrays.toString(idx)).append(" = ").append(array.getFloat()).append("\n"));
+    return sb.toString();
   }
 }
