@@ -28,6 +28,7 @@ The following describes the layout of the repository and its different artifacts
   * Intended audience: neural network developers
   * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
 
+*Note: The NdArray Library module has now its own [repository](https://github.com/tensorflow/java-ndarray) and has been moved out of TensorFlow Java.*
 
 ## Communication
 
