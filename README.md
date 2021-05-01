@@ -27,13 +27,7 @@ The following describes the layout of the repository and its different artifacts
   * Primary API for building and training neural networks with TensorFlow
   * Intended audience: neural network developers
   * For more information: [tensorflow-framework/README.md](tensorflow-framework/README.md)
-     
-* `ndarray`
-  * Generic utility library for n-dimensional data I/O operations
-  * Used by TensorFlow but does not depend on TensorFlow
-  * Intended audience: any developer who needs a Java n-dimensional array implementation, whether or not they
-    use it with TensorFlow
-  
+
 
 ## Communication
 
