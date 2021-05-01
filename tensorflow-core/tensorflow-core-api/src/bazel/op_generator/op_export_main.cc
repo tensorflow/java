@@ -15,6 +15,8 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 
 #include "tensorflow/core/framework/op.h"
@@ -43,7 +45,9 @@ const char kUsageHeader[] =
     "The first argument is the location of the tensorflow binary built for TF-"
     "Java.\nFor example, `bazel-out/k8-opt/bin/external/org_tensorflow/tensorfl"
     "ow/libtensorflow_cc.so`.\n\n"
-    "Finally, the `--api_dirs` argument takes a list of comma-separated "
+    "The second and third arguments are the binary and text output files, respectively.\n"
+    "The text output file will not include ApiDefs, like tensorflow's ops.pbtxt.\n\n"
+    "Finally, the rest of the arguments are used as "
     "directories of API definitions can be provided to override default\n"
     "values found in the ops definitions. Directories are ordered by priority "
     "(the last having precedence over the first).\nFor example, `bazel-tensorf"
@@ -86,32 +90,45 @@ Status UpdateOpDefs(OpList* op_list, const std::vector<tensorflow::string>& api_
 // See usage header.
 // Writes an OpList proto to stdout, with each OpDef having its ApiDef in field 100
 int main(int argc, char* argv[]) {
-  tensorflow::string api_dirs_str;
-  std::vector<tensorflow::Flag> flag_list = {
-      tensorflow::Flag(
-          "api_dirs", &api_dirs_str,
-          "List of directories that contain the ops API definitions protos")};
-  tensorflow::string usage = tensorflow::java::kUsageHeader;
-  usage += tensorflow::Flags::Usage(
-      tensorflow::string(argv[0]) + " <ops library paths...>", flag_list);
-  bool parsed_flags_ok = tensorflow::Flags::Parse(&argc, argv, flag_list);
-  tensorflow::port::InitMain(usage.c_str(), &argc, &argv);
-  QCHECK(parsed_flags_ok && argc > 1) << usage;
-  std::vector<tensorflow::string> api_dirs = tensorflow::str_util::Split(
-      api_dirs_str, ",", tensorflow::str_util::SkipEmpty());
+  tensorflow::port::InitMain(tensorflow::java::kUsageHeader, &argc, &argv);
+  std::vector<tensorflow::string> api_dirs;
+
+  if(argc < 4) {
+      std::cerr << "Must specify <library_path> <binary_output> <text_output>" << "\n";
+      std::cerr << tensorflow::java::kUsageHeader;
+      return 1;
+  }
+  
+  for(int i = 4 ; i < argc ; i++){
+    api_dirs.push_back(argv[i]);
+  }
+
+  std::ofstream binary_output (argv[2], std::ios::out | std::ios::trunc | std::ios::binary);
+  std::ofstream text_output  (argv[3], std::ios::out | std::ios::trunc);
+
+  if(!binary_output.is_open()){
+    std::cerr << "Error opening file " << argv[2] << "\n";
+    return 1;
+  }
+
+  if(!text_output.is_open()){
+    std::cerr << "Error opening file " << argv[3] << "\n";
+    return 1;
+  }
 
   tensorflow::Env* env = tensorflow::Env::Default();
-  void* ops_libs_handles[50];
-  for (int i = 1; i < argc; ++i) {
-    TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[i - 1]));
-  }
+  void* ops_libs_handles[1];
+  TF_CHECK_OK(env->LoadDynamicLibrary(argv[1], &ops_libs_handles[0]));
   tensorflow::OpList ops;
   tensorflow::OpRegistry::Global()->Export(false, &ops);
+
+  text_output << ops.DebugString();
+  text_output.close();
+
   TF_CHECK_OK(tensorflow::java::UpdateOpDefs(&ops, api_dirs, env));
 
-
-  std::ostream & out = std::cout;
-  ops.SerializeToOstream(&out);
+  ops.SerializeToOstream(&binary_output);
+  binary_output.close();
 
   return 0;
 }

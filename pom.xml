@@ -29,7 +29,6 @@
   </scm>
 
   <modules>
-    <module>ndarray</module>
     <module>tensorflow-core</module>
     <module>tensorflow-framework</module>
   </modules>
@@ -234,7 +233,7 @@
   <!-- http://central.sonatype.org/pages/requirements.html#developer-information -->
   <developers>
     <developer>
-      <name>TensorFlowers</name>
+      <name>SIG JVM</name>
       <organization>TensorFlow</organization>
       <organizationUrl>http://www.tensorflow.org</organizationUrl>
     </developer>

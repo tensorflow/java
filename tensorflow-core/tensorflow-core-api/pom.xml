@@ -20,6 +20,8 @@
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
     <java.module.name>org.tensorflow.core.api</java.module.name>
+    <ndarray.version>0.3.1</ndarray.version>
+    <truth.version>1.0.1</truth.version>
   </properties>
 
   <dependencies>
@@ -43,17 +45,17 @@
     <dependency>
       <groupId>org.tensorflow</groupId>
       <artifactId>ndarray</artifactId>
-      <version>${project.version}</version>
+      <version>${ndarray.version}</version>
     </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <scope>test</scope>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.openjdk.jmh</groupId>
@@ -63,7 +65,7 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
-      <version>1.0.1</version>
+      <version>${truth.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -359,7 +361,7 @@
           <mainClass>org.tensorflow.op.generator.OpGenerator</mainClass>
           <arguments>
             <argument>${project.basedir}/src/gen/java</argument>
-            <argument>${project.basedir}/src/gen/resources/org/tensorflow/op/ops.pb</argument>
+            <argument>${project.basedir}/src/gen/resources/ops.pb</argument>
           </arguments>
         </configuration>
       </plugin>
@@ -423,10 +425,10 @@
           </execution>
         </executions>
         <configuration>
-            <!-- Activate the use of TCP to transmit events to the plugin -->
-            <!-- disabled as it appears to cause intermittent test failures in GitHub Actions
-            <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
-            -->
+          <!-- Activate the use of TCP to transmit events to the plugin -->
+          <!-- disabled as it appears to cause intermittent test failures in GitHub Actions
+          <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+          -->
           <additionalClasspathElements>
             <additionalClasspathElement>${project.build.directory}/${project.artifactId}-${project.version}-${native.classifier}.jar</additionalClasspathElement>
             <!-- Note: the following path is not accessible in deploying profile, so other libraries like
