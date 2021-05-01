@@ -14,7 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.ndarray.*;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.FloatNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -316,6 +320,64 @@ public class ND {
   }
 
   /**
+   * Multiply 2 arrays
+   *
+   * @param a the first array
+   * @param b the second array
+   * @return the resulting array from the muliply operation
+   */
+  public static DoubleNdArray mul(DoubleNdArray a, DoubleNdArray b) {
+    if (!a.shape().equals(b.shape()))
+      throw new IllegalArgumentException(
+              String.format(
+                      "ValueError: operands do not have same shapes %s %s ", a.shape(), b.shape()));
+    boolean sameSize = a.shape().size() == b.shape().size();
+    DoubleNdArray result = NdArrays.ofDoubles(a.shape());
+    int nDims = a.shape().numDimensions();
+
+    a.elements(nDims - 1)
+            .forEachIndexed(
+                    (idx, v) -> {
+                      if (sameSize) {
+                        result.setDouble(v.getDouble() * b.getDouble(idx), idx);
+                      } else {
+                        double value = v.getDouble() * b.getDouble(idx[0], 0L);
+                        result.setDouble(value, idx);
+                      }
+                    });
+    return result;
+  }
+
+  /**
+   * Multiply an array with a scalar value
+   *
+   * @param a the array
+   * @param scalar the scalar value
+   * @return the resulting array from the Multiply operation
+   */
+  public static DoubleNdArray mul(DoubleNdArray a, float scalar) {
+    DoubleNdArray result = NdArrays.ofDoubles(a.shape());
+    if (a.shape().isScalar()) {
+      a.scalars().forEach(f -> result.setDouble(f.getDouble() * scalar));
+    } else {
+      a.scalars().forEachIndexed((idx, f) -> result.setDouble(f.getDouble() * scalar, idx));
+    }
+
+    return result;
+  }
+
+  /**
+   * Multiply a scalar value with an array
+   *
+   * @param scalar the scalar value
+   * @param a the array
+   * @return the resulting array from the Multiply operation
+   */
+  public static DoubleNdArray mul(float scalar, DoubleNdArray a) {
+    return mul(a, scalar);
+  }
+
+  /**
    * Divide two arrays
    *
    * @param a the dividend array
@@ -588,6 +650,18 @@ public class ND {
   }
 
   /**
+   * Get the absolute value of each member of the array
+   *
+   * @param a the array
+   * @return the array with the absolute value of each item.
+   */
+  public static DoubleNdArray abs(DoubleNdArray a) {
+    DoubleNdArray result = NdArrays.ofDoubles(a.shape());
+    a.scalars().forEachIndexed((idx, f) -> result.setDouble( Math.abs(f.getDouble()), idx));
+    return result;
+  }
+
+  /**
    * Sum all elements of an array
    *
    * @param a the array
@@ -599,17 +673,7 @@ public class ND {
     return NdArrays.scalarOf(sum.get());
   }
 
-  /**
-   * Sum all elements of an array
-   *
-   * @param a the array
-   * @return an a array with one element containing the sum.
-   */
-  public static DoubleNdArray sum(DoubleNdArray a) {
-    AtomicReference<Double> sum = new AtomicReference<Double>(0D);
-    a.scalars().forEach(f -> sum.set(sum.get() + f.getDouble()));
-    return NdArrays.scalarOf(sum.get());
-  }
+
 
   /**
    * Sum all elements of an array based on the specified axis
@@ -622,16 +686,7 @@ public class ND {
     return sum(a, axis, false);
   }
 
-  /**
-   * Sum all elements of an array based on the specified axis
-   *
-   * @param a the array
-   * @param axis the axis to sum
-   * @return an a array the sum over the axis less the diemsnion
-   */
-  public static DoubleNdArray sum(DoubleNdArray a, int axis) {
-    return sum(a, axis, false);
-  }
+
 
   /**
    * Sum all elements of an array based on the specified axis
@@ -676,45 +731,6 @@ public class ND {
    * Sum all elements of an array based on the specified axis
    *
    * @param a the array
-   * @param axis the axis to sum
-   * @param keepDims indicates whether the dimensions over the sum should be kept or not.
-   * @return an a array the sum over the axis
-   */
-  public static DoubleNdArray sum(DoubleNdArray a, int axis, boolean keepDims) {
-    Shape shape = a.shape();
-    int nDims = shape.numDimensions();
-    int xis = nDims - 1 - axis;
-    long totalSize = shape.size();
-    long axisSize = shape.size(xis);
-    final double[] sums = new double[(int) axisSize];
-
-    a.scalars()
-        .forEachIndexed(
-            (idx, f) -> {
-              sums[(int) idx[xis]] += f.getDouble();
-            });
-
-    if (keepDims) {
-      long[] newDims = shape.asArray();
-      newDims[axis] = 1;
-      final AtomicInteger counter = new AtomicInteger();
-      DoubleNdArray arrayK = NdArrays.ofDoubles(Shape.of(newDims));
-      arrayK
-          .elements(newDims.length - 1)
-          .forEachIndexed(
-              (idx, v) -> {
-                v.setDouble(sums[counter.getAndAdd(1)]);
-              });
-      return arrayK;
-    } else {
-      return NdArrays.vectorOf(sums);
-    }
-  }
-
-  /**
-   * Sum all elements of an array based on the specified axis
-   *
-   * @param a the array
    * @param axes the axis to sum
    * @param keepDims indicates whether the dimensions over the sum should be kept or not.
    * @return an a array the sum over the axis
@@ -729,6 +745,97 @@ public class ND {
         Shape bShape = Shape.of(dims);
         FloatNdArray resultK = NdArrays.ofFloats(bShape);
         resultK.setFloat(scalar, 0, 0);
+        return resultK;
+      }
+      return result;
+    } else if (axes.length == 1) {
+      return sum(a, axes[0], keepDims);
+    } else {
+      // TODO
+      throw new UnsupportedOperationException("Multi Axis Not implemented Yet");
+    }
+  }
+
+  /**
+   * Sum all elements of an array
+   *
+   * @param a the array
+   * @return an a array with one element containing the sum.
+   */
+  public static DoubleNdArray sum(DoubleNdArray a) {
+    AtomicReference<Double> sum = new AtomicReference<>(0.);
+    a.scalars().forEach(f -> sum.set(sum.get() + f.getDouble()));
+    return NdArrays.scalarOf(sum.get());
+  }
+
+  /**
+   * Sum all elements of an array based on the specified axis
+   *
+   * @param a the array
+   * @param axis the axis to sum
+   * @return an a array the sum over the axis less the diemsnion
+   */
+  public static DoubleNdArray sum(DoubleNdArray a, int axis) {
+    return sum(a, axis, false);
+  }
+
+  /**
+   * Sum all elements of an array based on the specified axis
+   *
+   * @param a the array
+   * @param axis the axis to sum
+   * @param keepDims indicates whether the dimensions over the sum should be kept or not.
+   * @return an a array the sum over the axis
+   */
+  public static DoubleNdArray sum(DoubleNdArray a, int axis, boolean keepDims) {
+    Shape shape = a.shape();
+    int nDims = shape.numDimensions();
+    int xis = nDims - 1 - axis;
+    long totalSize = shape.size();
+    long axisSize = shape.size(xis);
+    final double[] sums = new double[(int) axisSize];
+
+    a.scalars()
+            .forEachIndexed(
+                    (idx, f) -> {
+                      sums[(int) idx[xis]] += f.getDouble();
+                    });
+
+    if (keepDims) {
+      long[] newDims = shape.asArray();
+      newDims[axis] = 1;
+      final AtomicInteger counter = new AtomicInteger();
+      DoubleNdArray arrayK = NdArrays.ofDoubles(Shape.of(newDims));
+      arrayK
+              .elements(newDims.length - 1)
+              .forEachIndexed(
+                      (idx, v) -> {
+                        v.setDouble(sums[counter.getAndAdd(1)]);
+                      });
+      return arrayK;
+    } else {
+      return NdArrays.vectorOf(sums);
+    }
+  }
+
+  /**
+   * Sum all elements of an array based on the specified axis
+   *
+   * @param a the array
+   * @param axes the axis to sum
+   * @param keepDims indicates whether the dimensions over the sum should be kept or not.
+   * @return an a array the sum over the axis
+   */
+  public static DoubleNdArray sum(DoubleNdArray a, Integer[] axes, boolean keepDims) {
+    Shape shape = a.shape();
+    if (axes == null) {
+      DoubleNdArray result = sum(a);
+      if (keepDims) {
+        double scalar = result.getDouble(0);
+        long[] dims = {1, 1};
+        Shape bShape = Shape.of(dims);
+        DoubleNdArray resultK = NdArrays.ofDoubles(bShape);
+        resultK.setDouble(scalar, 0, 0);
         return resultK;
       }
       return result;
