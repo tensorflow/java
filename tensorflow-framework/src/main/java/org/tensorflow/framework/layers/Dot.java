@@ -17,6 +17,7 @@ package org.tensorflow.framework.layers;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.layers.impl.Merge;
 import org.tensorflow.framework.losses.Losses;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Squeeze;
@@ -300,8 +301,9 @@ public class Dot<T extends TFloating> extends Merge<T> {
       }
     }
     if (normalize) {
-      input1 = Losses.l2Normalize(tf, input1, new int[] {axes[0]});
-      input2 = Losses.l2Normalize(tf, input2, new int[] {axes[0]});
+      FrameworkOps fops = FrameworkOps.create(tf);
+      input1 = fops.math.l2Normalize(input1, new int[] {axes[0]});
+      input2 = fops.math.l2Normalize(input2, new int[] {axes[0]});
     }
     return batchDot(input1, input2, newAxes);
   }
@@ -378,6 +380,7 @@ public class Dot<T extends TFloating> extends Merge<T> {
   private Operand<T> batchDot(
       Operand<? extends TNumber> x, Operand<? extends TNumber> y, int[] dotAxes) {
     Ops tf = getTF();
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> tX = cast(tf, x, getType());
     Operand<T> tY = cast(tf, y, getType());
 
@@ -515,7 +518,8 @@ public class Dot<T extends TFloating> extends Merge<T> {
       ySquashed = true;
     }
 
-    Operand<T> result = org.tensorflow.framework.op.linalg.MatMul.matmul(getTF().scope(), tX, tY);
+
+    Operand<T> result = fops.linalg.matmul(tX, tY);
     boolean doReshape = false;
     Operand<TInt64> outputShape = tf.shape(result, TInt64.class);
 
