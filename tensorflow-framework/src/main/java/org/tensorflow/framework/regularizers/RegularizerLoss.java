@@ -52,7 +52,6 @@ class RegularizerLoss extends Loss {
     this.regularizer = regularizer;
   }
 
-
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
