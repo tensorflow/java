@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -150,12 +151,13 @@ public class WeightsBroadcastOps {
   private static Operand<TBool> hasValidDims(
       Ops tf, Operand<TInt32> weightsShape, Operand<TInt32> valuesShape) {
     tf = tf.withSubScope("hasInvalidDims");
+    FrameworkOps fops = FrameworkOps.create(tf);
 
     Operand<TInt32> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
     Operand<TInt32> validDims = tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<TInt32> weightsShape2d = tf.expandDims(weightsShape, tf.constant(-1));
 
-    Operand<TInt32> invalidDims = SetsOps.difference(tf, weightsShape2d, validDims);
+    Operand<TInt32> invalidDims = fops.sets.difference(weightsShape2d, validDims);
     Operand<TInt32> numInvalidDims = tf.size(invalidDims, TInt32.class);
     return tf.math.equal(tf.constant(0), numInvalidDims);
   }
