@@ -87,7 +87,7 @@ public class NnOps {
    * @param logits the logits of type float32 or float64
    * @param <T> the type of labels and logits
    * @return the component-wise logistic losses.
-   * @throws IllegalArgumentException if logits' and labels' do not have the same shape
+   * @throws IllegalArgumentException if logits and labels do not have the same shape
    */
   public <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Operand<T> labels, Operand<T> logits) {
@@ -139,7 +139,6 @@ public class NnOps {
    * @return the softmax cross entropy loss. Its type is the same as {@code logits} and its shape is
    *     the same as {@code labels} except that it does not have the last dimension of {@code
    *     labels}.
-   *
    */
   public <T extends TNumber, U extends TNumber> Operand<T> softmaxCrossEntropyWithLogits(
       Operand<U> labels, Operand<T> logits, int axis) {
@@ -181,14 +180,14 @@ public class NnOps {
    * @param logits Per-label activations (typically a linear output) of shape {@code [d_0, d_1, ...,
    *     d_{r-1}, numClasses]} and dataType of {@code TFloat16}, {@code TFloat32}, or {@code
    *     TFloat64}. These activation energies are interpreted as unnormalized log probabilities.
-   * @param <T> The data type for the labels
-   * @param <U> The data type for the logits and loss
+   * @param <U> the data type for the labels
+   * @param <T> the data tyoe for the loss and logits.
    * @return the loss
-   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if the rank
-   *     of the labels is not equal to the rank of the logits minus one.
+   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if
+   *     the rank of the labels is not equal to the rank of the logits minus one.
    */
-  public <T extends TNumber, U extends TNumber> Operand<U> sparseSoftmaxCrossEntropyWithLogits(
-      Operand<T> labels, Operand<U> logits) {
+  public <T extends TNumber, U extends TNumber> Operand<T> sparseSoftmaxCrossEntropyWithLogits(
+      Operand<U> labels, Operand<T> logits) {
     return SparseSoftmaxCrossEntropyWithLogits.sparseSoftmaxCrossEntropyWithLogits(
         scope, labels, logits);
   }
