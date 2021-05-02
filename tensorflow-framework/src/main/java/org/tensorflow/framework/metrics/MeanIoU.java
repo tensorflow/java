@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
-import org.tensorflow.framework.metrics.impl.MetricsHelper;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -170,10 +170,11 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
       tSampleWeights = getTF().shape.flatten(tSampleWeights);
     }
 
+    FrameworkOps fops = FrameworkOps.create(getTF());
     // Accumulate the prediction to current confusion matrix.
     Operand<T> currentCM =
-        MetricsHelper.confusionMatrix(
-            getTF(), tLabels, tPredictions, getTF().constant(numClasses), tSampleWeights, type);
+        fops.math.confusionMatrix(
+            tLabels, tPredictions, tSampleWeights, getTF().constant(numClasses));
     return Collections.singletonList(getTF().assignAdd(totalConfusionMatrix, currentCM));
   }
 

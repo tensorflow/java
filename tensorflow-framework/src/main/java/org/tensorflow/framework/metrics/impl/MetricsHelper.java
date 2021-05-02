@@ -32,6 +32,7 @@ import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
+;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Rank;
