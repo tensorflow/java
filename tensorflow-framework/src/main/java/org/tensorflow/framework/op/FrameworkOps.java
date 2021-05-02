@@ -31,8 +31,9 @@ import org.tensorflow.op.Scope;
 public class FrameworkOps {
   public final Ops coreOps;
   public final NnOps nn;
-  public final SetsOps sets;
+  public final SetOps sets;
   public final MathOps math;
+  public final LinalgOps linalg;
   private final Scope scope;
 
   /**
@@ -44,8 +45,9 @@ public class FrameworkOps {
     this.coreOps = Ops.create(scope.env());
     this.scope = scope;
     nn = new NnOps(this);
-    sets = new SetsOps(this);
+    sets = new SetOps(this);
     math = new MathOps(this);
+    linalg = new LinalgOps(this);
   }
 
   /**
@@ -57,8 +59,9 @@ public class FrameworkOps {
     this.coreOps = coreOps;
     this.scope = coreOps.scope();
     nn = new NnOps(this);
-    sets = new SetsOps(this);
+    sets = new SetOps(this);
     math = new MathOps(this);
+    linalg = new LinalgOps(this);
   }
 
   /**
