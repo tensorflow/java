@@ -24,7 +24,7 @@ import org.tensorflow.op.sparse.SparseToDense;
 import org.tensorflow.types.family.TNumber;
 
 /** Implementation of set operations */
-public class SetsOps {
+public class SetOps {
 
   private final Scope scope;
 
@@ -35,7 +35,7 @@ public class SetsOps {
    *
    * @param frameworkOps the TensorFLow framework Ops
    */
-  SetsOps(FrameworkOps frameworkOps) {
+  SetOps(FrameworkOps frameworkOps) {
     this.scope = frameworkOps.scope();
     this.frameworkOps = frameworkOps;
   }

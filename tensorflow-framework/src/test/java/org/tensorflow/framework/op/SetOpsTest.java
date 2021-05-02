@@ -1,9 +1,7 @@
-package org.tensorflow.framework.metrics.impl;
+package org.tensorflow.framework.op;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
-import org.tensorflow.framework.op.FrameworkOps;
-import org.tensorflow.framework.op.SetsOps;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
