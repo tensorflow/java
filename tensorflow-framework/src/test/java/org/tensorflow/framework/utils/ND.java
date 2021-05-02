@@ -98,9 +98,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.sqrt(v.getFloat()), idx);
-            });
+            (idx, v) -> result.setFloat((float) Math.sqrt(v.getFloat()), idx));
     return result;
   }
 
@@ -115,9 +113,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setDouble(Math.sqrt(v.getDouble()), idx);
-            });
+            (idx, v) -> result.setDouble(Math.sqrt(v.getDouble()), idx));
     return result;
   }
 
@@ -132,9 +128,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() * v.getFloat(), idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() * v.getFloat(), idx));
     return result;
   }
 
@@ -149,9 +143,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setDouble(v.getDouble() * v.getDouble(), idx);
-            });
+            (idx, v) -> result.setDouble(v.getDouble() * v.getDouble(), idx));
     return result;
   }
 
@@ -169,9 +161,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() + b.getFloat(idx), idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() + b.getFloat(idx), idx));
     return result;
   }
 
@@ -188,9 +178,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() + scalar, idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() + scalar, idx));
     return result;
   }
 
@@ -219,9 +207,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() - b.getFloat(idx), idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() - b.getFloat(idx), idx));
     return result;
   }
 
@@ -237,9 +223,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() - scalar, idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() - scalar, idx));
     return result;
   }
 
@@ -255,9 +239,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(scalar - v.getFloat(), idx);
-            });
+            (idx, v) -> result.setFloat(scalar - v.getFloat(), idx));
     return result;
   }
 
@@ -391,9 +373,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() / b.getFloat(idx), idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() / b.getFloat(idx), idx));
     return result;
   }
 
@@ -410,9 +390,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat(v.getFloat() / scalar, idx);
-            });
+            (idx, v) -> result.setFloat(v.getFloat() / scalar, idx));
     return result;
   }
 
@@ -449,9 +427,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.pow(v.getFloat(), b.getFloat(idx)), idx);
-            });
+            (idx, v) -> result.setFloat((float) Math.pow(v.getFloat(), b.getFloat(idx)), idx));
     return result;
   }
 
@@ -467,9 +443,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.pow(v.getFloat(), scalar), idx);
-            });
+            (idx, v) -> result.setFloat((float) Math.pow(v.getFloat(), scalar), idx));
     return result;
   }
 
@@ -485,9 +459,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.pow(scalar, v.getFloat()), idx);
-            });
+            (idx, v) -> result.setFloat((float) Math.pow(scalar, v.getFloat()), idx));
     return result;
   }
 
@@ -503,9 +475,7 @@ public class ND {
     AtomicInteger counter = new AtomicInteger();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result[counter.getAndAdd(1)] = v.getFloat();
-            });
+            (idx, v) -> result[counter.getAndAdd(1)] = v.getFloat());
     return result;
   }
 
@@ -537,7 +507,7 @@ public class ND {
    * Get the maximum value of comparing the arrays
    *
    * @param a the first array
-   * @param a the second array
+   * @param b the second array
    * @return the resulting array with the maximum values between each element of the arrays.
    * @throws AssertionError if the two arrays are not the same size.
    */
@@ -548,9 +518,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.max(v.getFloat(), b.getFloat(idx)), idx);
-            });
+            (idx, v) -> result.setFloat(Math.max(v.getFloat(), b.getFloat(idx)), idx));
     return result;
   }
 
@@ -567,9 +535,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.max(v.getFloat(), scalar), idx);
-            });
+            (idx, v) -> result.setFloat(Math.max(v.getFloat(), scalar), idx));
     return result;
   }
 
@@ -589,7 +555,7 @@ public class ND {
    * Get the minimum value of comparing the arrays
    *
    * @param a the first array
-   * @param a the second array
+   * @param b the second array
    * @return the resulting array with the minimum values between each element of the arrays.
    * @throws AssertionError if the two arrays are not the same size.
    */
@@ -600,9 +566,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.min(v.getFloat(), b.getFloat(idx)), idx);
-            });
+            (idx, v) -> result.setFloat(Math.min(v.getFloat(), b.getFloat(idx)), idx));
     return result;
   }
 
@@ -619,9 +583,7 @@ public class ND {
     int nDims = a.shape().numDimensions();
     a.elements(nDims - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              result.setFloat((float) Math.min(v.getFloat(), scalar), idx);
-            });
+            (idx, v) -> result.setFloat( Math.min(v.getFloat(), scalar), idx));
     return result;
   }
 
@@ -645,7 +607,7 @@ public class ND {
    */
   public static FloatNdArray abs(FloatNdArray a) {
     FloatNdArray result = NdArrays.ofFloats(a.shape());
-    a.scalars().forEachIndexed((idx, f) -> result.setFloat((float) Math.abs(f.getFloat()), idx));
+    a.scalars().forEachIndexed((idx, f) -> result.setFloat(Math.abs(f.getFloat()), idx));
     return result;
   }
 
@@ -686,8 +648,6 @@ public class ND {
     return sum(a, axis, false);
   }
 
-
-
   /**
    * Sum all elements of an array based on the specified axis
    *
@@ -706,9 +666,7 @@ public class ND {
 
     a.scalars()
         .forEachIndexed(
-            (idx, f) -> {
-              sums[(int) idx[xis]] += f.getFloat();
-            });
+            (idx, f) -> sums[(int) idx[xis]] += f.getFloat());
 
     if (keepDims) {
       long[] newDims = shape.asArray();
@@ -718,9 +676,7 @@ public class ND {
       arrayK
           .elements(newDims.length - 1)
           .forEachIndexed(
-              (idx, v) -> {
-                v.setFloat(sums[counter.getAndAdd(1)]);
-              });
+              (idx, v) -> v.setFloat(sums[counter.getAndAdd(1)]));
       return arrayK;
     } else {
       return NdArrays.vectorOf(sums);
@@ -780,7 +736,7 @@ public class ND {
   }
 
   /**
-   * Sum all elements of an array based on the specified axis
+   * Sum all elements of an array over the specified axis
    *
    * @param a the array
    * @param axis the axis to sum
@@ -797,9 +753,7 @@ public class ND {
 
     a.scalars()
             .forEachIndexed(
-                    (idx, f) -> {
-                      sums[(int) idx[xis]] += f.getDouble();
-                    });
+                    (idx, f) -> sums[(int) idx[xis]] += f.getDouble());
 
     if (keepDims) {
       long[] newDims = shape.asArray();
@@ -809,9 +763,7 @@ public class ND {
       arrayK
               .elements(newDims.length - 1)
               .forEachIndexed(
-                      (idx, v) -> {
-                        v.setDouble(sums[counter.getAndAdd(1)]);
-                      });
+                      (idx, v) -> v.setDouble(sums[counter.getAndAdd(1)]));
       return arrayK;
     } else {
       return NdArrays.vectorOf(sums);
@@ -883,9 +835,7 @@ public class ND {
     } else {
       a.elements(a.shape().numDimensions() - 1)
           .forEachIndexed(
-              (idx, v) -> {
-                System.out.printf("%s == %f\n", Arrays.toString(idx), v.getFloat());
-              });
+              (idx, v) -> System.out.printf("%s == %f\n", Arrays.toString(idx), v.getFloat()));
     }
     System.out.println();
   }
@@ -916,9 +866,7 @@ public class ND {
     result
         .elements(shape.numDimensions() - 1)
         .forEachIndexed(
-            (idx, v) -> {
-              v.setFloat(y[index.getAndAdd(1)]);
-            });
+            (idx, v) -> v.setFloat(y[index.getAndAdd(1)]));
     return result;
   }
 }
