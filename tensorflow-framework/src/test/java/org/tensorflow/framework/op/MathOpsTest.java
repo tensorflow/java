@@ -5,8 +5,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
+import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MathOpsTest {
 
@@ -386,7 +389,7 @@ class MathOpsTest {
         Ops tf = session.getTF();
         FrameworkOps fops = FrameworkOps.create(tf);
         Operand<TFloat64> input = tf.constant(array);
-        Operand<TFloat64> result = fops.math.l2Normalize(tf.constant(array), new int[]{ 0,1,2});
+        Operand<TFloat64> result = fops.math.l2Normalize(tf.constant(array), new int[] {0, 1, 2});
         session.evaluate(tf.constant(expectedArray), result);
       }
   }
@@ -408,6 +411,91 @@ class MathOpsTest {
               {1, 0, 2}
             };
         session.evaluate(tf.constant(expected), result);
+      }
+  }
+
+  @Test
+  public void testTensorDotValid() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        FrameworkOps fops = FrameworkOps.create(tf);
+        int[] axes1 = new int[] {1, 2};
+        int[][] axes2 = new int[][] {{1}, {2}};
+        int[][] axes3 = new int[2][0];
+        int axes4 = 0;
+
+        Operand<TFloat32> a = tf.ones(tf.constant(Shape.of(3, 3)), TFloat32.class);
+        Operand<TFloat32> b = tf.constant(new float[][][] {{{2, 3, 1}}});
+
+        Operand<TFloat32> ans = fops.math.tensordot(a, b, axes1);
+        Operand<TFloat32> expected = tf.constant(new float[][][] {{{6}}, {{6}}, {{6}}});
+        session.evaluate(expected, ans);
+
+        ans = fops.math.tensordot(a, b, axes2);
+        expected = tf.constant(new float[][][] {{{6}}, {{6}}, {{6}}});
+        session.evaluate(expected, ans);
+
+        ans = fops.math.tensordot(a, b, axes3);
+
+        float[][][][][] expectedArray =
+            new float[][][][][] {
+              {{{{2, 3, 1}}}, {{{2, 3, 1}}}, {{{2, 3, 1}}}},
+              {{{{2, 3, 1}}}, {{{2, 3, 1}}}, {{{2, 3, 1}}}},
+              {{{{2, 3, 1}}}, {{{2, 3, 1}}}, {{{2, 3, 1}}}}
+            };
+        ans = fops.math.tensordot(a, b, axes3);
+        expected = tf.constant(expectedArray);
+        session.evaluate(expected, ans);
+
+        ans = fops.math.tensordot(a, b, axes4);
+        expected = tf.constant(expectedArray);
+        session.evaluate(expected, ans);
+      }
+  }
+
+  @Test
+  public void testTensorDotInValidAxis() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        FrameworkOps fops = FrameworkOps.create(tf);
+        Operand<TFloat32> a = tf.constant(new float[][] {{1, 2}, {3, 4}});
+        Operand<TFloat32> b = tf.constant(new float[][] {{1, 2}, {3, 4}});
+        assertThrows(IllegalArgumentException.class, () -> fops.math.tensordot(a, b, -1));
+        assertThrows(IllegalArgumentException.class, () -> fops.math.tensordot(a, b, 3));
+        assertThrows(
+            IllegalArgumentException.class, () -> fops.math.tensordot(a, b, new int[] {1}));
+        assertThrows(
+            IllegalArgumentException.class, () -> fops.math.tensordot(a, b, new int[][] {{1}}));
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> fops.math.tensordot(a, b, new int[][] {{1}, {0, 1}}));
+
+        assertThrows(
+            ArrayIndexOutOfBoundsException.class,
+            () -> fops.math.tensordot(a, b, new int[][] {{0}, {7}}));
+      }
+  }
+
+  @Test
+  public void testReduceLogSumExp() {
+    for (TestSession.Mode tfMode : tfModes)
+      try (TestSession session = TestSession.createTestSession(tfMode)) {
+        Ops tf = session.getTF();
+        FrameworkOps fops = FrameworkOps.create(tf);
+        Operand<TFloat32> x =
+            tf.constant(
+                new float[][] {
+                  {0.43346116f, 0.8569728f, 0.57155997f, 0.0743812f, 0.63846475f},
+                  {0.8165283f, 0.26554802f, 0.37025765f, 0.8255019f, 0.45682374f},
+                  {0.93511814f, 0.52291054f, 0.80983895f, 0.11580781f, 0.8111686f},
+                  {0.49967498f, 0.27537802f, 0.48554695f, 0.28238368f, 0.7989301f},
+                  {0.8958915f, 0.84870094f, 0.56874424f, 0.08818512f, 0.13915819f}
+                });
+
+        Operand<TFloat32> result = fops.math.reduceLogSumExp(x, new int[] {0, 1}, false);
+        session.evaluate(3.7911222f, result);
       }
   }
 }
