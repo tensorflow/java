@@ -56,11 +56,13 @@ import org.tensorflow.op.math.Rsqrt;
 import org.tensorflow.op.math.Square;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,27 +112,27 @@ public class MathOps {
    * Computes the confusion matrix from predictions and labels.
    *
    * <p>The matrix columns represent the prediction labels and the rows represent the real labels.
-   * The confusion matrix is always a 2-D array of shape `[n, n]`, where `n` is the number of valid
+   * The confusion matrix is always a 2-D array of shape {@code [n,n]}, where {@code n} is the number of valid
    * labels for a given classification task. Both prediction and labels must be 1-D arrays of the
    * same shape in order for this function to work.
    *
-   * <p>If `num_classes` is `None`, then `num_classes` will be set to one plus the maximum value in
+   * <p>If {@code numClasses} is null, then {@code numClasses} will be set to one plus the maximum value in
    * either predictions or labels. Class labels are expected to start at 0. For example, if
-   * `num_classes` is 3, then the possible labels would be `[0, 1, 2]`.
+   * {@code numClasses} is 3, then the possible labels would be {@code [0, 1, 2]}.
    *
-   * <p>If `weights` is not `None`, then each prediction contributes its corresponding weight to the
+   * <p>If {@code weights} is not null, then each prediction contributes its corresponding weight to the
    * total value of the confusion matrix cell.
    *
    * <p>For example:
    *
-   * <pre>
+   * <pre>{@code
    *     fops.math.confusion_matrix(tf.constant(new int[] {1, 2, 4}), tf.constant(new int[] {2, 2, 4})) ==>
    *         [[0 0 0 0 0]
    *          [0 0 1 0 0]
    *          [0 0 1 0 0]
    *          [0 0 0 0 0]
    *          [0 0 0 0 1]]
-   * </pre>
+   * }</pre>
    *
    * <p>Note that the possible labels are assumed to be {@code [0, 1, 2, 3, 4]}, resulting in a 5x5
    * confusion matrix.
@@ -152,27 +154,27 @@ public class MathOps {
    * Computes the confusion matrix from predictions and labels.
    *
    * <p>The matrix columns represent the prediction labels and the rows represent the real labels.
-   * The confusion matrix is always a 2-D array of shape `[n, n]`, where `n` is the number of valid
+   * The confusion matrix is always a 2-D array of shape {@code [n,n]}, where {@code n} is the number of valid
    * labels for a given classification task. Both prediction and labels must be 1-D arrays of the
    * same shape in order for this function to work.
    *
-   * <p>If `num_classes` is `None`, then `num_classes` will be set to one plus the maximum value in
+   * <p>If {@code numClasses} is null, then {@code numClasses} will be set to one plus the maximum value in
    * either predictions or labels. Class labels are expected to start at 0. For example, if
-   * `num_classes` is 3, then the possible labels would be `[0, 1, 2]`.
+   * {@code numClasses} is 3, then the possible labels would be {@code [0, 1, 2]}.
    *
-   * <p>If `weights` is not `None`, then each prediction contributes its corresponding weight to the
+   * <p>If {@code weights} is not null, then each prediction contributes its corresponding weight to the
    * total value of the confusion matrix cell.
    *
    * <p>For example:
    *
-   * <pre>
+   * <pre>{@code
    *     fops.math.confusion_matrix(tf.constant(new int[] {1, 2, 4}), tf.constant(new int[] {2, 2, 4})) ==>
    *         [[0 0 0 0 0]
    *          [0 0 1 0 0]
    *          [0 0 1 0 0]
    *          [0 0 0 0 0]
    *          [0 0 0 0 1]]
-   * </pre>
+   * }</pre>
    *
    * <p>Note that the possible labels are assumed to be {@code [0, 1, 2, 3, 4]}, resulting in a 5x5
    * confusion matrix.
@@ -196,27 +198,27 @@ public class MathOps {
    * Computes the confusion matrix from predictions and labels.
    *
    * <p>The matrix columns represent the prediction labels and the rows represent the real labels.
-   * The confusion matrix is always a 2-D array of shape `[n, n]`, where `n` is the number of valid
+   * The confusion matrix is always a 2-D array of shape {@code [n,n]}, where {@code n} is the number of valid
    * labels for a given classification task. Both prediction and labels must be 1-D arrays of the
    * same shape in order for this function to work.
    *
-   * <p>If `num_classes` is `None`, then `num_classes` will be set to one plus the maximum value in
+   * <p>If {@code numClasses} is null, then {@code numClasses} will be set to one plus the maximum value in
    * either predictions or labels. Class labels are expected to start at 0. For example, if
-   * `num_classes` is 3, then the possible labels would be `[0, 1, 2]`.
+   * {@code numClasses} is 3, then the possible labels would be {@code [0, 1, 2]}.
    *
-   * <p>If `weights` is not `None`, then each prediction contributes its corresponding weight to the
+   * <p>If {@code weights}  is not null, then each prediction contributes its corresponding weight to the
    * total value of the confusion matrix cell.
    *
    * <p>For example:
    *
-   * <pre>
+   * <pre>{@code
    *     fops.math.confusion_matrix(tf.constant(new int[] {1, 2, 4}), tf.constant(new int[] {2, 2, 4})) ==>
    *         [[0 0 0 0 0]
    *          [0 0 1 0 0]
    *          [0 0 1 0 0]
    *          [0 0 0 0 0]
    *          [0 0 0 0 1]]
-   * </pre>
+   * }</pre>
    *
    * <p>Note that the possible labels are assumed to be {@code [0, 1, 2, 3, 4]}, resulting in a 5x5
    * confusion matrix.
@@ -277,19 +279,21 @@ public class MathOps {
               one);
     } else {
       lNumClasses = Cast.create(lScope, numClasses, TInt64.class);
+      Operand<TBool> less = Less.create(lScope, lLabels, lNumClasses);
       AssertThat labelsLess =
           AssertThat.create(
               lScope,
-              Less.create(lScope, lLabels, lNumClasses),
+                  ReduceAll.create(scope, less, allAxes(less), ReduceAll.keepDims(false)),
               Collections.singletonList(Constant.scalarOf(lScope, "labels out of bounds")));
       lLabels =
           Identity.create(
               lScope.withControlDependencies(Collections.singletonList(labelsLess)), lLabels);
 
+      less = Less.create(lScope, lPredictions, lNumClasses);
       AssertThat predictionsLess =
           AssertThat.create(
               lScope,
-              Less.create(lScope, lPredictions, lNumClasses),
+                  ReduceAll.create(scope, less, allAxes(less), ReduceAll.keepDims(false)),
               Collections.singletonList(Constant.scalarOf(lScope, "predictions  out of bounds")));
       lPredictions =
           Identity.create(
@@ -319,12 +323,12 @@ public class MathOps {
   /**
    * Squeeze last dim if ranks differ from expected by exactly 1.
    *
-   * @param labels Label values, a <code>Operand</code> whose dimensions match <code>predictions
-   *     </code>.
-   * @param predictions Predicted values, a <code>Tensor</code> of arbitrary dimensions.
-   * @param expectedRankDiff Expected result of <code>rank(predictions) - rank(labels)</code>.
+   * @param labels Label values, a {@code Operand} whose dimensions match {@code predictions
+   *     }.
+   * @param predictions Predicted values, a {@code Tensor} of arbitrary dimensions.
+   * @param expectedRankDiff Expected result of {@code rank(predictions) - rank(labels)}.
    * @param <T> the data type for the labels, predictions and result
-   * @return <code>labels</code> and <code>predictions</code>, possibly with last dim squeezed.
+   * @return {@code labels} and {@code predictions}, possibly with last dim squeezed.
    */
   public <T extends TNumber> LossTuple<T> removeSqueezableDimensions(
       Operand<T> labels, Operand<T> predictions, int expectedRankDiff) {
@@ -372,10 +376,9 @@ public class MathOps {
    * Creates an Operand that has all axes contained in the Operand's shape.
    *
    * @param op the Operand
-   * @param <T> THe Data type for the Operand
    * @return an Operand that has all axes contained in the Operand's shape..
    */
-  public <T extends TNumber> Operand<TInt32> allAxes(Operand<T> op) {
+  public  Operand<TInt32> allAxes(Operand<? extends TType> op) {
     int rank = op.shape().numDimensions();
     if (rank != Shape.UNKNOWN_SIZE) {
       int[] axes = new int[rank];
@@ -392,18 +395,18 @@ public class MathOps {
   /**
    * Transpose and reshape the input for contraction op.
    *
-   * <p>This method is helpful in reducing `math_ops.tensordot` to `math_ops.matmul` using
-   * `array_ops.transpose` and `array_ops.reshape`. The method takes a tensor and performs the
+   * <p>This method is helpful in reducing {@code math.tensordot} to {@code math_ops.matmul} using
+   * {@code array_ops.transpose} and {@code array_ops.reshape}. The method takes a tensor and performs the
    * correct transpose and reshape operation for a given set of indices. It returns the reshaped
    * tensor as well as a list of indices necessary to reshape the tensor again after matrix
    * multiplication.
    *
    * @param <T> the type of Operand
    * @param a the Tensor
-   * @param axis unique indices specifying valid axes of `a`.
+   * @param axis unique indices specifying valid axes of {@code a}.
    * @param flipped whether to flip the dimensions or not
    * @return A tuple (reshapedA, freeDims, freeDimsStatic) where reshapedA is a reshaped to allow
-   *     contraction via matmul, freeDims` is a TInt32 Operand, depending on whether the shape of a
+   *     contraction via matmul, freeDims is a TInt32 Operand, depending on whether the shape of a
    *     is fully specified, and freeDimsStatic is either a list of integers and null values, or
    *     None, representing the inferred shape of the free dimensions
    */
@@ -703,50 +706,48 @@ public class MathOps {
    * Tensor contraction of a and b along specified axes and outer product.
    * <p>
    * Tensordot (also known as tensor contraction) sums the product of elements
-   * from <code>a</code> and <code>b</code>` over the indices specified by
-   * <code>a_axes</code> and <code>b_axes</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> specify those pairs of axes
-   * along which to contract the tensors. The axis <code>a_axes[i]</code> of
-   * <code>a</code> must have the same dimension as axis
-   * <code>b_axes[i]</code> of <code>b</code> for all <code>i</code> in
-   * <code>range(0, len(a_axes))</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> must have identical length
+   * from {@code a} and {@code b} over the indices specified by
+   * {@code a_axes} and {@code b_axes}. The lists
+   * {@code a_axes} and {@code b_axes} specify those pairs of axes
+   * along which to contract the tensors. The axis {@code a_axes[i]} of
+   * {@code a} must have the same dimension as axis
+   * {@code b_axes[i]} of {@code b} for all {@code i} in
+   * {@code range(0, len(a_axes))}. The lists
+   * {@code a_axes} and {@code b_axes} must have identical length
    * and consist of unique integers that specify valid axes for each of the
    * tensors. Additionally outer product is supported by passing
-   * <code>axes=0</code>.
+   * {@code axes=0}.
    * <p>
-   * This operation corresponds to <code>numpy.tensordot(a, b, axes)</code>.
+   * This operation corresponds to {@code numpy.tensordot(a, b, axes)}.
    * <p>
-   * Example 1: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes = 1</code> is equivalent to matrix multiplication.
+   * Example 1: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes = 1} is equivalent to matrix multiplication.
    * <p>
-   * Example 2: When <code>a</code> and<code>`b</code> are matrices (order 2),
+   * Example 2: When {@code a} and {@code b} are matrices (order 2),
    * the case
-   * <code>axes = [[1], [0]]</code> is equivalent to matrix multiplication.
+   * {@code axes = [[1], [0]]} is equivalent to matrix multiplication.
    * <p>
-   * Example 3: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes=0</code> gives the outer product, a tensor of order
+   * Example 3: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes=0} gives the outer product, a tensor of order
    * 4.
    * <p>
    * Example 4: Suppose that <i>a<sub>ijk</sub></i> and <i>b<sub>lmn</sub></i>
-   * represent two tensors of order 3. Then, <code>contract(a, b, [[0], [2]])<code> is the order 4 tensor
+   * represent two tensors of order 3. Then, {@code contract(a, b, [[0], [2]])}  is the order 4 tensor
    * <i>c<sub>jklm</sub></i> whose entry corresponding to the indices
    * <i>(j,k,l,m)</i> is given by:
-   * <p>
    * <i> c<sub>jklm</sub> = &Sigma;<sub>i</sub> a<sub>ijk</sub>
    * b<sub>lmi</sub> </i>.
    * <p>
-   * In general, <code>order(c) = order(a) + order(b) - 2*len(axes[0])</code>.
-   * <p>
+   * In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    *
-   * @param a `Operand` of type `float32` or `float64`.
-   * @param b `Operand` with the same type as `a`.
+   * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
+   * @param b {@code Operand} with the same type as {@code a}.
    * @param axis  sum over the last N axes of a and the
-   * first N axes of b in order.  If `axes=0`, computes the outer
-   * product between `a` and `b`.
+   * first N axes of b in order.  If {@code axis=0}, computes the outer
+   * product between {@code a} and {@code b}.
    * @param <T> the datatype of the Operands, must be either TFloat32 or
    * TFloat64
-   * @return A `Operand` with the same type as `a`.
+   * @return A {@code Operand} with the same type as {@code a}.
    * @throws IllegalArgumentException if a is not a float32 or float64 data type and if a and b are not the same data type
    */
   @Endpoint(name = "tensordot")
@@ -762,53 +763,53 @@ public class MathOps {
    * Tensor contraction of a and b along specified axes and outer product.
    * <p>
    * Tensordot (also known as tensor contraction) sums the product of elements
-   * from <code>a</code> and <code>b</code>` over the indices specified by
-   * <code>a_axes</code> and <code>b_axes</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> specify those pairs of axes
-   * along which to contract the tensors. The axis <code>a_axes[i]</code> of
-   * <code>a</code> must have the same dimension as axis
-   * <code>b_axes[i]</code> of <code>b</code> for all <code>i</code> in
-   * <code>range(0, len(a_axes))</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> must have identical length
+   * from {@code a} and {@code b} over the indices specified by
+   * {@code a_axes} and {@code b_axes}. The lists
+   * {@code a_axes} and {@code b_axes} specify those pairs of axes
+   * along which to contract the tensors. The axis {@code a_axes[i]} of
+   * {@code a} must have the same dimension as axis
+   * {@code b_axes[i]} of {@code b} for all {@code i} in
+   * {@code range(0, len(a_axes))}. The lists
+   * {@code a_axes} and {@code b_axes} must have identical length
    * and consist of unique integers that specify valid axes for each of the
    * tensors. Additionally outer product is supported by passing
-   * <code>axes=0</code>.
+   * {@code axes=0}.
    * <p>
-   * This operation corresponds to <code>numpy.tensordot(a, b, axes)</code>.
+   * This operation corresponds to {@code numpy.tensordot(a, b, axes)}.
    * <p>
-   * Example 1: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes = 1</code> is equivalent to matrix multiplication.
+   * Example 1: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes = 1} is equivalent to matrix multiplication.
    * <p>
-   * Example 2: When <code>a</code> and<code>`b</code> are matrices (order 2),
+   * Example 2: When {@code a} and {@code b} are matrices (order 2),
    * the case
-   * <code>axes = [[1], [0]]</code> is equivalent to matrix multiplication.
+   * {@code axes = [[1], [0]]} is equivalent to matrix multiplication.
    * <p>
-   * Example 3: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes=0</code> gives the outer product, a tensor of order
+   * Example 3: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes=0} gives the outer product, a tensor of order
    * 4.
    * <p>
    * Example 4: Suppose that <i>a<sub>ijk</sub></i> and <i>b<sub>lmn</sub></i>
-   * represent two tensors of order 3. Then, <code>contract(a, b, [[0], [2]])<code> is the order 4 tensor
+   * represent two tensors of order 3. Then, {@code contract(a, b, [[0], [2]])}  is the order 4 tensor
    * <i>c<sub>jklm</sub></i> whose entry corresponding to the indices
    * <i>(j,k,l,m)</i> is given by:
    * <p>
    * <i> c<sub>jklm</sub> = &Sigma;<sub>i</sub> a<sub>ijk</sub>
    * b<sub>lmi</sub> </i>.
    * <p>
-   * In general, <code>order(c) = order(a) + order(b) - 2*len(axes[0])</code>.
+   * In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    * <p>
    *
-   * @param a `Operand` of type `float32` or `float64`.
-   * @param b `Operand` with the same type as `a`.
+   * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
+   * @param b {@code Operand} with the same type as {@code a}.
    * @param axes If axes is a scalar, sum over the last N axes of a and the
    * first N axes of b in order. If axes is a list, the first and second row
    * contain the set of unique integers specifying axes along which the
-   * contraction is computed, for `a` and `b`, respectively. The number of
-   * axes for `a` and `b` must be equal. If `axes=0`, computes the outer
-   * product between `a` and `b`.
+   * contraction is computed, for {@code a} and {@code b}, respectively. The number of
+   * axes for {@code a} and {@code b} must be equal. If {@code axis=0}, computes the outer
+   * product between {@code a} and {@code b}.
    * @param <T> the datatype of the Operands, must be either TFloat32 or
    * TFloat64
-   * @return A `Operand` with the same type as `a`.
+   * @return A {@code Operand} with the same type as {@code a}.
    * @throws IllegalArgumentException if a is not a float32 or float64 data type and if a and b are not the same data type
    */
   @Endpoint(name = "tensordot")
@@ -826,51 +827,51 @@ public class MathOps {
    * Tensor contraction of a and b along specified axes and outer product.
    * <p>
    * Tensordot (also known as tensor contraction) sums the product of elements
-   * from <code>a</code> and <code>b</code>` over the indices specified by
-   * <code>a_axes</code> and <code>b_axes</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> specify those pairs of axes
-   * along which to contract the tensors. The axis <code>a_axes[i]</code> of
-   * <code>a</code> must have the same dimension as axis
-   * <code>b_axes[i]</code> of <code>b</code> for all <code>i</code> in
-   * <code>range(0, len(a_axes))</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> must have identical length
+   * from {@code a} and {@code b} over the indices specified by
+   * {@code a_axes} and {@code b_axes}. The lists
+   * {@code a_axes} and {@code b_axes} specify those pairs of axes
+   * along which to contract the tensors. The axis {@code a_axes[i]} of
+   * {@code a} must have the same dimension as axis
+   * {@code b_axes[i]} of {@code b} for all {@code i} in
+   * {@code range(0, len(a_axes))}. The lists
+   * {@code a_axes} and {@code b_axes} must have identical length
    * and consist of unique integers that specify valid axes for each of the
    * tensors. Additionally outer product is supported by passing
-   * <code>axes=0</code>.
+   * {@code axes=0}.
    * <p>
-   * This operation corresponds to <code>numpy.tensordot(a, b, axes)</code>.
+   * This operation corresponds to {@code numpy.tensordot(a, b, axes)}.
    * <p>
-   * Example 1: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes = 1</code> is equivalent to matrix multiplication.
+   * Example 1: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes = 1} is equivalent to matrix multiplication.
    * <p>
-   * Example 2: When <code>a</code> and<code>`b</code> are matrices (order 2),
+   * Example 2: When {@code a} and{@code b} are matrices (order 2),
    * the case
-   * <code>axes = [[1], [0]]</code> is equivalent to matrix multiplication.
+   * {@code axes = [[1], [0]]} is equivalent to matrix multiplication.
    * <p>
-   * Example 3: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes=0</code> gives the outer product, a tensor of order
+   * Example 3: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes=0} gives the outer product, a tensor of order
    * 4.
    * <p>
    * Example 4: Suppose that <i>a<sub>ijk</sub></i> and <i>b<sub>lmn</sub></i>
-   * represent two tensors of order 3. Then, <code>contract(a, b, [[0], [2]])<code> is the order 4 tensor
+   * represent two tensors of order 3. Then, {@code contract(a, b, [[0], [2]])}  is the order 4 tensor
    * <i>c<sub>jklm</sub></i> whose entry corresponding to the indices
    * <i>(j,k,l,m)</i> is given by:
    * <p>
    * <i> c<sub>jklm</sub> = &Sigma;<sub>i</sub> a<sub>ijk</sub>
    * b<sub>lmi</sub> </i>.
    * <p>
-   * In general, <code>order(c) = order(a) + order(b) - 2*len(axes[0])</code>.
+   * In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    * <p>
    *
-   * @param a `Operand` of type `float32` or `float64`.
-   * @param b `Operand` with the same type as `a`.
+   * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
+   * @param b {@code Operand} with the same type as {@code a}.
    * @param axes the first and second row
    * contain the set of unique integers specifying axes along which the
-   * contraction is computed, for `a` and `b`, respectively. The number of
-   * axes for `a` and `b` must be equal. I
+   * contraction is computed, for {@code a} and {@code b}, respectively. The number of
+   * axes for {@code a} and {@code b} must be equal. I
    * @param <T> the datatype of the Operands, must be either TFloat32 or
    * TFloat64
-   * @return A `Operand` with the same type as `a`.
+   * @return A {@code Operand} with the same type as {@code a}.
    * @throws IllegalArgumentException if a is not a float32 or float64 data type and if a and b are not the same data type
    */
   @Endpoint(name = "tensordot")
@@ -887,51 +888,51 @@ public class MathOps {
    * Tensor contraction of a and b along specified axes and outer product.
    * <p>
    * Tensordot (also known as tensor contraction) sums the product of elements
-   * from <code>a</code> and <code>b</code>` over the indices specified by
-   * <code>a_axes</code> and <code>b_axes</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> specify those pairs of axes
-   * along which to contract the tensors. The axis <code>a_axes[i]</code> of
-   * <code>a</code> must have the same dimension as axis
-   * <code>b_axes[i]</code> of <code>b</code> for all <code>i</code> in
-   * <code>range(0, len(a_axes))</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> must have identical length
+   * from {@code a} and {@code b} over the indices specified by
+   * {@code a_axes} and {@code b_axes}. The lists
+   * {@code a_axes} and {@code b_axes} specify those pairs of axes
+   * along which to contract the tensors. The axis {@code a_axes[i]} of
+   * {@code a} must have the same dimension as axis
+   * {@code b_axes[i]} of {@code b} for all {@code i} in
+   * {@code range(0, len(a_axes))}. The lists
+   * {@code a_axes} and {@code b_axes} must have identical length
    * and consist of unique integers that specify valid axes for each of the
    * tensors. Additionally outer product is supported by passing
-   * <code>axes=0</code>.
+   * {@code axes=0}.
    * <p>
-   * This operation corresponds to <code>numpy.tensordot(a, b, axes)</code>.
+   * This operation corresponds to {@code numpy.tensordot(a, b, axes)}.
    * <p>
-   * Example 1: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes = 1</code> is equivalent to matrix multiplication.
+   * Example 1: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes = 1} is equivalent to matrix multiplication.
    * <p>
-   * Example 2: When <code>a</code> and<code>`b</code> are matrices (order 2),
+   * Example 2: When {@code a} and{@code b} are matrices (order 2),
    * the case
-   * <code>axes = [[1], [0]]</code> is equivalent to matrix multiplication.
+   * {@code axes = [[1], [0]]} is equivalent to matrix multiplication.
    * <p>
-   * Example 3: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes=0</code> gives the outer product, a tensor of order
+   * Example 3: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes=0} gives the outer product, a tensor of order
    * 4.
    * <p>
    * Example 4: Suppose that <i>a<sub>ijk</sub></i> and <i>b<sub>lmn</sub></i>
-   * represent two tensors of order 3. Then, <code>contract(a, b, [[0], [2]])<code> is the order 4 tensor
+   * represent two tensors of order 3. Then, {@code contract(a, b, [[0], [2]])}  is the order 4 tensor
    * <i>c<sub>jklm</sub></i> whose entry corresponding to the indices
    * <i>(j,k,l,m)</i> is given by:
    * <p>
    * <i> c<sub>jklm</sub> = &Sigma;<sub>i</sub> a<sub>ijk</sub>
    * b<sub>lmi</sub> </i>.
    * <p>
-   * In general, <code>order(c) = order(a) + order(b) - 2*len(axes[0])</code>.
+   * In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    * <p>
    *
-   * @param a `Operand` of type `float32` or `float64`.
-   * @param b `Operand` with the same type as `a`.
+   * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
+   * @param b {@code Operand} with the same type as {@code a}.
    * @param axes the first and second row
    * contain the set of unique integers specifying axes along which the
-   * contraction is computed, for `a` and `b`, respectively. The number of
-   * axes for `a` and `b` must be equal. I
+   * contraction is computed, for {@code a} and {@code b}, respectively. The number of
+   * axes for {@code a} and {@code b} must be equal. I
    * @param <T> the datatype of the Operands, must be either TFloat32 or
    * TFloat64
-   * @return A `Operand` with the same type as `a`.
+   * @return A {@code Operand} with the same type as {@code a}.
    * @throws IllegalArgumentException if a is not a float32 or float64 data type and if a and b are not the same data type
    */
   @Endpoint(name = "tensordot")
@@ -948,49 +949,49 @@ public class MathOps {
    * Tensor contraction of a and b along specified axes and outer product.
    * <p>
    * Tensordot (also known as tensor contraction) sums the product of elements
-   * from <code>a</code> and <code>b</code>` over the indices specified by
-   * <code>a_axes</code> and <code>b_axes</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> specify those pairs of axes
-   * along which to contract the tensors. The axis <code>a_axes[i]</code> of
-   * <code>a</code> must have the same dimension as axis
-   * <code>b_axes[i]</code> of <code>b</code> for all <code>i</code> in
-   * <code>range(0, len(a_axes))</code>. The lists
-   * <code>a_axes</code> and <code>b_axes</code> must have identical length
+   * from {@code a} and {@code b} over the indices specified by
+   * {@code a_axes} and {@code b_axes}. The lists
+   * {@code a_axes} and {@code b_axes} specify those pairs of axes
+   * along which to contract the tensors. The axis {@code a_axes[i]} of
+   * {@code a} must have the same dimension as axis
+   * {@code b_axes[i]} of {@code b} for all {@code i} in
+   * {@code range(0, len(a_axes))}. The lists
+   * {@code a_axes} and {@code b_axes} must have identical length
    * and consist of unique integers that specify valid axes for each of the
    * tensors. Additionally outer product is supported by passing
-   * <code>axes=0</code>.
+   * {@code axes=0}.
    * <p>
-   * This operation corresponds to <code>numpy.tensordot(a, b, axes)</code>.
+   * This operation corresponds to {@code numpy.tensordot(a, b, axes)}.
    * <p>
-   * Example 1: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes = 1</code> is equivalent to matrix multiplication.
+   * Example 1: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes = 1} is equivalent to matrix multiplication.
    * <p>
-   * Example 2: When <code>a</code> and<code>`b</code> are matrices (order 2),
+   * Example 2: When {@code a} and{@code b} are matrices (order 2),
    * the case
-   * <code>axes = [[1], [0]]</code> is equivalent to matrix multiplication.
+   * {@code axes = [[1], [0]]} is equivalent to matrix multiplication.
    * <p>
-   * Example 3: When <code>a</code> and <code>b</code> are matrices (order 2),
-   * the case <code>axes=0</code> gives the outer product, a tensor of order
+   * Example 3: When {@code a} and {@code b} are matrices (order 2),
+   * the case {@code axes=0} gives the outer product, a tensor of order
    * 4.
    * <p>
    * Example 4: Suppose that <i>a<sub>ijk</sub></i> and <i>b<sub>lmn</sub></i>
-   * represent two tensors of order 3. Then, <code>contract(a, b, [[0], [2]])<code> is the order 4 tensor
+   * represent two tensors of order 3. Then, {@code contract(a, b, [[0], [2]])} is the order 4 tensor
    * <i>c<sub>jklm</sub></i> whose entry corresponding to the indices
    * <i>(j,k,l,m)</i> is given by:
    * <p>
    * <i> c<sub>jklm</sub> = &Sigma;<sub>i</sub> a<sub>ijk</sub>
    * b<sub>lmi</sub> </i>.
    * <p>
-   * In general, <code>order(c) = order(a) + order(b) - 2*len(axes[0])</code>.
+   * In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    * <p>
    *
-   * @param a `Operand` of type `float32` or `float64`.
-   * @param b `Operand` with the same type as `a`.
+   * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
+   * @param b {@code Operand} with the same type as {@code a}.
    * @param aAxis axes for the a Operand
    * @param bAxis axes for the b Operand
    * @param <T> the datatype of the Operands, must be either TFloat32 or
    * TFloat64
-   * @return A `Operand` with the same type as `a`.
+   * @return A {@code Operand} with the same type as {@code a}.
    * @throws IllegalArgumentException if a is not a float32 or float64 data type and if a and b are not the same data type
    */
   @SuppressWarnings({"unchecked", "unused"})
@@ -1042,7 +1043,7 @@ public class MathOps {
    * Computes log(sum(exp(elements across dimensions of a tensor))). Reduces {@code input_tensor}
    * along the dimensions given in {@code axes}.
    *
-   * <p>Reduces `{@code input} along the dimensions given in {@code axes}. Unless {@code keepdims}
+   * <p>Reduces {@code input} along the dimensions given in {@code axes}. Unless {@code keepdims}
    * is true, the rank of the tensor is reduced by 1 for each of the entries in {@code axes}, which
    * must be unique. If {@code keepdims} is true, the reduced dimensions are retained with length 1.
    * If {@code axes} has no entries, all dimensions are reduced, and a tensor with a single element
@@ -1052,8 +1053,9 @@ public class MathOps {
    *
    * @param input The tensor to reduce.
    * @param axes The dimensions to reduce. If null, reduces all dimensions. Must be in the range
-   *     {@link [-rank(input_tensor), rank(input_tensor)]}.
+   *     {@code [-rank(input_tensor), rank(input_tensor)]}.
    * @param keepDims If true, retains reduced dimensions with length 1.
+   * @param <T> the data type for the input and the result
    * @return The reduced tensor.
    */
   @Endpoint(name = "reduceLogSumExp")
