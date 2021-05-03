@@ -45,15 +45,15 @@ public class LinalgOps {
   }
 
   /**
-   * Multiplies matrix <code>a</code> by matrix <code>b</code>, producing <code>a</code> * <code>b
-   * </code>.
+   * Multiplies matrix {@code a} by matrix {@code b}, producing {@code a} * {@code b
+   * }.
    *
-   * <p>The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2
+   * <p>The inputs must, following any transpositions, be tensors of {@code rank >= 2} where the inner 2
    * dimensions specify valid matrix multiplication dimensions, and any further outer dimensions
    * specify matching batch size.
    *
-   * <p>Both matrices must be of the same type. The supported types are: <code>TFloat16</code>,
-   * <code>TFloat32</code>, <code>TFloat64</code>, <code>TInt32</code>.
+   * <p>Both matrices must be of the same type. The supported types are: {@code TFloat16},
+   * {@code TFloat32}, {@code TFloat64}, {@code TInt32}.
    *
    * <p>Either matrix can be transposed or adjointed (conjugated and transposed) on the fly by
    * setting one of the corresponding flag to true. These are false by default.
@@ -80,15 +80,15 @@ public class LinalgOps {
    *
    * <p>Note: This is matrix product, not element-wise product.
    *
-   * @param a an Operand of of type <code>TFloat16</code>, <code>TFloat32</code>, <code>TFloat64
-   *     </code>, <code>TInt32</code>. with a rank > 1
-   * @param b an Operand with same type and rank as <code>a</code>.
+   * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64
+   *     }, {@code TInt32}. with a {@code rank > 1}
+   * @param b an Operand with same type and rank as {@code a}.
    * @param <T> the data type of the Operands
-   * @return A Operand of the same type as <code>a</code> and <code>b</code> where each inner-most
-   *     matrix is the product of the corresponding matrices in <code>a</code> and <code>b</code>.
+   * @return A Operand of the same type as {@code a} and {@code b} where each inner-most
+   *     matrix is the product of the corresponding matrices in {@code a} and {@code b}.
    *     This is the matrix product not an element-wise product.
-   * @throws java.lang.IllegalArgumentException If <code>transposeA</code> and <code>adjointA</code>
-   *     , or <code>transposeB</code> and <code>adjointB</code> are both set to `true`.
+   * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA}
+   *     , or {@code transposeB} and {@code adjointB} are both set to `true`.
    */
   @Endpoint(name = "matmul")
   public <T extends TNumber> Operand<T> matmul(Operand<T> a, Operand<T> b) {
@@ -96,20 +96,18 @@ public class LinalgOps {
   }
 
   /**
-   * Multiplies matrix <code>a</code> by matrix <code>b</code>, producing <code>a</code> * <code>b
-   * </code>.
+   * Multiplies matrix {@code a} by matrix {@code b}, producing {@code a} * {@code b
+   * }.
    *
-   * <p>The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2
+   * <p>The inputs must, following any transpositions, be tensors of {@code rank >= 2} where the inner 2
    * dimensions specify valid matrix multiplication dimensions, and any further outer dimensions
    * specify matching batch size.
    *
-   * <p>Both matrices must be of the same type. The supported types are: <code>TFloat16</code>,
-   * <code>TFloat32</code>, <code>TFloat64</code>, <code>TInt32</code>.
+   * <p>Both matrices must be of the same type. The supported types are: {@code TFloat16},
+   * {@code TFloat32}, {@code TFloat64}, {@code TInt32}.
    *
    * <p>Either matrix can be transposed or adjointed (conjugated and transposed) on the fly by
    * setting one of the corresponding flag to true. These are false by default.
-   *
-   * <p>
    *
    * <p>Note: This is matrix product, not element-wise product.
    *
@@ -133,17 +131,17 @@ public class LinalgOps {
    *
    * }</pre>
    *
-   * @param a an Operand of of type <code>TFloat16</code>, <code>TFloat32</code>, <code>TFloat64
-   *     </code>, <code>TInt32</code>. with a rank > 1
-   * @param b an Operand with same type and rank as <code>a</code>.
-   * @param transposeA If `true`, <code>a</code> is transposed before multiplication.
-   * @param transposeB If `True`, <code>b</code> is transposed before multiplication
+   * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64
+   *     }, {@code TInt32}. with a {@code rank > 1}
+   * @param b an Operand with same type and rank as {@code a}.
+   * @param transposeA If true, {@code a} is transposed before multiplication.
+   * @param transposeB If true, {@code b} is transposed before multiplication
    * @param <T> the data type of the Operands
-   * @return A Operand of the same type as <code>a</code> and <code>b</code> where each inner-most
-   *     matrix is the product of the corresponding matrices in <code>a</code> and <code>b</code>.
+   * @return A Operand of the same type as {@code a} and {@code b} where each inner-most
+   *     matrix is the product of the corresponding matrices in {@code a} and {@code b}.
    *     This is the matrix product not an element-wise product.
-   * @throws java.lang.IllegalArgumentException If <code>transposeA</code> and <code>adjointA</code>
-   *     , or <code>transposeB</code> and <code>adjointB</code> are both set to `true`.
+   * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA}
+   *     , or {@code transposeB} and {@code adjointB} are both set to `true`.
    */
   @Endpoint(name = "matmul")
   public <T extends TNumber> Operand<T> matmul(
@@ -152,15 +150,15 @@ public class LinalgOps {
   }
 
   /**
-   * Multiplies matrix <code>a</code> by matrix <code>b</code>, producing <code>a</code> * <code>b
-   * </code>.
+   * Multiplies matrix {@code a} by matrix {@code b}, producing {@code a} * {@code b
+   * }.
    *
-   * <p>The inputs must, following any transpositions, be tensors of rank >= 2 where the inner 2
+   * <p>The inputs must, following any transpositions, be tensors of {@code rank >= 2} where the inner 2
    * dimensions specify valid matrix multiplication dimensions, and any further outer dimensions
    * specify matching batch size.
    *
-   * <p>Both matrices must be of the same type. The supported types are: <code>TFloat16</code>,
-   * <code>TFloat32</code>, <code>TFloat64</code>, <code>TInt32</code>.
+   * <p>Both matrices must be of the same type. The supported types are: {@code TFloat16},
+   * {@code TFloat32}, {@code TFloat64}, {@code TInt32}.
    *
    * <p>Either matrix can be transposed or adjointed (conjugated and transposed) on the fly by
    * setting one of the corresponding flag to true. These are false by default.
@@ -187,25 +185,25 @@ public class LinalgOps {
    *
    * }</pre>
    *
-   * @param a an Operand of of type <code>TFloat16</code>, <code>TFloat32</code>, <code>TFloat64
-   *     </code>, <code>TInt32</code>. with a rank > 1
-   * @param b an Operand with same type and rank as <code>a</code>.
-   * @param transposeA If true, <code>a</code> is transposed before multiplication.
-   * @param transposeB If True, <code>b</code> is transposed before multiplication
-   * @param adjointA If true, <code>a</code> is conjugated and transposed before multiplication.
-   * @param adjointB If true, <code>b</code> is conjugated and transposed before multiplication.
-   * @param aIsSparse If true, <code>a</code> is treated as a sparse matrix. Notice, this <em>does
+   * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64
+   *     }, {@code TInt32}. with a {@code rank > 1}
+   * @param b an Operand with same type and rank as {@code a}.
+   * @param transposeA If true, {@code a} is transposed before multiplication.
+   * @param transposeB If True, {@code b} is transposed before multiplication
+   * @param adjointA If true, {@code a} is conjugated and transposed before multiplication.
+   * @param adjointB If true, {@code b} is conjugated and transposed before multiplication.
+   * @param aIsSparse If true, {@code a} is treated as a sparse matrix. Notice, this <em>does
    *     not support {@link SparseTensor}</em>, it just makes optimizations that assume most values
-   *     in <code>a</code> are zero.
-   * @param bIsSparse If true, <code>b</code> is treated as a sparse matrix. Notice, this <em>does
+   *     in {@code a} are zero.
+   * @param bIsSparse If true, {@code b} is treated as a sparse matrix. Notice, this <em>does
    *     not support {@link SparseTensor}</em>, it just makes optimizations that assume most values
-   *     in <code>b</code> are zero.
+   *     in {@code b} are zero.
    * @param <T> the data type of the Operands
-   * @return A Operand of the same type as <code>a</code> and <code>b</code> where each inner-most
-   *     matrix is the product of the corresponding matrices in <code>a</code> and <code>b</code>.
+   * @return A Operand of the same type as {@code a} and {@code b} where each inner-most
+   *     matrix is the product of the corresponding matrices in {@code a} and {@code b}.
    *     This is the matrix product not an element-wise product.
-   * @throws java.lang.IllegalArgumentException If <code>transposeA</code> and <code>adjointA</code>
-   *     , or <code>transposeB</code> and <code>adjointB</code> are both set to `true`.
+   * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA}
+   *     , or {@code transposeB} and {@code adjointB} are both set to `true`.
    */
   @SuppressWarnings("unchecked")
   @Endpoint(name = "matmul")
