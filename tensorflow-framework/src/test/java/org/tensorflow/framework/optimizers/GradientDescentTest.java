@@ -113,9 +113,9 @@ public class GradientDescentTest {
     }
   }
 
-  // This test fails due to initialization and gradient issues. It should not, but it seems to be a
-  // problem
-  // in TF-core.
+  // This test fails due to incorrect gradients being generated some of the time, when
+  // using an identical graph on identical data. It should not, but it seems to be a
+  // problem in TF-core.
   @Disabled
   @Test
   public void testDeterminism() {
@@ -204,7 +204,6 @@ public class GradientDescentTest {
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
                 .run());
-        System.out.println("Initialized - " + ndArrToString((TFloat32)initialized.get(i).get(3)));
 
         TFloat32 lossVal = (TFloat32) s.runner()
             .addTarget(trainName)
@@ -222,8 +221,6 @@ public class GradientDescentTest {
                 .fetch(outputWeightName)
                 .fetch(outputBiasName)
                 .run());
-        System.out.println("Initialized - " + ndArrToString((TFloat32)initialized.get(i).get(3)));
-        System.out.println("Trained - " + ndArrToString((TFloat32)trained.get(i).get(3)));
 
         lossVal = (TFloat32) s.runner()
                 .addTarget(trainName)
@@ -237,10 +234,10 @@ public class GradientDescentTest {
     }
 
     for (int i = 1; i < numRuns; i++) {
-      assertEquals(initialLoss[0],initialLoss[i]);
-      assertEquals(postTrainingLoss[0],postTrainingLoss[i]);
+      assertEquals(initialLoss[0], initialLoss[i]);
+      assertEquals(postTrainingLoss[0], postTrainingLoss[i]);
       // Because the weights are references not copies.
-      assertEquals(initialized.get(i),trained.get(i));
+      assertEquals(initialized.get(i), trained.get(i));
       assertEquals(
           initialized.get(0),
           initialized.get(i),
@@ -259,11 +256,5 @@ public class GradientDescentTest {
         t.close();
       }
     }
-  }
-
-  private static String ndArrToString(FloatNdArray ndarray) {
-    StringBuffer sb = new StringBuffer();
-    ndarray.scalars().forEachIndexed((idx,array) -> sb.append(Arrays.toString(idx)).append(" = ").append(array.getFloat()).append("\n"));
-    return sb.toString();
   }
 }

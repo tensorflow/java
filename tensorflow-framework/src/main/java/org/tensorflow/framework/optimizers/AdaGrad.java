@@ -44,7 +44,7 @@ public class AdaGrad extends Optimizer {
   public static final float INITIAL_ACCUMULATOR_DEFAULT = 0.01f;
 
   private static final ApplyAdagrad.Options[] opts = new ApplyAdagrad.Options[]{
-          ApplyAdagrad.updateSlots(true),ApplyAdagrad.useLocking(true)};
+          ApplyAdagrad.updateSlots(true), ApplyAdagrad.useLocking(true)};
 
   private final float learningRate;
 
