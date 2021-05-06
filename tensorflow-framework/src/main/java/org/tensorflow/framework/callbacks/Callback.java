@@ -24,14 +24,19 @@ import java.util.logging.Logger;
  *
  * <p>The logs map that callback methods take as argument will contain keys for quantities relevant
  * to the current batch or epoch (see method-specific docstrings).
+ *
+ * <p>This class has empty implementations for {@code onTrainBatchBegin/End}, {@code
+ * onTrainBegin/End}, {@code onTestBatchBegin/End}, {@code onTestBegin/End}, {@code
+ * onPredictBatchBegin/End}, and {@code onPredictBegin/End}. Subclasses should override these
+ * methods for specific processing.
  */
 public abstract class Callback {
-  protected Map<String, Object> params;
+  protected final Map<String, Object> params;
   // TODO  protected Model model;
 
   /** Creates a Callback */
   protected Callback() {
-    this(null);
+    this(Collections.emptyMap());
   }
 
   /**
@@ -43,13 +48,13 @@ public abstract class Callback {
     this.params = params;
   }
 
-  /**
+  /* TODO with Model
    * Creates a Callback
    *
    * @param params Training parameters
    * @param model the Model
    */
-  /* TODO
+  /* TODO  with Model
   protected Callback(Map<String, Object> params, Model model) {=
     this.params = params;
     this.model = model;
@@ -57,9 +62,8 @@ public abstract class Callback {
    */
 
   /**
-   * Performs custom processing at the the start of an epoch. This method should only be Performs
-   * custom processing during TRAIN mode. This method is empty. Extend this class to handle this
-   * event.
+   * Performs custom processing at the the start of an epoch. This method should only be called
+   * during TRAIN mode.
    *
    * @param epoch index of epoch.
    * @param logs metric results
@@ -68,30 +72,28 @@ public abstract class Callback {
   public void onEpochBegin(int epoch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of an epoch.This method should only be Performs custom
-   * processing during TRAIN mode. This method is empty. Extend this class to handle this event.
+   * Performs custom processing at the end of an epoch. This method should only be called during
+   * TRAIN mode.
    *
    * @param epoch index of epoch.
    * @param logs metric results for this training epoch, and for the validation epoch if validation
-   *     is performed. Validation result keys are prefixed with `val_`.
+   *     is performed. Validation result keys are prefixed with {@code val_}.
    */
   @SuppressWarnings("unused")
   public void onEpochEnd(int epoch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of a training batch in `fit` methods. This method
-   * is empty. Extend this class to handle this event.
+   * Performs custom processing at the beginning of a training batch in {@code model.fit} methods.
    *
    * @param batch the batch index
-   * @param logs Has keys `batch` and `size` representing the current batch number and the size of
-   *     the batch.
+   * @param logs Has keys {@code batch} and {@code size} representing the current batch number and
+   *     the size of the batch.
    */
   @SuppressWarnings("unused")
   public void onTrainBatchBegin(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of a training batch in `fit` methods. This method is
-   * empty. Extend this class to handle this event.
+   * Performs custom processing at the end of a training batch in {@code model.fit} methods.
    *
    * @param batch index of batch within the current epoch.
    * @param logs Metric results for this batch.
@@ -100,8 +102,7 @@ public abstract class Callback {
   public void onTrainBatchEnd(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of training. This method is empty. Extend this
-   * class to handle this event.
+   * Performs custom processing at the beginning of training.
    *
    * @param logs metric results
    */
@@ -109,8 +110,7 @@ public abstract class Callback {
   public void onTrainBegin(Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of training. This method is empty. Extend this class to
-   * handle this event.
+   * Performs custom processing at the end of training.
    *
    * @param logs metric results
    */
@@ -118,23 +118,21 @@ public abstract class Callback {
   public void onTrainEnd(Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of a batch in `evaluate` methods. Also Performs
-   * custom processing at the beginning of a validation batch in the `fit` methods, if validation
-   * data is provided. This method is empty. Extend this class to handle this event.
+   * Performs custom processing at the beginning of a batch in {@code model.evaluate} methods. Also
+   * Performs custom processing at the beginning of a validation batch in the {@code fit} methods,
+   * if validation data is provided.
    *
    * @param batch the batch number
-   * @param logs Has keys `batch` and `size` representing the current batch number and the size of
-   *     the batch.
+   * @param logs Has keys {@code batch} and {@code size} representing the current batch number and
+   *     the size of the batch.
    */
   @SuppressWarnings("unused")
   public void onTestBatchBegin(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of a batch in `evaluate` methods. Also Performs custom
-   * processing at the end of a validation batch in the `fit` methods, if validation data is
-   * provided.
-   *
-   * <p>This method is empty. Extend this class to handle this event.
+   * Performs custom processing at the end of a batch in {@code model.evaluate} methods. Also Performs
+   * custom processing at the end of a validation batch in the {@code fit} methods, if validation
+   * data is provided.
    *
    * @param batch the batch number
    * @param logs Metric results for this batch.
@@ -143,8 +141,7 @@ public abstract class Callback {
   public void onTestBatchEnd(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of evaluation or validation. This method is empty.
-   * Extend this class to handle this event.
+   * Performs custom processing at the beginning of evaluation or validation.
    *
    * @param logs metric results
    */
@@ -152,8 +149,7 @@ public abstract class Callback {
   public void onTestBegin(Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of evaluation or validation. This method is empty. Extend
-   * this class to handle this event.
+   * Performs custom processing at the end of evaluation or validation.
    *
    * @param logs metric results
    */
@@ -161,19 +157,17 @@ public abstract class Callback {
   public void onTestEnd(Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of a batch in `predict` methods. This method is
-   * empty. Extend this class to handle this event.
+   * Performs custom processing at the beginning of a batch in {@code model.predict} methods.
    *
    * @param batch index of batch within the current epoch.
-   * @param logs Has keys `batch` and `size` representing the current batch number and the size of
-   *     the batch.
+   * @param logs Has keys {@code batch} and {@code size} representing the current batch number and
+   *     the size of the batch.
    */
   @SuppressWarnings("unused")
   public void onPredictBatchBegin(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of a batch in `predict` methods. This method is empty.
-   * Extend this class to handle this event.
+   * Performs custom processing at the end of a batch in {@code model.predict} methods.
    *
    * @param batch index of batch within the current epoch.
    * @param logs Metric results for this batch.
@@ -182,8 +176,7 @@ public abstract class Callback {
   public void onPredictBatchEnd(int batch, Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the beginning of prediction. This method is empty. Extend this
-   * class to handle this event.
+   * Performs custom processing at the beginning of prediction.
    *
    * @param logs metric results
    */
@@ -191,8 +184,7 @@ public abstract class Callback {
   public void onPredictBegin(Map<String, Number> logs) {}
 
   /**
-   * Performs custom processing at the end of prediction. This method is empty. Extend this class to
-   * handle this event.
+   * Performs custom processing at the end of prediction.
    *
    * @param logs metric results
    */
@@ -228,15 +220,6 @@ public abstract class Callback {
    */
   public Map<String, Object> getParams() {
     return params;
-  }
-
-  /**
-   * Sets the params
-   *
-   * @param params the params to set
-   */
-  public void setParams(Map<String, Object> params) {
-    this.params = params;
   }
 
   /**

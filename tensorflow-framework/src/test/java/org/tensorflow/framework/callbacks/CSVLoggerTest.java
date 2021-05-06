@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class CSVLoggerTest {
+public class CSVLoggerTest {
 
   @Test
   public void testStandAlone() {
@@ -59,7 +59,7 @@ class CSVLoggerTest {
             assertEquals(values[iv++], v, 0e-6);
           }
         } finally {
-          tmpFile.delete();
+          tmpFile.deleteOnExit();
         }
       }
 
@@ -102,7 +102,7 @@ class CSVLoggerTest {
             iv++;
           }
         } finally {
-          tmpFile.delete();
+          tmpFile.deleteOnExit();
         }
       }
 

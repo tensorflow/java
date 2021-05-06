@@ -160,20 +160,20 @@ public class ProgbarLogger extends Callback {
       ProgressBar.CountMode unit,
       List<String> statefulMetrics) {
     // TODO super(params, model);
+    super(params);
 
     this.unit = unit;
     this.statefulMetrics =
         statefulMetrics != null ? new HashSet<>(statefulMetrics) : new HashSet<>();
-    setParams(params);
+    init();
   }
 
-  /** {@inheritDoc} */
-  @Override
-  public final void setParams(Map<String, Object> params) {
-    if (params == null) {
-      return;
-    }
-    super.setParams(params);
+
+  /**
+   * Initializes the ProgbarLogger
+   */
+  private final void init() {
+    Map<String, Object> params = getParams();
     verbose =
         ((ProgressBar.VerboseMode) params.getOrDefault("verbose", ProgressBar.VerboseMode.VERBOSE));
     epochs = (Integer) params.getOrDefault("epochs", 1);

@@ -424,6 +424,7 @@ public class ProgressBar {
    * @return the repeated string
    */
   private String repeat(String s, int count) {
+    // TODO JDK 11 update with s.repeat(count)
     return new String(new char[count]).replace("\0", s);
   }
 
@@ -471,7 +472,7 @@ public class ProgressBar {
   }
 
   public enum CountMode {
-    /** the progress bar should count steps () */
+    /** the progress bar should count steps */
     STEPS,
     /** the progress bar should count samples */
     SAMPLES

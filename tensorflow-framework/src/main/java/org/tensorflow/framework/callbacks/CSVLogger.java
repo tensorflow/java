@@ -35,13 +35,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
- * Callback that streams epoch results to a CSV file. public
+ * Callback that streams epoch results to a CSV file.
  *
  * <p>Supports all values that can be represented as a string
  *
  * @param <T> the data type for the weights in the model
  */
-class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
+public class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
 
   public static final char DEFAULT_SEPARATOR = ',';
   public static final boolean DEFAULT_APPEND = false;
@@ -138,7 +138,7 @@ class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
         return ((NdArray<?>) val).getObject().toString();
       } else {
         NdArray<?> array = (NdArray<T>) val;
-        return toString(array);
+        return ndArrayToString(array);
       }
     } else if (val instanceof Collection) {
       return "["
@@ -155,7 +155,7 @@ class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
    * @param ndArray the NdArray
    * @return the printable string
    */
-  private String toString(NdArray<?> ndArray) {
+  private String ndArrayToString(NdArray<?> ndArray) {
     Iterator<? extends NdArray<?>> iterator = ndArray.scalars().iterator();
     Shape shape = ndArray.shape();
     if (shape.numDimensions() == 0) {
@@ -164,14 +164,22 @@ class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
       }
       return valToString(iterator.next().getObject());
     }
-    return toString(iterator, shape, 0);
+    return ndArrayToString(iterator, shape, 0);
   }
 
-  private String toString(Iterator<? extends NdArray<?>> iterator, Shape shape, int dimension) {
+  /**
+   * coverts an NdArray iterator to a printable string
+   *
+   * @param iterator the NdArray iterator
+   * @param shape the shape of the NdArray item
+   * @param dimension the dimension within the overall NDArray tree
+   * @return the printable string
+   */
+  private String ndArrayToString(Iterator<? extends NdArray<?>> iterator, Shape shape, int dimension) {
     if (dimension < shape.numDimensions() - 1) {
       StringJoiner joiner = new StringJoiner("", "[", "]");
       for (long i = 0, size = shape.size(dimension); i < size; ++i) {
-        String element = toString(iterator, shape, dimension + 1);
+        String element = ndArrayToString(iterator, shape, dimension + 1);
         joiner.add(element);
       }
       return joiner.toString();
@@ -189,7 +197,7 @@ class CSVLogger<T extends TNumber> extends Callback implements AutoCloseable {
    * Converts a value to a printable string
    *
    * @param val the value
-   * @return tje printable string
+   * @return the printable string
    */
   private String valToString(Object val) {
     if (val instanceof Number) {
