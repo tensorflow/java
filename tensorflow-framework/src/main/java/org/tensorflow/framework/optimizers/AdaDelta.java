@@ -20,6 +20,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.train.ApplyAdadelta;
 import org.tensorflow.types.family.TType;
 
 import java.util.List;
@@ -160,7 +161,8 @@ public class AdaDelta extends Optimizer {
         tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
         tf.dtypes.cast(tf.constant(rho), gradient.type()),
         tf.dtypes.cast(tf.constant(epsilon), gradient.type()),
-        gradient);
+        gradient,
+        ApplyAdadelta.useLocking(true));
   }
 
   /** {@inheritDoc} */

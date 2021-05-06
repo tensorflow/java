@@ -139,7 +139,8 @@ public class Momentum extends Optimizer {
         tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
         gradient,
         tf.dtypes.cast(tf.constant(momentum), gradient.type()),
-        ApplyMomentum.useNesterov(useNesterov));
+        ApplyMomentum.useNesterov(useNesterov),
+        ApplyMomentum.useLocking(true));
   }
 
   /** {@inheritDoc} */
