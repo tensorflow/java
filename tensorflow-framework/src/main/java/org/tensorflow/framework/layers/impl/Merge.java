@@ -374,7 +374,7 @@ public abstract class Merge<T extends TFloating> extends Layer<T> {
             String.format(
                 "Operands could not be broadcast together with shapes %s %s", shape1, shape2));
       } else {
-        outputShape.append(shape1.size(i));
+        outputShape = outputShape.append(shape1.size(i));
       }
     }
     return outputShape;

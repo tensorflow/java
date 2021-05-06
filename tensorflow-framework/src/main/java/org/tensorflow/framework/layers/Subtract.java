@@ -54,11 +54,11 @@ public class Subtract<T extends TFloating> extends Merge<T> {
    *
    * @param tf the TensorFlow Ops
    * @param type the data type for the weights and computation
+   * @param options the layer's options.
    */
   public Subtract(Ops tf, Class<T> type, Options options) {
     this(tf, null, type, options);
   }
-
 
   /**
    * Creates an Add Layer
@@ -77,6 +77,7 @@ public class Subtract<T extends TFloating> extends Merge<T> {
    * @param tf the TensorFlow Ops
    * @param name the name of the layer, if null the name is set to {@link Class#getSimpleName()}
    * @param type the data type for the weights and computation
+   * @param options the layer's options.
    */
   public Subtract(Ops tf, String name, Class<T> type, Options options) {
     super(tf, name, type, options);

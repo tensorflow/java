@@ -40,15 +40,15 @@ class GaussianNoiseTest {
               new double[][][] {
                 {{3.679269, 1.977210, 8.807560}, {9.322395, 6.767639, 7.653679}},
                 {{6.874095, 3.046032, 4.328507}, {3.396144, 3.414768, 1.099349}},
-                {{6.208934,  6.194471, 3.045125}, {10.126389, 7.881398, 9.125002}}
+                {{6.208934, 6.194471, 3.045125}, {10.126389, 7.881398, 9.125002}}
               });
 
       // second pass, trainable is true, so there should be noise applied
       result = instance.call(input, true, TFloat64.class);
       assertEquals(expectedShape, result.shape());
       // cannot evaluate more than once, else it doesn't match expected
-        // because of random number generation.
-      //session.print(result);
+      // because of random number generation.
+      // session.print(result);
       session.evaluate(expected, result);
     }
   }

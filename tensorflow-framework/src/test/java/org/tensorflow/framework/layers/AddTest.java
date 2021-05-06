@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AddTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -104,13 +106,12 @@ class AddTest {
               Layer.Options.create().inputShape(Shape.of(4, 5)));
       Add<TFloat64> instance = new Add<>(tf, TFloat64.class);
       List<Operand<TFloat64>> resultList =
-
           instance.call(
-                  Arrays.asList(
-                      i1.getOutput(TFloat64.class),
-                      i2.getOutput(TFloat64.class),
-                      i3.getOutput(TFloat64.class)),
-                  TFloat64.class);
+              Arrays.asList(
+                  i1.getOutput(TFloat64.class),
+                  i2.getOutput(TFloat64.class),
+                  i3.getOutput(TFloat64.class)),
+              TFloat64.class);
 
       Operand<TFloat64> result = resultList.get(0);
 

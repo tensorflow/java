@@ -30,10 +30,10 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <p>It follows::
  *
- * <pre>
- *     f(x) = x for x > theta
- *     f(x) = 0 otherwise`
- * </pre>
+ * <pre>{@code
+ * f(x) = x for x > theta
+ * f(x) = 0 otherwise`
+ * }</pre>
  *
  * @param <T> the data type for the layer's weights and computation.
  */
@@ -73,6 +73,7 @@ public class ThresholdedReLU<T extends TFloating> extends Layer<T> {
    * @param tf the TensorFlow Ops
    * @param theta Negative slope coefficient. Must be &gt;= 0.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options.
    */
   public ThresholdedReLU(Ops tf, float theta, Class<T> type, Options options) {
     this(tf, null, theta, type, options);

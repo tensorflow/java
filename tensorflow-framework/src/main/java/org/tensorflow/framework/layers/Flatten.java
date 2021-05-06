@@ -31,13 +31,12 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Flattens the input. Does not affect the batch size.
  *
- * <p><em>Note:</em> If inputs are shaped <code>(batch,)</code> without a feature axis, then flattening adds an extra
- * channel dimension and output shape is <code(batch, 1)</code>.
+ * <p><em>Note:</em> If inputs are shaped {@code (batch,)} without a feature axis, then flattening
+ * adds an extra channel dimension and output shape is {@code (batch, 1)}.
  *
  * @param <T> the data type for the layer's weights and computation.
  */
 public class Flatten<T extends TFloating> extends Layer<T> {
-  private static final int FLATTEN_INPUT_LENGTH = 1;
   private final TensorFormat dataFormat;
 
   /**
@@ -64,15 +63,13 @@ public class Flatten<T extends TFloating> extends Layer<T> {
     this(tf, name, TensorFormat.NHWC, type, null);
   }
 
-
   /**
    * Creates a Flatten Layer with a unique name generated based on * {@link Class#getSimpleName()}.
    *
    * @param tf the TensorFlow Ops.
    * @param dataFormat The ordering of the dimensions in the inputs. {@link TensorFormat#NHWC}
-   *     corresponds to inputs with shape <code>(batch, ..., channels)
-   *     </code> while {@link TensorFormat#NCHW} corresponds to inputs with shape <code>
-   *     (batch, channels, ...)</code>.
+   *     corresponds to inputs with shape {@code (batch, ..., channels) } while {@link
+   *     TensorFormat#NCHW} corresponds to inputs with shape {@code (batch, channels, ...)}.
    * @param type the data type for the layer's weights and computation.
    */
   public Flatten(Ops tf, TensorFormat dataFormat, Class<T> type) {
@@ -84,10 +81,10 @@ public class Flatten<T extends TFloating> extends Layer<T> {
    *
    * @param tf the TensorFlow Ops.
    * @param dataFormat The ordering of the dimensions in the inputs. {@link TensorFormat#NHWC}
-   *     corresponds to inputs with shape <code>(batch, ..., channels)
-   *     </code> while {@link TensorFormat#NCHW} corresponds to inputs with shape <code>
-   *     (batch, channels, ...)</code>.
+   *     corresponds to inputs with shape {@code (batch, ..., channels) } while {@link
+   *     TensorFormat#NCHW} corresponds to inputs with shape {@code (batch, channels, ...)}.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options
    */
   public Flatten(Ops tf, TensorFormat dataFormat, Class<T> type, Options options) {
     this(tf, null, dataFormat, type, options);
@@ -100,9 +97,8 @@ public class Flatten<T extends TFloating> extends Layer<T> {
    * @param name the unique name for this layer. If null, a unique name will be generated based on
    *     {@link Class#getSimpleName()}.
    * @param dataFormat The ordering of the dimensions in the inputs. {@link TensorFormat#NHWC}
-   *     corresponds to inputs with shape <code>(batch, ..., channels)
-   *     </code> while {@link TensorFormat#NCHW} corresponds to inputs with shape <code>
-   *     (batch, channels, ...)</code>.
+   *     corresponds to inputs with shape {@code (batch, ..., channels) } while {@link
+   *     TensorFormat#NCHW} corresponds to inputs with shape {@code (batch, channels, ...)}.
    * @param type the data type for the layer's weights and computation.
    */
   public Flatten(Ops tf, String name, TensorFormat dataFormat, Class<T> type) {
@@ -115,9 +111,8 @@ public class Flatten<T extends TFloating> extends Layer<T> {
    * @param name the unique name for this layer. If null, a unique name will be generated based on
    *     {@link Class#getSimpleName()}.
    * @param dataFormat The ordering of the dimensions in the inputs. {@link TensorFormat#NHWC}
-   *     corresponds to inputs with shape <code>(batch, ..., channels)
-   *     </code> while {@link TensorFormat#NCHW} corresponds to inputs with shape <code>
-   *     (batch, channels, ...)</code>.
+   *     corresponds to inputs with shape {@code (batch, ..., channels) } while {@link
+   *     TensorFormat#NCHW} corresponds to inputs with shape {@code (batch, channels, ...)}.
    * @param type the data type for the layer's weights and computation.
    * @param options the layer's options.
    */

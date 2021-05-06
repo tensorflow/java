@@ -53,7 +53,7 @@ class LinalgOpsTest {
         expected64 =
             tf.constant(
                 new double[][] {{154.01892}, {231.81863}, {166.91096}, {126.92895}, {83.58413}});
-        session.setEpsilon(1e-4f);
+        TestSession.setEpsilon(1e-4f);
         session.evaluate(expected64, ans64);
       }
   }

@@ -83,7 +83,9 @@ class MinimumTest {
               Layer.Options.create().inputShape(Shape.of(4, 5)));
       Minimum<TFloat64> instance = new Minimum<>(tf, TFloat64.class);
       List<Operand<TFloat64>> resultList =
-          instance.call(Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)), TFloat64.class);
+          instance.call(
+              Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)),
+              TFloat64.class);
 
       Operand<TFloat64> result = resultList.get(0);
 

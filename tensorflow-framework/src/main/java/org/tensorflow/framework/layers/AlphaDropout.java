@@ -46,8 +46,7 @@ public class AlphaDropout<T extends TFloating> extends Layer<T> {
    * Creates a AlphaDropout layer, using a unique name will be generated based on {@link
    * Class#getSimpleName()} and no noiseShape.
    *
-   * @param tf the TensorFlow Ops, may be null but will need to be set before the first call to the
-   *     {@link #call} method method is called.
+   * @param tf the TensorFlow Ops
    * @param rate A number between 0 and 1. Drop probability (as with {@link Dropout}). The
    *     multiplicative noise will have standard deviation <code>sqrt(rate / (1 - rate))</code>.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -64,6 +63,7 @@ public class AlphaDropout<T extends TFloating> extends Layer<T> {
    * Creates a AlphaDropout layer, using a unique name will be generated based on {@link
    * Class#getSimpleName()}.
    *
+   * @param tf the TensorFlow Ops
    * @param rate A number between 0 and 1. Drop probability (as with {@link Dropout}). The
    *     multiplicative noise will have standard deviation <code>sqrt(rate / (1 - rate))</code>.
    * @param noiseShape Optional, 1D integer tensor representing the shape of the binary dropout mask
@@ -83,8 +83,7 @@ public class AlphaDropout<T extends TFloating> extends Layer<T> {
   /**
    * Creates a AlphaDropout layer
    *
-   * @param tf the TensorFlow Ops, may be null but will need to be set before the first call to the
-   *     {@link #call} method method is called.
+   * @param tf the TensorFlow Ops
    * @param name name the unique name for this layer. If null, a unique name will be generated based
    *     on {@link Class#getSimpleName()}.
    * @param rate A number between 0 and 1. Drop probability (as with {@link Dropout}). The
@@ -164,7 +163,7 @@ public class AlphaDropout<T extends TFloating> extends Layer<T> {
       outputs.add(result);
     }
 
-    return callPostProcess(convertTo(outputs, resultType), training);
+    return callPostProcess(convertTo(outputs, resultType), true);
   }
 
   /** {@inheritDoc} */

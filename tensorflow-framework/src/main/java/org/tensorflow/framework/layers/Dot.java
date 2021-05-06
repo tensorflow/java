@@ -16,7 +16,6 @@ package org.tensorflow.framework.layers;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.layers.impl.Merge;
-import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
@@ -45,9 +44,6 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 public class Dot<T extends TFloating> extends Merge<T> {
   private final int[] axes;
   private final boolean normalize;
-
-  private boolean reshapeRequired;
-
 
   /**
    * Creates a Layer that computes a dot product between samples in two tensors, using {@link
@@ -88,7 +84,6 @@ public class Dot<T extends TFloating> extends Merge<T> {
     this(tf, null, axes, false, type, null);
   }
 
-
   /**
    * Creates a Layer that computes a dot product between samples in two tensors, using {@link
    * Class#getSimpleName()} as the layer name and no L2 Normalization.
@@ -103,7 +98,6 @@ public class Dot<T extends TFloating> extends Merge<T> {
   public Dot(Ops tf, int[] axes, Class<T> type, Options options) {
     this(tf, null, axes, false, type, options);
   }
-
 
   /**
    * Creates a Layer that computes a dot product between samples in two tensors with no L2
@@ -251,6 +245,7 @@ public class Dot<T extends TFloating> extends Merge<T> {
     int[] newAxes;
     if (axes.length == 1) {
       newAxes = new int[2];
+      // covert negative axes
       if (axes[0] < 0) {
         newAxes[0] = Math.floorMod(axes[0], shape1.numDimensions());
         newAxes[1] = Math.floorMod(axes[0], shape2.numDimensions());
@@ -303,7 +298,7 @@ public class Dot<T extends TFloating> extends Merge<T> {
     if (normalize) {
       FrameworkOps fops = FrameworkOps.create(tf);
       input1 = fops.math.l2Normalize(input1, new int[] {axes[0]});
-      input2 = fops.math.l2Normalize(input2, new int[] {axes[0]});
+      input2 = fops.math.l2Normalize(input2, new int[] {axes[1]});
     }
     return batchDot(input1, input2, newAxes);
   }
@@ -355,7 +350,7 @@ public class Dot<T extends TFloating> extends Merge<T> {
     Shape outputShape = shape1.append(shape2);
 
     if (outputShape.numDimensions() == 1) {
-      outputShape.append(1);
+      outputShape = outputShape.append(1);
     }
     return Collections.singletonList(outputShape);
   }
@@ -371,16 +366,18 @@ public class Dot<T extends TFloating> extends Merge<T> {
    *
    * @param x Operand with <code>numdimensions >= 2</code>.
    * @param y Operand with <code>numdimensions >= 2</code>.
-   * @param dotAxes the axes to peform the Dot Product.
+   * @param axes the axes to peform the Dot Product.
    * @return A operand with shape equal to the concatenation of <code>x</code>'s shape (less the
    *     dimension that was summed over) and <code>y</code>'s shape (less the batch dimension and
    *     the dimension that was summed over). If the final rank is 1, the result is reshaped to
    *     <code>(batch_size, 1)</code>.
    */
   private Operand<T> batchDot(
-      Operand<? extends TNumber> x, Operand<? extends TNumber> y, int[] dotAxes) {
+      Operand<? extends TNumber> x, Operand<? extends TNumber> y, int[] axes) {
     Ops tf = getTF();
     FrameworkOps fops = FrameworkOps.create(tf);
+    // make local copy for changes later
+    int[] dotAxes = axes;
     Operand<T> tX = cast(tf, x, getType());
     Operand<T> tY = cast(tf, y, getType());
 
@@ -410,11 +407,10 @@ public class Dot<T extends TFloating> extends Merge<T> {
 
     if (dotAxes == null) {
       dotAxes = new int[2];
+      dotAxes[0] = xRank - 1;
       if (yRank == 2) {
-        dotAxes[0] = xRank - 1;
         dotAxes[1] = yRank - 1;
       } else {
-        dotAxes[0] = xRank - 1;
         dotAxes[1] = yRank - 2;
       }
     } else if (dotAxes.length == 1) {
@@ -441,9 +437,10 @@ public class Dot<T extends TFloating> extends Merge<T> {
       throw new IllegalArgumentException(
           String.format(
               "Cannot do batch_dot on inputs with shapes %s and %s with axes %s. x.shape[%d] != %d, y.shape[%d] != %d",
-              xShape, yShape, Arrays.toString(dotAxes), a0, d1, d2));
+              xShape, yShape, Arrays.toString(dotAxes), a0, d1, a1, d2));
     }
 
+    // backup rank. Need them rank.
     int origXRank = xRank;
     int origYRank = yRank;
     if (xRank == 2) {
@@ -459,11 +456,12 @@ public class Dot<T extends TFloating> extends Merge<T> {
     // move x's dimension to be reduced to last axis.
     if (a0 != xRank - 1) {
       int[] pattern = new int[xRank];
+      // move a0 to last
       for (int i = 0; i < a0; i++) {
         pattern[i] = i;
       }
-      for (int i = a0, j = 0; i < xRank; i++) {
-        pattern[j++] = i;
+      for (int i = a0; i < xRank - 1; i++) {
+        pattern[i] = i + 1;
       }
       pattern[xRank - 1] = a0;
       tX = tf.linalg.transpose(tX, tf.constant(pattern));
@@ -471,18 +469,17 @@ public class Dot<T extends TFloating> extends Merge<T> {
     // move y's dimension to be reduced to axis 1.
     if (a1 != 1) {
       int[] pattern = new int[yRank];
-
-      for (int i = 0, j = 0; i < xRank; i++) {
-        if (i == 1) { // leave dim 1 slot open
-          j++;
-          continue;
-        }
-        if (i == a1) { // skip a1 dim
-          continue;
-        }
-        pattern[j++] = i;
+      pattern[0] = 0;
+      // skip slot 1
+      for (int i = 1; i < a1; i++) {
+        pattern[i + 1] = i;
+      }
+      for (int i = a1; i < pattern.length - 1; i++) {
+        pattern[i + 1] = i + 1;
       }
       pattern[1] = a1;
+      //noinspection SuspiciousNameCombination
+      tY = tf.linalg.transpose(tY, tf.constant(pattern));
     }
 
     // normalize both inputs to rank 3.
@@ -490,15 +487,15 @@ public class Dot<T extends TFloating> extends Merge<T> {
     Operand<TInt64> xMidShape = null;
     if (xRank > 3) {
       org.tensorflow.op.core.Shape<TInt64> tmpShape = tf.shape(tX, TInt64.class);
-      xMidShape = tf.shape.take(tmpShape, tf.constant((long) (xRank)), TInt64.class);
       xMidShape = tf.shape.takeLast(tmpShape, tf.constant((long) (xRank - 1)), TInt64.class);
 
       Operand<TInt64> squashedShape =
           tf.stack(
               Arrays.asList(
-                  tf.shape.size(tmpShape, tf.constant(0l), TInt64.class),
+                  tf.shape.size(tmpShape, tf.constant(0L), TInt64.class),
                   tf.constant(Shape.UNKNOWN_SIZE),
                   tf.shape.size(tmpShape, tf.constant((long) (xRank - 1)), TInt64.class)));
+      tX = tf.reshape(tX, squashedShape);
       xSquashed = true;
     }
 
@@ -515,15 +512,15 @@ public class Dot<T extends TFloating> extends Merge<T> {
                   tf.shape.size(y, tf.constant(0L), TInt64.class),
                   tf.shape.size(y, tf.constant(1L), TInt64.class),
                   tf.constant(-1L)));
+      tY = tf.reshape(tY, squashedShape);
       ySquashed = true;
     }
-
 
     Operand<T> result = fops.linalg.matmul(tX, tY);
     boolean doReshape = false;
     Operand<TInt64> outputShape = tf.shape(result, TInt64.class);
 
-    if (xSquashed && xMidShape != null) {
+    if (xSquashed) {
       outputShape =
           tf.concat(
               Arrays.asList(
@@ -534,7 +531,7 @@ public class Dot<T extends TFloating> extends Merge<T> {
       doReshape = true;
     }
 
-    if (ySquashed && yTrailDims != null) {
+    if (ySquashed) {
 
       outputShape =
           tf.concat(

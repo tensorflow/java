@@ -8,7 +8,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RepeatVectorTest {
@@ -34,11 +33,8 @@ class RepeatVectorTest {
         {{0.37533432, 0.7761148}, {0.37533432, 0.7761148}, {0.37533432, 0.7761148}}
       };
 
-
-
       Operand<TFloat64> result =
-              instance.call(
-                      tf.dtypes.cast(tf.constant(array), TFloat64.class), TFloat64.class);
+          instance.call(tf.dtypes.cast(tf.constant(array), TFloat64.class), TFloat64.class);
 
       assertEquals(expectedShape, result.shape());
       session.evaluate(tf.constant(expected), result);

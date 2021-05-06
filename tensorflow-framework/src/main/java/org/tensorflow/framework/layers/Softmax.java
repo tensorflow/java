@@ -15,7 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.layers;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.op.math.ReduceLogSumExp;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TFloat16;
@@ -40,7 +40,6 @@ public class Softmax<T extends TFloating> extends Layer<T> {
    *     {@link Class#getSimpleName()}.
    * @param axes axes along which the softmax normalization is applied.
    * @param type the data type for the layer's weights and computation.
-
    */
   public Softmax(Ops tf, String name, int[] axes, Class<T> type) {
     this(tf, name, axes, type, null);
@@ -69,6 +68,7 @@ public class Softmax<T extends TFloating> extends Layer<T> {
       boolean training,
       Class<U> resultType) {
     Ops tf = getTF();
+    FrameworkOps fops = FrameworkOps.create(tf);
     // TODO mask
 
     List<Operand<T>> results = new ArrayList<>();
@@ -91,11 +91,9 @@ public class Softmax<T extends TFloating> extends Layer<T> {
         input = tf.math.add(input, adder);
       }
       if (axes.length > 1) {
-        result =
-            tf.math.exp(
-                tf.math.sub(input, ReduceLogSumExp.reduceLogSumExp(tf.scope(), input, axes, true)));
+        result = tf.math.exp(tf.math.sub(input, fops.math.reduceLogSumExp(input, axes, true)));
       } else {
-        result = org.tensorflow.framework.op.nn.Softmax.softmax(tf.scope(), input, axes[0]);
+        result = fops.nn.softmax(input, axes[0]);
       }
       results.add(result);
     }

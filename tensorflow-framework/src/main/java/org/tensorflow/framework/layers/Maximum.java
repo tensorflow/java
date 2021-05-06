@@ -50,6 +50,7 @@ public class Maximum<T extends TFloating> extends Merge<T> {
    *
    * @param tf the TensorFlow Ops
    * @param type the data type for the weights and computation
+   * @param options the layer's options.
    */
   public Maximum(Ops tf, Class<T> type, Options options) {
     this(tf, null, type, options);
@@ -72,6 +73,7 @@ public class Maximum<T extends TFloating> extends Merge<T> {
    * @param tf the TensorFlow Ops
    * @param name the name of the layer, if null the name is set to {@link Class#getSimpleName()}
    * @param type the data type for the weights and computation
+   * @param options the layer's options.
    */
   public Maximum(Ops tf, String name, Class<T> type, Options options) {
     super(tf, name, type, options);

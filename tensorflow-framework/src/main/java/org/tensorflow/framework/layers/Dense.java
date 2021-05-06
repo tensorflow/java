@@ -16,13 +16,14 @@ package org.tensorflow.framework.layers;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.activations.Activation;
-import org.tensorflow.framework.constraints.Constraint;
 import org.tensorflow.framework.initializers.Glorot;
 import org.tensorflow.framework.initializers.Initializer;
 import org.tensorflow.framework.initializers.VarianceScaling;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.layers.impl.InputSpec;
-import org.tensorflow.framework.op.math.TensorDot;
+import org.tensorflow.framework.layers.impl.VariableDef;
+import org.tensorflow.framework.op.FrameworkOps;
+import org.tensorflow.framework.regularizers.Regularizer;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
@@ -32,6 +33,7 @@ import org.tensorflow.types.family.TType;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -61,8 +63,12 @@ public class Dense<T extends TFloating> extends Layer<T> {
   private final Activation<T> activation;
   private final boolean useBias;
   private final long seed;
-  private final Constraint kernelConstraint;
-  private final Constraint biasConstraint;
+
+  private final UnaryOperator<Operand<T>> kernelConstraint;
+  private final UnaryOperator<Operand<T>> biasConstraint;
+  private final Regularizer biasRegularizer;
+  private final Regularizer kernelRegularizer;
+
   private Initializer<T> kernelInitializer;
   private Initializer<T> biasInitializer;
   private Variable<T> kernel;
@@ -78,7 +84,7 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param type the data type for the weights and computation
    */
   public Dense(Ops tf, Integer units, long seed, Class<T> type) {
-    this(tf, null, units, null, true, null, null, null, null, seed, type, null);
+    this(tf, null, units, null, true, null, null, null, null, null, null, null, seed, type, null);
   }
 
   /**
@@ -92,7 +98,8 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param options the layer's options.
    */
   public Dense(Ops tf, Integer units, long seed, Class<T> type, Options options) {
-    this(tf, null, units, null, true, null, null, null, null, seed, type, options);
+    this(
+        tf, null, units, null, true, null, null, null, null, null, null, null, seed, type, options);
   }
 
   /**
@@ -107,7 +114,7 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param type the data type for the weights and computation
    */
   public Dense(Ops tf, String name, Integer units, long seed, Class<T> type) {
-    this(tf, name, units, null, true, null, null, null, null, seed, type, null);
+    this(tf, name, units, null, true, null, null, null, null, null, null, null, seed, type, null);
   }
 
   /**
@@ -123,7 +130,8 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param options the layer's options.
    */
   public Dense(Ops tf, String name, Integer units, long seed, Class<T> type, Options options) {
-    this(tf, name, units, null, true, null, null, null, null, seed, type, options);
+    this(
+        tf, name, units, null, true, null, null, null, null, null, null, null, seed, type, options);
   }
 
   /**
@@ -138,24 +146,47 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param useBias whether the layer uses a bias vector.
    * @param kernelInitializer Initializer for the <code>kernel</code> weights matrix.
    * @param biasInitializer Initializer for the bias vector.
+   * @param kernelRegularizer Regularizer applied to the kernel weights matrix.
+   * @param biasRegularizer Regularizer function applied to the bias vector.
+   * @param activityRegularizer Regularizer function applied to the output of the layer (its
+   *     "activation").
+   * @param kernelConstraint a constraint on the kernel variable
+   * @param biasConstraint a constraint on the bias variable
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the weights and computation
    */
-  @SuppressWarnings("unchecked")
   public Dense(
-          Ops tf,
-          String name,
-          Integer units,
-          Activation<T> activation,
-          boolean useBias,
-          Initializer<T> kernelInitializer,
-          Initializer<T> biasInitializer,
-          Constraint kernelConstraint,
-          Constraint biasConstraint,
-          long seed,
-          Class<T> type) {
-    this(tf, name, units, activation, useBias, kernelInitializer, biasInitializer, kernelConstraint, biasConstraint, seed, type, null);
+      Ops tf,
+      String name,
+      Integer units,
+      Activation<T> activation,
+      boolean useBias,
+      Initializer<T> kernelInitializer,
+      Initializer<T> biasInitializer,
+      Regularizer kernelRegularizer,
+      Regularizer biasRegularizer,
+      Regularizer activityRegularizer,
+      UnaryOperator<Operand<T>> kernelConstraint,
+      UnaryOperator<Operand<T>> biasConstraint,
+      long seed,
+      Class<T> type) {
+    this(
+        tf,
+        name,
+        units,
+        activation,
+        useBias,
+        kernelInitializer,
+        biasInitializer,
+        kernelRegularizer,
+        biasRegularizer,
+        activityRegularizer,
+        kernelConstraint,
+        biasConstraint,
+        seed,
+        type,
+        null);
   }
   /**
    * Creates a Dense layer.
@@ -169,6 +200,12 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param useBias whether the layer uses a bias vector.
    * @param kernelInitializer Initializer for the <code>kernel</code> weights matrix.
    * @param biasInitializer Initializer for the bias vector.
+   * @param kernelRegularizer Regularizer applied to the kernel weights matrix.
+   * @param biasRegularizer Regularizer function applied to the bias vector.
+   * @param activityRegularizer Regularizer function applied to the output of the layer (its
+   *     "activation").
+   * @param kernelConstraint a constraint on the kernel variable
+   * @param biasConstraint a constraint on the bias variable
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the weights and computation
@@ -183,8 +220,11 @@ public class Dense<T extends TFloating> extends Layer<T> {
       boolean useBias,
       Initializer<T> kernelInitializer,
       Initializer<T> biasInitializer,
-      Constraint kernelConstraint,
-      Constraint biasConstraint,
+      Regularizer kernelRegularizer,
+      Regularizer biasRegularizer,
+      Regularizer activityRegularizer,
+      UnaryOperator<Operand<T>> kernelConstraint,
+      UnaryOperator<Operand<T>> biasConstraint,
       long seed,
       Class<T> type,
       Options options) {
@@ -200,6 +240,9 @@ public class Dense<T extends TFloating> extends Layer<T> {
     this.biasInitializer = biasInitializer != null ? biasInitializer : new Zeros<>(tf);
     this.kernelConstraint = kernelConstraint;
     this.biasConstraint = biasConstraint;
+    this.biasRegularizer = biasRegularizer;
+    this.kernelRegularizer = kernelRegularizer;
+    setActivityRegularizer(activityRegularizer);
     this.seed = seed;
     addInputSpec(new InputSpec(InputSpec.Options.create().minRank(2)));
     setSupportsMasking(true);
@@ -216,7 +259,8 @@ public class Dense<T extends TFloating> extends Layer<T> {
    * @param resultType the data tupe for the result
    * @param <U> the data tupe for the result
    * @return the output with shape {@code (batch_size, ..., units)}. For instance, for a 2D input
-   *     with shape {@code (batch_size, input_dim)}, the output would have shape {@code (batch_size, units)}.
+   *     with shape {@code (batch_size, input_dim)}, the output would have shape {@code (batch_size,
+   *     units)}.
    */
   @Override
   public <U extends TType> List<Operand<U>> call(
@@ -228,21 +272,25 @@ public class Dense<T extends TFloating> extends Layer<T> {
       throw new IllegalArgumentException("Dense only supports 1 input.");
     Operand<? extends TType> singleInput = inputs.get(0);
     Operand<T> input = cast(getTF(), singleInput, getType());
-    System.out.println("Dense.call: " + input.shape());
     if (!isBuilt()) build(input.shape());
     Shape inputShape = input.shape();
     int rank = inputShape.numDimensions();
     Operand<T> tOutput;
-    System.out.println("Dense input: " + inputShape);
     if (rank == 2 || rank == Shape.UNKNOWN_SIZE) {
       tOutput = getTF().linalg.matMul(input, getKernel());
     } else {
-      tOutput = TensorDot.tensordot(getTF().scope(), input, getKernel(), new int[] {rank - 1, 0});
+      FrameworkOps fops = FrameworkOps.create(getTF());
+      tOutput = fops.math.tensordot(input, getKernel(), new int[] {rank - 1, 0});
       // Reshape the output back to the original number of dimensions of the input.
       Shape newShape = inputShape.take(rank - 1).append(getUnits());
       tOutput = getTF().reshape(tOutput, getTF().constant(newShape));
     }
-    if (isUseBias()) tOutput = getTF().nn.biasAdd(tOutput, getBias());
+    if (isUseBias()) {
+      tOutput = getTF().nn.biasAdd(tOutput, getBias());
+    }
+    if (activation != null) {
+      tOutput = activation.call(tOutput);
+    }
 
     return callPostProcess(Collections.singletonList(cast(getTF(), tOutput, resultType)), training);
   }
@@ -263,13 +311,12 @@ public class Dense<T extends TFloating> extends Layer<T> {
     if (kernelInitializer == null) {
       // Cast is required because Glorot is TFloating.
       kernelInitializer = new Glorot<>(getTF(), VarianceScaling.Distribution.UNIFORM, getSeed());
-      }
+    }
     if (biasInitializer == null) {
       biasInitializer = new Zeros<>(getTF());
     }
 
     Shape inputShape = inputShapes.get(0);
-    System.out.println("dense.build: " + inputShape);
     if (inputShape.size(-1) == Shape.UNKNOWN_SIZE) {
       throw new IllegalArgumentException(
           "The last dimension of the inputs to `Dense` should be defined. Found `UNKNOWN`.");
@@ -279,21 +326,32 @@ public class Dense<T extends TFloating> extends Layer<T> {
 
     kernel =
         addWeight(
-            getName() + "_kernel",
+            "kernel",
             Shape.of(lastDim, this.getUnits()),
             kernelInitializer,
             kernelConstraint,
+            kernelRegularizer,
             true,
             getSeed());
     if (isUseBias())
       bias =
           addWeight(
-              getName() + "_bias",
+              "bias",
               Shape.of(this.getUnits()),
               biasInitializer,
               biasConstraint,
+              biasRegularizer,
               true,
               getSeed());
+  }
+
+  public Operand<T> applyConstraint(Variable variable) {
+    VariableDef<T> variableDef = getVariableDef(variable);
+    if(variableDef != null && variableDef.getConstraint() != null) {
+        return variableDef.getConstraint().apply(variable);
+    }else {
+      return variable;
+    }
   }
 
   /** {@inheritDoc} */
@@ -307,7 +365,7 @@ public class Dense<T extends TFloating> extends Layer<T> {
       throw new IllegalArgumentException(
           String.format(
               "Dense layer: The innermost dimension of input_shape must be defined, but saw: %s",
-                  singleShape));
+              singleShape));
     Shape headShape = singleShape.take(singleShape.numDimensions() - 1).append(getUnits());
 
     return Collections.singletonList(headShape);
@@ -352,7 +410,7 @@ public class Dense<T extends TFloating> extends Layer<T> {
   /**
    * Gets the bias variable
    *
-   * @return
+   * @return the bias variable
    */
   public Variable<T> getBias() {
     return bias;

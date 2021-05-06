@@ -37,9 +37,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>the Java lambda function is in the form <code>x = function(tf, input)</code>. The first
  * argument is the TensorFlow Ops, the second argument is the input Operand. For example:
  *
- * <pre>
- *        Lambda lambda = new Lambda(tf, (ops, input) -> ops.math.mul(ops.constant(2), input), TFloat32.class);
- *    </pre>
+ * <pre>{@code
+ * Lambda lambda = new Lambda(tf, (ops, input) -> ops.math.mul(ops.constant(2), input), TFloat32.class);
+ * }</pre>
  *
  * @param <T> the data type for the layer's weights and computation.
  */
@@ -47,24 +47,19 @@ public class Lambda<T extends TFloating> extends Layer<T> {
   private BiFunction<Ops, Operand<T>, Operand<T>> function;
 
   /**
-   * Creates a Lambda layer, generating a unique name based on {@link Class#getSimpleName()
+   * Creates a Lambda layer, generating a unique name based on {@link Class#getSimpleName()}
    *
    * @param tf the TensorFlow Ops
-   * @param function the Java lambda function in the form <code>x = function(tf, input)</code>.
-   *                 The first argument is the TensorFlow Ops, the second argument is the input Operand.
    * @param type the data type for the layer's weights and computation.
-   * @param options the layer's options.
    */
   public Lambda(Ops tf, Class<T> type) {
-    this(tf, null, null, type,  null);
+    this(tf, null, null, type, null);
   }
 
   /**
-   * Creates a Lambda layer, generating a unique name based on {@link Class#getSimpleName()
+   * Creates a Lambda layer, generating a unique name based on {@link Class#getSimpleName()}
    *
    * @param tf the TensorFlow Ops
-   * @param function the Java lambda function in the form <code>x = function(tf, input)</code>.
-   *                 The first argument is the TensorFlow Ops, the second argument is the input Operand.
    * @param type the data type for the layer's weights and computation.
    * @param options the layer's options.
    */
@@ -91,6 +86,7 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    * @param name the unique name for this layer, if null, generates a unique name based on {@link
    *     Class#getSimpleName()}.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options.
    */
   public Lambda(Ops tf, String name, Class<T> type, Options options) {
     this(tf, name, null, type, options);
@@ -101,13 +97,11 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    *
    * @param tf the TensorFlow Ops
    * @param function The Java lambda function in the form <code>x = function(tf, input)</code>. The
-   *      first argument is the TensorFlow Ops, the second argument is the input Operand. If function
-   *      is null, then the input is returned un changed.
+   *     first argument is the TensorFlow Ops, the second argument is the input Operand. If function
+   *     is null, then the input is returned un changed.
    * @param type the data type for the layer's weights and computation.
-
    */
-  public Lambda(
-          Ops tf, BiFunction<Ops, Operand<T>, Operand<T>> function, Class<T> type) {
+  public Lambda(Ops tf, BiFunction<Ops, Operand<T>, Operand<T>> function, Class<T> type) {
     this(tf, null, function, type, null);
   }
 
@@ -116,8 +110,8 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    *
    * @param tf the TensorFlow Ops
    * @param function The Java lambda function in the form <code>x = function(tf, input)</code>. The
-   *      first argument is the TensorFlow Ops, the second argument is the input Operand. If function
-   *      is null, then the input is returned un changed.
+   *     first argument is the TensorFlow Ops, the second argument is the input Operand. If function
+   *     is null, then the input is returned un changed.
    * @param type the data type for the layer's weights and computation.
    * @param options the layer's options.
    */
@@ -138,10 +132,7 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    * @param type the data type for the layer's weights and computation.
    */
   public Lambda(
-          Ops tf,
-          String name,
-          BiFunction<Ops, Operand<T>, Operand<T>> function,
-          Class<T> type) {
+      Ops tf, String name, BiFunction<Ops, Operand<T>, Operand<T>> function, Class<T> type) {
     this(tf, name, function, type, null);
   }
 
@@ -155,6 +146,7 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    *     first argument is the TensorFlow Ops, the second argument is the input Operand. If function
    *     is null, then the input is returned un changed.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options
    */
   public Lambda(
       Ops tf,
@@ -173,7 +165,7 @@ public class Lambda<T extends TFloating> extends Layer<T> {
    *     x = function(tf, input)</code>. The first argument is the TensorFlow Ops, the second
    *     argument is the input Operand.
    */
-  public void setLamda(BiFunction<Ops, Operand<T>, Operand<T>> function) {
+  public void setLambda(BiFunction<Ops, Operand<T>, Operand<T>> function) {
     this.function = function;
   }
 

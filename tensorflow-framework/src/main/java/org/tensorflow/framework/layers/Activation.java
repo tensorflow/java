@@ -42,9 +42,7 @@ public class Activation<T extends TFloating> extends Layer<T> {
    * @param type the data type for the weights and computation
    */
   public Activation(
-          Ops tf,
-          org.tensorflow.framework.activations.Activation<T> activation,
-          Class<T> type) {
+      Ops tf, org.tensorflow.framework.activations.Activation<T> activation, Class<T> type) {
     this(tf, null, activation, type, null);
   }
 
@@ -74,10 +72,10 @@ public class Activation<T extends TFloating> extends Layer<T> {
    * @param type the data type for the weights and computation
    */
   public Activation(
-          Ops tf,
-          String name,
-          org.tensorflow.framework.activations.Activation<T> activation,
-          Class<T> type) {
+      Ops tf,
+      String name,
+      org.tensorflow.framework.activations.Activation<T> activation,
+      Class<T> type) {
     this(tf, name, activation, type, null);
   }
   /**

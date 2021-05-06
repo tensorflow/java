@@ -35,7 +35,6 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  */
 public class Add<T extends TFloating> extends Merge<T> {
 
-
   /**
    * Creates an Add Layer using {@link Class#getSimpleName()} as the layer name.
    *
@@ -51,6 +50,7 @@ public class Add<T extends TFloating> extends Merge<T> {
    *
    * @param tf the TensorFlow Ops
    * @param type the data type for the weights and computation
+   * @param options the layer options
    */
   public Add(Ops tf, Class<T> type, Options options) {
     this(tf, null, type, options);
@@ -72,6 +72,7 @@ public class Add<T extends TFloating> extends Merge<T> {
    * @param tf the TensorFlow Ops
    * @param name the name of the layer, if null the name is set to {@link Class#getSimpleName()}
    * @param type the data type for the weights and computation
+   * @param options the layer options
    */
   public Add(Ops tf, String name, Class<T> type, Options options) {
 

@@ -30,10 +30,10 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <p>It follows::
  *
- * <pre>
- *     f(x) =  alpha * (exp(x) - 1.) for x < 0
- *     f(x) = x for x >= 0
- * </pre>
+ * <pre>{@code
+ * f(x) =  alpha * (exp(x) - 1.) for x < 0
+ * f(x) = x for x >= 0
+ * }</pre>
  *
  * @param <T> the data type for the layer's weights and computation.
  */
@@ -71,6 +71,7 @@ public class ELU<T extends TFloating> extends Layer<T> {
    * @param tf the TensorFlow Ops.
    * @param alpha Negative slope coefficient. Must be &gt;= 0.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options
    */
   public ELU(Ops tf, float alpha, Class<T> type, Options options) {
     this(tf, null, alpha, type, options);

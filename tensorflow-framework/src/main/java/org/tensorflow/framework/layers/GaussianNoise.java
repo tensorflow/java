@@ -57,7 +57,6 @@ public class GaussianNoise<T extends TFloating> extends Layer<T> {
     this(tf, null, stddev, seed, type, null);
   }
 
-
   /**
    * Creates a GaussianNoise layer, using a unique name will be generated based on {@link
    * Class#getSimpleName()} and no noiseShape.
@@ -86,8 +85,7 @@ public class GaussianNoise<T extends TFloating> extends Layer<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the weights and computation
    */
-  public GaussianNoise(
-          Ops tf, String name, float stddev, long seed, Class<T> type) {
+  public GaussianNoise(Ops tf, String name, float stddev, long seed, Class<T> type) {
     this(tf, name, stddev, seed, type, null);
   }
   /**
@@ -111,7 +109,6 @@ public class GaussianNoise<T extends TFloating> extends Layer<T> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("unchecked")
   @Override
   public <U extends TType> List<Operand<U>> call(
       List<Operand<? extends TType>> inputs,

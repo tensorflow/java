@@ -47,7 +47,6 @@ class GaussianDropoutTest {
       result = instance.call(input, true, TFloat64.class);
       assertEquals(expectedShape, result.shape());
       session.evaluate(expected, result);
-
     }
   }
 

@@ -153,7 +153,6 @@ public class Concatenate<T extends TFloating> extends Merge<T> {
     this(tf, null, DEFAULT_AXIS, type, options);
   }
 
-
   /**
    * Creates a Concatenate Layer using {@link Class#getSimpleName()} as the layer name.
    *

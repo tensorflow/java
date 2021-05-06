@@ -138,13 +138,7 @@ public class Dropout<T extends TFloating> extends Layer<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the weights and computation
    */
-  public Dropout(
-          Ops tf,
-          String name,
-          float rate,
-          Shape noiseShape,
-          long seed,
-          Class<T> type) {
+  public Dropout(Ops tf, String name, float rate, Shape noiseShape, long seed, Class<T> type) {
     this(tf, name, rate, noiseShape, seed, type, null);
   }
 

@@ -30,11 +30,11 @@ import java.util.List;
  *
  * <p>Otherwise, it follows:
  *
- * <pre>
- *    f(x) = max_value if x >= max_value
- *     f(x) = x if threshold <= x < max_value
- *     f(x) = negative_slope * (x - threshold) otherwise
- * </pre>
+ * <pre>{@code
+ * f(x) = max_value if x >= max_value
+ *  f(x) = x if threshold <= x < max_value
+ *  f(x) = negative_slope * (x - threshold) otherwise
+ * }</pre>
  *
  * @param <T> the data type for the layer's weights and computation.
  */
@@ -127,12 +127,7 @@ public class ReLU<T extends TFloating> extends Layer<T> {
    * @param type the data type for the layer's weights and computation.
    * @throws IllegalArgumentException if maxValue or negativeSlope is &lt; 0
    */
-  public ReLU(
-      Ops tf,
-      float negativeSlope,
-      float maxValue,
-      float threshold,
-      Class<T> type) {
+  public ReLU(Ops tf, float negativeSlope, float maxValue, float threshold, Class<T> type) {
     this(tf, null, negativeSlope, maxValue, threshold, type, null);
   }
 
@@ -149,12 +144,12 @@ public class ReLU<T extends TFloating> extends Layer<T> {
    * @throws IllegalArgumentException if maxValue or negativeSlope is &lt; 0
    */
   public ReLU(
-          Ops tf,
-          float negativeSlope,
-          float maxValue,
-          float threshold,
-          Class<T> type,
-          Options options) {
+      Ops tf,
+      float negativeSlope,
+      float maxValue,
+      float threshold,
+      Class<T> type,
+      Options options) {
     this(tf, null, negativeSlope, maxValue, threshold, type, options);
   }
 
@@ -171,12 +166,7 @@ public class ReLU<T extends TFloating> extends Layer<T> {
    * @throws IllegalArgumentException if maxValue or negativeSlope is &lt; 0
    */
   public ReLU(
-          Ops tf,
-          String name,
-          float negativeSlope,
-          float maxValue,
-          float threshold,
-          Class<T> type) {
+      Ops tf, String name, float negativeSlope, float maxValue, float threshold, Class<T> type) {
     this(tf, name, negativeSlope, maxValue, threshold, type, null);
   }
   /**

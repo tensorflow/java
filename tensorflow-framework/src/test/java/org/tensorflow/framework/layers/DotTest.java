@@ -37,13 +37,23 @@ class DotTest {
       Ops tf = session.getTF();
       Input<TFloat64> i1 =
           new Input<>(
-              tf, "l1", TFloat64.class, TFloat64.class, Layer.Options.create().inputShape(Shape.of(4)));
+              tf,
+              "l1",
+              TFloat64.class,
+              TFloat64.class,
+              Layer.Options.create().inputShape(Shape.of(4)));
       Input<TFloat64> i2 =
           new Input<>(
-              tf, "l2", TFloat64.class, TFloat64.class, Layer.Options.create().inputShape(Shape.of(4)));
+              tf,
+              "l2",
+              TFloat64.class,
+              TFloat64.class,
+              Layer.Options.create().inputShape(Shape.of(4)));
       Dot<TFloat64> instance = new Dot<>(tf, 1, TFloat64.class);
       List<Operand<TFloat64>> resultList =
-          instance.call(Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)), TFloat64.class);
+          instance.call(
+              Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)),
+              TFloat64.class);
 
       Operand<TFloat64> result = resultList.get(0);
 
@@ -70,13 +80,23 @@ class DotTest {
       Ops tf = session.getTF();
       Input<TFloat64> i1 =
           new Input<>(
-              tf, "l1", TFloat64.class, TFloat64.class, Layer.Options.create().inputShape(Shape.of(4)));
+              tf,
+              "l1",
+              TFloat64.class,
+              TFloat64.class,
+              Layer.Options.create().inputShape(Shape.of(4)));
       Input<TFloat64> i2 =
           new Input<>(
-              tf, "l2", TFloat64.class, TFloat64.class, Layer.Options.create().inputShape(Shape.of(4)));
+              tf,
+              "l2",
+              TFloat64.class,
+              TFloat64.class,
+              Layer.Options.create().inputShape(Shape.of(4)));
       Dot<TFloat64> instance = new Dot<>(tf, new int[] {-1, -1}, TFloat64.class);
       List<Operand<TFloat64>> resultList =
-          instance.call(Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)), TFloat64.class);
+          instance.call(
+              Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)),
+              TFloat64.class);
 
       Operand<TFloat64> result = resultList.get(0);
 
@@ -106,7 +126,8 @@ class DotTest {
       List<Shape> outputShapes =
           dot.computeOutputShape(Arrays.asList(Shape.of(4, 5), Shape.of(4, 5)));
       assertFalse(outputShapes.isEmpty());
-      assertArrayEquals(new long[] {4}, outputShapes.get(0).asArray());
+      assertArrayEquals(new long[] {4,1}, outputShapes.get(0).asArray());
+
     }
   }
 }

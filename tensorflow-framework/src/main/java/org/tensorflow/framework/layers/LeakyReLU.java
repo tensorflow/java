@@ -29,10 +29,10 @@ import java.util.List;
  *
  * <p>It allows a small gradient when the unit is not active:
  *
- * <pre>
- *     f(x) = alpha * x if x < 0
- *     f(x) = x if x >= 0
- * </pre>
+ * <pre>{@code
+ * f(x) = alpha * x if x < 0
+ * f(x) = x if x >= 0
+ * }</pre>
  *
  * @param <T> the data type for the layer's weights and computation.
  */
@@ -47,9 +47,10 @@ public class LeakyReLU<T extends TFloating> extends Layer<T> {
    *
    * @param tf the TensorFlow Ops.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options.
    */
   public LeakyReLU(Ops tf, Class<T> type, Options options) {
-    this(tf, null, DEFAULT_ALPHA, type, null);
+    this(tf, null, DEFAULT_ALPHA, type, options);
   }
 
   /**
@@ -71,6 +72,7 @@ public class LeakyReLU<T extends TFloating> extends Layer<T> {
    * @param tf the TensorFlow Ops.
    * @param alpha Negative slope coefficient. Must be &gt;= 0.
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options.
    */
   public LeakyReLU(Ops tf, float alpha, Class<T> type, Options options) {
     this(tf, null, alpha, type, options);

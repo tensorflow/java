@@ -7,9 +7,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
-import org.tensorflow.types.family.TType;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 class LeakyReLUTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -83,7 +80,7 @@ class LeakyReLUTest {
 
       Operand<TFloat32> result = instance.call(tf.constant(inputArray), TFloat32.class);
 
-      session.evaluate(tf.constant(expectedArray),  result);
+      session.evaluate(tf.constant(expectedArray), result);
     }
   }
 
@@ -111,9 +108,9 @@ class LeakyReLUTest {
           new LeakyReLU<>(
               tf, alpha, TFloat64.class, Layer.Options.create().inputShape(Shape.of(2, 3, 4)));
 
-      Operand<TFloat64> result = instance.call(  tf.constant(inputArray) , TFloat64.class);
+      Operand<TFloat64> result = instance.call(tf.constant(inputArray), TFloat64.class);
 
-      session.evaluate(tf.constant(expectedArray),  result);
+      session.evaluate(tf.constant(expectedArray), result);
     }
   }
 }

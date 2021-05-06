@@ -36,7 +36,8 @@ public class RepeatVector<T extends TFloating> extends Layer<T> {
   private final int repeatCount;
 
   /**
-   * Creates a RepeatCount using a unique name will be generated based on * {@link Class#getSimpleName()}.
+   * Creates a RepeatCount using a unique name will be generated based on * {@link
+   * Class#getSimpleName()}.
    *
    * @param tf the TensorFlow Ops
    * @param repeatCount the repetition factor.
@@ -46,9 +47,9 @@ public class RepeatVector<T extends TFloating> extends Layer<T> {
     this(tf, null, repeatCount, type, null);
   }
 
-
   /**
-   * Creates a RepeatCountusing a unique name will be generated based on * {@link Class#getSimpleName()}.
+   * Creates a RepeatVector using a unique name will be generated based on * {@link
+   * Class#getSimpleName()}.
    *
    * @param tf the TensorFlow Ops
    * @param repeatCount the repetition factor.
@@ -88,7 +89,6 @@ public class RepeatVector<T extends TFloating> extends Layer<T> {
   }
 
   /**
-   *
    * @param inputs the input Operands, 2D tensor of shape (num_samples, features)
    * @param masks a list of masks, one for each input, to apply to the result, may be null
    * @param training whether the call is in inference mode or training mode

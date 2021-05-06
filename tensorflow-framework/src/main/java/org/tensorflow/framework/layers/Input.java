@@ -51,7 +51,6 @@ public class Input<T extends TNumber> extends Layer<T> {
     this(tf, null, input, null, type, null);
   }
 
-
   /**
    * Creates an input layer using {@link Class#getSimpleName()} for the name.
    *
@@ -74,8 +73,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    * @param input The input
    * @param type the data type for the layer's weights and computation.
    */
-  public Input(
-          Ops tf, String name, Operand<? extends TType> input, Class<T> type) {
+  public Input(Ops tf, String name, Operand<? extends TType> input, Class<T> type) {
 
     this(tf, name, input, null, type, null);
   }
@@ -88,6 +86,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    *     Class#getSimpleName()}
    * @param input The input
    * @param type the data type for the layer's weights and computation.
+   * @param options the layer's options
    */
   public Input(
       Ops tf, String name, Operand<? extends TType> input, Class<T> type, Options options) {
@@ -129,8 +128,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    * @param inputType the data type for the input and output, if null, input.type() is used
    * @param type the data type for the layer's weights and computation.
    */
-  public Input(
-          Ops tf, String name, Class<? extends TType> inputType, Class<T> type) {
+  public Input(Ops tf, String name, Class<? extends TType> inputType, Class<T> type) {
     this(tf, name, null, inputType, type, null);
   }
 
@@ -162,11 +160,11 @@ public class Input<T extends TNumber> extends Layer<T> {
    *     null, and if both inputShape and input are null.
    */
   public Input(
-          Ops tf,
-          String name,
-          Operand<? extends TType> input,
-          Class<? extends TType> inputType,
-          Class<T> type) {
+      Ops tf,
+      String name,
+      Operand<? extends TType> input,
+      Class<? extends TType> inputType,
+      Class<T> type) {
     this(tf, name, input, inputType, type, null);
   }
   /**
@@ -190,24 +188,20 @@ public class Input<T extends TNumber> extends Layer<T> {
       Class<T> type,
       Options options) {
     super(tf, name, true, type, options);
-    Options c = getInstanceOptions();
+    Options inputOptions = getInstanceOptions();
 
     if (inputType == null && input == null) {
       throw new IllegalArgumentException("both input and inputType cannot be null");
-      }
+    }
 
     if (input != null && inputType != null && !input.type().equals(inputType)) {
       throw new IllegalArgumentException(
           String.format("input.type() differs from inputType: %s vs. %s", input.type(), inputType));
-      }
+    }
 
-    //if ((c == null || c.inputShape == null) && input == null) {
-    //  throw new IllegalArgumentException("both input and inputShape cannot be null");
-    //  }
-
-    if (c != null) {
-      if ( c.inputShape != null
-          && (c.batchSize != null || c.batchInputShape != null)) {
+    if (inputOptions != null) {
+      if (inputOptions.inputShape != null
+          && (inputOptions.batchSize != null || inputOptions.batchInputShape != null)) {
         throw new IllegalArgumentException(
             "Only provide the inputShape or the batchSize or batchInputShape parameters at the size.");
       }
@@ -215,20 +209,30 @@ public class Input<T extends TNumber> extends Layer<T> {
 
     Shape lShape;
 
-    if (c != null && c.batchInputShape != null) {
-      lShape = c.batchInputShape.takeLast(c.batchInputShape.numDimensions() - 1);
-      setBatchInputShape(c.batchInputShape);
+    if (inputOptions != null && inputOptions.batchInputShape != null) {
+      lShape =
+          inputOptions.batchInputShape.takeLast(inputOptions.batchInputShape.numDimensions() - 1);
+      setBatchInputShape(inputOptions.batchInputShape);
       if (getBatchSize() == null) {
-        setBatchSize(c.batchInputShape.size(0));
+        setBatchSize(inputOptions.batchInputShape.size(0));
       }
     } else {
-        if(input == null) {
-          lShape = (c == null || c.inputShape == null) ? Shape.of(Shape.UNKNOWN_SIZE) : c.inputShape;
-        }else {
-          lShape = (c == null || c.inputShape == null) ? input.shape() : c.inputShape;
-        }
+      if (input == null) {
+        lShape =
+            (inputOptions == null || inputOptions.inputShape == null)
+                ? Shape.of(Shape.UNKNOWN_SIZE)
+                : inputOptions.inputShape;
+      } else {
+        lShape =
+            (inputOptions == null || inputOptions.inputShape == null)
+                ? input.shape()
+                : inputOptions.inputShape;
+      }
 
-      setBatchSize((c == null || c.batchSize == null) ? Shape.UNKNOWN_SIZE : c.batchSize);
+      setBatchSize(
+          (inputOptions == null || inputOptions.batchSize == null)
+              ? Shape.UNKNOWN_SIZE
+              : inputOptions.batchSize);
 
       setBatchInputShape(Shape.of(getBatchSize()).append(lShape));
     }
@@ -253,8 +257,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    * @param <T> the data type for the layer's calculations.
    * @return the output
    */
-  public static <T extends TNumber> Operand<T> input(
-          Ops tf, Class<T> type) {
+  public static <T extends TNumber> Operand<T> input(Ops tf, Class<T> type) {
     return input(tf, type, null);
   }
 
@@ -267,8 +270,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    * @param <T> the data type for the layer's calculations.
    * @return the output
    */
-  public static <T extends TNumber> Operand<T> input(
-      Ops tf, Class<T> type, Options options) {
+  public static <T extends TNumber> Operand<T> input(Ops tf, Class<T> type, Options options) {
     Input<T> layer = new Input<>(tf, type, type, options);
     return layer.getOutput(type);
   }
@@ -318,6 +320,7 @@ public class Input<T extends TNumber> extends Layer<T> {
    * {@link #call} methods
    *
    * @param resultType the output data type
+   * @param <U> the data type for the result
    * @return the output Operand.
    */
   public <U extends TType> Operand<U> getOutput(Class<U> resultType) {

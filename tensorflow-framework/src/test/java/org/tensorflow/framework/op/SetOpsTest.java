@@ -34,9 +34,10 @@ class SetOpsTest {
         int[][] expected = new int[][] {{1, 9}, {0, 0}};
         Shape expectedShape = Shape.of(2, 2);
         for (Class<? extends TType> type : types) {
+          // Use raw type because of changing type in for loop
           Operand aa = cast(tf, a, type);
           Operand bb = cast(tf, b, type);
-          Operand<? extends TType> intersection = fops.sets.intersection(aa, bb);
+          Operand intersection = fops.sets.intersection(aa, bb);
           session.evaluate(cast(tf, tf.constant(expected), type), intersection);
           session.evaluate(tf.constant(expectedShape), tf.shape(intersection, TInt64.class));
         }

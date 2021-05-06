@@ -322,6 +322,11 @@ public class InputSpec {
     private Map<Integer, Long> axes;
     private boolean allowLastAxisSqueeze;
 
+    /**
+     * Creates an InputSpecs.Options instance
+     *
+     * @return the InputSpecs.Options instance
+     */
     public static Options create() {
       return new Options();
     }
@@ -329,6 +334,7 @@ public class InputSpec {
     /**
      * Sets the expected Data Type of the input.
      *
+     * @param dataType the expected Data Type of the input.
      * @return this Options instance.
      */
     public Options dataType(Class<? extends TType> dataType) {
@@ -340,6 +346,7 @@ public class InputSpec {
      * Sets the expected shape of the input (may include {@link Shape#UNKNOWN_SIZE} for unchecked
      * axes). Includes the batch size.
      *
+     * @param shape the expected shape of the input
      * @return this Options instance.
      */
     public Options shape(Shape shape) {
@@ -350,6 +357,7 @@ public class InputSpec {
     /**
      * Sets the expected rank of the input
      *
+     * @param rank the expected rank of the input
      * @return this Options instance.
      */
     public Options rank(Integer rank) {
@@ -360,6 +368,7 @@ public class InputSpec {
     /**
      * Sets the maximum rank of the input.
      *
+     * @param maxRank the maximum rank of the input.
      * @return this Options instance.
      */
     public Options maxRank(Integer maxRank) {
@@ -370,6 +379,7 @@ public class InputSpec {
     /**
      * Sets the minimum rank of the input.
      *
+     * @param minRank the minimum rank of the input.
      * @return this Options instance.
      */
     public Options minRank(Integer minRank) {
@@ -379,6 +389,7 @@ public class InputSpec {
     /**
      * Sets the Dictionary mapping integer axes to a specific dimension value.
      *
+     * @param axes the Dictionary mapping integer axes to a specific dimension value.
      * @return this Options instance.
      */
     public Options axesMap(Map<Integer, Long> axes) {
@@ -388,6 +399,8 @@ public class InputSpec {
     /**
      * Sets the Dictionary mapping integer axes to a specific dimension value.
      *
+     * @param key the integer axis
+     * @param dim the dimension value for the specified axis
      * @return this Options instance.
      */
     public Options axesMap(Integer key, Long dim) {
@@ -403,6 +416,8 @@ public class InputSpec {
      * N+1 as long as the last axis of the input is 1, as well as inputs of rank N-1 as long as the
      * last axis of the spec is 1.
      *
+     * @param allowLastAxisSqueeze indicator that the allow last axis squeeze indicator for the
+     *     input
      * @return this Options instance.
      */
     public Options allowLastAxisSqueeze(boolean allowLastAxisSqueeze) {

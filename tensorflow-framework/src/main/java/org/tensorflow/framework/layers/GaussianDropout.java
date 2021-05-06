@@ -83,11 +83,9 @@ public class GaussianDropout<T extends TFloating> extends Layer<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the weights and computation
    */
-  public GaussianDropout(
-          Ops tf, String name, float rate, long seed, Class<T> type) {
+  public GaussianDropout(Ops tf, String name, float rate, long seed, Class<T> type) {
     this(tf, name, rate, seed, type, null);
   }
-
 
   /**
    * Creates a GaussianDropout layer
@@ -112,7 +110,6 @@ public class GaussianDropout<T extends TFloating> extends Layer<T> {
   }
 
   /** {@inheritDoc} */
-  @SuppressWarnings("unchecked")
   @Override
   public <U extends TType> List<Operand<U>> call(
       List<Operand<? extends TType>> inputs,
@@ -127,10 +124,10 @@ public class GaussianDropout<T extends TFloating> extends Layer<T> {
 
       Operand<T> output = cast(tf, input, getType());
 
+      // if in training mode do dropout, otherwise don't
+      //noinspection IfStatementWithIdenticalBranches
       if (training && rate >= 0 && rate <= 1) {
-
         Operand<T> rateV = cast(tf, tf.constant(rate), getType());
-
         output = dropout(output, rateV, seed);
         outputs.add(output);
       } else {

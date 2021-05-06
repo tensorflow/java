@@ -16,10 +16,12 @@ package org.tensorflow.framework.op;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.op.nn.SigmoidCrossEntropyWithLogits;
+import org.tensorflow.framework.op.nn.Softmax;
 import org.tensorflow.framework.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SparseSoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -190,5 +192,19 @@ public class NnOps {
       Operand<U> labels, Operand<T> logits) {
     return SparseSoftmaxCrossEntropyWithLogits.sparseSoftmaxCrossEntropyWithLogits(
         scope, labels, logits);
+  }
+
+  /**
+   * Calculates a Softmax operation. If the exis is not the last dimension, then the input axis is
+   * moved to the last axis berfore calling tf.nn.softmax, then restored before returning.
+   *
+   * @param input the input
+   * @param axis the axis
+   * @return the softmax of the input for the specified axis.
+   * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
+   * @param <T> the data type for the input and result
+   */
+  public <T extends TFloating> Operand<T> softmax(Operand<T> input, int axis){
+    return Softmax.softmax(scope, input, axis);
   }
 }

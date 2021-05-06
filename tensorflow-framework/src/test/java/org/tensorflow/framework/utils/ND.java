@@ -14,7 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.utils;
 
-import org.tensorflow.ndarray.*;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.FloatNdArray;
+import org.tensorflow.ndarray.NdArray;
+import org.tensorflow.ndarray.NdArrays;
+import org.tensorflow.ndarray.Shape;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;

@@ -15,7 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ConcatenateTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -92,7 +94,9 @@ class ConcatenateTest {
               Layer.Options.create().inputShape(Shape.of(4, 5)));
       Concatenate<TFloat64> instance = new Concatenate<>(tf, 1, TFloat64.class);
       List<Operand<TFloat64>> resultList =
-          instance.call(Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)), TFloat64.class);
+          instance.call(
+              Arrays.asList(i1.getOutput(TFloat64.class), i2.getOutput(TFloat64.class)),
+              TFloat64.class);
 
       Operand<TFloat64> result = resultList.get(0);
 

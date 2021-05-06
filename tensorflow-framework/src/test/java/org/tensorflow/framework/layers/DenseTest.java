@@ -26,7 +26,6 @@ import org.tensorflow.types.TFloat32;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -34,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class DenseTest {
 
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-  private final Random random = new Random(1001L);
 
   @Test
   public void testShape3_2() {
@@ -45,7 +43,8 @@ public class DenseTest {
       int units = 3;
 
       Dense<TFloat32> instance =
-          new Dense<>(tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
+          new Dense<>(
+              tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
 
       float[][] data = {
         {6.600953f, 4.659476f},
@@ -83,7 +82,8 @@ public class DenseTest {
       int units = 3;
 
       Dense<TFloat32> instance =
-          new Dense<>(tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
+          new Dense<>(
+              tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
 
       float[][] inputArray = {
         {6.600953f, 4.659476f},
@@ -126,7 +126,8 @@ public class DenseTest {
       int units = 3;
 
       Dense<TFloat32> instance =
-          new Dense<>(tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
+          new Dense<>(
+              tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
 
       Shape fullShape = Shape.of(5, 10, 2);
       float[][][] data = {
@@ -280,7 +281,8 @@ public class DenseTest {
       Shape inputShape = Shape.of(3, 4, 5, 2);
 
       Dense<TFloat32> instance =
-          new Dense<>(tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
+          new Dense<>(
+              tf, units, 1001L, TFloat32.class, Layer.Options.create().inputShape(inputShape));
       assertEquals("Dense", instance.getName());
       session.run(tf.init());
 
@@ -505,8 +507,11 @@ public class DenseTest {
               true,
               null,
               null,
-              nonNeg,
-              nonNeg,
+              null,
+              null,
+              null,
+              nonNeg::call,
+              nonNeg::call,
               1001L,
               TFloat32.class,
               Layer.Options.create().inputShape(inputShape));
@@ -526,11 +531,12 @@ public class DenseTest {
         {-0, 4, -0}
       };
 
-      float[] biasConstraintInput = { -1, 2, 5 };
-      float[] biasConstraintExpected = { -0, 2, 5  };
+      float[] biasConstraintInput = {-1, 2, 5};
+      float[] biasConstraintExpected = {-0, 2, 5};
 
       Operand<TFloat32> input = tf.constant(data);
 
+      @SuppressWarnings("unused")
       Operand<TFloat32> y = instance.call(input, TFloat32.class);
       // initialize variables
       session.run(tf.init());
@@ -542,15 +548,14 @@ public class DenseTest {
       Variable<TFloat32> kernel = instance.getKernel();
       Operand<TFloat32> varUpdate = instance.assign(kernel, tf.constant(constraintInput));
       session.run(varUpdate);
-      session.evaluate(tf.constant(constraintExpected), kernel);
+      session.evaluate(tf.constant(constraintExpected), instance.applyConstraint(kernel));
 
       // test bias
       Variable<TFloat32> bias = instance.getBias();
       assertEquals(Shape.of(units), bias.shape());
       varUpdate = instance.assignAdd(bias, tf.constant(biasConstraintInput));
       session.run(varUpdate);
-      session.evaluate(tf.constant(biasConstraintExpected), bias);
-
+      session.evaluate(tf.constant(biasConstraintExpected), instance.applyConstraint(bias));
     }
   }
 
@@ -565,42 +570,46 @@ public class DenseTest {
       MinMaxNorm minMaxNorm = new MinMaxNorm(tf);
 
       Dense<TFloat32> instance =
-              new Dense<>(
-                      tf,
-                      "constraintTest",
-                      units,
-                      null,
-                      true,
-                      null,
-                      null,
-                      minMaxNorm,
-                      minMaxNorm,
-                      1001L,
-                      TFloat32.class,
-                      Layer.Options.create().inputShape(inputShape));
+          new Dense<>(
+              tf,
+              "constraintTest",
+              units,
+              null,
+              true,
+              null,
+              null,
+              null,
+              null,
+              null,
+              minMaxNorm::call,
+              minMaxNorm::call,
+              1001L,
+              TFloat32.class,
+              Layer.Options.create().inputShape(inputShape));
 
       float[][] data = {
-              {6.600953f, 4.659476f},
-              {6.943807f, 2.113826f},
-              {4.667166f, 6.931125f}
+        {6.600953f, 4.659476f},
+        {6.943807f, 2.113826f},
+        {4.667166f, 6.931125f}
       };
 
       float[][] constraintInput = {
-              {1, 0.5f, 2},
-              {-2, 0.75f, 0}
+        {1, 0.5f, 2},
+        {-2, 0.75f, 0}
       };
       float[][] constraintExpected = {
-              { 0.447214f, 0.5f, 1},
-              {-0.894427f, 0.75f, 0}
+        {0.447214f, 0.5f, 1},
+        {-0.894427f, 0.75f, 0}
       };
 
-      float[] biasConstraintInput = { -1, 2, 5 };
-      float[] biasConstraintExpected = {  -0.182574f,0.365148f, 0.912871f };
+      float[] biasConstraintInput = {-1, 2, 5};
+      float[] biasConstraintExpected = {-0.182574f, 0.365148f, 0.912871f};
 
       Operand<TFloat32> input = tf.constant(data);
 
+      @SuppressWarnings("unused")
       Operand<TFloat32> y = instance.call(input, TFloat32.class);
-      //initialize variables
+      // initialize variables
       session.run(tf.init());
 
       List<Variable<TFloat32>> weights = instance.getWeights();
@@ -610,7 +619,7 @@ public class DenseTest {
       Variable<TFloat32> kernel = instance.getKernel();
       Operand<TFloat32> varUpdate = instance.assign(kernel, tf.constant(constraintInput));
       session.run(varUpdate);
-      session.evaluate(tf.constant(constraintExpected), kernel);
+      session.evaluate(tf.constant(constraintExpected), instance.applyConstraint(kernel));
 
       // test bias
       Variable<TFloat32> bias = instance.getBias();
@@ -618,8 +627,7 @@ public class DenseTest {
 
       varUpdate = instance.assignAdd(bias, tf.constant(biasConstraintInput));
       session.run(varUpdate);
-      session.evaluate(tf.constant(biasConstraintExpected), bias);
-
+      session.evaluate(tf.constant(biasConstraintExpected), instance.applyConstraint(bias));
     }
   }
 }

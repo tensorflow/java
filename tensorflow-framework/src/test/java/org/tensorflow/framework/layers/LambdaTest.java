@@ -21,7 +21,7 @@ class LambdaTest {
       Shape shape = Shape.of(3, 2);
 
       Lambda<TFloat32> instance = new Lambda<>(tf, TFloat32.class);
-      instance.setLamda((t, y) -> t.math.mul(cast(t, t.constant(2), y.type()), y));
+      instance.setLambda((t, y) -> t.math.mul(cast(t, t.constant(2), y.type()), y));
 
       double[][] array = {
         {0.41448207, 0.71509451}, {0.21307868, 0.76890945}, {0.37533432, 0.7761148}

@@ -15,16 +15,17 @@ limitations under the License.
 package org.tensorflow.framework.layers;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.constraints.Constraint;
 import org.tensorflow.framework.initializers.Initializer;
 import org.tensorflow.framework.layers.impl.InputSpec;
 import org.tensorflow.framework.layers.impl.VariableDef;
 import org.tensorflow.framework.losses.Loss;
 import org.tensorflow.framework.metrics.Metric;
+import org.tensorflow.framework.regularizers.Regularizer;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
+import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
@@ -59,6 +61,9 @@ public abstract class Layer<T extends TNumber> {
   private final List<Variable<T>> trainableWeights = new ArrayList<>();
   private final List<Variable<T>> nonTrainableWeights = new ArrayList<>();
   private final List<Loss> losses = new ArrayList<>();
+  // some loss operations don't have an associated Loss class, so this property holds
+  // the Operands to calculate the loss, used in the model.
+  private final List<Operand<T>> lossOperations = new ArrayList<>();
   private final List<Metric<? extends TNumber>> metrics = new ArrayList<>();
   private final Map<Variable<T>, VariableDef<T>> variableMap = new HashMap<>();
   // Note that, unlike other classes, tf may not be set in the constructor, but may be set later.
@@ -66,8 +71,7 @@ public abstract class Layer<T extends TNumber> {
   // sets the tf instance probably during the model.compile phase.
   private final Ops tf;
   private boolean trainable;
-  // TODO change to Regularizer class
-  private Object activityRegularizer;
+  private Regularizer activityRegularizer;
   private boolean built;
   private boolean stateful;
   private boolean supportsMasking;
@@ -148,12 +152,12 @@ public abstract class Layer<T extends TNumber> {
    * Invokes the layer's algorithm using a single input, returning a single output. Training mode is
    * true.
    *
-   * <p>This is a convenience call on top of {@link {@link #call}}.
+   * <p>This is a convenience call on top of {@link #call}}.
    *
    * @param input the input Operand
    * @return the output Operand, or null if no output is generated from the layer's logic.
    */
-  public  Operand<T> call(Operand<? extends TType> input) {
+  public Operand<T> call(Operand<? extends TType> input) {
 
     return call(input, null, true, getType());
   }
@@ -162,9 +166,11 @@ public abstract class Layer<T extends TNumber> {
    * Invokes the layer's algorithm using a single input, returning a single output. Training mode is
    * true.
    *
-   * <p>This is a convenience call on top of {@link {@link #call}}.
+   * <p>This is a convenience call on top of {@link #call}}.
    *
    * @param input the input Operand
+   * @param type the data type for the result
+   * @param <U> the data type for the result
    * @return the output Operand, or null if no output is generated from the layer's logic.
    */
   public <U extends TType> Operand<U> call(Operand<? extends TType> input, Class<U> type) {
@@ -179,6 +185,8 @@ public abstract class Layer<T extends TNumber> {
    *
    * @param input the input Operand
    * @param training whether the call is in inference mode or training mode
+   * @param type the data type for the result
+   * @param <U> the data type for the result
    * @return the output Operand, or null if no output is generated from the layer's logic.
    */
   public <U extends TType> Operand<U> call(
@@ -194,6 +202,8 @@ public abstract class Layer<T extends TNumber> {
    * @param input the input Operand
    * @param mask the mask to apply to the result, may be null
    * @param training whether the call is in inference mode or training mode
+   * @param type the data type for the result
+   * @param <U> the data type for the result
    * @return the output Operand, or null if no output is generated from the layer's logic.
    */
   public <U extends TType> Operand<U> call(
@@ -207,6 +217,8 @@ public abstract class Layer<T extends TNumber> {
    * Invokes the layer's algorithm Training mode is true.
    *
    * @param inputs the input Operands
+   * @param type the data type for the result
+   * @param <U> the data type for the result
    * @return the output Operands
    */
   public <U extends TType> List<Operand<U>> call(
@@ -220,6 +232,8 @@ public abstract class Layer<T extends TNumber> {
    * @param inputs the input Operands
    * @param masks a list of masks, one for each input, to apply to the result, may be null
    * @param training whether the call is in inference mode or training mode
+   * @param type the data type for the result
+   * @param <U> the data type for the result
    * @return the output Operands.
    */
   public abstract <U extends TType> List<Operand<U>> call(
@@ -232,11 +246,26 @@ public abstract class Layer<T extends TNumber> {
    * Post processes a layer's call result
    *
    * @param inputs the input Operands
+   * @param training true if in training mode
+   * @param <U> the data type of the inputs and result
    * @return the output Operands.
    */
   protected <U extends TType> List<Operand<U>> callPostProcess(
-      List<Operand<U>> inputs, boolean training) {
-    return handleActivityRegister(inputs);
+      List<Operand<U>> inputs, @SuppressWarnings("unused") boolean training) {
+    if (activityRegularizer != null && !inputs.isEmpty()) {
+      boolean aTNumber = TNumber.class.isAssignableFrom(inputs.get(0).type());
+      if (aTNumber) {
+        inputs.forEach(
+            input -> {
+              if (input.type() != TString.class) {
+                Operand<T> tInput = cast(tf, input, getType());
+                addLossOperation(activityRegularizer.call(tInput));
+              }
+            });
+      }
+    }
+
+    return inputs;
   }
 
   /**
@@ -252,6 +281,8 @@ public abstract class Layer<T extends TNumber> {
    * Converts a list of inputs to a new list of the internal data type defined for this layer.
    *
    * @param inputs the inputs.
+   * @param resultType the data type of the result
+   * @param <U> the data type of the result
    * @return the new list converted to the new type.
    */
   protected <U extends TType> List<Operand<U>> convertList(
@@ -274,16 +305,6 @@ public abstract class Layer<T extends TNumber> {
     List<Operand<R>> result = new ArrayList<>();
     inputs.forEach(input -> result.add(cast(getTF(), input, newType)));
     return result;
-  }
-
-  private <U extends TType> List<Operand<U>> handleActivityRegister(List<Operand<U>> inputs) {
-    if (this.activityRegularizer != null) {
-      // TODO activityRegularizer
-      return inputs;
-
-    } else {
-      return inputs;
-    }
   }
 
   /**
@@ -407,21 +428,28 @@ public abstract class Layer<T extends TNumber> {
    * @param name the variable's name
    * @param shape the variable's shape
    * @param initializer the variable initializer
+   * @param constraint a constraint to be applied to the weight
+   * @param regularizer Regularizer instance
    * @param trainable whether the variable should be part of the layer's "trainableWeights"
+   * @param seed a seed value for random number generation
    * @throws IllegalStateException if the property {@link #tf} has not been set yet.
+   * @return the variable created for the weight
    */
   public Variable<T> addWeight(
       String name,
       Shape shape,
       Initializer<T> initializer,
-      Constraint constraint,
+      UnaryOperator<Operand<T>> constraint,
+      Regularizer regularizer,
       boolean trainable,
       long seed) {
     if (tf == null) {
       throw new IllegalStateException("Parameter \"tf\" has not been set");
     }
+
     VariableDef<T> variableDef =
-        new VariableDef<>(tf, name, shape, initializer, constraint, trainable, seed, getType());
+        new VariableDef<>(
+            tf, name, shape, initializer, constraint, regularizer, trainable, seed, getType());
 
     Variable<T> variable = variableDef.getVariable();
 
@@ -433,20 +461,35 @@ public abstract class Layer<T extends TNumber> {
   }
 
   /**
+   * Gets the VariableDef for the specified variable
+   *
+   * @param variable the variable
+   * @return the VariableDef
+   */
+  public VariableDef<T> getVariableDef(Variable<T> variable) {
+    return variableMap.get(variable);
+  }
+
+  /**
    * Adds a weight to the layer
    *
+   * @param name the weight name
    * @param variable the variable to add
    * @param initializer the variable initializer
+   * @param constraint the constraint on the variable
+   * @param regularizer the regularizer for the variable
    * @param trainable whether the variable should be part of the layer's "trainableWeights"
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and type.
    * @throws IllegalStateException if the property {@link #tf} has not been set yet.
+   * @return the variable created for the weight
    */
   public Variable<T> addWeight(
       String name,
       Variable<T> variable,
       Initializer<T> initializer,
-      Constraint constraint,
+      UnaryOperator<Operand<T>> constraint,
+      Regularizer regularizer,
       boolean trainable,
       long seed) {
     if (tf == null) {
@@ -456,7 +499,8 @@ public abstract class Layer<T extends TNumber> {
       throw new IllegalStateException("Parameter \"variable\" has not been set");
     }
     VariableDef<T> variableDef =
-        new VariableDef<>(tf, name, variable, initializer, constraint, trainable, seed);
+        new VariableDef<>(
+            tf, name, variable, initializer, constraint, regularizer, trainable, seed);
     variableMap.put(variable, variableDef);
     weights.add(variable);
     if (trainable) trainableWeights.add(variable);
@@ -489,7 +533,7 @@ public abstract class Layer<T extends TNumber> {
   public Operand<T> initializeWeight(Variable<T> weight, long seed) {
     VariableDef<T> varDef = variableMap.get(weight);
     if (varDef == null) { // this should not happen if addWeight was used to create/add the weight
-      addWeight(null, weight, null, null, true, seed);
+      addWeight(null, weight, null, null, null, true, seed);
       varDef = variableMap.get(weight);
     }
     return varDef.init();
@@ -528,6 +572,15 @@ public abstract class Layer<T extends TNumber> {
   }
 
   /**
+   * Gets the Loss Operations assigned to this layer
+   *
+   * @return the Loss Operations assigned to this layer
+   */
+  public List<Operand<T>> getLossOperations() {
+    return lossOperations;
+  }
+
+  /**
    * Adds a loss to this layer
    *
    * @param loss the loss to add
@@ -537,12 +590,30 @@ public abstract class Layer<T extends TNumber> {
   }
 
   /**
+   * Adds a loss operation to this layer
+   *
+   * @param lossOperation the loss operation
+   */
+  public void addLossOperation(Operand<T> lossOperation) {
+    this.lossOperations.add(lossOperation);
+  }
+
+  /**
    * Adds losses to this layer
    *
    * @param losses the losses to add
    */
   public void addLosses(List<Loss> losses) {
     this.losses.addAll(losses);
+  }
+
+  /**
+   * Adds loss operations to this layer
+   *
+   * @param lossOperations the loss operations to add
+   */
+  public void addLossOperations(List<Operand<T>> lossOperations) {
+    this.lossOperations.addAll(lossOperations);
   }
 
   /**
@@ -577,6 +648,7 @@ public abstract class Layer<T extends TNumber> {
    *
    * @return true, if the build method has been called.
    */
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   public boolean isBuilt() {
     return built;
   }
@@ -749,8 +821,7 @@ public abstract class Layer<T extends TNumber> {
    *
    * @param activityRegularizer the activity Regularizer
    */
-  // TODO change to Regularizer class
-  public void setActivityRegularizer(Object activityRegularizer) {
+  public void setActivityRegularizer(Regularizer activityRegularizer) {
     this.activityRegularizer = activityRegularizer;
   }
 
@@ -781,7 +852,7 @@ public abstract class Layer<T extends TNumber> {
    * @throws IllegalArgumentException if the variable is not known.
    */
   public Operand<T> assign(Variable<T> variable, Operand<T> value) {
-    VariableDef varDef = variableMap.get(variable);
+    VariableDef<T> varDef = variableMap.get(variable);
     if (varDef == null) {
       throw new IllegalStateException(String.format("Variable %s was not found.", variable));
     }
@@ -797,7 +868,7 @@ public abstract class Layer<T extends TNumber> {
    * @throws IllegalArgumentException if the variable is not known.
    */
   public Operand<T> assignAdd(Variable<T> variable, Operand<T> value) {
-    VariableDef varDef = variableMap.get(variable);
+    VariableDef<T> varDef = variableMap.get(variable);
     if (varDef == null) {
       throw new IllegalStateException(String.format("Variable %s was not found.", variable));
     }
@@ -813,7 +884,7 @@ public abstract class Layer<T extends TNumber> {
    * @throws IllegalArgumentException if the variable is not known.
    */
   public Operand<T> assignSub(Variable<T> variable, Operand<T> value) {
-    VariableDef varDef = variableMap.get(variable);
+    VariableDef<T> varDef = variableMap.get(variable);
     if (varDef == null) {
       throw new IllegalStateException(String.format("Variable %s was not found.", variable));
     }
@@ -827,8 +898,7 @@ public abstract class Layer<T extends TNumber> {
     protected Long batchSize;
     protected List<Metric<? extends TNumber>> metrics;
     protected List<Loss> losses;
-    // TODO change to Regularizer class
-    protected Object activityRegularizer;
+    protected Regularizer activityRegularizer;
 
     public static Options create() {
       return new Options();
@@ -873,8 +943,7 @@ public abstract class Layer<T extends TNumber> {
      * @param activityRegularizer the activity Regularizer
      * @return this Options instance
      */
-    // TODO change to Regularizer class
-    public Layer.Options activityRegularizer(Object activityRegularizer) {
+    public Layer.Options activityRegularizer(Regularizer activityRegularizer) {
       this.activityRegularizer = activityRegularizer;
       return this;
     }

@@ -81,7 +81,10 @@ class ReLUTest {
       float negativeSlope = 0.2f;
       ReLU<TFloat32> instance =
           new ReLU<>(
-              tf, negativeSlope, TFloat32.class, Layer.Options.create().inputShape(Shape.of(2, 3, 4)));
+              tf,
+              negativeSlope,
+              TFloat32.class,
+              Layer.Options.create().inputShape(Shape.of(2, 3, 4)));
 
       Operand<TFloat32> result = instance.call(tf.constant(inputArray), TFloat32.class);
 
@@ -119,8 +122,7 @@ class ReLUTest {
               Layer.Options.create().inputShape(Shape.of(2, 3, 4)));
 
       Operand<TFloat64> result =
-          instance.call(
-              tf.dtypes.cast(tf.constant(inputArray), TFloat64.class), TFloat64.class);
+          instance.call(tf.dtypes.cast(tf.constant(inputArray), TFloat64.class), TFloat64.class);
 
       session.evaluate(tf.constant(expectedArray), result);
     }
