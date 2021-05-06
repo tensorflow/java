@@ -26,6 +26,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.train.ApplyAdam;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
@@ -237,7 +238,8 @@ public class Adam extends Optimizer {
         tf.dtypes.cast(betaOneConst, gradient.type()),
         tf.dtypes.cast(betaTwoConst, gradient.type()),
         tf.dtypes.cast(epsilonConst, gradient.type()),
-        gradient);
+        gradient,
+        ApplyAdam.useLocking(true));
   }
 
   /**

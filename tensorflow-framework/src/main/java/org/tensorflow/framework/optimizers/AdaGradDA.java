@@ -22,6 +22,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.train.ApplyAdagradDa;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -219,7 +220,8 @@ public class AdaGradDA extends Optimizer {
         tf.dtypes.cast(tf.constant(learningRate), gradient.type()),
         tf.dtypes.cast(tf.constant(l1Strength), gradient.type()),
         tf.dtypes.cast(tf.constant(l2Strength), gradient.type()),
-        globalStep);
+        globalStep,
+        ApplyAdagradDa.useLocking(true));
   }
 
   /**
