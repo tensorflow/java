@@ -21,6 +21,7 @@ import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
+import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.Range;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.Reshape;
@@ -40,8 +41,8 @@ import java.util.Arrays;
 public class Softmax {
 
   /**
-   * Calculates a Softmax operation. If the exis is not the last dimension, then the input axis is
-   * moved to the last axis berfore calling tf.nn.softmax, then restored before returning.
+   * Calculates a Softmax operation. If the axis is not the last dimension, then the input axis is
+   * moved to the last axis before calling tf.nn.softmax, then restored before returning.
    *
    * @param scope The TensorFlow scope
    * @param input the input
@@ -58,25 +59,30 @@ public class Softmax {
       return org.tensorflow.op.nn.Softmax.create(scope, input);
     }
 
-    if (axis <= -shape.numDimensions() || axis >= shape.numDimensions()) {
+    // validate axis
+    if (!(-shape.numDimensions() <= axis && axis < shape.numDimensions())) {
       throw new IllegalArgumentException(
           String.format(
               "Axis (%d) must be in the range [%d, %d] where %d is the number of dimensions in the input.",
               axis, -shape.numDimensions(), shape.numDimensions(), shape.numDimensions()));
     }
 
+    // If dim is not the last dimension, we have to do a transpose so that we can
+    // still perform the op on its  last dimension.
+
+    // In case dim is negative (and is not last dimension -1), convert to positive
     int dim = Math.floorMod(axis, shape.numDimensions());
-    Operand<TInt32> rank = Rank.create(scope, input);
+    Operand<TInt32> inputRank = Rank.create(scope, input);
     Operand<TInt32> dimOp = Constant.scalarOf(scope, dim);
     Operand<TInt32> one = Constant.scalarOf(scope, 1);
-    Operand<TInt32> lastIndex = Sub.create(scope, rank, one);
+    Operand<TInt32> lastIndex = Sub.create(scope, inputRank, one);
     Operand<T> swappedInputs = swapAxis(scope, input, dimOp, lastIndex);
     Operand<T> output = org.tensorflow.op.nn.Softmax.create(scope, swappedInputs);
     return fixOutput(scope, output, shape, dimOp, lastIndex);
   }
 
   /**
-   * Restores the specified axis, then reshapes the input to the provided shaoe.
+   * Restores the specified axis, then reshapes the input to the provided shape.
    *
    * @param scope The TensorFlow scope
    * @param output the output
@@ -104,15 +110,13 @@ public class Softmax {
 
     Operand<TInt32> zero = Constant.scalarOf(scope, 0);
     Operand<TInt32> one = Constant.scalarOf(scope, 1);
+    Operand<TInt32> minus1 = Constant.scalarOf(scope, -1);
+    Operand<TInt32> range1 = Range.create(scope, zero, dim, one);
+    Operand<TInt32> range2 = Range.create(scope, Add.create(scope, dim, one), lastIndex, one);
+    Operand<TInt32> xDim = ExpandDims.create(scope, dim, minus1);
+    Operand<TInt32> xLastIndex = ExpandDims.create(scope, lastIndex, minus1);
+
     return Transpose.create(
-        scope,
-        input,
-        Concat.create(
-            scope,
-            Arrays.asList(
-                Range.create(scope, zero, dim, one),
-                Range.create(scope, Add.create(scope, dim, one), lastIndex, one),
-                dim),
-            zero));
+        scope, input, Concat.create(scope, Arrays.asList(range1, xLastIndex, range2, xDim), zero));
   }
 }
