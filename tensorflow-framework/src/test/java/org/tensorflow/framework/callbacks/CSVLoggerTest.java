@@ -38,6 +38,7 @@ public class CSVLoggerTest {
       int epoch = 0;
       double[] values = {0.95, 0.90, 0.85, 0.90, 0.99, Double.NaN};
       File tmpFile = File.createTempFile("tf-test", ".csv");
+      tmpFile.deleteOnExit();
       Map<String, Number> logs = new HashMap<>();
       try (CSVLogger<TFloat64> csvLogger = new CSVLogger<>(tmpFile)) {
         csvLogger.onTrainBegin(null);
@@ -58,8 +59,6 @@ public class CSVLoggerTest {
             double v = Double.valueOf(valueStr);
             assertEquals(values[iv++], v, 0e-6);
           }
-        } finally {
-          tmpFile.deleteOnExit();
         }
       }
 
@@ -75,6 +74,7 @@ public class CSVLoggerTest {
       double[] valuesAcc = {0.95, 0.90, 0.85, 0.90, 0.99, Double.NaN};
       double[] valuesErr = {1e-1, 1e-2, 1e-3, 1e-4, 1e-5, Double.NaN};
       File tmpFile = File.createTempFile("tf-test", ".csv");
+      tmpFile.deleteOnExit();
       Map<String, Number> logs = new HashMap<>();
       try (CSVLogger<TFloat64> csvLogger = new CSVLogger<>(tmpFile)) {
         csvLogger.onTrainBegin(null);
@@ -101,8 +101,6 @@ public class CSVLoggerTest {
             assertEquals(valuesErr[iv], e, 0e-8);
             iv++;
           }
-        } finally {
-          tmpFile.deleteOnExit();
         }
       }
 

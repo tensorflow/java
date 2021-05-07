@@ -40,7 +40,7 @@ class ProgbarLoggerTest {
     File tmpFile = null;
     try {
       tmpFile = File.createTempFile("tf-test-progbar", ".txt");
-      System.out.println(tmpFile);
+      tmpFile.deleteOnExit();
       try (PrintWriter writer = new PrintWriter(new FileWriter(tmpFile))) {
         int numEpochs = 1;
         int numSteps = 10;
@@ -89,10 +89,6 @@ class ProgbarLoggerTest {
           });
     } catch (IOException ex) {
       fail(ex);
-    } finally {
-      if (tmpFile != null) {
-        // tmpFile.delete();
-      }
     }
   }
 
@@ -102,6 +98,7 @@ class ProgbarLoggerTest {
     File tmpFile = null;
     try {
       tmpFile = File.createTempFile("tf-test-progbar", ".txt");
+      tmpFile.deleteOnExit();
       try (PrintWriter writer = new PrintWriter(new FileWriter(tmpFile))) {
         int numEpochs = 10;
         int numSteps = 10;
@@ -158,10 +155,6 @@ class ProgbarLoggerTest {
 
     } catch (IOException ex) {
       fail(ex);
-    } finally {
-      if (tmpFile != null) {
-        tmpFile.delete();
-      }
     }
   }
 
