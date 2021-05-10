@@ -28,7 +28,6 @@ import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TFloating;
-import org.tensorflow.types.family.TNumber;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
@@ -43,8 +42,8 @@ public class NNhelper {
    *
    * @param scope the TensorFlow Scope
    * @param input the input
-   * @param computeOp  The function to wrap. Must accept the scope as the first argument, and the input as the second  argument.
-   *                   (e.g. {@code org.tensorflow.op.nn.Softmax::create}
+   * @param computeOp The function to wrap. Must accept the scope as the first argument, and the
+   *     input as the second argument. (e.g. {@code org.tensorflow.op.nn.Softmax::create}
    * @param axis The axisension the operation should operate on. {@code -1} indicates the last
    *     axisension.
    * @param <T> the data type from the input and the result.
@@ -52,7 +51,10 @@ public class NNhelper {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    */
   public static <T extends TFloating> Operand<T> wrap2DFunction(
-      Scope scope, Operand<T> input, BiFunction<Scope, Operand<T>, Operand<T>> computeOp, int axis) {
+      Scope scope,
+      Operand<T> input,
+      BiFunction<Scope, Operand<T>, Operand<T>> computeOp,
+      int axis) {
     Shape shape = input.shape();
     boolean isLastDim = axis == -1 || axis == shape.numDimensions() - 1;
     if (isLastDim) {
@@ -91,7 +93,11 @@ public class NNhelper {
    * @return the restored output based on the axisension and shape.
    */
   private static <T extends TFloating> Operand<T> fixOutput(
-      Scope scope, Operand<T> output, Shape shape, Operand<TInt32> axis, Operand<TInt32> lastIndex) {
+      Scope scope,
+      Operand<T> output,
+      Shape shape,
+      Operand<TInt32> axis,
+      Operand<TInt32> lastIndex) {
     Operand<T> result = swapAxis(scope, output, axis, lastIndex);
     return Reshape.create(scope, result, Constant.tensorOf(scope, shape));
   }
