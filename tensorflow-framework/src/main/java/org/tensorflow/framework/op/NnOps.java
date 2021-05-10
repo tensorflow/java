@@ -16,13 +16,14 @@ package org.tensorflow.framework.op;
 
 import org.tensorflow.Operand;
 import org.tensorflow.framework.op.nn.SigmoidCrossEntropyWithLogits;
-import org.tensorflow.framework.op.nn.Softmax;
 import org.tensorflow.framework.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SparseSoftmaxCrossEntropyWithLogits;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.op.nn.NNhelper.wrap2DFunction;
 
 /**
  * An API for building {@code nn} operations as {@link Op Op}s
@@ -194,9 +195,22 @@ public class NnOps {
         scope, labels, logits);
   }
 
+
   /**
-   * Calculates a Softmax operation. If the exis is not the last dimension, then the input axis is
-   * moved to the last axis berfore calling tf.nn.softmax, then restored before returning.
+   * Calculates a Softmax operation operation on the last dimension
+   *
+   * @param input the input
+   * @return the softmax of the input for the specified axis.
+   * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
+   * @param <T> the data type for the input and result
+   */
+  public  <T extends TFloating> Operand<T> softmax(Operand<T> input) {
+    return wrap2DFunction( scope, input, org.tensorflow.op.nn.Softmax::create, -1 );
+  }
+
+  /**
+   * Calculates a Softmax operation. If the axis is not the last dimension, then the input axis is
+   * moved to the last axis before calling tf.nn.softmax, then restored before returning.
    *
    * @param input the input
    * @param axis the axis
@@ -204,7 +218,35 @@ public class NnOps {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    * @param <T> the data type for the input and result
    */
-  public <T extends TFloating> Operand<T> softmax(Operand<T> input, int axis){
-    return Softmax.softmax(scope, input, axis);
+  public  <T extends TFloating> Operand<T> softmax(Operand<T> input, int axis) {
+    return wrap2DFunction( scope, input, org.tensorflow.op.nn.Softmax::create, axis );
   }
+
+  /**
+   * Calculates a Log Softmax operation on the last dimension
+   *
+   * @param input the input
+   * @return the softmax of the input for the specified axis.
+   * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
+   * @param <T> the data type for the input and result
+   */
+  public  <T extends TFloating> Operand<T> logSoftmax(Operand<T> input) {
+    return wrap2DFunction( scope, input, org.tensorflow.op.nn.LogSoftmax::create, -1 );
+  }
+
+  /**
+   * Calculates a Log Softmax operation. If the axis is not the last dimension, then the input axis is
+   * moved to the last axis before calling tf.nn.softmax, then restored before returning.
+   *
+   * @param input the input
+   * @param axis the axis
+   * @return the softmax of the input for the specified axis.
+   * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
+   * @param <T> the data type for the input and result
+   */
+  public  <T extends TFloating> Operand<T> logSoftmax(Operand<T> input, int axis) {
+    return wrap2DFunction( scope, input, org.tensorflow.op.nn.LogSoftmax::create, axis );
+  }
+
+
 }

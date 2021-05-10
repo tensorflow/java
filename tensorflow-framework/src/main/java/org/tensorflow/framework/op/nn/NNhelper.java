@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@ package org.tensorflow.framework.op.nn;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.ExpandDims;
@@ -30,55 +28,57 @@ import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TFloating;
+import org.tensorflow.types.family.TNumber;
 
 import java.util.Arrays;
+import java.util.function.BiFunction;
 
-/**
- * Higher level operation for Softmax. This class will move the desired axis to the last axis, if
- * necessary, before calling the low level tf.nn.softmax method.
- */
-@Operator(group = "nn")
-public class Softmax {
-
+/** package private Helper class for nn functions */
+public class NNhelper {
   /**
-   * Calculates a Softmax operation. If the axis is not the last dimension, then the input axis is
-   * moved to the last axis before calling tf.nn.softmax, then restored before returning.
+   * Helper function for ops that accept and return 2d inputs of same shape.
    *
-   * @param scope The TensorFlow scope
+   * <p>It reshapes and transposes the inputs into a 2-D Tensor and then invokes the given function.
+   * The output would be transposed and reshaped back.
+   *
+   * @param scope the TensorFlow Scope
    * @param input the input
-   * @param axis the axis
-   * @return the softmax of the input for the specified axis.
+   * @param computeOp  The function to wrap. Must accept the scope as the first argument, and the input as the second  argument.
+   *                   (e.g. {@code org.tensorflow.op.nn.Softmax::create}
+   * @param axis The axisension the operation should operate on. {@code -1} indicates the last
+   *     axisension.
+   * @param <T> the data type from the input and the result.
+   * @return the result of the operation, the same shape as the input
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
-   * @param <T> the data type for the input and result
    */
-  @Endpoint(name = "softmax")
-  public static <T extends TFloating> Operand<T> softmax(Scope scope, Operand<T> input, int axis) {
+  public static <T extends TFloating> Operand<T> wrap2DFunction(
+      Scope scope, Operand<T> input, BiFunction<Scope, Operand<T>, Operand<T>> computeOp, int axis) {
     Shape shape = input.shape();
     boolean isLastDim = axis == -1 || axis == shape.numDimensions() - 1;
     if (isLastDim) {
-      return org.tensorflow.op.nn.Softmax.create(scope, input);
+      return computeOp.apply(scope, input);
     }
 
     // validate axis
     if (!(-shape.numDimensions() <= axis && axis < shape.numDimensions())) {
       throw new IllegalArgumentException(
           String.format(
-              "Axis (%d) must be in the range [%d, %d] where %d is the number of dimensions in the input.",
+              "Axis (%d) must be in the range [%d, %d] where %d is the number of axisensions in the input.",
               axis, -shape.numDimensions(), shape.numDimensions(), shape.numDimensions()));
     }
 
-    // If dim is not the last dimension, we have to do a transpose so that we can
-    // still perform the op on its  last dimension.
+    // If axis is not the last axisension, we have to do a transpose so that we can
+    // still perform the op on its  last axisension.
 
-    // In case dim is negative (and is not last dimension -1), convert to positive
-    int dim = Math.floorMod(axis, shape.numDimensions());
+    // In case axis is negative (and is not last axisension -1), convert to positive
+    int lAxis = Math.floorMod(axis, shape.numDimensions());
     Operand<TInt32> inputRank = Rank.create(scope, input);
-    Operand<TInt32> dimOp = Constant.scalarOf(scope, dim);
+    Operand<TInt32> axisOp = Constant.scalarOf(scope, lAxis);
     Operand<TInt32> one = Constant.scalarOf(scope, 1);
     Operand<TInt32> lastIndex = Sub.create(scope, inputRank, one);
-    Operand<T> swappedInputs = swapAxis(scope, input, dimOp, lastIndex);
-    Operand<T> output = org.tensorflow.op.nn.Softmax.create(scope, swappedInputs);
-    return fixOutput(scope, output, shape, dimOp, lastIndex);
+    Operand<T> swappedInputs = swapAxis(scope, input, axisOp, lastIndex);
+    Operand<T> output = computeOp.apply(scope, swappedInputs);
+    return fixOutput(scope, output, shape, axisOp, lastIndex);
   }
 
   /**
@@ -87,13 +87,12 @@ public class Softmax {
    * @param scope The TensorFlow scope
    * @param output the output
    * @param shape the desired shape
-   * @param dim the dimension to move
-   * @return the restored output based on the dimension and shape.
+   * @param axis the axisension to move
+   * @return the restored output based on the axisension and shape.
    */
   private static <T extends TFloating> Operand<T> fixOutput(
-      Scope scope, Operand<T> output, Shape shape, Operand<TInt32> dim, Operand<TInt32> lastIndex) {
-
-    Operand<T> result = swapAxis(scope, output, dim, lastIndex);
+      Scope scope, Operand<T> output, Shape shape, Operand<TInt32> axis, Operand<TInt32> lastIndex) {
+    Operand<T> result = swapAxis(scope, output, axis, lastIndex);
     return Reshape.create(scope, result, Constant.tensorOf(scope, shape));
   }
 
@@ -101,19 +100,19 @@ public class Softmax {
    * Moves the specified Axis to the last axis
    *
    * @param input the input
-   * @param dim the dimension to move
-   * @param lastIndex the last dimension
-   * @return input with the dimension swapped to the last dimension
+   * @param axis the axisension to move
+   * @param lastIndex the last axisension
+   * @return input with the axisension swapped to the last axisension
    */
   private static <T extends TFloating> Operand<T> swapAxis(
-      Scope scope, Operand<T> input, Operand<TInt32> dim, Operand<TInt32> lastIndex) {
+      Scope scope, Operand<T> input, Operand<TInt32> axis, Operand<TInt32> lastIndex) {
 
     Operand<TInt32> zero = Constant.scalarOf(scope, 0);
     Operand<TInt32> one = Constant.scalarOf(scope, 1);
     Operand<TInt32> minus1 = Constant.scalarOf(scope, -1);
-    Operand<TInt32> range1 = Range.create(scope, zero, dim, one);
-    Operand<TInt32> range2 = Range.create(scope, Add.create(scope, dim, one), lastIndex, one);
-    Operand<TInt32> xDim = ExpandDims.create(scope, dim, minus1);
+    Operand<TInt32> range1 = Range.create(scope, zero, axis, one);
+    Operand<TInt32> range2 = Range.create(scope, Add.create(scope, axis, one), lastIndex, one);
+    Operand<TInt32> xDim = ExpandDims.create(scope, axis, minus1);
     Operand<TInt32> xLastIndex = ExpandDims.create(scope, lastIndex, minus1);
 
     return Transpose.create(
