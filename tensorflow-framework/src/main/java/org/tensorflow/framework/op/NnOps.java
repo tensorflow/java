@@ -195,7 +195,6 @@ public class NnOps {
         scope, labels, logits);
   }
 
-
   /**
    * Calculates a Softmax operation operation on the last dimension
    *
@@ -204,8 +203,8 @@ public class NnOps {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    * @param <T> the data type for the input and result
    */
-  public  <T extends TFloating> Operand<T> softmax(Operand<T> input) {
-    return wrap2DFunction( scope, input, org.tensorflow.op.nn.Softmax::create, -1 );
+  public <T extends TFloating> Operand<T> softmax(Operand<T> input) {
+    return wrap2DFunction(scope, input, org.tensorflow.op.nn.Softmax::create, -1);
   }
 
   /**
@@ -218,8 +217,8 @@ public class NnOps {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    * @param <T> the data type for the input and result
    */
-  public  <T extends TFloating> Operand<T> softmax(Operand<T> input, int axis) {
-    return wrap2DFunction( scope, input, org.tensorflow.op.nn.Softmax::create, axis );
+  public <T extends TFloating> Operand<T> softmax(Operand<T> input, int axis) {
+    return wrap2DFunction(scope, input, org.tensorflow.op.nn.Softmax::create, axis);
   }
 
   /**
@@ -230,13 +229,13 @@ public class NnOps {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    * @param <T> the data type for the input and result
    */
-  public  <T extends TFloating> Operand<T> logSoftmax(Operand<T> input) {
-    return wrap2DFunction( scope, input, org.tensorflow.op.nn.LogSoftmax::create, -1 );
+  public <T extends TFloating> Operand<T> logSoftmax(Operand<T> input) {
+    return wrap2DFunction(scope, input, org.tensorflow.op.nn.LogSoftmax::create, -1);
   }
 
   /**
-   * Calculates a Log Softmax operation. If the axis is not the last dimension, then the input axis is
-   * moved to the last axis before calling tf.nn.softmax, then restored before returning.
+   * Calculates a Log Softmax operation. If the axis is not the last dimension, then the input axis
+   * is moved to the last axis before calling tf.nn.softmax, then restored before returning.
    *
    * @param input the input
    * @param axis the axis
@@ -244,9 +243,7 @@ public class NnOps {
    * @throws IllegalArgumentException if axis is not in the range [-rank - rank], exclusive
    * @param <T> the data type for the input and result
    */
-  public  <T extends TFloating> Operand<T> logSoftmax(Operand<T> input, int axis) {
-    return wrap2DFunction( scope, input, org.tensorflow.op.nn.LogSoftmax::create, axis );
+  public <T extends TFloating> Operand<T> logSoftmax(Operand<T> input, int axis) {
+    return wrap2DFunction(scope, input, org.tensorflow.op.nn.LogSoftmax::create, axis);
   }
-
-
 }
