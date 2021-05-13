@@ -28,6 +28,7 @@ import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Loader;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.TensorFlow;
 import org.tensorflow.ndarray.buffer.DataBuffer;
 import org.tensorflow.internal.c_api.TF_TString;
 import org.tensorflow.ndarray.impl.buffer.AbstractDataBuffer;
@@ -132,4 +133,8 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
   }
 
   private final TF_TString data;
+
+  static {
+    TensorFlow.init(); // make sure TF library is loaded before working with `TF_TString` native objects
+  }
 }
