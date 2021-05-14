@@ -404,6 +404,11 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   static {
-    TensorFlow.init();
+    try {
+      // Ensure that TensorFlow native library and classes are ready to be used
+      Class.forName("org.tensorflow.TensorFlow");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

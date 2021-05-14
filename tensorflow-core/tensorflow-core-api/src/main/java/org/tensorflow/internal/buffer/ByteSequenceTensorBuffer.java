@@ -135,6 +135,11 @@ public class ByteSequenceTensorBuffer extends AbstractDataBuffer<byte[]> {
   private final TF_TString data;
 
   static {
-    TensorFlow.init(); // make sure TF library is loaded before working with `TF_TString` native objects
+    try {
+      // Ensure that TensorFlow native library and classes are ready to be used
+      Class.forName("org.tensorflow.TensorFlow");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 }
