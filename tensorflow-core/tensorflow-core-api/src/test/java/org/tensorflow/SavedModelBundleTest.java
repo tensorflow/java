@@ -210,13 +210,13 @@ public class SavedModelBundleTest {
       args.clear();
 
       // variable unwrapping happens in Session, which is used by ConcreteFunction.call
-      ConcreteFunction getVariable = bundle.function("get_variable");
+      SessionFunction getVariable = bundle.function("get_variable");
       try (TFloat32 dummy = TFloat32.scalarOf(1.0f)) {
-        args.put("dummy",dummy);
+        args.put("dummy", dummy);
         // TF functions always require an input, so we supply a dummy one here
         // This test actually checks that resource variables can be loaded correctly.
         try (TFloat32 v = (TFloat32) getVariable.call(args)
-                    .get(getVariable.signature().outputNames().iterator().next())) {
+            .get(getVariable.signature().outputNames().iterator().next())) {
           assertEquals(2f, v.getFloat());
         }
       }
