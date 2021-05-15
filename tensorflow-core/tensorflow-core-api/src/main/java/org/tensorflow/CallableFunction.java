@@ -20,6 +20,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.tensorflow.Signature.TensorDescription;
 
+/**
+ * A function that can be called with tensors.
+ */
 public interface CallableFunction {
 
   /**
