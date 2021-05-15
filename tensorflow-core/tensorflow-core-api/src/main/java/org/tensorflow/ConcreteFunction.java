@@ -18,7 +18,6 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionSetAttrValueProto;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToFunction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -65,19 +64,19 @@ import org.tensorflow.types.family.TType;
  * Map<String, Tensor> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
  */
-public class ConcreteFunction implements AutoCloseable {
+public class ConcreteFunction implements AutoCloseable, CallableFunction {
 
 
   /**
    * Creates a function by building a new graph.
    *
    * <p>The {@code functionBuilder} must initialize the function graph from the provided
-   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors
-   * and fetch the output tensors on execution.
+   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors and fetch the output
+   * tensors on execution.
    *
    * <p>The function will be the owner of the new graph and its resulting session. Therefore,
-   * the function must be enclosed properly with a try-with-resources block to guarantee that all
-   * native resources will be freed once the function is discarded. For example:
+   * the function must be enclosed properly with a try-with-resources block to guarantee that all native resources will
+   * be freed once the function is discarded. For example:
    *
    * <pre>{@code
    * public class MyModel {
@@ -112,8 +111,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Create a function from a signature and an existing graph.
    *
    * <p>The function will keep the ownership of the session used to run the graph but not
-   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope of the
-   * function. For example:
+   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope of the function. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -130,7 +129,7 @@ public class ConcreteFunction implements AutoCloseable {
    * }</pre>
    *
    * @param signature signature of the function to create
-   * @param graph     a valid and initialized graph
+   * @param graph a valid and initialized graph
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Graph graph) {
@@ -141,8 +140,8 @@ public class ConcreteFunction implements AutoCloseable {
    * Create a function from a signature and a valid graph session.
    *
    * <p>The function will not own the session nor its graph, meaning that their lifetime
-   * can extend beyond the scope of the function. Therefore the function does not need to be closed
-   * after its usage. For example:
+   * can extend beyond the scope of the function. Therefore the function does not need to be closed after its usage. For
+   * example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -164,7 +163,7 @@ public class ConcreteFunction implements AutoCloseable {
    * }</pre>
    *
    * @param signature signature of the function to create
-   * @param session   a valid session to an initialized graph
+   * @param session a valid session to an initialized graph
    * @return a new function
    */
   public static ConcreteFunction create(Signature signature, Session session) {
@@ -174,6 +173,7 @@ public class ConcreteFunction implements AutoCloseable {
   /**
    * Returns the signature of this function
    */
+  @Override
   public Signature signature() {
     return signature;
   }
@@ -220,10 +220,10 @@ public class ConcreteFunction implements AutoCloseable {
 
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't
-   * already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
    *
-   * @param scope     the scope to call the function in
+   * @param scope the scope to call the function in
    * @param arguments the arguments to the call
    * @return the outputs of the function
    */
@@ -235,11 +235,16 @@ public class ConcreteFunction implements AutoCloseable {
 
     int i = 0;
     for (String inputName : signature().inputNames()) {
-      Operand<?> input = arguments.get(inputName);
-      if (input == null) {
+      if (!arguments.containsKey(inputName)) {
         throw new IllegalArgumentException(
             "Function " + signature().methodName() + " has parameter \"" + inputName
                 + "\", but no argument was passed for it.");
+      }
+
+      Operand<?> input = arguments.get(inputName);
+      if (input == null) {
+        throw new IllegalArgumentException(
+            "Can't pass null as an argument to a function.  Argument \"" + inputName + "\" was null.");
       }
       inputs[i] = input.asOutput();
       i++;
@@ -288,10 +293,10 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't
-   * already present. Only works for functions with a single input and output.
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
    *
-   * @param scope    the scope to call the function in
+   * @param scope the scope to call the function in
    * @param argument the argument to the call
    * @return the output of the function
    */
@@ -316,18 +321,8 @@ public class ConcreteFunction implements AutoCloseable {
     return call(scope, inputMap).get(outputName);
   }
 
-  /**
-   * Invokes a function using the default eager session.
-   *
-   * <p>Caller is responsible for closing all Tensors.
-   *
-   * @param arguments list of tensors to pass in input to the function, mapped by their signature
-   *                  name
-   * @return output tensors resulting from the execution of the function, mapped by their signature
-   * name
-   */
-  public Map<String, Tensor> call(Map<String, Tensor> arguments)
-      throws IllegalArgumentException {
+  @Override
+  public Map<String, Tensor> call(Map<String, Tensor> arguments) {
     //FIXME need to manage input/output operand lifetimes
     Ops tf = Ops.create();
     Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
@@ -345,27 +340,10 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * Invokes a function with a single input and output using the default eager session.
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * inputs and outputs are keyed by the names set in the {@code Signature}.
    *
-   * <p>Caller is responsible for closing all Tensors.
-   *
-   * @param tensor input tensor
-   * @return output tensor
-   * @throws IllegalArgumentException if there are multiple input or output parameters defined in
-   *                                  the function
-   */
-  public Tensor call(Tensor tensor) throws IllegalArgumentException {
-    Ops tf = Ops.create();
-    Operand<?> argument = tf.constantOf((TType) tensor);
-    Operand<?> output = call(tf, argument);
-    return output.asTensor();
-  }
-
-  /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't
-   * already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
-   *
-   * @param tf        the scope to call the function in
+   * @param tf the scope to call the function in
    * @param arguments the arguments to the call
    * @return the outputs of the function
    */
@@ -374,28 +352,15 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't
-   * already present. Only works for functions with a single input and output.
+   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * works for functions with a single input and output.
    *
-   * @param tf       the scope to call the function in
+   * @param tf the scope to call the function in
    * @param argument the argument to the call
    * @return the output of the function
    */
   public Operand<?> call(Ops tf, Operand<?> argument) {
     return tf.call(this, argument);
-  }
-
-  /**
-   * Export this function as a saved model.
-   *
-   * <p>This method is convenient shortcut equivalent to
-   * {@code SavedModel.exporter(exportDir).withFunction(this).export()}
-   *
-   * @param exportDir directory where to export the saved model
-   * @throws IOException if saved model or variable state cannot be written on disk
-   */
-  public void save(String exportDir) throws IOException {
-    SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
   TF_Function nativeHandle() {
@@ -414,8 +379,8 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * Detects the signature from the handle. Does not close passed functions. All passed functions
-   * should have deallocators.
+   * Detects the signature from the handle. Does not close passed functions. All passed functions should have
+   * deallocators.
    */
   static ConcreteFunction fromNativeHandle(NativeFunction nativeFunction,
       Collection<NativeFunction> availableFunctions) {
@@ -524,11 +489,11 @@ public class ConcreteFunction implements AutoCloseable {
   }
 
   /**
-   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because
-   * how to enable XLA JIT is extremely non-obvious.
+   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
+   * JIT is extremely non-obvious.
    * <p>
-   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered
-   * platform with id: 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
+   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
+   * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
    */
   private void makeJit() {
     try (PointerScope scope = new PointerScope()) {
@@ -599,18 +564,18 @@ public class ConcreteFunction implements AutoCloseable {
         Reference ref = graph.ref()) {
       TF_Status status = TF_Status.newStatus();
 
-      List<Operand<?>> inputs = signature.getInputs().values().stream()
-          .map((x) -> graph.outputOrThrow(x.name))
+      List<Operand<?>> inputs = signature.getInputs().entrySet().stream()
+          .map((x) -> CallableFunction.validateDescription(x.getValue(), graph, x.getKey(), "Input"))
           .collect(Collectors.toList());
 
-      List<Operand<?>> outputs = signature.getOutputs().values().stream()
-          .map((x) -> graph.outputOrThrow(x.name))
+      List<Operand<?>> outputs = signature.getOutputs().entrySet().stream()
+          .map((x) -> CallableFunction.validateDescription(x.getValue(), graph, x.getKey(), "Output"))
           .collect(Collectors.toList());
 
       List<GraphOperation> ops = new ArrayList<>(
           graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
 
-      inputs.forEach(input -> ops.remove(input.op()));
+      inputs.forEach(input -> ops.remove((GraphOperation) input.op()));
 
       ops.forEach(x -> {
         if (x.type().equals(Placeholder.OP_NAME) || x.type()

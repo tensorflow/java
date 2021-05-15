@@ -23,6 +23,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -504,6 +505,24 @@ public final class Session implements AutoCloseable {
     runner().addTarget(op.op()).run();
   }
 
+  /**
+   * Create a new session function, backed by this session.
+   *
+   * @param signature the signature of the function.
+   */
+  public SessionFunction function(Signature signature) {
+    return new SessionFunction(signature, this);
+  }
+
+  /**
+   * Create and call a function, returning the results.
+   *
+   * @param signature the signature of the function
+   * @param arguments the arguments to call with.
+   */
+  public Map<String, Tensor> run(Signature signature, Map<String, Tensor> arguments) {
+    return function(signature).call(arguments);
+  }
 
   /**
    * Execute the graph's initializers.
