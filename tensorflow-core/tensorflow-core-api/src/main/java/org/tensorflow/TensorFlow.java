@@ -32,6 +32,7 @@ import org.tensorflow.proto.framework.OpList;
 
 /** Static utility methods describing the TensorFlow runtime. */
 public final class TensorFlow {
+
   /** Returns the version of the underlying TensorFlow runtime. */
   public static String version() {
     return TF_Version().getString();
@@ -106,7 +107,7 @@ public final class TensorFlow {
   private TensorFlow() {}
 
   /** Load the TensorFlow runtime C library. */
-  static void init() {
+  static {
     try {
       NativeLibrary.load();
     } catch (Exception e) {
@@ -120,9 +121,5 @@ public final class TensorFlow {
       e.printStackTrace();
       throw e;
     }
-  }
-
-  static {
-    init();
   }
 }
