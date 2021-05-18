@@ -16,9 +16,15 @@ limitations under the License.
 */
 package org.tensorflow.ndarray;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class ShapeTest {
 
@@ -26,22 +32,22 @@ public class ShapeTest {
   public void allKnownDimensions() {
     Shape shape = Shape.of(5, 4, 5);
     assertEquals(3, shape.numDimensions());
-    assertEquals(5, shape.size(0));
-    assertEquals(4, shape.size(1));
-    assertEquals(5, shape.size(2));
+    assertEquals(5, shape.get(0));
+    assertEquals(4, shape.get(1));
+    assertEquals(5, shape.get(2));
     assertEquals(100, shape.size());
-    assertArrayEquals(new long[] {5, 4, 5}, shape.asArray());
+    assertArrayEquals(new long[]{5, 4, 5}, shape.asArray());
     try {
-      shape.size(3);
+      shape.get(3);
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected
     }
-    assertEquals(5, shape.size(-1));
-    assertEquals(4, shape.size(-2));
-    assertEquals(5, shape.size(-3));
+    assertEquals(5, shape.get(-1));
+    assertEquals(4, shape.get(-2));
+    assertEquals(5, shape.get(-3));
     try {
-      shape.size(-4);
+      shape.get(-4);
       fail();
     } catch (IndexOutOfBoundsException e) {
       // as expected
@@ -133,7 +139,7 @@ public class ShapeTest {
     long[] internalShape = one.asArray();
     assertNotNull(internalShape);
     internalShape[0] = 42L;
-    assertEquals(2L, one.size(0));
+    assertEquals(2L, one.get(0));
   }
 
   @Test

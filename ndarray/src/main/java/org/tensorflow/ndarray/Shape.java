@@ -17,7 +17,9 @@ limitations under the License.
 
 package org.tensorflow.ndarray;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * The shape of a Tensor or {@link NdArray}.
@@ -74,8 +76,8 @@ public final class Shape {
    * Shape scalar = Shape.of()
    * }</pre>
    *
-   * @param dimensionSizes number of elements in each dimension of this shape, if any, or
-   *                       {@link Shape#UNKNOWN_SIZE} if unknown.
+   * @param dimensionSizes number of elements in each dimension of this shape, if any, or {@link
+   *     Shape#UNKNOWN_SIZE} if unknown.
    * @return a new shape
    */
   public static Shape of(long... dimensionSizes) {
@@ -108,13 +110,34 @@ public final class Shape {
    * an unknown size, {@link Shape#UNKNOWN_SIZE} is returned.
    *
    * @param i the index of the dimension to get the size for. If this Shape has a known number of
-   *     dimensions, it must be &lt; {@link Shape#numDimensions()}. The index may be negative, in which
-   *     case the position is counted from the end of the shape. E.g.: {@code size(-1)} returns the
-   *     size of the last dimension, {@code size(-2)} the size of the second to last dimension etc.
+   *     dimensions, it must be &lt; {@link Shape#numDimensions()}. The index may be negative, in
+   *     which case the position is counted from the end of the shape. E.g.: {@code size(-1)}
+   *     returns the size of the last dimension, {@code size(-2)} the size of the second to last
+   *     dimension etc.
+   * @return The size of the dimension with the given index if known, {@link Shape#UNKNOWN_SIZE}
+   *     otherwise.
+   * @deprecated Renamed to {@link #get(int)}.
+   */
+  @Deprecated
+  public long size(int i){
+    return get(i);
+  }
+
+  /**
+   * The size of the dimension with the given index.
+   *
+   * <p>If {@link Shape#isUnknown()} is true or the size of the dimension with the given index has
+   * an unknown size, {@link Shape#UNKNOWN_SIZE} is returned.
+   *
+   * @param i the index of the dimension to get the size for. If this Shape has a known number of
+   *     dimensions, it must be &lt; {@link Shape#numDimensions()}. The index may be negative, in
+   *     which case the position is counted from the end of the shape. E.g.: {@code size(-1)}
+   *     returns the size of the last dimension, {@code size(-2)} the size of the second to last
+   *     dimension etc.
    * @return The size of the dimension with the given index if known, {@link Shape#UNKNOWN_SIZE}
    *     otherwise.
    */
-  public long size(int i) {
+  public long get(int i) {
     if (dimensionSizes == null) {
       return UNKNOWN_SIZE;
     } else if (i >= 0) {
@@ -177,6 +200,24 @@ public final class Shape {
     }
   }
 
+  /**
+   * Returns a defensive copy of the this Shape's axes. Changes to the returned list do not change
+   * this Shape's state. Returns null if {@link Shape#isUnknown()} is true.
+   */
+  public List<Long> toListOrNull() {
+    long[] array = asArray();
+    if (array == null) {
+      return null;
+    }
+
+    List<Long> list = new ArrayList<>(array.length);
+    for (long l : array) {
+      list.add(l);
+    }
+
+    return list;
+  }
+
   @Override
   public int hashCode() {
     return dimensionSizes != null ? Arrays.hashCode(dimensionSizes) : super.hashCode();
@@ -186,6 +227,7 @@ public final class Shape {
    * Equals implementation for Shapes. Two Shapes are considered equal iff:
    *
    * <p>
+   *
    * <ul>
    *   <li>the number of dimensions is defined and equal for both
    *   <li>the size of each dimension is defined and equal for both
@@ -236,7 +278,8 @@ public final class Shape {
    * Returns an n-dimensional Shape with the dimensions matching the first n dimensions of this
    * shape
    *
-   * @param n the number of leading dimensions to get, must be &lt;= than {@link Shape#numDimensions()}
+   * @param n the number of leading dimensions to get, must be &lt;= than {@link
+   *     Shape#numDimensions()}
    * @return an n-dimensional Shape with the first n dimensions matching the first n dimensions of
    *     this Shape
    */
@@ -252,7 +295,9 @@ public final class Shape {
 
   /** Returns a new Shape, with this Shape's first dimension removed. */
   public Shape tail() {
-    if (dimensionSizes.length < 2) return Shape.of();
+    if (dimensionSizes.length < 2) {
+      return Shape.of();
+    }
     return Shape.of(Arrays.copyOfRange(dimensionSizes, 1, dimensionSizes.length));
   }
 
@@ -276,15 +321,21 @@ public final class Shape {
   }
 
   /**
-   * Return a {@code end - begin} dimensional shape with dimensions matching this Shape from {@code begin} to {@code end}.
+   * Return a {@code end - begin} dimensional shape with dimensions matching this Shape from {@code
+   * begin} to {@code end}.
+   *
    * @param begin Where to start the sub-shape.
    * @param end Where to end the sub-shape, exclusive.
    * @return the sub-shape bounded by begin and end.
    */
-  public Shape subShape(int begin, int end){
+  public Shape subShape(int begin, int end) {
     if (end > numDimensions()) {
       throw new ArrayIndexOutOfBoundsException(
-          "End index " + end + " out of bounds: shape only has " + numDimensions() + " dimensions.");
+          "End index "
+              + end
+              + " out of bounds: shape only has "
+              + numDimensions()
+              + " dimensions.");
     }
     if (begin < 0) {
       throw new ArrayIndexOutOfBoundsException(
@@ -423,7 +474,7 @@ public final class Shape {
         return false;
       }
       for (int i = 0; i < numDimensions(); i++) {
-        if (!isCompatible(size(i), shape.size(i))) {
+        if (!isCompatible(get(i), shape.get(i))) {
           return false;
         }
       }

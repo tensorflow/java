@@ -28,7 +28,7 @@ public class DimensionalSpace {
 
     // Start from the last dimension, where all elements are continuous
     for (int i = dimensions.length - 1, elementSize = 1; i >= 0; --i) {
-      dimensions[i] = new Axis(shape.size(i), elementSize);
+      dimensions[i] = new Axis(shape.get(i), elementSize);
       elementSize *= dimensions[i].numElements();
     }
     return new DimensionalSpace(dimensions, shape);
@@ -189,7 +189,9 @@ public class DimensionalSpace {
     return position;
   }
 
-  /** Succinct description of the shape meant for debugging. */
+  /**
+   * Succinct description of the shape meant for debugging.
+   */
   @Override
   public String toString() {
     return Arrays.toString(dimensions);

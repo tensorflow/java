@@ -24,10 +24,10 @@ import static org.tensorflow.ndarray.index.Indices.all;
 import static org.tensorflow.ndarray.index.Indices.at;
 import static org.tensorflow.ndarray.index.Indices.even;
 import static org.tensorflow.ndarray.index.Indices.flip;
-import static org.tensorflow.ndarray.index.Indices.sliceFrom;
 import static org.tensorflow.ndarray.index.Indices.odd;
 import static org.tensorflow.ndarray.index.Indices.range;
 import static org.tensorflow.ndarray.index.Indices.seq;
+import static org.tensorflow.ndarray.index.Indices.sliceFrom;
 import static org.tensorflow.ndarray.index.Indices.sliceTo;
 
 import java.nio.BufferOverflowException;
@@ -132,15 +132,15 @@ public abstract class NdArrayTestBase<T> {
     long value = 0L;
     for (NdArray<T> matrix : matrix3d.elements(0)) {
       assertEquals(2L, matrix.shape().numDimensions());
-      assertEquals(4L, matrix.shape().size(0));
-      assertEquals(5L, matrix.shape().size(1));
+      assertEquals(4L, matrix.shape().get(0));
+      assertEquals(5L, matrix.shape().get(1));
 
       for (NdArray<T> vector : matrix.elements(0)) {
-        assertEquals(1L, vector.shape().numDimensions()) ;
-        assertEquals(5L, vector.shape().size(0));
+        assertEquals(1L, vector.shape().numDimensions());
+        assertEquals(5L, vector.shape().get(0));
 
         for (NdArray<T> scalar : vector.scalars()) {
-          assertEquals(0L, scalar.shape().numDimensions()) ;
+          assertEquals(0L, scalar.shape().numDimensions());
           scalar.setObject(valueOf(value++));
           try {
             scalar.elements(0);
@@ -162,7 +162,7 @@ public abstract class NdArrayTestBase<T> {
   @Test
   public void slices() {
     NdArray<T> matrix3d = allocate(Shape.of(5, 4, 5));
-    
+
     T val100 = valueOf(100L);
     matrix3d.setObject(val100, 1, 0, 0);
     T val101 = valueOf(101L);
@@ -318,8 +318,8 @@ public abstract class NdArrayTestBase<T> {
     NdArray<T> array4 = allocate(Shape.of(1, 2, 2));
 
     @SuppressWarnings("unchecked")
-    T[][][] values = (T[][][])(new Object[][][] {
-        { { valueOf(0L), valueOf(1L) }, { valueOf(2L), valueOf(0L) } }
+    T[][][] values = (T[][][]) (new Object[][][]{
+        {{valueOf(0L), valueOf(1L)}, {valueOf(2L), valueOf(0L)}}
     });
 
     StdArrays.copyTo(values[0], array1);
