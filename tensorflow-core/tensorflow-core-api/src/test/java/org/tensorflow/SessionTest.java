@@ -43,18 +43,33 @@ import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/**
- * Unit tests for {@link org.tensorflow.Session}.
- */
+/** Unit tests for {@link org.tensorflow.Session}. */
 public class SessionTest {
+
+  @Test
+  public void runUsingFunction() {
+    try (Graph g = new Graph();
+        Session s = new Session(g)) {
+      Ops tf = Ops.create(g);
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      Signature sig =
+          Signature.builder("sess").input("X", g.output("X")).output("Y", g.output("Y")).build();
+      SessionFunction func = s.function(sig);
+
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
+          TInt32 y = (TInt32) func.call(x)) {
+        assertEquals(31, y.getInt(0, 0));
+      }
+    }
+  }
 
   @Test
   public void runUsingOperationNames() {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][]{{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
           AutoCloseableList<Tensor> outputs =
               new AutoCloseableList<>(s.runner().feed("X", x).fetch("Y").run())) {
         assertEquals(1, outputs.size());
@@ -68,10 +83,10 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][]{{2}, {3}});
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
       Output<TInt32> feed = g.operation("X").output(0);
       Output<TInt32> fetch = g.operation("Y").output(0);
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}));
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}));
           AutoCloseableList<Tensor> outputs =
               new AutoCloseableList<>(s.runner().feed(feed, x).fetch(fetch).run())) {
         assertEquals(1, outputs.size());
@@ -95,12 +110,9 @@ public class SessionTest {
       }
       // Feed using colon separated names.
       try (TInt32 fed = TInt32.vectorOf(4, 3, 2, 1);
-          TInt32 fetched = (TInt32) s.runner()
-              .feed("Split:0", fed)
-              .feed("Split:1", fed)
-              .fetch("Add")
-              .run()
-              .get(0)) {
+          TInt32 fetched =
+              (TInt32)
+                  s.runner().feed("Split:0", fed).feed("Split:1", fed).fetch("Add").run().get(0)) {
         assertEquals(NdArrays.vectorOf(8, 6, 4, 2), fetched);
       }
     }
@@ -111,13 +123,14 @@ public class SessionTest {
     try (Graph g = new Graph();
         Session s = new Session(g)) {
       Ops tf = Ops.create(g);
-      transpose_A_times_X(tf, new int[][]{{2}, {3}});
-      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][]{{5}, {7}}))) {
-        Session.Run result = s.runner()
-            .feed("X", x)
-            .fetch("Y")
-            .setOptions(fullTraceRunOptions())
-            .runAndFetchMetadata();
+      transpose_A_times_X(tf, new int[][] {{2}, {3}});
+      try (TInt32 x = TInt32.tensorOf(StdArrays.ndCopyOf(new int[][] {{5}, {7}}))) {
+        Session.Run result =
+            s.runner()
+                .feed("X", x)
+                .fetch("Y")
+                .setOptions(fullTraceRunOptions())
+                .runAndFetchMetadata();
         // Sanity check on outputs.
         AutoCloseableList<Tensor> outputs = new AutoCloseableList<>(result.outputs);
         assertEquals(1, outputs.size());
@@ -163,8 +176,7 @@ public class SessionTest {
   @Test
   public void createWithConfigProto() {
     try (Graph g = new Graph();
-        Session s = new Session(g, singleThreadConfigProto())) {
-    }
+        Session s = new Session(g, singleThreadConfigProto())) {}
   }
 
   @Test
@@ -219,10 +231,12 @@ public class SessionTest {
     Path testFolder = Files.createTempDirectory("tf-session-save-restore-test");
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Variable<TFloat32> x = tf.withName("x")
-          .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
-      Variable<TFloat32> y = tf.withName("y")
-          .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> x =
+          tf.withName("x")
+              .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+      Variable<TFloat32> y =
+          tf.withName("y")
+              .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
       Init init = tf.init();
 
       try (Session s = new Session(g)) {
@@ -234,9 +248,10 @@ public class SessionTest {
           restoredGraph.importGraphDef(graphDef);
           try (Session restoredSession = new Session(restoredGraph)) {
             restoredSession.restore(testFolder.resolve("checkpoint").toString());
-            try (AutoCloseableList<Tensor> oldList = new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
-                AutoCloseableList<Tensor> newList = new AutoCloseableList<>(
-                    restoredSession.runner().fetch("x").fetch("y").run())) {
+            try (AutoCloseableList<Tensor> oldList =
+                    new AutoCloseableList<>(s.runner().fetch("x").fetch("y").run());
+                AutoCloseableList<Tensor> newList =
+                    new AutoCloseableList<>(restoredSession.runner().fetch("x").fetch("y").run())) {
               assertEquals(oldList.get(0), newList.get(0));
               assertEquals(oldList.get(1), newList.get(1));
             }
@@ -265,7 +280,6 @@ public class SessionTest {
       try (TInt32 value = (TInt32) s.runner().addTarget(assign).fetch(variable).run().get(0)) {
         assertEquals(2, value.getInt());
       }
-
     }
   }
 
@@ -295,14 +309,11 @@ public class SessionTest {
       }
 
       assertEquals(0, numOperations(g) - ops);
-
     }
   }
 
   private static RunOptions fullTraceRunOptions() {
-    return RunOptions.newBuilder()
-        .setTraceLevel(RunOptions.TraceLevel.FULL_TRACE)
-        .build();
+    return RunOptions.newBuilder().setTraceLevel(RunOptions.TraceLevel.FULL_TRACE).build();
   }
 
   private static ConfigProto singleThreadConfigProto() {
@@ -313,10 +324,11 @@ public class SessionTest {
   }
 
   private static void transpose_A_times_X(Ops tf, int[][] a) {
-    tf.withName("Y").linalg.matMul(
-        tf.withName("A").constant(a),
-        tf.withName("X").placeholder(TInt32.class),
-        MatMul.transposeA(true).transposeB(false)
-    );
+    tf.withName("Y")
+        .linalg
+        .matMul(
+            tf.withName("A").constant(a),
+            tf.withName("X").placeholder(TInt32.class),
+            MatMul.transposeA(true).transposeB(false));
   }
 }

@@ -179,6 +179,13 @@ public class Signature {
     return new Builder();
   }
 
+  /**
+   * Returns a new builder for creating a signature, with the methodName and key set to {@code name}
+   */
+  public static Builder builder(String name) {
+    return new Builder().methodName(name).key(name);
+  }
+
   /** Return the key of this signature */
   public String key() {
     return key;

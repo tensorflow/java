@@ -1120,8 +1120,8 @@ public final class Ops {
   }
 
   /**
-   * Calls the function in an execution environment, adding its graph as a function if it isn't already present. Only
-   *  works for functions with a single input and output.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   *  already present. Only works for functions with a single input and output.
    *
    * @param argument the argument to the call
    * @return the output of the function
@@ -1132,8 +1132,8 @@ public final class Ops {
   }
 
   /**
-   * Calls the function in an execution environment, adding its graph as a function if it isn't already present. The
-   *  inputs and outputs are keyed by the names set in the {@code Signature}.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   *  already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
    *
    * @param arguments the arguments to the call
    * @return the outputs of the function
