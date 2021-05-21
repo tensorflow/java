@@ -363,18 +363,24 @@ public final class OperatorProcessor extends AbstractProcessor {
   private String buildOpMethodJavadoc(
       TypeElement opClass, ExecutableElement endpointMethod, boolean copyClassDescription) {
     Javadoc methodJavadoc = parseJavadoc(endpointMethod);
+
+    Javadoc javadoc;
+
     if (!copyClassDescription) {
-      return methodJavadoc.toText();
+      javadoc = new Javadoc(methodJavadoc.getDescription());
+    } else {
+      javadoc = parseJavadoc(opClass);
     }
-    Javadoc classJavadoc = parseJavadoc(opClass);
+
     // Copy all endpoint method tags to the description, except for the `scope` parameter which
     // will be inferred by the Ops class
     methodJavadoc.getBlockTags().forEach(t -> {
-      if (!t.getTagName().equals("param") || t.getName().map(s -> !s.equals("scope")).orElse(true)) {
-        classJavadoc.addBlockTag(t);
+      if (!(t.getTagName().equals("param") && t.getName().map(s -> s.equals("scope")).orElse(false))) {
+        javadoc.addBlockTag(t);
       }
     });
-    return classJavadoc.toText();
+
+    return javadoc.toText();
   }
 
   private static Collection<OpsSpec> collectGroupOps(OpsSpec ops, Multimap<String, MethodSpec> groupedMethods) {
