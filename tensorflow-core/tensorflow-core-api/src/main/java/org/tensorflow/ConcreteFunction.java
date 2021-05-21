@@ -55,9 +55,9 @@ import org.tensorflow.types.family.TType;
 /**
  * A graph that can be invoked as a single function, with an input and output signature.
  *
- * <p>A function can also invoke a
- * <a href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a>
- * defined in a {@link SavedModelBundle}.
+ * <p>A function can also invoke a <a
+ * href="https://www.tensorflow.org/api_docs/python/tf/function">tf.function</a> defined in a {@link
+ * SavedModelBundle}.
  *
  * <pre>{@code
  * ConcreteFunction myFunction = savedModelBundle.function("myFunctionSignatureName");
@@ -66,17 +66,16 @@ import org.tensorflow.types.family.TType;
  */
 public class ConcreteFunction implements AutoCloseable, CallableFunction {
 
-
   /**
    * Creates a function by building a new graph.
    *
-   * <p>The {@code functionBuilder} must initialize the function graph from the provided
-   * {@link Ops} instance and return a valid signature that will be used to feed the input tensors and fetch the output
-   * tensors on execution.
+   * <p>The {@code functionBuilder} must initialize the function graph from the provided {@link Ops}
+   * instance and return a valid signature that will be used to feed the input tensors and fetch the
+   * output tensors on execution.
    *
-   * <p>The function will be the owner of the new graph and its resulting session. Therefore,
-   * the function must be enclosed properly with a try-with-resources block to guarantee that all native resources will
-   * be freed once the function is discarded. For example:
+   * <p>The function will be the owner of the new graph and its resulting session. Therefore, the
+   * function must be enclosed properly with a try-with-resources block to guarantee that all native
+   * resources will be freed once the function is discarded. For example:
    *
    * <pre>{@code
    * public class MyModel {
@@ -110,9 +109,9 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   /**
    * Create a function from a signature and an existing graph.
    *
-   * <p>The function will keep the ownership of the session used to run the graph but not
-   * the graph itself, meaning that the lifetime of the latter can extend beyond the scope of the function. For
-   * example:
+   * <p>The function will keep the ownership of the session used to run the graph but not the graph
+   * itself, meaning that the lifetime of the latter can extend beyond the scope of the function.
+   * For example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -139,9 +138,9 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   /**
    * Create a function from a signature and a valid graph session.
    *
-   * <p>The function will not own the session nor its graph, meaning that their lifetime
-   * can extend beyond the scope of the function. Therefore the function does not need to be closed after its usage. For
-   * example:
+   * <p>The function will not own the session nor its graph, meaning that their lifetime can extend
+   * beyond the scope of the function. Therefore the function does not need to be closed after its
+   * usage. For example:
    *
    * <pre>{@code
    * try (Graph g = new Graph()) {
@@ -170,31 +169,26 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
     return buildFromGraph(session.graph(), signature);
   }
 
-  /**
-   * Returns the signature of this function
-   */
+  /** Returns the signature of this function */
   @Override
   public Signature signature() {
     return signature;
   }
 
   /**
-   * Get the name of the function.
+   * Get the name of the function. This is what it will show up under in the graph and any exported
+   * GraphDefs.
    */
   public String getNativeFunctionName() {
     return nativeFunction.getName();
   }
 
-  /**
-   * Get the {@link FunctionDef} proto.
-   */
+  /** Get the {@link FunctionDef} proto. */
   public FunctionDef getFunctionDef() {
     return nativeFunction.getFunctionDef();
   }
 
-  /**
-   * Get whether the function is stateful.
-   */
+  /** Get whether the function is stateful. */
   public boolean isStateful() {
     return nativeFunction.isStateful();
   }
@@ -213,22 +207,20 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
     return signature.toString();
   }
 
-  //TODO migrate to the actual ops once they are generated
+  // TODO migrate to the actual ops once they are generated
   public static final String CALL_OP = "PartitionedCall";
-  //TODO migrate to the actual ops once they are generated
+  // TODO migrate to the actual ops once they are generated
   public static final String STATEFUL_CALL_OP = "StatefulPartitionedCall";
 
-
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
-   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   * already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
    *
    * @param scope the scope to call the function in
    * @param arguments the arguments to the call
    * @return the outputs of the function
    */
-  public Map<String, Operand<?>> call(Scope scope,
-      Map<String, Operand<?>> arguments) {
+  public Map<String, Operand<?>> call(Scope scope, Map<String, Operand<?>> arguments) {
     List<Operand<?>> inputList = new ArrayList<>();
 
     Output<?>[] inputs = new Output<?>[signature().inputNames().size()];
@@ -237,14 +229,19 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
     for (String inputName : signature().inputNames()) {
       if (!arguments.containsKey(inputName)) {
         throw new IllegalArgumentException(
-            "Function " + signature().methodName() + " has parameter \"" + inputName
+            "Function "
+                + signature().methodName()
+                + " has parameter \""
+                + inputName
                 + "\", but no argument was passed for it.");
       }
 
       Operand<?> input = arguments.get(inputName);
       if (input == null) {
         throw new IllegalArgumentException(
-            "Can't pass null as an argument to a function.  Argument \"" + inputName + "\" was null.");
+            "Can't pass null as an argument to a function.  Argument \""
+                + inputName
+                + "\" was null.");
       }
       inputs[i] = input.asOutput();
       i++;
@@ -255,8 +252,10 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
 
     String displayName = Scope.isValidOpName(name) ? name : "FunctionCall";
 
-    OperationBuilder opBuilder = scope.env()
-        .opBuilder(isStateful() ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
+    OperationBuilder opBuilder =
+        scope
+            .env()
+            .opBuilder(isStateful() ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
 
     opBuilder.addInputList(inputs);
 
@@ -293,8 +292,8 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
-   * works for functions with a single input and output.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   * already present. Only works for functions with a single input and output.
    *
    * @param scope the scope to call the function in
    * @param argument the argument to the call
@@ -323,7 +322,7 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
 
   @Override
   public Map<String, Tensor> call(Map<String, Tensor> arguments) {
-    //FIXME need to manage input/output operand lifetimes
+    // FIXME need to manage input/output operand lifetimes
     Ops tf = Ops.create();
     Map<String, Operand<?>> inputs = new LinkedHashMap<>(arguments.size());
 
@@ -340,8 +339,8 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
-   * inputs and outputs are keyed by the names set in the {@code Signature}.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   * already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
    *
    * @param tf the scope to call the function in
    * @param arguments the arguments to the call
@@ -352,8 +351,8 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
-   * works for functions with a single input and output.
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   * already present. Only works for functions with a single input and output.
    *
    * @param tf the scope to call the function in
    * @param argument the argument to the call
@@ -370,50 +369,49 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
     return nativeFunction.getNativeHandle();
   }
 
-  /**
-   * All native functions should have deallocators registered
-   */
-  ConcreteFunction(Signature signature, NativeFunction nativeFunction,
+  /** All native functions should have deallocators registered */
+  ConcreteFunction(
+      Signature signature,
+      NativeFunction nativeFunction,
       Collection<NativeFunction> availableFunctions) {
     this(signature, nativeFunction, nativeFunction.getAllDependencies(availableFunctions));
   }
 
   /**
-   * Detects the signature from the handle. Does not close passed functions. All passed functions should have
-   * deallocators.
+   * Detects the signature from the handle. Does not close passed functions. All passed functions
+   * should have deallocators.
    */
-  static ConcreteFunction fromNativeHandle(NativeFunction nativeFunction,
-      Collection<NativeFunction> availableFunctions) {
+  static ConcreteFunction fromNativeHandle(
+      NativeFunction nativeFunction, Collection<NativeFunction> availableFunctions) {
 
-    Signature.Builder builder = Signature.builder()
-        .methodName(nativeFunction.getFunctionDef().getSignature().getName())
-        .key(nativeFunction.getName());
+    Signature.Builder builder =
+        Signature.builder()
+            .methodName(nativeFunction.getFunctionDef().getSignature().getName())
+            .key(nativeFunction.getName());
 
     for (ArgDef input : nativeFunction.getFunctionDef().getSignature().getInputArgList()) {
-      TensorInfo info = TensorInfo.newBuilder()
-          .setDtype(input.getType())
-          .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
-          .setName(input.getName())
-          .build();
+      TensorInfo info =
+          TensorInfo.newBuilder()
+              .setDtype(input.getType())
+              .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
+              .setName(input.getName())
+              .build();
 
       builder.input(input.getName(), info);
     }
 
     for (ArgDef outputDef : nativeFunction.getFunctionDef().getSignature().getOutputArgList()) {
-      TensorInfo info = TensorInfo.newBuilder()
-          .setDtype(outputDef.getType())
-          .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
-          .setName(outputDef.getName())
-          .build();
+      TensorInfo info =
+          TensorInfo.newBuilder()
+              .setDtype(outputDef.getType())
+              .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
+              .setName(outputDef.getName())
+              .build();
 
       builder.output(outputDef.getName(), info);
     }
 
-    return new ConcreteFunction(
-        builder.build(),
-        nativeFunction,
-        availableFunctions
-    );
+    return new ConcreteFunction(builder.build(), nativeFunction, availableFunctions);
   }
 
   private final Signature signature;
@@ -423,60 +421,62 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   private final DataType[] inputDtypes;
   private final DataType[] outputDtypes;
 
-
-  /**
-   * All native functions should have deallocators registered
-   */
-  private ConcreteFunction(Signature signature, NativeFunction nativeFunction,
-      Set<TF_Function> dependencies) {
+  /** All native functions should have deallocators registered */
+  private ConcreteFunction(
+      Signature signature, NativeFunction nativeFunction, Set<TF_Function> dependencies) {
     this.signature = signature;
     this.nativeFunction = nativeFunction;
     this.dependencies = Collections.unmodifiableSet(dependencies);
 
-    if (this.signature.getInputs().size() != nativeFunction.getFunctionDef().getSignature()
-        .getInputArgCount()) {
+    if (this.signature.getInputs().size()
+        != nativeFunction.getFunctionDef().getSignature().getInputArgCount()) {
       throw new IllegalArgumentException(
           "Signature must have the same number of inputs as the native function.  Expected "
-              + nativeFunction.getFunctionDef().getSignature().getInputArgCount() + ", got "
+              + nativeFunction.getFunctionDef().getSignature().getInputArgCount()
+              + ", got "
               + this.signature.getInputs().size());
     }
 
-    if (this.signature.getOutputs().size() != nativeFunction.getFunctionDef().getSignature()
-        .getOutputArgCount()) {
+    if (this.signature.getOutputs().size()
+        != nativeFunction.getFunctionDef().getSignature().getOutputArgCount()) {
       throw new IllegalArgumentException(
           "New signature must have the same number of outputs as the native function.  Expected "
-              + nativeFunction.getFunctionDef().getSignature().getOutputArgCount() + ", got "
+              + nativeFunction.getFunctionDef().getSignature().getOutputArgCount()
+              + ", got "
               + this.signature.getOutputs().size());
     }
 
-    inputDtypes = this.signature.getInputs().values().stream().map(x -> x.dataType)
-        .toArray(DataType[]::new);
+    inputDtypes =
+        this.signature.getInputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new);
 
     List<DataType> inputs = Arrays.asList(inputDtypes);
-    List<DataType> nativeInputs = nativeFunction.getFunctionDef().getSignature().getInputArgList()
-        .stream()
-        .map(ArgDef::getType)
-        .collect(Collectors.toList());
+    List<DataType> nativeInputs =
+        nativeFunction.getFunctionDef().getSignature().getInputArgList().stream()
+            .map(ArgDef::getType)
+            .collect(Collectors.toList());
 
     if (!dataTypesMatch(inputs, nativeInputs)) {
       throw new IllegalArgumentException(
           "Data types of the signature's inputs must match the native function's (in order).  Expected "
-              + nativeInputs + ", got " + inputs);
+              + nativeInputs
+              + ", got "
+              + inputs);
     }
 
-    outputDtypes = signature().getOutputs().values().stream().map(x -> x.dataType)
-        .toArray(DataType[]::new);
+    outputDtypes =
+        signature().getOutputs().values().stream().map(x -> x.dataType).toArray(DataType[]::new);
 
     List<DataType> outputs = Arrays.asList(outputDtypes);
-    List<DataType> nativeOutputs = nativeFunction.getFunctionDef().getSignature().getOutputArgList()
-        .stream()
-        .map(ArgDef::getType)
-        .collect(Collectors.toList());
+    List<DataType> nativeOutputs =
+        nativeFunction.getFunctionDef().getSignature().getOutputArgList().stream()
+            .map(ArgDef::getType)
+            .collect(Collectors.toList());
 
     if (!dataTypesMatch(outputs, nativeOutputs)) {
       throw new IllegalArgumentException(
           "Data types of the signature's outputs must match the native function's (in order).  Expected "
-              + nativeOutputs + ", got "
+              + nativeOutputs
+              + ", got "
               + outputs);
     }
 
@@ -489,11 +489,11 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
   }
 
   /**
-   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because how to enable XLA
-   * JIT is extremely non-obvious.
-   * <p>
-   * Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered platform with id:
-   * 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
+   * FIXME: This causes native errors when I use it (Linux GPU, 6.1 CC), but I'm leaving it because
+   * how to enable XLA JIT is extremely non-obvious.
+   *
+   * <p>Causes {@code OP_REQUIRES failed at xla_ops.cc:363 : Not found: could not find registered
+   * platform with id: 0x7f75af03e6e8} (it's a warning, but the resulting TF_Status fails).
    */
   private void makeJit() {
     try (PointerScope scope = new PointerScope()) {
@@ -501,8 +501,8 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
       BytePointer trueValue = new BytePointer(bytes);
 
       TF_Status status1 = TF_Status.newStatus();
-      TF_FunctionSetAttrValueProto(nativeHandle(), "_XlaMustCompile", trueValue, bytes.length,
-          status1);
+      TF_FunctionSetAttrValueProto(
+          nativeHandle(), "_XlaMustCompile", trueValue, bytes.length, status1);
       status1.throwExceptionIfNotOK();
 
       TF_Status status2 = TF_Status.newStatus();
@@ -527,7 +527,6 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
 
     return true;
   }
-
 
   private static TF_Operation outputHandle(Operand<?> operand) {
     if (operand == null) {
@@ -564,37 +563,52 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
         Reference ref = graph.ref()) {
       TF_Status status = TF_Status.newStatus();
 
-      List<Operand<?>> inputs = signature.getInputs().entrySet().stream()
-          .map((x) -> CallableFunction.validateDescription(x.getValue(), graph, x.getKey(), "Input"))
-          .collect(Collectors.toList());
+      List<Operand<?>> inputs =
+          signature.getInputs().entrySet().stream()
+              .map(
+                  (x) ->
+                      CallableFunction.validateDescription(
+                          x.getValue(), graph, x.getKey(), "Input"))
+              .collect(Collectors.toList());
 
-      List<Operand<?>> outputs = signature.getOutputs().entrySet().stream()
-          .map((x) -> CallableFunction.validateDescription(x.getValue(), graph, x.getKey(), "Output"))
-          .collect(Collectors.toList());
+      List<Operand<?>> outputs =
+          signature.getOutputs().entrySet().stream()
+              .map(
+                  (x) ->
+                      CallableFunction.validateDescription(
+                          x.getValue(), graph, x.getKey(), "Output"))
+              .collect(Collectors.toList());
 
-      List<GraphOperation> ops = new ArrayList<>(
-          graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
+      List<GraphOperation> ops =
+          new ArrayList<>(graph.completeSubgraph(new HashSet<>(inputs), new HashSet<>(outputs)));
 
       inputs.forEach(input -> ops.remove((GraphOperation) input.op()));
 
-      ops.forEach(x -> {
-        if (x.type().equals(Placeholder.OP_NAME) || x.type()
-            .equals(PlaceholderWithDefault.OP_NAME)) {
-          throw new IllegalArgumentException(
-              "Can't calculate outputs (" + outputs + ") from inputs (" + inputs + "), "
-                  + "they also depend on \"" + x + "\"");
-        }
-      });
+      ops.forEach(
+          x -> {
+            if (x.type().equals(Placeholder.OP_NAME)
+                || x.type().equals(PlaceholderWithDefault.OP_NAME)) {
+              throw new IllegalArgumentException(
+                  "Can't calculate outputs ("
+                      + outputs
+                      + ") from inputs ("
+                      + inputs
+                      + "), "
+                      + "they also depend on \""
+                      + x
+                      + "\"");
+            }
+          });
 
       // Python sometimes has NoOps as outputs
       Ops tf = Ops.create(graph).withSubScope("functionControlOutputs");
       for (int i = 0; i < outputs.size(); i++) {
         Operand<?> output = outputs.get(i);
         if (output.op().numOutputs() < 1) {
-          Operand<TBool> realOutput = tf
-              .withControlDependencies(Collections.singletonList(output))
-              .withName(output.op().name() + "_control")
-              .constant(false);
+          Operand<TBool> realOutput =
+              tf.withControlDependencies(Collections.singletonList(output))
+                  .withName(output.op().name() + "_control")
+                  .constant(false);
           ops.add((GraphOperation) realOutput.op());
           outputs.set(i, realOutput);
         }
@@ -605,27 +619,29 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
         operations.put(i, ops.get(i).getUnsafeNativeHandle());
       }
 
-      TF_Function handle = TF_GraphToFunction(
-          ref.nativeHandle(),
-          new BytePointer(signature.key()),
-          (byte) 1,
-          ops.size(),
-          operations,
-          inputs.size(),
-          resolveToOutput(graph, inputs),
-          outputs.size(),
-          resolveToOutput(graph, outputs),
-          null,
-          null,
-          new BytePointer(signature.methodName() != null ? signature.methodName()
-              : "Method " + signature.key()),
-          status
-      );
+      TF_Function handle =
+          TF_GraphToFunction(
+              ref.nativeHandle(),
+              new BytePointer(signature.key()),
+              (byte) 1,
+              ops.size(),
+              operations,
+              inputs.size(),
+              resolveToOutput(graph, inputs),
+              outputs.size(),
+              resolveToOutput(graph, outputs),
+              null,
+              null,
+              new BytePointer(
+                  signature.methodName() != null
+                      ? signature.methodName()
+                      : "Method " + signature.key()),
+              status);
 
       handle.withDeallocator();
       status.throwExceptionIfNotOK();
-      return new ConcreteFunction(signature, new NativeFunction(handle),
-          graph.getNativeFunctions(scope));
+      return new ConcreteFunction(
+          signature, new NativeFunction(handle), graph.getNativeFunctions(scope));
     }
   }
 }

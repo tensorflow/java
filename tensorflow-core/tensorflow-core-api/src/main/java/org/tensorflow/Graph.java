@@ -391,11 +391,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), null, status);
       status.throwExceptionIfNotOK();
 
-      function.getDependencies().forEach(x -> {
-        TF_Status status2 = TF_Status.newStatus();
-        TF_GraphCopyFunction(ref.nativeHandle(), x, null, status2);
-        status2.throwExceptionIfNotOK();
-      });
+      function
+          .getDependencies()
+          .forEach(
+              x -> {
+                TF_Status status2 = TF_Status.newStatus();
+                TF_GraphCopyFunction(ref.nativeHandle(), x, null, status2);
+                status2.throwExceptionIfNotOK();
+              });
     }
   }
 
@@ -431,12 +434,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
-   * Get the function attached to the graph with the given native name.  Returns {@code null} if
-   * none found.
+   * Get the function attached to the graph with the given native name. Returns {@code null} if none
+   * found.
    *
-   * @param key the name of the native function.  Note that this may include an argument hash.
+   * @param key the name of the native function. Note that this may include an argument hash.
    * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct
-   * name
+   *     name
    */
   public synchronized ConcreteFunction getFunction(String key) {
     try (Reference ref = ref();
@@ -463,7 +466,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         PointerScope scope = new PointerScope()) {
       List<NativeFunction> funcs = getNativeFunctions(scope);
 
-      return funcs.stream().map(x -> ConcreteFunction.fromNativeHandle(x, funcs))
+      return funcs.stream()
+          .map(x -> ConcreteFunction.fromNativeHandle(x, funcs))
           .collect(Collectors.toList());
     }
   }

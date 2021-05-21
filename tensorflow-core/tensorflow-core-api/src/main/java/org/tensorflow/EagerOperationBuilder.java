@@ -93,7 +93,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public OperationBuilder addControlInput(Operation control) {
-    // No-op.  Any operations passed to this method will already be evaluated (b/c eager evaluation).
+    // No-op.  Any operations passed to this method will already be evaluated (b/c eager
+    // evaluation).
     return this;
   }
 
@@ -235,9 +236,13 @@ final class EagerOperationBuilder implements OperationBuilder {
       session.attachFunction(fn);
     }
 
-    setAttrFunctionList(opHandle, session.nativeHandle(), name, Arrays.stream(value)
-        .map(ConcreteFunction::getNativeFunctionName)
-        .collect(Collectors.toList()));
+    setAttrFunctionList(
+        opHandle,
+        session.nativeHandle(),
+        name,
+        Arrays.stream(value)
+            .map(ConcreteFunction::getNativeFunctionName)
+            .collect(Collectors.toList()));
 
     return this;
   }
@@ -248,9 +253,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   private final String type;
   private final String name;
 
-  /**
-   * This value should be >= to the maximum number of outputs in any op
-   */
+  /** This value should be >= to the maximum number of outputs in any op */
   private static final int MAX_OUTPUTS_PER_OP = 1000;
 
   private static void requireOp(TFE_Op handle) {
@@ -292,7 +295,8 @@ final class EagerOperationBuilder implements OperationBuilder {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
       IntPointer numRetvals = new IntPointer(1).put(MAX_OUTPUTS_PER_OP);
-      PointerPointer<TFE_TensorHandle> retvals = new PointerPointer<TFE_TensorHandle>(MAX_OUTPUTS_PER_OP);
+      PointerPointer<TFE_TensorHandle> retvals =
+          new PointerPointer<TFE_TensorHandle>(MAX_OUTPUTS_PER_OP);
       TF_Status status = TF_Status.newStatus();
       TFE_Execute(opHandle, retvals, numRetvals, status);
       status.throwExceptionIfNotOK();
@@ -319,7 +323,8 @@ final class EagerOperationBuilder implements OperationBuilder {
   private static void addInputList(TFE_Op opHandle, TFE_TensorHandle[] tensorHandles) {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
-      PointerPointer<TFE_TensorHandle> tensorPointers = new PointerPointer<TFE_TensorHandle>(tensorHandles.length);
+      PointerPointer<TFE_TensorHandle> tensorPointers =
+          new PointerPointer<TFE_TensorHandle>(tensorHandles.length);
       for (int i = 0; i < tensorHandles.length; ++i) {
         requireTensorHandle(tensorHandles[i]);
         tensorPointers.put(i, tensorHandles[i]);
@@ -388,7 +393,8 @@ final class EagerOperationBuilder implements OperationBuilder {
   private static void setAttrBoolList(TFE_Op opHandle, String name, boolean[] values) {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
-      TFE_OpSetAttrBoolList(opHandle, name, new BytePointer(new BooleanPointer(values)), values.length);
+      TFE_OpSetAttrBoolList(
+          opHandle, name, new BytePointer(new BooleanPointer(values)), values.length);
     }
   }
 
@@ -433,8 +439,13 @@ final class EagerOperationBuilder implements OperationBuilder {
         shapesPointer.position(shapesPointer.position() + numDims[i] * 8);
       }
       TF_Status status = TF_Status.newStatus();
-      TFE_OpSetAttrShapeList(opHandle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-          numDims.length, status);
+      TFE_OpSetAttrShapeList(
+          opHandle,
+          new BytePointer(name),
+          shapesPointers,
+          new IntPointer(numDims),
+          numDims.length,
+          status);
     }
   }
 
@@ -445,8 +456,8 @@ final class EagerOperationBuilder implements OperationBuilder {
     }
   }
 
-  private static void setAttrFunctionList(TFE_Op opHandle, TFE_Context context, String attrName,
-      List<String> functionNames) {
+  private static void setAttrFunctionList(
+      TFE_Op opHandle, TFE_Context context, String attrName, List<String> functionNames) {
     requireOp(opHandle);
     requireContext(context);
     try (PointerScope scope = new PointerScope()) {

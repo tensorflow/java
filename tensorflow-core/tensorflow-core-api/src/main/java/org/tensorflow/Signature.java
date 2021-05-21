@@ -27,28 +27,22 @@ import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.framework.TensorShapeProto.Dim;
 
 /**
- * Describe the inputs and outputs of an executable entity, such as a {@link ConcreteFunction}, among
- * other useful metadata.
+ * Describe the inputs and outputs of an executable entity, such as a {@link ConcreteFunction},
+ * among other useful metadata.
  */
-public class Signature  {
+public class Signature {
 
   /** The default signature key, when not provided */
   public static final String DEFAULT_KEY = "serving_default";
 
   public static class TensorDescription {
 
-    /**
-     * The name of the tensor's operand in the graph
-     */
+    /** The name of the tensor's operand in the graph */
     public final String name;
-    /**
-     * The data type of the tensor
-     */
+    /** The data type of the tensor */
     public final DataType dataType;
 
-    /**
-     * The shape of the tensor
-     */
+    /** The shape of the tensor */
     public final Shape shape;
 
     public TensorDescription(DataType dataType, Shape shape, String name) {
@@ -58,9 +52,7 @@ public class Signature  {
     }
   }
 
-  /**
-   * Builds a new function signature.
-   */
+  /** Builds a new function signature. */
   public static class Builder {
 
     /**
@@ -90,7 +82,8 @@ public class Signature  {
      */
     public Builder input(String inputName, Operand<?> input) {
       if (signatureBuilder.containsInputs(inputName)) {
-        throw new IllegalArgumentException("\"" + inputName + "\" is already being mapped to another input");
+        throw new IllegalArgumentException(
+            "\"" + inputName + "\" is already being mapped to another input");
       }
       signatureBuilder.putInputs(inputName, toTensorInfo(input.asOutput()));
       return this;
@@ -106,7 +99,8 @@ public class Signature  {
      */
     Builder input(String inputName, TensorInfo input) {
       if (signatureBuilder.containsInputs(inputName)) {
-        throw new IllegalArgumentException("\"" + inputName + "\" is already being mapped to another input");
+        throw new IllegalArgumentException(
+            "\"" + inputName + "\" is already being mapped to another input");
       }
       signatureBuilder.putInputs(inputName, input);
       return this;
@@ -122,7 +116,8 @@ public class Signature  {
      */
     public Builder output(String outputName, Operand<?> output) {
       if (signatureBuilder.containsOutputs(outputName)) {
-        throw new IllegalArgumentException("\"" + outputName + "\" is already being mapped to another output");
+        throw new IllegalArgumentException(
+            "\"" + outputName + "\" is already being mapped to another output");
       }
       signatureBuilder.putOutputs(outputName, toTensorInfo(output.asOutput()));
       return this;
@@ -138,15 +133,16 @@ public class Signature  {
      */
     Builder output(String outputName, TensorInfo output) {
       if (signatureBuilder.containsOutputs(outputName)) {
-        throw new IllegalArgumentException("\"" + outputName + "\" is already being mapped to another output");
+        throw new IllegalArgumentException(
+            "\"" + outputName + "\" is already being mapped to another output");
       }
       signatureBuilder.putOutputs(outputName, output);
       return this;
     }
 
     /**
-     * Provide extensible name information enabling third-party users to mark a signature as supporting a particular
-     * method
+     * Provide extensible name information enabling third-party users to mark a signature as
+     * supporting a particular method
      *
      * @param methodName method name or null for none (default)
      * @return this builder
@@ -156,9 +152,7 @@ public class Signature  {
       return this;
     }
 
-    /**
-     * Returns a signature from the provided data.
-     */
+    /** Returns a signature from the provided data. */
     public Signature build() {
       return new Signature(key, signatureBuilder.build());
     }
@@ -180,44 +174,34 @@ public class Signature  {
     private final SignatureDef.Builder signatureBuilder = SignatureDef.newBuilder();
   }
 
-  /**
-   * Returns a new builder for creating a signature
-   */
+  /** Returns a new builder for creating a signature */
   public static Builder builder() {
     return new Builder();
   }
 
-  /**
-   * Return the key of this signature
-   */
+  /** Return the key of this signature */
   public String key() {
     return key;
   }
 
-  /**
-   * Returns the method name of this signature (e.g. as exposed by TF serving) or null if none
-   */
+  /** Returns the method name of this signature (e.g. as exposed by TF serving) or null if none */
   public String methodName() {
     return signatureDef.getMethodName().isEmpty() ? null : signatureDef.getMethodName();
   }
 
-  /**
-   * Returns the names of the inputs in this signature
-   */
+  /** Returns the names of the inputs in this signature */
   public Set<String> inputNames() {
     return signatureDef.getInputsMap().keySet();
   }
 
-  /**
-   * Returns the names of the outputs in this signature
-   */
+  /** Returns the names of the outputs in this signature */
   public Set<String> outputNames() {
     return signatureDef.getOutputsMap().keySet();
   }
 
   @Override
   public String toString() {
-    StringBuilder strBuilder = new StringBuilder("Signature for \"" + key +"\":\n");
+    StringBuilder strBuilder = new StringBuilder("Signature for \"" + key + "\":\n");
     if (!methodName().isEmpty()) {
       strBuilder.append("\tMethod: \"").append(methodName()).append("\"\n");
     }
@@ -232,18 +216,23 @@ public class Signature  {
     return strBuilder.toString();
   }
 
-  private Map<String, TensorDescription> buildTensorDescriptionMap(Map<String, TensorInfo> dataMapIn) {
+  private Map<String, TensorDescription> buildTensorDescriptionMap(
+      Map<String, TensorInfo> dataMapIn) {
     Map<String, TensorDescription> dataTypeMap = new LinkedHashMap<>();
-    dataMapIn.forEach((name, info) -> {
-      long[] tensorDims = info.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
-      Shape tensorShape = Shape.of(tensorDims);
-      dataTypeMap.put(name, new TensorDescription(info.getDtype(), tensorShape, info.getName()));
-    });
+    dataMapIn.forEach(
+        (name, info) -> {
+          long[] tensorDims =
+              info.getTensorShape().getDimList().stream().mapToLong(d -> d.getSize()).toArray();
+          Shape tensorShape = Shape.of(tensorDims);
+          dataTypeMap.put(
+              name, new TensorDescription(info.getDtype(), tensorShape, info.getName()));
+        });
     return Collections.unmodifiableMap(dataTypeMap);
   }
 
   /**
-   * Returns the names of the inputs in this signature mapped to their expected data type, shape, and operand name
+   * Returns the names of the inputs in this signature mapped to their expected data type, shape,
+   * and operand name
    */
   public Map<String, TensorDescription> getInputs() {
     if (inputMap == null) {
@@ -253,7 +242,8 @@ public class Signature  {
   }
 
   /**
-   * Returns the names of the outputs in this signature mapped to their expected data type, shape, and operand name
+   * Returns the names of the outputs in this signature mapped to their expected data type, shape,
+   * and operand name
    */
   public Map<String, TensorDescription> getOutputs() {
     if (outputMap == null) {
@@ -277,19 +267,21 @@ public class Signature  {
   private Map<String, TensorDescription> outputMap;
 
   private static void printTensorInfo(Map<String, TensorInfo> tensorMap, StringBuilder strBuilder) {
-    tensorMap.forEach((key, tensorInfo) -> {
-      strBuilder.append("\t\t\"")
-          .append(key)
-          .append("\": dtype=")
-          .append(tensorInfo.getDtype().name())
-          .append(", shape=(");
-      for (int i = 0; i < tensorInfo.getTensorShape().getDimCount(); ++i) {
-        strBuilder.append(tensorInfo.getTensorShape().getDim(i).getSize());
-        if (i < tensorInfo.getTensorShape().getDimCount() - 1) {
-          strBuilder.append(", ");
-        }
-      }
-      strBuilder.append(")\n");
-    });
+    tensorMap.forEach(
+        (key, tensorInfo) -> {
+          strBuilder
+              .append("\t\t\"")
+              .append(key)
+              .append("\": dtype=")
+              .append(tensorInfo.getDtype().name())
+              .append(", shape=(");
+          for (int i = 0; i < tensorInfo.getTensorShape().getDimCount(); ++i) {
+            strBuilder.append(tensorInfo.getTensorShape().getDim(i).getSize());
+            if (i < tensorInfo.getTensorShape().getDimCount() - 1) {
+              strBuilder.append(", ");
+            }
+          }
+          strBuilder.append(")\n");
+        });
   }
 }

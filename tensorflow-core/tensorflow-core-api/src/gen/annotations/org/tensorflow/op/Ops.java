@@ -1120,10 +1120,9 @@ public final class Ops {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. Only
+   * Calls the function in an execution environment, adding its graph as a function if it isn't already present. Only
    *  works for functions with a single input and output.
    *
-   * @param scope the scope to call the function in
    * @param argument the argument to the call
    * @return the output of the function
    * @see ConcreteFunction#call(Ops, Operand)
@@ -1133,10 +1132,9 @@ public final class Ops {
   }
 
   /**
-   * Calls the function in an execution environment, adding it's graph as a function if it isn't already present. The
+   * Calls the function in an execution environment, adding its graph as a function if it isn't already present. The
    *  inputs and outputs are keyed by the names set in the {@code Signature}.
    *
-   * @param scope the scope to call the function in
    * @param arguments the arguments to the call
    * @return the outputs of the function
    * @see ConcreteFunction#call(Ops, Map)

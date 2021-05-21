@@ -293,11 +293,14 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       TFE_ContextAddFunction(nativeHandle, function.nativeHandle(), status);
       status.throwExceptionIfNotOK();
 
-      function.getDependencies().forEach(fn -> {
-        TF_Status status2 = TF_Status.newStatus();
-        TFE_ContextAddFunction(nativeHandle, fn, status2);
-        status2.throwExceptionIfNotOK();
-      });
+      function
+          .getDependencies()
+          .forEach(
+              fn -> {
+                TF_Status status2 = TF_Status.newStatus();
+                TFE_ContextAddFunction(nativeHandle, fn, status2);
+                status2.throwExceptionIfNotOK();
+              });
     }
   }
 
