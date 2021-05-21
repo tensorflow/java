@@ -407,7 +407,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * @param outerScope the pointer scope to attach the functions to.
    */
-  synchronized List<NativeFunction> getNativeFunctions(PointerScope outerScope) {
+  List<NativeFunction> getNativeFunctions(PointerScope outerScope) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
@@ -441,7 +441,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct
    *     name
    */
-  public synchronized ConcreteFunction getFunction(String key) {
+  public ConcreteFunction getFunction(String key) {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       List<NativeFunction> funcs = getNativeFunctions(scope);
@@ -461,7 +461,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * @return all functions attached to this graph.
    */
-  public synchronized List<ConcreteFunction> getFunctions() {
+  public List<ConcreteFunction> getFunctions() {
     try (Reference ref = ref();
         PointerScope scope = new PointerScope()) {
       List<NativeFunction> funcs = getNativeFunctions(scope);
