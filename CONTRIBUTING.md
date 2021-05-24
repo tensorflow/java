@@ -21,6 +21,20 @@ the `dev` profile in your Maven command to use those artifacts instead of buildi
 Modifying the native op generation code (not the annotation processor) or the JavaCPP configuration (not the abstract Pointers) will require a
 complete build could be required to reflect the changes, otherwise `-Pdev` should be fine.
 
+## JDK 16+
+
+If you're using JDK 16+, you need to add some exports for the formatter plugin:
+
+```
+--add-exports jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED
+--add-exports jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED
+--add-exports jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED
+--add-exports jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED
+--add-exports jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED
+```
+
+This can be done in `.mvn/jvm.config` or `MAVEN_OPTS`.
+
 ### Native Builds
 
 In some cases, like when adding GPU support or re-generating op classes, you will need to re-build the native library. 99% of this is building
