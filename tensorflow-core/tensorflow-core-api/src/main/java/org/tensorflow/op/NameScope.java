@@ -38,12 +38,12 @@ import org.tensorflow.Graph;
  */
 final class NameScope {
 
-  NameScope withSubScope(String scopeName) {
+  NameScope withSubScope(String scopeName, ExecutionEnvironment env) {
     checkPattern(NAME_REGEX, scopeName);
     // Override with opName if it exists.
     String actualName = (opName != null) ? opName : scopeName;
     String newPrefix = fullyQualify(makeUnique(actualName));
-    return new NameScope(newPrefix, null, null);
+    return new NameScope(newPrefix, null, null).withUsedFrom(env);
   }
 
   NameScope withName(String name) {
@@ -55,7 +55,7 @@ final class NameScope {
   private static final Pattern NAME_PATTERN = Pattern.compile("(.+)_(\\d+)", Pattern.DOTALL);
 
   /** "Import" used names from a graph. Useful when adding to a loaded graph. */
-  NameScope withUsedFrom(ExecutionEnvironment env) {
+  private NameScope withUsedFrom(ExecutionEnvironment env) {
 
     if (env instanceof Graph) {
       ((Graph) env)
@@ -104,9 +104,12 @@ final class NameScope {
    *
    * <p>A root-level namescope generates operator names with no components, like {@code Const_72}
    * and {@code result}.
+   *
+   * @param env
    */
-  NameScope() {
+  NameScope(ExecutionEnvironment env) {
     this(null, null, null);
+    withUsedFrom(env);
   }
 
   private NameScope(String opPrefix, String opName, Map<String, Integer> ids) {

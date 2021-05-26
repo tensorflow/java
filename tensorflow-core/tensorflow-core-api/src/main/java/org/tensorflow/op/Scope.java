@@ -86,8 +86,7 @@ public final class Scope {
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(
-        env, new NameScope().withUsedFrom(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
+    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
   }
 
   /** Returns the execution environment used by this scope. */
@@ -110,10 +109,7 @@ public final class Scope {
    */
   public Scope withSubScope(String childScopeName) {
     return new Scope(
-        env,
-        nameScope.withSubScope(childScopeName).withUsedFrom(env),
-        controlDependencies,
-        deviceSpec);
+        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec);
   }
 
   /**
@@ -151,7 +147,7 @@ public final class Scope {
   public Scope withNameAsSubScope(String defaultName) {
     return new Scope(
         env,
-        nameScope.withSubScope(nameScope.makeOpName(defaultName)).withUsedFrom(env),
+        nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
         controlDependencies,
         deviceSpec);
   }

@@ -354,9 +354,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
+
+  public final TpuOps tpu;
 
   public final MathOps math;
 
@@ -385,8 +385,8 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
+    tpu = new TpuOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
@@ -7884,7 +7884,7 @@ public final class Ops {
    * Creates an API for building operations in the provided execution environment
    */
   public static Ops create(ExecutionEnvironment env) {
-    return new Ops(env.baseScope());
+    return new Ops(new Scope(env));
   }
 
   /**
@@ -7893,6 +7893,6 @@ public final class Ops {
    * <p>Invoking this method is equivalent to {@code Ops.create(EagerSession.getDefault())}.
    */
   public static Ops create() {
-    return create(EagerSession.getDefault());
+    return new Ops(new Scope(EagerSession.getDefault()));
   }
 }
