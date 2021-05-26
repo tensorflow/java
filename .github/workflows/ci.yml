@@ -63,7 +63,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        ext: ["", -mkl, -gpu, -mkl-gpu]
+        ext: ["", -mkl, -gpu] #, -mkl-gpu]
     steps:
       - name: Install environment
         run: |
