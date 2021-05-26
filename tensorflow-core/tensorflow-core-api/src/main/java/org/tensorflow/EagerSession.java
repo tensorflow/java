@@ -309,7 +309,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
 
   @Override
   public synchronized Scope baseScope() {
-    if(baseScope == null){
+    if (baseScope == null) {
       baseScope = new Scope(this);
     }
 
