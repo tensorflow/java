@@ -1,18 +1,17 @@
-/* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+/*
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetAsync;
@@ -29,7 +28,6 @@ import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
@@ -114,7 +112,8 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
      * Configures the session based on the data found in the provided configuration.
      *
      * @param config a config protocol buffer
-     * @see <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto">config.proto</a></a>
+     * @see <a
+     *     href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/core/protobuf/config.proto">config.proto</a></a>
      */
     public Options config(ConfigProto config) {
       this.config = config;
@@ -321,17 +320,16 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   /**
    * Attach the list of native resources to this eager session scope.
    *
-   * <p>When the eager session is closed (i.e. by calling {@link #close()} explicitly or
-   * implicitly via try-with-resources), all native resources attached to the session will be
-   * released as well, unless so other references are {@link Pointer#retainReference() retaining}
-   * them.</p>
+   * <p>When the eager session is closed (i.e. by calling {@link #close()} explicitly or implicitly
+   * via try-with-resources), all native resources attached to the session will be released as well,
+   * unless so other references are {@link Pointer#retainReference() retaining} them.
    *
    * <p>Attached resources can still be garbage collected though if their associated {@link Pointer}
    * is no longer reachable in Java, independently of their reference count. Therefore, it is
    * assumed that these resources are not required by the native library once the Java client no
-   * longer needs them.</p>
+   * longer needs them.
    *
-   * <p>Attaching a resource already attached to this session will have no effect.</p>
+   * <p>Attaching a resource already attached to this session will have no effect.
    *
    * @param resources resources to attach to the session
    */
@@ -346,14 +344,14 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
    * Detach a list of resources from this eager session scope.
    *
    * <p>Detached native resources will prevent them to be automatically released when the session is
-   * closed.</p>
+   * closed.
    *
    * <p>Note though that this method will decrement the reference count of each resources being
-   * detached, which may automatically released them if that count reaches 0. Therefore,
-   * invoking {@link Pointer#retainReference()} prior to this call on any resource that must remain
-   * valid after being detached might be required.</p>
+   * detached, which may automatically released them if that count reaches 0. Therefore, invoking
+   * {@link Pointer#retainReference()} prior to this call on any resource that must remain valid
+   * after being detached might be required.
    *
-   * <p>Detaching a resource that is not attached to this session will have no effect.</p>
+   * <p>Detaching a resource that is not attached to this session will have no effect.
    *
    * @param resources resources to detach from the session
    */
@@ -390,7 +388,8 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  private static TFE_Context allocate(boolean async, int devicePlacementPolicy, ConfigProto config) {
+  private static TFE_Context allocate(
+      boolean async, int devicePlacementPolicy, ConfigProto config) {
     try (PointerScope scope = new PointerScope()) {
       TFE_ContextOptions opts = TFE_ContextOptions.newContextOptions();
       TF_Status status = TF_Status.newStatus();
@@ -399,7 +398,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
         TFE_ContextOptionsSetConfig(opts, configBytes, configBytes.capacity(), status);
         status.throwExceptionIfNotOK();
       }
-      TFE_ContextOptionsSetAsync(opts, (byte)(async ? 1 : 0));
+      TFE_ContextOptionsSetAsync(opts, (byte) (async ? 1 : 0));
       TFE_ContextOptionsSetDevicePlacementPolicy(opts, devicePlacementPolicy);
       TFE_Context context = TFE_NewContext(opts, status);
       status.throwExceptionIfNotOK();

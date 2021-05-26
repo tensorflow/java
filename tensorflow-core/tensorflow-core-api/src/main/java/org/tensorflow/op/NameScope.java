@@ -1,18 +1,17 @@
-/* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+/*
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+     http://www.apache.org/licenses/LICENSE-2.0
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow.op;
 
 import java.util.HashMap;
@@ -26,8 +25,8 @@ import org.tensorflow.Graph;
  * A class to manage scoped (hierarchical) names for operators.
  *
  * <p>{@code NameScope} manages hierarchical names where each component in the hierarchy is
- * separated by a forward slash {@code '/'}. For instance, {@code nn/Const_72} or {@code nn/gradient/assign/init}. Each
- * scope is a subtree in this hierarchy.
+ * separated by a forward slash {@code '/'}. For instance, {@code nn/Const_72} or {@code
+ * nn/gradient/assign/init}. Each scope is a subtree in this hierarchy.
  *
  * <p>Use {@code NameScope} to group related operations within a hierarchy, which for example lets
  * tensorboard coalesce nodes for better graph visualizations.
@@ -55,39 +54,40 @@ final class NameScope {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("(.+)_(\\d+)", Pattern.DOTALL);
 
-  /**
-   * "Import" used names from a graph.  Useful when adding to a loaded graph.
-   */
+  /** "Import" used names from a graph. Useful when adding to a loaded graph. */
   NameScope withUsedFrom(ExecutionEnvironment env) {
 
     if (env instanceof Graph) {
-      ((Graph) env).operations().forEachRemaining(op -> {
-        if (op.name().startsWith(opPrefix != null ? opPrefix : "")) {
-          String name = op.name();
+      ((Graph) env)
+          .operations()
+          .forEachRemaining(
+              op -> {
+                if (op.name().startsWith(opPrefix != null ? opPrefix : "")) {
+                  String name = op.name();
 
-          if (opPrefix != null) {
-            name = name.substring(opPrefix.length() + 1);
-          }
+                  if (opPrefix != null) {
+                    name = name.substring(opPrefix.length() + 1);
+                  }
 
-          if (!name.contains("/")) {
-            Matcher matcher = NAME_PATTERN.matcher(name);
-            if (matcher.find()) {
-              String realName = matcher.group(1);
-              int num = Integer.parseInt(matcher.group(2)) + 1;
+                  if (!name.contains("/")) {
+                    Matcher matcher = NAME_PATTERN.matcher(name);
+                    if (matcher.find()) {
+                      String realName = matcher.group(1);
+                      int num = Integer.parseInt(matcher.group(2)) + 1;
 
-              if (!(ids.containsKey(realName) && ids.get(realName) > num)) {
-                ids.put(realName, num);
-              }
-            } else {
-              if (!ids.containsKey(name)) {
-                ids.put(name, 1);
-              } else {
-                ids.put(name, ids.get(name) + 1);
-              }
-            }
-          }
-        }
-      });
+                      if (!(ids.containsKey(realName) && ids.get(realName) > num)) {
+                        ids.put(realName, num);
+                      }
+                    } else {
+                      if (!ids.containsKey(name)) {
+                        ids.put(name, 1);
+                      } else {
+                        ids.put(name, ids.get(name) + 1);
+                      }
+                    }
+                  }
+                }
+              });
     }
     return this;
   }
@@ -175,9 +175,9 @@ final class NameScope {
     }
     if (!pattern.matcher(name).matches()) {
       throw new IllegalArgumentException(
-              String.format(
-                      "invalid name: '%s' does not match the regular expression %s",
-                      name, NAME_REGEX.pattern()));
+          String.format(
+              "invalid name: '%s' does not match the regular expression %s",
+              name, NAME_REGEX.pattern()));
     }
   }
 

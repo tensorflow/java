@@ -1,6 +1,4 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
-
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
@@ -12,7 +10,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- ==============================================================================
+ =======================================================================
  */
 package org.tensorflow;
 
@@ -21,8 +19,8 @@ import org.tensorflow.op.Ops;
 
 public class ScopeTest {
   @Test
-  public void testSeparateOps(){
-    try(Graph g = new Graph()){
+  public void testSeparateOps() {
+    try (Graph g = new Graph()) {
       Ops tf1 = Ops.create(g);
       Ops tf2 = Ops.create(g);
 
@@ -35,7 +33,6 @@ public class ScopeTest {
       tf2.withName("Constant2").constant(2);
       tf2.withSubScope("Scope").constant(2);
       tf2.withSubScope("Scope").withName("Constant4").constant(2);
-
     }
   }
 }
