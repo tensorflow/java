@@ -328,6 +328,27 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.commonjava.maven.plugins</groupId>
+        <artifactId>directory-maven-plugin</artifactId>
+        <version>0.3.1</version>
+        <executions>
+          <execution>
+            <id>directories</id>
+            <goals>
+              <goal>directory-of</goal>
+            </goals>
+            <phase>initialize</phase>
+            <configuration>
+              <property>root.basedir</property>
+              <project>
+                <groupId>org.tensorflow</groupId>
+                <artifactId>tensorflow-java</artifactId>
+              </project>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <version>${spotless.version}</version>
@@ -342,7 +363,7 @@
             <removeUnusedImports/>
 
             <licenseHeader>
-              <file>./license-header</file>
+              <file>${root.basedir}/license-header</file>
             </licenseHeader>
           </java>
         </configuration>
