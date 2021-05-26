@@ -395,7 +395,11 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public Scope baseScope() {
+  public synchronized Scope baseScope() {
+    if(baseScope == null){
+      baseScope = new Scope(this);
+    }
+
     return baseScope;
   }
 
@@ -709,7 +713,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private TF_Graph nativeHandle;
   private int refcount = 0;
   private SaverDef saverDef;
-  private final Scope baseScope = new Scope(this);
+  private Scope baseScope = null;
 
   private final List<Op> initializers = new ArrayList<>();
 

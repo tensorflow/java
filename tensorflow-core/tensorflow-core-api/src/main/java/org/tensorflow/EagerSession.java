@@ -308,7 +308,11 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public Scope baseScope() {
+  public synchronized Scope baseScope() {
+    if(baseScope == null){
+      baseScope = new Scope(this);
+    }
+
     return baseScope;
   }
 
@@ -367,7 +371,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
 
-  private final Scope baseScope = new Scope(this);
+  private Scope baseScope = null;
 
   private EagerSession(Options options) {
     this.nativeResources = new WeakPointerScope();
