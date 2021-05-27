@@ -77,11 +77,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /** Create an empty Graph. */
   public Graph() {
     nativeHandle = allocate();
+    this.baseScope = new Scope(this);
   }
 
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
+    this.baseScope = new Scope(this);
   }
 
   Graph(TF_Graph nativeHandle, SaverDef saverDef) {
@@ -396,11 +398,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public synchronized Scope baseScope() {
-    if (baseScope == null) {
-      baseScope = new Scope(this);
-    }
-
+  public Scope baseScope() {
     return baseScope;
   }
 
@@ -714,7 +712,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private TF_Graph nativeHandle;
   private int refcount = 0;
   private SaverDef saverDef;
-  private Scope baseScope = null;
+  private final Scope baseScope;
 
   private final List<Op> initializers = new ArrayList<>();
 

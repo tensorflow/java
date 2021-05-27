@@ -7884,7 +7884,7 @@ public final class Ops {
    * Creates an API for building operations in the provided execution environment
    */
   public static Ops create(ExecutionEnvironment env) {
-    return new Ops(new Scope(env));
+    return new Ops(env.baseScope());
   }
 
   /**
@@ -7893,6 +7893,6 @@ public final class Ops {
    * <p>Invoking this method is equivalent to {@code Ops.create(EagerSession.getDefault())}.
    */
   public static Ops create() {
-    return new Ops(new Scope(EagerSession.getDefault()));
+    return create(EagerSession.getDefault());
   }
 }
