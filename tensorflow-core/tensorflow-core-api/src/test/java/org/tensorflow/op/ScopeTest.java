@@ -1,18 +1,18 @@
-/* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2017-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow.op;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +28,24 @@ import org.tensorflow.types.family.TType;
 
 /** Unit tests for {@link org.tensorflow.op.Scope}. */
 public class ScopeTest {
+
+  @Test
+  public void testSeparateOps() {
+    try (Graph g = new Graph()) {
+      Ops tf1 = Ops.create(g);
+      Ops tf2 = Ops.create(g);
+
+      tf1.constant(2);
+      tf1.withName("Constant2").constant(2);
+      tf1.withSubScope("Scope").constant(2);
+      tf1.withSubScope("Scope").withName("Constant4").constant(2);
+
+      tf2.constant(2);
+      tf2.withName("Constant2").constant(2);
+      tf2.withSubScope("Scope").constant(2);
+      tf2.withSubScope("Scope").withName("Constant4").constant(2);
+    }
+  }
 
   @Test
   public void basicNames() {
@@ -168,9 +186,9 @@ public class ScopeTest {
       // assertNotNull(g.operation("variance/zero"));
 
       // Verify correct results as well.
-      TInt32 result = (TInt32)sess.runner().fetch(var1.output()).run().get(0);
+      TInt32 result = (TInt32) sess.runner().fetch(var1.output()).run().get(0);
       assertEquals(21704, result.getInt());
-      result = (TInt32)sess.runner().fetch(var2.output()).run().get(0);
+      result = (TInt32) sess.runner().fetch(var2.output()).run().get(0);
       assertEquals(21704, result.getInt());
     }
   }
