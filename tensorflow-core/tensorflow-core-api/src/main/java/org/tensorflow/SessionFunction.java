@@ -1,5 +1,4 @@
-/*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -12,7 +11,7 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
- ==============================================================================
+ =======================================================================
  */
 package org.tensorflow;
 
@@ -21,11 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A callable function backed by a session.  All calls of this function will be ran on the same session.
+ * A callable function backed by a session. All calls of this function will be ran on the same
+ * session.
  *
- * Does no resource management, the session and all returned tensors are the caller's responsibility.
+ * <p>Does no resource management, the session and all returned tensors are the caller's
+ * responsibility.
  *
- * Does not initialize the session, since it may be shared.
+ * <p>Does not initialize the session, since it may be shared.
  */
 public class SessionFunction implements CallableFunction {
 
@@ -36,13 +37,19 @@ public class SessionFunction implements CallableFunction {
     this.signature = signature;
     this.session = session;
 
-    signature.getInputs().forEach((name, description) -> {
-      CallableFunction.validateDescription(description, session.graph(), name, "Input");
-    });
+    signature
+        .getInputs()
+        .forEach(
+            (name, description) -> {
+              CallableFunction.validateDescription(description, session.graph(), name, "Input");
+            });
 
-    signature.getInputs().forEach((name, description) -> {
-      CallableFunction.validateDescription(description, session.graph(), name, "Output");
-    });
+    signature
+        .getInputs()
+        .forEach(
+            (name, description) -> {
+              CallableFunction.validateDescription(description, session.graph(), name, "Output");
+            });
   }
 
   public static SessionFunction create(Signature signature, Session session) {
@@ -70,19 +77,25 @@ public class SessionFunction implements CallableFunction {
   @Override
   public Map<String, Tensor> call(Map<String, Tensor> arguments) {
     Session.Runner runner = session.runner();
-    signature.getInputs().forEach((argName, operand) -> {
-      if (!arguments.containsKey(argName)) {
-        throw new IllegalArgumentException("No argument found for parameter \"" + argName + "\"");
-      }
-      Tensor value = arguments.get(argName);
+    signature
+        .getInputs()
+        .forEach(
+            (argName, operand) -> {
+              if (!arguments.containsKey(argName)) {
+                throw new IllegalArgumentException(
+                    "No argument found for parameter \"" + argName + "\"");
+              }
+              Tensor value = arguments.get(argName);
 
-      if (value == null) {
-        throw new IllegalArgumentException(
-            "Can't pass null as an argument to a function.  Argument \"" + argName + "\" was null.");
-      }
+              if (value == null) {
+                throw new IllegalArgumentException(
+                    "Can't pass null as an argument to a function.  Argument \""
+                        + argName
+                        + "\" was null.");
+              }
 
-      runner.feed(operand.name, value);
-    });
+              runner.feed(operand.name, value);
+            });
 
     signature.getOutputs().values().forEach(x -> runner.fetch(x.name));
 

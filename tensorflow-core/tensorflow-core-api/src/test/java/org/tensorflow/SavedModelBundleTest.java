@@ -1,18 +1,18 @@
-/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,9 +42,7 @@ import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.types.TFloat32;
 
-/**
- * Unit tests for {@link org.tensorflow.SavedModelBundle}.
- */
+/** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
 public class SavedModelBundleTest {
 
   private static final float EPSILON = 1e-7f;
@@ -53,9 +51,12 @@ public class SavedModelBundleTest {
 
   static {
     try {
-      SAVED_MODEL_PATH = Paths.get(SavedModelBundleTest.class.getResource("/saved_model").toURI()).toString();
-      SAVED_MODEL_PY_PATH = Paths.get(SavedModelBundleTest.class.getResource("/saved_model_using_python/model").toURI())
-          .toString();
+      SAVED_MODEL_PATH =
+          Paths.get(SavedModelBundleTest.class.getResource("/saved_model").toURI()).toString();
+      SAVED_MODEL_PY_PATH =
+          Paths.get(
+                  SavedModelBundleTest.class.getResource("/saved_model_using_python/model").toURI())
+              .toString();
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
@@ -84,11 +85,12 @@ public class SavedModelBundleTest {
 
   @Test
   public void loader() {
-    try (SavedModelBundle bundle = SavedModelBundle.loader(SAVED_MODEL_PATH)
-        .withTags("serve")
-        .withConfigProto(sillyConfigProto())
-        .withRunOptions(sillyRunOptions())
-        .load()) {
+    try (SavedModelBundle bundle =
+        SavedModelBundle.loader(SAVED_MODEL_PATH)
+            .withTags("serve")
+            .withConfigProto(sillyConfigProto())
+            .withRunOptions(sillyRunOptions())
+            .load()) {
       assertNotNull(bundle.session());
       assertNotNull(bundle.graph());
       assertNotNull(bundle.metaGraphDef());
@@ -103,25 +105,22 @@ public class SavedModelBundleTest {
       Ops tf = Ops.create(g);
       Signature f1Signature = buildGraphWithVariables(tf, Shape.of(1, 1));
       Signature f2Signature = buildIdentityGraph(tf, "identity");
-      try (Session s = new Session(g);) {
+      try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
         s.runInit();
-        try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
+        try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
             TFloat32 t = (TFloat32) f1.call(x)) {
           reducedSum = t.getFloat();
         }
-        SavedModelBundle.exporter(testFolder.toString())
-            .withFunction(f1)
-            .withFunction(f2)
-            .export();
+        SavedModelBundle.exporter(testFolder.toString()).withFunction(f1).withFunction(f2).export();
       }
     }
     try (SavedModelBundle model = SavedModelBundle.load(testFolder.toString())) {
       assertEquals(2, model.signatures().size());
       SessionFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
-      try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[]{2, 2}));
+      try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
           TFloat32 t = (TFloat32) f1.call(x)) {
         assertEquals(reducedSum, t.getFloat(), EPSILON);
       }
@@ -147,7 +146,7 @@ public class SavedModelBundleTest {
       Ops tf = Ops.create(g);
       Signature f1Signature = buildGraphWithVariables(tf, Shape.of(1, 1));
       Signature f2Signature = buildIdentityGraph(tf, Signature.DEFAULT_KEY);
-      try (Session s = new Session(g);) {
+      try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
         s.runInit();
@@ -166,24 +165,21 @@ public class SavedModelBundleTest {
 
   @Test
   public void cannotExportOrImportInvalidTags() {
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(null)
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(new String[]{"tag", null})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(new String[]{"tag", ""})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(null)
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(new String[]{"tag", null})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(new String[]{"tag", ""})
-    );
+    assertThrows(IllegalArgumentException.class, () -> SavedModelBundle.loader("/").withTags(null));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.loader("/").withTags(new String[] {"tag", null}));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.loader("/").withTags(new String[] {"tag", ""}));
+    assertThrows(
+        IllegalArgumentException.class, () -> SavedModelBundle.exporter("/").withTags(null));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.exporter("/").withTags(new String[] {"tag", null}));
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SavedModelBundle.exporter("/").withTags(new String[] {"tag", ""}));
   }
 
   @Test
@@ -215,8 +211,11 @@ public class SavedModelBundleTest {
         args.put("dummy", dummy);
         // TF functions always require an input, so we supply a dummy one here
         // This test actually checks that resource variables can be loaded correctly.
-        try (TFloat32 v = (TFloat32) getVariable.call(args)
-            .get(getVariable.signature().outputNames().iterator().next())) {
+        try (TFloat32 v =
+            (TFloat32)
+                getVariable
+                    .call(args)
+                    .get(getVariable.signature().outputNames().iterator().next())) {
           assertEquals(2f, v.getFloat());
         }
       }
@@ -225,8 +224,9 @@ public class SavedModelBundleTest {
 
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
     Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
-    Variable<TFloat32> y = tf.withName("variable")
-        .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
+    Variable<TFloat32> y =
+        tf.withName("variable")
+            .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     Init init = tf.init();
     return Signature.builder().input("input", x).output("reducedSum", z).build();
@@ -239,9 +239,7 @@ public class SavedModelBundleTest {
   }
 
   private static RunOptions sillyRunOptions() {
-    return RunOptions.newBuilder()
-        .setTraceLevel(RunOptions.TraceLevel.FULL_TRACE)
-        .build();
+    return RunOptions.newBuilder().setTraceLevel(RunOptions.TraceLevel.FULL_TRACE).build();
   }
 
   private static ConfigProto sillyConfigProto() {
