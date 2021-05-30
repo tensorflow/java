@@ -52,6 +52,9 @@ import org.tensorflow.proto.util.SaverDef;
 /**
  * SavedModelBundle represents a model loaded from storage.
  *
+ * <p><b>All operations on a loaded bundle, and any functions from it, share the same underlying
+ * session.</b> The session is initialized when loaded.
+ *
  * <p>The model consists of a description of the computation (a {@link Graph}), a {@link Session}
  * with tensors (e.g., parameters or variables in the graph) initialized to values saved in storage,
  * and a description of the model as a <a
@@ -337,6 +340,8 @@ public class SavedModelBundle implements AutoCloseable {
    * Map<String, Tensor> outputTensorMap = myFunction.call(session, inputTensorMap);
    * }</pre>
    *
+   * <b>All functions use the bundle's underlying session.</b>
+   *
    * @param signatureKey name of the {@code SignatureDef} in the saved model.
    * @return object that can be used to make calls to a function
    * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
@@ -350,7 +355,11 @@ public class SavedModelBundle implements AutoCloseable {
     return function;
   }
 
-  /** Get all functions in the bundle. */
+  /**
+   * Get all functions in the bundle.
+   *
+   * <p><b>All functions use the bundle's underlying session.</b>
+   */
   public List<TensorFunction> functions() {
     return new ArrayList<>(functions.values());
   }
@@ -368,6 +377,8 @@ public class SavedModelBundle implements AutoCloseable {
    * </ul>
    *
    * <p>Caller is responsible for closing all returned Tensors.
+   *
+   * <p><b>This uses the model's underlying session</b>
    *
    * @param arguments list of input tensors, mapped by their signature name
    * @return list of output tensors, mapped by the signature name
