@@ -195,11 +195,30 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     /**
+     * Save multiple functions. Wrapper around {@link #withFunction(SessionFunction)}. All functions
+     * must have the same session.
+     *
+     * @param functions the functions to export
+     * @return this object
+     * @throws IllegalArgumentException if a function with the same name has already been added to
+     *     the model
+     * @throws UnsupportedOperationException if the session is already set to a different session
+     * @see #withFunction(SessionFunction)
+     */
+    public Exporter withFunctions(SessionFunction... functions) {
+      for (SessionFunction f : functions) {
+        withFunction(f);
+      }
+      return this;
+    }
+
+    /**
      * Add a signature to the model. This wraps the signature in a {@link SessionFunction} using the
      * exporter's already-set session. As such, <b>either {@link #withSession(Session)} or {@link
      * #withFunction(SessionFunction)} must be called before this method</b>.
      *
      * @throws IllegalStateException if no session has been set
+     * @return this
      */
     public Exporter withSignature(Signature signature) {
       if (session == null) {
@@ -207,6 +226,24 @@ public class SavedModelBundle implements AutoCloseable {
             "Session has not been set yet, you must call withSession or withFunction first.");
       }
       return withFunction(session.function(signature));
+    }
+
+    /**
+     * Add multiple signatures to the model. Wraps {@link #withSignature(Signature)}
+     *
+     * <p><b>Either {@link #withSession(Session)} or {@link * #withFunction(SessionFunction)} must
+     * be called before this method</b>, and the session set there will be used for these
+     * signatures.
+     *
+     * @throws IllegalStateException if no session has been set
+     * @return this
+     * @see #withSession(Session)
+     */
+    public Exporter withSignatures(Signature... signatures) {
+      for (Signature s : signatures) {
+        withSignature(s);
+      }
+      return this;
     }
 
     /**

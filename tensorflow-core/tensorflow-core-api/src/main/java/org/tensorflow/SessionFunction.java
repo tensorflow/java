@@ -15,6 +15,7 @@
  */
 package org.tensorflow;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,19 @@ public class SessionFunction implements TensorFunction {
 
   public static SessionFunction create(Signature signature, Session session) {
     return new SessionFunction(signature, session);
+  }
+
+  /**
+   * Save this function using {@link SavedModelBundle}.
+   *
+   * <p>This is identical to calling {@code
+   * SavedModelBundle.exporter(exportDir).withFunction(this).export()}.
+   *
+   * @param exportDir the directory path containing a saved model.
+   * @throws IOException if saved model or variable state cannot be written on disk
+   */
+  public void save(String exportDir) throws IOException {
+    SavedModelBundle.exporter(exportDir).withFunction(this).export();
   }
 
   @Override

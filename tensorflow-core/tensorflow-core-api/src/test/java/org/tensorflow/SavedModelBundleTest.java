@@ -162,7 +162,7 @@ public class SavedModelBundleTest {
         reducedSum = zTensor.getFloat();
       }
       // Save/export the model (which is a single function in this case)
-      SavedModelBundle.exporter(testFolder.toString()).withFunction(f).export();
+      f.save(testFolder.toString());
     }
     assertTrue(Files.exists(testFolder.resolve(Paths.get("variables", "variables.index"))));
     assertTrue(
@@ -253,10 +253,7 @@ public class SavedModelBundleTest {
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
         s.runInit();
         try {
-          SavedModelBundle.exporter(testFolder.toString())
-              .withFunction(f1)
-              .withFunction(f2)
-              .export();
+          SavedModelBundle.exporter(testFolder.toString()).withFunctions(f1, f2).export();
           fail();
         } catch (IllegalArgumentException e) {
           // as expected
