@@ -118,13 +118,13 @@ public class SavedModelBundleTest {
     }
     try (SavedModelBundle model = SavedModelBundle.load(testFolder.toString())) {
       assertEquals(2, model.signatures().size());
-      SessionFunction f1 = model.function(Signature.DEFAULT_KEY);
+      TensorFunction f1 = model.function(Signature.DEFAULT_KEY);
       assertNotNull(f1);
       try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
           TFloat32 t = (TFloat32) f1.call(x)) {
         assertEquals(reducedSum, t.getFloat(), EPSILON);
       }
-      SessionFunction f2 = model.function("identity");
+      TensorFunction f2 = model.function("identity");
       assertNotNull(f2);
       try (TFloat32 x = TFloat32.scalarOf(10.0f);
           TFloat32 t = (TFloat32) f2.call(x)) {
@@ -190,7 +190,7 @@ public class SavedModelBundleTest {
        * Test model was created in python
        *   Signature name used for saving 'add', argument names 'a' and 'b'
        */
-      SessionFunction add = bundle.function("add");
+      TensorFunction add = bundle.function("add");
       Map<String, Tensor> args = new HashMap<>();
       try (TFloat32 a = TFloat32.scalarOf(10.0f);
           TFloat32 b = TFloat32.scalarOf(15.5f)) {
@@ -206,7 +206,7 @@ public class SavedModelBundleTest {
       args.clear();
 
       // variable unwrapping happens in Session, which is used by ConcreteFunction.call
-      SessionFunction getVariable = bundle.function("get_variable");
+      TensorFunction getVariable = bundle.function("get_variable");
       try (TFloat32 dummy = TFloat32.scalarOf(1.0f)) {
         args.put("dummy", dummy);
         // TF functions always require an input, so we supply a dummy one here
