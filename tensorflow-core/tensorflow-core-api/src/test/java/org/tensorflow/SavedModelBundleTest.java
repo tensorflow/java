@@ -26,10 +26,12 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Ops;
@@ -40,6 +42,8 @@ import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
+import org.tensorflow.proto.framework.SignatureDef;
+import org.tensorflow.proto.framework.TensorInfo;
 import org.tensorflow.types.TFloat32;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
@@ -134,6 +138,104 @@ public class SavedModelBundleTest {
         model.function("NoSuchFunction");
         fail();
       } catch (IllegalArgumentException e) {
+        // as expected
+      }
+    }
+  }
+
+  @Test
+  public void exportFunctionWithVariables() throws IOException {
+    Path testFolder = Files.createTempDirectory("tf-saved-model-export-test");
+    float reducedSum;
+    FloatNdArray xValue = StdArrays.ndCopyOf(new float[][] {{0, 1, 2}, {3, 4, 5}});
+    Shape xyShape = Shape.of(2, 3L);
+    try (Graph g = new Graph();
+        Session session = new Session(g)) {
+      Ops tf = Ops.create(g);
+      SessionFunction f = session.function(buildGraphWithVariables(tf, xyShape));
+      // Init variable state by running the Init operation directly
+      session.runInit();
+
+      // Call the graph and remember the result of computation for later
+      try (TFloat32 xTensor = TFloat32.tensorOf(xValue);
+          TFloat32 zTensor = (TFloat32) f.call(xTensor)) {
+        reducedSum = zTensor.getFloat();
+      }
+      // Save/export the model (which is a single function in this case)
+      SavedModelBundle.exporter(testFolder.toString()).withFunction(f).export();
+    }
+    assertTrue(Files.exists(testFolder.resolve(Paths.get("variables", "variables.index"))));
+    assertTrue(
+        Files.exists(testFolder.resolve(Paths.get("variables", "variables.data-00000-of-00001"))));
+    assertTrue(Files.exists(testFolder.resolve("saved_model.pb")));
+
+    // Reload the model just saved and validate its data
+    try (SavedModelBundle savedModel =
+        SavedModelBundle.load(testFolder.toString(), SavedModelBundle.DEFAULT_TAG)) {
+      assertNotNull(savedModel.metaGraphDef());
+      assertNotNull(savedModel.metaGraphDef().getSaverDef());
+      assertEquals(1, savedModel.metaGraphDef().getSignatureDefCount());
+      assertEquals(
+          Signature.DEFAULT_KEY,
+          savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
+
+      TensorFunction function = savedModel.function(Signature.DEFAULT_KEY);
+      assertNotNull(function);
+
+      Signature signature = function.signature();
+      assertNotNull(signature);
+      assertEquals(1, signature.inputNames().size());
+      assertEquals("input", signature.inputNames().iterator().next());
+      assertEquals(1, signature.outputNames().size());
+      assertEquals("reducedSum", signature.outputNames().iterator().next());
+
+      SignatureDef signatureDef = signature.asSignatureDef();
+      assertEquals(1, signatureDef.getInputsCount());
+      assertEquals(1, signatureDef.getOutputsCount());
+
+      TensorInfo inputInfo = signatureDef.getInputsMap().get("input");
+      assertNotNull(inputInfo);
+      assertEquals(xyShape.numDimensions(), inputInfo.getTensorShape().getDimCount());
+      for (int i = 0; i < xyShape.numDimensions(); ++i) {
+        assertEquals(xyShape.size(i), inputInfo.getTensorShape().getDim(i).getSize());
+      }
+
+      TensorInfo outputInfo = signatureDef.getOutputsMap().get("reducedSum");
+      assertNotNull(outputInfo);
+      assertEquals(0, outputInfo.getTensorShape().getDimCount());
+
+      try (TFloat32 xTensor = TFloat32.tensorOf(xValue)) {
+        // Call the saved model function and make sure it returns the same result as before
+        try (TFloat32 zTensor = (TFloat32) function.call(xTensor)) {
+          assertEquals(reducedSum, zTensor.getFloat(), EPSILON);
+        }
+        // Now call the same function directly from the model
+        try (TFloat32 zTensor =
+            (TFloat32)
+                savedModel.call(Collections.singletonMap("input", xTensor)).get("reducedSum")) {
+          assertEquals(reducedSum, zTensor.getFloat(), EPSILON);
+        }
+      }
+    }
+  }
+
+  @Test
+  public void cannotExportMultipleFunctionsWithDifferentSessions() throws IOException {
+    Path testFolder = Files.createTempDirectory("tf-saved-model-export-test");
+    try (Graph g = new Graph();
+        Session s1 = new Session(g);
+        Session s2 = new Session(g)) {
+      Ops tf = Ops.create(g);
+      Signature f1Signature = buildGraphWithVariables(tf, Shape.of(1, 1));
+      Signature f2Signature = buildIdentityGraph(tf, "identity");
+      SessionFunction f1 = s1.function(f1Signature);
+      SessionFunction f2 = s2.function(f2Signature);
+      s1.runInit();
+      s2.runInit();
+      try {
+        SavedModelBundle.exporter(testFolder.toString()).withFunction(f1).withFunction(f2).export();
+        fail();
+      } catch (UnsupportedOperationException e) {
         // as expected
       }
     }
