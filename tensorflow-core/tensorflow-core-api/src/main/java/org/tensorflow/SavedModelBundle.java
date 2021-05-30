@@ -341,7 +341,7 @@ public class SavedModelBundle implements AutoCloseable {
    * @return object that can be used to make calls to a function
    * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
    */
-  public SessionFunction function(String signatureKey) {
+  public TensorFunction function(String signatureKey) {
     SessionFunction function = functions.get(signatureKey);
     if (function == null) {
       throw new IllegalArgumentException(
@@ -351,7 +351,7 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /** Get all functions in the bundle. */
-  public List<SessionFunction> functions() {
+  public List<TensorFunction> functions() {
     return new ArrayList<>(functions.values());
   }
 

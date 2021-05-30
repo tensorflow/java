@@ -20,7 +20,7 @@ import java.util.Map;
 import org.tensorflow.Signature.TensorDescription;
 
 /** A function that can be called with tensors. */
-public interface CallableFunction {
+public interface TensorFunction {
 
   /** Returns the signature of this function */
   Signature signature();

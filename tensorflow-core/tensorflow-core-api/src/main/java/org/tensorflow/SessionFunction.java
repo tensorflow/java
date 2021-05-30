@@ -28,7 +28,7 @@ import java.util.Map;
  *
  * <p>Does not initialize the session, since it may be shared.
  */
-public class SessionFunction implements CallableFunction {
+public class SessionFunction implements TensorFunction {
 
   private final Signature signature;
   private final Session session;
@@ -41,14 +41,14 @@ public class SessionFunction implements CallableFunction {
         .getInputs()
         .forEach(
             (name, description) -> {
-              CallableFunction.validateDescription(description, session.graph(), name, "Input");
+              TensorFunction.validateDescription(description, session.graph(), name, "Input");
             });
 
     signature
         .getInputs()
         .forEach(
             (name, description) -> {
-              CallableFunction.validateDescription(description, session.graph(), name, "Output");
+              TensorFunction.validateDescription(description, session.graph(), name, "Output");
             });
   }
 

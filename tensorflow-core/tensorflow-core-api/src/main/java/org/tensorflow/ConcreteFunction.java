@@ -64,7 +64,7 @@ import org.tensorflow.types.family.TType;
  * Map<String, Tensor> outputTensorMap = myFunction.call(inputTensorMap);
  * }</pre>
  */
-public class ConcreteFunction implements AutoCloseable, CallableFunction {
+public class ConcreteFunction implements AutoCloseable, TensorFunction {
 
   /**
    * Creates a function by building a new graph.
@@ -567,16 +567,14 @@ public class ConcreteFunction implements AutoCloseable, CallableFunction {
           signature.getInputs().entrySet().stream()
               .map(
                   (x) ->
-                      CallableFunction.validateDescription(
-                          x.getValue(), graph, x.getKey(), "Input"))
+                      TensorFunction.validateDescription(x.getValue(), graph, x.getKey(), "Input"))
               .collect(Collectors.toList());
 
       List<Operand<?>> outputs =
           signature.getOutputs().entrySet().stream()
               .map(
                   (x) ->
-                      CallableFunction.validateDescription(
-                          x.getValue(), graph, x.getKey(), "Output"))
+                      TensorFunction.validateDescription(x.getValue(), graph, x.getKey(), "Output"))
               .collect(Collectors.toList());
 
       List<GraphOperation> ops =
