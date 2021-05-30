@@ -226,7 +226,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   @Override
   public OperationBuilder setAttr(String name, ConcreteFunction value) {
     session.attachFunction(value);
-    setAttrFunctionName(opHandle, name, value.getNativeFunctionName());
+    setAttrFunctionName(opHandle, name, value.getDefinedName());
     return this;
   }
 
@@ -240,9 +240,7 @@ final class EagerOperationBuilder implements OperationBuilder {
         opHandle,
         session.nativeHandle(),
         name,
-        Arrays.stream(value)
-            .map(ConcreteFunction::getNativeFunctionName)
-            .collect(Collectors.toList()));
+        Arrays.stream(value).map(ConcreteFunction::getDefinedName).collect(Collectors.toList()));
 
     return this;
   }

@@ -356,7 +356,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public OperationBuilder setAttr(String name, ConcreteFunction value) {
     graph.attachFunction(value);
     try (Reference r = graph.ref()) {
-      setAttrFunctionName(unsafeNativeHandle, name, value.getNativeFunctionName());
+      setAttrFunctionName(unsafeNativeHandle, name, value.getDefinedName());
     }
     return this;
   }
@@ -371,9 +371,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
       setAttrFunctionList(
           unsafeNativeHandle,
           name,
-          Arrays.stream(value)
-              .map(ConcreteFunction::getNativeFunctionName)
-              .collect(Collectors.toList()));
+          Arrays.stream(value).map(ConcreteFunction::getDefinedName).collect(Collectors.toList()));
     }
     return this;
   }

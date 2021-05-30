@@ -105,7 +105,7 @@ public class ConcreteFunctionTest {
       Ops tf = Ops.create(g);
       tf.call(function, tf.constant(3f));
 
-      ConcreteFunction attached = g.getFunction(function.getNativeFunctionName());
+      ConcreteFunction attached = g.getFunction(function.getDefinedName());
       assertNotNull(attached);
 
       try (TFloat32 x = TFloat32.scalarOf(10f);

@@ -176,10 +176,10 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
   }
 
   /**
-   * Get the name of the function. This is what it will show up under in the graph and any exported
-   * GraphDefs.
+   * Get the name of the function definition. This is what it will show up under in the graph and
+   * any exported GraphDefs, and should be used for anything using tensorflow core directly.
    */
-  public String getNativeFunctionName() {
+  public String getDefinedName() {
     return nativeFunction.getName();
   }
 
@@ -248,7 +248,7 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
     }
 
     scope.env().attachFunction(this);
-    String name = getNativeFunctionName();
+    String name = getDefinedName();
 
     String displayName = Scope.isValidOpName(name) ? name : "FunctionCall";
 
