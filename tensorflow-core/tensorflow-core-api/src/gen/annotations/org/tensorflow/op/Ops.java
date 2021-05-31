@@ -58,6 +58,7 @@ import org.tensorflow.op.core.BarrierInsertMany;
 import org.tensorflow.op.core.BarrierReadySize;
 import org.tensorflow.op.core.BarrierTakeMany;
 import org.tensorflow.op.core.Batch;
+import org.tensorflow.op.core.BatchFunction;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
@@ -66,6 +67,7 @@ import org.tensorflow.op.core.BooleanMaskUpdate;
 import org.tensorflow.op.core.BroadcastDynamicShape;
 import org.tensorflow.op.core.BroadcastTo;
 import org.tensorflow.op.core.Bucketize;
+import org.tensorflow.op.core.Case;
 import org.tensorflow.op.core.ClipByValue;
 import org.tensorflow.op.core.Concat;
 import org.tensorflow.op.core.Constant;
@@ -89,6 +91,7 @@ import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
+import org.tensorflow.op.core.For;
 import org.tensorflow.op.core.Function;
 import org.tensorflow.op.core.Gather;
 import org.tensorflow.op.core.GatherNd;
@@ -101,6 +104,7 @@ import org.tensorflow.op.core.Helpers;
 import org.tensorflow.op.core.HistogramFixedWidth;
 import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
+import org.tensorflow.op.core.If;
 import org.tensorflow.op.core.ImmutableConst;
 import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.InitializeTable;
@@ -149,6 +153,7 @@ import org.tensorflow.op.core.OrderedMapUnstageNoKey;
 import org.tensorflow.op.core.Pad;
 import org.tensorflow.op.core.ParallelConcat;
 import org.tensorflow.op.core.ParallelDynamicStitch;
+import org.tensorflow.op.core.PartitionedCall;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.PlaceholderWithDefault;
 import org.tensorflow.op.core.Print;
@@ -166,6 +171,8 @@ import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
+import org.tensorflow.op.core.RemoteCall;
+import org.tensorflow.op.core.RemoteFusedGraphExecute;
 import org.tensorflow.op.core.Reshape;
 import org.tensorflow.op.core.ResourceCountUpTo;
 import org.tensorflow.op.core.ResourceGather;
@@ -215,6 +222,9 @@ import org.tensorflow.op.core.Stage;
 import org.tensorflow.op.core.StageClear;
 import org.tensorflow.op.core.StagePeek;
 import org.tensorflow.op.core.StageSize;
+import org.tensorflow.op.core.StatefulPartitionedCall;
+import org.tensorflow.op.core.StatelessIf;
+import org.tensorflow.op.core.StatelessWhile;
 import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
 import org.tensorflow.op.core.StridedSliceAssign;
@@ -281,6 +291,7 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
+import org.tensorflow.op.core.While;
 import org.tensorflow.op.core.XlaConvV2;
 import org.tensorflow.op.core.XlaDotV2;
 import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
@@ -777,6 +788,61 @@ public final class Ops {
   }
 
   /**
+   * Batches all the inputs tensors to the computation done by the function.
+   *  So, for example, in the following code
+   *  <pre>
+   *
+   *  # This input will be captured.
+   *  y = tf.placeholder_with_default(1.0, shape=[])
+   *
+   *  {@literal @}tf.Defun(tf.float32)
+   *  def computation(a):
+   *    return tf.matmul(a, a) + y
+   *
+   *  b = gen_batch_ops.batch_function(
+   *          f=computation
+   *          in_tensors=[a],
+   *          captured_tensors=computation.captured_inputs,
+   *          Tout=[o.type for o in computation.definition.signature.output_arg],
+   *          num_batch_threads=1,
+   *          max_batch_size=10,
+   *          batch_timeout_micros=100000,  # 100ms
+   *          allowed_batch_sizes=[3, 10],
+   *          batching_queue=&quot;&quot;)
+   *  </pre>
+   *  <p>If more than one session.run call is simultaneously trying to compute {@code b}
+   *  the values of {@code a} will be gathered, non-deterministically concatenated
+   *  along the first axis, and only one thread will run the computation.
+   *  <p>Assumes that all arguments of the function are Tensors which will be batched
+   *  along their first dimension.
+   *  <p>Arguments that are captured, are not batched. The session.run call which does
+   *  the concatenation, will use the values of the captured tensors available to it.
+   *  Therefore, typical uses of captured tensors should involve values which remain
+   *  unchanged across session.run calls. Inference is a good example of this.
+   *  <p>SparseTensor is not supported. The return value of the decorated function
+   *  must be a Tensor or a list/tuple of Tensors.
+   *
+   * @param inTensors The tensors to be batched.
+   * @param capturedTensors The tensors which are captured in the function, and don't need
+   *  to be batched.
+   * @param f the value of the f property
+   * @param numBatchThreads Number of scheduling threads for processing batches of work.
+   *  Determines the number of batches processed in parallel.
+   * @param maxBatchSize Batch sizes will never be bigger than this.
+   * @param batchTimeoutMicros Maximum number of microseconds to wait before outputting
+   *  an incomplete batch.
+   * @param Tout the types of the output tensors.
+   * @param options carries optional attribute values
+   * @return a new instance of BatchFunction
+   */
+  public BatchFunction batchFunction(Iterable<Operand<?>> inTensors,
+      Iterable<Operand<?>> capturedTensors, ConcreteFunction f, Long numBatchThreads,
+      Long maxBatchSize, Long batchTimeoutMicros, List<Class<? extends TType>> Tout,
+      BatchFunction.Options... options) {
+    return BatchFunction.create(scope, inTensors, capturedTensors, f, numBatchThreads, maxBatchSize, batchTimeoutMicros, Tout, options);
+  }
+
+  /**
    * BatchToSpace for 4-D tensors of type T.
    *  This is a legacy version of the more general BatchToSpaceND.
    *  <p>Rearranges (permutes) data from batch into blocks of spatial data, followed by
@@ -1142,6 +1208,42 @@ public final class Ops {
   public Map<String, Operand<?>> call(ConcreteFunction function,
       Map<String, Operand<?>> arguments) {
     return Function.call(scope, function, arguments);
+  }
+
+  /**
+   * An n-way switch statement which calls a single branch function.
+   *  <pre>
+   *  An n-way switch statement, implementing the following:
+   *  ```
+   *  switch (branch_index) {
+   *    case 0:
+   *      output = branches[0](input);
+   *      break;
+   *    case 1:
+   *      output = branches[1](input);
+   *      break;
+   *    ...
+   *    case [[nbranches-1]]:
+   *    default:
+   *      output = branches[nbranches-1](input);
+   *      break;
+   *  }
+   *  ```
+   *  </pre>
+   *
+   * @param branchIndex The branch selector, an int32 Tensor.
+   * @param input A list of input tensors passed to the branch function.
+   * @param Tout A list of output types.
+   * @param branches <pre>
+   *    A list of functions each of which takes 'inputs' and returns a list of
+   *    tensors, whose types are the same as what every other branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of Case
+   */
+  public Case caseOp(Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Case.Options... options) {
+    return Case.create(scope, branchIndex, input, Tout, branches, options);
   }
 
   /**
@@ -2476,6 +2578,28 @@ public final class Ops {
   }
 
   /**
+   * <pre>
+   *   output = input;
+   *   for i in range(start, limit, delta)
+   *     output = body(i, output);
+   *  </pre>
+   *
+   * @param start The lower bound. An int32
+   * @param limit The upper bound. An int32
+   * @param delta The increment. An int32
+   * @param input A list of input tensors whose types are T.
+   * @param body <pre>
+   *  A function that takes a list of tensors (int32, T) and returns another
+   *  list of tensors (T).
+   *  </pre>
+   * @return a new instance of For
+   */
+  public For forOp(Operand<TInt32> start, Operand<TInt32> limit, Operand<TInt32> delta,
+      Iterable<Operand<?>> input, ConcreteFunction body) {
+    return For.create(scope, start, limit, delta, input, body);
+  }
+
+  /**
    * Gather slices from {@code params} axis {@code axis} according to {@code indices}.
    *  {@code indices} must be an integer tensor of any dimension (usually 0-D or 1-D).
    *  Produces an output tensor with shape {@code params.shape[:axis] + indices.shape[batch_dims:] + params.shape[axis + 1:]} where:
@@ -2818,6 +2942,36 @@ public final class Ops {
    */
   public IdentityN identityN(Iterable<Operand<?>> input) {
     return IdentityN.create(scope, input);
+  }
+
+  /**
+   * output = cond ? then_branch(input) : else_branch(input)
+   *
+   * @param cond <pre>
+   *    A Tensor. If the tensor is a scalar of non-boolean type, the
+   *    scalar is converted to a boolean according to the
+   *    following rule: if the scalar is a numerical value, non-zero means
+   *    `True` and zero means False; if the scalar is a string, non-empty
+   *    means `True` and empty means `False`. If the tensor is not a scalar,
+   *    being empty means False and being non-empty means True.
+   *  </pre>
+   * @param input A list of input tensors.
+   * @param Tout A list of output types.
+   * @param thenBranch <pre>
+   *    A function that takes 'inputs' and returns a list of tensors, whose
+   *    types are the same as what else_branch returns.
+   *  </pre>
+   * @param elseBranch <pre>
+   *  A function that takes 'inputs' and returns a list of tensors, whose
+   *  types are the same as what then_branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of If
+   */
+  public If ifOp(Operand<? extends TType> cond, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, ConcreteFunction thenBranch, ConcreteFunction elseBranch,
+      If.Options... options) {
+    return If.create(scope, cond, input, Tout, thenBranch, elseBranch, options);
   }
 
   /**
@@ -3860,6 +4014,25 @@ public final class Ops {
   }
 
   /**
+   * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *
+   * @param args A list of input tensors.
+   * @param Tout A list of output types.
+   * @param f <pre>
+   *    A function that takes 'args', a list of tensors, and returns 'output',
+   *    another list of tensors. Input and output types are specified by 'Tin'
+   *    and 'Tout'. The function body of f will be placed and partitioned across
+   *    devices, setting this op apart from the regular Call op.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of PartitionedCall
+   */
+  public PartitionedCall partitionedCall(Iterable<Operand<?>> args,
+      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
+    return PartitionedCall.create(scope, args, Tout, f, options);
+  }
+
+  /**
    * A placeholder op for a value that will be fed into the computation.
    *  N.B. This operation will fail with an error if it is executed. It is
    *  intended as a way to represent a value that will always be fed, and to
@@ -4156,6 +4329,41 @@ public final class Ops {
    */
   public <T extends TType> RefSwitch<T> refSwitch(Operand<T> data, Operand<TBool> pred) {
     return RefSwitch.create(scope, data, pred);
+  }
+
+  /**
+   * Runs function {@code f} on a remote device indicated by {@code target}.
+   *
+   * @param target A fully specified device name where we want to run the function.
+   * @param args A list of arguments for the function.
+   * @param Tout The type list for the return values.
+   * @param f The function to run remotely.
+   * @return a new instance of RemoteCall
+   */
+  public RemoteCall remoteCall(Operand<TString> target, Iterable<Operand<?>> args,
+      List<Class<? extends TType>> Tout, ConcreteFunction f) {
+    return RemoteCall.create(scope, target, args, Tout, f);
+  }
+
+  /**
+   * Execute a sub graph on a remote processor.
+   *  The graph specifications(such as graph itself, input tensors and output names)
+   *  are stored as a serialized protocol buffer of RemoteFusedGraphExecuteInfo
+   *  as serialized_remote_fused_graph_execute_info.
+   *  The specifications will be passed to a dedicated registered
+   *  remote fused graph executor.  The executor will send the graph specifications
+   *  to a remote processor and execute that graph.  The execution results
+   *  will be passed to consumer nodes as outputs of this node.
+   *
+   * @param inputs Arbitrary number of tensors with arbitrary data types
+   * @param Toutputs the value of the Toutputs property
+   * @param serializedRemoteFusedGraphExecuteInfo Serialized protocol buffer
+   *  of RemoteFusedGraphExecuteInfo which contains graph specifications.
+   * @return a new instance of RemoteFusedGraphExecute
+   */
+  public RemoteFusedGraphExecute remoteFusedGraphExecute(Iterable<Operand<?>> inputs,
+      List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
+    return RemoteFusedGraphExecute.create(scope, inputs, Toutputs, serializedRemoteFusedGraphExecuteInfo);
   }
 
   /**
@@ -5838,6 +6046,89 @@ public final class Ops {
    */
   public StageSize stageSize(List<Class<? extends TType>> dtypes, StageSize.Options... options) {
     return StageSize.create(scope, dtypes, options);
+  }
+
+  /**
+   * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *
+   * @param args A list of input tensors.
+   * @param Tout A list of output types.
+   * @param f <pre>
+   *    A function that takes 'args', a list of tensors, and returns 'output',
+   *    another list of tensors. Input and output types are specified by 'Tin'
+   *    and 'Tout'. The function body of f will be placed and partitioned across
+   *    devices, setting this op apart from the regular Call op. This op is
+   *    stateful.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatefulPartitionedCall
+   */
+  public StatefulPartitionedCall statefulPartitionedCall(Iterable<Operand<?>> args,
+      List<Class<? extends TType>> Tout, ConcreteFunction f,
+      StatefulPartitionedCall.Options... options) {
+    return StatefulPartitionedCall.create(scope, args, Tout, f, options);
+  }
+
+  /**
+   * output = cond ? then_branch(input) : else_branch(input)
+   *
+   * @param cond <pre>
+   *    A Tensor. If the tensor is a scalar of non-boolean type, the
+   *    scalar is converted to a boolean according to the
+   *    following rule: if the scalar is a numerical value, non-zero means
+   *    `True` and zero means False; if the scalar is a string, non-empty
+   *    means `True` and empty means `False`. If the tensor is not a scalar,
+   *    being empty means False and being non-empty means True.
+   *
+   *    This should only be used when the if then/else body functions do not
+   *    have stateful ops.
+   *  </pre>
+   * @param input A list of input tensors.
+   * @param Tout A list of output types.
+   * @param thenBranch <pre>
+   *    A function that takes 'inputs' and returns a list of tensors, whose
+   *    types are the same as what else_branch returns.
+   *  </pre>
+   * @param elseBranch <pre>
+   *  A function that takes 'inputs' and returns a list of tensors, whose
+   *  types are the same as what then_branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatelessIf
+   */
+  public StatelessIf statelessIf(Operand<? extends TType> cond, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, ConcreteFunction thenBranch, ConcreteFunction elseBranch,
+      StatelessIf.Options... options) {
+    return StatelessIf.create(scope, cond, input, Tout, thenBranch, elseBranch, options);
+  }
+
+  /**
+   * output = input; While (Cond(output)) { output = Body(output) }
+   *
+   * @param input A list of input tensors whose types are T.
+   * @param cond <pre>
+   *    A function takes 'input' and returns a tensor.  If the tensor is
+   *    a scalar of non-boolean, the scalar is converted to a boolean
+   *    according to the following rule: if the scalar is a numerical
+   *    value, non-zero means True and zero means False; if the scalar is
+   *    a string, non-empty means True and empty means False. If the
+   *    tensor is not a scalar, non-emptiness means True and False
+   *    otherwise.
+   *
+   *    This should only be used when the while condition and body functions
+   *    do not have stateful ops.
+   *  </pre>
+   * @param body <pre>
+   *    A function that takes a list of tensors and returns another
+   *    list of tensors. Both lists have the same types as specified
+   *    by T.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatelessWhile
+   */
+  public StatelessWhile statelessWhile(Iterable<Operand<?>> input, ConcreteFunction cond,
+      ConcreteFunction body, StatelessWhile.Options... options) {
+    return StatelessWhile.create(scope, input, cond, body, options);
   }
 
   /**
@@ -7695,6 +7986,32 @@ public final class Ops {
    */
   public Where where(Operand<? extends TType> condition) {
     return Where.create(scope, condition);
+  }
+
+  /**
+   * output = input; While (Cond(output)) { output = Body(output) }
+   *
+   * @param input A list of input tensors whose types are T.
+   * @param cond <pre>
+   *    A function takes 'input' and returns a tensor.  If the tensor is
+   *    a scalar of non-boolean, the scalar is converted to a boolean
+   *    according to the following rule: if the scalar is a numerical
+   *    value, non-zero means True and zero means False; if the scalar is
+   *    a string, non-empty means True and empty means False. If the
+   *    tensor is not a scalar, non-emptiness means True and False
+   *    otherwise.
+   *  </pre>
+   * @param body <pre>
+   *    A function that takes a list of tensors and returns another
+   *    list of tensors. Both lists have the same types as specified
+   *    by T.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of While
+   */
+  public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
+      While.Options... options) {
+    return While.create(scope, input, cond, body, options);
   }
 
   /**

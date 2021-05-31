@@ -77,7 +77,8 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of While
    */
   @Endpoint(
-      describeByClass = true
+      describeByClass = true,
+      name = "whileOp"
   )
   public static While create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body, Options... options) {

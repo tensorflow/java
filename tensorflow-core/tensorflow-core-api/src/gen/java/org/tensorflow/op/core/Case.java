@@ -88,7 +88,8 @@ public final class Case extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of Case
    */
   @Endpoint(
-      describeByClass = true
+      describeByClass = true,
+      name = "caseOp"
   )
   public static Case create(Scope scope, Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
       List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Options... options) {

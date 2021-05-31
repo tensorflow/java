@@ -73,7 +73,8 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of For
    */
   @Endpoint(
-      describeByClass = true
+      describeByClass = true,
+      name = "forOp"
   )
   public static For create(Scope scope, Operand<TInt32> start, Operand<TInt32> limit,
       Operand<TInt32> delta, Iterable<Operand<?>> input, ConcreteFunction body) {

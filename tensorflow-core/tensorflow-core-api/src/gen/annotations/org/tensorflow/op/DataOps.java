@@ -18,6 +18,7 @@
 package org.tensorflow.op;
 
 import java.util.List;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.data.AnonymousIterator;
@@ -25,12 +26,17 @@ import org.tensorflow.op.data.BatchDataset;
 import org.tensorflow.op.data.ConcatenateDataset;
 import org.tensorflow.op.data.DeleteIterator;
 import org.tensorflow.op.data.DeserializeIterator;
+import org.tensorflow.op.data.FilterDataset;
+import org.tensorflow.op.data.FlatMapDataset;
+import org.tensorflow.op.data.InterleaveDataset;
 import org.tensorflow.op.data.Iterator;
 import org.tensorflow.op.data.IteratorGetNext;
 import org.tensorflow.op.data.IteratorGetNextAsOptional;
 import org.tensorflow.op.data.IteratorGetNextSync;
 import org.tensorflow.op.data.IteratorToStringHandle;
 import org.tensorflow.op.data.MakeIterator;
+import org.tensorflow.op.data.MapDataset;
+import org.tensorflow.op.data.OneShotIterator;
 import org.tensorflow.op.data.OptionalFromValue;
 import org.tensorflow.op.data.OptionalGetValue;
 import org.tensorflow.op.data.OptionalHasValue;
@@ -135,6 +141,75 @@ public final class DataOps {
   }
 
   /**
+   * Creates a dataset containing elements of {@code input_dataset} matching {@code predicate}.
+   *  The {@code predicate} function must return a scalar boolean and accept the
+   *  following arguments:
+   *  <ul>
+   *  <li>One tensor for each component of an element of {@code input_dataset}.</li>
+   *  <li>One tensor for each value in {@code other_arguments}.</li>
+   *  </ul>
+   *
+   * @param inputDataset the inputDataset value
+   * @param otherArguments A list of tensors, typically values that were captured when
+   *  building a closure for {@code predicate}.
+   * @param predicate A function returning a scalar boolean.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of FilterDataset
+   */
+  public FilterDataset filterDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, ConcreteFunction predicate,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return FilterDataset.create(scope, inputDataset, otherArguments, predicate, outputTypes, outputShapes);
+  }
+
+  /**
+   * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
+   *  Unlike MapDataset, the {@code f} in FlatMapDataset is expected to return a
+   *  Dataset variant, and FlatMapDataset will flatten successive results
+   *  into a single Dataset.
+   *
+   * @param inputDataset the inputDataset value
+   * @param otherArguments the otherArguments value
+   * @param f A function mapping elements of {@code input_dataset}, concatenated with
+   *  {@code other_arguments}, to a Dataset variant that contains elements matching
+   *  {@code output_types} and {@code output_shapes}.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of FlatMapDataset
+   */
+  public FlatMapDataset flatMapDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, ConcreteFunction f,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return FlatMapDataset.create(scope, inputDataset, otherArguments, f, outputTypes, outputShapes);
+  }
+
+  /**
+   * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
+   *  Unlike MapDataset, the {@code f} in InterleaveDataset is expected to return
+   *  a Dataset variant, and InterleaveDataset will flatten successive
+   *  results into a single Dataset. Unlike FlatMapDataset,
+   *  InterleaveDataset will interleave sequences of up to {@code block_length}
+   *  consecutive elements from {@code cycle_length} input elements.
+   *
+   * @param inputDataset the inputDataset value
+   * @param otherArguments the otherArguments value
+   * @param cycleLength the cycleLength value
+   * @param blockLength the blockLength value
+   * @param f A function mapping elements of {@code input_dataset}, concatenated with
+   *  {@code other_arguments}, to a Dataset variant that contains elements matching
+   *  {@code output_types} and {@code output_shapes}.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @return a new instance of InterleaveDataset
+   */
+  public InterleaveDataset interleaveDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, Operand<TInt64> cycleLength, Operand<TInt64> blockLength,
+      ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
+    return InterleaveDataset.create(scope, inputDataset, otherArguments, cycleLength, blockLength, f, outputTypes, outputShapes);
+  }
+
+  /**
    * The IteratorV2 operation
    *
    * @param sharedName the value of the sharedName property
@@ -213,6 +288,56 @@ public final class DataOps {
   public MakeIterator makeIterator(Operand<? extends TType> dataset,
       Operand<? extends TType> iterator) {
     return MakeIterator.create(scope, dataset, iterator);
+  }
+
+  /**
+   * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
+   *
+   * @param inputDataset the inputDataset value
+   * @param otherArguments the otherArguments value
+   * @param f the value of the f property
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
+   * @return a new instance of MapDataset
+   */
+  public MapDataset mapDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, ConcreteFunction f,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      MapDataset.Options... options) {
+    return MapDataset.create(scope, inputDataset, otherArguments, f, outputTypes, outputShapes, options);
+  }
+
+  /**
+   * Makes a &quot;one-shot&quot; iterator that can be iterated only once.
+   *  A one-shot iterator bundles the logic for defining the dataset and
+   *  the state of the iterator in a single op, which allows simple input
+   *  pipelines to be defined without an additional initialization
+   *  (&quot;MakeIterator&quot;) step.
+   *  <p>One-shot iterators have the following limitations:
+   *  <ul>
+   *  <li>They do not support parameterization: all logic for creating the underlying
+   *  dataset must be bundled in the {@code dataset_factory} function.</li>
+   *  <li>They are not resettable. Once a one-shot iterator reaches the end of its
+   *  underlying dataset, subsequent &quot;IteratorGetNext&quot; operations on that
+   *  iterator will always produce an {@code OutOfRange} error.</li>
+   *  </ul>
+   *  <p>For greater flexibility, use &quot;Iterator&quot; and &quot;MakeIterator&quot; to define
+   *  an iterator using an arbitrary subgraph, which may capture tensors
+   *  (including fed values) as parameters, and which may be reset multiple
+   *  times by rerunning &quot;MakeIterator&quot;.
+   *
+   * @param datasetFactory A function of type {@code () -> DT_VARIANT}, where the returned
+   *  DT_VARIANT is a dataset.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
+   * @return a new instance of OneShotIterator
+   */
+  public OneShotIterator oneShotIterator(ConcreteFunction datasetFactory,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      OneShotIterator.Options... options) {
+    return OneShotIterator.create(scope, datasetFactory, outputTypes, outputShapes, options);
   }
 
   /**

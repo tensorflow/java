@@ -69,7 +69,8 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
    * @return a new instance of If
    */
   @Endpoint(
-      describeByClass = true
+      describeByClass = true,
+      name = "ifOp"
   )
   public static If create(Scope scope, Operand<? extends TType> cond, Iterable<Operand<?>> inputs,
       ConcreteFunction thenBranch, ConcreteFunction elseBranch, List<Class<? extends TType>> Tout) {
