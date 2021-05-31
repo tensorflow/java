@@ -57,7 +57,6 @@ final class ClassGenerator {
   /** Return true if we can generate the operation class for {@code op}. */
   static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
-        && !op.getAttrList().stream().anyMatch(x -> x.getType().contains("func"))
         && !op.getName()
             .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
