@@ -1,18 +1,18 @@
-/* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_Execute;
@@ -22,6 +22,8 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBool;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrBoolList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloat;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFloatList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFunctionList;
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrFunctionName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrInt;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrIntList;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetAttrShape;
@@ -35,6 +37,9 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TFE_OpSetDevice;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BooleanPointer;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.IntPointer;
@@ -88,7 +93,8 @@ final class EagerOperationBuilder implements OperationBuilder {
 
   @Override
   public OperationBuilder addControlInput(Operation control) {
-    // No-op.  Any operations passed to this method will already be evaluated (b/c eager evaluation).
+    // No-op.  Any operations passed to this method will already be evaluated (b/c eager
+    // evaluation).
     return this;
   }
 
@@ -217,15 +223,35 @@ final class EagerOperationBuilder implements OperationBuilder {
     return this;
   }
 
+  @Override
+  public OperationBuilder setAttr(String name, ConcreteFunction value) {
+    session.attachFunction(value);
+    setAttrFunctionName(opHandle, name, value.getDefinedName());
+    return this;
+  }
+
+  @Override
+  public OperationBuilder setAttr(String name, ConcreteFunction[] value) {
+    for (ConcreteFunction fn : value) {
+      session.attachFunction(fn);
+    }
+
+    setAttrFunctionList(
+        opHandle,
+        session.nativeHandle(),
+        name,
+        Arrays.stream(value).map(ConcreteFunction::getDefinedName).collect(Collectors.toList()));
+
+    return this;
+  }
+
   private TFE_Op opHandle;
 
   private final EagerSession session;
   private final String type;
   private final String name;
 
-  /**
-   * This value should be >= to the maximum number of outputs in any op
-   */
+  /** This value should be >= to the maximum number of outputs in any op */
   private static final int MAX_OUTPUTS_PER_OP = 1000;
 
   private static void requireOp(TFE_Op handle) {
@@ -267,7 +293,8 @@ final class EagerOperationBuilder implements OperationBuilder {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
       IntPointer numRetvals = new IntPointer(1).put(MAX_OUTPUTS_PER_OP);
-      PointerPointer<TFE_TensorHandle> retvals = new PointerPointer<TFE_TensorHandle>(MAX_OUTPUTS_PER_OP);
+      PointerPointer<TFE_TensorHandle> retvals =
+          new PointerPointer<TFE_TensorHandle>(MAX_OUTPUTS_PER_OP);
       TF_Status status = TF_Status.newStatus();
       TFE_Execute(opHandle, retvals, numRetvals, status);
       status.throwExceptionIfNotOK();
@@ -294,7 +321,8 @@ final class EagerOperationBuilder implements OperationBuilder {
   private static void addInputList(TFE_Op opHandle, TFE_TensorHandle[] tensorHandles) {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
-      PointerPointer<TFE_TensorHandle> tensorPointers = new PointerPointer<TFE_TensorHandle>(tensorHandles.length);
+      PointerPointer<TFE_TensorHandle> tensorPointers =
+          new PointerPointer<TFE_TensorHandle>(tensorHandles.length);
       for (int i = 0; i < tensorHandles.length; ++i) {
         requireTensorHandle(tensorHandles[i]);
         tensorPointers.put(i, tensorHandles[i]);
@@ -363,7 +391,8 @@ final class EagerOperationBuilder implements OperationBuilder {
   private static void setAttrBoolList(TFE_Op opHandle, String name, boolean[] values) {
     requireOp(opHandle);
     try (PointerScope scope = new PointerScope()) {
-      TFE_OpSetAttrBoolList(opHandle, name, new BytePointer(new BooleanPointer(values)), values.length);
+      TFE_OpSetAttrBoolList(
+          opHandle, name, new BytePointer(new BooleanPointer(values)), values.length);
     }
   }
 
@@ -408,8 +437,36 @@ final class EagerOperationBuilder implements OperationBuilder {
         shapesPointer.position(shapesPointer.position() + numDims[i] * 8);
       }
       TF_Status status = TF_Status.newStatus();
-      TFE_OpSetAttrShapeList(opHandle, new BytePointer(name), shapesPointers, new IntPointer(numDims),
-          numDims.length, status);
+      TFE_OpSetAttrShapeList(
+          opHandle,
+          new BytePointer(name),
+          shapesPointers,
+          new IntPointer(numDims),
+          numDims.length,
+          status);
+    }
+  }
+
+  private static void setAttrFunctionName(TFE_Op opHandle, String attrName, String functionName) {
+    requireOp(opHandle);
+    try (PointerScope scope = new PointerScope()) {
+      TFE_OpSetAttrFunctionName(opHandle, attrName, functionName, functionName.length());
+    }
+  }
+
+  private static void setAttrFunctionList(
+      TFE_Op opHandle, TFE_Context context, String attrName, List<String> functionNames) {
+    requireOp(opHandle);
+    requireContext(context);
+    try (PointerScope scope = new PointerScope()) {
+      PointerPointer<TFE_Op> fns = new PointerPointer<>(functionNames.size());
+      for (int i = 0; i < functionNames.size(); i++) {
+        TF_Status status = TF_Status.newStatus();
+        TFE_Op op = TFE_Op.newOp(context, functionNames.get(i), status);
+        status.throwExceptionIfNotOK();
+        fns.put(i, op);
+      }
+      TFE_OpSetAttrFunctionList(opHandle, new BytePointer(attrName), fns, functionNames.size());
     }
   }
 }

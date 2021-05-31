@@ -18,8 +18,11 @@ package org.tensorflow;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FinishWhile;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphCopyFunction;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphGetFunctions;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphImportGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNextOperation;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphNumFunctions;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphOperationByName;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GraphToGraphDef;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_ImportGraphDefOptionsSetPrefix;
@@ -39,10 +42,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
+import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
+import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_ImportGraphDefOptions;
 import org.tensorflow.internal.c_api.TF_Operation;
@@ -376,6 +381,95 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
     return new GraphOperationBuilder(this, type, name);
+  }
+
+  @Override
+  public void attachFunction(ConcreteFunction function) {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TF_GraphCopyFunction(ref.nativeHandle(), function.nativeHandle(), null, status);
+      status.throwExceptionIfNotOK();
+
+      function
+          .getDependencies()
+          .forEach(
+              x -> {
+                TF_Status status2 = TF_Status.newStatus();
+                TF_GraphCopyFunction(ref.nativeHandle(), x, null, status2);
+                status2.throwExceptionIfNotOK();
+              });
+    }
+  }
+
+  /**
+   * Get the graph's functions.
+   *
+   * @param outerScope the pointer scope to attach the functions to.
+   */
+  List<NativeFunction> getNativeFunctions(PointerScope outerScope) {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+
+      int numFunctions = TF_GraphNumFunctions(ref.nativeHandle());
+
+      PointerPointer<TF_Function> output = new PointerPointer<>(numFunctions);
+
+      TF_GraphGetFunctions(ref.nativeHandle(), output, numFunctions, status);
+      status.throwExceptionIfNotOK();
+
+      List<NativeFunction> funcs = new ArrayList<>(numFunctions);
+      for (int i = 0; i < numFunctions; i++) {
+        TF_Function function = output.get(TF_Function.class, i);
+
+        function.withDeallocator();
+        outerScope.attach(function);
+
+        funcs.add(new NativeFunction(function));
+      }
+
+      return funcs;
+    }
+  }
+
+  /**
+   * Get the function attached to the graph with the given native name. Returns {@code null} if none
+   * found.
+   *
+   * @param key the name of the native function. Note that this may include an argument hash.
+   * @return the found {@link ConcreteFunction}, or {@code null} if none were found with the correct
+   *     name
+   */
+  public ConcreteFunction getFunction(String key) {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      List<NativeFunction> funcs = getNativeFunctions(scope);
+
+      for (NativeFunction f : funcs) {
+
+        if (f.getName().equals(key)) {
+          return ConcreteFunction.fromNativeHandle(f, funcs);
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Get the functions attached to the graph.
+   *
+   * @return all functions attached to this graph.
+   */
+  public List<ConcreteFunction> getFunctions() {
+    try (Reference ref = ref();
+        PointerScope scope = new PointerScope()) {
+      List<NativeFunction> funcs = getNativeFunctions(scope);
+
+      return funcs.stream()
+          .map(x -> ConcreteFunction.fromNativeHandle(x, funcs))
+          .collect(Collectors.toList());
+    }
   }
 
   @Override
@@ -1077,12 +1171,20 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
     }
 
+    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
+
+    if (varNames.isEmpty()) {
+      return SaverDef.newBuilder()
+          .setFilenameTensorName(saveFilename.op().name())
+          .setSaveTensorName(tf.withName("empty_save").identity(saveFilename).op().name())
+          .setRestoreOpName(tf.withName("restore_all").noOp().op().name())
+          .build();
+    }
+
     // FIXME Need an easier way to initialize an NdArray from a list
     String[] tmp = new String[varNames.size()];
     Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
     Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
-
-    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
     Save saveVariables = tf.train.save(saveFilename, varNamesTensor, varSlices, varOutputs);
     Identity<TString> id =
         tf.withControlDependencies(Arrays.asList(saveFilename, saveVariables))

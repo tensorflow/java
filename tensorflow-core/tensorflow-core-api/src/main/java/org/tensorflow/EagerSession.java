@@ -15,6 +15,7 @@
  */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextAddFunction;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetAsync;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetConfig;
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextOptionsSetDevicePlacementPolicy;
@@ -282,6 +283,25 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
     }
     return new EagerOperationBuilder(this, type, name);
+  }
+
+  @Override
+  public void attachFunction(ConcreteFunction function) {
+    checkSession();
+    try (PointerScope scope = new PointerScope()) {
+      TF_Status status = TF_Status.newStatus();
+      TFE_ContextAddFunction(nativeHandle, function.nativeHandle(), status);
+      status.throwExceptionIfNotOK();
+
+      function
+          .getDependencies()
+          .forEach(
+              fn -> {
+                TF_Status status2 = TF_Status.newStatus();
+                TFE_ContextAddFunction(nativeHandle, fn, status2);
+                status2.throwExceptionIfNotOK();
+              });
+    }
   }
 
   @Override

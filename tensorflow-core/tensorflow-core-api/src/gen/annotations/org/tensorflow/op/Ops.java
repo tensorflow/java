@@ -19,6 +19,8 @@ package org.tensorflow.op;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.EagerSession;
 import org.tensorflow.ExecutionEnvironment;
@@ -87,6 +89,7 @@ import org.tensorflow.op.core.ExpandDims;
 import org.tensorflow.op.core.ExtractVolumePatches;
 import org.tensorflow.op.core.Fill;
 import org.tensorflow.op.core.Fingerprint;
+import org.tensorflow.op.core.Function;
 import org.tensorflow.op.core.Gather;
 import org.tensorflow.op.core.GatherNd;
 import org.tensorflow.op.core.GetSessionHandle;
@@ -1114,6 +1117,31 @@ public final class Ops {
    */
   public Bucketize bucketize(Operand<? extends TNumber> input, List<Float> boundaries) {
     return Bucketize.create(scope, input, boundaries);
+  }
+
+  /**
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   *  already present. Only works for functions with a single input and output.
+   *
+   * @param argument the argument to the call
+   * @return the output of the function
+   * @see ConcreteFunction#call(Ops, Operand)
+   */
+  public Operand<?> call(ConcreteFunction function, Operand<?> argument) {
+    return Function.call(scope, function, argument);
+  }
+
+  /**
+   * Calls the function in an execution environment, adding its graph as a function if it isn't
+   *  already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
+   *
+   * @param arguments the arguments to the call
+   * @return the outputs of the function
+   * @see ConcreteFunction#call(Ops, Map)
+   */
+  public Map<String, Operand<?>> call(ConcreteFunction function,
+      Map<String, Operand<?>> arguments) {
+    return Function.call(scope, function, arguments);
   }
 
   /**

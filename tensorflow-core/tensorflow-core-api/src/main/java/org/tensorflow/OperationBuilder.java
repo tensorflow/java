@@ -1,18 +1,18 @@
-/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow;
 
 import org.tensorflow.ndarray.Shape;
@@ -49,7 +49,7 @@ public interface OperationBuilder {
    *
    * <p>The OperationBuilder is not usable after build() returns.
    */
-   Operation build();
+  Operation build();
 
   /**
    * Add the output of another operation as the next input of the operation being built.
@@ -57,7 +57,7 @@ public interface OperationBuilder {
    * @param input {@link Output} supposed to be the input of the operation being built.
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder addInput(Output<?> input);
+  OperationBuilder addInput(Output<?> input);
 
   /**
    * Add the outputs of another operation as the next inputs of the operation being built.
@@ -65,7 +65,7 @@ public interface OperationBuilder {
    * @param inputs list of {@link Output} supposed to be the inputs of the operation being built.
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder addInputList(Output<?>[] inputs);
+  OperationBuilder addInputList(Output<?>[] inputs);
 
   /**
    * Ensure that the operation does not execute before the control operation does.
@@ -80,7 +80,7 @@ public interface OperationBuilder {
    * @param control operation that must be executed before running this operation.
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder addControlInput(Operation control);
+  OperationBuilder addControlInput(Operation control);
 
   /**
    * Set the device requested for computing the operation being built.
@@ -88,7 +88,7 @@ public interface OperationBuilder {
    * @param device the requested device, as a string
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setDevice(String device);
+  OperationBuilder setDevice(String device);
 
   /**
    * Set the string values of an attribute of the operation being built.
@@ -97,7 +97,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, String[] value);
+  OperationBuilder setAttr(String name, String[] value);
 
   /**
    * Set the string value of an attribute of the operation being built.
@@ -106,7 +106,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, String value);
+  OperationBuilder setAttr(String name, String value);
 
   /**
    * Set the byte values of an attribute of the operation being built.
@@ -115,7 +115,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, byte[] value);
+  OperationBuilder setAttr(String name, byte[] value);
 
   /**
    * Set the long value of an attribute of the operation being built.
@@ -124,7 +124,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, long value);
+  OperationBuilder setAttr(String name, long value);
 
   /**
    * Set the long values of an attribute of the operation being built.
@@ -133,7 +133,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, long[] value);
+  OperationBuilder setAttr(String name, long[] value);
 
   /**
    * Set the float value of an attribute of the operation being built.
@@ -142,7 +142,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, float value);
+  OperationBuilder setAttr(String name, float value);
 
   /**
    * Set the float values of an attribute of the operation being built.
@@ -151,7 +151,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, float[] value);
+  OperationBuilder setAttr(String name, float[] value);
 
   /**
    * Set the boolean value of an attribute of the operation being built.
@@ -160,7 +160,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, boolean value);
+  OperationBuilder setAttr(String name, boolean value);
 
   /**
    * Set the boolean values of an attribute of the operation being built.
@@ -169,7 +169,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, boolean[] value);
+  OperationBuilder setAttr(String name, boolean[] value);
 
   /**
    * Set the type value of an attribute of the operation being built.
@@ -178,7 +178,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, DataType value);
+  OperationBuilder setAttr(String name, DataType value);
 
   /**
    * Set the type values of an attribute of the operation being built.
@@ -187,7 +187,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, DataType[] value);
+  OperationBuilder setAttr(String name, DataType[] value);
 
   /**
    * Set the tensor value of an attribute of the operation being built.
@@ -196,7 +196,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Tensor value);
+  OperationBuilder setAttr(String name, Tensor value);
 
   /**
    * Set the tensor values of an attribute of the operation being built.
@@ -205,7 +205,7 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Tensor[] value);
+  OperationBuilder setAttr(String name, Tensor[] value);
 
   /**
    * Set the shape value of an attribute of the operation being built.
@@ -214,7 +214,7 @@ public interface OperationBuilder {
    * @param value attribute value
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Shape value);
+  OperationBuilder setAttr(String name, Shape value);
 
   /**
    * Set the shape values of an attribute of the operation being built.
@@ -223,5 +223,25 @@ public interface OperationBuilder {
    * @param value attribute values
    * @return the OperationBuilder instance for chaining.
    */
-   OperationBuilder setAttr(String name, Shape[] value);
+  OperationBuilder setAttr(String name, Shape[] value);
+
+  /**
+   * Set the function value of an attribute of the operation being built. Also attaches the function
+   * and dependencies to the execution environment.
+   *
+   * @param name attribute name
+   * @param value attribute value
+   * @return the OperationBuilder instance for chaining.
+   */
+  OperationBuilder setAttr(String name, ConcreteFunction value);
+
+  /**
+   * Set the function values of an attribute of the operation being built. Also attaches the
+   * functions and dependencies to the execution environment.
+   *
+   * @param name attribute name
+   * @param value attribute value
+   * @return the OperationBuilder instance for chaining.
+   */
+  OperationBuilder setAttr(String name, ConcreteFunction[] value);
 }
