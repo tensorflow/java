@@ -90,7 +90,7 @@ public final class BroadcastTo<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> BroadcastTo<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BroadcastTo", scope.makeOpName("BroadcastTo"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastTo"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);

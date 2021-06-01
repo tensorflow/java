@@ -62,7 +62,7 @@ public final class SparseMatrixAdd extends RawOp implements Operand<TType> {
   )
   public static <T extends TType> SparseMatrixAdd create(Scope scope, Operand<? extends TType> a,
       Operand<? extends TType> b, Operand<T> alpha, Operand<T> beta) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixAdd", scope.makeOpName("SparseMatrixAdd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixAdd"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(alpha.asOutput());

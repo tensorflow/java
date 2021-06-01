@@ -68,7 +68,7 @@ public final class RefSwitch<T extends TType> extends RawOp {
   )
   public static <T extends TType> RefSwitch<T> create(Scope scope, Operand<T> data,
       Operand<TBool> pred) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RefSwitch", scope.makeOpName("RefSwitch"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RefSwitch"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(pred.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -58,7 +58,7 @@ public final class SdcaShrinkL1 extends RawOp {
   )
   public static SdcaShrinkL1 create(Scope scope, Iterable<Operand<TFloat32>> weights, Float l1,
       Float l2) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SdcaShrinkL1", scope.makeOpName("SdcaShrinkL1"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SdcaShrinkL1"));
     opBuilder.addInputList(Operands.asOutputs(weights));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("l1", l1);

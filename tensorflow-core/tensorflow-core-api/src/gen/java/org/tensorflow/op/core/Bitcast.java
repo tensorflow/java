@@ -120,7 +120,7 @@ public final class Bitcast<U extends TType> extends RawOp implements Operand<U> 
   )
   public static <U extends TType> Bitcast<U> create(Scope scope, Operand<? extends TType> input,
       Class<U> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Bitcast", scope.makeOpName("Bitcast"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Bitcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));

@@ -60,7 +60,7 @@ public final class LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumD
   public static LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug create(
       Scope scope, Operand<TFloat32> parameters, Operand<TFloat32> gradientAccumulators,
       Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(gradientAccumulators.asOutput());
     opBuilder = scope.apply(opBuilder);

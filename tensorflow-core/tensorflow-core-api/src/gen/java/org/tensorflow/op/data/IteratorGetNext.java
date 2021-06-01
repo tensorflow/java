@@ -69,7 +69,7 @@ public final class IteratorGetNext extends RawOp implements Iterable<Operand<TTy
   )
   public static IteratorGetNext create(Scope scope, Operand<? extends TType> iterator,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNext", scope.makeOpName("IteratorGetNext"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IteratorGetNext"));
     opBuilder.addInput(iterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

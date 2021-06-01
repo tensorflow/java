@@ -66,7 +66,7 @@ public final class Selu<T extends TNumber> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TNumber> Selu<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Selu", scope.makeOpName("Selu"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Selu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Selu<>(opBuilder.build());

@@ -70,7 +70,7 @@ public final class Execute extends RawOp implements Iterable<Operand<TType>> {
   )
   public static Execute create(Scope scope, Iterable<Operand<?>> args, Operand<TString> key,
       List<Class<? extends TType>> Tresults) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUExecute", scope.makeOpName("Execute"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Execute"));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder.addInput(key.asOutput());
     opBuilder = scope.apply(opBuilder);

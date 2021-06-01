@@ -71,7 +71,7 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals,
       Operand<T> rhs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TridiagonalSolve", scope.makeOpName("TridiagonalSolve"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TridiagonalSolve"));
     opBuilder.addInput(diagonals.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);

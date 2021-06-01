@@ -68,7 +68,7 @@ public final class StatefulTruncatedNormal<U extends TType> extends RawOp implem
   public static <U extends TType> StatefulTruncatedNormal<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
       Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatefulTruncatedNormal", scope.makeOpName("StatefulTruncatedNormal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulTruncatedNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());

@@ -70,7 +70,7 @@ public final class Barrier extends RawOp implements Operand<TString> {
   )
   public static Barrier create(Scope scope, List<Class<? extends TType>> componentTypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Barrier", scope.makeOpName("Barrier"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Barrier"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     if (options != null) {

@@ -66,7 +66,7 @@ public final class RetrieveTPUEmbeddingRMSPropParameters extends RawOp {
   )
   public static RetrieveTPUEmbeddingRMSPropParameters create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingRMSPropParameters", scope.makeOpName("RetrieveTPUEmbeddingRMSPropParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingRMSPropParameters"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

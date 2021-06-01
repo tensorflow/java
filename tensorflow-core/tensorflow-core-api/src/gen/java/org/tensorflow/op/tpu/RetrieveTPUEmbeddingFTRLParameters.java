@@ -66,7 +66,7 @@ public final class RetrieveTPUEmbeddingFTRLParameters extends RawOp {
   )
   public static RetrieveTPUEmbeddingFTRLParameters create(Scope scope, Long numShards, Long shardId,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingFTRLParameters", scope.makeOpName("RetrieveTPUEmbeddingFTRLParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingFTRLParameters"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

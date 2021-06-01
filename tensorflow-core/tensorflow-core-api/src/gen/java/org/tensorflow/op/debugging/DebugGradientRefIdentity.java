@@ -61,7 +61,7 @@ public final class DebugGradientRefIdentity<T extends TType> extends RawOp imple
   )
   public static <T extends TType> DebugGradientRefIdentity<T> create(Scope scope,
       Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientRefIdentity", scope.makeOpName("DebugGradientRefIdentity"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DebugGradientRefIdentity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DebugGradientRefIdentity<>(opBuilder.build());

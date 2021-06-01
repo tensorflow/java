@@ -65,7 +65,7 @@ public final class BatchMatrixBandPart<T extends TType> extends RawOp implements
   )
   public static <T extends TType> BatchMatrixBandPart<T> create(Scope scope, Operand<T> input,
       Operand<TInt64> numLower, Operand<TInt64> numUpper) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixBandPart", scope.makeOpName("BatchMatrixBandPart"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatrixBandPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());

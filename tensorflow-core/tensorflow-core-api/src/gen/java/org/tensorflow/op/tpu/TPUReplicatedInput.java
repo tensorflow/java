@@ -73,7 +73,7 @@ public final class TPUReplicatedInput<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> TPUReplicatedInput<T> create(Scope scope,
       Iterable<Operand<T>> inputs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicatedInput", scope.makeOpName("TPUReplicatedInput"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TPUReplicatedInput"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

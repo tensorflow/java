@@ -81,7 +81,7 @@ public final class LogUniformCandidateSampler extends RawOp {
   )
   public static LogUniformCandidateSampler create(Scope scope, Operand<TInt64> trueClasses,
       Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LogUniformCandidateSampler", scope.makeOpName("LogUniformCandidateSampler"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LogUniformCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);

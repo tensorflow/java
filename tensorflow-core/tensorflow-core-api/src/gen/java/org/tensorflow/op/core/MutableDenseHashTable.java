@@ -71,7 +71,7 @@ public final class MutableDenseHashTable extends RawOp implements Operand<TType>
   )
   public static <T extends TType, U extends TType> MutableDenseHashTable create(Scope scope,
       Operand<T> emptyKey, Operand<T> deletedKey, Class<U> valueDtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MutableDenseHashTableV2", scope.makeOpName("MutableDenseHashTable"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MutableDenseHashTable"));
     opBuilder.addInput(emptyKey.asOutput());
     opBuilder.addInput(deletedKey.asOutput());
     opBuilder = scope.apply(opBuilder);

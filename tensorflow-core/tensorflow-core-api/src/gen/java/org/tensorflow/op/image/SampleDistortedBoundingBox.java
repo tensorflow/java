@@ -112,7 +112,7 @@ public final class SampleDistortedBoundingBox<T extends TNumber> extends RawOp {
   public static <T extends TNumber> SampleDistortedBoundingBox<T> create(Scope scope,
       Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SampleDistortedBoundingBoxV2", scope.makeOpName("SampleDistortedBoundingBox"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SampleDistortedBoundingBox"));
     opBuilder.addInput(imageSize.asOutput());
     opBuilder.addInput(boundingBoxes.asOutput());
     opBuilder.addInput(minObjectCovered.asOutput());

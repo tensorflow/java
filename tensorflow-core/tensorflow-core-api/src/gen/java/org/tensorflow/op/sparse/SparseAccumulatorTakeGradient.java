@@ -81,7 +81,7 @@ public final class SparseAccumulatorTakeGradient<T extends TType> extends RawOp 
   )
   public static <T extends TType> SparseAccumulatorTakeGradient<T> create(Scope scope,
       Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorTakeGradient", scope.makeOpName("SparseAccumulatorTakeGradient"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -67,7 +67,7 @@ public final class ConjugateTranspose<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> ConjugateTranspose<T> create(Scope scope, Operand<T> x,
       Operand<? extends TNumber> perm) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ConjugateTranspose", scope.makeOpName("ConjugateTranspose"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ConjugateTranspose"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());
     opBuilder = scope.apply(opBuilder);

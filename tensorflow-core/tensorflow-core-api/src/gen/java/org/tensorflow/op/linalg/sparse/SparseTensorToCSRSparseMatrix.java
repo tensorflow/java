@@ -59,7 +59,7 @@ public final class SparseTensorToCSRSparseMatrix extends RawOp implements Operan
   )
   public static SparseTensorToCSRSparseMatrix create(Scope scope, Operand<TInt64> indices,
       Operand<? extends TType> values, Operand<TInt64> denseShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorToCSRSparseMatrix", scope.makeOpName("SparseTensorToCSRSparseMatrix"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseTensorToCSRSparseMatrix"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());

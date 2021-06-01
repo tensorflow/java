@@ -48,7 +48,7 @@ public final class NoOp extends RawOp {
       describeByClass = true
   )
   public static NoOp create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NoOp", scope.makeOpName("NoOp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NoOp"));
     opBuilder = scope.apply(opBuilder);
     return new NoOp(opBuilder.build());
   }

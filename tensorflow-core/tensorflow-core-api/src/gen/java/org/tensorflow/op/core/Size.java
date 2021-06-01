@@ -71,7 +71,7 @@ public final class Size<U extends TNumber> extends RawOp implements Operand<U> {
   )
   public static <U extends TNumber> Size<U> create(Scope scope, Operand<? extends TType> input,
       Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Size", scope.makeOpName("Size"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Size"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));

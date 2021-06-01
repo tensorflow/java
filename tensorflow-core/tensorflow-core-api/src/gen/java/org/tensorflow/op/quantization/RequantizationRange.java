@@ -69,7 +69,7 @@ public final class RequantizationRange extends RawOp {
   )
   public static RequantizationRange create(Scope scope, Operand<? extends TNumber> input,
       Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RequantizationRange", scope.makeOpName("RequantizationRange"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RequantizationRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());

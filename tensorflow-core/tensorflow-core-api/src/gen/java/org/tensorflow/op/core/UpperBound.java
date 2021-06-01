@@ -78,7 +78,7 @@ public final class UpperBound<U extends TNumber> extends RawOp implements Operan
   )
   public static <U extends TNumber, T extends TType> UpperBound<U> create(Scope scope,
       Operand<T> sortedInputs, Operand<T> values, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UpperBound", scope.makeOpName("UpperBound"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UpperBound"));
     opBuilder.addInput(sortedInputs.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);

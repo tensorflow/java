@@ -56,7 +56,7 @@ public final class LookupTableInsert extends RawOp {
   )
   public static LookupTableInsert create(Scope scope, Operand<? extends TType> tableHandle,
       Operand<? extends TType> keys, Operand<? extends TType> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LookupTableInsertV2", scope.makeOpName("LookupTableInsert"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LookupTableInsert"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());

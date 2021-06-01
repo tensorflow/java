@@ -111,7 +111,7 @@ public final class SdcaOptimizer extends RawOp {
       Iterable<Operand<TInt64>> sparseIndices, Iterable<Operand<TFloat32>> sparseWeights,
       Iterable<Operand<TFloat32>> denseWeights, Operand<TFloat32> exampleStateData, String lossType,
       Float l1, Float l2, Long numLossPartitions, Long numInnerIterations, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SdcaOptimizerV2", scope.makeOpName("SdcaOptimizer"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SdcaOptimizer"));
     opBuilder.addInputList(Operands.asOutputs(sparseExampleIndices));
     opBuilder.addInputList(Operands.asOutputs(sparseFeatureIndices));
     opBuilder.addInputList(Operands.asOutputs(sparseFeatureValues));

@@ -65,7 +65,7 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
   )
   public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalRandomDataset", scope.makeOpName("RandomDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomDataset"));
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder = scope.apply(opBuilder);

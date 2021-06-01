@@ -66,7 +66,7 @@ public final class BatchMatrixSolveLs<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> BatchMatrixSolveLs<T> create(Scope scope, Operand<T> matrix,
       Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolveLs", scope.makeOpName("BatchMatrixSolveLs"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatrixSolveLs"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(l2Regularizer.asOutput());

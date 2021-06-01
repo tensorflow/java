@@ -63,7 +63,7 @@ public final class GuaranteeConst<T extends TType> extends RawOp implements Oper
       describeByClass = true
   )
   public static <T extends TType> GuaranteeConst<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GuaranteeConst", scope.makeOpName("GuaranteeConst"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GuaranteeConst"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new GuaranteeConst<>(opBuilder.build());

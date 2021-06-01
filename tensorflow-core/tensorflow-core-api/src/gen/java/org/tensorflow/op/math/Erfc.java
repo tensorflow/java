@@ -61,7 +61,7 @@ public final class Erfc<T extends TNumber> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TNumber> Erfc<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Erfc", scope.makeOpName("Erfc"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Erfc"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Erfc<>(opBuilder.build());

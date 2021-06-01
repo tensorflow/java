@@ -61,7 +61,7 @@ public final class BarrierInsertMany extends RawOp {
   )
   public static BarrierInsertMany create(Scope scope, Operand<TString> handle,
       Operand<TString> keys, Operand<? extends TType> values, Long componentIndex) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BarrierInsertMany", scope.makeOpName("BarrierInsertMany"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BarrierInsertMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());

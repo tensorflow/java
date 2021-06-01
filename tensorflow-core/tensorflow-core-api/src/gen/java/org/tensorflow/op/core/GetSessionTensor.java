@@ -63,7 +63,7 @@ public final class GetSessionTensor<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> GetSessionTensor<T> create(Scope scope, Operand<TString> handle,
       Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GetSessionTensor", scope.makeOpName("GetSessionTensor"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GetSessionTensor"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

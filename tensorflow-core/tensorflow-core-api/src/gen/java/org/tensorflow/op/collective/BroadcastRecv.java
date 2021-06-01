@@ -65,7 +65,7 @@ public final class BroadcastRecv<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> BroadcastRecv<T> create(Scope scope, Class<T> T, Long groupSize,
       Long groupKey, Long instanceKey, Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastRecv", scope.makeOpName("BroadcastRecv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastRecv"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", Operands.toDataType(T));
     opBuilder.setAttr("group_size", groupSize);

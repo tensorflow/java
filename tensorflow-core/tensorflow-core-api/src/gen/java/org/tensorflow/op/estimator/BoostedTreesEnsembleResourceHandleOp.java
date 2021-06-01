@@ -55,7 +55,7 @@ public final class BoostedTreesEnsembleResourceHandleOp extends RawOp implements
       describeByClass = true
   )
   public static BoostedTreesEnsembleResourceHandleOp create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesEnsembleResourceHandleOp", scope.makeOpName("BoostedTreesEnsembleResourceHandleOp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesEnsembleResourceHandleOp"));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {

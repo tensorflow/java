@@ -69,7 +69,7 @@ public final class OptionalGetValue extends RawOp implements Iterable<Operand<TT
   )
   public static OptionalGetValue create(Scope scope, Operand<? extends TType> optional,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OptionalGetValue", scope.makeOpName("OptionalGetValue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptionalGetValue"));
     opBuilder.addInput(optional.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

@@ -89,7 +89,7 @@ public final class StringSplit extends RawOp {
   )
   public static StringSplit create(Scope scope, Operand<TString> input, Operand<TString> sep,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StringSplitV2", scope.makeOpName("StringSplit"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StringSplit"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sep.asOutput());
     opBuilder = scope.apply(opBuilder);

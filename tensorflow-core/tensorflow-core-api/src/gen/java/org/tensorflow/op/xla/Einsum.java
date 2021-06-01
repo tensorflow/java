@@ -66,7 +66,7 @@ public final class Einsum<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Einsum<T> create(Scope scope, Operand<T> a, Operand<T> b,
       String equation) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaEinsum", scope.makeOpName("Einsum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Einsum"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);

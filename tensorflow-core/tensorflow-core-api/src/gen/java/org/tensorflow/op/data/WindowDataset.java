@@ -110,7 +110,7 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
       Operand<TInt64> sizeOutput, Operand<TInt64> shift, Operand<TInt64> stride,
       Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("WindowDataset", scope.makeOpName("WindowDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(shift.asOutput());

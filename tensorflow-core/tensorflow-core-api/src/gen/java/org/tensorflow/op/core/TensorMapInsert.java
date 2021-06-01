@@ -64,7 +64,7 @@ public final class TensorMapInsert extends RawOp implements Operand<TType> {
   )
   public static TensorMapInsert create(Scope scope, Operand<? extends TType> inputHandle,
       Operand<? extends TType> key, Operand<? extends TType> value) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorMapInsert", scope.makeOpName("TensorMapInsert"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapInsert"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(value.asOutput());

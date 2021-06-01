@@ -73,7 +73,7 @@ public final class ApplyPowerSign<T extends TType> extends RawOp implements Oper
   public static <T extends TType> ApplyPowerSign<T> create(Scope scope, Operand<T> var,
       Operand<T> m, Operand<T> lr, Operand<T> logbase, Operand<T> signDecay, Operand<T> beta,
       Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyPowerSign", scope.makeOpName("ApplyPowerSign"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyPowerSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(lr.asOutput());

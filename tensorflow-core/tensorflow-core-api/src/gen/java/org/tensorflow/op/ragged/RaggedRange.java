@@ -82,7 +82,7 @@ public final class RaggedRange<U extends TNumber, T extends TNumber> extends Raw
   )
   public static <U extends TNumber, T extends TNumber> RaggedRange<U, T> create(Scope scope,
       Operand<T> starts, Operand<T> limits, Operand<T> deltas, Class<U> Tsplits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RaggedRange", scope.makeOpName("RaggedRange"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedRange"));
     opBuilder.addInput(starts.asOutput());
     opBuilder.addInput(limits.asOutput());
     opBuilder.addInput(deltas.asOutput());

@@ -74,7 +74,7 @@ public final class SparseApplyMomentum<T extends TType> extends RawOp implements
   public static <T extends TType> SparseApplyMomentum<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> lr, Operand<T> grad, Operand<? extends TNumber> indices,
       Operand<T> momentum, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyMomentum", scope.makeOpName("SparseApplyMomentum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyMomentum"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());

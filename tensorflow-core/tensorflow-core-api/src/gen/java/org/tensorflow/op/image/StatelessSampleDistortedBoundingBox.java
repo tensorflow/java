@@ -139,7 +139,7 @@ public final class StatelessSampleDistortedBoundingBox<T extends TNumber> extend
   public static <T extends TNumber> StatelessSampleDistortedBoundingBox<T> create(Scope scope,
       Operand<T> imageSize, Operand<TFloat32> boundingBoxes, Operand<TFloat32> minObjectCovered,
       Operand<? extends TNumber> seed, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessSampleDistortedBoundingBox", scope.makeOpName("StatelessSampleDistortedBoundingBox"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessSampleDistortedBoundingBox"));
     opBuilder.addInput(imageSize.asOutput());
     opBuilder.addInput(boundingBoxes.asOutput());
     opBuilder.addInput(minObjectCovered.asOutput());

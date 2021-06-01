@@ -75,7 +75,7 @@ public final class Pad<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType, U extends TNumber> Pad<T> create(Scope scope, Operand<T> input,
       Operand<T> paddingValue, Operand<U> paddingLow, Operand<U> paddingHigh,
       Operand<U> paddingInterior) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaPad", scope.makeOpName("Pad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Pad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
     opBuilder.addInput(paddingLow.asOutput());

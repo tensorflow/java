@@ -95,7 +95,7 @@ public final class BoostedTreesCalculateBestGainsPerFeature extends RawOp {
       Operand<TInt32> nodeIdRange, Iterable<Operand<TFloat32>> statsSummaryList,
       Operand<TFloat32> l1, Operand<TFloat32> l2, Operand<TFloat32> treeComplexity,
       Operand<TFloat32> minNodeWeight, Long maxSplits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestGainsPerFeature", scope.makeOpName("BoostedTreesCalculateBestGainsPerFeature"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesCalculateBestGainsPerFeature"));
     opBuilder.addInput(nodeIdRange.asOutput());
     opBuilder.addInputList(Operands.asOutputs(statsSummaryList));
     opBuilder.addInput(l1.asOutput());

@@ -82,7 +82,7 @@ public final class GenerateBoundingBoxProposals extends RawOp {
       Operand<TFloat32> bboxDeltas, Operand<TFloat32> imageInfo, Operand<TFloat32> anchors,
       Operand<TFloat32> nmsThreshold, Operand<TInt32> preNmsTopn, Operand<TFloat32> minSize,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GenerateBoundingBoxProposals", scope.makeOpName("GenerateBoundingBoxProposals"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GenerateBoundingBoxProposals"));
     opBuilder.addInput(scores.asOutput());
     opBuilder.addInput(bboxDeltas.asOutput());
     opBuilder.addInput(imageInfo.asOutput());

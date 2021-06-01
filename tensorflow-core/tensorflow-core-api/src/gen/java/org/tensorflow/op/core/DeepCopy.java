@@ -59,7 +59,7 @@ public final class DeepCopy<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> DeepCopy<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeepCopy", scope.makeOpName("DeepCopy"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DeepCopy"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DeepCopy<>(opBuilder.build());

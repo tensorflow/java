@@ -65,7 +65,7 @@ public final class RandomShuffleQueue extends RawOp implements Operand<TType> {
   )
   public static RandomShuffleQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffleQueueV2", scope.makeOpName("RandomShuffleQueue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomShuffleQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     if (options != null) {

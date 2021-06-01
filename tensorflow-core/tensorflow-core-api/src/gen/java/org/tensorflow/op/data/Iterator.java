@@ -66,7 +66,7 @@ public final class Iterator extends RawOp implements Operand<TType> {
   )
   public static Iterator create(Scope scope, String sharedName, String container,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorV2", scope.makeOpName("Iterator"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Iterator"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shared_name", sharedName);
     opBuilder.setAttr("container", container);

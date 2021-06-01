@@ -57,7 +57,7 @@ public final class ReplicaId extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static ReplicaId create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaReplicaId", scope.makeOpName("ReplicaId"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReplicaId"));
     opBuilder = scope.apply(opBuilder);
     return new ReplicaId(opBuilder.build());
   }

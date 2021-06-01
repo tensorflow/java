@@ -98,7 +98,7 @@ public final class CudnnRNNCanonicalToParams<T extends TNumber> extends RawOp im
   public static <T extends TNumber> CudnnRNNCanonicalToParams<T> create(Scope scope,
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize,
       Iterable<Operand<T>> weights, Iterable<Operand<T>> biases, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNCanonicalToParamsV2", scope.makeOpName("CudnnRNNCanonicalToParams"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CudnnRNNCanonicalToParams"));
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());

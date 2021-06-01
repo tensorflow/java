@@ -61,7 +61,7 @@ public final class SparseMatrixSoftmaxGrad extends RawOp implements Operand<TTyp
   )
   public static <T extends TNumber> SparseMatrixSoftmaxGrad create(Scope scope,
       Operand<? extends TType> softmax, Operand<? extends TType> gradSoftmax, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSoftmaxGrad", scope.makeOpName("SparseMatrixSoftmaxGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixSoftmaxGrad"));
     opBuilder.addInput(softmax.asOutput());
     opBuilder.addInput(gradSoftmax.asOutput());
     opBuilder = scope.apply(opBuilder);

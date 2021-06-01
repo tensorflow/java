@@ -70,7 +70,7 @@ public final class ReaderReadUpTo extends RawOp {
   )
   public static ReaderReadUpTo create(Scope scope, Operand<? extends TType> readerHandle,
       Operand<? extends TType> queueHandle, Operand<TInt64> numRecords) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadUpToV2", scope.makeOpName("ReaderReadUpTo"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderReadUpTo"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
     opBuilder.addInput(numRecords.asOutput());

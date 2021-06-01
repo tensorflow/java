@@ -88,7 +88,7 @@ public final class SparseApplyCenteredRmsProp<T extends TType> extends RawOp imp
       Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho,
       Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Operand<? extends TNumber> indices,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyCenteredRMSProp", scope.makeOpName("SparseApplyCenteredRmsProp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());
     opBuilder.addInput(ms.asOutput());

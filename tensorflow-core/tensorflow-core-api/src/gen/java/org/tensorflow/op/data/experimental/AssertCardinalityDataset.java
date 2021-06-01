@@ -64,7 +64,7 @@ public final class AssertCardinalityDataset extends RawOp implements Operand<TTy
   public static AssertCardinalityDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> cardinality, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AssertCardinalityDataset", scope.makeOpName("AssertCardinalityDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssertCardinalityDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(cardinality.asOutput());
     opBuilder = scope.apply(opBuilder);

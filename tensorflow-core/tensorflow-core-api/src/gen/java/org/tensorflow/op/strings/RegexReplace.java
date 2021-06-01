@@ -65,7 +65,7 @@ public final class RegexReplace extends RawOp implements Operand<TString> {
   )
   public static RegexReplace create(Scope scope, Operand<TString> input, Operand<TString> pattern,
       Operand<TString> rewrite, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RegexReplace", scope.makeOpName("RegexReplace"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pattern.asOutput());
     opBuilder.addInput(rewrite.asOutput());

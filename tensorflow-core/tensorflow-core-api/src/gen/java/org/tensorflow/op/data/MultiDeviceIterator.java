@@ -65,7 +65,7 @@ public final class MultiDeviceIterator extends RawOp implements Operand<TType> {
   )
   public static MultiDeviceIterator create(Scope scope, List<String> devices, String sharedName,
       String container, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIterator", scope.makeOpName("MultiDeviceIterator"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MultiDeviceIterator"));
     opBuilder = scope.apply(opBuilder);
     String[] devicesArray = new String[devices.size()];
     for (int i = 0 ; i < devicesArray.length ; i++) {

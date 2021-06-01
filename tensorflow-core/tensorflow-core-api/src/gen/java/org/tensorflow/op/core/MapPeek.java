@@ -71,7 +71,7 @@ public final class MapPeek extends RawOp implements Iterable<Operand<TType>> {
   )
   public static MapPeek create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices,
       List<Class<? extends TType>> dtypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MapPeek", scope.makeOpName("MapPeek"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapPeek"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);

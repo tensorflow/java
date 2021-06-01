@@ -68,7 +68,7 @@ public final class PaddingFifoQueue extends RawOp implements Operand<TType> {
   )
   public static PaddingFifoQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PaddingFIFOQueueV2", scope.makeOpName("PaddingFifoQueue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PaddingFifoQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     if (options != null) {

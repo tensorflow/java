@@ -78,7 +78,7 @@ public final class QuantizedAvgPool<T extends TNumber> extends RawOp {
   public static <T extends TNumber> QuantizedAvgPool<T> create(Scope scope, Operand<T> input,
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides,
       String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedAvgPool", scope.makeOpName("QuantizedAvgPool"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedAvgPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
     opBuilder.addInput(maxInput.asOutput());

@@ -66,7 +66,7 @@ public final class TopKWithUnique extends RawOp {
       describeByClass = true
   )
   public static TopKWithUnique create(Scope scope, Operand<TFloat32> input, Long k) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TopKWithUnique", scope.makeOpName("TopKWithUnique"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TopKWithUnique"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("k", k);

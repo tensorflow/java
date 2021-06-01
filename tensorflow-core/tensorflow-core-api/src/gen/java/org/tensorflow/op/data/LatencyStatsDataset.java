@@ -63,7 +63,7 @@ public final class LatencyStatsDataset extends RawOp implements Operand<TType> {
   )
   public static LatencyStatsDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> tag, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LatencyStatsDataset", scope.makeOpName("LatencyStatsDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LatencyStatsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -68,7 +68,7 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<TT
   public static DenseToSparseBatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSize, Operand<TInt64> rowShape, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalDenseToSparseBatchDataset", scope.makeOpName("DenseToSparseBatchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseToSparseBatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(rowShape.asOutput());

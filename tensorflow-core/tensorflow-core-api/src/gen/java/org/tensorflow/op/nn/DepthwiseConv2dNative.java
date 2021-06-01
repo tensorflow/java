@@ -85,7 +85,7 @@ public final class DepthwiseConv2dNative<T extends TNumber> extends RawOp implem
   )
   public static <T extends TNumber> DepthwiseConv2dNative<T> create(Scope scope, Operand<T> input,
       Operand<T> filter, List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNative", scope.makeOpName("DepthwiseConv2dNative"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DepthwiseConv2dNative"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder = scope.apply(opBuilder);

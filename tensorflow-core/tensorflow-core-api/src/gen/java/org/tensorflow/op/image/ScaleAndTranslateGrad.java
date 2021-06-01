@@ -64,7 +64,7 @@ public final class ScaleAndTranslateGrad<T extends TNumber> extends RawOp implem
   public static <T extends TNumber> ScaleAndTranslateGrad<T> create(Scope scope, Operand<T> grads,
       Operand<T> originalImage, Operand<TFloat32> scale, Operand<TFloat32> translation,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScaleAndTranslateGrad", scope.makeOpName("ScaleAndTranslateGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScaleAndTranslateGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());
     opBuilder.addInput(scale.asOutput());

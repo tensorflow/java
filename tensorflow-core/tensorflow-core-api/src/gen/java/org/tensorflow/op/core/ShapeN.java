@@ -71,7 +71,7 @@ public final class ShapeN<U extends TNumber> extends RawOp implements Iterable<O
   )
   public static <U extends TNumber> ShapeN<U> create(Scope scope,
       Iterable<Operand<? extends TType>> input, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShapeN", scope.makeOpName("ShapeN"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ShapeN"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));

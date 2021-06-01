@@ -59,7 +59,7 @@ public final class DeviceIndex extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static DeviceIndex create(Scope scope, List<String> deviceNames) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DeviceIndex", scope.makeOpName("DeviceIndex"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DeviceIndex"));
     opBuilder = scope.apply(opBuilder);
     String[] deviceNamesArray = new String[deviceNames.size()];
     for (int i = 0 ; i < deviceNamesArray.length ; i++) {

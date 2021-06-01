@@ -72,7 +72,7 @@ public final class BatchDataset extends RawOp implements Operand<TType> {
   public static BatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSize, Operand<TBool> dropRemainder,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchDatasetV2", scope.makeOpName("BatchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());

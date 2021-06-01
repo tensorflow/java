@@ -60,7 +60,7 @@ public final class ThreadPoolHandle extends RawOp implements Operand<TType> {
   )
   public static ThreadPoolHandle create(Scope scope, Long numThreads, String displayName,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalThreadPoolHandle", scope.makeOpName("ThreadPoolHandle"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ThreadPoolHandle"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_threads", numThreads);
     opBuilder.setAttr("display_name", displayName);

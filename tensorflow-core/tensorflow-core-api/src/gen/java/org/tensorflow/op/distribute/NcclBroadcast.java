@@ -66,7 +66,7 @@ public final class NcclBroadcast<T extends TNumber> extends RawOp implements Ope
   )
   public static <T extends TNumber> NcclBroadcast<T> create(Scope scope, Operand<T> input,
       Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NcclBroadcast", scope.makeOpName("NcclBroadcast"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NcclBroadcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);

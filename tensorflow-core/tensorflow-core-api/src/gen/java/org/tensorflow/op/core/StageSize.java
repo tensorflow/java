@@ -61,7 +61,7 @@ public final class StageSize extends RawOp implements Operand<TInt32> {
   )
   public static StageSize create(Scope scope, List<Class<? extends TType>> dtypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StageSize", scope.makeOpName("StageSize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StageSize"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {

@@ -64,7 +64,7 @@ public final class MaxIntraOpParallelismDataset extends RawOp implements Operand
   public static MaxIntraOpParallelismDataset create(Scope scope,
       Operand<? extends TType> inputDataset, Operand<TInt64> maxIntraOpParallelism,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalMaxIntraOpParallelismDataset", scope.makeOpName("MaxIntraOpParallelismDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxIntraOpParallelismDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(maxIntraOpParallelism.asOutput());
     opBuilder = scope.apply(opBuilder);

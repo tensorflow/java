@@ -67,7 +67,7 @@ public final class LookupTableFind<U extends TType> extends RawOp implements Ope
   public static <U extends TType> LookupTableFind<U> create(Scope scope,
       Operand<? extends TType> tableHandle, Operand<? extends TType> keys,
       Operand<U> defaultValue) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LookupTableFindV2", scope.makeOpName("LookupTableFind"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LookupTableFind"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(defaultValue.asOutput());

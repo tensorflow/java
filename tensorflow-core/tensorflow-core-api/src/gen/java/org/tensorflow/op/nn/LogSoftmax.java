@@ -65,7 +65,7 @@ public final class LogSoftmax<T extends TNumber> extends RawOp implements Operan
       describeByClass = true
   )
   public static <T extends TNumber> LogSoftmax<T> create(Scope scope, Operand<T> logits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LogSoftmax", scope.makeOpName("LogSoftmax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LogSoftmax"));
     opBuilder.addInput(logits.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new LogSoftmax<>(opBuilder.build());

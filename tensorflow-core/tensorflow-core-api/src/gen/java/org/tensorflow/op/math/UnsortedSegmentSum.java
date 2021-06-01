@@ -86,7 +86,7 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UnsortedSegmentSum", scope.makeOpName("UnsortedSegmentSum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentSum"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());

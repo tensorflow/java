@@ -80,7 +80,7 @@ public final class ResourceApplyCenteredRmsProp extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> mg, Operand<? extends TType> ms,
       Operand<? extends TType> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum,
       Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyCenteredRMSProp", scope.makeOpName("ResourceApplyCenteredRmsProp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());
     opBuilder.addInput(ms.asOutput());

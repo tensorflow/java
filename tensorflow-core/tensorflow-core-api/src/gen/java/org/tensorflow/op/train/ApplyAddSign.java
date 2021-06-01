@@ -73,7 +73,7 @@ public final class ApplyAddSign<T extends TType> extends RawOp implements Operan
   public static <T extends TType> ApplyAddSign<T> create(Scope scope, Operand<T> var, Operand<T> m,
       Operand<T> lr, Operand<T> alpha, Operand<T> signDecay, Operand<T> beta, Operand<T> grad,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyAddSign", scope.makeOpName("ApplyAddSign"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyAddSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(lr.asOutput());

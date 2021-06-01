@@ -67,7 +67,7 @@ public final class ReduceMax<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber> ReduceMax<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Max", scope.makeOpName("ReduceMax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

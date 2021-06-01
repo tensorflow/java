@@ -166,7 +166,7 @@ public final class MatrixSetDiag<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> MatrixSetDiag<T> create(Scope scope, Operand<T> input,
       Operand<T> diagonal, Operand<TInt32> k, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MatrixSetDiagV3", scope.makeOpName("MatrixSetDiag"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixSetDiag"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(diagonal.asOutput());
     opBuilder.addInput(k.asOutput());

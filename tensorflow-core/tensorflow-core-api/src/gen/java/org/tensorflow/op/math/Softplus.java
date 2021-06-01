@@ -61,7 +61,7 @@ public final class Softplus<T extends TNumber> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TNumber> Softplus<T> create(Scope scope, Operand<T> features) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Softplus", scope.makeOpName("Softplus"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Softplus"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Softplus<>(opBuilder.build());

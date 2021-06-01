@@ -67,7 +67,7 @@ public final class RandomUniform<U extends TNumber> extends RawOp implements Ope
   )
   public static <U extends TNumber> RandomUniform<U> create(Scope scope,
       Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomUniform", scope.makeOpName("RandomUniform"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomUniform"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

@@ -87,7 +87,7 @@ public final class SetDiff1d<T extends TType, U extends TNumber> extends RawOp {
   )
   public static <T extends TType, U extends TNumber> SetDiff1d<T, U> create(Scope scope,
       Operand<T> x, Operand<T> y, Class<U> outIdx) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ListDiff", scope.makeOpName("SetDiff1d"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SetDiff1d"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -67,7 +67,7 @@ public final class AddN<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> AddN<T> create(Scope scope, Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AddN", scope.makeOpName("AddN"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AddN"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     return new AddN<>(opBuilder.build());

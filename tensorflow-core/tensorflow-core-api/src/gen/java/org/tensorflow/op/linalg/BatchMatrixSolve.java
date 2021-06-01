@@ -64,7 +64,7 @@ public final class BatchMatrixSolve<T extends TNumber> extends RawOp implements 
   )
   public static <T extends TNumber> BatchMatrixSolve<T> create(Scope scope, Operand<T> matrix,
       Operand<T> rhs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchMatrixSolve", scope.makeOpName("BatchMatrixSolve"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatrixSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);

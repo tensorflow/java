@@ -151,7 +151,7 @@ public final class GatherNd<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType> GatherNd<T> create(Scope scope, Operand<T> params,
       Operand<? extends TNumber> indices) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GatherNd", scope.makeOpName("GatherNd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GatherNd"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);

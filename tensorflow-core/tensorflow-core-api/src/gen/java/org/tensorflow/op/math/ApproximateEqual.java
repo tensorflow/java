@@ -63,7 +63,7 @@ public final class ApproximateEqual extends RawOp implements Operand<TBool> {
   )
   public static <T extends TType> ApproximateEqual create(Scope scope, Operand<T> x, Operand<T> y,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApproximateEqual", scope.makeOpName("ApproximateEqual"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApproximateEqual"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

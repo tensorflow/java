@@ -66,7 +66,7 @@ public final class ResourceSparseApplyProximalGradientDescent extends RawOp {
   public static <T extends TType> ResourceSparseApplyProximalGradientDescent create(Scope scope,
       Operand<? extends TType> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad,
       Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyProximalGradientDescent", scope.makeOpName("ResourceSparseApplyProximalGradientDescent"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceSparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(l1.asOutput());

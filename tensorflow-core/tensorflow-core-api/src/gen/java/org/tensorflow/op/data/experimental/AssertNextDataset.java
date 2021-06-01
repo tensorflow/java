@@ -64,7 +64,7 @@ public final class AssertNextDataset extends RawOp implements Operand<TType> {
   public static AssertNextDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> transformations, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalAssertNextDataset", scope.makeOpName("AssertNextDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssertNextDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(transformations.asOutput());
     opBuilder = scope.apply(opBuilder);

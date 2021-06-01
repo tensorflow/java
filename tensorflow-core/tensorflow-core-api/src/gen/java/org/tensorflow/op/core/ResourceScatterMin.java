@@ -72,7 +72,7 @@ public final class ResourceScatterMin extends RawOp {
   )
   public static ResourceScatterMin create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterMin", scope.makeOpName("ResourceScatterMin"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterMin"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

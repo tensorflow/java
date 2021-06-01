@@ -80,7 +80,7 @@ public final class QueueDequeueMany extends RawOp implements Iterable<Operand<TT
   )
   public static QueueDequeueMany create(Scope scope, Operand<? extends TType> handle,
       Operand<TInt32> n, List<Class<? extends TType>> componentTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QueueDequeueManyV2", scope.makeOpName("QueueDequeueMany"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QueueDequeueMany"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(n.asOutput());
     opBuilder = scope.apply(opBuilder);

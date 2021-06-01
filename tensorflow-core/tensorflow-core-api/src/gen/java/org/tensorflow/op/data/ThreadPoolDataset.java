@@ -63,7 +63,7 @@ public final class ThreadPoolDataset extends RawOp implements Operand<TType> {
   public static ThreadPoolDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<? extends TType> threadPool, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ThreadPoolDataset", scope.makeOpName("ThreadPoolDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ThreadPoolDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(threadPool.asOutput());
     opBuilder = scope.apply(opBuilder);

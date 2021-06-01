@@ -146,7 +146,7 @@ public final class ParseExample extends RawOp {
       Operand<TString> raggedKeys, Iterable<Operand<?>> denseDefaults, Long numSparse,
       List<Class<? extends TType>> sparseTypes, List<Class<? extends TType>> raggedValueTypes,
       List<Class<? extends TNumber>> raggedSplitTypes, List<Shape> denseShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleV2", scope.makeOpName("ParseExample"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(names.asOutput());
     opBuilder.addInput(sparseKeys.asOutput());

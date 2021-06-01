@@ -71,7 +71,7 @@ public final class RandomShuffle<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> RandomShuffle<T> create(Scope scope, Operand<T> value,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomShuffle", scope.makeOpName("RandomShuffle"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomShuffle"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

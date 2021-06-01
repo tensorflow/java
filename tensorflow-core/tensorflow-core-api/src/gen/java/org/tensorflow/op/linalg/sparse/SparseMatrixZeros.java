@@ -60,7 +60,7 @@ public final class SparseMatrixZeros extends RawOp implements Operand<TType> {
   )
   public static <T extends TType> SparseMatrixZeros create(Scope scope, Operand<TInt64> denseShape,
       Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixZeros", scope.makeOpName("SparseMatrixZeros"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixZeros"));
     opBuilder.addInput(denseShape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));

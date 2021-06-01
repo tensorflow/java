@@ -64,7 +64,7 @@ public final class BroadcastSend<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> BroadcastSend<T> create(Scope scope, Operand<T> input,
       Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSend", scope.makeOpName("BroadcastSend"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastSend"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("group_size", groupSize);

@@ -70,7 +70,7 @@ public final class ShuffleAndRepeatDataset extends RawOp implements Operand<TTyp
       Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2,
       Operand<TInt64> count, Operand<? extends TType> seedGenerator,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShuffleAndRepeatDatasetV2", scope.makeOpName("ShuffleAndRepeatDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ShuffleAndRepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(seed.asOutput());

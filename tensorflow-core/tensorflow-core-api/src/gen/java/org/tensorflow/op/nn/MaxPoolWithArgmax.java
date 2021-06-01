@@ -86,7 +86,7 @@ public final class MaxPoolWithArgmax<T extends TNumber, U extends TNumber> exten
   public static <T extends TNumber, U extends TNumber> MaxPoolWithArgmax<T, U> create(Scope scope,
       Operand<T> input, List<Long> ksize, List<Long> strides, Class<U> Targmax, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolWithArgmax", scope.makeOpName("MaxPoolWithArgmax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPoolWithArgmax"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];

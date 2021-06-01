@@ -59,7 +59,7 @@ public final class TensorMapSize extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static TensorMapSize create(Scope scope, Operand<? extends TType> inputHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorMapSize", scope.makeOpName("TensorMapSize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapSize"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorMapSize(opBuilder.build());

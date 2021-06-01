@@ -97,7 +97,7 @@ public final class BandPart<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType, U extends TNumber> BandPart<T> create(Scope scope,
       Operand<T> input, Operand<U> numLower, Operand<U> numUpper) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MatrixBandPart", scope.makeOpName("BandPart"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BandPart"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(numLower.asOutput());
     opBuilder.addInput(numUpper.asOutput());

@@ -55,7 +55,7 @@ public final class CompileSucceededAssert extends RawOp {
       describeByClass = true
   )
   public static CompileSucceededAssert create(Scope scope, Operand<TString> compilationStatus) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUCompileSucceededAssert", scope.makeOpName("CompileSucceededAssert"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompileSucceededAssert"));
     opBuilder.addInput(compilationStatus.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new CompileSucceededAssert(opBuilder.build());

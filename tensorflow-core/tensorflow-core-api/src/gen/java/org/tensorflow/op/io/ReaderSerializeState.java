@@ -61,7 +61,7 @@ public final class ReaderSerializeState extends RawOp implements Operand<TString
       describeByClass = true
   )
   public static ReaderSerializeState create(Scope scope, Operand<? extends TType> readerHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReaderSerializeStateV2", scope.makeOpName("ReaderSerializeState"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderSerializeState"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderSerializeState(opBuilder.build());

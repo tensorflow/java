@@ -72,7 +72,7 @@ public final class SparseSegmentSqrtNWithNumSegments<T extends TNumber> extends 
   public static <T extends TNumber> SparseSegmentSqrtNWithNumSegments<T> create(Scope scope,
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
       Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNWithNumSegments", scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSegmentSqrtNWithNumSegments"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

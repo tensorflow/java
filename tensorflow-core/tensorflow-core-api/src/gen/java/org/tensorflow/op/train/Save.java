@@ -63,7 +63,7 @@ public final class Save extends RawOp {
   )
   public static Save create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames,
       Operand<TString> shapeAndSlices, Iterable<Operand<?>> tensors) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SaveV2", scope.makeOpName("Save"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Save"));
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
     opBuilder.addInput(shapeAndSlices.asOutput());

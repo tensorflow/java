@@ -140,7 +140,7 @@ public final class OneHot<U extends TType> extends RawOp implements Operand<U> {
   )
   public static <U extends TType> OneHot<U> create(Scope scope, Operand<? extends TNumber> indices,
       Operand<TInt32> depth, Operand<U> onValue, Operand<U> offValue, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OneHot", scope.makeOpName("OneHot"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OneHot"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(depth.asOutput());
     opBuilder.addInput(onValue.asOutput());

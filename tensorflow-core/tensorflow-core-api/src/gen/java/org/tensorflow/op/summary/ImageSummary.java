@@ -99,7 +99,7 @@ public final class ImageSummary extends RawOp implements Operand<TString> {
   )
   public static ImageSummary create(Scope scope, Operand<TString> tag,
       Operand<? extends TNumber> tensor, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ImageSummary", scope.makeOpName("ImageSummary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ImageSummary"));
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);

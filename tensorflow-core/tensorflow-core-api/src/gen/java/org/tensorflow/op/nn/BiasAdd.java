@@ -66,7 +66,7 @@ public final class BiasAdd<T extends TType> extends RawOp implements Operand<T> 
   )
   public static <T extends TType> BiasAdd<T> create(Scope scope, Operand<T> value, Operand<T> bias,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BiasAdd", scope.makeOpName("BiasAdd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BiasAdd"));
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(bias.asOutput());
     opBuilder = scope.apply(opBuilder);

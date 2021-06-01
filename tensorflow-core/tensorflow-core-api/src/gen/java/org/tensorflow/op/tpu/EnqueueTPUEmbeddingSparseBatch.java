@@ -77,7 +77,7 @@ public final class EnqueueTPUEmbeddingSparseBatch extends RawOp {
       Iterable<Operand<? extends TNumber>> embeddingIndices,
       Iterable<Operand<? extends TNumber>> aggregationWeights, Operand<TString> modeOverride,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("EnqueueTPUEmbeddingSparseBatch", scope.makeOpName("EnqueueTPUEmbeddingSparseBatch"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EnqueueTPUEmbeddingSparseBatch"));
     opBuilder.addInputList(Operands.asOutputs(sampleIndices));
     opBuilder.addInputList(Operands.asOutputs(embeddingIndices));
     opBuilder.addInputList(Operands.asOutputs(aggregationWeights));

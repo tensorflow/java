@@ -68,7 +68,7 @@ public final class Reduce<T extends TNumber> extends RawOp implements Operand<T>
   public static <T extends TNumber> Reduce<T> create(Scope scope, Operand<T> input, Long groupSize,
       Long groupKey, Long instanceKey, String mergeOp, String finalOp, List<Long> subdivOffsets,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveReduce", scope.makeOpName("Reduce"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reduce"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("group_size", groupSize);

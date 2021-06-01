@@ -72,7 +72,7 @@ public final class QuantizedInstanceNorm<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> QuantizedInstanceNorm<T> create(Scope scope, Operand<T> x,
       Operand<TFloat32> xMin, Operand<TFloat32> xMax, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedInstanceNorm", scope.makeOpName("QuantizedInstanceNorm"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedInstanceNorm"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(xMin.asOutput());
     opBuilder.addInput(xMax.asOutput());

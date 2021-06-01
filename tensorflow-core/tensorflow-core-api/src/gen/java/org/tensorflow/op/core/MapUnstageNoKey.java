@@ -72,7 +72,7 @@ public final class MapUnstageNoKey extends RawOp {
   )
   public static MapUnstageNoKey create(Scope scope, Operand<TInt32> indices,
       List<Class<? extends TType>> dtypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MapUnstageNoKey", scope.makeOpName("MapUnstageNoKey"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapUnstageNoKey"));
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));

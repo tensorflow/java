@@ -69,7 +69,7 @@ public final class SparseAccumulatorApplyGradient extends RawOp {
       Operand<TInt64> localStep, Operand<TInt64> gradientIndices,
       Operand<? extends TType> gradientValues, Operand<TInt64> gradientShape,
       Boolean hasKnownShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseAccumulatorApplyGradient", scope.makeOpName("SparseAccumulatorApplyGradient"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseAccumulatorApplyGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(localStep.asOutput());
     opBuilder.addInput(gradientIndices.asOutput());

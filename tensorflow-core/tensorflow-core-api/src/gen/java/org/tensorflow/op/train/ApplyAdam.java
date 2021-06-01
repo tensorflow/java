@@ -77,7 +77,7 @@ public final class ApplyAdam<T extends TType> extends RawOp implements Operand<T
   public static <T extends TType> ApplyAdam<T> create(Scope scope, Operand<T> var, Operand<T> m,
       Operand<T> v, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1,
       Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdam", scope.makeOpName("ApplyAdam"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyAdam"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(v.asOutput());

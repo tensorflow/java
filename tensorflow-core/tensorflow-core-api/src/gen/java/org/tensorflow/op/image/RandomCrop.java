@@ -70,7 +70,7 @@ public final class RandomCrop<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> RandomCrop<T> create(Scope scope, Operand<T> image,
       Operand<TInt64> sizeOutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomCrop", scope.makeOpName("RandomCrop"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomCrop"));
     opBuilder.addInput(image.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);

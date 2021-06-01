@@ -65,7 +65,7 @@ public final class CollectivePermute<T extends TType> extends RawOp implements O
   )
   public static <T extends TType> CollectivePermute<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> sourceTargetPairs) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectivePermute", scope.makeOpName("CollectivePermute"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CollectivePermute"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sourceTargetPairs.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -70,7 +70,7 @@ public final class Multinomial<U extends TNumber> extends RawOp implements Opera
   public static <U extends TNumber> Multinomial<U> create(Scope scope,
       Operand<? extends TNumber> logits, Operand<TInt32> numSamples, Class<U> outputDtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Multinomial", scope.makeOpName("Multinomial"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Multinomial"));
     opBuilder.addInput(logits.asOutput());
     opBuilder.addInput(numSamples.asOutput());
     opBuilder = scope.apply(opBuilder);

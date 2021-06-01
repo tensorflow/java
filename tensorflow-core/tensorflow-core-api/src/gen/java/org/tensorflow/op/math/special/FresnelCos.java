@@ -57,7 +57,7 @@ public final class FresnelCos<T extends TNumber> extends RawOp implements Operan
       describeByClass = true
   )
   public static <T extends TNumber> FresnelCos<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FresnelCos", scope.makeOpName("FresnelCos"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FresnelCos"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new FresnelCos<>(opBuilder.build());

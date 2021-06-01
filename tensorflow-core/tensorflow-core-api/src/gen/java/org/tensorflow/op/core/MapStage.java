@@ -61,7 +61,7 @@ public final class MapStage extends RawOp {
   )
   public static MapStage create(Scope scope, Operand<TInt64> key, Operand<TInt32> indices,
       Iterable<Operand<?>> values, List<Class<? extends TType>> dtypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MapStage", scope.makeOpName("MapStage"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapStage"));
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));

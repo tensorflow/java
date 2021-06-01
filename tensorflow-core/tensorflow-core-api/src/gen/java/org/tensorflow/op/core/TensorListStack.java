@@ -70,7 +70,7 @@ public final class TensorListStack<T extends TType> extends RawOp implements Ope
   public static <T extends TType> TensorListStack<T> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<TInt32> elementShape, Class<T> elementDtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListStack", scope.makeOpName("TensorListStack"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListStack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.apply(opBuilder);
