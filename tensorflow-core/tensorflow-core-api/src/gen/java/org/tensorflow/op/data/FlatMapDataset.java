@@ -74,7 +74,7 @@ public final class FlatMapDataset extends RawOp implements Operand<TType> {
   public static FlatMapDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FlatMapDataset", scope.makeOpName("FlatMapDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FlatMapDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder = scope.apply(opBuilder);

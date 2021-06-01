@@ -69,7 +69,7 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
   public static PartitionedCall create(Scope scope, Iterable<Operand<?>> args,
       Operand<TInt32> deviceOrdinal, List<Class<? extends TType>> Tout, ConcreteFunction f,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUPartitionedCall", scope.makeOpName("PartitionedCall"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PartitionedCall"));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder.addInput(deviceOrdinal.asOutput());
     opBuilder = scope.apply(opBuilder);

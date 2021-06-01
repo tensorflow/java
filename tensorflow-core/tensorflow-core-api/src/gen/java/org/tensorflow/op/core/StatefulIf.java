@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * output = cond ? then_branch(input) : else_branch(input)
  */
 @Operator
-public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> {
+public final class StatefulIf extends RawOp implements If {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -84,8 +84,8 @@ public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> 
   )
   public static StatefulIf create(Scope scope, Operand<? extends TType> cond,
       Iterable<Operand<?>> input, List<Class<? extends TType>> Tout, ConcreteFunction thenBranch,
-      ConcreteFunction elseBranch, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("If", scope.makeOpName("StatefulIf"));
+      ConcreteFunction elseBranch, If.Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulIf"));
     opBuilder.addInput(cond.asOutput());
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
@@ -93,7 +93,7 @@ public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> 
     opBuilder.setAttr("then_branch", thenBranch);
     opBuilder.setAttr("else_branch", elseBranch);
     if (options != null) {
-      for (Options opts : options) {
+      for (If.Options opts : options) {
         if (opts.outputShapes != null) {
           Shape[] outputShapesArray = new Shape[opts.outputShapes.size()];
           for (int i = 0 ; i < outputShapesArray.length ; i++) {
@@ -107,30 +107,11 @@ public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> 
   }
 
   /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(List<Shape> outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(Shape[] outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
    * Gets output.
    * A list of return values.
    * @return output.
    */
+  @Override
   public List<Output<?>> output() {
     return output;
   }
@@ -139,37 +120,5 @@ public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.StatefulIf}
-   */
-  public static class Options {
-    private List<Shape> outputShapes;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(List<Shape> outputShapes) {
-      this.outputShapes = outputShapes;
-      return this;
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(Shape... outputShapes) {
-      this.outputShapes = Arrays.asList(outputShapes);
-      return this;
-    }
   }
 }

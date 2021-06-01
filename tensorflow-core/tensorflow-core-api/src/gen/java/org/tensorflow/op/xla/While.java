@@ -77,7 +77,7 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
   )
   public static While create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaWhile", scope.makeOpName("While"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("While"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);

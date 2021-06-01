@@ -72,7 +72,7 @@ public final class ChooseFastestBranchDataset extends RawOp implements Operand<T
       Operand<TInt64> ratioDenominator, Iterable<Operand<?>> otherArguments,
       Long numElementsPerBranch, List<ConcreteFunction> branches, List<Long> otherArgumentsLengths,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ChooseFastestBranchDataset", scope.makeOpName("ChooseFastestBranchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ChooseFastestBranchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(ratioNumerator.asOutput());
     opBuilder.addInput(ratioDenominator.asOutput());

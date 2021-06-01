@@ -64,17 +64,20 @@ public final class FullOpDef {
 
     OpDef copy =
         opDef.toBuilder().setName(other.opDef.getName()).setIsStateful(other.isStateful()).build();
-    return copy.equals(other.opDef) && packageName.equals(other.packageName);
+    return copy.equals(other.opDef)
+        && packageName.equals(other.packageName)
+        && group.equals(other.group);
   }
 
   public TypeSpec buildOpClass() {
-    return buildOpClass(className);
+    return buildOpClass(className, null);
   }
 
-  public TypeSpec buildOpClass(String className) {
+  TypeSpec buildOpClass(String className, StatefulPair pair) {
     TypeSpec.Builder cls = TypeSpec.classBuilder(className);
     try {
-      new ClassGenerator(cls, opDef, apiDef, basePackage, packageName, group, className, endpoint)
+      new ClassGenerator(
+              cls, opDef, apiDef, basePackage, packageName, group, className, endpoint, pair)
           .buildClass();
     } catch (Exception e) {
       throw new IllegalStateException("Failed to generate class for op " + opDef.getName(), e);

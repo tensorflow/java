@@ -74,7 +74,7 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
   public static ReduceDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> initialState, Iterable<Operand<?>> otherArguments, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReduceDataset", scope.makeOpName("ReduceDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(initialState));
     opBuilder.addInputList(Operands.asOutputs(otherArguments));

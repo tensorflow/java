@@ -22,12 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
-import org.tensorflow.Operation;
-import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.Operands;
-import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
@@ -54,25 +50,10 @@ import org.tensorflow.types.family.TType;
  * }
  * ```
  * </pre>
+ * Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
  */
 @Operator
-public final class StatefulCase extends RawOp implements Case {
-  /**
-   * The name of this op, as known by TensorFlow core engine
-   */
-  public static final String OP_NAME = "Case";
-
-  private List<Output<?>> output;
-
-  @SuppressWarnings("unchecked")
-  private StatefulCase(Operation operation) {
-    super(operation);
-    int outputIdx = 0;
-    int outputLength = operation.outputListLength("output");
-    output = Arrays.asList(operation.outputList(outputIdx, outputLength));
-    outputIdx += outputLength;
-  }
-
+public interface Case extends Iterable<Operand<TType>> {
   /**
    * Factory method to create a class wrapping a new Case operation.
    *
@@ -85,36 +66,43 @@ public final class StatefulCase extends RawOp implements Case {
    *   tensors, whose types are the same as what every other branch returns.
    * </pre>
    * @param options carries optional attribute values
-   * @return a new instance of StatefulCase
+   * @return a new instance of Case
    */
   @Endpoint(
-      describeByClass = true
+      describeByClass = true,
+      name = "caseOp"
   )
-  public static StatefulCase create(Scope scope, Operand<TInt32> branchIndex,
-      Iterable<Operand<?>> input, List<Class<? extends TType>> Tout,
-      List<ConcreteFunction> branches, Case.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulCase"));
-    opBuilder.addInput(branchIndex.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
-    ConcreteFunction[] branchesArray = new ConcreteFunction[branches.size()];
-    for (int i = 0 ; i < branchesArray.length ; i++) {
-      branchesArray[i] = branches.get(i);
+  static Case create(Scope scope, Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Options... options) {
+    boolean isStateful = false;
+    if (branches.stream().anyMatch(x -> x.isStateful())) {
+      isStateful = true;
     }
-    opBuilder.setAttr("branches", branchesArray);
-    if (options != null) {
-      for (Case.Options opts : options) {
-        if (opts.outputShapes != null) {
-          Shape[] outputShapesArray = new Shape[opts.outputShapes.size()];
-          for (int i = 0 ; i < outputShapesArray.length ; i++) {
-            outputShapesArray[i] = opts.outputShapes.get(i);
-          }
-          opBuilder.setAttr("output_shapes", outputShapesArray);
-        }
-      }
+    if (isStateful) {
+      return StatefulCase.create(scope, branchIndex, input, Tout, branches, options);
+    } else {
+      return StatelessCase.create(scope, branchIndex, input, Tout, branches, options);
     }
-    return new StatefulCase(opBuilder.build());
+  }
+
+  /**
+   * Sets the outputShapes option.
+   *
+   * @param outputShapes the outputShapes option
+   * @return this Options instance.
+   */
+  static Options outputShapes(List<Shape> outputShapes) {
+    return new Options().outputShapes(outputShapes);
+  }
+
+  /**
+   * Sets the outputShapes option.
+   *
+   * @param outputShapes the outputShapes option
+   * @return this Options instance.
+   */
+  static Options outputShapes(Shape[] outputShapes) {
+    return new Options().outputShapes(outputShapes);
   }
 
   /**
@@ -122,14 +110,41 @@ public final class StatefulCase extends RawOp implements Case {
    * A list of return values.
    * @return output.
    */
-  @Override
-  public List<Output<?>> output() {
-    return output;
-  }
+  List<Output<?>> output();
 
   @Override
   @SuppressWarnings({"rawtypes", "unchecked"})
-  public Iterator<Operand<TType>> iterator() {
-    return (Iterator) output.iterator();
+  Iterator<Operand<TType>> iterator();
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.core.Case}
+   */
+  class Options {
+    List<Shape> outputShapes;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public Options outputShapes(List<Shape> outputShapes) {
+      this.outputShapes = outputShapes;
+      return this;
+    }
+
+    /**
+     * Sets the outputShapes option.
+     *
+     * @param outputShapes the outputShapes option
+     * @return this Options instance.
+     */
+    public Options outputShapes(Shape... outputShapes) {
+      this.outputShapes = Arrays.asList(outputShapes);
+      return this;
+    }
   }
 }

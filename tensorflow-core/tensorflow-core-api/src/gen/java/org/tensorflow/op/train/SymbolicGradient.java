@@ -82,7 +82,7 @@ public final class SymbolicGradient extends RawOp implements Iterable<Operand<TT
   )
   public static SymbolicGradient create(Scope scope, Iterable<Operand<?>> input,
       List<Class<? extends TType>> Tout, ConcreteFunction f) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SymbolicGradient", scope.makeOpName("SymbolicGradient"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SymbolicGradient"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));

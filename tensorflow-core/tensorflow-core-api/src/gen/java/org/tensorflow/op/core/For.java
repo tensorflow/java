@@ -78,7 +78,7 @@ public final class For extends RawOp implements Iterable<Operand<TType>> {
   )
   public static For create(Scope scope, Operand<TInt32> start, Operand<TInt32> limit,
       Operand<TInt32> delta, Iterable<Operand<?>> input, ConcreteFunction body) {
-    OperationBuilder opBuilder = scope.env().opBuilder("For", scope.makeOpName("For"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("For"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(limit.asOutput());
     opBuilder.addInput(delta.asOutput());

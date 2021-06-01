@@ -95,7 +95,7 @@ public final class Compile extends RawOp {
   public static Compile create(Scope scope, Iterable<Operand<TInt64>> dynamicShapes,
       Iterable<Operand<?>> guaranteedConstants, Long numComputations, ConcreteFunction function,
       String metadata) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUCompile", scope.makeOpName("Compile"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Compile"));
     opBuilder.addInputList(Operands.asOutputs(dynamicShapes));
     opBuilder.addInputList(Operands.asOutputs(guaranteedConstants));
     opBuilder = scope.apply(opBuilder);

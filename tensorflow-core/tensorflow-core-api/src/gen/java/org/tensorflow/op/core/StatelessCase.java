@@ -56,7 +56,7 @@ import org.tensorflow.types.family.TType;
  * This should only be used when the none of branches has stateful ops.
  * </pre>
  */
-public final class StatelessCase extends RawOp implements Iterable<Operand<TType>> {
+public final class StatelessCase extends RawOp implements Case {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -92,8 +92,8 @@ public final class StatelessCase extends RawOp implements Iterable<Operand<TType
   )
   public static StatelessCase create(Scope scope, Operand<TInt32> branchIndex,
       Iterable<Operand<?>> input, List<Class<? extends TType>> Tout,
-      List<ConcreteFunction> branches, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessCase", scope.makeOpName("StatelessCase"));
+      List<ConcreteFunction> branches, Case.Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessCase"));
     opBuilder.addInput(branchIndex.asOutput());
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
@@ -104,7 +104,7 @@ public final class StatelessCase extends RawOp implements Iterable<Operand<TType
     }
     opBuilder.setAttr("branches", branchesArray);
     if (options != null) {
-      for (Options opts : options) {
+      for (Case.Options opts : options) {
         if (opts.outputShapes != null) {
           Shape[] outputShapesArray = new Shape[opts.outputShapes.size()];
           for (int i = 0 ; i < outputShapesArray.length ; i++) {
@@ -118,30 +118,11 @@ public final class StatelessCase extends RawOp implements Iterable<Operand<TType
   }
 
   /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(List<Shape> outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(Shape[] outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
    * Gets output.
    * A list of return values.
    * @return output.
    */
+  @Override
   public List<Output<?>> output() {
     return output;
   }
@@ -150,37 +131,5 @@ public final class StatelessCase extends RawOp implements Iterable<Operand<TType
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.StatelessCase}
-   */
-  public static class Options {
-    private List<Shape> outputShapes;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(List<Shape> outputShapes) {
-      this.outputShapes = outputShapes;
-      return this;
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(Shape... outputShapes) {
-      this.outputShapes = Arrays.asList(outputShapes);
-      return this;
-    }
   }
 }

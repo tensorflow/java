@@ -71,7 +71,7 @@ public final class ParallelMapDataset extends RawOp implements Operand<TType> {
   public static ParallelMapDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, Operand<TInt64> numParallelCalls, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParallelMapDatasetV2", scope.makeOpName("ParallelMapDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelMapDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(numParallelCalls.asOutput());

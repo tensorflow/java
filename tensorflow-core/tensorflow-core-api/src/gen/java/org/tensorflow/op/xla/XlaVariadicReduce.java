@@ -75,7 +75,7 @@ public final class XlaVariadicReduce<T extends TType> extends RawOp implements I
   public static <T extends TType> XlaVariadicReduce<T> create(Scope scope,
       Iterable<Operand<T>> input, Iterable<Operand<T>> initValue, List<Long> dimensionsToReduce,
       ConcreteFunction reducer) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaVariadicReduce", scope.makeOpName("XlaVariadicReduce"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaVariadicReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder.addInputList(Operands.asOutputs(initValue));
     opBuilder = scope.apply(opBuilder);

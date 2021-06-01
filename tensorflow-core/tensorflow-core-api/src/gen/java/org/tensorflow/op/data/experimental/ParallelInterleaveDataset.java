@@ -95,7 +95,7 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
       Operand<TInt64> bufferOutputElements, Operand<TInt64> prefetchInputElements,
       Operand<TInt64> numParallelCalls, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParallelInterleaveDatasetV4", scope.makeOpName("ParallelInterleaveDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelInterleaveDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(cycleLength.asOutput());

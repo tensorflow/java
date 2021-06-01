@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * output = input; While (Cond(output)) { output = Body(output) }
  */
 @Operator
-public final class StatelessWhile extends RawOp implements Iterable<Operand<TType>> {
+public final class StatelessWhile extends RawOp implements While {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -83,14 +83,14 @@ public final class StatelessWhile extends RawOp implements Iterable<Operand<TTyp
       describeByClass = true
   )
   public static StatelessWhile create(Scope scope, Iterable<Operand<?>> input,
-      ConcreteFunction cond, ConcreteFunction body, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessWhile", scope.makeOpName("StatelessWhile"));
+      ConcreteFunction cond, ConcreteFunction body, While.Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessWhile"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);
     opBuilder.setAttr("body", body);
     if (options != null) {
-      for (Options opts : options) {
+      for (While.Options opts : options) {
         if (opts.outputShapes != null) {
           Shape[] outputShapesArray = new Shape[opts.outputShapes.size()];
           for (int i = 0 ; i < outputShapesArray.length ; i++) {
@@ -107,40 +107,11 @@ public final class StatelessWhile extends RawOp implements Iterable<Operand<TTyp
   }
 
   /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(List<Shape> outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
-   * Sets the outputShapes option.
-   *
-   * @param outputShapes the outputShapes option
-   * @return this Options instance.
-   */
-  public static Options outputShapes(Shape[] outputShapes) {
-    return new Options().outputShapes(outputShapes);
-  }
-
-  /**
-   * Sets the parallelIterations option.
-   *
-   * @param parallelIterations the parallelIterations option
-   * @return this Options instance.
-   */
-  public static Options parallelIterations(Long parallelIterations) {
-    return new Options().parallelIterations(parallelIterations);
-  }
-
-  /**
    * Gets output.
    * A list of output tensors whose types are T.
    * @return output.
    */
+  @Override
   public List<Output<?>> output() {
     return output;
   }
@@ -149,50 +120,5 @@ public final class StatelessWhile extends RawOp implements Iterable<Operand<TTyp
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.StatelessWhile}
-   */
-  public static class Options {
-    private List<Shape> outputShapes;
-
-    private Long parallelIterations;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(List<Shape> outputShapes) {
-      this.outputShapes = outputShapes;
-      return this;
-    }
-
-    /**
-     * Sets the outputShapes option.
-     *
-     * @param outputShapes the outputShapes option
-     * @return this Options instance.
-     */
-    public Options outputShapes(Shape... outputShapes) {
-      this.outputShapes = Arrays.asList(outputShapes);
-      return this;
-    }
-
-    /**
-     * Sets the parallelIterations option.
-     *
-     * @param parallelIterations the parallelIterations option
-     * @return this Options instance.
-     */
-    public Options parallelIterations(Long parallelIterations) {
-      this.parallelIterations = parallelIterations;
-      return this;
-    }
   }
 }

@@ -68,7 +68,7 @@ public final class Reduce<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Reduce<T> create(Scope scope, Operand<T> input,
       Operand<T> initValue, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaReduce", scope.makeOpName("Reduce"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reduce"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(initValue.asOutput());
     opBuilder = scope.apply(opBuilder);

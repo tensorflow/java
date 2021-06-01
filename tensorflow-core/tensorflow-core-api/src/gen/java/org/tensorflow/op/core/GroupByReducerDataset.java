@@ -82,7 +82,7 @@ public final class GroupByReducerDataset extends RawOp implements Operand<TType>
       Iterable<Operand<?>> finalizeFuncOtherArguments, ConcreteFunction keyFunc,
       ConcreteFunction initFunc, ConcreteFunction reduceFunc, ConcreteFunction finalizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GroupByReducerDataset", scope.makeOpName("GroupByReducerDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GroupByReducerDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(keyFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(initFuncOtherArguments));

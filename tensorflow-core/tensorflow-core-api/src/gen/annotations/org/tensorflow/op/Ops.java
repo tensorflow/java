@@ -222,8 +222,12 @@ import org.tensorflow.op.core.Stage;
 import org.tensorflow.op.core.StageClear;
 import org.tensorflow.op.core.StagePeek;
 import org.tensorflow.op.core.StageSize;
+import org.tensorflow.op.core.StatefulCase;
+import org.tensorflow.op.core.StatefulIf;
 import org.tensorflow.op.core.StatefulPartitionedCall;
+import org.tensorflow.op.core.StatefulWhile;
 import org.tensorflow.op.core.StatelessIf;
+import org.tensorflow.op.core.StatelessPartitionedCall;
 import org.tensorflow.op.core.StatelessWhile;
 import org.tensorflow.op.core.StopGradient;
 import org.tensorflow.op.core.StridedSlice;
@@ -1230,6 +1234,7 @@ public final class Ops {
    *  }
    *  ```
    *  </pre>
+   *  Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
    *
    * @param branchIndex The branch selector, an int32 Tensor.
    * @param input A list of input tensors passed to the branch function.
@@ -2946,6 +2951,7 @@ public final class Ops {
 
   /**
    * output = cond ? then_branch(input) : else_branch(input)
+   *  Selects between {@link StatefulIf} and {@link StatelessIf} based on the statefulness of the function arguments.
    *
    * @param cond <pre>
    *    A Tensor. If the tensor is a scalar of non-boolean type, the
@@ -4015,6 +4021,7 @@ public final class Ops {
 
   /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *  Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
    *
    * @param args A list of input tensors.
    * @param Tout A list of output types.
@@ -4022,7 +4029,8 @@ public final class Ops {
    *    A function that takes 'args', a list of tensors, and returns 'output',
    *    another list of tensors. Input and output types are specified by 'Tin'
    *    and 'Tout'. The function body of f will be placed and partitioned across
-   *    devices, setting this op apart from the regular Call op.
+   *    devices, setting this op apart from the regular Call op. This op is
+   *    stateful.
    *  </pre>
    * @param options carries optional attribute values
    * @return a new instance of PartitionedCall
@@ -6049,6 +6057,72 @@ public final class Ops {
   }
 
   /**
+   * An n-way switch statement which calls a single branch function.
+   *  <pre>
+   *  An n-way switch statement, implementing the following:
+   *  ```
+   *  switch (branch_index) {
+   *    case 0:
+   *      output = branches[0](input);
+   *      break;
+   *    case 1:
+   *      output = branches[1](input);
+   *      break;
+   *    ...
+   *    case [[nbranches-1]]:
+   *    default:
+   *      output = branches[nbranches-1](input);
+   *      break;
+   *  }
+   *  ```
+   *  </pre>
+   *
+   * @param branchIndex The branch selector, an int32 Tensor.
+   * @param input A list of input tensors passed to the branch function.
+   * @param Tout A list of output types.
+   * @param branches <pre>
+   *    A list of functions each of which takes 'inputs' and returns a list of
+   *    tensors, whose types are the same as what every other branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatefulCase
+   */
+  public StatefulCase statefulCase(Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Case.Options... options) {
+    return StatefulCase.create(scope, branchIndex, input, Tout, branches, options);
+  }
+
+  /**
+   * output = cond ? then_branch(input) : else_branch(input)
+   *
+   * @param cond <pre>
+   *    A Tensor. If the tensor is a scalar of non-boolean type, the
+   *    scalar is converted to a boolean according to the
+   *    following rule: if the scalar is a numerical value, non-zero means
+   *    `True` and zero means False; if the scalar is a string, non-empty
+   *    means `True` and empty means `False`. If the tensor is not a scalar,
+   *    being empty means False and being non-empty means True.
+   *  </pre>
+   * @param input A list of input tensors.
+   * @param Tout A list of output types.
+   * @param thenBranch <pre>
+   *    A function that takes 'inputs' and returns a list of tensors, whose
+   *    types are the same as what else_branch returns.
+   *  </pre>
+   * @param elseBranch <pre>
+   *  A function that takes 'inputs' and returns a list of tensors, whose
+   *  types are the same as what then_branch returns.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatefulIf
+   */
+  public StatefulIf statefulIf(Operand<? extends TType> cond, Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, ConcreteFunction thenBranch, ConcreteFunction elseBranch,
+      If.Options... options) {
+    return StatefulIf.create(scope, cond, input, Tout, thenBranch, elseBranch, options);
+  }
+
+  /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
    *
    * @param args A list of input tensors.
@@ -6064,9 +6138,34 @@ public final class Ops {
    * @return a new instance of StatefulPartitionedCall
    */
   public StatefulPartitionedCall statefulPartitionedCall(Iterable<Operand<?>> args,
-      List<Class<? extends TType>> Tout, ConcreteFunction f,
-      StatefulPartitionedCall.Options... options) {
+      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
     return StatefulPartitionedCall.create(scope, args, Tout, f, options);
+  }
+
+  /**
+   * output = input; While (Cond(output)) { output = Body(output) }
+   *
+   * @param input A list of input tensors whose types are T.
+   * @param cond <pre>
+   *    A function takes 'input' and returns a tensor.  If the tensor is
+   *    a scalar of non-boolean, the scalar is converted to a boolean
+   *    according to the following rule: if the scalar is a numerical
+   *    value, non-zero means True and zero means False; if the scalar is
+   *    a string, non-empty means True and empty means False. If the
+   *    tensor is not a scalar, non-emptiness means True and False
+   *    otherwise.
+   *  </pre>
+   * @param body <pre>
+   *    A function that takes a list of tensors and returns another
+   *    list of tensors. Both lists have the same types as specified
+   *    by T.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatefulWhile
+   */
+  public StatefulWhile statefulWhile(Iterable<Operand<?>> input, ConcreteFunction cond,
+      ConcreteFunction body, While.Options... options) {
+    return StatefulWhile.create(scope, input, cond, body, options);
   }
 
   /**
@@ -6098,8 +6197,27 @@ public final class Ops {
    */
   public StatelessIf statelessIf(Operand<? extends TType> cond, Iterable<Operand<?>> input,
       List<Class<? extends TType>> Tout, ConcreteFunction thenBranch, ConcreteFunction elseBranch,
-      StatelessIf.Options... options) {
+      If.Options... options) {
     return StatelessIf.create(scope, cond, input, Tout, thenBranch, elseBranch, options);
+  }
+
+  /**
+   * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *
+   * @param args A list of input tensors.
+   * @param Tout A list of output types.
+   * @param f <pre>
+   *    A function that takes 'args', a list of tensors, and returns 'output',
+   *    another list of tensors. Input and output types are specified by 'Tin'
+   *    and 'Tout'. The function body of f will be placed and partitioned across
+   *    devices, setting this op apart from the regular Call op.
+   *  </pre>
+   * @param options carries optional attribute values
+   * @return a new instance of StatelessPartitionedCall
+   */
+  public StatelessPartitionedCall statelessPartitionedCall(Iterable<Operand<?>> args,
+      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
+    return StatelessPartitionedCall.create(scope, args, Tout, f, options);
   }
 
   /**
@@ -6127,7 +6245,7 @@ public final class Ops {
    * @return a new instance of StatelessWhile
    */
   public StatelessWhile statelessWhile(Iterable<Operand<?>> input, ConcreteFunction cond,
-      ConcreteFunction body, StatelessWhile.Options... options) {
+      ConcreteFunction body, While.Options... options) {
     return StatelessWhile.create(scope, input, cond, body, options);
   }
 
@@ -7990,6 +8108,7 @@ public final class Ops {
 
   /**
    * output = input; While (Cond(output)) { output = Body(output) }
+   *  Selects between {@link StatefulWhile} and {@link StatelessWhile} based on the statefulness of the function arguments.
    *
    * @param input A list of input tensors whose types are T.
    * @param cond <pre>

@@ -71,14 +71,48 @@ public final class StatefulPair {
   }
 
   public String getPackageName() {
+    // guaranteed to be the same in FullOpDef.isStateVariant
     return statefulOp.packageName;
   }
 
-  public List<TypeSpec> buildOpClasses() {
-    TypeSpec stateful = statefulOp.buildOpClass(statefulClassName);
-    TypeSpec stateless = statelessOp.buildOpClass(statelessClassName);
+  public String getGroup() {
+    // guaranteed to be the same in FullOpDef.isStateVariant
+    return statefulOp.group;
+  }
 
-    return Arrays.asList(stateful, stateless);
+  public boolean hasOptionalAttrs() {
+    return statefulOp.opDef.getAttrList().stream()
+        .anyMatch(attr -> attr.hasDefaultValue() && !attr.getType().contains("type"));
+  }
+
+  public List<TypeSpec> buildOpClasses() {
+
+    TypeSpec.Builder selector = TypeSpec.interfaceBuilder(selectorClassName);
+    try {
+      new ClassGenerator(
+              selector,
+              statefulOp.opDef,
+              statefulOp.apiDef,
+              statefulOp.basePackage,
+              getPackageName(),
+              getGroup(),
+              selectorClassName,
+              statefulOp.endpoint,
+              this)
+          .buildClass();
+    } catch (Exception e) {
+      throw new IllegalStateException(
+          "Failed to generate statefulness selector class for ops "
+              + statefulOp.opDef.getName()
+              + " and "
+              + statelessOp.opDef.getName(),
+          e);
+    }
+
+    TypeSpec stateful = statefulOp.buildOpClass(statefulClassName, this);
+    TypeSpec stateless = statelessOp.buildOpClass(statelessClassName, this);
+
+    return Arrays.asList(stateful, stateless, selector.build());
   }
 
   @Override

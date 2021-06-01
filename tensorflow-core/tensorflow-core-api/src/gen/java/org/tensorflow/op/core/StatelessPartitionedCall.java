@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
  */
 @Operator
-public final class StatelessPartitionedCall extends RawOp implements Iterable<Operand<TType>> {
+public final class StatelessPartitionedCall extends RawOp implements PartitionedCall {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -72,14 +72,14 @@ public final class StatelessPartitionedCall extends RawOp implements Iterable<Op
       describeByClass = true
   )
   public static StatelessPartitionedCall create(Scope scope, Iterable<Operand<?>> args,
-      List<Class<? extends TType>> Tout, ConcreteFunction f, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PartitionedCall", scope.makeOpName("StatelessPartitionedCall"));
+      List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessPartitionedCall"));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     opBuilder.setAttr("f", f);
     if (options != null) {
-      for (Options opts : options) {
+      for (PartitionedCall.Options opts : options) {
         if (opts.config != null) {
           opBuilder.setAttr("config", opts.config);
         }
@@ -95,40 +95,11 @@ public final class StatelessPartitionedCall extends RawOp implements Iterable<Op
   }
 
   /**
-   * Sets the config option.
-   *
-   * @param config the config option
-   * @return this Options instance.
-   */
-  public static Options config(String config) {
-    return new Options().config(config);
-  }
-
-  /**
-   * Sets the configProto option.
-   *
-   * @param configProto the configProto option
-   * @return this Options instance.
-   */
-  public static Options configProto(String configProto) {
-    return new Options().configProto(configProto);
-  }
-
-  /**
-   * Sets the executorType option.
-   *
-   * @param executorType the executorType option
-   * @return this Options instance.
-   */
-  public static Options executorType(String executorType) {
-    return new Options().executorType(executorType);
-  }
-
-  /**
    * Gets output.
    * A list of return values.
    * @return output.
    */
+  @Override
   public List<Output<?>> output() {
     return output;
   }
@@ -137,52 +108,5 @@ public final class StatelessPartitionedCall extends RawOp implements Iterable<Op
   @SuppressWarnings({"rawtypes", "unchecked"})
   public Iterator<Operand<TType>> iterator() {
     return (Iterator) output.iterator();
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.core.StatelessPartitionedCall}
-   */
-  public static class Options {
-    private String config;
-
-    private String configProto;
-
-    private String executorType;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the config option.
-     *
-     * @param config the config option
-     * @return this Options instance.
-     */
-    public Options config(String config) {
-      this.config = config;
-      return this;
-    }
-
-    /**
-     * Sets the configProto option.
-     *
-     * @param configProto the configProto option
-     * @return this Options instance.
-     */
-    public Options configProto(String configProto) {
-      this.configProto = configProto;
-      return this;
-    }
-
-    /**
-     * Sets the executorType option.
-     *
-     * @param executorType the executorType option
-     * @return this Options instance.
-     */
-    public Options executorType(String executorType) {
-      this.executorType = executorType;
-      return this;
-    }
   }
 }

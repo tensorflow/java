@@ -84,7 +84,7 @@ public final class OneShotIterator extends RawOp implements Operand<TType> {
   )
   public static OneShotIterator create(Scope scope, ConcreteFunction datasetFactory,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OneShotIterator", scope.makeOpName("OneShotIterator"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OneShotIterator"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dataset_factory", datasetFactory);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

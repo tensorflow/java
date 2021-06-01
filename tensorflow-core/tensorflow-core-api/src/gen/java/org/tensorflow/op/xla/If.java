@@ -74,7 +74,7 @@ public final class If extends RawOp implements Iterable<Operand<TType>> {
   )
   public static If create(Scope scope, Operand<? extends TType> cond, Iterable<Operand<?>> inputs,
       ConcreteFunction thenBranch, ConcreteFunction elseBranch, List<Class<? extends TType>> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaIf", scope.makeOpName("If"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("If"));
     opBuilder.addInput(cond.asOutput());
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
