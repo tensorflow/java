@@ -18,7 +18,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Interface for Metrics that wrap Loss functions.
+ * Interface for Metrics that wrap AbstractLoss functions.
  *
  * @param <T> The data type of the predictions.
  */

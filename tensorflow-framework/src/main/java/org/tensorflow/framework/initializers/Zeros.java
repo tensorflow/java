@@ -28,24 +28,21 @@ import org.tensorflow.types.family.TType;
  *      Zeros&lt;TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Zeros&lt;&gt;(tf);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
  */
 public class Zeros<T extends TType> extends BaseInitializer<T> {
 
-  /**
-   * Creates an Initializer that sets all values to one.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Zeros(Ops tf) {
-    super(tf);
+  /** Creates an Initializer that sets all values to one. */
+  public Zeros() {
+    super();
   }
 
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> dtype) {
-    return tf.zeros(dims, dtype);
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
+    return tf.zeros(dims, type);
   }
 }

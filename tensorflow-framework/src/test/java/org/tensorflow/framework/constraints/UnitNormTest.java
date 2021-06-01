@@ -28,8 +28,8 @@ class UnitNormTest {
         };
 
         Operand<TFloat32> weights = tf.constant(array);
-        UnitNorm instance = new UnitNorm(tf, 1);
-        Operand<TFloat32> result = instance.call(weights);
+        UnitNorm instance = new UnitNorm(1);
+        Operand<TFloat32> result = instance.call(tf, weights);
         Operand<TFloat32> expected = tf.constant(expectedArray);
         session.evaluate(expected, result);
       }
@@ -50,9 +50,9 @@ class UnitNormTest {
           {{0.72920675, 0.40984813, 0.55712338}, {0.68429305, 0.91215323, 0.83042956}},
           {{0.97694125, 0.99972269, 0.13576831}, {0.21350717, 0.02353181, 0.99074035}}
         };
-        UnitNorm instance = new UnitNorm(tf, 1);
+        UnitNorm instance = new UnitNorm(1);
         Operand<TFloat64> weights = tf.constant(array);
-        Operand<TFloat64> result = instance.call(weights);
+        Operand<TFloat64> result = instance.call(tf, weights);
         Operand<TFloat64> expected = tf.constant(expectedArray);
         session.evaluate(expected, result);
       }

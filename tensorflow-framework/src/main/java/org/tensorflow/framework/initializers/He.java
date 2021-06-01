@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -38,7 +37,7 @@ import org.tensorflow.types.family.TFloating;
  *             new org.tensorflow.framework.initializers.He&lt;&gt;(tf,
  *             Distribution.TRUNCATED_NORMAL, seed););
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *             initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>He Uniform:
@@ -49,14 +48,16 @@ import org.tensorflow.types.family.TFloating;
  *             new org.tensorflow.framework.initializers.He&lt;&gt;(tf,
  *             Distribution.UNIFORM, seed););
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *             initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p><b>NOTE:</b>
+ *
  * <p>For an HeNormal equivalent initializer, use {@link
  * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
- * <p>For an HeUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
- * for the distribution parameter.
+ *
+ * <p>For an HeUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM} for
+ * the distribution parameter.
  *
  * @param <T> The TType for the call operation
  * @see <a
@@ -70,13 +71,12 @@ public class He<T extends TFloating> extends VarianceScaling<T> {
   /**
    * Creates an He Initializer
    *
-   * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the He initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    * @see VarianceScaling.Distribution
    */
-  public He(Ops tf, Distribution distribution, long seed) {
-    super(tf, SCALE, Mode.FAN_IN, distribution, seed);
+  public He(Distribution distribution, long seed) {
+    super(SCALE, Mode.FAN_IN, distribution, seed);
   }
 }

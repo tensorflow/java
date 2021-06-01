@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -39,7 +40,7 @@ import org.tensorflow.types.family.TNumber;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
  *    Huber huberLoss = new Huber(tf);
- *    Operand&lt;TFloat32&gt; result = huberLoss.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = huberLoss.call(Ops tf, labels, predictions);
  *    // produces 0.155
  * </pre>
  *
@@ -47,7 +48,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {1.f, 0.f});
- *    Operand&lt;TFloat32&gt; result = huberLoss.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = huberLoss.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.09f
  * </pre>
  *
@@ -55,7 +56,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Huber huberLoss = new Huber(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = huberLoss.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = huberLoss.call(Ops tf, labels, predictions);
  *    // produces 0.32f
  * </pre>
  *
@@ -63,78 +64,74 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Huber huberLoss = new Huber(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = huberLoss.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = huberLoss.call(Ops tf, labels, predictions);
  *    // produces [0.18f, 0.13f]
  * </pre>
  *
  * @see <a href="https://en.wikipedia.org/wiki/Huber_loss">Huber loss</a>
  */
-public class Huber extends Loss {
+public class Huber extends AbstractLoss {
   public static final float DELTA_DEFAULT = 1.0f;
 
   private final float delta;
 
   /**
-   * Creates a Huber Loss using {@link Class#getSimpleName()} as the loss name, {@link
-   * #DELTA_DEFAULT} as the delta and a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Huber AbstractLoss using {@link Class#getSimpleName()} as the loss name, {@link
+   * #DELTA_DEFAULT} as the delta and a AbstractLoss Reduction of {@link
+   * AbstractLoss#REDUCTION_DEFAULT}
    */
-  public Huber(Ops tf) {
-    this(tf, null, DELTA_DEFAULT, Reduction.AUTO);
+  public Huber() {
+    this(null, DELTA_DEFAULT, Reduction.AUTO);
   }
 
   /**
-   * Creates a Huber Loss using {@link #DELTA_DEFAULT} as the delta and a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}
+   * Creates a Huber AbstractLoss using {@link #DELTA_DEFAULT} as the delta and a AbstractLoss
+   * Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    */
-  public Huber(Ops tf, String name) {
-    this(tf, name, DELTA_DEFAULT, Reduction.AUTO);
+  public Huber(String name) {
+    this(name, DELTA_DEFAULT, Reduction.AUTO);
   }
 
   /**
-   * Creates a Huber Loss using {@link Class#getSimpleName()} as the loss name and and {@link
-   * #DELTA_DEFAULT} as the delta
+   * Creates a Huber AbstractLoss using {@link Class#getSimpleName()} as the loss name and and
+   * {@link #DELTA_DEFAULT} as the delta
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public Huber(Ops tf, Reduction reduction) {
-    this(tf, null, DELTA_DEFAULT, reduction);
+  public Huber(Reduction reduction) {
+    this(null, DELTA_DEFAULT, reduction);
   }
 
   /**
-   * Creates a Huber Loss using {@link #DELTA_DEFAULT} as the delta
+   * Creates a Huber AbstractLoss using {@link #DELTA_DEFAULT} as the delta
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public Huber(Ops tf, String name, Reduction reduction) {
-    this(tf, name, DELTA_DEFAULT, reduction);
+  public Huber(String name, Reduction reduction) {
+    this(name, DELTA_DEFAULT, reduction);
   }
 
   /**
-   * Creates a Huber Loss
+   * Creates a Huber AbstractLoss
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss, if null then {@link Class#getSimpleName()} is used.
    * @param delta the point where the Huber loss function changes from quadratic to linear.
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public Huber(Ops tf, String name, float delta, Reduction reduction) {
-    super(tf, name, reduction);
+  public Huber(String name, float delta, Reduction reduction) {
+    super(name, reduction);
     this.delta = delta;
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.huber(getTF(), labels, predictions, delta);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
+    Operand<T> losses = Losses.huber(tf, labels, predictions, delta);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

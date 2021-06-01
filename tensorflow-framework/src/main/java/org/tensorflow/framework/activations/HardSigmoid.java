@@ -18,6 +18,8 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Hard sigmoid activation.
  *
@@ -40,34 +42,23 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = hardSigmoid.call(input);
  *     // result is [0.f , 0.3f, 0.5f, 0.7f, 1.f]
  * </pre>
- *
- * @param <T> the data type of the result
  */
-public class HardSigmoid<T extends TFloating> extends Activation<T> {
+public class HardSigmoid<T extends TFloating> extends AbstractActivation<T> {
 
-  /**
-   * Creates Hard sigmoid activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public HardSigmoid(Ops tf) {
-    super(tf);
+  /** Creates Hard sigmoid activation. */
+  public HardSigmoid() {
+    super();
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     Class<T> inputType = input.type();
-    Operand<T> point2 = tf.dtypes.cast(tf.constant(0.2), inputType);
-    Operand<T> point5 = tf.dtypes.cast(tf.constant(0.5), inputType);
+    Operand<T> point2 = cast(tf, tf.constant(0.2), inputType);
+    Operand<T> point5 = cast(tf, tf.constant(0.5), inputType);
 
     Operand<T> x = tf.math.add(tf.math.mul(input, point2), point5);
     return tf.clipByValue(
-        x, tf.dtypes.cast(tf.constant(0), inputType), tf.dtypes.cast(tf.constant(1), inputType));
+        x, cast(tf, tf.constant(0), inputType), cast(tf, tf.constant(1), inputType));
   }
 }

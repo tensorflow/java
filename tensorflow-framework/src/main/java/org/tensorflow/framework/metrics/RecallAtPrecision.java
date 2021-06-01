@@ -34,8 +34,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * falseNegatives that are used to compute the recall at the given precision. The threshold for the
  * given precision value is computed and used to evaluate the corresponding recall.
  *
- * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of
- * 0 to mask values.
+ * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of 0 to mask
+ * values.
  *
  * @param <T> The data type for the metric result
  */

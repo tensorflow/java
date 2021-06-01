@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.regularizers;
 
-import org.tensorflow.op.Ops;
-
 /**
  * A regularizer that applies a L2 (Ridge Regression) regularization penalty.
  *
@@ -25,22 +23,41 @@ public class L2 extends L1L2 {
 
   /**
    * Create a regularizer that applies an L2 regularization penalty of {@link
+   * #DEFAULT_REGULARIZATION_PENALTY} and a name based on the class name.
+   */
+  public L2() {
+    this(null, DEFAULT_REGULARIZATION_PENALTY);
+  }
+
+  /**
+   * Create a regularizer that applies an L2 regularization penalty of {@link
    * #DEFAULT_REGULARIZATION_PENALTY}
    *
-   * @param tf the TensorFlow Ops
+   * @param name the name for this AbstractRegularizer
    */
-  public L2(Ops tf) {
-    this(tf, DEFAULT_REGULARIZATION_PENALTY);
+  public L2(String name) {
+    this(name, DEFAULT_REGULARIZATION_PENALTY);
+  }
+
+  /**
+   * Create a regularizer that applies an L1 regularization penalty and a name based on the class
+   * name.
+   *
+   * @param l2 the L2 regularization penalty
+   * @throws IllegalArgumentException if the l2 regularization factor is NaN or is infinite.
+   */
+  public L2(float l2) {
+    this(null, l2);
   }
 
   /**
    * Create a regularizer that applies an L1 regularization penalty
    *
-   * @param tf the TensorFlow Ops
+   * @param name the name for this AbstractRegularizer
    * @param l2 the L2 regularization penalty
    * @throws IllegalArgumentException if the l2 regularization factor is NaN or is infinite.
    */
-  public L2(Ops tf, float l2) {
-    super(tf, 0f, l2);
+  public L2(String name, float l2) {
+    super(name, 0f, l2);
   }
 }

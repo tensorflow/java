@@ -31,10 +31,11 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yTrue);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yTrue);
         float expected = 0.0f;
         testSession.evaluate(expected, loss);
       }
@@ -46,12 +47,13 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 1.4370421f;
         testSession.evaluate(expected, loss);
       }
@@ -63,13 +65,14 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 3.3051968f;
         testSession.evaluate(expected, loss);
       }
@@ -80,7 +83,8 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {1.2f, 3.4f};
@@ -88,7 +92,7 @@ public class MeanSquaredLogarithmicErrorTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 3.7856376f;
         testSession.evaluate(expected, loss);
       }
@@ -99,13 +103,14 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -116,7 +121,8 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf, Reduction.AUTO);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(Reduction.AUTO);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {3f, 6f, 5f, 0f, 4f, 2f};
@@ -126,7 +132,7 @@ public class MeanSquaredLogarithmicErrorTest {
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
 
         float expected = 2.647374f;
         testSession.evaluate(expected, loss);
@@ -141,7 +147,8 @@ public class MeanSquaredLogarithmicErrorTest {
           () -> {
             try (TestSession testSession = TestSession.createTestSession(tfMode)) {
               Ops tf = testSession.getTF();
-              MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf);
+              MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError();
+
               float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
               float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
               float[] sampleArray = {3f, 6f, 5f, 0f};
@@ -151,7 +158,7 @@ public class MeanSquaredLogarithmicErrorTest {
                   tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
               Operand<TFloat32> sampleWeight =
                   tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 2)));
-              Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+              Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
               float expected = 83f / 6f;
               testSession.evaluate(expected, loss);
             }
@@ -163,13 +170,14 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf, Reduction.NONE);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(Reduction.NONE);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         Float[] expected = {2.3006392f, 4.3097544f};
         testSession.evaluate(expected, loss);
       }
@@ -180,13 +188,14 @@ public class MeanSquaredLogarithmicErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(tf, Reduction.SUM);
+        MeanSquaredLogarithmicError instance = new MeanSquaredLogarithmicError(Reduction.SUM);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         Float[] expected = {6.6103935f};
         testSession.evaluate(expected, loss);
       }

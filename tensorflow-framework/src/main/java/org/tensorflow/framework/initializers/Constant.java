@@ -21,6 +21,8 @@ import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates tensors with a constant value.
  *
@@ -30,7 +32,7 @@ import org.tensorflow.types.family.TType;
  *      Constant&lt;TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Constant&lt;&gt;(tf, 3f);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The Type for the call operation
@@ -45,11 +47,10 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
-   * @param tf the TensorFlow Ops
    * @param value a long value used for the constant.
    */
-  public Constant(Ops tf, long value) {
-    super(tf);
+  public Constant(long value) {
+    super();
     longValue = value;
     doubleValue = 0;
     booleanValue = false;
@@ -59,11 +60,10 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
-   * @param tf the TensorFlow Ops
    * @param value a double value used for the constant.
    */
-  public Constant(Ops tf, double value) {
-    super(tf);
+  public Constant(double value) {
+    super();
     doubleValue = value;
     longValue = 0;
     booleanValue = false;
@@ -73,11 +73,10 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
   /**
    * Creates an Initializer that generates tensors with a constant value.
    *
-   * @param tf the TensorFlow Ops
    * @param value a boolean value used for the constant.
    */
-  public Constant(Ops tf, boolean value) {
-    super(tf);
+  public Constant(boolean value) {
+    super();
     booleanValue = value;
     doubleValue = 0;
     longValue = 0;
@@ -86,17 +85,19 @@ public class Constant<T extends TType> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
     if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
-      throw new IllegalArgumentException("Tensor type must be numeric or boolean: " + type.getSimpleName());
+      throw new IllegalArgumentException(
+          "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
     switch (valueType) {
       case LONG:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(longValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(longValue), type));
       case DOUBLE:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(doubleValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(doubleValue), type));
       default:
-        return tf.fill(dims, tf.dtypes.cast(tf.constant(booleanValue), type));
+        return tf.fill(dims, cast(tf, tf.constant(booleanValue), type));
     }
   }
 

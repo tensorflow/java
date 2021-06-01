@@ -29,8 +29,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * falseNegatives that are used to compute the precision at the given recall. The threshold for the
  * given recall value is computed and used to evaluate the corresponding precision.
  *
- * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of
- * 0 to mask values.
+ * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of 0 to mask
+ * values.
  *
  * @param <T> The data type for the metric result
  */
@@ -115,8 +115,7 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
   public Operand<T> result() {
     Ops tf = getTF();
 
-    Operand<T> div =
-        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
+    Operand<T> div = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
     Operand<T> sub = tf.math.sub(div, cast(tf, tf.constant(recall), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
     minIndex = tf.expandDims(minIndex, tf.constant(0));

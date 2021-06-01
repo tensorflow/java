@@ -34,8 +34,8 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
   private final int k;
 
   /**
-   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of
-   * top elements to look at for computing accuracy.
+   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
+   * elements to look at for computing accuracy.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.

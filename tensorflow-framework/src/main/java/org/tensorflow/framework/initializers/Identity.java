@@ -21,6 +21,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates the identity matrix.
  *
@@ -32,40 +34,34 @@ import org.tensorflow.types.family.TFloating;
  *     Identity&lt;TFloat32&gt; initializer =
  *             new org.tensorflow.framework.initializers.Identity&lt;&gt;(tf);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *             initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
  */
 public class Identity<T extends TFloating> extends BaseInitializer<T> {
   public static final double GAIN_DEFAULT = 1.0;
-
   private final double gain;
 
-  /**
-   * Creates an Initializer that generates the identity matrix.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Identity(Ops tf) {
-    super(tf);
-    this.gain = GAIN_DEFAULT;
+  /** Creates an Initializer that generates the identity matrix. */
+  public Identity() {
+    this(GAIN_DEFAULT);
   }
 
   /**
    * Creates an Initializer that generates the identity matrix.
    *
-   * @param tf the TensorFlow Ops
    * @param gain the gain to be applied to the Identity Matrix
    */
-  public Identity(Ops tf, double gain) {
-    super(tf);
+  public Identity(double gain) {
+    super();
     this.gain = gain;
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
     Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     if (shape.numDimensions() != 2) {
       throw new IllegalArgumentException("2D matrix required, got " + shape.numDimensions());
@@ -75,9 +71,9 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
     Shape diagShape = Shape.of(diagSize);
 
     Operand<T> op;
-    Operand<T> zero = tf.dtypes.cast(tf.constant(0), type);
+    Operand<T> zero = cast(tf, tf.constant(0), type);
     Operand<T> diagOnes =
-        tf.fill(tf.constant(diagShape.asArray()), tf.dtypes.cast(tf.constant(1.0), type));
+        tf.fill(tf.constant(diagShape.asArray()), cast(tf, tf.constant(1.0), type));
     if (isSquare) {
       op =
           tf.linalg.matrixDiag(
@@ -91,6 +87,6 @@ public class Identity<T extends TFloating> extends BaseInitializer<T> {
       op = tf.linalg.matrixSetDiag(zeroMatrix, diagOnes, tf.constant(0));
     }
 
-    return tf.math.mul(op, tf.dtypes.cast(tf.constant(gain), type));
+    return tf.math.mul(op, cast(tf, tf.constant(gain), type));
   }
 }

@@ -38,7 +38,7 @@ import org.tensorflow.types.family.TFloating;
  *
  * @param <T> the data type of the activation
  */
-public class Softmax<T extends TFloating> extends Activation<T> {
+public class Softmax<T extends TFloating> extends AbstractActivation<T> {
 
   private static final int AXIS_DEFAULT = -1;
 
@@ -47,32 +47,24 @@ public class Softmax<T extends TFloating> extends Activation<T> {
   /**
    * Creates a softmax activation where the default axis is {@link #AXIS_DEFAULT} which indicates
    * the last dimension.
-   *
-   * @param tf the TensorFlow Ops
    */
-  public Softmax(Ops tf) {
-    this(tf, AXIS_DEFAULT);
+  public Softmax() {
+    this(AXIS_DEFAULT);
   }
 
   /**
    * Creates a Softmax activation
    *
-   * @param tf the TensorFlow Ops
    * @param axis The dimension softmax would be performed on.
    */
-  public Softmax(Ops tf, int axis) {
-    super(tf);
+  public Softmax(int axis) {
+    super();
     this.axis = axis;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     Shape shape = input.shape();
     int numDimensions = shape.numDimensions();
     if (numDimensions == 2) {

@@ -45,25 +45,16 @@ import org.tensorflow.types.family.TFloating;
  * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1706.02515">Klambauer et al., 2017</a>
  */
-public class SELU<T extends TFloating> extends Activation<T> {
+public class SELU<T extends TFloating> extends AbstractActivation<T> {
 
-  /**
-   * Creates a Scaled Exponential Linear Unit (SELU) activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public SELU(Ops tf) {
-    super(tf);
+  /** Creates a Scaled Exponential Linear Unit (SELU) activation. */
+  public SELU() {
+    super();
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     return tf.nn.selu(input);
   }
 }

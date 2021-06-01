@@ -14,7 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
@@ -24,20 +24,6 @@ import org.tensorflow.types.TFloat64;
 /** @author Jim Clarke */
 public class TanhTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
-  public TanhTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
 
   /** Test of Tanh call method. */
   @Test
@@ -52,8 +38,8 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat32> instance = new Tanh<>(tf);
-        Operand<TFloat32> result = instance.call(tf.constant(input));
+        Tanh<TFloat32> instance = new Tanh<>();
+        Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -71,8 +57,8 @@ public class TanhTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Tanh<TFloat64> instance = new Tanh<>(tf);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        Tanh<TFloat64> instance = new Tanh<>();
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }

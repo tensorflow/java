@@ -21,35 +21,72 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A class that represents a Symbolic shape.
+ *
+ * <p>A Symbolic shape uses symbols to identify the relationship of the shape of an operand to
+ * underlying values that are not know until compute time. For example, "N" represent the number of
+ * examples, while "L" represents the number of labels. When the values later become known, the
+ * shape of the operand must conform the these symbolic values.
+ *
+ * @param <T> The data type for the Operand.
+ */
 public class SymbolicShape<T extends TNumber> {
   private Operand<T> operand;
   private List<String> symbols = new ArrayList<>();
 
+  /**
+   * Creates a SymbolicShape
+   *
+   * @param operand the Operand that needs to conform to the shape
+   * @param symbols the symbolic value for each dimension of the shape.
+   */
   public SymbolicShape(Operand<T> operand, String... symbols) {
     this.operand = operand;
     this.symbols.addAll(Arrays.asList(symbols));
   }
 
-  /** @return the operand */
+  /**
+   * Gets the operand
+   *
+   * @return the operand
+   */
   public Operand<T> getOperand() {
     return operand;
   }
 
-  /** @param operand the operand to set */
+  /**
+   * Sets the operand
+   *
+   * @param operand the operand to set
+   */
   public void setOperand(Operand<T> operand) {
     this.operand = operand;
   }
 
-  /** @return the symbols */
+  /**
+   * Gets the symbols associated with each dimension of the shape
+   *
+   * @return the symbols associated with each dimension of the shape
+   */
   public List<String> getSymbols() {
     return symbols;
   }
 
-  /** @param symbols the symbols to set */
+  /**
+   * Sets teh symbols associated with each dimension of the shape
+   *
+   * @param symbols the symbols associated with each dimension of the shape
+   */
   public void setSymbols(List<String> symbols) {
     this.symbols = symbols;
   }
 
+  /**
+   * Gets the rank associated with this Symbolic Shape
+   *
+   * @return the rank associated with this Symbolic Shape
+   */
   public int rank() {
     return this.symbols.size();
   }

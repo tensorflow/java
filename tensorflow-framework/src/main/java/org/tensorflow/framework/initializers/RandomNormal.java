@@ -19,6 +19,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TFloating;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Initializer that generates tensors with a normal distribution.
  *
@@ -29,7 +31,7 @@ import org.tensorflow.types.family.TFloating;
  *     RandomNormal&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.RandomNormal&lt;&gt;(tf, seed);
  *     Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -47,37 +49,34 @@ public class RandomNormal<T extends TFloating> extends BaseInitializer<T> {
    * Creates the RandomUniform initializer using {@link #MEAN_DEFAULT} for the mean and {@link
    * #STDDEV_DEFAULT} for the standard deviation.
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, long seed) {
-    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, seed);
+  public RandomNormal(long seed) {
+    this(MEAN_DEFAULT, STDDEV_DEFAULT, seed);
   }
 
   /**
    * Creates the RandomUniform initializer using {@link #STDDEV_DEFAULT} for the standard deviation.
    *
-   * @param tf the TensorFlow Ops
    * @param mean Mean of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, double mean, long seed) {
-    this(tf, mean, STDDEV_DEFAULT, seed);
+  public RandomNormal(double mean, long seed) {
+    this(mean, STDDEV_DEFAULT, seed);
   }
 
   /**
    * creates the RandomUniform initializer
    *
-   * @param tf the TensorFlow Ops
    * @param mean Mean of the random values to generate.
    * @param stddev Standard deviation of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public RandomNormal(Ops tf, double mean, double stddev, long seed) {
-    super(tf);
+  public RandomNormal(double mean, double stddev, long seed) {
+    super();
     this.mean = mean;
     this.stddev = stddev;
     this.seed = seed;
@@ -85,10 +84,11 @@ public class RandomNormal<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
     long[] seeds = {seed, 0};
     Operand<T> distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), type);
-    Operand<T> op = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(this.stddev), type));
-    return tf.math.add(op, tf.dtypes.cast(tf.constant(mean), type));
+    Operand<T> op = tf.math.mul(distOp, cast(tf, tf.constant(this.stddev), type));
+    return tf.math.add(op, cast(tf, tf.constant(mean), type));
   }
 }

@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -43,7 +44,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.05f, 0.95f, 0f}, {0.1f, 0.8f, 0.1f}});
  *    SparseCategoricalCrossentropy sparseCCE = new SparseCategoricalCrossentropy(tf);
- *    Operand&lt;TFloat32&gt; result = sparseCCE.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = sparseCCE.call(Ops tf, labels, predictions);
  *    // produces 1.177f
  * </pre>
  *
@@ -51,27 +52,27 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {0.3f, 0.7f});
- *    Operand&lt;TFloat32&gt; result = sparseCCE.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = sparseCCE.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.814f
  * </pre>
  *
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    SparseCategoricalCrossentropy sparseCCE = new SparseCategoricalCrossentropy(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = sparseCCE.call(labels, predictions);
+ *    SparseCategoricalCrossentropy sparseCCE = new SparseCategoricalCrossentropy(Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = sparseCCE.call(Ops tf, labels, predictions);
  *    // produces 2.354f
  * </pre>
  *
  * <p>Using <code>NONE</code> reduction type:
  *
  * <pre>
- *    SparseCategoricalCrossentropy sparseCCE = new SparseCategoricalCrossentropy(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = sparseCCE.call(labels, predictions);
+ *    SparseCategoricalCrossentropy sparseCCE = new SparseCategoricalCrossentropy(Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = sparseCCE.call(Ops tf, labels, predictions);
  *    // produces [0.0513f, 2.303f]
  * </pre>
  */
-public class SparseCategoricalCrossentropy extends Loss {
+public class SparseCategoricalCrossentropy extends AbstractLoss {
   public static final boolean FROM_LOGITS_DEFAULT = false;
   public static final int AXIS_DEFAULT = -1;
 
@@ -80,24 +81,23 @@ public class SparseCategoricalCrossentropy extends Loss {
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and fromLogits={@link
+   * name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    */
-  public SparseCategoricalCrossentropy(Ops tf) {
-    this(tf, null, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy() {
+    this(null, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy loss using a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * Creates a SparseCategoricalCrossentropy loss using a AbstractLoss Reduction of {@link
+   * AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss function
    */
-  public SparseCategoricalCrossentropy(Ops tf, String name) {
-    this(tf, name, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(String name) {
+    this(name, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);
   }
 
   /**
@@ -107,8 +107,8 @@ public class SparseCategoricalCrossentropy extends Loss {
    * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to loss.
    */
-  public SparseCategoricalCrossentropy(Ops tf, Reduction reduction) {
-    this(tf, null, FROM_LOGITS_DEFAULT, reduction, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(Reduction reduction) {
+    this(null, FROM_LOGITS_DEFAULT, reduction, AXIS_DEFAULT);
   }
 
   /**
@@ -119,32 +119,32 @@ public class SparseCategoricalCrossentropy extends Loss {
    * @param name the name of this loss function
    * @param reduction Type of Reduction to apply to loss.
    */
-  public SparseCategoricalCrossentropy(Ops tf, String name, Reduction reduction) {
-    this(tf, name, FROM_LOGITS_DEFAULT, reduction, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(String name, Reduction reduction) {
+    this(name, FROM_LOGITS_DEFAULT, reduction, AXIS_DEFAULT);
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy using a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
+   * Creates a SparseCategoricalCrossentropy using a AbstractLoss Reduction of {@link
+   * AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param name the name of this loss function
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public SparseCategoricalCrossentropy(Ops tf, String name, boolean fromLogits) {
-    this(tf, name, fromLogits, REDUCTION_DEFAULT, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(String name, boolean fromLogits) {
+    this(name, fromLogits, REDUCTION_DEFAULT, AXIS_DEFAULT);
   }
 
   /**
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
-   * name, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT} and fromLogits={@link
+   * name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT} and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
    *
    * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public SparseCategoricalCrossentropy(Ops tf, boolean fromLogits) {
-    this(tf, null, fromLogits, REDUCTION_DEFAULT, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(boolean fromLogits) {
+    this(null, fromLogits, REDUCTION_DEFAULT, AXIS_DEFAULT);
   }
 
   /**
@@ -155,8 +155,8 @@ public class SparseCategoricalCrossentropy extends Loss {
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param reduction Type of Reduction to apply to loss.
    */
-  public SparseCategoricalCrossentropy(Ops tf, boolean fromLogits, Reduction reduction) {
-    this(tf, null, fromLogits, reduction, AXIS_DEFAULT);
+  public SparseCategoricalCrossentropy(boolean fromLogits, Reduction reduction) {
+    this(null, fromLogits, reduction, AXIS_DEFAULT);
   }
 
   /**
@@ -170,8 +170,8 @@ public class SparseCategoricalCrossentropy extends Loss {
    *     and <code>axis=1</code> corresponds to data format 'Channels First'.
    */
   public SparseCategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, Reduction reduction, int axis) {
-    super(tf, name, reduction);
+      String name, boolean fromLogits, Reduction reduction, int axis) {
+    super(name, reduction);
     this.fromLogits = fromLogits;
     this.axis = axis;
   }
@@ -199,23 +199,24 @@ public class SparseCategoricalCrossentropy extends Loss {
    */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
     Operand<T> lPredictions;
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
           LossesHelper.rangeCheck(
-              getTF(),
+              tf,
               "predictions range check [0-1]",
               predictions,
-              cast(getTF(), getTF().constant(0), predictions.type()),
-              cast(getTF(), getTF().constant(1), predictions.type()));
+              cast(tf, tf.constant(0), predictions.type()),
+              cast(tf, tf.constant(1), predictions.type()));
 
     } else {
       lPredictions = predictions;
     }
     Operand<T> losses =
-        Losses.sparseCategoricalCrossentropy(getTF(), labels, lPredictions, fromLogits, axis);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+        Losses.sparseCategoricalCrossentropy(tf, labels, lPredictions, fromLogits, axis);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }
