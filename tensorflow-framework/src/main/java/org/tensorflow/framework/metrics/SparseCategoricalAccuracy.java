@@ -35,9 +35,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * probabilities are same.
  *
  * <p>This metric creates two local variables, `total` and `count` that are used to compute the
- * frequency with which {@code predictions} matches {@code labels}. This frequency is
- * ultimately returned as `sparse categorical accuracy`: an idempotent operation that simply divides
- * `total` by `count`.
+ * frequency with which {@code predictions} matches {@code labels}. This frequency is ultimately
+ * returned as `sparse categorical accuracy`: an idempotent operation that simply divides `total` by
+ * `count`.
  *
  * <p>If `sample_weight` is `None`, weights default to 1. Use `sample_weight` of 0 to mask values.'
  *

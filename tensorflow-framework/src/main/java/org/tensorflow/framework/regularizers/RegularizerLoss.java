@@ -15,50 +15,49 @@ limitations under the License.
 package org.tensorflow.framework.regularizers;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.losses.Loss;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * A Regularizer call wrapped as a Loss instance
+ * A AbstractRegularizer call wrapped as a AbstractLoss instance
  *
  * <p>This class facilitates using a regularizer as a loss, only <code>sampleWeights</code> are
  * regularized.
  */
-class RegularizerLoss extends Loss {
+class RegularizerLoss extends AbstractLoss {
 
-  private final Regularizer regularizer;
+  private final AbstractRegularizer regularizer;
 
   /**
-   * Creates a Loss using {@link Class#getSimpleName()} as the name and a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}
+   * Creates a AbstractLoss using {@link Class#getSimpleName()} as the name and a AbstractLoss
+   * Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    *
-   * @param tf the TensorFlow Ops
    * @param regularizer the regularizer used to calculate the loss
    */
-  public RegularizerLoss(Ops tf, Regularizer regularizer) {
-    this(tf, null, regularizer);
+  public RegularizerLoss(AbstractRegularizer regularizer) {
+    this(null, regularizer);
   }
 
   /**
-   * Creates a Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
+   * Creates a AbstractLoss using a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this Loss, if null the name will be {@link Class#getSimpleName()}.
+   * @param name the name of this AbstractLoss, if null the name will be {@link
+   *     Class#getSimpleName()}.
    * @param regularizer the regularizer used to calculate the loss
    */
-  public RegularizerLoss(Ops tf, String name, Regularizer regularizer) {
-    super(tf, name);
+  public RegularizerLoss(String name, AbstractRegularizer regularizer) {
+    super(name);
     this.regularizer = regularizer;
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
     if (sampleWeights == null) {
       throw new IllegalArgumentException("sampleWeights cannot be null");
     }
-    return regularizer.call(sampleWeights);
+    return regularizer.call(tf, sampleWeights);
   }
 }

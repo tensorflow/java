@@ -19,6 +19,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TFloating;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Exponential linear unit.
  *
@@ -44,53 +46,41 @@ import org.tensorflow.types.family.TFloating;
  *     Operand&lt;TFloat32&gt; result = elu.call(input);
  * </pre>
  *
- * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1511.07289">Clevert et al, 2016, Fast and Accurate Deep
  *     Network Learning by Exponential Linear Units (ELUs)</a>
  */
-public class ELU<T extends TFloating> extends Activation<T> {
+public class ELU<T extends TFloating> extends AbstractActivation<T> {
 
   private static final double ALPHA_DEFAULT = 1.0;
 
   /** A scalar, slope of negative section. */
   private final double alpha;
 
-  /**
-   * Creates a new ELU with alpha={@link #ALPHA_DEFAULT}.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public ELU(Ops tf) {
-    this(tf, ALPHA_DEFAULT);
+  /** Creates a new ELU with alpha={@link #ALPHA_DEFAULT}. */
+  public ELU() {
+    this(ALPHA_DEFAULT);
   }
 
   /**
    * Creates a new ELU
    *
-   * @param tf the TensorFlow Ops
    * @param alpha A scalar, slope of negative section. It controls the value to which an ELU
    *     saturates for negative net inputs.
    */
-  public ELU(Ops tf, double alpha) {
-    super(tf);
+  public ELU(double alpha) {
+    super();
     this.alpha = alpha;
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
-
+  public Operand<T> call(Ops tf, Operand<T> input) {
     Operand<T> result = tf.nn.elu(input);
     if (alpha == 1.0) return result;
     else {
       Class<T> inputType = input.type();
-      Operand<T> y = tf.math.mul(result, tf.dtypes.cast(tf.constant(alpha), inputType));
-      Operand<TBool> cond = tf.math.greater(result, tf.dtypes.cast(tf.constant(0), inputType));
+      Operand<T> y = tf.math.mul(result, cast(tf, tf.constant(alpha), inputType));
+      Operand<TBool> cond = tf.math.greater(result, cast(tf, tf.constant(0), inputType));
       return tf.select(cond, result, y);
     }
   }

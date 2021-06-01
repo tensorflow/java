@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.initializers;
 
 import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -23,14 +24,18 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> The data Type for initializer operation
  */
+@FunctionalInterface
 public interface Initializer<T extends TType> {
 
   /**
    * Generates the operation used to perform the initialization.
    *
+   * @param tf the TensorFlow Ops
    * @param dims the shape dimensions
    * @param type the type of tensor
+   * @throws IllegalStateException if the object has not been initialized with the TensorFlow
+   *     Platform.
    * @return An operand for the initialization.
    */
-  Operand<T> call(Operand<TInt64> dims, Class<T> type);
+  Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type);
 }

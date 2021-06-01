@@ -14,34 +14,16 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /** @author Jim Clarke */
 public class HardSigmoidTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
-  public HardSigmoidTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
-
 
   /** Test of HardSigmoid call method. */
   @Test
@@ -51,8 +33,8 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat32> instance = new HardSigmoid<>(tf);
-        Operand<TFloat32> result = instance.call(tf.constant(input));
+        HardSigmoid<TFloat32> instance = new HardSigmoid<>();
+        Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -65,8 +47,8 @@ public class HardSigmoidTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        HardSigmoid<TFloat64> instance = new HardSigmoid<>(tf);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        HardSigmoid<TFloat64> instance = new HardSigmoid<>();
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }

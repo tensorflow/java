@@ -14,29 +14,24 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
 
 /** Abstract base class for all Initializers */
 public abstract class BaseInitializer<T extends TType> implements Initializer<T> {
 
-  protected final Ops tf;
+  private final String name;
 
-  /**
-   * Creates an Initializer
-   *
-   * @param tf the TensorFlow Ops
-   */
-  protected BaseInitializer(Ops tf) {
-    this.tf = tf;
+  /** Creates an Initializer */
+  protected BaseInitializer() {
+    name = getClass().getSimpleName();
   }
 
   /**
-   * Gets the TensorFlow Ops
+   * Gets the name for this initializer
    *
-   * @return the TensorFlow Ops
+   * @return the name for this initializer
    */
-  public Ops getTF() {
-    return tf;
+  public String getName() {
+    return name;
   }
 }

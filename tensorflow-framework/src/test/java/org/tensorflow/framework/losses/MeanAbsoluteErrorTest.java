@@ -31,10 +31,11 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+        MeanAbsoluteError instance = new MeanAbsoluteError();
+
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yTrue);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yTrue);
         float expected = 0.0f;
         testSession.evaluate(expected, loss);
       }
@@ -46,12 +47,13 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+        MeanAbsoluteError instance = new MeanAbsoluteError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 5.5f;
         testSession.evaluate(expected, loss);
       }
@@ -63,13 +65,14 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+        MeanAbsoluteError instance = new MeanAbsoluteError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 12.65f;
         testSession.evaluate(expected, loss);
       }
@@ -80,7 +83,8 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+        MeanAbsoluteError instance = new MeanAbsoluteError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {1.2f, 3.4f};
@@ -88,7 +92,7 @@ public class MeanAbsoluteErrorTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 81.4f / 6f;
         testSession.evaluate(expected, loss);
       }
@@ -99,13 +103,14 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+        MeanAbsoluteError instance = new MeanAbsoluteError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -116,7 +121,8 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf, Reduction.AUTO);
+        MeanAbsoluteError instance = new MeanAbsoluteError(Reduction.AUTO);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {3f, 6f, 5f, 0f, 4f, 2f};
@@ -126,7 +132,7 @@ public class MeanAbsoluteErrorTest {
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
 
         float expected = 83f / 6f;
         testSession.evaluate(expected, loss);
@@ -141,7 +147,8 @@ public class MeanAbsoluteErrorTest {
           () -> {
             try (TestSession testSession = TestSession.createTestSession(tfMode)) {
               Ops tf = testSession.getTF();
-              MeanAbsoluteError instance = new MeanAbsoluteError(tf);
+              MeanAbsoluteError instance = new MeanAbsoluteError();
+
               float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
               float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
               float[] sampleArray = {3f, 6f, 5f, 0f};
@@ -151,7 +158,7 @@ public class MeanAbsoluteErrorTest {
                   tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
               Operand<TFloat32> sampleWeight =
                   tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 2)));
-              Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+              Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
               float expected = 83f / 6f;
               testSession.evaluate(expected, loss);
             }
@@ -163,13 +170,14 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf, Reduction.NONE);
+        MeanAbsoluteError instance = new MeanAbsoluteError(Reduction.NONE);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         Float[] expected = {10.733333f, 14.566667f};
         testSession.evaluate(expected, loss);
       }
@@ -180,13 +188,14 @@ public class MeanAbsoluteErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsoluteError instance = new MeanAbsoluteError(tf, Reduction.SUM);
+        MeanAbsoluteError instance = new MeanAbsoluteError(Reduction.SUM);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         Float[] expected = {25.29999f};
         testSession.evaluate(expected, loss);
       }

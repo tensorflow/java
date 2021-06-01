@@ -19,9 +19,9 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Linear activation function  (pass-through).
+ * Linear activation function (pass-through).
  *
- * <p>The linear activation returns its input. It is also known as the Identity activation function.</p>
+ * <p>The linear activation returns its input. It is also known as the Identity activation function.
  *
  * <p>For example:
  *
@@ -33,20 +33,16 @@ import org.tensorflow.types.family.TNumber;
  *    // result is [-3.0f,-1.0f, 0.0f,1.0f,3.0f]
  * </pre>
  */
-public class Linear<U extends TNumber> extends Activation<U> {
+public class Linear<U extends TNumber> extends AbstractActivation<U> {
 
-  /**
-   * Creates a linear activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Linear(Ops tf) {
-    super(tf);
+  /** Creates a linear activation. */
+  public Linear() {
+    super();
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<U> call(Operand<U> input) {
+  public Operand<U> call(Ops tf, Operand<U> input) {
     return input;
   }
 }

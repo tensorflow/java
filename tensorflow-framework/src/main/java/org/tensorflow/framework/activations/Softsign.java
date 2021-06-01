@@ -33,25 +33,16 @@ import org.tensorflow.types.family.TFloating;
  *
  * @param <T> the data type of the activation
  */
-public class Softsign<T extends TFloating> extends Activation<T> {
+public class Softsign<T extends TFloating> extends AbstractActivation<T> {
 
-  /**
-   * Creates a Softsign activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Softsign(Ops tf) {
-    super(tf);
+  /** Creates a Softsign activation. */
+  public Softsign() {
+    super();
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     return tf.nn.softsign(input);
   }
 }

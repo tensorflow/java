@@ -1,4 +1,4 @@
-/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,21 +12,35 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.framework.regularizers;
+package org.tensorflow.framework.activations;
 
-import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-public interface Regularizer {
+/** Abstract base class for Activations */
+public abstract class AbstractActivation<T extends TNumber> implements Activation<T> {
+
+  /** The TensorFlow Ops */
+  protected Ops tf;
+
+  /** Creates the abstract class for an AbstractActivation */
+  protected AbstractActivation() {}
 
   /**
-   * Computes a regularization penalty from an input.
+   * Gets the TensorFlow Ops
+   *
+   * @return the TensorFlow Ops
+   */
+  protected Ops getTF() {
+    return this.tf;
+  }
+
+  /**
+   * Sets the TensorFlow Ops
    *
    * @param tf the TensorFlow Ops
-   * @param input the weighted input
-   * @return the result of computing the regularization penalty
-   * @param <R> the data type of the input and result
    */
-  <R extends TNumber> Operand<R> call(Ops tf, Operand<R> input);
+  protected void setTF(Ops tf) {
+    this.tf = tf;
+  }
 }

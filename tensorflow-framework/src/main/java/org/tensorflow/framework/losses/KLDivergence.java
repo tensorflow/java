@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -31,8 +32,8 @@ import org.tensorflow.types.family.TNumber;
  *        tf.constant(new float[][] {{0.f, 1.f}, {0.f, 0.f}});
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
- *    KLDivergence kld = new KLDivergence(tf);
- *    Operand&lt;TFloat32&gt; result = kld.call(labels, predictions);
+ *    KLDivergence kld = new KLDivergence();
+ *    Operand&lt;TFloat32&gt; result = kld.call(Ops tf, labels, predictions);
  *    // produces 0.458
  * </pre>
  *
@@ -40,68 +41,65 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {0.8f, 0.2f});
- *    Operand&lt;TFloat32&gt; result = kld.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = kld.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.366f
  * </pre>
  *
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    KLDivergence kld = new KLDivergence(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = kld.call(labels, predictions);
+ *    KLDivergence kld = new KLDivergence(, Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = kld.call(Ops tf, labels, predictions);
  *    // produces 0.916f
  * </pre>
  *
  * <p>Using <code>NONE</code> reduction type:
  *
  * <pre>
- *    KLDivergence kld = new KLDivergence(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = kld.call(labels, predictions);
+ *    KLDivergence kld = new KLDivergence(, Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = kld.call(Ops tf, labels, predictions);
  *    // produces [0.916f, -3.08e-06f]
  * </pre>
  *
  * @see <a href="https://en.wikipedia.org/wiki/Kullback?Leibler_divergence">Kullback?Leibler
  *     divergence</a>
  */
-public class KLDivergence extends Loss {
+public class KLDivergence extends AbstractLoss {
 
   /**
-   * Creates a Kullback Leibler Divergence Loss using {@link Class#getSimpleName()} as the loss name
-   * and a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Kullback Leibler Divergence AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name and a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public KLDivergence(Ops tf) {
-    super(tf);
+  public KLDivergence() {
+    super();
   }
 
   /**
-   * Creates a Kullback Leibler Divergence Loss Loss using {@link Class#getSimpleName()} as the loss
-   * name
+   * Creates a Kullback Leibler Divergence AbstractLoss AbstractLoss using {@link
+   * Class#getSimpleName()} as the loss name
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public KLDivergence(Ops tf, Reduction reduction) {
-    super(tf, null, reduction);
+  public KLDivergence(Reduction reduction) {
+    super(null, reduction);
   }
 
   /**
-   * Creates a Kullback Leibler Divergence Loss
+   * Creates a Kullback Leibler Divergence AbstractLoss
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public KLDivergence(Ops tf, String name, Reduction reduction) {
-    super(tf, name, reduction);
+  public KLDivergence(String name, Reduction reduction) {
+    super(name, reduction);
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.kullbackLeiblerDivergence(getTF(), labels, predictions);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
+    Operand<T> losses = Losses.kullbackLeiblerDivergence(tf, labels, predictions);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

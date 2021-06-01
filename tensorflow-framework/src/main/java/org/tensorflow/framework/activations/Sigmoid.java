@@ -41,25 +41,16 @@ import org.tensorflow.types.family.TFloating;
  *
  * @param <T> the data type of the activation
  */
-public class Sigmoid<T extends TFloating> extends Activation<T> {
+public class Sigmoid<T extends TFloating> extends AbstractActivation<T> {
 
-  /**
-   * Creates a Sigmoid activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Sigmoid(Ops tf) {
-    super(tf);
+  /** Creates a Sigmoid activation. */
+  public Sigmoid() {
+    super();
   }
 
-  /**
-   * Gets the calculation operation for the activation.
-   *
-   * @param input the input tensor
-   * @return The operand for the activation
-   */
+  /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     return tf.math.sigmoid(input);
   }
 }
