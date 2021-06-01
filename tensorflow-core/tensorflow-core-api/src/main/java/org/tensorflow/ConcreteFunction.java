@@ -38,12 +38,12 @@ import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Operation;
 import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.internal.types.registry.TensorTypeRegistry;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.core.PartitionedCall;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.PlaceholderWithDefault;
-import org.tensorflow.op.core.StatefulPartitionedCall;
-import org.tensorflow.op.core.StatelessPartitionedCall;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
@@ -218,11 +218,8 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
    * @return the outputs of the function
    */
   public Map<String, Operand<?>> call(Scope scope, Map<String, Operand<?>> arguments) {
-    List<Operand<?>> inputList = new ArrayList<>();
+    List<Operand<?>> inputList = new ArrayList<>(signature.inputNames().size());
 
-    Output<?>[] inputs = new Output<?>[signature().inputNames().size()];
-
-    int i = 0;
     for (String inputName : signature().inputNames()) {
       if (!arguments.containsKey(inputName)) {
         throw new IllegalArgumentException(
@@ -240,42 +237,23 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
                 + inputName
                 + "\" was null.");
       }
-      inputs[i] = input.asOutput();
-      i++;
+      inputList.add(input);
     }
 
-    scope.env().attachFunction(this);
-    String name = getDefinedName();
-
-    String displayName = Scope.isValidOpName(name) ? name : "FunctionCall";
-
-    OperationBuilder opBuilder =
-        scope
-            .env()
-            .opBuilder(
-                isStateful() ? StatefulPartitionedCall.OP_NAME : StatelessPartitionedCall.OP_NAME,
-                scope.makeOpName(displayName));
-
-    opBuilder.addInputList(inputs);
-
-    opBuilder.setAttr("f", this);
-    opBuilder.setAttr("Tin", inputDtypes);
-    opBuilder.setAttr("Tout", outputDtypes);
-
-    opBuilder = scope.apply(opBuilder);
-    Operation op = opBuilder.build();
-
-    int numOutputs1 = op.numOutputs();
-    List<Operand<?>> outputList = new ArrayList<>(signature().outputNames().size());
-
-    for (i = 0; i < numOutputs1; i++) {
-      outputList.add(op.output(i));
-    }
+    List<Output<?>> outputList =
+        PartitionedCall.create(
+                scope,
+                inputList,
+                Arrays.stream(inputDtypes)
+                    .map(x -> TensorTypeRegistry.find(x).type())
+                    .collect(Collectors.toList()),
+                this)
+            .output();
 
     Map<String, Operand<?>> namedOutputs = new LinkedHashMap<>(signature().outputNames().size());
 
     List<String> outputNames = new ArrayList<>(signature().outputNames());
-    for (i = 0; i < outputNames.size(); i++) {
+    for (int i = 0; i < outputNames.size(); i++) {
       String outputName = outputNames.get(i);
 
       if (i > outputList.size()) {
