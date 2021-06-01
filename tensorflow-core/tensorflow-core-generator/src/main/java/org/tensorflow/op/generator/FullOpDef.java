@@ -16,6 +16,7 @@
 package org.tensorflow.op.generator;
 
 import com.squareup.javapoet.TypeSpec;
+import java.util.StringJoiner;
 import org.tensorflow.proto.framework.ApiDef;
 import org.tensorflow.proto.framework.ApiDef.Endpoint;
 import org.tensorflow.proto.framework.OpDef;
@@ -56,13 +57,21 @@ public final class FullOpDef {
     return opDef.getIsStateful();
   }
 
-  public boolean equalOtherThanState(FullOpDef other) {
+  public boolean isStateVariant(FullOpDef other) {
+    if (this.equals(other)) return false;
+
+    if (this.isStateful() == other.isStateful()) return false;
+
     OpDef copy =
         opDef.toBuilder().setName(other.opDef.getName()).setIsStateful(other.isStateful()).build();
-    return copy.equals(other.opDef);
+    return copy.equals(other.opDef) && packageName.equals(other.packageName);
   }
 
   public TypeSpec buildOpClass() {
+    return buildOpClass(className);
+  }
+
+  public TypeSpec buildOpClass(String className) {
     TypeSpec.Builder cls = TypeSpec.classBuilder(className);
     try {
       new ClassGenerator(cls, opDef, apiDef, basePackage, packageName, group, className, endpoint)
@@ -115,5 +124,18 @@ public final class FullOpDef {
     result = 31 * result + className.hashCode();
     result = 31 * result + endpoint.hashCode();
     return result;
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", FullOpDef.class.getSimpleName() + "(", ")")
+        .add("opDef=" + opDef)
+        .add("apiDef=" + apiDef)
+        .add("basePackage='" + basePackage + "'")
+        .add("packageName='" + packageName + "'")
+        .add("group='" + group + "'")
+        .add("className='" + className + "'")
+        .add("endpoint=" + endpoint)
+        .toString();
   }
 }

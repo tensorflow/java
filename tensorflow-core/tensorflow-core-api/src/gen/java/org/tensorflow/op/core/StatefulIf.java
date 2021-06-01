@@ -31,41 +31,22 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
-import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * An n-way switch statement which calls a single branch function.
- * <pre>
- * An n-way switch statement, implementing the following:
- * ```
- * switch (branch_index) {
- *   case 0:
- *     output = branches[0](input);
- *     break;
- *   case 1:
- *     output = branches[1](input);
- *     break;
- *   ...
- *   case [[nbranches-1]]:
- *   default:
- *     output = branches[nbranches-1](input);
- *     break;
- * }
- * ```
- * </pre>
+ * output = cond ? then_branch(input) : else_branch(input)
  */
 @Operator
-public final class Case extends RawOp implements Iterable<Operand<TType>> {
+public final class StatefulIf extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "Case";
+  public static final String OP_NAME = "If";
 
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private Case(Operation operation) {
+  private StatefulIf(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
@@ -74,35 +55,43 @@ public final class Case extends RawOp implements Iterable<Operand<TType>> {
   }
 
   /**
-   * Factory method to create a class wrapping a new Case operation.
+   * Factory method to create a class wrapping a new If operation.
    *
    * @param scope current scope
-   * @param branchIndex The branch selector, an int32 Tensor.
-   * @param input A list of input tensors passed to the branch function.
+   * @param cond <pre>
+   *   A Tensor. If the tensor is a scalar of non-boolean type, the
+   *   scalar is converted to a boolean according to the
+   *   following rule: if the scalar is a numerical value, non-zero means
+   *   `True` and zero means False; if the scalar is a string, non-empty
+   *   means `True` and empty means `False`. If the tensor is not a scalar,
+   *   being empty means False and being non-empty means True.
+   * </pre>
+   * @param input A list of input tensors.
    * @param Tout A list of output types.
-   * @param branches <pre>
-   *   A list of functions each of which takes 'inputs' and returns a list of
-   *   tensors, whose types are the same as what every other branch returns.
+   * @param thenBranch <pre>
+   *   A function that takes 'inputs' and returns a list of tensors, whose
+   *   types are the same as what else_branch returns.
+   * </pre>
+   * @param elseBranch <pre>
+   * A function that takes 'inputs' and returns a list of tensors, whose
+   * types are the same as what then_branch returns.
    * </pre>
    * @param options carries optional attribute values
-   * @return a new instance of Case
+   * @return a new instance of StatefulIf
    */
   @Endpoint(
-      describeByClass = true,
-      name = "caseOp"
+      describeByClass = true
   )
-  public static Case create(Scope scope, Operand<TInt32> branchIndex, Iterable<Operand<?>> input,
-      List<Class<? extends TType>> Tout, List<ConcreteFunction> branches, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Case", scope.makeOpName("Case"));
-    opBuilder.addInput(branchIndex.asOutput());
+  public static StatefulIf create(Scope scope, Operand<? extends TType> cond,
+      Iterable<Operand<?>> input, List<Class<? extends TType>> Tout, ConcreteFunction thenBranch,
+      ConcreteFunction elseBranch, Options... options) {
+    OperationBuilder opBuilder = scope.env().opBuilder("If", scope.makeOpName("StatefulIf"));
+    opBuilder.addInput(cond.asOutput());
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
-    ConcreteFunction[] branchesArray = new ConcreteFunction[branches.size()];
-    for (int i = 0 ; i < branchesArray.length ; i++) {
-      branchesArray[i] = branches.get(i);
-    }
-    opBuilder.setAttr("branches", branchesArray);
+    opBuilder.setAttr("then_branch", thenBranch);
+    opBuilder.setAttr("else_branch", elseBranch);
     if (options != null) {
       for (Options opts : options) {
         if (opts.outputShapes != null) {
@@ -114,7 +103,7 @@ public final class Case extends RawOp implements Iterable<Operand<TType>> {
         }
       }
     }
-    return new Case(opBuilder.build());
+    return new StatefulIf(opBuilder.build());
   }
 
   /**
@@ -153,7 +142,7 @@ public final class Case extends RawOp implements Iterable<Operand<TType>> {
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.Case}
+   * Optional attributes for {@link org.tensorflow.op.core.StatefulIf}
    */
   public static class Options {
     private List<Shape> outputShapes;

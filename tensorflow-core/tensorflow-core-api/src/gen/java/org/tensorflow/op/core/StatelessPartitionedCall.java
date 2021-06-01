@@ -36,7 +36,7 @@ import org.tensorflow.types.family.TType;
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
  */
 @Operator
-public final class PartitionedCall extends RawOp implements Iterable<Operand<TType>> {
+public final class StatelessPartitionedCall extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -45,7 +45,7 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private PartitionedCall(Operation operation) {
+  private StatelessPartitionedCall(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
@@ -66,14 +66,14 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
    *   devices, setting this op apart from the regular Call op.
    * </pre>
    * @param options carries optional attribute values
-   * @return a new instance of PartitionedCall
+   * @return a new instance of StatelessPartitionedCall
    */
   @Endpoint(
       describeByClass = true
   )
-  public static PartitionedCall create(Scope scope, Iterable<Operand<?>> args,
+  public static StatelessPartitionedCall create(Scope scope, Iterable<Operand<?>> args,
       List<Class<? extends TType>> Tout, ConcreteFunction f, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PartitionedCall", scope.makeOpName("PartitionedCall"));
+    OperationBuilder opBuilder = scope.env().opBuilder("PartitionedCall", scope.makeOpName("StatelessPartitionedCall"));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
@@ -91,7 +91,7 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
         }
       }
     }
-    return new PartitionedCall(opBuilder.build());
+    return new StatelessPartitionedCall(opBuilder.build());
   }
 
   /**
@@ -140,7 +140,7 @@ public final class PartitionedCall extends RawOp implements Iterable<Operand<TTy
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.PartitionedCall}
+   * Optional attributes for {@link org.tensorflow.op.core.StatelessPartitionedCall}
    */
   public static class Options {
     private String config;

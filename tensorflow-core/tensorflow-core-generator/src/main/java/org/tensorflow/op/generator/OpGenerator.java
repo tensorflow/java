@@ -186,6 +186,30 @@ public final class OpGenerator {
     generate(outputDir, packageName, defs);
   }
 
+  private static void writeToFile(TypeSpec spec, File outputDir, String packageName) {
+    JavaFile file =
+        JavaFile.builder(packageName, spec).indent("  ").skipJavaLangImports(true).build();
+
+    File outputFile =
+        new File(outputDir, packageName.replace('.', '/') + '/' + spec.name + ".java");
+    outputFile.getParentFile().mkdirs();
+    try {
+      StringBuilder builder = new StringBuilder();
+      builder.append(LICENSE + '\n');
+      builder.append("// This class has been generated, DO NOT EDIT!\n\n");
+      file.writeTo(builder);
+
+      Files.write(
+          outputFile.toPath(),
+          builder.toString().getBytes(StandardCharsets.UTF_8),
+          StandardOpenOption.WRITE,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.TRUNCATE_EXISTING);
+    } catch (IOException ioException) {
+      throw new IllegalStateException("Failed to write file " + outputFile, ioException);
+    }
+  }
+
   /** Generate all the ops that pass {@link ClassGenerator#canGenerateOp(OpDef, ApiDef)}. */
   private static void generate(File outputDir, String basePackage, Map<OpDef, ApiDef> ops) {
     List<FullOpDef> fullOps =
@@ -219,34 +243,19 @@ public final class OpGenerator {
                             }))
             .collect(Collectors.toList());
 
+    List<StatefulPair> statefulPairs = StatefulPair.extractStatefulPairs(fullOps);
+
     fullOps.forEach(
         (def) -> {
           TypeSpec spec = def.buildOpClass();
 
-          JavaFile file =
-              JavaFile.builder(def.packageName, spec)
-                  .indent("  ")
-                  .skipJavaLangImports(true)
-                  .build();
+          writeToFile(spec, outputDir, def.packageName);
+        });
 
-          File outputFile =
-              new File(outputDir, def.packageName.replace('.', '/') + '/' + spec.name + ".java");
-          outputFile.getParentFile().mkdirs();
-          try {
-            StringBuilder builder = new StringBuilder();
-            builder.append(LICENSE + '\n');
-            builder.append("// This class has been generated, DO NOT EDIT!\n\n");
-            file.writeTo(builder);
-
-            Files.write(
-                outputFile.toPath(),
-                builder.toString().getBytes(StandardCharsets.UTF_8),
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING);
-          } catch (IOException ioException) {
-            throw new IllegalStateException("Failed to write file " + outputFile, ioException);
-          }
+    statefulPairs.forEach(
+        (pair) -> {
+          pair.buildOpClasses()
+              .forEach((spec) -> writeToFile(spec, outputDir, pair.getPackageName()));
         });
   }
 }

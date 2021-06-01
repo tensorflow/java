@@ -37,7 +37,7 @@ import org.tensorflow.types.family.TType;
  * output = input; While (Cond(output)) { output = Body(output) }
  */
 @Operator
-public final class While extends RawOp implements Iterable<Operand<TType>> {
+public final class StatefulWhile extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -46,7 +46,7 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
   private List<Output<?>> output;
 
   @SuppressWarnings("unchecked")
-  private While(Operation operation) {
+  private StatefulWhile(Operation operation) {
     super(operation);
     int outputIdx = 0;
     int outputLength = operation.outputListLength("output");
@@ -74,15 +74,14 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
    *   by T.
    * </pre>
    * @param options carries optional attribute values
-   * @return a new instance of While
+   * @return a new instance of StatefulWhile
    */
   @Endpoint(
-      describeByClass = true,
-      name = "whileOp"
+      describeByClass = true
   )
-  public static While create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
+  public static StatefulWhile create(Scope scope, Iterable<Operand<?>> input, ConcreteFunction cond,
       ConcreteFunction body, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("While", scope.makeOpName("While"));
+    OperationBuilder opBuilder = scope.env().opBuilder("While", scope.makeOpName("StatefulWhile"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);
@@ -101,7 +100,7 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
         }
       }
     }
-    return new While(opBuilder.build());
+    return new StatefulWhile(opBuilder.build());
   }
 
   /**
@@ -150,7 +149,7 @@ public final class While extends RawOp implements Iterable<Operand<TType>> {
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.While}
+   * Optional attributes for {@link org.tensorflow.op.core.StatefulWhile}
    */
   public static class Options {
     private List<Shape> outputShapes;
