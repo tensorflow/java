@@ -66,6 +66,8 @@ final class ClassGenerator {
         && !op.getName().startsWith("_"); //TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
+  private static final String OP_NAME_FIELD_NAME = "OP_NAME";
+
   enum RenderMode {
     DEFAULT, LIST_OPERAND, OPERAND;
   }
@@ -305,7 +307,7 @@ final class ClassGenerator {
 
     // add op name field
     builder
-        .addField(FieldSpec.builder(TypeResolver.STRING, "OP_NAME", Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+        .addField(FieldSpec.builder(TypeResolver.STRING, OP_NAME_FIELD_NAME, Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
             .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
             .initializer("$S", op.getName())
             .build());
@@ -463,8 +465,9 @@ final class ClassGenerator {
 
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
-    body.addStatement("$T opBuilder = scope.env().opBuilder($S, scope.makeOpName($S))",
-        Names.OperationBuilder, op.getName(),
+    body.addStatement("$T opBuilder = scope.env().opBuilder($L, scope.makeOpName($S))",
+        Names.OperationBuilder,
+        OP_NAME_FIELD_NAME,
         className);
 
     // add the inputs as parameters, and add them to the op builder
