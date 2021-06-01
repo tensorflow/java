@@ -76,10 +76,21 @@ class NativeFunction {
       Set<String> deps = new LinkedHashSet<>();
 
       for (NodeDef node : getFunctionDef().getNodeDefList()) {
-        if (node.getOp().equals(ConcreteFunction.CALL_OP)
-            || node.getOp().equals(ConcreteFunction.STATEFUL_CALL_OP)) {
-          deps.add(node.getAttrMap().get("f").getFunc().getName());
-        }
+        node.getAttrMap()
+            .values()
+            .forEach(
+                (attr) -> {
+                  if (attr.hasFunc()) {
+                    deps.add(attr.getFunc().getName());
+                  } else if (attr.hasList()) {
+                    attr.getList()
+                        .getFuncList()
+                        .forEach(
+                            funcs -> {
+                              deps.add(funcs.getName());
+                            });
+                  }
+                });
       }
       dependencies = Collections.unmodifiableList(new ArrayList<>(deps));
     }
