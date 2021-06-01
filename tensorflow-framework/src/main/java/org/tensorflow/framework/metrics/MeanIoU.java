@@ -93,11 +93,15 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
     Shape variableShape = Shape.of(numClasses, numClasses);
 
     if (totalConfusionMatrix == null) {
-      Zeros<T> zeros = new Zeros<>(getTF());
+      Zeros<T> zeros = new Zeros<>();
       totalConfusionMatrix =
-          getTF().withName(totalCMName).variable(zeros.call(getTF().constant(variableShape), type));
+          getTF()
+              .withName(totalCMName)
+              .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
       initializer =
-          getTF().assign(totalConfusionMatrix, zeros.call(getTF().constant(variableShape), type));
+          getTF()
+              .assign(
+                  totalConfusionMatrix, zeros.call(getTF(), getTF().constant(variableShape), type));
     }
   }
 
@@ -124,8 +128,8 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
    * @param sampleWeights Optional weighting of each example. Defaults to 1, if null. Rank is either
    *     0, or the same rank as labels, and must be broadcastable to labels.
    * @return the Operands that updates totalConfusionMatrix variable
-   * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=} labels rank,
-   *     and if the predictions size is not equal to the labels size
+   * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=}
+   *     labels rank, and if the predictions size is not equal to the labels size
    */
   @Override
   public List<Op> updateStateList(

@@ -26,8 +26,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 public class SetsOps {
 
   /**
-   * Computes set difference of elements in last dimension of {@code a} and {@code b} with
-   * {@code aMinusB} set to true.
+   * Computes set difference of elements in last dimension of {@code a} and {@code b} with {@code
+   * aMinusB} set to true.
    *
    * <p>All but the last dimension of {@code a} and {@code b} must match
    *
@@ -35,8 +35,8 @@ public class SetsOps {
    * @param a The first operand representing set {@code a}
    * @param b The other operand representing set {@code b}
    * @param <T>the data type for the sets
-   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the
-   *     last dimension the * same. Elements along the last dimension contain the results of the set
+   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the last
+   *     dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
   public static <T extends TNumber> Operand<T> difference(Ops tf, Operand<T> a, Operand<T> b) {
@@ -53,8 +53,8 @@ public class SetsOps {
    * @param b The other operand representing set {@code b}
    * @param aMinusB whether to subtract b from a, vs vice versa.
    * @param <T>the data type for the sets
-   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the
-   *     last dimension the * same. Elements along the last dimension contain the results of the set
+   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the last
+   *     dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
   public static <T extends TNumber> Operand<T> difference(
@@ -69,8 +69,8 @@ public class SetsOps {
    * @param a The first operand representing set {@code a}
    * @param b The other operand representing set {@code b}
    * @param <T>the data type for the sets
-   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the
-   *     last dimension the * same. Elements along the last dimension contain the results of the set
+   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the last
+   *     dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
   public static <T extends TNumber> Operand<T> union(Ops tf, Operand<T> a, Operand<T> b) {
@@ -84,8 +84,8 @@ public class SetsOps {
    * @param a The first operand representing set {@code a}
    * @param b The other operand representing set {@code b}
    * @param <T>the data type for the sets
-   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the
-   *     last dimension the * same. Elements along the last dimension contain the results of the set
+   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the last
+   *     dimension the * same. Elements along the last dimension contain the results of the set
    *     operation.
    */
   public static <T extends TNumber> Operand<T> intersection(Ops tf, Operand<T> a, Operand<T> b) {
@@ -100,8 +100,8 @@ public class SetsOps {
    * @param b The other et operation operand
    * @param setOperation The set operation to perform, {@link Operation}.
    * @param <T> the data type for the sets
-   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the
-   *     last dimension the same. Elements along the last dimension contain the results of the set
+   * @return An Operand with the same rank as {@code a} and {@code b}, and all but the last
+   *     dimension the same. Elements along the last dimension contain the results of the set
    *     operation.
    */
   public static <T extends TNumber> Operand<T> setOperation(

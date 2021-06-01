@@ -39,8 +39,8 @@ class MinMaxNormTest {
         for (AtomicInteger i = new AtomicInteger();
             i.get() < testValues.length;
             i.getAndIncrement()) {
-          MinMaxNorm instance = new MinMaxNorm(tf, testValues[i.get()], testValues[i.get()] * 2);
-          Operand<TFloat32> result = instance.call(weights);
+          MinMaxNorm instance = new MinMaxNorm(testValues[i.get()], testValues[i.get()] * 2);
+          Operand<TFloat32> result = instance.call(tf, weights);
           if (tfMode == TestSession.Mode.EAGER)
             evaluate(session, result.asTensor(), testValues[i.get()]);
           else

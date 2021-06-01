@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,50 +19,19 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Abstract base class for Activations
+ * Interface for Activations
  *
- * <p><b>Note:</b> The {@link #tf} attribute must be set prior to invoking the call method. See
- * {@link #setTF(Ops)} and the constructor {@link #Activation(Ops)}.
- *
- * @param <T> the data type of the activation
+ * @param <T> the data type of the input and the result
  */
-public abstract class Activation<T extends TNumber> {
-
-  /** The TensorFlow Ops */
-  protected Ops tf;
-
-  /**
-   * Creates the abstract class for an Activation
-   *
-   * @param tf the TensorFlow Ops
-   */
-  protected Activation(Ops tf) {
-    this.tf = tf;
-  }
-
-  /**
-   * Sets the TensorFlow Ops
-   *
-   * @param tf the TensorFlow Ops
-   */
-  protected void setTF(Ops tf) {
-    this.tf = tf;
-  }
-
-  /**
-   * Gets the TensorFlow Ops
-   *
-   * @return the TensorFlow Ops
-   */
-  protected Ops getTF() {
-    return this.tf;
-  }
+@FunctionalInterface
+public interface Activation<T extends TNumber> {
 
   /**
    * Gets the calculation operation for the activation.
    *
+   * @param tf the TensorFlow Ops
    * @param input the input tensor
    * @return The operand for the activation
    */
-  public abstract Operand<T> call(Operand<T> input);
+  Operand<T> call(Ops tf, Operand<T> input);
 }

@@ -30,10 +30,11 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError();
+
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yTrue);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yTrue);
         float expected = 0.0f;
         testSession.evaluate(expected, loss);
       }
@@ -45,12 +46,13 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 211.85184f;
         testSession.evaluate(expected, loss);
       }
@@ -62,13 +64,14 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 487.25922f;
         testSession.evaluate(expected, loss);
       }
@@ -79,7 +82,8 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {1.2f, 3.4f};
@@ -87,7 +91,7 @@ public class MeanAbsolutePercentageErrorTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 422.8889f;
         testSession.evaluate(expected, loss);
       }
@@ -98,13 +102,14 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError();
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -115,7 +120,8 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf, Reduction.AUTO);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(Reduction.AUTO);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {3f, 6f, 5f, 0f, 4f, 2f};
@@ -125,7 +131,7 @@ public class MeanAbsolutePercentageErrorTest {
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 694.4445f;
         testSession.evaluate(expected, loss);
       }
@@ -136,13 +142,14 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf, Reduction.NONE);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(Reduction.NONE);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         Float[] expected = {621.8518f, 352.66666f};
         testSession.evaluate(expected, loss);
       }
@@ -153,13 +160,14 @@ public class MeanAbsolutePercentageErrorTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(tf, Reduction.SUM);
+        MeanAbsolutePercentageError instance = new MeanAbsolutePercentageError(Reduction.SUM);
+
         float[] trueArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 974.51843f;
         testSession.evaluate(expected, loss);
       }

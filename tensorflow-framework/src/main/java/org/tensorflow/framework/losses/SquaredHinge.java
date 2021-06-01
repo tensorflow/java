@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -37,7 +38,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
  *    SquaredHinge squaredHinge = new SquaredHinge(tf);
- *    Operand&lt;TFloat32&gt; result = squaredHinge.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = squaredHinge.call(Ops tf, labels, predictions);
  *    // produces 1.86f
  * </pre>
  *
@@ -45,7 +46,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {1.f, 0.f});
- *    Operand&lt;TFloat32&gt; result = squaredHinge.call(labels, predictions,
+ *    Operand&lt;TFloat32&gt; result = squaredHinge.call(Ops tf, labels, predictions,
  *                                                  sampleWeight);
  *    // produces 0.73f
  * </pre>
@@ -53,50 +54,46 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    SquaredHinge squaredHinge = new SquaredHinge(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = squaredHinge.call(labels, predictions);
+ *    SquaredHinge squaredHinge = new SquaredHinge(Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = squaredHinge.call(Ops tf, labels, predictions);
  *    // produces 3.72f
  * </pre>
  *
  * <p>Using <code>NONE</code> reduction type:
  *
  * <pre>
- *    SquaredHinge squaredHinge = new SquaredHinge(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = squaredHinge.call(labels, predictions);
+ *    SquaredHinge squaredHinge = new SquaredHinge(Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = squaredHinge.call(Ops tf, labels, predictions);
  *    // produces [1.46f, 2.26f]
  * </pre>
  */
-public class SquaredHinge extends Loss {
+public class SquaredHinge extends AbstractLoss {
 
   /**
-   * Creates a Squared Hinge Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Squared Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name and a
+   * AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public SquaredHinge(Ops tf) {
-    super(tf);
+  public SquaredHinge() {
+    super();
   }
 
   /**
-   * Creates a Squared Hinge Loss using {@link Class#getSimpleName()} as the loss name
+   * Creates a Squared Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public SquaredHinge(Ops tf, Reduction reduction) {
-    super(tf, null, reduction);
+  public SquaredHinge(Reduction reduction) {
+    super(null, reduction);
   }
 
   /**
    * Creates a Squared Hinge
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public SquaredHinge(Ops tf, String name, Reduction reduction) {
-    super(tf, name, reduction);
+  public SquaredHinge(String name, Reduction reduction) {
+    super(name, reduction);
   }
 
   /**
@@ -123,19 +120,17 @@ public class SquaredHinge extends Loss {
    */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
     @SuppressWarnings("unchecked")
-    Operand<T> tLabels =
-        predictions.type() == labels.type()
-            ? (Operand<T>) labels
-            : cast(tf, labels, predictions.type());
+    Operand<T> tLabels = cast(tf, labels, predictions.type());
     tLabels =
         LossesHelper.valueCheck(
-            getTF(),
+            tf,
             "labels value check [-1, 0, 1]",
             tLabels,
-            cast(getTF(), getTF().constant(new int[] {-1, 0, 1}), predictions.type()));
-    Operand<T> losses = Losses.squaredHinge(getTF(), tLabels, predictions);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+            cast(tf, tf.constant(new int[] {-1, 0, 1}), predictions.type()));
+    Operand<T> losses = Losses.squaredHinge(tf, tLabels, predictions);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

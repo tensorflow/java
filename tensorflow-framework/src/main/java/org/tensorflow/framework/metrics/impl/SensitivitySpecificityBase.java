@@ -87,9 +87,9 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   /** Initializes the Variables */
   private void init() {
     Ops tf = getTF();
-    Zeros<T> zeros = new Zeros<>(tf);
+    Zeros<T> zeros = new Zeros<>();
     Shape varShape = Shape.of(numThresholds);
-    Operand<T> zero = zeros.call(tf.constant(varShape), type);
+    Operand<T> zero = zeros.call(tf, tf.constant(varShape), type);
 
     if (this.getTruePositives() == null) {
 
@@ -227,8 +227,6 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   public int getNumThresholds() {
     return numThresholds;
   }
-
-
 
   /**
    * Gets the thresholds

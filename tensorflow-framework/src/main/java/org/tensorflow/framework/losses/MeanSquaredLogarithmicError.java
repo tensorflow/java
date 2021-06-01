@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -32,7 +33,7 @@ import org.tensorflow.types.family.TNumber;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{1.f, 1.f}, {1.f, 0.f}});
  *    MeanSquaredLogarithmicError msle = new MeanSquaredLogarithmicError(tf);
- *    Operand&lt;TFloat32&gt; result = msle.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = msle.call(Ops tf, labels, predictions);
  *    // produces 0.240f
  * </pre>
  *
@@ -40,64 +41,61 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {0.7f, 0.3f});
- *    Operand&lt;TFloat32&gt; result = msle.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = msle.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.120f
  * </pre>
  *
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    MeanSquaredLogarithmicError msle = new MeanSquaredLogarithmicError(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = msle.call(labels, predictions);
+ *    MeanSquaredLogarithmicError msle = new MeanSquaredLogarithmicError(Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = msle.call(Ops tf, labels, predictions);
  *    // produces 0.480f
  * </pre>
  *
  * <p>Using <code>NONE</code> reduction type:
  *
  * <pre>
- *    MeanSquaredLogarithmicError msle = new MeanSquaredLogarithmicError(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = msle.call(labels, predictions);
+ *    MeanSquaredLogarithmicError msle = new MeanSquaredLogarithmicError(Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = msle.call(Ops tf, labels, predictions);
  *    // produces [0.240f, 0.240f]
  * </pre>
  */
-public class MeanSquaredLogarithmicError extends Loss {
+public class MeanSquaredLogarithmicError extends AbstractLoss {
 
   /**
-   * Creates a MeanSquaredError Loss using {@link Class#getSimpleName()} as the loss name and a Loss
-   * Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a MeanSquaredError AbstractLoss using {@link Class#getSimpleName()} as the loss name
+   * and a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public MeanSquaredLogarithmicError(Ops tf) {
-    super(tf);
+  public MeanSquaredLogarithmicError() {
+    super();
   }
 
   /**
-   * Creates a MeanSquaredError Loss using {@link Class#getSimpleName()} as the loss name
+   * Creates a MeanSquaredError AbstractLoss using {@link Class#getSimpleName()} as the loss name
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public MeanSquaredLogarithmicError(Ops tf, Reduction reduction) {
-    super(tf, null, reduction);
+  public MeanSquaredLogarithmicError(Reduction reduction) {
+    super(null, reduction);
   }
 
   /**
    * Creates a MeanSquaredError
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public MeanSquaredLogarithmicError(Ops tf, String name, Reduction reduction) {
-    super(tf, name, reduction);
+  public MeanSquaredLogarithmicError(String name, Reduction reduction) {
+    super(name, reduction);
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.meanSquaredLogarithmicError(getTF(), labels, predictions);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
+    Operand<T> losses = Losses.meanSquaredLogarithmicError(tf, labels, predictions);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

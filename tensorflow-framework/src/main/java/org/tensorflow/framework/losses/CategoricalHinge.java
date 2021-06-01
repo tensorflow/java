@@ -15,6 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -35,7 +36,7 @@ import org.tensorflow.types.family.TNumber;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
  *    CategoricalHinge categoricalHinge = new CategoricalHinge(tf);
- *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(Ops tf, labels, predictions);
  *    // produces 1.4
  * </pre>
  *
@@ -43,7 +44,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {1f, 0.f});
- *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.6f
  * </pre>
  *
@@ -51,7 +52,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * <pre>
  *    CategoricalHinge categoricalHinge = new CategoricalHinge(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(Ops tf, labels, predictions);
  *    // produces 2.8f
  * </pre>
  *
@@ -60,48 +61,45 @@ import org.tensorflow.types.family.TNumber;
  * <pre>
  *    CategoricalHinge categoricalHinge =
  *        new CategoricalHinge(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = categoricalHinge.call(Ops tf, labels, predictions);
  *    // produces [1.2f, 1.6f]
  * </pre>
  */
-public class CategoricalHinge extends Loss {
+public class CategoricalHinge extends AbstractLoss {
 
   /**
-   * Creates a Categorical Hinge Loss using {@link Class#getSimpleName()} as the loss name and a
-   * Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Categorical Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name
+   * and a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public CategoricalHinge(Ops tf) {
-    super(tf);
+  public CategoricalHinge() {
+    super();
   }
 
   /**
-   * Creates a Categorical Hinge Loss using {@link Class#getSimpleName()} as the loss name
+   * Creates a Categorical Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public CategoricalHinge(Ops tf, Reduction reduction) {
-    super(tf, null, reduction);
+  public CategoricalHinge(Reduction reduction) {
+    super(null, reduction);
   }
 
   /**
    * Creates a Categorical Hinge
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public CategoricalHinge(Ops tf, String name, Reduction reduction) {
-    super(tf, name, reduction);
+  public CategoricalHinge(String name, Reduction reduction) {
+    super(name, reduction);
   }
 
   /** {@inheritDoc} */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
-    Operand<T> losses = Losses.categoricalHinge(getTF(), labels, predictions);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
+    Operand<T> losses = Losses.categoricalHinge(tf, labels, predictions);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

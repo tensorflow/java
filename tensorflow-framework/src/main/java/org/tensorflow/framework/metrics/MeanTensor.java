@@ -85,8 +85,8 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
   private boolean init(Shape shape) {
     if (!initialized) {
       this.shape = shape;
-      Zeros<T> zeros = new Zeros<>(getTF());
-      Operand<T> zero = zeros.call(getTF().constant(shape), type);
+      Zeros<T> zeros = new Zeros<>();
+      Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), type);
 
       if (total == null) {
         total = getTF().withName(totalName).variable(zero);

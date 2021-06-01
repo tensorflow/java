@@ -30,12 +30,13 @@ public class LogCoshTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        LogCosh instance = new LogCosh(tf);
+        LogCosh instance = new LogCosh();
+
         float[] predArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 4.829245330860459f;
         testSession.evaluate(expected, loss);
       }
@@ -47,13 +48,14 @@ public class LogCoshTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        LogCosh instance = new LogCosh(tf);
+        LogCosh instance = new LogCosh();
+
         float[] predArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 11.107264260979056f;
         testSession.evaluate(expected, loss);
       }
@@ -64,7 +66,8 @@ public class LogCoshTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        LogCosh instance = new LogCosh(tf);
+        LogCosh instance = new LogCosh();
+
         float[] predArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {1.2f, 3.4f};
@@ -72,7 +75,7 @@ public class LogCoshTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 12.001114667519486f;
         testSession.evaluate(expected, loss);
       }
@@ -83,13 +86,14 @@ public class LogCoshTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        LogCosh instance = new LogCosh(tf);
+        LogCosh instance = new LogCosh();
+
         float[] predArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -100,7 +104,8 @@ public class LogCoshTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        LogCosh instance = new LogCosh(tf, Reduction.AUTO);
+        LogCosh instance = new LogCosh(Reduction.AUTO);
+
         float[] predArray = {1f, 9f, 2f, -5f, -2f, 6f};
         float[] trueArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] sampleArray = {3f, 6f, 5f, 0f, 4f, 2f};
@@ -110,7 +115,7 @@ public class LogCoshTest {
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
 
         float expected = 11.653484271934046f;
         testSession.evaluate(expected, loss);

@@ -14,7 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
@@ -26,20 +26,6 @@ import org.tensorflow.types.TInt32;
 public class LinearTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
-  public LinearTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
   /** Test of Linear call method. */
   @Test
   public void testCallInt() {
@@ -48,8 +34,8 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TInt32> instance = new Linear<>(tf);
-        Operand<TInt32> result = instance.call(tf.constant(input));
+        Linear<TInt32> instance = new Linear<>();
+        Operand<TInt32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -62,8 +48,8 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat32> instance = new Linear<>(tf);
-        Operand<TFloat32> result = instance.call(tf.constant(input));
+        Linear<TFloat32> instance = new Linear<>();
+        Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -76,8 +62,8 @@ public class LinearTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Linear<TFloat64> instance = new Linear<>(tf);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        Linear<TFloat64> instance = new Linear<>();
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }

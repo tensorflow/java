@@ -15,7 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.losses;
 
 /**
- * Type of Loss Reduction
+ * Type of AbstractLoss Reduction
  *
  * <p>{@link #AUTO} indicates that the reduction option will be determined by the usage context. For
  * almost all cases this defaults to {@link #SUM_OVER_BATCH_SIZE}.

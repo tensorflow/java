@@ -1,13 +1,17 @@
 package org.tensorflow.framework.optimizers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Session;
 import org.tensorflow.Tensor;
 import org.tensorflow.framework.initializers.Glorot;
 import org.tensorflow.framework.initializers.VarianceScaling;
 import org.tensorflow.framework.utils.TestSession;
-import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Op;
@@ -26,10 +30,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Test cases for GradientDescent Optimizer */
@@ -136,14 +138,14 @@ public class GradientDescentTest {
       Ops tf = Ops.create(g);
 
       Glorot<TFloat32> initializer =
-          new Glorot<>(tf, VarianceScaling.Distribution.TRUNCATED_NORMAL, 1L);
+          new Glorot<>(VarianceScaling.Distribution.TRUNCATED_NORMAL, 1L);
       // Inputs
       Placeholder<TFloat32> input =
           tf.withName("input").placeholder(TFloat32.class, Placeholder.shape(Shape.of(-1, 20)));
 
       // Fully connected layer
       Variable<TFloat32> fcWeights =
-          tf.variable(initializer.call(tf.array(20L, 200L), TFloat32.class));
+          tf.variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
       fcWeightName = fcWeights.op().name();
       Variable<TFloat32> fcBiases = tf.variable(tf.fill(tf.array(200), tf.constant(0.1f)));
       fcBiasName = fcBiases.op().name();
@@ -151,13 +153,13 @@ public class GradientDescentTest {
 
       // Output layer
       Variable<TFloat32> outputWeights =
-          tf.variable(initializer.call(tf.array(200L, 2L), TFloat32.class));
+          tf.variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
       outputWeightName = outputWeights.op().name();
       Variable<TFloat32> outputBiases = tf.variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
       outputBiasName = outputBiases.op().name();
       Add<TFloat32> output = tf.math.add(tf.linalg.matMul(relu, outputWeights), outputBiases);
 
-      // Loss
+      // AbstractLoss
       Placeholder<TFloat32> placeholder =
           tf.withName("output").placeholder(TFloat32.class, Placeholder.shape(Shape.of(-1, 2)));
       Mean<TFloat32> loss =
@@ -205,12 +207,15 @@ public class GradientDescentTest {
                 .fetch(outputBiasName)
                 .run());
 
-        TFloat32 lossVal = (TFloat32) s.runner()
-            .addTarget(trainName)
-            .feed("input", dataTensor)
-            .feed("output", targetTensor)
-            .fetch(lossName)
-            .run().get(0);
+        TFloat32 lossVal =
+            (TFloat32)
+                s.runner()
+                    .addTarget(trainName)
+                    .feed("input", dataTensor)
+                    .feed("output", targetTensor)
+                    .fetch(lossName)
+                    .run()
+                    .get(0);
         initialLoss[i] = lossVal.getFloat();
         lossVal.close();
 
@@ -222,12 +227,15 @@ public class GradientDescentTest {
                 .fetch(outputBiasName)
                 .run());
 
-        lossVal = (TFloat32) s.runner()
-                .addTarget(trainName)
-                .feed("input", dataTensor)
-                .feed("output", targetTensor)
-                .fetch(lossName)
-                .run().get(0);
+        lossVal =
+            (TFloat32)
+                s.runner()
+                    .addTarget(trainName)
+                    .feed("input", dataTensor)
+                    .feed("output", targetTensor)
+                    .fetch(lossName)
+                    .run()
+                    .get(0);
         postTrainingLoss[i] = lossVal.getFloat();
         lossVal.close();
       }

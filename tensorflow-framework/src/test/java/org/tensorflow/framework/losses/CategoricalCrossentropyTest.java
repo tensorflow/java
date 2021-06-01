@@ -48,8 +48,9 @@ public class CategoricalCrossentropyTest {
         };
         Operand<TInt64> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-        CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0F;
         testSession.evaluate(expected, loss);
 
@@ -62,8 +63,9 @@ public class CategoricalCrossentropyTest {
         yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new CategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits);
+        instance = new CategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits);
         testSession.setEpsilon(1e-3F);
         testSession.evaluate(0.0F, loss);
       }
@@ -81,7 +83,8 @@ public class CategoricalCrossentropyTest {
             catchClass,
             () -> {
               Ops tf = testSession.getTF();
-              CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
+              CategoricalCrossentropy instance = new CategoricalCrossentropy();
+
               float[] trueArray = {
                 1L, 0L, 0L,
                 0L, 1L, 0L,
@@ -97,7 +100,7 @@ public class CategoricalCrossentropyTest {
               Operand<TFloat32> yPred =
                   tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
 
-              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
               testSession.run(loss);
             });
       }
@@ -109,7 +112,8 @@ public class CategoricalCrossentropyTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy();
+
         int[] trueArray = {1, 0, 0, 0, 1, 0, 0, 0, 1};
         float[] predArray = {
           .9F, .05F, .05F,
@@ -118,7 +122,7 @@ public class CategoricalCrossentropyTest {
         };
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0.32396814F;
         testSession.evaluate(expected, loss);
 
@@ -130,8 +134,9 @@ public class CategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new CategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits);
+        instance = new CategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits);
         expected = 0.0573755F;
         testSession.evaluate(expected, loss);
       }
@@ -158,8 +163,9 @@ public class CategoricalCrossentropyTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3F);
 
-        CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = .7451267F;
         testSession.evaluate(expected, loss);
 
@@ -171,8 +177,9 @@ public class CategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new CategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits, sampleWeight);
+        instance = new CategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits, sampleWeight);
         expected = 0.13196386F;
         testSession.evaluate(expected, loss);
       }
@@ -183,7 +190,8 @@ public class CategoricalCrossentropyTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalCrossentropy instance = new CategoricalCrossentropy(tf);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy();
+
         float[] sampeWeightArray = {1.2F, 3.4F, 5.6F};
         int[] trueArray = {
           1, 0, 0,
@@ -199,7 +207,7 @@ public class CategoricalCrossentropyTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampeWeightArray), tf.constant(Shape.of(3, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 1.0696F;
         testSession.evaluate(expected, loss);
 
@@ -211,8 +219,9 @@ public class CategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new CategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits, sampleWeight);
+        instance = new CategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits, sampleWeight);
         expected = 0.31829F;
         testSession.evaluate(expected, loss);
       }
@@ -234,9 +243,9 @@ public class CategoricalCrossentropyTest {
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        CategoricalCrossentropy instance =
-            new CategoricalCrossentropy(tf, true, 0.0F, Reduction.NONE);
-        Operand<TFloat32> loss = instance.call(yTrue, logits);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy(true, 0.0F, Reduction.NONE);
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, logits);
         Float[] expected = {0.001822F, 0.000459F, 0.169846F};
         testSession.evaluate(expected, loss);
       }
@@ -254,8 +263,9 @@ public class CategoricalCrossentropyTest {
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(1, 3)));
 
-        CategoricalCrossentropy instance = new CategoricalCrossentropy(tf, true, labelSmoothing);
-        Operand<TFloat32> loss = instance.call(yTrue, logits);
+        CategoricalCrossentropy instance = new CategoricalCrossentropy(true, labelSmoothing);
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, logits);
         float expected = 400.0F * labelSmoothing / 3.0F;
         testSession.evaluate(expected, loss);
       }

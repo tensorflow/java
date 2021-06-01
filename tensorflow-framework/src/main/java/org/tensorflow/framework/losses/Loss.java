@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,60 +18,14 @@ import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-public abstract class Loss {
-  public static final Reduction REDUCTION_DEFAULT = Reduction.AUTO;
-
-  protected final Ops tf;
-  protected final Reduction reduction;
-
-  /**
-   * Creates a Loss using {@link Class#getSimpleName()} as the name and a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
-   */
-  protected Loss(Ops tf) {
-    this(tf, null, Reduction.AUTO);
-  }
-
-  /**
-   * Creates a Loss using a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this Loss, if null the name will be {@link Class#getSimpleName()}.
-   */
-  protected Loss(Ops tf, String name) {
-    this(tf, name, Reduction.AUTO);
-  }
-
-  /**
-   * Creates a Loss
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this loss, if null the name will be {@link Class#getSimpleName()}.
-   * @param reduction Type of Reduction to apply to the loss.
-   */
-  protected Loss(Ops tf, String name, Reduction reduction) {
-    this.tf = name != null ? tf.withSubScope(name) : tf.withSubScope(getClass().getSimpleName());
-    this.reduction = reduction;
-  }
-
-  /**
-   * Calculates the loss
-   *
-   * @param labels the truth values or labels
-   * @param predictions the predictions
-   * @param <T> The data type of the predictions and loss.
-   * @return the loss
-   */
-  public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions) {
-    return call(labels, predictions, null);
-  }
+/** Interface for loss calc ulation */
+@FunctionalInterface
+public interface Loss {
 
   /**
    * Generates an Operand that calculates the loss.
    *
+   * @param tf the TensorFlow Ops
    * @param labels the truth values or labels
    * @param predictions the predictions
    * @param sampleWeights Optional sampleWeights acts as a coefficient for the loss. If a scalar is
@@ -84,24 +38,6 @@ public abstract class Loss {
    * @param <T> The data type of the predictions, sampleWeights and loss.
    * @return the loss
    */
-  public abstract <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights);
-
-  /**
-   * Gets the TensorFlow Ops
-   *
-   * @return the TensorFlow Ops
-   */
-  public Ops getTF() {
-    return tf;
-  }
-
-  /**
-   * Gets the loss reduction
-   *
-   * @return the loss reduction
-   */
-  public Reduction getReduction() {
-    return reduction;
-  }
+  <T extends TNumber> Operand<T> call(
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights);
 }

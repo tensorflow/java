@@ -32,12 +32,13 @@ public class SquaredHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SquaredHinge instance = new SquaredHinge(tf);
+        SquaredHinge instance = new SquaredHinge();
+
         float[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
         float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0.364062f;
         testSession.evaluate(expected, loss);
       }
@@ -55,14 +56,15 @@ public class SquaredHingeTest {
             catchClass,
             () -> {
               Ops tf = testSession.getTF();
-              SquaredHinge instance = new SquaredHinge(tf);
+              SquaredHinge instance = new SquaredHinge();
+
               float[] trueArray = {0, 2, 0, 1, 0, 0, 1, 1};
               float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
               Operand<TFloat32> yTrue =
                   tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
               Operand<TFloat32> yPred =
                   tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
-              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
               testSession.run(loss);
             });
       }
@@ -74,13 +76,14 @@ public class SquaredHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SquaredHinge instance = new SquaredHinge(tf);
+        SquaredHinge instance = new SquaredHinge();
+
         float[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
         float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0.8373437f;
         testSession.evaluate(expected, loss);
       }
@@ -91,7 +94,8 @@ public class SquaredHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SquaredHinge instance = new SquaredHinge(tf);
+        SquaredHinge instance = new SquaredHinge();
+
         float[] sampleArray = {1.2f, 3.4f};
         float[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
         float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
@@ -99,7 +103,7 @@ public class SquaredHingeTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0.7043125f;
         testSession.evaluate(expected, loss);
       }
@@ -110,13 +114,14 @@ public class SquaredHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SquaredHinge instance = new SquaredHinge(tf);
+        SquaredHinge instance = new SquaredHinge();
+
         float[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
         float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -127,7 +132,8 @@ public class SquaredHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SquaredHinge instance = new SquaredHinge(tf, Reduction.AUTO);
+        SquaredHinge instance = new SquaredHinge(Reduction.AUTO);
+
         float[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
         float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
         Operand<TFloat32> yTrue =
@@ -137,7 +143,7 @@ public class SquaredHingeTest {
         float[] sampleArray = {3f, 6f, 5f, 0f, 4f, 2f, 1f, 3f};
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 4)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
 
         float expected = 1.54250000f;
         testSession.evaluate(expected, loss);

@@ -32,8 +32,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 /**
  * Weight broadcasting operations.
  *
- * <p>In {@link org.tensorflow.framework.losses} and `{@link org.tensorflow.framework.metrics}, we support limited weight broadcasting. This file includes
- * operations for those broadcasting rules.
+ * <p>In {@link org.tensorflow.framework.losses} and `{@link org.tensorflow.framework.metrics}, we
+ * support limited weight broadcasting. This file includes operations for those broadcasting rules.
  */
 public class WeightsBroadcastOps {
 
@@ -46,10 +46,11 @@ public class WeightsBroadcastOps {
    * @param tf the TensorFlow Ops
    * @param weights the weights Operand
    * @param values Operand of values to which weights are applied.
-   * @return {@code Operation} raising a tensorflow InvalidArgumentError if {@code weights} has incorrect shape. {@link NoOp} if
-   *     static checks determine {@code weights}  has correct shape.
+   * @return {@code Operation} raising a tensorflow InvalidArgumentError if {@code weights} has
+   *     incorrect shape. {@link NoOp} if static checks determine {@code weights} has correct shape.
    * @param <T> the type of weights and values
-   * @throws IllegalArgumentException If static checks determine {@code weights}  has incorrect shape.
+   * @throws IllegalArgumentException If static checks determine {@code weights} has incorrect
+   *     shape.
    */
   public static <T extends TNumber> Op assertBroadcastable(
       Ops tf, Operand<T> weights, Operand<T> values) {
@@ -81,14 +82,12 @@ public class WeightsBroadcastOps {
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
-        if (weightsShapeStatic.size(i) != 1 && valuesShapeStatic.size(i) != weightsShapeStatic.size(i)) {
+        if (weightsShapeStatic.size(i) != 1
+            && valuesShapeStatic.size(i) != weightsShapeStatic.size(i)) {
           throw new IllegalArgumentException(
               String.format(
                   "%s Mismatch at dim %s. values.shape=%s weights.shape=%s.",
-                  ASSERT_BROADCASTABLE_ERROR_PREFIX,
-                  i,
-                  valuesShapeStatic,
-                  weightsShapeStatic));
+                  ASSERT_BROADCASTABLE_ERROR_PREFIX, i, valuesShapeStatic, weightsShapeStatic));
         }
       }
       return tf.withSubScope("staticDimsCheckSuccess")
@@ -105,12 +104,12 @@ public class WeightsBroadcastOps {
             tf.constant("values.shape="),
             valuesShape,
             tf.constant("isScalar="),
-                isScalar);
+            isScalar);
 
     Operand<TBool> isValidShape =
         tf.select(
-                isScalar,
-                isScalar,
+            isScalar,
+            isScalar,
             hasValidNonscalarShape(tf, weightsRank, weightsShape, valuesRank, valuesShape));
 
     return tf.assertThat(isValidShape, data);
@@ -140,7 +139,8 @@ public class WeightsBroadcastOps {
   }
 
   /**
-   * Checks that each dimension of the two shapes are the same size, or that the weight dimension size is 1.
+   * Checks that each dimension of the two shapes are the same size, or that the weight dimension
+   * size is 1.
    *
    * @param tf the TensorFlow Ops
    * @param weightsShape the shape of the weights
@@ -152,7 +152,8 @@ public class WeightsBroadcastOps {
     tf = tf.withSubScope("hasInvalidDims");
 
     Operand<TInt32> valuesShape2d = tf.expandDims(valuesShape, tf.constant(-1));
-    Operand<TInt32> validDims = tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
+    Operand<TInt32> validDims =
+        tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<TInt32> weightsShape2d = tf.expandDims(weightsShape, tf.constant(-1));
 
     Operand<TInt32> invalidDims = SetsOps.difference(tf, weightsShape2d, validDims);
@@ -164,8 +165,7 @@ public class WeightsBroadcastOps {
    * Broadcast {@code weights} to the same shape as {@code values}.
    *
    * <p>This returns a version of {@code weights} following the same broadcast rules as {@code
-   * mul(weights,
-   * values)}, but limited to the weights shapes allowed by {@code assertBroadcastable}
+   * mul(weights, values)}, but limited to the weights shapes allowed by {@code assertBroadcastable}
    * When computing a weighted average, use this function to broadcast {@code weights} before
    * summing them; e.g., {@code reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))}.
    *

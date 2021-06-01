@@ -21,11 +21,11 @@ import org.tensorflow.types.family.TNumber;
 /**
  * Computes the (weighted) sum of the given values.
  *
- * <p>For example, if values is {@code [1, 3, 5, 7]} then the sum is {@code 16}. If the
- * weights were specified as {@code [1, 1, 0, 0]}, then the sum would be {@code 4.}
+ * <p>For example, if values is {@code [1, 3, 5, 7]} then the sum is {@code 16}. If the weights were
+ * specified as {@code [1, 1, 0, 0]}, then the sum would be {@code 4.}
  *
- * <p>This metric creates one variable, {@code total}, that is used to compute the sum of
- * values. This is ultimately returned as sum.
+ * <p>This metric creates one variable, {@code total}, that is used to compute the sum of values.
+ * This is ultimately returned as sum.
  *
  * <p>If sample_weight is None, weights default to 1. Use sample_weight of 0 to mask values.
  */

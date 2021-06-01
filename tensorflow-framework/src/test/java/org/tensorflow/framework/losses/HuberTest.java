@@ -32,8 +32,9 @@ public class HuberTest {
         float[] trueArray = {.9f, .2f, .2f, .8f, .4f, .6f};
 
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
-        Huber instance = new Huber(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yTrue);
+        Huber instance = new Huber();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yTrue);
         float expected = 0.0f;
         testSession.evaluate(expected, loss);
       }
@@ -50,8 +51,9 @@ public class HuberTest {
         float[] predArray = {1.f, 0.f, 1.f, 1.f, 0.f, 0.f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Huber instance = new Huber(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Huber instance = new Huber();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0.10416666666666669f;
         testSession.evaluate(expected, loss);
       }
@@ -67,9 +69,10 @@ public class HuberTest {
         float[] predArray = {1.f, 0.f, 1.f, 1.f, 0.f, 0.f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Huber instance = new Huber(tf);
+        Huber instance = new Huber();
+
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0.23958333333333337f;
         testSession.evaluate(expected, loss);
 
@@ -87,10 +90,11 @@ public class HuberTest {
         float[] predArray = {1.f, 0.f, 1.f, 1.f, 0.f, 0.f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Huber instance = new Huber(tf);
+        Huber instance = new Huber();
+
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0.22766666666666668f;
         testSession.evaluate(expected, loss);
       }
@@ -105,9 +109,10 @@ public class HuberTest {
         float[] predArray = {1.f, 0.f, 1.f, 1.f, 0.f, 0.f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
-        Huber instance = new Huber(tf);
+        Huber instance = new Huber();
+
         Operand<TFloat32> sampleWeight = tf.constant(0.F);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -125,10 +130,11 @@ public class HuberTest {
             tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> yPred =
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
-        Huber instance = new Huber(tf);
+        Huber instance = new Huber();
+
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleArray), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
 
         float expected = .4025f;
         testSession.evaluate(expected, loss);

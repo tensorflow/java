@@ -15,7 +15,6 @@ limitations under the License.
 
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -43,7 +42,7 @@ import org.tensorflow.types.family.TFloating;
  *             new org.tensorflow.framework.initializers.Glorot&lt;&gt;(tf,
  *             Distribution.TRUNCATED_NORMAL, seed);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *             initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>Glorot Uniform:
@@ -54,12 +53,14 @@ import org.tensorflow.types.family.TFloating;
  *             new org.tensorflow.framework.initializers.Glorot&lt;&gt;(tf,
  *             Distribution.UNIFORM, seed);
  *     Operand&lt;TFloat32&gt; values =
- *             initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *             initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p><b>NOTE:</b>
+ *
  * <p>For a GlorotNormal equivalent initializer, use {@link
  * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter.
+ *
  * <p>For a GlorotUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM}
  * for the distribution parameter.
  *
@@ -74,13 +75,12 @@ public class Glorot<T extends TFloating> extends VarianceScaling<T> {
   /**
    * Creates a Glorot initializer
    *
-   * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the Glorot initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    * @see VarianceScaling.Distribution
    */
-  public Glorot(Ops tf, Distribution distribution, long seed) {
-    super(tf, SCALE, Mode.FAN_AVG, distribution, seed);
+  public Glorot(Distribution distribution, long seed) {
+    super(SCALE, Mode.FAN_AVG, distribution, seed);
   }
 }

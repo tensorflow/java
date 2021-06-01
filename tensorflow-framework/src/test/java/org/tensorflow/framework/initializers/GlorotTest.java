@@ -14,7 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.VarianceScaling.Distribution;
 import org.tensorflow.framework.utils.TestSession;
@@ -29,20 +29,6 @@ public class GlorotTest {
   private static final long SEED = 1000L;
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
-  public GlorotTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
   /** Test of call method, of class Glorot. */
   @Test
   public void testCallNormalFloat() {
@@ -51,9 +37,9 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat32> instance = new Glorot<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
+        Glorot<TFloat32> instance = new Glorot<>(Distribution.TRUNCATED_NORMAL, SEED);
 
-        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
+        Operand<TFloat32> operand = instance.call(tf, tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
   }
@@ -68,8 +54,9 @@ public class GlorotTest {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
 
-        Glorot<TFloat64> instance = new Glorot<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
-        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
+        Glorot<TFloat64> instance = new Glorot<>(Distribution.TRUNCATED_NORMAL, SEED);
+
+        Operand<TFloat64> operand = instance.call(tf, tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
   }
@@ -82,8 +69,9 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat32> instance = new Glorot<>(tf, Distribution.UNIFORM, SEED);
-        Operand<TFloat32> operand = instance.call(tf.constant(shape), TFloat32.class);
+        Glorot<TFloat32> instance = new Glorot<>(Distribution.UNIFORM, SEED);
+
+        Operand<TFloat32> operand = instance.call(tf, tf.constant(shape), TFloat32.class);
         session.evaluate(expected, operand);
       }
   }
@@ -97,8 +85,9 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat64> instance = new Glorot<>(tf, Distribution.UNIFORM, SEED);
-        Operand<TFloat64> operand = instance.call(tf.constant(shape), TFloat64.class);
+        Glorot<TFloat64> instance = new Glorot<>(Distribution.UNIFORM, SEED);
+
+        Operand<TFloat64> operand = instance.call(tf, tf.constant(shape), TFloat64.class);
         session.evaluate(expected, operand);
       }
   }
@@ -109,9 +98,10 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat64> instance = new Glorot<>(tf, Distribution.TRUNCATED_NORMAL, SEED);
-        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
-        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
+        Glorot<TFloat64> instance = new Glorot<>(Distribution.TRUNCATED_NORMAL, SEED);
+
+        Operand<TFloat64> operand1 = instance.call(tf, tf.constant(shape), TFloat64.class);
+        Operand<TFloat64> operand2 = instance.call(tf, tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
   }
@@ -122,9 +112,10 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat64> instance = new Glorot<>(tf, Distribution.UNIFORM, SEED);
-        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
-        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
+        Glorot<TFloat64> instance = new Glorot<>(Distribution.UNIFORM, SEED);
+
+        Operand<TFloat64> operand1 = instance.call(tf, tf.constant(shape), TFloat64.class);
+        Operand<TFloat64> operand2 = instance.call(tf, tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
   }
@@ -135,10 +126,10 @@ public class GlorotTest {
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
         Shape shape = Shape.of(2, 2);
-        Glorot<TFloat64> instance =
-            new Glorot<>(tf, Distribution.NORMAL, SEED);
-        Operand<TFloat64> operand1 = instance.call(tf.constant(shape), TFloat64.class);
-        Operand<TFloat64> operand2 = instance.call(tf.constant(shape), TFloat64.class);
+        Glorot<TFloat64> instance = new Glorot<>(Distribution.NORMAL, SEED);
+
+        Operand<TFloat64> operand1 = instance.call(tf, tf.constant(shape), TFloat64.class);
+        Operand<TFloat64> operand2 = instance.call(tf, tf.constant(shape), TFloat64.class);
         session.evaluate(operand1, operand2);
       }
   }
