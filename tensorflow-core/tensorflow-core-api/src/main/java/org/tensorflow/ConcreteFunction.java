@@ -42,6 +42,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.PlaceholderWithDefault;
+import org.tensorflow.op.core.StatefulPartitionedCall;
+import org.tensorflow.op.core.StatelessPartitionedCall;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.FunctionDef;
@@ -207,11 +209,6 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
     return signature.toString();
   }
 
-  // TODO migrate to the actual ops once they are generated
-  public static final String CALL_OP = "PartitionedCall";
-  // TODO migrate to the actual ops once they are generated
-  public static final String STATEFUL_CALL_OP = "StatefulPartitionedCall";
-
   /**
    * Calls the function in an execution environment, adding its graph as a function if it isn't
    * already present. The inputs and outputs are keyed by the names set in the {@code Signature}.
@@ -255,7 +252,9 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
     OperationBuilder opBuilder =
         scope
             .env()
-            .opBuilder(isStateful() ? STATEFUL_CALL_OP : CALL_OP, scope.makeOpName(displayName));
+            .opBuilder(
+                isStateful() ? StatefulPartitionedCall.OP_NAME : StatelessPartitionedCall.OP_NAME,
+                scope.makeOpName(displayName));
 
     opBuilder.addInputList(inputs);
 
