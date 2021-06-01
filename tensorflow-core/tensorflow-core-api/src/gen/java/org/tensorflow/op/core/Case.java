@@ -50,7 +50,8 @@ import org.tensorflow.types.family.TType;
  * }
  * ```
  * </pre>
- * Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
+ *
+ * <p>Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
  */
 @Operator
 public interface Case extends Iterable<Operand<TType>> {

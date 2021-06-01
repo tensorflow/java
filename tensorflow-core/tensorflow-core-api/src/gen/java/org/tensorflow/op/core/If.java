@@ -31,7 +31,8 @@ import org.tensorflow.types.family.TType;
 
 /**
  * output = cond ? then_branch(input) : else_branch(input)
- * Selects between {@link StatefulIf} and {@link StatelessIf} based on the statefulness of the function arguments.
+ *
+ * <p>Selects between {@link StatefulIf} and {@link StatelessIf} based on the statefulness of the function arguments.
  */
 @Operator
 public interface If extends Iterable<Operand<TType>> {

@@ -31,7 +31,8 @@ import org.tensorflow.types.family.TType;
 
 /**
  * output = input; While (Cond(output)) { output = Body(output) }
- * Selects between {@link StatefulWhile} and {@link StatelessWhile} based on the statefulness of the function arguments.
+ *
+ * <p>Selects between {@link StatefulWhile} and {@link StatelessWhile} based on the statefulness of the function arguments.
  */
 @Operator
 public interface While extends Iterable<Operand<TType>> {

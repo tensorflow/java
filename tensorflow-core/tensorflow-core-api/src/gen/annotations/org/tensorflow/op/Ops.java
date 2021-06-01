@@ -1234,7 +1234,8 @@ public final class Ops {
    *  }
    *  ```
    *  </pre>
-   *  Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
+   *
+   *  <p>Selects between {@link StatefulCase} and {@link StatelessCase} based on the statefulness of the function arguments.
    *
    * @param branchIndex The branch selector, an int32 Tensor.
    * @param input A list of input tensors passed to the branch function.
@@ -2951,7 +2952,8 @@ public final class Ops {
 
   /**
    * output = cond ? then_branch(input) : else_branch(input)
-   *  Selects between {@link StatefulIf} and {@link StatelessIf} based on the statefulness of the function arguments.
+   *
+   *  <p>Selects between {@link StatefulIf} and {@link StatelessIf} based on the statefulness of the function arguments.
    *
    * @param cond <pre>
    *    A Tensor. If the tensor is a scalar of non-boolean type, the
@@ -4021,7 +4023,8 @@ public final class Ops {
 
   /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
-   *  Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
+   *
+   *  <p>Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
    *
    * @param args A list of input tensors.
    * @param Tout A list of output types.
@@ -8108,7 +8111,8 @@ public final class Ops {
 
   /**
    * output = input; While (Cond(output)) { output = Body(output) }
-   *  Selects between {@link StatefulWhile} and {@link StatelessWhile} based on the statefulness of the function arguments.
+   *
+   *  <p>Selects between {@link StatefulWhile} and {@link StatelessWhile} based on the statefulness of the function arguments.
    *
    * @param input A list of input tensors whose types are T.
    * @param cond <pre>

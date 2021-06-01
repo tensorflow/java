@@ -29,7 +29,8 @@ import org.tensorflow.types.family.TType;
 
 /**
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
- * Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
+ *
+ * <p>Selects between {@link StatefulPartitionedCall} and {@link StatelessPartitionedCall} based on the statefulness of the function arguments.
  */
 @Operator
 public interface PartitionedCall extends Iterable<Operand<TType>> {

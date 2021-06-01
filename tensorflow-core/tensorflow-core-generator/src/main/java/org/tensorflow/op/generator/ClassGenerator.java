@@ -240,6 +240,7 @@ final class ClassGenerator {
     }
 
     if (isStateSelector) {
+      builder.addJavadoc("\n<p>");
       builder.addJavadoc(
           "Selects between {@link "
               + statefulPair.statefulClassName
