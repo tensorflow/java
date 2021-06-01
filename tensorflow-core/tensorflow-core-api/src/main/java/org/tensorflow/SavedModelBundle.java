@@ -1,18 +1,18 @@
-/* Copyright 2016 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_LoadSessionFromSavedModel;
@@ -25,11 +25,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -49,6 +51,9 @@ import org.tensorflow.proto.util.SaverDef;
 
 /**
  * SavedModelBundle represents a model loaded from storage.
+ *
+ * <p><b>All operations on a loaded bundle, and any functions from it, share the same underlying
+ * session.</b> The session is initialized when loaded.
  *
  * <p>The model consists of a description of the computation (a {@link Graph}), a {@link Session}
  * with tensors (e.g., parameters or variables in the graph) initialized to values saved in storage,
@@ -114,7 +119,7 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private String exportDir = null;
-    private String[] tags = { DEFAULT_TAG };
+    private String[] tags = {DEFAULT_TAG};
     private ConfigProto configProto = null;
     private RunOptions runOptions = null;
   }
@@ -138,37 +143,106 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     /**
-     * Save a concrete function of this model.
+     * Set the session to export, without adding any signatures. This enables the use of {@link
+     * #withSignature(Signature)}
      *
-     * <p>The concrete function carries a signature (i.e. a list of user-friendly input and outputs
-     * names to a graph) and a valid session to a graph to be saved in the model.
+     * @throws IllegalStateException if the session is already set to a different session
+     */
+    public Exporter withSession(Session session) {
+      if (this.session != null && this.session != session) {
+        throw new IllegalStateException(
+            "This exporter already has a session that differs from the passed session");
+      }
+      this.session = session;
+      return this;
+    }
+
+    /**
+     * Save a function of this model.
+     *
+     * <p>The function carries a signature (i.e. a list of user-friendly input and outputs names to
+     * a graph) and a valid session to a graph to be saved in the model.
      *
      * <p><i>Note:Eventually, TensorFlow for Java will support the export of functions objects like
-     * the Python API does but right now, only session-centric models are supported (i.e. models that
-     * has a single main graph and one or more signatures). These models are compatible with those
-     * exported by TensorFlow 1.x or by TensorFlow 2.x estimators.
-     *
-     * <br>Therefore, all functions exported in a model should share the same session at the moment
-     * or an exception will be thrown.</i>
+     * the Python API does but right now, only session-centric models are supported (i.e. models
+     * that has a single main graph and one or more signatures). These models are compatible with
+     * those exported by TensorFlow 1.x or by TensorFlow 2.x estimators. <br>
+     * Therefore, all functions exported in a model should share the same session at the moment or
+     * an exception will be thrown.</i> This applies to sessions set via {@link
+     * #withSession(Session)} as well, the exporter can only even have one session.
      *
      * @param function a function carrying a signature and a valid session to the graph to be saved
      * @return this object
-     * @throws IllegalArgumentException if a function with the same name has already been added to the model
-     * @throws UnsupportedOperationException if this function does not share the same session with the other
-     *                                       functions added to this model
+     * @throws IllegalArgumentException if a function with the same name has already been added to
+     *     the model
+     * @throws UnsupportedOperationException if the session is already set to a different session
      */
-    public Exporter withFunction(ConcreteFunction function) {
+    public Exporter withFunction(SessionFunction function) {
       Signature signature = function.signature();
       if (functions.containsKey(signature.key())) {
-        throw new IllegalArgumentException("Function \"" + signature.key() + "\" was already added to the model");
+        throw new IllegalArgumentException(
+            "Function \"" + signature.key() + "\" was already added to the model");
       }
+      if (session != null && session != function.session()) {
+        throw new UnsupportedOperationException(
+            "This exporter already has a session that differs from the passed function's session");
+      }
+
+      session = function.session();
       functions.put(signature.key(), function);
-      if (session == null) {
-        session = function.session();
-      } else if (session != function.session()) {
-        throw new UnsupportedOperationException("Saving multiple functions with different graphs/sessions is not supported yet.");
-      }
       metaGraphDefBuilder.putSignatureDef(signature.key(), signature.asSignatureDef());
+      return this;
+    }
+
+    /**
+     * Save multiple functions. Wrapper around {@link #withFunction(SessionFunction)}. All functions
+     * must have the same session.
+     *
+     * @param functions the functions to export
+     * @return this object
+     * @throws IllegalArgumentException if a function with the same name has already been added to
+     *     the model
+     * @throws UnsupportedOperationException if the session is already set to a different session
+     * @see #withFunction(SessionFunction)
+     */
+    public Exporter withFunctions(SessionFunction... functions) {
+      for (SessionFunction f : functions) {
+        withFunction(f);
+      }
+      return this;
+    }
+
+    /**
+     * Add a signature to the model. This wraps the signature in a {@link SessionFunction} using the
+     * exporter's already-set session. As such, <b>either {@link #withSession(Session)} or {@link
+     * #withFunction(SessionFunction)} must be called before this method</b>.
+     *
+     * @throws IllegalStateException if no session has been set
+     * @return this
+     */
+    public Exporter withSignature(Signature signature) {
+      if (session == null) {
+        throw new IllegalStateException(
+            "Session has not been set yet, you must call withSession or withFunction first.");
+      }
+      return withFunction(session.function(signature));
+    }
+
+    /**
+     * Add multiple signatures to the model. Wraps {@link #withSignature(Signature)}
+     *
+     * <p><b>Either {@link #withSession(Session)} or {@link * #withFunction(SessionFunction)} must
+     * be called before this method</b>, and the session set there will be used for these
+     * signatures.
+     *
+     * @throws IllegalStateException if no session has been set
+     * @return this
+     * @see #withSession(Session)
+     */
+    public Exporter withSignatures(Signature... signatures) {
+      for (Signature s : signatures) {
+        withSignature(s);
+      }
       return this;
     }
 
@@ -178,7 +252,7 @@ public class SavedModelBundle implements AutoCloseable {
      * @throws IOException if saved model or variable state cannot be written on disk
      */
     public void export() throws IOException {
-      if (functions.isEmpty() || session == null) {
+      if (functions.isEmpty()) {
         throw new IllegalStateException("Model should contain at least one valid function");
       }
       Graph graph = session.graph();
@@ -187,10 +261,11 @@ public class SavedModelBundle implements AutoCloseable {
       // new ops to the graph for saving and restoring the variables.
       SaverDef saverDef = graph.saverDef();
 
-      MetaGraphDef.Builder metaGraphDef = metaGraphDefBuilder
-          .setSaverDef(saverDef)
-          .setGraphDef(graph.toGraphDef())
-          .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
+      MetaGraphDef.Builder metaGraphDef =
+          metaGraphDefBuilder
+              .setSaverDef(saverDef)
+              .setGraphDef(graph.toGraphDef())
+              .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
       // Make sure saved model directories exist
@@ -213,10 +288,10 @@ public class SavedModelBundle implements AutoCloseable {
     }
 
     private final String exportDir;
-    private String[] tags = { DEFAULT_TAG };
+    private String[] tags = {DEFAULT_TAG};
     private final MetaGraphDef.Builder metaGraphDefBuilder = MetaGraphDef.newBuilder();
-    private final Map<String, ConcreteFunction> functions = new LinkedHashMap<>();
     private Session session;
+    private final Map<String, SessionFunction> functions = new LinkedHashMap<>();
   }
 
   /**
@@ -289,9 +364,7 @@ public class SavedModelBundle implements AutoCloseable {
     return session;
   }
 
-  /**
-   * Return the signature of all functions available in this saved model.
-   */
+  /** Return the signature of all functions available in this saved model. */
   public List<Signature> signatures() {
     return functions.values().stream().map(f -> f.signature()).collect(Collectors.toList());
   }
@@ -304,13 +377,14 @@ public class SavedModelBundle implements AutoCloseable {
    * Map<String, Tensor> outputTensorMap = myFunction.call(session, inputTensorMap);
    * }</pre>
    *
+   * <b>All functions use the bundle's underlying session.</b>
+   *
    * @param signatureKey name of the {@code SignatureDef} in the saved model.
    * @return object that can be used to make calls to a function
-   * @throws IllegalArgumentException if {@code signatureKey} is not found in this
-   *                                  saved model.
+   * @throws IllegalArgumentException if {@code signatureKey} is not found in this saved model.
    */
-  public ConcreteFunction function(String signatureKey) {
-    ConcreteFunction function = functions.get(signatureKey);
+  public TensorFunction function(String signatureKey) {
+    SessionFunction function = functions.get(signatureKey);
     if (function == null) {
       throw new IllegalArgumentException(
           String.format("Function with signature [%s] not found", signatureKey));
@@ -319,23 +393,36 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   /**
+   * Get all functions in the bundle.
+   *
+   * <p><b>All functions use the bundle's underlying session.</b>
+   */
+  public List<TensorFunction> functions() {
+    return new ArrayList<>(functions.values());
+  }
+
+  /**
    * Invokes the default function directly from this model.
    *
    * <p>The default function selection is done based on the first of the following conditions that
    * is true:
+   *
    * <ul>
-   *   <li>The function is the only signature available attached to the main graph of this saved model</li>
-   *   <li>The function is mapped to the default signature name, which is "serving_default"</li>
+   *   <li>The function is the only signature available attached to the main graph of this saved
+   *       model
+   *   <li>The function is mapped to the default signature name, which is "serving_default"
    * </ul>
    *
    * <p>Caller is responsible for closing all returned Tensors.
+   *
+   * <p><b>This uses the model's underlying session</b>
    *
    * @param arguments list of input tensors, mapped by their signature name
    * @return list of output tensors, mapped by the signature name
    * @throws IllegalArgumentException if no function can be selected by default
    */
   public Map<String, Tensor> call(Map<String, Tensor> arguments) {
-    ConcreteFunction function = null;
+    SessionFunction function = null;
     if (functions.size() == 1) {
       function = functions.values().iterator().next();
     } else {
@@ -360,13 +447,17 @@ public class SavedModelBundle implements AutoCloseable {
   private final Graph graph;
   private final Session session;
   private final MetaGraphDef metaGraphDef;
-  private final Map<String, ConcreteFunction> functions;
+  private final Map<String, SessionFunction> functions;
 
-  private SavedModelBundle(Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, ConcreteFunction> functions) {
+  private SavedModelBundle(
+      Graph graph, Session session, MetaGraphDef metaGraphDef, Map<String, Signature> signatures) {
     this.graph = graph;
     this.session = session;
     this.metaGraphDef = metaGraphDef;
-    this.functions = functions;
+    this.functions =
+        signatures.entrySet().stream()
+            .collect(
+                Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)));
   }
 
   /**
@@ -385,11 +476,17 @@ public class SavedModelBundle implements AutoCloseable {
     // Note that the saved model will remain the owner of the graph and the session, meaning
     // that the functions do not need to be closed by the user and if it does, it should have
     // no effect.
-    final Map<String, ConcreteFunction> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
-    metaGraphDef.getSignatureDefMap().forEach((signatureName, signatureDef) -> {
-      Signature signature = new Signature(signatureName, signatureDef);
-      functions.put(signatureName, ConcreteFunction.create(signature, session));
-    });
+    final Map<String, Signature> functions = new HashMap<>(metaGraphDef.getSignatureDefCount());
+
+    metaGraphDef
+        .getSignatureDefMap()
+        .forEach(
+            (signatureName, signatureDef) -> {
+              if (!functions.containsKey(signatureName)) {
+                Signature signature = new Signature(signatureName, signatureDef);
+                functions.put(signatureName, signature);
+              }
+            });
     return new SavedModelBundle(graph, session, metaGraphDef, functions);
   }
 
@@ -412,14 +509,22 @@ public class SavedModelBundle implements AutoCloseable {
       // load the session
       TF_Graph graph = TF_NewGraph();
       TF_Buffer metagraphDef = TF_Buffer.newBuffer();
-      TF_Session session = TF_LoadSessionFromSavedModel(
-          opts, runOpts, new BytePointer(exportDir), new PointerPointer(tags),
-          tags.length, graph, metagraphDef, status);
+      TF_Session session =
+          TF_LoadSessionFromSavedModel(
+              opts,
+              runOpts,
+              new BytePointer(exportDir),
+              new PointerPointer(tags),
+              tags.length,
+              graph,
+              metagraphDef,
+              status);
       status.throwExceptionIfNotOK();
 
       // handle the result
       try {
-        bundle = fromHandle(graph, session, MetaGraphDef.parseFrom(metagraphDef.dataAsByteBuffer()));
+        bundle =
+            fromHandle(graph, session, MetaGraphDef.parseFrom(metagraphDef.dataAsByteBuffer()));
       } catch (InvalidProtocolBufferException e) {
         throw new TensorFlowException("Cannot parse MetaGraphDef protocol buffer", e);
       }
@@ -435,6 +540,11 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   static {
-    TensorFlow.init();
+    try {
+      // Ensure that TensorFlow native library and classes are ready to be used
+      Class.forName("org.tensorflow.TensorFlow");
+    } catch (ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

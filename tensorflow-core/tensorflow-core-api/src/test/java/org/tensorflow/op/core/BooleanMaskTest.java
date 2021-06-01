@@ -18,7 +18,7 @@ package org.tensorflow.op.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
@@ -29,6 +29,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
 public class BooleanMaskTest {
+
   @Test
   public void testBooleanMask(){
     try (Graph g = new Graph();
@@ -43,24 +44,24 @@ public class BooleanMaskTest {
       Operand<TInt32> output1 = BooleanMask.create(scope, input, mask);
       Operand<TInt32> output2 = BooleanMask.create(scope, input2, mask, BooleanMask.axis(1));
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output1).run().get(0)) {
+      try (TInt32 result = (TInt32) sess.runner().fetch(output1).run().get(0)) {
         // expected shape from Python tensorflow
         assertEquals(Shape.of(5), result.shape());
-        assertEquals(0, result.getFloat(0));
-        assertEquals(1, result.getFloat(1));
-        assertEquals(4, result.getFloat(2));
-        assertEquals(5, result.getFloat(3));
-        assertEquals(6, result.getFloat(4));
+        assertEquals(0, result.getInt(0));
+        assertEquals(1, result.getInt(1));
+        assertEquals(4, result.getInt(2));
+        assertEquals(5, result.getInt(3));
+        assertEquals(6, result.getInt(4));
       }
 
-      try (TFloat32 result = (TFloat32) sess.runner().fetch(output2).run().get(0)) {
+      try (TInt32 result = (TInt32) sess.runner().fetch(output2).run().get(0)) {
         // expected shape from Python tensorflow
-        assertEquals(Shape.of(5), result.shape());
-        assertEquals(0, result.getFloat(0));
-        assertEquals(1, result.getFloat(1));
-        assertEquals(4, result.getFloat(2));
-        assertEquals(5, result.getFloat(3));
-        assertEquals(6, result.getFloat(4));
+        assertEquals(Shape.of(1, 5), result.shape());
+        assertEquals(0, result.getInt(0, 0));
+        assertEquals(1, result.getInt(0, 1));
+        assertEquals(4, result.getInt(0, 2));
+        assertEquals(5, result.getInt(0, 3));
+        assertEquals(6, result.getInt(0, 4));
       }
     }
   }

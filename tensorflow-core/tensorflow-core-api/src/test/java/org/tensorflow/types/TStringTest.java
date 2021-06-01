@@ -23,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
+
 import org.bytedeco.javacpp.Pointer;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.NdArray;
 import org.tensorflow.ndarray.NdArrays;
@@ -39,16 +41,15 @@ public class TStringTest {
     assertEquals("Pretty vacant", tensor.getObject());
   }
 
-    @Test
-    public void createrScalarLongerThan127() {
-        TString tensor = TString.scalarOf("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
-        assertNotNull(tensor);
-        assertEquals(Shape.scalar(), tensor.shape());
-        assertEquals("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !", tensor.getObject());
-    }
+  @Test
+  public void createrScalarLongerThan127() {
+    TString tensor = TString.scalarOf("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !");
+    assertNotNull(tensor);
+    assertEquals(Shape.scalar(), tensor.shape());
+    assertEquals("Long String 1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890 !", tensor.getObject());
+  }
 
-
-    @Test
+  @Test
   public void createVector() {
     TString tensor = TString.vectorOf("Pretty", "vacant");
     assertNotNull(tensor);
@@ -106,6 +107,7 @@ public class TStringTest {
   }
 
   @Test
+  @Disabled // FIXME This test does not deterministically succeed, so skip it by default
   public void testNoLeaks() throws Exception {
     // warm up and try to get all JIT compilation done to stabilize memory usage...
     for (int i = 0; i < 1000; i++) {

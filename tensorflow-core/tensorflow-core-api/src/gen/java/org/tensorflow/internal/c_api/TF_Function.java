@@ -13,7 +13,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 // Once created and added to graphs, functions can be invoked by creating an
 // operation whose operation type matches the function name.
 @Opaque @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
-public class TF_Function extends Pointer {
+public class TF_Function extends org.tensorflow.internal.c_api.AbstractTF_Function {
     /** Empty constructor. Calls {@code super((Pointer)null)}. */
     public TF_Function() { super((Pointer)null); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
