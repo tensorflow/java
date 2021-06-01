@@ -1,23 +1,26 @@
-/* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow.op;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.Graph;
 
 /**
  * A class to manage scoped (hierarchical) names for operators.
@@ -36,18 +39,58 @@ import java.util.regex.Pattern;
  */
 final class NameScope {
 
-  NameScope withSubScope(String scopeName) {
+  NameScope withSubScope(String scopeName, ExecutionEnvironment env) {
     checkPattern(NAME_REGEX, scopeName);
     // Override with opName if it exists.
     String actualName = (opName != null) ? opName : scopeName;
     String newPrefix = fullyQualify(makeUnique(actualName));
-    return new NameScope(newPrefix, null, null);
+    return new NameScope(newPrefix, null, null).withUsedFrom(env);
   }
 
   NameScope withName(String name) {
     checkPattern(NAME_REGEX, name);
     // All context except for the opName is shared with the new scope.
     return new NameScope(opPrefix, name, ids);
+  }
+
+  private static final Pattern NAME_PATTERN = Pattern.compile("(.+)_(\\d+)", Pattern.DOTALL);
+
+  /** "Import" used names from a graph. Useful when adding to a loaded graph. */
+  private NameScope withUsedFrom(ExecutionEnvironment env) {
+
+    if (env instanceof Graph) {
+      ((Graph) env)
+          .operations()
+          .forEachRemaining(
+              op -> {
+                if (op.name().startsWith(opPrefix != null ? opPrefix : "")) {
+                  String name = op.name();
+
+                  if (opPrefix != null) {
+                    name = name.substring(opPrefix.length() + 1);
+                  }
+
+                  if (!name.contains("/")) {
+                    Matcher matcher = NAME_PATTERN.matcher(name);
+                    if (matcher.find()) {
+                      String realName = matcher.group(1);
+                      int num = Integer.parseInt(matcher.group(2)) + 1;
+
+                      if (!(ids.containsKey(realName) && ids.get(realName) > num)) {
+                        ids.put(realName, num);
+                      }
+                    } else {
+                      if (!ids.containsKey(name)) {
+                        ids.put(name, 1);
+                      } else {
+                        ids.put(name, ids.get(name) + 1);
+                      }
+                    }
+                  }
+                }
+              });
+    }
+    return this;
   }
 
   String makeOpName(String name) {
@@ -62,9 +105,12 @@ final class NameScope {
    *
    * <p>A root-level namescope generates operator names with no components, like {@code Const_72}
    * and {@code result}.
+   *
+   * @param env
    */
-  NameScope() {
+  NameScope(ExecutionEnvironment env) {
     this(null, null, null);
+    withUsedFrom(env);
   }
 
   private NameScope(String opPrefix, String opName, Map<String, Integer> ids) {
@@ -119,6 +165,13 @@ final class NameScope {
   // needed. This is a map containing names already created by this
   // instance mapped to the next available numeric suffix for it.
   private final Map<String, Integer> ids;
+
+  static boolean isValidName(String name) {
+    if (name == null) {
+      return false;
+    }
+    return NAME_REGEX.matcher(name).matches();
+  }
 
   private static void checkPattern(Pattern pattern, String name) {
     if (name == null) {

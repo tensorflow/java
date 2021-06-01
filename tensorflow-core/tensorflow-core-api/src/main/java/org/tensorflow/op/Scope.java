@@ -1,18 +1,18 @@
-/* Copyright 2017 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+     http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-==============================================================================*/
-
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ =======================================================================
+ */
 package org.tensorflow.op;
 
 import java.util.ArrayList;
@@ -21,7 +21,8 @@ import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.OperationBuilder;
 
 /**
- * Manages groups of related properties when creating Tensorflow Operations, such as a common name prefix.
+ * Manages groups of related properties when creating Tensorflow Operations, such as a common name
+ * prefix.
  *
  * <p>A {@code Scope} is a container for common properties applied to TensorFlow Ops. Normal user
  * code initializes a {@code Scope} and provides it to Operation building classes. For example:
@@ -80,15 +81,16 @@ public final class Scope {
   /**
    * Create a new top-level scope.
    *
+   * <p><b>For internal use only</b>, use {@link ExecutionEnvironment#baseScope()} if you need a
+   * base level scope.
+   *
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(), new ArrayList<>(), DeviceSpec.newBuilder().build());
+    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
   }
 
-  /**
-   * Returns the execution environment used by this scope.
-   */
+  /** Returns the execution environment used by this scope. */
   public ExecutionEnvironment env() {
     return env;
   }
@@ -97,7 +99,8 @@ public final class Scope {
    * Returns a new scope where added operations will have the provided name prefix.
    *
    * <p>Ops created with this scope will have {@code name/childScopeName/} as the prefix. The actual
-   * name will be unique in the returned scope. All other properties are inherited from the current scope.
+   * name will be unique in the returned scope. All other properties are inherited from the current
+   * scope.
    *
    * <p>The child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
    *
@@ -106,7 +109,8 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withSubScope(String childScopeName) {
-    return new Scope(env, nameScope.withSubScope(childScopeName), controlDependencies, deviceSpec);
+    return new Scope(
+        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec);
   }
 
   /**
@@ -126,29 +130,34 @@ public final class Scope {
   }
 
   /**
-   * Returns a new scope where added operations will be prefixed by this scope's op name
-   * (set by {@link #withName(String)}), or the given default if it is unset.  This is intended to be used for
-   * composite ops.
+   * Returns a new scope where added operations will be prefixed by this scope's op name (set by
+   * {@link #withName(String)}), or the given default if it is unset. This is intended to be used
+   * for composite ops.
    *
-   * <p>Ops created with this scope will have {@code name/opName/} as the prefix. The actual
-   * name will be unique in the returned scope. All other properties are inherited from the current
+   * <p>Ops created with this scope will have {@code name/opName/} as the prefix. The actual name
+   * will be unique in the returned scope. All other properties are inherited from the current
    * scope.
    *
-   * <p>The default child scope name must match the regular expression {@code [A-Za-z0-9.][A-Za-z0-9_.\-]*}
+   * <p>The default child scope name must match the regular expression {@code
+   * [A-Za-z0-9.][A-Za-z0-9_.\-]*}
    *
    * @param defaultName name of the sub scope if this scope's name hasn't been set.
    * @return a new subscope
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withNameAsSubScope(String defaultName){
-    return new Scope(env, nameScope.withSubScope(nameScope.makeOpName(defaultName)), controlDependencies, deviceSpec);
+  public Scope withNameAsSubScope(String defaultName) {
+    return new Scope(
+        env,
+        nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
+        controlDependencies,
+        deviceSpec);
   }
 
   /**
    * Return a new scope that uses the provided device specification for an op.
    *
-   * <p>Operations created within this scope will place the created operations on the device(s) matching the provided
-   * spec.
+   * <p>Operations created within this scope will place the created operations on the device(s)
+   * matching the provided spec.
    *
    * @param deviceSpec device specification for an operator in the returned scope
    * @return a new Scope that uses opName for operations.
@@ -170,8 +179,8 @@ public final class Scope {
    * }</pre>
    *
    * <p><b>Note:</b> if you provide a composite operator building class (i.e, a class that creates a
-   * set of related operations by calling other operator building code), the provided name will act as a subscope to all
-   * underlying operators.
+   * set of related operations by calling other operator building code), the provided name will act
+   * as a subscope to all underlying operators.
    *
    * @param defaultName name for the underlying operator.
    * @return unique name for the operator.
@@ -181,8 +190,15 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
+  public static boolean isValidOpName(String name) {
+    return NameScope.isValidName(name);
+  }
+
   private Scope(
-      ExecutionEnvironment env, NameScope nameScope, Iterable<Op> controlDependencies, DeviceSpec deviceSpec) {
+      ExecutionEnvironment env,
+      NameScope nameScope,
+      Iterable<Op> controlDependencies,
+      DeviceSpec deviceSpec) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
@@ -206,8 +222,8 @@ public final class Scope {
   }
 
   /**
-   * Applies device specification and adds each Operand in controlDependencies as a control input to the provided
-   * builder.
+   * Applies device specification and adds each Operand in controlDependencies as a control input to
+   * the provided builder.
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
@@ -233,9 +249,7 @@ public final class Scope {
   private final NameScope nameScope;
   private final DeviceSpec deviceSpec;
 
-  /**
-   * Returns device string from the scope.
-   */
+  /** Returns device string from the scope. */
   public String getDeviceString() {
     return deviceSpec.toString();
   }
