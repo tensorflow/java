@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.ShapeUtils;
 import org.tensorflow.ndarray.Shape;
@@ -24,8 +26,8 @@ import org.tensorflow.types.family.TFloating;
 /**
  * Initializer capable of adapting its scale to the shape of weights tensors.
  *
- * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from
- * a truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
+ * <p>With <code>distribution=TRUNCATED_NORMAL or NORMAL</code>, samples are drawn from a
+ * truncated/untruncated normal distribution with a mean of zero and a standard deviation (after
  * truncation, if used) <code>stddev = Math.sqrt(scale / n)</code>, where <code>n</code> is:
  *
  * <ul>
@@ -46,7 +48,7 @@ import org.tensorflow.types.family.TFloating;
  *          new org.tensorflow.framework.initializers.VarianceScaling&lt;&gt;(
  *              tf, scale, Mode.FAN_IN, Distribution.UNIFORM, seed);
  *      Operand&lt;TFloat32&gt; values =
- *          initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *          initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -64,28 +66,25 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
   private final Distribution distribution;
   private final long seed;
 
-
   /**
    * Creates a VarianceScaling Initializer
    *
-   * @param tf the TensorFlow Ops
    * @param seed sed to create random seeds.
    */
-  public VarianceScaling(Ops tf, long seed) {
-    this(tf, SCALE_DEFAULT, MODE_DEFAULT, DISTRIBUTION_DEFAULT, seed);
+  public VarianceScaling(long seed) {
+    this(SCALE_DEFAULT, MODE_DEFAULT, DISTRIBUTION_DEFAULT, seed);
   }
 
   /**
    * Creates a VarianceScaling Initializer
    *
-   * @param tf the TensorFlow Ops
    * @param scale Scaling factor (positive float).
    * @param mode the mode for the variance
    * @param distribution Random distribution to use.
    * @param seed Used to create random seeds.
    */
-  public VarianceScaling(Ops tf, double scale, Mode mode, Distribution distribution, long seed) {
-    super(tf);
+  public VarianceScaling(double scale, Mode mode, Distribution distribution, long seed) {
+    super();
     if (scale <= 0.0) {
       throw new IllegalArgumentException("scale must be greater than 0, got " + scale);
     }
@@ -97,8 +96,9 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    Shape shape = ShapeUtils.toShape(this.tf.scope(), dims);
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
+    Shape shape = ShapeUtils.toShape(tf.scope(), dims);
     double lscale = this.scale;
     double[] fans /* fanIn, fanOut */ = computeFans(shape);
     switch (mode) {
@@ -119,18 +119,18 @@ public class VarianceScaling<T extends TFloating> extends BaseInitializer<T> {
     switch (distribution) {
       case TRUNCATED_NORMAL:
         distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
-        stddev = Math.sqrt(lscale) / .87962566103423978;
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        stddev = Math.sqrt(lscale) / 0.87962566103423978;
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
       case NORMAL:
         distOp = tf.random.statelessRandomNormal(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
       case UNIFORM:
         distOp = tf.random.statelessRandomUniform(dims, tf.constant(seeds), type);
         stddev = Math.sqrt(3.0 * lscale);
-        mulOp = tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type));
+        mulOp = tf.math.mul(distOp, cast(tf, tf.constant(stddev), type));
         break;
     }
     return mulOp;

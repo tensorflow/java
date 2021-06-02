@@ -14,7 +14,7 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
@@ -26,20 +26,6 @@ public class SoftsignTest {
 
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
 
-  public SoftsignTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
   /** Test of Softsign call method */
   @Test
   public void testCallFloat() {
@@ -48,8 +34,8 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat32> instance = new Softsign<>(tf);
-        Operand<TFloat32> result = instance.call(tf.constant(input));
+        Softsign<TFloat32> instance = new Softsign<>();
+        Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -71,8 +57,8 @@ public class SoftsignTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        Softsign<TFloat64> instance = new Softsign<>(tf);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        Softsign<TFloat64> instance = new Softsign<>();
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }

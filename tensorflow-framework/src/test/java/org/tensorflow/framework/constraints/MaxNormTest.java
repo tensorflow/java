@@ -1,14 +1,13 @@
 package org.tensorflow.framework.constraints;
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
-
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class MaxNormTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -35,8 +34,8 @@ class MaxNormTest {
         for (AtomicInteger i = new AtomicInteger();
             i.get() < testValues.length;
             i.getAndIncrement()) {
-          MaxNorm instance = new MaxNorm(tf, testValues[i.get()]);
-          Operand<TFloat32> result = instance.call(weights);
+          MaxNorm instance = new MaxNorm(testValues[i.get()]);
+          Operand<TFloat32> result = instance.call(tf, weights);
           session.evaluate(result, v -> v.floatValue() <= testValues[i.get()]);
         }
       }
@@ -47,13 +46,13 @@ class MaxNormTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        MaxNorm instance = new MaxNorm(tf, 2.0);
+        MaxNorm instance = new MaxNorm(2.0);
         Operand<TFloat32> weights =
             tf.constant(
                 new float[][] {
                   {0, 1, 3, 3}, {0, 0, 0, 3}, {0, 0, 0, 3},
                 });
-        Operand<TFloat32> result = instance.call(weights);
+        Operand<TFloat32> result = instance.call(tf, weights);
         float[] expected = {
           0, 1, 2, 1.1547005f,
           0, 0, 0, 1.1547005f,

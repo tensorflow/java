@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
@@ -22,23 +24,20 @@ import org.tensorflow.op.core.OneHot;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Metric that calculates how often predictions matches one-hot labels.
  *
- * <p>You can provide {@code logits} of classes as {@code predictions}, since argmax of
- * {@code logits} and probabilities are same.
+ * <p>You can provide {@code logits} of classes as {@code predictions}, since argmax of {@code
+ * logits} and probabilities are same.
  *
- * <p>This metric creates two local variables, {@code total} and {@code count} that are
- * used to compute the frequency with which {@code predictions} matches {@code labels}.
- * This frequency is ultimately returned as categorical accuracy: an idempotent operation that
- * simply divides total by count.
+ * <p>This metric creates two local variables, {@code total} and {@code count} that are used to
+ * compute the frequency with which {@code predictions} matches {@code labels}. This frequency is
+ * ultimately returned as categorical accuracy: an idempotent operation that simply divides total by
+ * count.
  *
- * <p>{@code predictions} and {@code labels} should be passed in as vectors of
- * probabilities, rather than as labels. If necessary, use {@link
- * org.tensorflow.op.Ops#oneHot(Operand, Operand, Operand, Operand, OneHot.Options...)} to expand
- * {@code labels} as a vector.
+ * <p>{@code predictions} and {@code labels} should be passed in as vectors of probabilities, rather
+ * than as labels. If necessary, use {@link org.tensorflow.op.Ops#oneHot(Operand, Operand, Operand,
+ * Operand, OneHot.Options...)} to expand {@code labels} as a vector.
  *
  * <p>If sample_weight is None, weights default to 1. Use sample_weight of 0 to mask values.
  *

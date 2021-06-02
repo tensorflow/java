@@ -15,6 +15,9 @@
  */
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
@@ -22,13 +25,8 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
- * Computes root mean squared error metric between {@code labels} and {@code predictions}
- * .
+ * Computes root mean squared error metric between {@code labels} and {@code predictions} .
  *
  * @param <T> The data type for the metric result
  */

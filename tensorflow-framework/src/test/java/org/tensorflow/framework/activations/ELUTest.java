@@ -14,35 +14,16 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-/** @author Jim Clarke */
 public class ELUTest {
 
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
-
-  public ELUTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
-
-
 
   /** Test of ELU call method */
   @Test
@@ -52,8 +33,8 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat32> instance = new ELU<>(tf);
-        Operand<TFloat32> result = instance.call(tf.constant(input));
+        ELU<TFloat32> instance = new ELU<>();
+        Operand<TFloat32> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -66,8 +47,8 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>(tf);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        ELU<TFloat64> instance = new ELU<>();
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }
@@ -80,8 +61,8 @@ public class ELUTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession session = TestSession.createTestSession(tfMode)) {
         Ops tf = session.getTF();
-        ELU<TFloat64> instance = new ELU<>(tf, 2.0f);
-        Operand<TFloat64> result = instance.call(tf.constant(input));
+        ELU<TFloat64> instance = new ELU<>(2.0f);
+        Operand<TFloat64> result = instance.call(tf, tf.constant(input));
         session.evaluate(expected, result);
       }
   }

@@ -33,20 +33,16 @@ import org.tensorflow.types.family.TFloating;
  *
  * @param <T> the data type of the activation
  */
-public class Tanh<T extends TFloating> extends Activation<T> {
+public class Tanh<T extends TFloating> extends AbstractActivation<T> {
 
-  /**
-   * Creates a Hyperbolic tangent activation.
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public Tanh(Ops tf) {
-    super(tf);
+  /** Creates a Hyperbolic tangent activation. */
+  public Tanh() {
+    super();
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
+  public Operand<T> call(Ops tf, Operand<T> input) {
     return tf.math.tanh(input);
   }
 }

@@ -14,6 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.ConfusionMatrixEnum;
@@ -27,39 +36,29 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Metric that computes the approximate AUC (Area under the curve) via a Riemann sum.
  *
- * <p>This metric creates four local variables, {@code truePositives}, {@code trueNegatives
- * }, {@code falsePositives} and {@code falseNegatives} that are used to compute the
- * AUC. To discretize the AUC curve, a linearly spaced set of thresholds is used to compute pairs of
- * recall and precision values. The area under the ROC-curve is therefore computed using the height
- * of the recall values by the false positive rate, while the area under the PR-curve is the
- * computed using the height of the precision values by the recall.
+ * <p>This metric creates four local variables, {@code truePositives}, {@code trueNegatives },
+ * {@code falsePositives} and {@code falseNegatives} that are used to compute the AUC. To discretize
+ * the AUC curve, a linearly spaced set of thresholds is used to compute pairs of recall and
+ * precision values. The area under the ROC-curve is therefore computed using the height of the
+ * recall values by the false positive rate, while the area under the PR-curve is the computed using
+ * the height of the precision values by the recall.
  *
- * <p>This value is ultimately returned as {@code auc}, an idempotent operation that computes
- * the area under a discretized curve of precision versus recall values (computed using the
+ * <p>This value is ultimately returned as {@code auc}, an idempotent operation that computes the
+ * area under a discretized curve of precision versus recall values (computed using the
  * aforementioned variables). The {@code numThresholds} variable controls the degree of
  * discretization with larger numbers of thresholds more closely approximating the true AUC. The
- * quality of the approximation may vary dramatically depending on {@code numThresholds}. The
- * {@code thresholds} parameter can be used to manually specify thresholds which split the
- * predictions more evenly.
+ * quality of the approximation may vary dramatically depending on {@code numThresholds}. The {@code
+ * thresholds} parameter can be used to manually specify thresholds which split the predictions more
+ * evenly.
  *
- * <p>For best results, {@code predictions} should be distributed approximately uniformly in
- * the range [0, 1] and not peaked around 0 or 1. The quality of the AUC approximation may be poor
- * if this is not the case. Setting {@code summationMethod} to {@code minoring} or {@code
- * majoring} can help quantify the error in the approximation by providing lower or upper
- * bound estimate of the AUC.
+ * <p>For best results, {@code predictions} should be distributed approximately uniformly in the
+ * range [0, 1] and not peaked around 0 or 1. The quality of the AUC approximation may be poor if
+ * this is not the case. Setting {@code summationMethod} to {@code minoring} or {@code majoring} can
+ * help quantify the error in the approximation by providing lower or upper bound estimate of the
+ * AUC.
  *
  * <p>Usage: <br>
  *
@@ -155,8 +154,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
    * {@link #DEFAULT_NUM_THRESHOLDS} for the numThresholds, {@link AUCCurve#ROC} for the curve type,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for
-   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
+   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
+   * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -180,8 +179,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NUM_THRESHOLDS} for the
    * numThresholds, {@link AUCCurve#ROC} for the curve type, {@link
-   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
+   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds, {@code
+   * false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
@@ -206,8 +205,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
    * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
-   * summation method, {@code null} for thresholds, {@code false} for multiLabel, and
-   * {@code null} for labelWeights.
+   * summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code null}
+   * for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
@@ -233,8 +232,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
    * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
-   * summation method, {@code null} for numThresholds, {@code false} for multiLabel, and
-   * {@code null} for labelWeights.
+   * summation method, {@code null} for numThresholds, {@code false} for multiLabel, and {@code
+   * null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
@@ -259,8 +258,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@link AUCCurve#ROC} for the curve type,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for
-   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
+   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
+   * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
@@ -314,8 +313,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric using {@link AUCSummationMethod#INTERPOLATION} for
-   * the summation method, {@code null} for thresholds, {@code false} for multiLabel, and
-   * {@code null} for labelWeights.
+   * the summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code
+   * null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
@@ -372,8 +371,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for
-   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
+   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
+   * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
@@ -400,8 +399,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric using {@code null} for numThresholds, {@link
-   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code false} for multiLabel,
-   * and {@code null} for labelWeights.
+   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code false} for multiLabel, and
+   * {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
@@ -428,8 +427,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@link #DEFAULT_NAME} for the metric name,,
-   * {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for
-   * labelWeights.
+   * {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
@@ -453,8 +451,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@code null} for numThresholds, {@code false} for multiLabel, and {@code null}
-   * for labelWeights.
+   * {@code null} for numThresholds, {@code false} for multiLabel, and {@code null} for
+   * labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
@@ -487,8 +485,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric. using {@code null} for thresholds, {@code
-   * false} for multiLabel, and {@code null} for labelWeights.
+   * Creates an AUC (Area under the curve) metric. using {@code null} for thresholds, {@code false}
+   * for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
@@ -513,8 +511,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric. using {@code null} for the numThresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
+   * Creates an AUC (Area under the curve) metric. using {@code null} for the numThresholds, {@code
+   * false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
@@ -560,16 +558,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param summationMethod Specifies the Riemann summation method used
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1]. This method
-   *     automatically brackets the provided {@code thresholds} with a (-{@link #EPSILON})
-   *     below and a (1 + {@link #EPSILON}) above.
+   *     automatically brackets the provided {@code thresholds} with a (-{@link #EPSILON}) below and
+   *     a (1 + {@link #EPSILON}) above.
    * @param multiLabel boolean indicating whether multilabel data should be treated as such, wherein
    *     AUC is computed separately for each label and then averaged across labels, or (when false)
    *     if the data should be flattened into a single label before AUC computation. In the latter
    *     case, when multilabel data is passed to AUC, each label-prediction pair is treated as an
    *     individual data point. Should be set to {@code false} for multi-class data.
    * @param labelWeights non-negative weights used to compute AUCs for multilabel data. When {@code
-   *     multiLabel} is true, the weights are applied to the individual label AUCs when they
-   *     are averaged to produce the multi-label AUC. When it's false, they are used to weight the
+   *     multiLabel} is true, the weights are applied to the individual label AUCs when they are
+   *     averaged to produce the multi-label AUC. When it's false, they are used to weight the
    *     individual label predictions in computing the confusion matrix on the flattened data.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -684,8 +682,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
     }
 
     // Create metric variables
-    Zeros<T> zeros = new Zeros<>(tf);
-    Operand<T> zero = zeros.call(tf.constant(variableShape), type);
+    Zeros<T> zeros = new Zeros<>();
+    Operand<T> zero = zeros.call(tf, tf.constant(variableShape), type);
     if (truePositives == null) {
       truePositives = tf.withName(getTruePositivesName()).variable(zero);
       initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf.assign(truePositives, zero));
@@ -715,8 +713,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *
    * @param labels shape (N, Cx, L1?) where N is the number of examples, Cx is zero or more class
    *     dimensions, and L1 is a potential extra dimension of size 1 that would be squeezed. Will be
-   *     cast to {@code <T>}. If {@link #multiLabel} or if {@link #labelWeights} {@code != null
-   *     }, then Cx must be a single dimension.
+   *     cast to {@code <T>}. If {@link #multiLabel} or if {@link #labelWeights} {@code != null },
+   *     then Cx must be a single dimension.
    * @param predictions the predictions shape (N, Cx, P1?). Will be cast to {@code T}.
    * @param sampleWeights sample weights to be applied to values, may be null. Will be cast to
    *     {@code <T>}.

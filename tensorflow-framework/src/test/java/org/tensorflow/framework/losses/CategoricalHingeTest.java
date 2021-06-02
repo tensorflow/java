@@ -31,12 +31,13 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf, Reduction.NONE);
+        CategoricalHinge instance = new CategoricalHinge(Reduction.NONE);
+
         int[] trueArray = {1, 9, 2, -5};
         float[] predArray = {4f, 8f, 12f, 8f};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 2)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         Float[] expected = {0.0f, 65.0f};
         testSession.evaluate(expected, loss);
       }
@@ -48,12 +49,13 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf);
+        CategoricalHinge instance = new CategoricalHinge();
+
         int[] trueArray = {1, 9, 2, -5};
         float[] predArray = {4f, 8f, 12f, 8f};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 2)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 2)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 32.5f;
         testSession.evaluate(expected, loss);
       }
@@ -65,17 +67,18 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf);
+        CategoricalHinge instance = new CategoricalHinge();
+
         int[] trueArray = {1, 9, 2, -5, -2, 6};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 83.95f;
         testSession.evaluate(expected, loss);
 
-        Operand<TFloat32> loss2 = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss2 = instance.call(tf, yTrue, yPred, sampleWeight);
         testSession.evaluate(loss, loss2);
       }
   }
@@ -85,7 +88,8 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf);
+        CategoricalHinge instance = new CategoricalHinge();
+
         int[] trueArray = {1, 9, 2, -5, -2, 6};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] weightsNp = {1.2f, 3.4f};
@@ -93,7 +97,7 @@ public class CategoricalHingeTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(weightsNp), tf.constant(Shape.of(2, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 124.1f;
         testSession.evaluate(expected, loss);
       }
@@ -104,13 +108,14 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf);
+        CategoricalHinge instance = new CategoricalHinge();
+
         int[] trueArray = {1, 9, 2, -5, -2, 6};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(0f);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 0f;
         testSession.evaluate(expected, loss);
       }
@@ -121,7 +126,8 @@ public class CategoricalHingeTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        CategoricalHinge instance = new CategoricalHinge(tf);
+        CategoricalHinge instance = new CategoricalHinge();
+
         int[] trueArray = {1, 9, 2, -5, -2, 6};
         float[] predArray = {4f, 8f, 12f, 8f, 1f, 3f};
         float[] weightsNp = {3, 6, 5, 0, 4, 2};
@@ -130,7 +136,7 @@ public class CategoricalHingeTest {
             tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3, 1)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(weightsNp), tf.constant(Shape.of(2, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 4.0f;
         testSession.evaluate(expected, loss);
       }

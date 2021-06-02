@@ -14,29 +14,29 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.SensitivitySpecificityBase;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Computes best specificity where sensitivity is &gt;= specified value. {@code Sensitivity}
- * measures the proportion of actual positives that are correctly identified as such {@code
- * (tp / (tp + fn))}.
+ * measures the proportion of actual positives that are correctly identified as such {@code (tp /
+ * (tp + fn))}.
  *
- * <p>{@code Specificity} measures the proportion of actual negatives that are correctly
- * identified as such {@code (tn / (tn + fp))}.
+ * <p>{@code Specificity} measures the proportion of actual negatives that are correctly identified
+ * as such {@code (tn / (tn + fp))}.
  *
- * <p>This metric creates four local variables, {@code truePositives}, {@code trueNegatives
- * }, {@code falsePositives} and {@code falseNegatives} that are used to compute the
- * specificity at the given sensitivity. The threshold for the given sensitivity value is computed
- * and used to evaluate the corresponding specificity.
+ * <p>This metric creates four local variables, {@code truePositives}, {@code trueNegatives },
+ * {@code falsePositives} and {@code falseNegatives} that are used to compute the specificity at the
+ * given sensitivity. The threshold for the given sensitivity value is computed and used to evaluate
+ * the corresponding specificity.
  *
- * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sample_weight of
- * 0 to mask values.
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sample_weight of 0 to mask
+ * values.
  *
  * @see <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity">Additional information
  *     about specificity and sensitivity</a>

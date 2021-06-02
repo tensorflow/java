@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
@@ -21,20 +24,15 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Computes the mean relative error by normalizing with the given values.
  *
- * <p>This metric creates two local variables, {@code total} and {@code count} that are
- * used to compute the mean relative error. This is weighted by {@code sampleWeight}, and it is
- * ultimately returned as mean relative error: an idempotent operation that simply divides total by
- * count.
+ * <p>This metric creates two local variables, {@code total} and {@code count} that are used to
+ * compute the mean relative error. This is weighted by {@code sampleWeight}, and it is ultimately
+ * returned as mean relative error: an idempotent operation that simply divides total by count.
  *
- * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use {@code sampleWeight}
- * of 0 to mask values.
+ * <p>If {@code sampleWeight} is {@code null}, weights default to 1. Use {@code sampleWeight} of 0
+ * to mask values.
  *
  * @param <T> The data type for the metric result
  */

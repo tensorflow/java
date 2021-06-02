@@ -1,5 +1,12 @@
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.Metric;
@@ -9,14 +16,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Abstract base class for computing sensitivity and specificity.
@@ -87,9 +86,9 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   /** Initializes the Variables */
   private void init() {
     Ops tf = getTF();
-    Zeros<T> zeros = new Zeros<>(tf);
+    Zeros<T> zeros = new Zeros<>();
     Shape varShape = Shape.of(numThresholds);
-    Operand<T> zero = zeros.call(tf.constant(varShape), type);
+    Operand<T> zero = zeros.call(tf, tf.constant(varShape), type);
 
     if (this.getTruePositives() == null) {
 
@@ -227,8 +226,6 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   public int getNumThresholds() {
     return numThresholds;
   }
-
-
 
   /**
    * Gets the thresholds

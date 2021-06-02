@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.Metric;
@@ -23,12 +28,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Abstract base class that calculates the value of the given confusion matrix condition based on
@@ -67,10 +66,9 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param confusionMatrixCond the confusion matrix condition to calculate
-   * @param threshold a threshold value in {@code [0, 1]}. A threshold is compared with
-   *     prediction values to determine the truth value of predictions (i.e., above the threshold is
-   *     {@code true}, below is {@code false}). One metric value is generated for each
-   *     threshold value.
+   * @param threshold a threshold value in {@code [0, 1]}. A threshold is compared with prediction
+   *     values to determine the truth value of predictions (i.e., above the threshold is {@code
+   *     true}, below is {@code false}). One metric value is generated for each threshold value.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
@@ -91,10 +89,9 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param confusionMatrixCond the confusion matrix condition to calculate
-   * @param thresholds threshold values in {@code [0, 1]}. A threshold is compared with
-   *     prediction values to determine the truth value of predictions (i.e., above the threshold is
-   *     {@code true}, below is {@code false}). One metric value is generated for each
-   *     threshold value.
+   * @param thresholds threshold values in {@code [0, 1]}. A threshold is compared with prediction
+   *     values to determine the truth value of predictions (i.e., above the threshold is {@code
+   *     true}, below is {@code false}). One metric value is generated for each threshold value.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
@@ -118,12 +115,13 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
   private void init() {
     Shape variableShape = Shape.of(this.thresholds.length);
 
-    Zeros<T> zeros = new Zeros<>(getTF());
+    Zeros<T> zeros = new Zeros<>();
     accumulator =
         getTF()
             .withName(getAccumulatorName())
-            .variable(zeros.call(getTF().constant(variableShape), type));
-    initializer = getTF().assign(accumulator, zeros.call(getTF().constant(variableShape), type));
+            .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
+    initializer =
+        getTF().assign(accumulator, zeros.call(getTF(), getTF().constant(variableShape), type));
   }
 
   /**
@@ -189,7 +187,11 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
     return this.thresholds;
   }
 
-  /** @return the accumulatorName */
+  /**
+   * Gets the accumulatorName
+   *
+   * @return the accumulatorName
+   */
   public String getAccumulatorName() {
     return accumulatorName;
   }

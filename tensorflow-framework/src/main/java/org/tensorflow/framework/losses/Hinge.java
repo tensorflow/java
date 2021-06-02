@@ -14,12 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the hinge loss between labels and predictions.
@@ -37,7 +38,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
  *    Hinge hingeLoss = new Hinge(tf);
- *    Operand&lt;TFloat32&gt; result = hingeLoss.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = hingeLoss.call(Ops tf, labels, predictions);
  *    // produces 1.3f
  * </pre>
  *
@@ -45,57 +46,53 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {1.f, 0.f});
- *    Operand&lt;TFloat32&gt; result = hingeLoss.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = hingeLoss.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.55f
  * </pre>
  *
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    Hinge hingeLoss = new Hinge(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = hingeLoss.call(labels, predictions);
+ *    Hinge hingeLoss = new Hinge(Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = hingeLoss.call(Ops tf, labels, predictions);
  *    // produces 2.6f
  * </pre>
  *
  * <p>Using <code>NONE</code> reduction type:
  *
  * <pre>
- *    Hinge hingeLoss = new Hinge(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = hingeLoss.call(labels, predictions);
+ *    Hinge hingeLoss = new Hinge(Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = hingeLoss.call(Ops tf, labels, predictions);
  *    // produces [1.1f, 1.5f]
  * </pre>
  */
-public class Hinge extends Loss {
+public class Hinge extends AbstractLoss {
 
   /**
-   * Creates a Hinge Loss using {@link Class#getSimpleName()} as the loss name and a Loss Reduction
-   * of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name and a
+   * AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public Hinge(Ops tf) {
-    this(tf, null, Reduction.AUTO);
+  public Hinge() {
+    this(null, Reduction.AUTO);
   }
 
   /**
-   * Creates a Hinge Loss using {@link Class#getSimpleName()} as the loss name
+   * Creates a Hinge AbstractLoss using {@link Class#getSimpleName()} as the loss name
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public Hinge(Ops tf, Reduction reduction) {
-    super(tf, null, reduction);
+  public Hinge(Reduction reduction) {
+    super(null, reduction);
   }
 
   /**
    * Creates a Hinge
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public Hinge(Ops tf, String name, Reduction reduction) {
-    super(tf, name, reduction);
+  public Hinge(String name, Reduction reduction) {
+    super(name, reduction);
   }
 
   /**
@@ -122,15 +119,16 @@ public class Hinge extends Loss {
    */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     tLabels =
         LossesHelper.valueCheck(
-            getTF(),
+            tf,
             "labels value check [-1, 0, 1]",
             tLabels,
-            cast(getTF(), getTF().constant(new int[] {-1, 0, 1}), predictions.type()));
-    Operand<T> losses = Losses.hinge(getTF(), tLabels, predictions);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+            cast(tf, tf.constant(new int[] {-1, 0, 1}), predictions.type()));
+    Operand<T> losses = Losses.hinge(tf, tLabels, predictions);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

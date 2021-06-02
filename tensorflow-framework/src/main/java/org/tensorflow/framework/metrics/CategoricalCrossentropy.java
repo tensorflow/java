@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
@@ -21,16 +23,13 @@ import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * A Metric that computes the categorical cross-entropy loss between true labels and predicted
  * labels.
  *
  * <p>This is the crossentropy metric class to be used when there are multiple label classes (2 or
  * more). The labels should be given as a one_hot representation. eg., When labels values are {@code
- * [2, 0, 1]}, the labels Operand contains = {@code [[0, 0, 1], [1, 0, 0], [0, 1, 0]]
- * }.
+ * [2, 0, 1]}, the labels Operand contains = {@code [[0, 0, 1], [1, 0, 0], [0, 1, 0]] }.
  *
  * @param <T> The data type for the metric result
  */
@@ -52,9 +51,9 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
    * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to
    *     a probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2}
-   *     means that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9
-   *     } for label {@code 1}
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
+   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
+   *     {@code 1}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
@@ -73,13 +72,12 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
    *     probability distribution.
    * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2}
-   *     means that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9
-   *     } for label {@code 1}
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
+   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
+   *     {@code 1}
    * @param axis Int specifying the channels axis. {@code axis={@link Losses#CHANNELS_LAST}}
-   *     corresponds to data format {@code channels_last}, and {@code
-   *     axis={@link Losses#CHANNELS_FIRST}} corresponds to data format {@code
-   *     channels_first}.
+   *     corresponds to data format {@code channels_last}, and {@code axis={@link
+   *     Losses#CHANNELS_FIRST}} corresponds to data format {@code channels_first}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result

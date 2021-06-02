@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TFloating;
 
 /**
@@ -27,7 +26,7 @@ import org.tensorflow.types.family.TFloating;
  * stddev = sqrt(1 / fanIn)</code> where <code>fanIn</code> is the number of input units in the
  * weight tensor.
  *
- * <p>If the distribution is UNIFORM, itraws samples from a uniform distribution within <code>
+ * <p>If the distribution is UNIFORM, it draws samples from a uniform distribution within <code>
  * [-limit, limit]</code>, where <code>limit = Math.sqrt(3 / fanIn)</code> (<code>fanIn</code> is
  * the number of input units in the weight tensor)
  *
@@ -41,7 +40,7 @@ import org.tensorflow.types.family.TFloating;
  *              new org.tensorflow.framework.initializers.LeCunNormal&lt;&gt;(tf,
  *               Distribution.TRUNCATED_NORMAL, seed);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * <p>LeCun Uniform:
@@ -52,14 +51,15 @@ import org.tensorflow.types.family.TFloating;
  *              new org.tensorflow.framework.initializers.LeCunNormal&lt;&gt;(tf,
  *               Distribution.UNIFORM, seed);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * *
  *
  * <p><b>NOTE:</b> *
  *
- * <p>For a LeCunNormal equivalent initializer, use {@link VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
+ * <p>For a LeCunNormal equivalent initializer, use {@link
+ * VarianceScaling.Distribution#TRUNCATED_NORMAL} for the distribution parameter. *
  *
  * <p>For a LeCunUniform equivalent initializer, use {@link VarianceScaling.Distribution#UNIFORM} *
  * for the distribution parameter. *
@@ -79,12 +79,11 @@ public class LeCun<T extends TFloating> extends VarianceScaling<T> {
   /**
    * Creates a LeCunNormal Initializer
    *
-   * @param tf the TensorFlow Ops
    * @param distribution The distribution type for the Glorot initializer.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public LeCun(Ops tf, Distribution distribution, long seed) {
-    super(tf, 1.0, Mode.FAN_IN, distribution, seed);
+  public LeCun(Distribution distribution, long seed) {
+    super(1.0, Mode.FAN_IN, distribution, seed);
   }
 }

@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
@@ -30,7 +32,7 @@ import org.tensorflow.types.family.TType;
  *      Ones&lt;TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Ones&lt;&gt;(tf);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -46,21 +48,21 @@ public class Ones<T extends TType> extends BaseInitializer<T> {
    *      Ones&lt;TFloat32&gt; initializer =
    *              new org.tensorflow.framework.initializers.Ones&lt;&gt;(tf);
    *      Operand&lt;TFloat32&gt; values =
-   *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+   *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
    * </pre>
-   *
-   * @param tf the TensorFlow Ops
    */
-  public Ones(Ops tf) {
-    super(tf);
+  public Ones() {
+    super();
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
     if (!TNumber.class.isAssignableFrom(type) && type != TBool.class) {
-      throw new IllegalArgumentException("Tensor type must be numeric or boolean: " + type.getSimpleName());
+      throw new IllegalArgumentException(
+          "Tensor type must be numeric or boolean: " + type.getSimpleName());
     }
-    return tf.fill(dims, tf.dtypes.cast(tf.constant(1.0), type));
+    return tf.fill(dims, cast(tf, tf.constant(1), type));
   }
 }

@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
@@ -24,10 +27,6 @@ import org.tensorflow.op.math.Equal;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.Collections;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Calculates how often predictions matches integer labels.
  *
@@ -35,9 +34,9 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * probabilities are same.
  *
  * <p>This metric creates two local variables, `total` and `count` that are used to compute the
- * frequency with which {@code predictions} matches {@code labels}. This frequency is
- * ultimately returned as `sparse categorical accuracy`: an idempotent operation that simply divides
- * `total` by `count`.
+ * frequency with which {@code predictions} matches {@code labels}. This frequency is ultimately
+ * returned as `sparse categorical accuracy`: an idempotent operation that simply divides `total` by
+ * `count`.
  *
  * <p>If `sample_weight` is `None`, weights default to 1. Use `sample_weight` of 0 to mask values.'
  *

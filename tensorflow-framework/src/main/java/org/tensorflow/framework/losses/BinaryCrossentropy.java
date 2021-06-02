@@ -14,12 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the cross-entropy loss between true labels and predicted labels.
@@ -35,7 +36,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.6f, 0.4f}, {0.4f, 0.6f}});
  *    BinaryCrossentropy bce = new BinaryCrossentropy(tf);
- *    Operand&lt;TFloat32&gt; result = bce.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = bce.call(Ops tf, labels, predictions);
  *    // produces 0.815
  * </pre>
  *
@@ -43,7 +44,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {1.f, 0.f});
- *    Operand&lt;TFloat32&gt; result = bce.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = bce.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.458f
  * </pre>
  *
@@ -51,7 +52,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    BinaryCrossentropy bce = new BinaryCrossentropy(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = bce.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = bce.call(Ops tf, labels, predictions);
  *    // produces 1.630f
  * </pre>
  *
@@ -59,11 +60,11 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    BinaryCrossentropy bce = new BinaryCrossentropy(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = bce.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = bce.call(Ops tf, labels, predictions);
  *    // produces [0.916f, 0.714f]
  * </pre>
  */
-public class BinaryCrossentropy extends Loss {
+public class BinaryCrossentropy extends AbstractLoss {
   public static final boolean FROM_LOGITS_DEFAULT = false;
   public static final float LABEL_SMOOTHING_DEFAULT = 0.0f;
 
@@ -71,70 +72,63 @@ public class BinaryCrossentropy extends Loss {
   private final float labelSmoothing;
 
   /**
-   * Creates a Binary Crossentropy Loss using {@link Class#getSimpleName()} as the loss name, {@link
-   * #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing and a
-   * Loss Reduction of {@link Loss#REDUCTION_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a Binary Crossentropy AbstractLoss using {@link Class#getSimpleName()} as the loss
+   * name, {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
+   * labelSmoothing and a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}
    */
-  public BinaryCrossentropy(Ops tf) {
-    this(tf, null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
+  public BinaryCrossentropy() {
+    this(null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
   }
 
   /**
    * Creates a Binary Crossentropy loss using {@link Class#getSimpleName()} as the loss name, {@link
    * #FROM_LOGITS_DEFAULT} for fromLogits, and {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public BinaryCrossentropy(Ops tf, Reduction reduction) {
-    this(tf, null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction);
+  public BinaryCrossentropy(Reduction reduction) {
+    this(null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction);
   }
 
   /**
    * Creates a Binary Crossentropy loss using using {@link Class#getSimpleName()} as the loss name,
    * labelSmoothing of {@link #LABEL_SMOOTHING_DEFAULT}, a reduction of {@link
-   * Loss#REDUCTION_DEFAULT},
+   * AbstractLoss#REDUCTION_DEFAULT},
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public BinaryCrossentropy(Ops tf, boolean fromLogits) {
-    this(tf, null, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
+  public BinaryCrossentropy(boolean fromLogits) {
+    this(null, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
   }
 
   /**
    * Creates a Binary Crossentropy loss using labelSmoothing of {@link #LABEL_SMOOTHING_DEFAULT} a
-   * reduction of {@link Loss#REDUCTION_DEFAULT}.
+   * reduction of {@link AbstractLoss#REDUCTION_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public BinaryCrossentropy(Ops tf, String name, boolean fromLogits) {
-    this(tf, name, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
+  public BinaryCrossentropy(String name, boolean fromLogits) {
+    this(name, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT);
   }
 
   /**
    * Creates a Binary Crossentropy loss using using {@link Class#getSimpleName()} as the loss name,
-   * and a reduction of {@link Loss#REDUCTION_DEFAULT}.
+   * and a reduction of {@link AbstractLoss#REDUCTION_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
    *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    */
-  public BinaryCrossentropy(Ops tf, boolean fromLogits, float labelSmoothing) {
-    this(tf, null, fromLogits, labelSmoothing, REDUCTION_DEFAULT);
+  public BinaryCrossentropy(boolean fromLogits, float labelSmoothing) {
+    this(null, fromLogits, labelSmoothing, REDUCTION_DEFAULT);
   }
 
   /**
-   * Creates a Binary Crossentropy loss using a reduction of {@link Loss#REDUCTION_DEFAULT}.
+   * Creates a Binary Crossentropy loss using a reduction of {@link AbstractLoss#REDUCTION_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
@@ -142,14 +136,13 @@ public class BinaryCrossentropy extends Loss {
    *     where the smoothing squeezes the labels towards 0.5. Larger values of labelSmoothing
    *     correspond to heavier smoothing.
    */
-  public BinaryCrossentropy(Ops tf, String name, boolean fromLogits, float labelSmoothing) {
-    this(tf, name, fromLogits, labelSmoothing, REDUCTION_DEFAULT);
+  public BinaryCrossentropy(String name, boolean fromLogits, float labelSmoothing) {
+    this(name, fromLogits, labelSmoothing, REDUCTION_DEFAULT);
   }
 
   /**
    * Creates a Binary Crossentropy loss
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
    *     compute the loss between the predicted labels and a smoothed version of the true labels,
@@ -157,14 +150,13 @@ public class BinaryCrossentropy extends Loss {
    *     correspond to heavier smoothing.
    * @param reduction Type of Reduction to apply to the loss.
    */
-  public BinaryCrossentropy(Ops tf, boolean fromLogits, float labelSmoothing, Reduction reduction) {
-    this(tf, null, fromLogits, labelSmoothing, reduction);
+  public BinaryCrossentropy(boolean fromLogits, float labelSmoothing, Reduction reduction) {
+    this(null, fromLogits, labelSmoothing, reduction);
   }
 
   /**
    * Creates a Binary Crossentropy loss
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing A number in the range, [0, 1]. When 0, no smoothing occurs. When &gt; 0,
@@ -175,8 +167,8 @@ public class BinaryCrossentropy extends Loss {
    * @throws IllegalArgumentException if labelSmoothing is not in the inclusive range of 0. - 1.
    */
   public BinaryCrossentropy(
-      Ops tf, String name, boolean fromLogits, float labelSmoothing, Reduction reduction) {
-    super(tf, name, reduction);
+      String name, boolean fromLogits, float labelSmoothing, Reduction reduction) {
+    super(name, reduction);
     if (labelSmoothing < 0 || labelSmoothing > 1)
       throw new IllegalArgumentException(
           "labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
@@ -207,24 +199,25 @@ public class BinaryCrossentropy extends Loss {
    */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
     Operand<T> lPredictions;
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
           LossesHelper.rangeCheck(
-              getTF(),
+              tf,
               "predictions range check [0-1]",
               predictions,
-              cast(getTF(), getTF().constant(0), predictions.type()),
-              cast(getTF(), getTF().constant(1), predictions.type()));
+              cast(tf, tf.constant(0), predictions.type()),
+              cast(tf, tf.constant(1), predictions.type()));
 
     } else {
       lPredictions = predictions;
     }
 
     Operand<T> losses =
-        Losses.binaryCrossentropy(getTF(), labels, lPredictions, fromLogits, labelSmoothing);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+        Losses.binaryCrossentropy(tf, labels, lPredictions, fromLogits, labelSmoothing);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

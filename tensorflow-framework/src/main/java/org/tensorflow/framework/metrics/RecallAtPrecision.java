@@ -14,15 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.SensitivitySpecificityBase;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes best recall where precision is &gt;= specified value.
@@ -34,8 +34,8 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  * falseNegatives that are used to compute the recall at the given precision. The threshold for the
  * given precision value is computed and used to evaluate the corresponding recall.
  *
- * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of
- * 0 to mask values.
+ * <p>If {@code sampleWeights} is null, weights default to 1. Use {@code sampleWeights} of 0 to mask
+ * values.
  *
  * @param <T> The data type for the metric result
  */

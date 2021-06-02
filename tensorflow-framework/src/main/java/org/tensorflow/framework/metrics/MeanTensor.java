@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.losses.impl.LossTuple;
@@ -25,11 +29,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Metric that computes the element-wise (weighted) mean of the given tensors.
@@ -85,8 +84,8 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
   private boolean init(Shape shape) {
     if (!initialized) {
       this.shape = shape;
-      Zeros<T> zeros = new Zeros<>(getTF());
-      Operand<T> zero = zeros.call(getTF().constant(shape), type);
+      Zeros<T> zeros = new Zeros<>();
+      Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), type);
 
       if (total == null) {
         total = getTF().withName(totalName).variable(zero);

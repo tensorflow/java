@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.MetricsHelper;
@@ -23,12 +28,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the mean Intersection-Over-Union metric.
@@ -93,11 +92,15 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
     Shape variableShape = Shape.of(numClasses, numClasses);
 
     if (totalConfusionMatrix == null) {
-      Zeros<T> zeros = new Zeros<>(getTF());
+      Zeros<T> zeros = new Zeros<>();
       totalConfusionMatrix =
-          getTF().withName(totalCMName).variable(zeros.call(getTF().constant(variableShape), type));
+          getTF()
+              .withName(totalCMName)
+              .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
       initializer =
-          getTF().assign(totalConfusionMatrix, zeros.call(getTF().constant(variableShape), type));
+          getTF()
+              .assign(
+                  totalConfusionMatrix, zeros.call(getTF(), getTF().constant(variableShape), type));
     }
   }
 
@@ -124,8 +127,8 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
    * @param sampleWeights Optional weighting of each example. Defaults to 1, if null. Rank is either
    *     0, or the same rank as labels, and must be broadcastable to labels.
    * @return the Operands that updates totalConfusionMatrix variable
-   * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=} labels rank,
-   *     and if the predictions size is not equal to the labels size
+   * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=}
+   *     labels rank, and if the predictions size is not equal to the labels size
    */
   @Override
   public List<Op> updateStateList(

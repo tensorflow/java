@@ -40,7 +40,7 @@ import org.tensorflow.types.family.TFloating;
  * @param <T> the data type of the activation
  * @see <a href="https://arxiv.org/abs/1710.05941">Ramachandran et al., 2017</a>
  */
-public class Swish<T extends TFloating> extends Activation<T> {
+public class Swish<T extends TFloating> extends AbstractActivation<T> {
 
   /**
    * Creates a Swish activation, <code>swish(x) = x * sigmoid(x)</code>.
@@ -48,17 +48,14 @@ public class Swish<T extends TFloating> extends Activation<T> {
    * <p>Swish activation function which returns <code>x*sigmoid(x)</code>. It is a smooth,
    * non-monotonic function that consistently matches or outperforms ReLU on deep networks, it is
    * unbounded above and bounded below.
-   *
-   * @param tf the TensorFlow Ops
    */
-  public Swish(Ops tf) {
-    super(tf);
+  public Swish() {
+    super();
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<T> input) {
-
+  public Operand<T> call(Ops tf, Operand<T> input) {
     // TODO Python Keras returns a "grad", which is an optimization not implemented in Java.
     return tf.math.mul(input, tf.math.sigmoid(input));
   }

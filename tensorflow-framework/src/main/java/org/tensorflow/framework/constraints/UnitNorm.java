@@ -14,57 +14,50 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.constraints;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /** Constrains the weights to have unit norm. */
-public class UnitNorm extends Constraint {
+public class UnitNorm extends AbstractConstraint {
   public static final int AXIS_DEFAULT = 0;
 
   /** integer, axis along which to calculate weight norms. */
   private final int[] axes;
 
-  /**
-   * Create a UnitNorm Constraint with the axis set to {@link #AXIS_DEFAULT}
-   *
-   * @param tf the TensorFlow Ops
-   */
-  public UnitNorm(Ops tf) {
-    this(tf, AXIS_DEFAULT);
+  /** Create a UnitNorm AbstractConstraint with the axis set to {@link #AXIS_DEFAULT} */
+  public UnitNorm() {
+    this(AXIS_DEFAULT);
   }
 
   /**
-   * Create a UnitNorm Constraint
+   * Create a UnitNorm AbstractConstraint
    *
-   * @param tf the TensorFlow Ops
    * @param axis axis along which to calculate weight norms.
    */
-  public UnitNorm(Ops tf, int axis) {
-    this(tf, new int[] {axis});
+  public UnitNorm(int axis) {
+    this(new int[] {axis});
   }
 
   /**
-   * Create a UnitNorm Constraint
+   * Create a UnitNorm AbstractConstraint
    *
-   * @param tf the TensorFlow Ops
    * @param axes axes along which to calculate weight norms.
    */
-  public UnitNorm(Ops tf, int[] axes) {
-    super(tf);
+  public UnitNorm(int[] axes) {
+    super();
     this.axes = axes;
   }
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> weights) {
     Class<T> type = weights.type();
 
-    Ops tf = getTF();
     return tf.math.div(
-        weights, tf.math.add(cast(tf, tf.constant(EPSILON), type), norm(weights, getAxes())));
+        weights, tf.math.add(cast(tf, tf.constant(EPSILON), type), norm(tf, weights, getAxes())));
   }
 
   /**

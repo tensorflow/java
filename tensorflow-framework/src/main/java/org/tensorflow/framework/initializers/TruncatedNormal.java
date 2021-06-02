@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt64;
@@ -29,7 +31,7 @@ import org.tensorflow.types.family.TFloating;
  *     TruncatedNormal&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.TruncatedNormal&lt;&gt;(tf, seed);
  *     Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -47,25 +49,23 @@ public class TruncatedNormal<T extends TFloating> extends BaseInitializer<T> {
    * Creates a TruncatedNormal Initializer using {@link #MEAN_DEFAULT} for the mean and {@link
    * #STDDEV_DEFAULT} for the standard deviation.
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public TruncatedNormal(Ops tf, long seed) {
-    this(tf, MEAN_DEFAULT, STDDEV_DEFAULT, seed);
+  public TruncatedNormal(long seed) {
+    this(MEAN_DEFAULT, STDDEV_DEFAULT, seed);
   }
 
   /**
    * Creates a TruncatedNormal Initializer.
    *
-   * @param tf the TensorFlow Ops
    * @param mean Mean of the random values to generate.
    * @param stddev Standard deviation of the random values to generate.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public TruncatedNormal(Ops tf, double mean, double stddev, long seed) {
-    super(tf);
+  public TruncatedNormal(double mean, double stddev, long seed) {
+    super();
     this.mean = mean;
     this.stddev = stddev;
     this.seed = seed;
@@ -73,11 +73,12 @@ public class TruncatedNormal<T extends TFloating> extends BaseInitializer<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
-    long[] seeds = {seed,0};
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
+    long[] seeds = {seed, 0};
     Operand<T> distOp = tf.random.statelessTruncatedNormal(dims, tf.constant(seeds), type);
     return tf.math.add(
-        tf.math.mul(distOp, tf.dtypes.cast(tf.constant(stddev), type)),
-        tf.dtypes.cast(tf.constant(mean), type));
+        tf.math.mul(distOp, cast(tf, tf.constant(stddev), type)),
+        cast(tf, tf.constant(mean), type));
   }
 }

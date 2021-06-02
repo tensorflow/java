@@ -14,12 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
+import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the crossentropy loss between the labels and predictions.
@@ -37,7 +38,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *    Operand&lt;TFloat32&gt; predictions =
  *        tf.constant(new float[][] {{0.05f, 0.95f, 0f}, {0.1f, 0.8f, 0.1f}});
  *    CategoricalCrossentropy cce = new CategoricalCrossentropy(tf);
- *    Operand&lt;TFloat32&gt; result = cce.call(labels, predictions);
+ *    Operand&lt;TFloat32&gt; result = cce.call(Ops tf, labels, predictions);
  *    // produces 1.177
  * </pre>
  *
@@ -45,15 +46,15 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    Operand&lt;TFloat32&gt; sampleWeight = tf.constant(new float[] {0.3f, 0.7f});
- *    Operand&lt;TFloat32&gt; result = cce.call(labels, predictions, sampleWeight);
+ *    Operand&lt;TFloat32&gt; result = cce.call(Ops tf, labels, predictions, sampleWeight);
  *    // produces 0.814f
  * </pre>
  *
  * <p>Using <code>SUM</code> reduction type:
  *
  * <pre>
- *    CategoricalCrossentropy cce = new CategoricalCrossentropy(tf, Reduction.SUM);
- *    Operand&lt;TFloat32&gt; result = cce.call(labels, predictions);
+ *    CategoricalCrossentropy cce = new CategoricalCrossentropy(Reduction.SUM);
+ *    Operand&lt;TFloat32&gt; result = cce.call(Ops tf, labels, predictions);
  *    // produces 2.354f
  * </pre>
  *
@@ -61,12 +62,12 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * <pre>
  *    CategoricalCrossentropy cce =
- *        new CategoricalCrossentropy(tf, Reduction.NONE);
- *    Operand&lt;TFloat32&gt; result = cce.call(labels, predictions);
+ *        new CategoricalCrossentropy(Reduction.NONE);
+ *    Operand&lt;TFloat32&gt; result = cce.call(Ops tf, labels, predictions);
  *    // produces [0.0513f, 2.303f]
  * </pre>
  */
-public class CategoricalCrossentropy extends Loss {
+public class CategoricalCrossentropy extends AbstractLoss {
   public static final boolean FROM_LOGITS_DEFAULT = false;
   public static final float LABEL_SMOOTHING_DEFAULT = 0.0f;
   public static final int DEFAULT_AXIS = Losses.CHANNELS_LAST;
@@ -76,98 +77,90 @@ public class CategoricalCrossentropy extends Loss {
   private final int axis;
 
   /**
-   * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
-   * labelSmoothing, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and an axis of {@link
-   * #DEFAULT_AXIS}
-   *
-   * @param tf the TensorFlow Ops
+   * Creates a categorical cross entropy AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name, {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
+   * labelSmoothing, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and an axis
+   * of {@link #DEFAULT_AXIS}
    */
-  public CategoricalCrossentropy(Ops tf) {
-    this(tf, null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy() {
+    this(null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link #FROM_LOGITS_DEFAULT} for fromLogits,
-   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}, and an axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using {@link #FROM_LOGITS_DEFAULT} for
+   * fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a AbstractLoss Reduction of
+   * {@link AbstractLoss#REDUCTION_DEFAULT}, and an axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss
    */
-  public CategoricalCrossentropy(Ops tf, String name) {
-    this(tf, name, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy(String name) {
+    this(name, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
+   * Creates a categorical cross entropy AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name, {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link #LABEL_SMOOTHING_DEFAULT} for
    * labelSmoothing and an axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to loss.
    */
-  public CategoricalCrossentropy(Ops tf, Reduction reduction) {
-    this(tf, null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction, DEFAULT_AXIS);
+  public CategoricalCrossentropy(Reduction reduction) {
+    this(null, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss {@link #FROM_LOGITS_DEFAULT} for fromLogits, {@link
-   * #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, and an axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss {@link #FROM_LOGITS_DEFAULT} for fromLogits,
+   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, and an axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param reduction Type of Reduction to apply to loss.
    */
-  public CategoricalCrossentropy(Ops tf, String name, Reduction reduction) {
-    this(tf, name, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction, DEFAULT_AXIS);
+  public CategoricalCrossentropy(String name, Reduction reduction) {
+    this(name, FROM_LOGITS_DEFAULT, LABEL_SMOOTHING_DEFAULT, reduction, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}, and an axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name, {@link #LABEL_SMOOTHING_DEFAULT} for labelSmoothing, a AbstractLoss Reduction of
+   * {@link AbstractLoss#REDUCTION_DEFAULT}, and an axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public CategoricalCrossentropy(Ops tf, boolean fromLogits) {
-    this(tf, null, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy(boolean fromLogits) {
+    this(null, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link #LABEL_SMOOTHING_DEFAULT} for
-   * labelSmoothing, a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and a channel axis of
-   * {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using {@link #LABEL_SMOOTHING_DEFAULT} for
+   * labelSmoothing, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and a
+   * channel axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
-  public CategoricalCrossentropy(Ops tf, String name, boolean fromLogits) {
-    this(tf, name, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy(String name, boolean fromLogits) {
+    this(name, fromLogits, LABEL_SMOOTHING_DEFAULT, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name,
-   * a Loss Reduction of {@link Loss#REDUCTION_DEFAULT}, and a channel axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and a channel
+   * axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
    *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>labelSmoothing=0.2
    *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
    *     <code>0.9</code> for label <code>1</code>
    */
-  public CategoricalCrossentropy(Ops tf, boolean fromLogits, float labelSmoothing) {
-    this(tf, null, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy(boolean fromLogits, float labelSmoothing) {
+    this(null, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using a Loss Reduction of {@link
-   * Loss#REDUCTION_DEFAULT}, and a channel axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using a AbstractLoss Reduction of {@link
+   * AbstractLoss#REDUCTION_DEFAULT}, and a channel axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
@@ -175,15 +168,14 @@ public class CategoricalCrossentropy extends Loss {
    *     </code> means that we will use a value of <code>0.1</code> for label <code>0</code> and
    *     <code>0.9</code> for label <code>1</code>
    */
-  public CategoricalCrossentropy(Ops tf, String name, boolean fromLogits, float labelSmoothing) {
-    this(tf, name, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
+  public CategoricalCrossentropy(String name, boolean fromLogits, float labelSmoothing) {
+    this(name, fromLogits, labelSmoothing, REDUCTION_DEFAULT, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss using {@link Class#getSimpleName()} as the loss name
-   * and a channel axis of {@link #DEFAULT_AXIS}
+   * Creates a categorical cross entropy AbstractLoss using {@link Class#getSimpleName()} as the
+   * loss name and a channel axis of {@link #DEFAULT_AXIS}
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
    *     smoothed, meaning the confidence on label values are relaxed. e.g. <code>x=0.2</code> means
@@ -191,15 +183,13 @@ public class CategoricalCrossentropy extends Loss {
    *     for label <code>1</code>
    * @param reduction Type of Reduction to apply to loss.
    */
-  public CategoricalCrossentropy(
-      Ops tf, boolean fromLogits, float labelSmoothing, Reduction reduction) {
-    this(tf, null, fromLogits, labelSmoothing, reduction, DEFAULT_AXIS);
+  public CategoricalCrossentropy(boolean fromLogits, float labelSmoothing, Reduction reduction) {
+    this(null, fromLogits, labelSmoothing, reduction, DEFAULT_AXIS);
   }
 
   /**
-   * Creates a categorical cross entropy Loss
+   * Creates a categorical cross entropy AbstractLoss
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param labelSmoothing Float in <code>[0, 1]</code>. When <code>&gt; 0</code>, label values are
@@ -213,13 +203,8 @@ public class CategoricalCrossentropy extends Loss {
    * @throws IllegalArgumentException if labelSmoothing is not in the inclusive range of 0. - 1.
    */
   public CategoricalCrossentropy(
-      Ops tf,
-      String name,
-      boolean fromLogits,
-      float labelSmoothing,
-      Reduction reduction,
-      int axis) {
-    super(tf, name, reduction);
+      String name, boolean fromLogits, float labelSmoothing, Reduction reduction, int axis) {
+    super(name, reduction);
     if (labelSmoothing < 0 || labelSmoothing > 1)
       throw new IllegalArgumentException(
           "labelSmoothing must be >= 0. and <= 1, found " + labelSmoothing);
@@ -251,24 +236,24 @@ public class CategoricalCrossentropy extends Loss {
    */
   @Override
   public <T extends TNumber> Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, Operand<T> sampleWeights) {
+
     Operand<T> lPredictions;
     if (!fromLogits) {
       // add predictions range check for 0 - 1
       lPredictions =
           LossesHelper.rangeCheck(
-              getTF(),
+              tf,
               "predictions range check [0-1]",
               predictions,
-              cast(getTF(), getTF().constant(0), predictions.type()),
-              cast(getTF(), getTF().constant(1), predictions.type()));
+              cast(tf, tf.constant(0), predictions.type()),
+              cast(tf, tf.constant(1), predictions.type()));
 
     } else {
       lPredictions = predictions;
     }
     Operand<T> losses =
-        Losses.categoricalCrossentropy(
-            getTF(), labels, lPredictions, fromLogits, labelSmoothing, axis);
-    return LossesHelper.computeWeightedLoss(getTF(), losses, getReduction(), sampleWeights);
+        Losses.categoricalCrossentropy(tf, labels, lPredictions, fromLogits, labelSmoothing, axis);
+    return LossesHelper.computeWeightedLoss(tf, losses, getReduction(), sampleWeights);
   }
 }

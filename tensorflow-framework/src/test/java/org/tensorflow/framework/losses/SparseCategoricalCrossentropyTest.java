@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -22,8 +24,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SparseCategoricalCrossentropyTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -44,8 +44,9 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0.0f;
         testSession.evaluate(expected, loss);
 
@@ -57,8 +58,9 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new SparseCategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits);
+        instance = new SparseCategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits);
         testSession.evaluate(0.0f, loss);
       }
   }
@@ -75,7 +77,8 @@ public class SparseCategoricalCrossentropyTest {
             catchClass,
             () -> {
               Ops tf = testSession.getTF();
-              SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
+              SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy();
+
               int[] trueArray = {0, 1, 2};
               float[] predArray = {
                 1.9f, .05f, .05f,
@@ -86,7 +89,7 @@ public class SparseCategoricalCrossentropyTest {
                   tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
               Operand<TFloat32> yPred =
                   tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-              Operand<TFloat32> loss = instance.call(yTrue, yPred);
+              Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
               testSession.run(loss);
             });
       }
@@ -98,7 +101,8 @@ public class SparseCategoricalCrossentropyTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
+        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy();
+
         int[] trueArray = {0, 1, 2};
         float[] predArray = {
           .9f, .05f, .05f,
@@ -107,7 +111,7 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 1)));
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred);
         float expected = 0.32396814f;
         testSession.evaluate(expected, loss);
 
@@ -119,8 +123,9 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new SparseCategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits);
+        instance = new SparseCategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits);
         expected = 0.05737559f;
         testSession.evaluate(expected, loss);
       }
@@ -143,8 +148,9 @@ public class SparseCategoricalCrossentropyTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight = tf.constant(2.3f);
 
-        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy();
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = .7451267f;
         testSession.evaluate(expected, loss);
 
@@ -156,8 +162,9 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new SparseCategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits, sampleWeight);
+        instance = new SparseCategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits, sampleWeight);
         expected = 0.13196386f;
         testSession.evaluate(expected, loss);
       }
@@ -168,7 +175,8 @@ public class SparseCategoricalCrossentropyTest {
     for (TestSession.Mode tfMode : tfModes)
       try (TestSession testSession = TestSession.createTestSession(tfMode)) {
         Ops tf = testSession.getTF();
-        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy(tf);
+        SparseCategoricalCrossentropy instance = new SparseCategoricalCrossentropy();
+
         float[] sampleWeightArray = {1.2f, 3.4f, 5.6f};
         int[] trueArray = {0, 1, 2};
         float[] predArray = {
@@ -180,7 +188,7 @@ public class SparseCategoricalCrossentropyTest {
         Operand<TFloat32> yPred = tf.reshape(tf.constant(predArray), tf.constant(Shape.of(3, 3)));
         Operand<TFloat32> sampleWeight =
             tf.reshape(tf.constant(sampleWeightArray), tf.constant(Shape.of(3, 1)));
-        Operand<TFloat32> loss = instance.call(yTrue, yPred, sampleWeight);
+        Operand<TFloat32> loss = instance.call(tf, yTrue, yPred, sampleWeight);
         float expected = 1.0696f;
         testSession.evaluate(expected, loss);
 
@@ -192,8 +200,9 @@ public class SparseCategoricalCrossentropyTest {
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
-        instance = new SparseCategoricalCrossentropy(tf, true);
-        loss = instance.call(yTrue, logits, sampleWeight);
+        instance = new SparseCategoricalCrossentropy(true);
+
+        loss = instance.call(tf, yTrue, logits, sampleWeight);
         expected = 0.31829f;
         testSession.evaluate(expected, loss);
       }
@@ -216,8 +225,9 @@ public class SparseCategoricalCrossentropyTest {
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
         SparseCategoricalCrossentropy instance =
-            new SparseCategoricalCrossentropy(tf, true, Reduction.NONE);
-        Operand<TFloat32> loss = instance.call(yTrue, logits);
+            new SparseCategoricalCrossentropy(true, Reduction.NONE);
+
+        Operand<TFloat32> loss = instance.call(tf, yTrue, logits);
         Float[] expected = {0.001822f, 0.000459f, 0.169846f};
         testSession.evaluate(expected, loss);
       }

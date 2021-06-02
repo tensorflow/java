@@ -1,5 +1,7 @@
 package org.tensorflow.framework.constraints;
 
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.ND;
@@ -9,9 +11,6 @@ import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
-
-import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class MinMaxNormTest {
 
@@ -39,8 +38,8 @@ class MinMaxNormTest {
         for (AtomicInteger i = new AtomicInteger();
             i.get() < testValues.length;
             i.getAndIncrement()) {
-          MinMaxNorm instance = new MinMaxNorm(tf, testValues[i.get()], testValues[i.get()] * 2);
-          Operand<TFloat32> result = instance.call(weights);
+          MinMaxNorm instance = new MinMaxNorm(testValues[i.get()], testValues[i.get()] * 2);
+          Operand<TFloat32> result = instance.call(tf, weights);
           if (tfMode == TestSession.Mode.EAGER)
             evaluate(session, result.asTensor(), testValues[i.get()]);
           else

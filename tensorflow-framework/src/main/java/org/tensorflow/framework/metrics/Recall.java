@@ -14,6 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.ConfusionMatrixEnum;
@@ -25,31 +32,23 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 /**
  * Computes the recall of the predictions with respect to the labels.
  *
- * <p>This metric creates two local variables, {@code truePositives} and {@code falseNegatives
- * }, that are used to compute the recall. This value is ultimately returned as recall, an
- * idempotent operation that simply divides {@code truePositives} by the sum of {@code
- * truePositives} and {@code falseNegatives}.
+ * <p>This metric creates two local variables, {@code truePositives} and {@code falseNegatives },
+ * that are used to compute the recall. This value is ultimately returned as recall, an idempotent
+ * operation that simply divides {@code truePositives} by the sum of {@code truePositives} and
+ * {@code falseNegatives}.
  *
- * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sampleWeights of
- * 0 to mask values.
+ * <p>If {@code sampleWeights} is {@code null}, weights default to 1. Use sampleWeights of 0 to mask
+ * values.
  *
- * <p>If {@code topK} is set, the metric calculates recall as how often on average a class
- * among the labels of a batch entry is in the top-k predictions.
+ * <p>If {@code topK} is set, the metric calculates recall as how often on average a class among the
+ * labels of a batch entry is in the top-k predictions.
  *
- * <p>If {@code classId} is specified, the metric calculates recall by considering only the
- * entries in the batch for which {@code classId} is in the label, and computing the fraction
- * of them for which {@code classId} is above the threshold and/or in the top-k predictions.
+ * <p>If {@code classId} is specified, the metric calculates recall by considering only the entries
+ * in the batch for which {@code classId} is in the label, and computing the fraction of them for
+ * which {@code classId} is above the threshold and/or in the top-k predictions.
  *
  * @param <T> The data type for the metric result
  */
@@ -305,8 +304,8 @@ public class Recall<T extends TNumber> extends Metric<T> {
   /** Initializes the Variables */
   private void init() {
     Ops tf = getTF();
-    Zeros<T> zeros = new Zeros<>(tf);
-    Operand<T> zero = zeros.call(tf.constant(Shape.of(this.thresholds.length)), type);
+    Zeros<T> zeros = new Zeros<>();
+    Operand<T> zero = zeros.call(tf, tf.constant(Shape.of(this.thresholds.length)), type);
     if (truePositives == null) {
 
       truePositives = tf.withName(truePositivesName).variable(zero);

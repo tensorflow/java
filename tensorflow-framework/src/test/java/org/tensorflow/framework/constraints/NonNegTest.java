@@ -17,8 +17,8 @@ class NonNegTest {
         Ops tf = session.getTF();
         float[][] array = {{-1, 2, -3, 4}, {-10, 11, 12, -13}};
         Operand<TFloat32> weights = tf.constant(array);
-        NonNeg instance = new NonNeg(tf);
-        Operand<TFloat32> result = instance.call(weights);
+        NonNeg instance = new NonNeg();
+        Operand<TFloat32> result = instance.call(tf, weights);
         float[] expected = {0, 2, 0, 4, 0, 11, 12, 0};
         session.evaluate(expected, result);
       }
@@ -31,8 +31,8 @@ class NonNegTest {
         Ops tf = session.getTF();
         final double[][] array = {{-1, 2, -3, 4}, {-10, 11, 12, -13}};
         Operand<TFloat64> weights = tf.constant(array);
-        NonNeg instance = new NonNeg(tf);
-        Operand<TFloat64> result = instance.call(weights);
+        NonNeg instance = new NonNeg();
+        Operand<TFloat64> result = instance.call(tf, weights);
         double[] expected = {0, 2, 0, 4, 0, 11, 12, 0};
         session.evaluate(expected, result);
       }

@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.initializers;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.framework.utils.ShapeUtils;
@@ -42,7 +44,7 @@ import org.tensorflow.types.family.TFloating;
  *      Orthogonal&lt;TFloat32, TFloat32&gt; initializer =
  *              new org.tensorflow.framework.initializers.Orthogonal&lt;&gt;(tf);
  *      Operand&lt;TFloat32&gt; values =
- *              initializer.call(tf.constant(Shape.of(2,2)), TFloat32.class);
+ *              initializer.call(Ops tf, tf.constant(Shape.of(2,2)), TFloat32.class);
  * </pre>
  *
  * @param <T> The TType for the call operation
@@ -57,31 +59,30 @@ public class Orthogonal<T extends TFloating> extends BaseInitializer<T> {
   /**
    * Creates an Orthogonal Initializer using {@link #GAIN_DEFAULT} for the gain.
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public Orthogonal(Ops tf, long seed) {
-    this(tf, GAIN_DEFAULT, seed);
+  public Orthogonal(long seed) {
+    this(GAIN_DEFAULT, seed);
   }
 
   /**
    * Creates an Orthogonal Initializer
    *
-   * @param tf the TensorFlow Ops
    * @param gain the gain to be applied to the Matrix.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and dtype.
    */
-  public Orthogonal(Ops tf, double gain, long seed) {
-    super(tf);
+  public Orthogonal(double gain, long seed) {
+    super();
     this.gain = gain;
     this.seed = seed;
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> call(Operand<TInt64> dims, Class<T> type) {
+  public Operand<T> call(Ops tf, Operand<TInt64> dims, Class<T> type) {
+
     Shape dimsShape = ShapeUtils.toShape(tf.scope(), dims);
     if (dimsShape.numDimensions() < 2) {
       throw new IllegalArgumentException(
@@ -101,10 +102,10 @@ public class Orthogonal<T extends TFloating> extends BaseInitializer<T> {
     Output<T> qo = qrOp.q();
     Output<T> ro = qrOp.r();
     Operand<T> diagOp =
-        tf.linalg.matrixDiagPart(ro, tf.constant(0), tf.dtypes.cast(tf.constant(0), type));
+        tf.linalg.matrixDiagPart(ro, tf.constant(0), cast(tf, tf.constant(0), type));
     Operand<T> qop = tf.math.mul(qo, tf.math.sign(diagOp));
     if (numRows < numCols) qop = tf.linalg.transpose(qop, null);
 
-    return tf.math.mul(qop, tf.dtypes.cast(tf.constant(this.gain), type));
+    return tf.math.mul(qop, cast(tf, tf.constant(this.gain), type));
   }
 }

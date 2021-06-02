@@ -14,17 +14,17 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.constraints;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Constrains the weights incident to each hidden unit to have a norm less than or equal to a
  * desired value.
  */
-public class MaxNorm extends Constraint {
+public class MaxNorm extends AbstractConstraint {
   public static final double MAX_VALUE_DEFAULT = 2.0;
   public static final int AXIS_DEFAULT = 0;
 
@@ -36,54 +36,48 @@ public class MaxNorm extends Constraint {
   /**
    * Create a MaxNorm constraint using {@link #MAX_VALUE_DEFAULT} for the max value and {@link
    * #AXIS_DEFAULT} for the axis.
-   *
-   * @param tf the TensorFlow Ops
    */
-  public MaxNorm(Ops tf) {
-    this(tf, MAX_VALUE_DEFAULT, AXIS_DEFAULT);
+  public MaxNorm() {
+    this(MAX_VALUE_DEFAULT, AXIS_DEFAULT);
   }
 
   /**
    * Create a MaxNorm constraint using {@link #AXIS_DEFAULT} for the axis.
    *
-   * @param tf the TensorFlow Ops
    * @param maxValue the maximum norm for the incoming weights.
    */
-  public MaxNorm(Ops tf, double maxValue) {
-    this(tf, maxValue, AXIS_DEFAULT);
+  public MaxNorm(double maxValue) {
+    this(maxValue, AXIS_DEFAULT);
   }
 
   /**
    * Create a MaxNorm constraint
    *
-   * @param tf the TensorFlow Ops
    * @param maxValue the maximum norm for the incoming weights.
    * @param axis axis along which to calculate weight norms.
    */
-  public MaxNorm(Ops tf, double maxValue, int axis) {
-    this(tf, maxValue, new int[] {axis});
+  public MaxNorm(double maxValue, int axis) {
+    this(maxValue, new int[] {axis});
   }
 
   /**
    * Create a MaxNorm constraint
    *
-   * @param tf the TensorFlow Ops
    * @param maxValue the maximum norm for the incoming weights.
    * @param axes axes along which to calculate weight norms.
    */
-  public MaxNorm(Ops tf, double maxValue, int[] axes) {
-    super(tf);
+  public MaxNorm(double maxValue, int[] axes) {
+    super();
     this.maxValue = maxValue;
     this.axes = axes;
   }
 
   /** {@inheritDoc} */
   @Override
-  public <T extends TNumber> Operand<T> call(Operand<T> weights) {
-    Ops tf = getTF();
+  public <T extends TNumber> Operand<T> call(Ops tf, Operand<T> weights) {
     Class<T> type = weights.type();
-    Operand<T> norms = norm(weights, getAxes());
-    Operand<T> desired = clip(norms, 0f, this.getMaxValue());
+    Operand<T> norms = norm(tf, weights, getAxes());
+    Operand<T> desired = clip(tf, norms, 0f, this.getMaxValue());
 
     return tf.math.mul(
         weights, tf.math.div(desired, tf.math.add(cast(tf, tf.constant(EPSILON), type), norms)));
