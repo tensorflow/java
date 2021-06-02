@@ -15,6 +15,11 @@
  */
 package org.tensorflow.framework.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Function;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.data.impl.BatchDataset;
 import org.tensorflow.framework.data.impl.MapDataset;
@@ -27,12 +32,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.function.Function;
 
 /**
  * Represents a potentially large list of independent elements (samples), and allows iteration and

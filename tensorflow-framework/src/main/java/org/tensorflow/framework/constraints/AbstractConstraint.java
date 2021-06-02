@@ -14,12 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.constraints;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Base class for Constraints. AbstractConstraint subclasses impose constraints on weight values */
 public abstract class AbstractConstraint implements Constraint {

@@ -14,16 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.Mean;
 import org.tensorflow.framework.metrics.MetricReduction;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of

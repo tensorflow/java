@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.AbstractLoss;
 import org.tensorflow.framework.losses.impl.LossesHelper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the crossentropy loss between labels and predictions.
@@ -83,8 +83,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
    * name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
-   *
-
    */
   public SparseCategoricalCrossentropy() {
     this(null, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);

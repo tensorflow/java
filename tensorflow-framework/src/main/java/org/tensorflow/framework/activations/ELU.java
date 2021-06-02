@@ -14,12 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.activations;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TFloating;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Exponential linear unit.

@@ -14,11 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.constraints;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Constrains the weights incident to each hidden unit to have a norm less than or equal to a

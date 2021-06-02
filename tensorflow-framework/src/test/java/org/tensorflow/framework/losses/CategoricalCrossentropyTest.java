@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -22,8 +24,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CategoricalCrossentropyTest {
 
@@ -90,11 +90,7 @@ public class CategoricalCrossentropyTest {
                 0L, 1L, 0L,
                 0L, 0L, 1L
               };
-              float[] predArray = {
-                -1.F, 0.F, 0.F,
-                0.F, 1.F, 0.F,
-                0.F, 0.F, 1.F
-              };
+              float[] predArray = {-1.F, 0.F, 0.F, 0.F, 1.F, 0.F, 0.F, 0.F, 1.F};
               Operand<TFloat32> yTrue =
                   tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(3, 3)));
               Operand<TFloat32> yPred =

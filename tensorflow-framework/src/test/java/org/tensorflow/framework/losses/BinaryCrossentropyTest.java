@@ -14,14 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class BinaryCrossentropyTest {
   private final TestSession.Mode[] tfModes = {TestSession.Mode.EAGER, TestSession.Mode.GRAPH};
@@ -43,9 +43,7 @@ public class BinaryCrossentropyTest {
         testSession.evaluate(expected, loss);
         // Test with logits.
         float[] logitsArray = {
-          100.0f, -100.0f, -100.0f,
-          -100.0f, 100.0f, -100.0f,
-          -100.0f, -100.0f, 100.0f
+          100.0f, -100.0f, -100.0f, -100.0f, 100.0f, -100.0f, -100.0f, -100.0f, 100.0f
         };
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(3, 3)));
@@ -101,10 +99,7 @@ public class BinaryCrossentropyTest {
 
         // Test with logits.
         float[] trueArray1 = {1f, 0f, 1f, 0f, 1f, 1f};
-        float[] logitsArray = {
-          100.0f, -100.0f, 100.0f,
-          100.0f, 100.0f, -100.0f
-        };
+        float[] logitsArray = {100.0f, -100.0f, 100.0f, 100.0f, 100.0f, -100.0f};
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
@@ -135,10 +130,7 @@ public class BinaryCrossentropyTest {
 
         // Test with logits.
         float[] trueArray1 = {1f, 0f, 1f, 0f, 1f, 1f};
-        float[] logitsArray = {
-          100.0f, -100.0f, 100.0f,
-          100.0f, 100.0f, -100.0f
-        };
+        float[] logitsArray = {100.0f, -100.0f, 100.0f, 100.0f, 100.0f, -100.0f};
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
@@ -170,10 +162,7 @@ public class BinaryCrossentropyTest {
 
         // Test with logits.
         float[] trueArray1 = {1f, 0f, 1f, 0f, 1f, 1f};
-        float[] logitsArray = {
-          100.0f, -100.0f, 100.0f,
-          100.0f, 100.0f, -100.0f
-        };
+        float[] logitsArray = {100.0f, -100.0f, 100.0f, 100.0f, 100.0f, -100.0f};
         float[] sampleWeightArray1 = {4f, 3f};
         Operand<TFloat32> yTrue1 = tf.reshape(tf.constant(trueArray1), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> logits =
@@ -195,10 +184,7 @@ public class BinaryCrossentropyTest {
 
         // Test with logits.
         float[] trueArray = {1f, 0f, 1f, 0f, 1f, 1f};
-        float[] logitsArray = {
-          100.0f, -100.0f, 100.0f,
-          100.0f, 100.0f, -100.0f
-        };
+        float[] logitsArray = {100.0f, -100.0f, 100.0f, 100.0f, 100.0f, -100.0f};
         Operand<TFloat32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
         Operand<TFloat32> logits =
             tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
