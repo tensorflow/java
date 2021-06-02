@@ -57,6 +57,7 @@ public class L1L2 extends AbstractRegularizer {
   /**
    * Creates an L1L2 regularizer
    *
+   * @param name the name for this regularizer, if null the class name will be used.
    * @param l1 L1 regularization factor, if null it is set to 0.
    * @param l2 L2 regularization factor, if null it is set to 0.
    * @throws IllegalArgumentException if the l1 or l2 regularization factor is {@link Float#isNaN}

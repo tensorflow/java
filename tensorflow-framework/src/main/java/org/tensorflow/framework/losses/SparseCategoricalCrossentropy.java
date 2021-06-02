@@ -84,7 +84,7 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
+
    */
   public SparseCategoricalCrossentropy() {
     this(null, FROM_LOGITS_DEFAULT, REDUCTION_DEFAULT, AXIS_DEFAULT);
@@ -104,7 +104,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
    * name, with Reduction.AUTO and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param reduction Type of Reduction to apply to loss.
    */
   public SparseCategoricalCrossentropy(Reduction reduction) {
@@ -115,7 +114,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * Creates a SparseCategoricalCrossentropy loss with Reduction.AUTO and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss function
    * @param reduction Type of Reduction to apply to loss.
    */
@@ -127,7 +125,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * Creates a SparseCategoricalCrossentropy using a AbstractLoss Reduction of {@link
    * AbstractLoss#REDUCTION_DEFAULT}, and fromLogits={@link #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss function
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
@@ -140,7 +137,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * name, a AbstractLoss Reduction of {@link AbstractLoss#REDUCTION_DEFAULT} and fromLogits={@link
    * #FROM_LOGITS_DEFAULT}.
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    */
   public SparseCategoricalCrossentropy(boolean fromLogits) {
@@ -151,7 +147,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * Creates a SparseCategoricalCrossentropy loss using {@link Class#getSimpleName()} as the loss
    * name,
    *
-   * @param tf the TensorFlow Ops
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param reduction Type of Reduction to apply to loss.
    */
@@ -162,7 +157,6 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
   /**
    * Creates a SparseCategoricalCrossentropy
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this loss function
    * @param fromLogits Whether to interpret predictions as a tensor of logit values
    * @param reduction Type of Reduction to apply to loss.
@@ -184,6 +178,7 @@ public class SparseCategoricalCrossentropy extends AbstractLoss {
    * range o [0. to 1.]. In Eager Mode, this call will throw {@link IllegalArgumentException}, if
    * the predictions values are outside the range o [0. to 1.]
    *
+   * @param tf the TensorFlow Ops
    * @param labels the truth values or labels
    * @param predictions the predictions, values must be in the range [0. to 1.] inclusive.
    * @param sampleWeights Optional SampleWeights acts as a coefficient for the loss. If a scalar is

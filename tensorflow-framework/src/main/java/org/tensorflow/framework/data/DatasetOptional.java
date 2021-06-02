@@ -31,6 +31,10 @@ import org.tensorflow.types.family.TType;
 public class DatasetOptional {
   protected Ops tf;
 
+  /**
+   * Gets the optional variant for this Dataset
+   * @return the optional variant for this Dataset
+   */
   public Operand<?> getOptionalVariant() {
     return optionalVariant;
   }
@@ -39,6 +43,13 @@ public class DatasetOptional {
   private List<Class<? extends TType>> outputTypes;
   private List<Shape> outputShapes;
 
+  /**
+   * Creates a DatasetOptional dataset
+   * @param tf the TensorFlow Ops
+   * @param optionalVariant the tensor that represents the dataset.
+   * @param outputTypes a list of output types produced by this data set.
+   * @param outputShapes a list of output shapes produced by this data set.
+   */
   public DatasetOptional(
       Ops tf, Operand<?> optionalVariant, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     this.tf = tf;
@@ -47,6 +58,11 @@ public class DatasetOptional {
     this.outputShapes = outputShapes;
   }
 
+  /**
+   * Creates a Dataset that is a copy of another Dataset
+   *
+   * @param other the other Dataset
+   */
   protected DatasetOptional(DatasetOptional other) {
     this.tf = other.tf;
     this.optionalVariant = other.optionalVariant;
@@ -56,12 +72,16 @@ public class DatasetOptional {
 
 
 
-  /** Whether this optional has a value. */
+  /** Gets the indicator of whether this optional has a value.
+   * @return the indicator of whether this optional has a value.
+   */
   public Operand<TBool> hasValue() {
     return tf.data.optionalHasValue(optionalVariant).hasValue();
   }
 
-  /** Returns the value of the dataset element represented by this optional, if it exists. */
+  /** Returns the value of the dataset element represented by this optional, if it exists.
+   * @return  the value of the dataset element represented by this optional, if it exists.
+   */
   public List<Operand<?>> getValue() {
     List<Operand<?>> components = new ArrayList<>();
     tf.data
@@ -72,6 +92,14 @@ public class DatasetOptional {
     return components;
   }
 
+  /**
+   * Creates a DatasetOptional from components.
+   * @param tf the TensorFlow Ops
+   * @param components the components that constitute the DatasetOptional
+   * @param outputTypes a list of output types produced by this data set.
+   * @param outputShapes a list of output shapes produced by this data set.
+   * @return a a DatasetOptional
+   */
   public static DatasetOptional fromComponents(
       Ops tf,
       List<Operand<?>> components,
@@ -81,6 +109,11 @@ public class DatasetOptional {
     return new DatasetOptional(tf, optionalVariant, outputTypes, outputShapes);
   }
 
+  /**
+   * Gets the TensorFlow Ops instance for this dataset
+   *
+   * @return the TensorFlow Ops instance for this dataset
+   */
   public Ops getOpsInstance() {
     return tf;
   }
