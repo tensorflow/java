@@ -507,15 +507,14 @@ public class SavedModelBundle implements AutoCloseable {
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
       // load the session
-      TF_Graph graph = TF_NewGraph();
+      TF_Graph graph = TF_Graph.newGraph();
       TF_Buffer metagraphDef = TF_Buffer.newBuffer();
       TF_Session session =
-          TF_LoadSessionFromSavedModel(
+          TF_Session.loadSessionFromSavedModel(
               opts,
               runOpts,
-              new BytePointer(exportDir),
-              new PointerPointer(tags),
-              tags.length,
+              exportDir,
+              tags,
               graph,
               metagraphDef,
               status);
@@ -525,6 +524,10 @@ public class SavedModelBundle implements AutoCloseable {
       try {
         bundle =
             fromHandle(graph, session, MetaGraphDef.parseFrom(metagraphDef.dataAsByteBuffer()));
+        // Only retain the references if the metagraphdef parses correctly,
+        // otherwise allow the pointer scope to clean them up
+        graph.retainReference();
+        session.retainReference();
       } catch (InvalidProtocolBufferException e) {
         throw new TensorFlowException("Cannot parse MetaGraphDef protocol buffer", e);
       }
