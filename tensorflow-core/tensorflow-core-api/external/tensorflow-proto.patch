@@ -76,6 +76,17 @@ diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/protobuf/trackable_object_graph.p
  
  // A TensorBundle addition which saves extra information about the objects which
  // own variables, allowing for more robust checkpoint loading into modified
+ diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/protobuf/transport_options.proto tensorflow-2.5.0-rc1-proto/tensorflow/core/protobuf/transport_options.proto
+ --- tensorflow-2.5.0-rc1/tensorflow/core/protobuf/transport_options.proto	2021-01-21 09:25:54.000000000 +0900
+ +++ tensorflow-2.5.0-rc1-proto/tensorflow/core/protobuf/transport_options.proto	2021-02-08 09:42:56.660650580 +0900
+ @@ -3,6 +3,7 @@
+  package tensorflow;
+
+  option go_package = "github.com/tensorflow/tensorflow/tensorflow/go/core/protobuf/for_core_protos_go_proto";
+ +option java_package = "org.tensorflow.distruntime";
+
+  // Extra data needed on a non-RDMA RecvBufResponse.
+  message RecvBufRespExtra {
 diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/lib/core/error_codes.proto tensorflow-2.5.0-rc1-proto/tensorflow/core/lib/core/error_codes.proto
 --- tensorflow-2.5.0-rc1/tensorflow/core/lib/core/error_codes.proto	2021-04-13 01:43:40.000000000 +0900
 +++ tensorflow-2.5.0-rc1-proto/tensorflow/core/lib/core/error_codes.proto	2021-04-27 10:19:52.003448629 +0900
@@ -135,3 +146,58 @@ diff -ruN tensorflow-2.5.0-rc1/tensorflow/core/protobuf/service_config.proto ten
  
  // Configuration for a tf.data service DispatchServer.
  message DispatcherConfig {
+diff --git a/tensorflow/core/framework/dataset_options.proto b/tensorflow/core/framework/dataset_options.proto
+index 3d71a560956..4c427640148 100644
+--- a/tensorflow/core/framework/dataset_options.proto
++++ b/tensorflow/core/framework/dataset_options.proto
+@@ -2,6 +2,10 @@ syntax = "proto3";
+ 
+ package tensorflow.data;
+ 
++option java_outer_classname = "DatasetOptionsProtos";
++option java_multiple_files = true;
++option java_package = "org.tensorflow.data";
++
+ // Represents the type of auto-sharding we enable.
+ enum AutoShardPolicy {
+   // AUTO: Attempts FILE-based sharding, falling back to DATA-based sharding.
+diff --git a/tensorflow/core/framework/model.proto b/tensorflow/core/framework/model.proto
+index ba74d7a2b7e..721dee57867 100644
+--- a/tensorflow/core/framework/model.proto
++++ b/tensorflow/core/framework/model.proto
+@@ -3,6 +3,9 @@ syntax = "proto3";
+ package tensorflow.data.model;
+ 
+ option cc_enable_arenas = true;
++option java_outer_classname = "ModelProtos";
++option java_multiple_files = true;
++option java_package = "org.tensorflow.data.model";
+ 
+ // Class of a node in the performance model.
+ enum NodeClass {
+diff --git a/tensorflow/core/grappler/costs/op_performance_data.proto b/tensorflow/core/grappler/costs/op_performance_data.proto
+index 5ef5fd927b8..7c9a6ca2141 100644
+--- a/tensorflow/core/grappler/costs/op_performance_data.proto
++++ b/tensorflow/core/grappler/costs/op_performance_data.proto
+@@ -17,6 +17,9 @@ syntax = "proto3";
+ 
+ package tensorflow;
+ option cc_enable_arenas = true;
++option java_outer_classname = "OpPerformanceDataProtos";
++option java_multiple_files = true;
++option java_package = "org.tensorflow.framework";
+ 
+ import "tensorflow/core/framework/tensor.proto";
+ import "tensorflow/core/framework/tensor_shape.proto";
+diff --git a/tensorflow/core/protobuf/extension_type_variant.proto b/tensorflow/core/protobuf/extension_type_variant.proto
+index 536db3b2435..88c4701b505 100644
+--- a/tensorflow/core/protobuf/extension_type_variant.proto
++++ b/tensorflow/core/protobuf/extension_type_variant.proto
+@@ -3,6 +3,7 @@ syntax = "proto3";
+ package tensorflow;
+ 
+ import "tensorflow/core/protobuf/struct.proto";
++option java_package = "org.tensorflow.framework";
+ 
+ // Metadata for ExtensionTypeVariant, used when serializing as Variant.
+ //
