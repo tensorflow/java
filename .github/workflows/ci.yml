@@ -62,7 +62,7 @@ jobs:
           export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
           echo $JAVA_HOME
           mvn -version
-          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true
+          mvn clean install -Pdev,jdk11 -B -U -e -Dlint.skip=true -Dmaven.test.skip=true
       - name: Run format checks
         run: |
           mvn spotless:check -Pdev,jdk11 -B -U -e
