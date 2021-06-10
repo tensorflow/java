@@ -89,7 +89,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        ext: ["", -mkl, -gpu] #, -mkl-gpu]
+        ext: ["", -gpu] #, -mkl, -mkl-gpu]
     steps:
       - name: Install environment
         run: |
@@ -153,7 +153,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        ext: ["", -mkl]
+        ext: [""] # , -mkl]
     steps:
       - name: Install environment
         run: |
@@ -189,7 +189,7 @@ jobs:
     needs: prepare
     strategy:
        matrix:
-         ext: ["", -gpu, -mkl] #, -mkl-gpu]
+         ext: ["", -gpu] #, -mkl, -mkl-gpu]
     steps:
       - name: Configure page file
         uses: al-cheb/configure-pagefile-action@v1.2
