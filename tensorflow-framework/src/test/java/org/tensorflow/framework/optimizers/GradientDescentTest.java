@@ -4,10 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
@@ -36,20 +32,6 @@ import org.tensorflow.types.family.TType;
 /** Test cases for GradientDescent Optimizer */
 public class GradientDescentTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
-
-  public GradientDescentTest() {}
-
-  @BeforeAll
-  public static void setUpClass() {}
-
-  @AfterAll
-  public static void tearDownClass() {}
-
-  @BeforeEach
-  public void setUp() {}
-
-  @AfterEach
-  public void tearDown() {}
 
   /** Test of getOptimizerName method, of class Nadam. */
   @Test
@@ -163,7 +145,7 @@ public class GradientDescentTest {
           tf.withName("output").placeholder(TFloat32.class, Placeholder.shape(Shape.of(-1, 2)));
       Mean<TFloat32> loss =
           tf.math.mean(
-              tf.nn.raw.softmaxCrossEntropyWithLogits(output, placeholder).loss(), tf.constant(0));
+              tf.nn.softmaxCrossEntropyWithLogits(output, placeholder).loss(), tf.constant(0));
       lossName = loss.op().name();
 
       GradientDescent gd = new GradientDescent(g, 10.0f);

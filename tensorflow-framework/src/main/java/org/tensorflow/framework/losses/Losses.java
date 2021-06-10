@@ -14,9 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceAll;
@@ -27,8 +30,6 @@ import org.tensorflow.op.math.Softplus;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Built-in loss functions. */
 public class Losses {
@@ -181,7 +182,10 @@ public class Losses {
    */
   private static <T extends TNumber> Operand<T> binaryCrossentropyHelper(
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
-    if (fromLogits) return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
+    FrameworkOps fop = FrameworkOps.create(tf);
+    if (fromLogits) {
+      return fop.nn.sigmoidCrossEntropyWithLogits(target, output);
+    }
 
     /* TODO - skip this logic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {
@@ -191,7 +195,7 @@ public class Losses {
       // TODO   if (output.op().numInputess() != 1)
       // TODO     throw new IllegalArgumentException("output can only have 1 output");
       // TODO   output = output.op().inout(0);
-       // TODO   return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
+       // TODO   return fop.nn.sigmoidCrossEntropyWithLogits(target, output);
       // TODO}
     }
     */
@@ -235,6 +239,7 @@ public class Losses {
       boolean fromLogits,
       float labelSmoothing,
       int axis) {
+    FrameworkOps fop = FrameworkOps.create(tf);
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -245,7 +250,7 @@ public class Losses {
       tLabels = smoothCategoricalLabels(tf, tLabels, labelSmoothing);
     }
     if (fromLogits) {
-      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
+      return fop.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
     }
     /* TODO
     if (!(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
@@ -255,7 +260,7 @@ public class Losses {
         if (predictions.op().numOutputs() != 1)
           throw new IllegalArgumentException("output can only have 1 output");
         predictions = predictions.op().output(0);
-        return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
+        return fop.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, -1);
       }
     }
     */
@@ -334,13 +339,14 @@ public class Losses {
    */
   public static <T extends TNumber> Operand<T> cosineSimilarity(
       Ops tf, Operand<? extends TNumber> labels, Operand<T> predictions, int[] axis) {
+    FrameworkOps fops = FrameworkOps.create(tf);
     Operand<T> tLabels = cast(tf, labels, predictions.type());
     LossTuple<T> lossTuple = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
     predictions = lossTuple.getTarget();
     tLabels = lossTuple.getLabels();
 
-    tLabels = l2Normalize(tf, tLabels, axis);
-    predictions = l2Normalize(tf, predictions, axis);
+    tLabels = fops.math.l2Normalize(tLabels, axis);
+    predictions = fops.math.l2Normalize(predictions, axis);
     Operand<T> mathMul = tf.math.mul(tLabels, predictions);
     return tf.reduceSum(mathMul, tf.constant(axis), ReduceSum.keepDims(Boolean.FALSE));
   }
@@ -516,6 +522,7 @@ public class Losses {
       boolean fromLogits,
       int axis) {
     Class<T> predictionType = predictions.type();
+    FrameworkOps fop = FrameworkOps.create(tf);
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
     Operand<T> oneMinusEpsilonConst = tf.math.sub(one, epsilonConst);
@@ -569,8 +576,7 @@ public class Losses {
                   new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
     }
 
-    @SuppressWarnings("unchecked")
-    Operand<T> loss = tf.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
+    Operand<T> loss = fop.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
     if (updateShape && predictionsRank >= 3) {
       Shape newShape = predictionsShape.take(predictionsShape.numDimensions() - 1);
       loss = tf.reshape(loss, tf.constant(newShape));
@@ -646,24 +652,6 @@ public class Losses {
     Operand<T> numClasses = cast(tf, tf.constant(labelsShape.size(numDims - 1)), labelType);
     Operand<T> oneMinusSmoothing = cast(tf, tf.constant(1.f - labelSmoothing), labelType);
     return tf.math.add(tf.math.mul(labels, oneMinusSmoothing), tf.math.div(smoothing, numClasses));
-  }
-
-  // TODO this was tf.math.l2_normalize in TF Python
-  /**
-   * Normalizes along dimension axis using an L2 norm.
-   *
-   * @param tf The TensorFlow Ops
-   * @param x the input
-   * @param axis Dimension along which to normalize.
-   * @param <T> the data type for the input and the result
-   * @return the normalized values based on L2 norm
-   */
-  public static <T extends TNumber> Operand<T> l2Normalize(Ops tf, Operand<T> x, int[] axis) {
-    Operand<T> squareSum =
-        tf.reduceSum(tf.math.square(x), tf.constant(axis), ReduceSum.keepDims(Boolean.TRUE));
-    Operand<T> invNorm =
-        tf.math.rsqrt(tf.math.maximum(squareSum, cast(tf, tf.constant(1e-12F), x.type())));
-    return tf.math.mul(x, invNorm);
   }
 
   /**
