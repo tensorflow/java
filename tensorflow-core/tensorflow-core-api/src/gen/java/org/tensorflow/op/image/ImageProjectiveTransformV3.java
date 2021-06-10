@@ -93,7 +93,7 @@ public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp i
   /**
    * Sets the fillMode option.
    *
-   * @param fillMode Fill mode, &quot;REFLECT&quot;, &quot;WRAP&quot;, or &quot;CONSTANT&quot;.
+   * @param fillMode Fill mode, &quot;REFLECT&quot;, &quot;WRAP&quot;, &quot;CONSTANT&quot;, or &quot;NEAREST&quot;.
    * @return this Options instance.
    */
   public static Options fillMode(String fillMode) {
@@ -127,7 +127,7 @@ public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp i
     /**
      * Sets the fillMode option.
      *
-     * @param fillMode Fill mode, &quot;REFLECT&quot;, &quot;WRAP&quot;, or &quot;CONSTANT&quot;.
+     * @param fillMode Fill mode, &quot;REFLECT&quot;, &quot;WRAP&quot;, &quot;CONSTANT&quot;, or &quot;NEAREST&quot;.
      * @return this Options instance.
      */
     public Options fillMode(String fillMode) {

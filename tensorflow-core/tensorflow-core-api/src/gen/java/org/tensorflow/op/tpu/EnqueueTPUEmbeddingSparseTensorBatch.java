@@ -111,6 +111,13 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
           }
           opBuilder.setAttr("max_sequence_lengths", maxSequenceLengthsArray);
         }
+        if (opts.numFeatures != null) {
+          long[] numFeaturesArray = new long[opts.numFeatures.size()];
+          for (int i = 0 ; i < numFeaturesArray.length ; i++) {
+            numFeaturesArray[i] = opts.numFeatures.get(i);
+          }
+          opBuilder.setAttr("num_features", numFeaturesArray);
+        }
       }
     }
     return new EnqueueTPUEmbeddingSparseTensorBatch(opBuilder.build());
@@ -178,6 +185,26 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
   }
 
   /**
+   * Sets the numFeatures option.
+   *
+   * @param numFeatures the numFeatures option
+   * @return this Options instance.
+   */
+  public static Options numFeatures(List<Long> numFeatures) {
+    return new Options().numFeatures(numFeatures);
+  }
+
+  /**
+   * Sets the numFeatures option.
+   *
+   * @param numFeatures the numFeatures option
+   * @return this Options instance.
+   */
+  public static Options numFeatures(Long[] numFeatures) {
+    return new Options().numFeatures(numFeatures);
+  }
+
+  /**
    * Optional attributes for {@link org.tensorflow.op.tpu.EnqueueTPUEmbeddingSparseTensorBatch}
    */
   public static class Options {
@@ -186,6 +213,8 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
     private List<String> combiners;
 
     private List<Long> maxSequenceLengths;
+
+    private List<Long> numFeatures;
 
     private Options() {
     }
@@ -253,6 +282,28 @@ public final class EnqueueTPUEmbeddingSparseTensorBatch extends RawOp {
      */
     public Options maxSequenceLengths(Long... maxSequenceLengths) {
       this.maxSequenceLengths = Arrays.asList(maxSequenceLengths);
+      return this;
+    }
+
+    /**
+     * Sets the numFeatures option.
+     *
+     * @param numFeatures the numFeatures option
+     * @return this Options instance.
+     */
+    public Options numFeatures(List<Long> numFeatures) {
+      this.numFeatures = numFeatures;
+      return this;
+    }
+
+    /**
+     * Sets the numFeatures option.
+     *
+     * @param numFeatures the numFeatures option
+     * @return this Options instance.
+     */
+    public Options numFeatures(Long... numFeatures) {
+      this.numFeatures = Arrays.asList(numFeatures);
       return this;
     }
   }

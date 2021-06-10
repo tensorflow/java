@@ -21,7 +21,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private FunctionSpec() {
-    experimentalCompile_ = 0;
+    jitCompile_ = 0;
   }
 
   @java.lang.Override
@@ -88,7 +88,7 @@ private static final long serialVersionUID = 0L;
           case 48: {
             int rawValue = input.readEnum();
 
-            experimentalCompile_ = rawValue;
+            jitCompile_ = rawValue;
             break;
           }
           default: {
@@ -133,9 +133,9 @@ private static final long serialVersionUID = 0L;
    * See `tf.function` for details.
    * </pre>
    *
-   * Protobuf enum {@code tensorflow.FunctionSpec.ExperimentalCompile}
+   * Protobuf enum {@code tensorflow.FunctionSpec.JitCompile}
    */
-  public enum ExperimentalCompile
+  public enum JitCompile
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
      * <code>DEFAULT = 0;</code>
@@ -178,11 +178,11 @@ private static final long serialVersionUID = 0L;
      * @deprecated Use {@link #forNumber(int)} instead.
      */
     @java.lang.Deprecated
-    public static ExperimentalCompile valueOf(int value) {
+    public static JitCompile valueOf(int value) {
       return forNumber(value);
     }
 
-    public static ExperimentalCompile forNumber(int value) {
+    public static JitCompile forNumber(int value) {
       switch (value) {
         case 0: return DEFAULT;
         case 1: return ON;
@@ -191,15 +191,15 @@ private static final long serialVersionUID = 0L;
       }
     }
 
-    public static com.google.protobuf.Internal.EnumLiteMap<ExperimentalCompile>
+    public static com.google.protobuf.Internal.EnumLiteMap<JitCompile>
         internalGetValueMap() {
       return internalValueMap;
     }
     private static final com.google.protobuf.Internal.EnumLiteMap<
-        ExperimentalCompile> internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<ExperimentalCompile>() {
-            public ExperimentalCompile findValueByNumber(int number) {
-              return ExperimentalCompile.forNumber(number);
+        JitCompile> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<JitCompile>() {
+            public JitCompile findValueByNumber(int number) {
+              return JitCompile.forNumber(number);
             }
           };
 
@@ -216,9 +216,9 @@ private static final long serialVersionUID = 0L;
       return org.tensorflow.proto.framework.FunctionSpec.getDescriptor().getEnumTypes().get(0);
     }
 
-    private static final ExperimentalCompile[] VALUES = values();
+    private static final JitCompile[] VALUES = values();
 
-    public static ExperimentalCompile valueOf(
+    public static JitCompile valueOf(
         com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
       if (desc.getType() != getDescriptor()) {
         throw new java.lang.IllegalArgumentException(
@@ -232,11 +232,11 @@ private static final long serialVersionUID = 0L;
 
     private final int value;
 
-    private ExperimentalCompile(int value) {
+    private JitCompile(int value) {
       this.value = value;
     }
 
-    // @@protoc_insertion_point(enum_scope:tensorflow.FunctionSpec.ExperimentalCompile)
+    // @@protoc_insertion_point(enum_scope:tensorflow.FunctionSpec.JitCompile)
   }
 
   public static final int FULLARGSPEC_FIELD_NUMBER = 1;
@@ -318,21 +318,21 @@ private static final long serialVersionUID = 0L;
     return getInputSignature();
   }
 
-  public static final int EXPERIMENTAL_COMPILE_FIELD_NUMBER = 6;
-  private int experimentalCompile_;
+  public static final int JIT_COMPILE_FIELD_NUMBER = 6;
+  private int jitCompile_;
   /**
-   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
    */
-  public int getExperimentalCompileValue() {
-    return experimentalCompile_;
+  public int getJitCompileValue() {
+    return jitCompile_;
   }
   /**
-   * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+   * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
    */
-  public org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile getExperimentalCompile() {
+  public org.tensorflow.proto.framework.FunctionSpec.JitCompile getJitCompile() {
     @SuppressWarnings("deprecation")
-    org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile result = org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.valueOf(experimentalCompile_);
-    return result == null ? org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.UNRECOGNIZED : result;
+    org.tensorflow.proto.framework.FunctionSpec.JitCompile result = org.tensorflow.proto.framework.FunctionSpec.JitCompile.valueOf(jitCompile_);
+    return result == null ? org.tensorflow.proto.framework.FunctionSpec.JitCompile.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -358,8 +358,8 @@ private static final long serialVersionUID = 0L;
     if (inputSignature_ != null) {
       output.writeMessage(5, getInputSignature());
     }
-    if (experimentalCompile_ != org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.DEFAULT.getNumber()) {
-      output.writeEnum(6, experimentalCompile_);
+    if (jitCompile_ != org.tensorflow.proto.framework.FunctionSpec.JitCompile.DEFAULT.getNumber()) {
+      output.writeEnum(6, jitCompile_);
     }
     unknownFields.writeTo(output);
   }
@@ -382,9 +382,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, getInputSignature());
     }
-    if (experimentalCompile_ != org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.DEFAULT.getNumber()) {
+    if (jitCompile_ != org.tensorflow.proto.framework.FunctionSpec.JitCompile.DEFAULT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(6, experimentalCompile_);
+        .computeEnumSize(6, jitCompile_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -413,7 +413,7 @@ private static final long serialVersionUID = 0L;
       if (!getInputSignature()
           .equals(other.getInputSignature())) return false;
     }
-    if (experimentalCompile_ != other.experimentalCompile_) return false;
+    if (jitCompile_ != other.jitCompile_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -436,8 +436,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + INPUT_SIGNATURE_FIELD_NUMBER;
       hash = (53 * hash) + getInputSignature().hashCode();
     }
-    hash = (37 * hash) + EXPERIMENTAL_COMPILE_FIELD_NUMBER;
-    hash = (53 * hash) + experimentalCompile_;
+    hash = (37 * hash) + JIT_COMPILE_FIELD_NUMBER;
+    hash = (53 * hash) + jitCompile_;
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -590,7 +590,7 @@ private static final long serialVersionUID = 0L;
         inputSignature_ = null;
         inputSignatureBuilder_ = null;
       }
-      experimentalCompile_ = 0;
+      jitCompile_ = 0;
 
       return this;
     }
@@ -629,7 +629,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.inputSignature_ = inputSignatureBuilder_.build();
       }
-      result.experimentalCompile_ = experimentalCompile_;
+      result.jitCompile_ = jitCompile_;
       onBuilt();
       return result;
     }
@@ -687,8 +687,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasInputSignature()) {
         mergeInputSignature(other.getInputSignature());
       }
-      if (other.experimentalCompile_ != 0) {
-        setExperimentalCompileValue(other.getExperimentalCompileValue());
+      if (other.jitCompile_ != 0) {
+        setJitCompileValue(other.getJitCompileValue());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1063,47 +1063,47 @@ private static final long serialVersionUID = 0L;
       return inputSignatureBuilder_;
     }
 
-    private int experimentalCompile_ = 0;
+    private int jitCompile_ = 0;
     /**
-     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
      */
-    public int getExperimentalCompileValue() {
-      return experimentalCompile_;
+    public int getJitCompileValue() {
+      return jitCompile_;
     }
     /**
-     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
      */
-    public Builder setExperimentalCompileValue(int value) {
-      experimentalCompile_ = value;
+    public Builder setJitCompileValue(int value) {
+      jitCompile_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
      */
-    public org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile getExperimentalCompile() {
+    public org.tensorflow.proto.framework.FunctionSpec.JitCompile getJitCompile() {
       @SuppressWarnings("deprecation")
-      org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile result = org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.valueOf(experimentalCompile_);
-      return result == null ? org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile.UNRECOGNIZED : result;
+      org.tensorflow.proto.framework.FunctionSpec.JitCompile result = org.tensorflow.proto.framework.FunctionSpec.JitCompile.valueOf(jitCompile_);
+      return result == null ? org.tensorflow.proto.framework.FunctionSpec.JitCompile.UNRECOGNIZED : result;
     }
     /**
-     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
      */
-    public Builder setExperimentalCompile(org.tensorflow.proto.framework.FunctionSpec.ExperimentalCompile value) {
+    public Builder setJitCompile(org.tensorflow.proto.framework.FunctionSpec.JitCompile value) {
       if (value == null) {
         throw new NullPointerException();
       }
       
-      experimentalCompile_ = value.getNumber();
+      jitCompile_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>.tensorflow.FunctionSpec.ExperimentalCompile experimental_compile = 6;</code>
+     * <code>.tensorflow.FunctionSpec.JitCompile jit_compile = 6;</code>
      */
-    public Builder clearExperimentalCompile() {
+    public Builder clearJitCompile() {
       
-      experimentalCompile_ = 0;
+      jitCompile_ = 0;
       onChanged();
       return this;
     }

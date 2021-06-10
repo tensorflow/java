@@ -102,9 +102,10 @@
       </activation>
       <modules>
         <module>tensorflow-core-platform</module>
-        <module>tensorflow-core-platform-mkl</module>
-        <module>tensorflow-core-platform-mkl-gpu</module>
         <module>tensorflow-core-platform-gpu</module>
+        <!-- Disabling MKL builds until they are more stable and performant -->
+        <!--module>tensorflow-core-platform-mkl</module-->
+        <!--module>tensorflow-core-platform-mkl-gpu</module-->
       </modules>
     </profile>
 

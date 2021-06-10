@@ -75,7 +75,6 @@ public interface GraphDefOrBuilder extends
 
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.
@@ -104,7 +103,6 @@ public interface GraphDefOrBuilder extends
   boolean hasLibrary();
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.
@@ -133,7 +131,6 @@ public interface GraphDefOrBuilder extends
   org.tensorflow.proto.framework.FunctionDefLibrary getLibrary();
   /**
    * <pre>
-   * EXPERIMENTAL. DO NOT USE OR DEPEND ON THIS YET.
    * "library" provides user-defined functions.
    * Naming:
    *   * library.function.name are in a flat namespace.

@@ -28,7 +28,7 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * Computes softplus: {@code log(exp(features) + 1)}.
+ * The Softplus operation
  *
  * @param <T> data type for {@code activations} output
  */

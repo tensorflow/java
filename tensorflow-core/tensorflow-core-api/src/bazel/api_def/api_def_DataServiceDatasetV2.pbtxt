@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "DataServiceDatasetV2"
+  endpoint {
+    name: "rawops.DataServiceDatasetV2"
+  }
+}

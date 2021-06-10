@@ -326,6 +326,50 @@ private static final long serialVersionUID = 0L;
 
     /**
      * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> 
+        getHandleDataList();
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape getHandleData(int index);
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    int getHandleDataCount();
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    java.util.List<? extends org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder> 
+        getHandleDataOrBuilderList();
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder getHandleDataOrBuilder(
+        int index);
+
+    /**
+     * <pre>
      * For inputs: if true, the inputs are required to be refs.
      *   By default, inputs can be either refs or non-refs.
      * For outputs: if true, outputs are refs, otherwise they are not.
@@ -358,6 +402,7 @@ private static final long serialVersionUID = 0L;
       typeAttr_ = "";
       numberAttr_ = "";
       typeListAttr_ = "";
+      handleData_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -380,6 +425,7 @@ private static final long serialVersionUID = 0L;
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -426,6 +472,15 @@ private static final long serialVersionUID = 0L;
               typeListAttr_ = s;
               break;
             }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                handleData_ = new java.util.ArrayList<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              handleData_.add(
+                  input.readMessage(org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.parser(), extensionRegistry));
+              break;
+            }
             case 128: {
 
               isRef_ = input.readBool();
@@ -446,6 +501,9 @@ private static final long serialVersionUID = 0L;
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          handleData_ = java.util.Collections.unmodifiableList(handleData_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -718,6 +776,61 @@ private static final long serialVersionUID = 0L;
       }
     }
 
+    public static final int HANDLE_DATA_FIELD_NUMBER = 7;
+    private java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> handleData_;
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    public java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> getHandleDataList() {
+      return handleData_;
+    }
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    public java.util.List<? extends org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder> 
+        getHandleDataOrBuilderList() {
+      return handleData_;
+    }
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    public int getHandleDataCount() {
+      return handleData_.size();
+    }
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape getHandleData(int index) {
+      return handleData_.get(index);
+    }
+    /**
+     * <pre>
+     * The handle data for resource inputs.
+     * </pre>
+     *
+     * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+     */
+    public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder getHandleDataOrBuilder(
+        int index) {
+      return handleData_.get(index);
+    }
+
     public static final int IS_REF_FIELD_NUMBER = 16;
     private boolean isRef_;
     /**
@@ -765,6 +878,9 @@ private static final long serialVersionUID = 0L;
       if (!getTypeListAttrBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, typeListAttr_);
       }
+      for (int i = 0; i < handleData_.size(); i++) {
+        output.writeMessage(7, handleData_.get(i));
+      }
       if (isRef_ != false) {
         output.writeBool(16, isRef_);
       }
@@ -796,6 +912,10 @@ private static final long serialVersionUID = 0L;
       if (!getTypeListAttrBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, typeListAttr_);
       }
+      for (int i = 0; i < handleData_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, handleData_.get(i));
+      }
       if (isRef_ != false) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(16, isRef_);
@@ -826,6 +946,8 @@ private static final long serialVersionUID = 0L;
           .equals(other.getNumberAttr())) return false;
       if (!getTypeListAttr()
           .equals(other.getTypeListAttr())) return false;
+      if (!getHandleDataList()
+          .equals(other.getHandleDataList())) return false;
       if (getIsRef()
           != other.getIsRef()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -851,6 +973,10 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getNumberAttr().hashCode();
       hash = (37 * hash) + TYPE_LIST_ATTR_FIELD_NUMBER;
       hash = (53 * hash) + getTypeListAttr().hashCode();
+      if (getHandleDataCount() > 0) {
+        hash = (37 * hash) + HANDLE_DATA_FIELD_NUMBER;
+        hash = (53 * hash) + getHandleDataList().hashCode();
+      }
       hash = (37 * hash) + IS_REF_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getIsRef());
@@ -986,6 +1112,7 @@ private static final long serialVersionUID = 0L;
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getHandleDataFieldBuilder();
         }
       }
       @java.lang.Override
@@ -1003,6 +1130,12 @@ private static final long serialVersionUID = 0L;
 
         typeListAttr_ = "";
 
+        if (handleDataBuilder_ == null) {
+          handleData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          handleDataBuilder_.clear();
+        }
         isRef_ = false;
 
         return this;
@@ -1031,12 +1164,22 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public org.tensorflow.proto.framework.OpDef.ArgDef buildPartial() {
         org.tensorflow.proto.framework.OpDef.ArgDef result = new org.tensorflow.proto.framework.OpDef.ArgDef(this);
+        int from_bitField0_ = bitField0_;
         result.name_ = name_;
         result.description_ = description_;
         result.type_ = type_;
         result.typeAttr_ = typeAttr_;
         result.numberAttr_ = numberAttr_;
         result.typeListAttr_ = typeListAttr_;
+        if (handleDataBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            handleData_ = java.util.Collections.unmodifiableList(handleData_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.handleData_ = handleData_;
+        } else {
+          result.handleData_ = handleDataBuilder_.build();
+        }
         result.isRef_ = isRef_;
         onBuilt();
         return result;
@@ -1109,6 +1252,32 @@ private static final long serialVersionUID = 0L;
           typeListAttr_ = other.typeListAttr_;
           onChanged();
         }
+        if (handleDataBuilder_ == null) {
+          if (!other.handleData_.isEmpty()) {
+            if (handleData_.isEmpty()) {
+              handleData_ = other.handleData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureHandleDataIsMutable();
+              handleData_.addAll(other.handleData_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.handleData_.isEmpty()) {
+            if (handleDataBuilder_.isEmpty()) {
+              handleDataBuilder_.dispose();
+              handleDataBuilder_ = null;
+              handleData_ = other.handleData_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              handleDataBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getHandleDataFieldBuilder() : null;
+            } else {
+              handleDataBuilder_.addAllMessages(other.handleData_);
+            }
+          }
+        }
         if (other.getIsRef() != false) {
           setIsRef(other.getIsRef());
         }
@@ -1140,6 +1309,7 @@ private static final long serialVersionUID = 0L;
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object name_ = "";
       /**
@@ -1699,6 +1869,318 @@ private static final long serialVersionUID = 0L;
         typeListAttr_ = value;
         onChanged();
         return this;
+      }
+
+      private java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> handleData_ =
+        java.util.Collections.emptyList();
+      private void ensureHandleDataIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          handleData_ = new java.util.ArrayList<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape>(handleData_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder> handleDataBuilder_;
+
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> getHandleDataList() {
+        if (handleDataBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(handleData_);
+        } else {
+          return handleDataBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public int getHandleDataCount() {
+        if (handleDataBuilder_ == null) {
+          return handleData_.size();
+        } else {
+          return handleDataBuilder_.getCount();
+        }
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape getHandleData(int index) {
+        if (handleDataBuilder_ == null) {
+          return handleData_.get(index);
+        } else {
+          return handleDataBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder setHandleData(
+          int index, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape value) {
+        if (handleDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureHandleDataIsMutable();
+          handleData_.set(index, value);
+          onChanged();
+        } else {
+          handleDataBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder setHandleData(
+          int index, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder builderForValue) {
+        if (handleDataBuilder_ == null) {
+          ensureHandleDataIsMutable();
+          handleData_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          handleDataBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder addHandleData(org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape value) {
+        if (handleDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureHandleDataIsMutable();
+          handleData_.add(value);
+          onChanged();
+        } else {
+          handleDataBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder addHandleData(
+          int index, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape value) {
+        if (handleDataBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureHandleDataIsMutable();
+          handleData_.add(index, value);
+          onChanged();
+        } else {
+          handleDataBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder addHandleData(
+          org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder builderForValue) {
+        if (handleDataBuilder_ == null) {
+          ensureHandleDataIsMutable();
+          handleData_.add(builderForValue.build());
+          onChanged();
+        } else {
+          handleDataBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder addHandleData(
+          int index, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder builderForValue) {
+        if (handleDataBuilder_ == null) {
+          ensureHandleDataIsMutable();
+          handleData_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          handleDataBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder addAllHandleData(
+          java.lang.Iterable<? extends org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape> values) {
+        if (handleDataBuilder_ == null) {
+          ensureHandleDataIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, handleData_);
+          onChanged();
+        } else {
+          handleDataBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder clearHandleData() {
+        if (handleDataBuilder_ == null) {
+          handleData_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          handleDataBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public Builder removeHandleData(int index) {
+        if (handleDataBuilder_ == null) {
+          ensureHandleDataIsMutable();
+          handleData_.remove(index);
+          onChanged();
+        } else {
+          handleDataBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder getHandleDataBuilder(
+          int index) {
+        return getHandleDataFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder getHandleDataOrBuilder(
+          int index) {
+        if (handleDataBuilder_ == null) {
+          return handleData_.get(index);  } else {
+          return handleDataBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public java.util.List<? extends org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder> 
+           getHandleDataOrBuilderList() {
+        if (handleDataBuilder_ != null) {
+          return handleDataBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(handleData_);
+        }
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder addHandleDataBuilder() {
+        return getHandleDataFieldBuilder().addBuilder(
+            org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder addHandleDataBuilder(
+          int index) {
+        return getHandleDataFieldBuilder().addBuilder(
+            index, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.getDefaultInstance());
+      }
+      /**
+       * <pre>
+       * The handle data for resource inputs.
+       * </pre>
+       *
+       * <code>repeated .tensorflow.ResourceHandleProto.DtypeAndShape handle_data = 7;</code>
+       */
+      public java.util.List<org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder> 
+           getHandleDataBuilderList() {
+        return getHandleDataFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder> 
+          getHandleDataFieldBuilder() {
+        if (handleDataBuilder_ == null) {
+          handleDataBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShape.Builder, org.tensorflow.proto.framework.ResourceHandleProto.DtypeAndShapeOrBuilder>(
+                  handleData_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          handleData_ = null;
+        }
+        return handleDataBuilder_;
       }
 
       private boolean isRef_ ;

@@ -31,6 +31,14 @@ public enum SpecializedType
    * <code>ST_TENSOR_LIST = 1;</code>
    */
   ST_TENSOR_LIST(1),
+  /**
+   * <pre>
+   * "tensorflow::data::Optional" in the variant type registry.
+   * </pre>
+   *
+   * <code>ST_OPTIONAL = 2;</code>
+   */
+  ST_OPTIONAL(2),
   UNRECOGNIZED(-1),
   ;
 
@@ -50,6 +58,14 @@ public enum SpecializedType
    * <code>ST_TENSOR_LIST = 1;</code>
    */
   public static final int ST_TENSOR_LIST_VALUE = 1;
+  /**
+   * <pre>
+   * "tensorflow::data::Optional" in the variant type registry.
+   * </pre>
+   *
+   * <code>ST_OPTIONAL = 2;</code>
+   */
+  public static final int ST_OPTIONAL_VALUE = 2;
 
 
   public final int getNumber() {
@@ -72,6 +88,7 @@ public enum SpecializedType
     switch (value) {
       case 0: return ST_INVALID;
       case 1: return ST_TENSOR_LIST;
+      case 2: return ST_OPTIONAL;
       default: return null;
     }
   }

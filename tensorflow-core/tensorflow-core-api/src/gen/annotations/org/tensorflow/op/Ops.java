@@ -166,7 +166,6 @@ import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
-import org.tensorflow.op.core.RemoteFusedGraphExecute;
 import org.tensorflow.op.core.Reshape;
 import org.tensorflow.op.core.ResourceCountUpTo;
 import org.tensorflow.op.core.ResourceGather;
@@ -187,7 +186,6 @@ import org.tensorflow.op.core.ResourceStridedSliceAssign;
 import org.tensorflow.op.core.Reverse;
 import org.tensorflow.op.core.ReverseSequence;
 import org.tensorflow.op.core.Roll;
-import org.tensorflow.op.core.Rpc;
 import org.tensorflow.op.core.ScatterAdd;
 import org.tensorflow.op.core.ScatterDiv;
 import org.tensorflow.op.core.ScatterMax;
@@ -271,7 +269,6 @@ import org.tensorflow.op.core.Tile;
 import org.tensorflow.op.core.Timestamp;
 import org.tensorflow.op.core.TopKUnique;
 import org.tensorflow.op.core.TopKWithUnique;
-import org.tensorflow.op.core.TryRpc;
 import org.tensorflow.op.core.Unbatch;
 import org.tensorflow.op.core.UnbatchGrad;
 import org.tensorflow.op.core.Unique;
@@ -284,6 +281,9 @@ import org.tensorflow.op.core.VarIsInitializedOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
+import org.tensorflow.op.core.XlaConvV2;
+import org.tensorflow.op.core.XlaDotV2;
+import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
 import org.tensorflow.op.core.XlaSpmdFullToShardShape;
 import org.tensorflow.op.core.XlaSpmdShardToFullShape;
 import org.tensorflow.op.core.Zeros;
@@ -2953,9 +2953,8 @@ public final class Ops {
   }
 
   /**
-   * <pre>
-   *  Adds v into specified rows of x.
-   *
+   * Adds v into specified rows of x.
+   *  <pre>
    *  Computes y = x; y[i, :] += v; return y.
    *  </pre>
    *
@@ -4160,27 +4159,6 @@ public final class Ops {
   }
 
   /**
-   * Execute a sub graph on a remote processor.
-   *  The graph specifications(such as graph itself, input tensors and output names)
-   *  are stored as a serialized protocol buffer of RemoteFusedGraphExecuteInfo
-   *  as serialized_remote_fused_graph_execute_info.
-   *  The specifications will be passed to a dedicated registered
-   *  remote fused graph executor.  The executor will send the graph specifications
-   *  to a remote processor and execute that graph.  The execution results
-   *  will be passed to consumer nodes as outputs of this node.
-   *
-   * @param inputs Arbitrary number of tensors with arbitrary data types
-   * @param Toutputs the value of the Toutputs property
-   * @param serializedRemoteFusedGraphExecuteInfo Serialized protocol buffer
-   *  of RemoteFusedGraphExecuteInfo which contains graph specifications.
-   * @return a new instance of RemoteFusedGraphExecute
-   */
-  public RemoteFusedGraphExecute remoteFusedGraphExecute(Iterable<Operand<?>> inputs,
-      List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
-    return RemoteFusedGraphExecute.create(scope, inputs, Toutputs, serializedRemoteFusedGraphExecuteInfo);
-  }
-
-  /**
    * Reshapes a tensor.
    *  Given {@code tensor}, this operation returns a tensor that has the same values
    *  as {@code tensor} with shape {@code shape}.
@@ -4855,64 +4833,6 @@ public final class Ops {
   public <T extends TType> Roll<T> roll(Operand<T> input, Operand<? extends TNumber> shift,
       Operand<? extends TNumber> axis) {
     return Roll.create(scope, input, shift, axis);
-  }
-
-  /**
-   * Perform batches of RPC requests.
-   *  This op asynchronously performs either a single RPC request, or a batch
-   *  of requests.  RPC requests are defined by three main parameters:
-   *  <ul>
-   *  <li>{@code address} (the host+port or BNS address of the request)</li>
-   *  <li>{@code method} (the RPC method name for the request)</li>
-   *  <li>{@code request} (the serialized proto string, or vector of strings,
-   *  of the RPC request argument).</li>
-   *  </ul>
-   *  <p>For example, if you have an RPC service running on port localhost:2345,
-   *  and its interface is configured with the following proto declaration:
-   *  <pre>
-   *  service MyService {
-   *    rpc MyMethod(MyRequestProto) returns (MyResponseProto) {
-   *    }
-   *  };
-   *  </pre>
-   *  <p>then call this op with arguments:
-   *  <pre>
-   *  address = &quot;localhost:2345&quot;
-   *  method = &quot;MyService/MyMethod&quot;
-   *  </pre>
-   *  <p>The {@code request} tensor is a string tensor representing serialized {@code MyRequestProto}
-   *  strings; and the output string tensor {@code response} will have the same shape
-   *  and contain (upon successful completion) corresponding serialized
-   *  {@code MyResponseProto} strings.
-   *  <p>For example, to send a single, empty, {@code MyRequestProto}, call
-   *  this op with {@code request = ""}.  To send 5 <strong>parallel</strong> empty requests,
-   *  call this op with {@code request = ["", "", "", "", ""]}.
-   *  <p>More generally, one can create a batch of {@code MyRequestProto} serialized protos
-   *  from regular batched tensors using the {@code encode_proto} op, and convert
-   *  the response {@code MyResponseProto} serialized protos to batched tensors
-   *  using the {@code decode_proto} op.
-   *  <p><strong>NOTE</strong> Working with serialized proto strings is faster than instantiating
-   *  actual proto objects in memory, so no performance degradation is expected
-   *  compared to writing custom kernels for this workflow.
-   *  <p>If the connection fails or the remote worker returns an error
-   *  status, the op reraises this exception locally.
-   *  <p>See the {@code TryRpc} op if you prefer to handle RPC failures manually in the graph.
-   *
-   * @param address {@code 0-D} or {@code 1-D}.  The address (i.e. host_name:port) of the RPC server.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code method} and {@code request}.
-   * @param method {@code 0-D} or {@code 1-D}.  The method address on the RPC server.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code address} and {@code request}.
-   * @param request {@code 0-D} or {@code 1-D}.  Serialized proto strings: the rpc request argument.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code address} and {@code method}.
-   * @param options carries optional attribute values
-   * @return a new instance of Rpc
-   */
-  public Rpc rpc(Operand<TString> address, Operand<TString> method, Operand<TString> request,
-      Rpc.Options... options) {
-    return Rpc.create(scope, address, method, request, options);
   }
 
   /**
@@ -5930,7 +5850,39 @@ public final class Ops {
    *  in the graph it inputs are masked from the gradient generator.  They are not
    *  taken into account for computing gradients.
    *  <p>This is useful any time you want to compute a value with TensorFlow but need
-   *  to pretend that the value was a constant. Some examples include:
+   *  to pretend that the value was a constant. For example, the softmax function
+   *  for a vector x can be written as
+   *  <pre>
+   *
+   *    def softmax(x):
+   *      numerator = tf.exp(x)
+   *      denominator = tf.reduce_sum(numerator)
+   *      return numerator / denominator
+   *  </pre>
+   *  <p>This however is susceptible to overflow if the values in x are large. An
+   *  alternative more stable way is to subtract the maximum of x from each of the
+   *  values.
+   *  <pre>
+   *
+   *    def stable_softmax(x):
+   *      z = x - tf.reduce_max(x)
+   *      numerator = tf.exp(z)
+   *      denominator = tf.reduce_sum(numerator)
+   *      return numerator / denominator
+   *  </pre>
+   *  <p>However, when we backprop through the softmax to x, we dont want to backprop
+   *  through the {@code tf.reduce_max(x)} (if the max values are not unique then the
+   *  gradient could flow to the wrong input) calculation and treat that as a
+   *  constant. Therefore, we should write this out as
+   *  <pre>
+   *
+   *    def stable_softmax(x):
+   *      z = x - tf.stop_gradient(tf.reduce_max(x))
+   *      numerator = tf.exp(z)
+   *      denominator = tf.reduce_sum(numerator)
+   *      return numerator / denominator
+   *  </pre>
+   *  <p>Some other examples include:
    *  <ul>
    *  <li>The <em>EM</em> algorithm where the <em>M-step</em> should not involve backpropagation
    *  through the output of the <em>E-step</em>.</li>
@@ -7193,8 +7145,8 @@ public final class Ops {
   }
 
   /**
-   * Returns the TopK unique values in the array in sorted order. The
-   *  running time is proportional to the product of K and the input
+   * Returns the TopK unique values in the array in sorted order.
+   *  The running time is proportional to the product of K and the input
    *  size. Sorting the whole array is more efficient for sufficiently large
    *  values of K. The median-of-medians algorithm is probably faster, but
    *  difficult to implement efficiently in XLA. If there are fewer than K
@@ -7216,11 +7168,12 @@ public final class Ops {
   }
 
   /**
-   * Returns the TopK values in the array in sorted order. This is a combination
-   *  of MakeUnique and TopKUnique. The returned top-K will have its lower bits
-   *  replaced by iota, thus it will be close to the original value but not exactly
-   *  the same. The running time is proportional to the product of K and the input
-   *  size. NaNs are never returned. Subnormal numbers are flushed to zero.
+   * Returns the TopK values in the array in sorted order.
+   *  This is a combination of MakeUnique and TopKUnique. The returned top-K will
+   *  have its lower bits replaced by iota, thus it will be close to the original
+   *  value but not exactly the same. The running time is proportional to the product
+   *  of K and the input size. NaNs are never returned. Subnormal numbers are flushed
+   *  to zero.
    *
    * @param input the input value
    * @param k the value of the k property
@@ -7228,67 +7181,6 @@ public final class Ops {
    */
   public TopKWithUnique topKWithUnique(Operand<TFloat32> input, Long k) {
     return TopKWithUnique.create(scope, input, k);
-  }
-
-  /**
-   * Perform batches of RPC requests.
-   *  This op asynchronously performs either a single RPC request, or a batch
-   *  of requests.  RPC requests are defined by three main parameters:
-   *  <ul>
-   *  <li>{@code address} (the host+port or BNS address of the request)</li>
-   *  <li>{@code method} (the method name for the request)</li>
-   *  <li>{@code request} (the serialized proto string, or vector of strings,
-   *  of the RPC request argument).</li>
-   *  </ul>
-   *  <p>For example, if you have an RPC service running on port localhost:2345,
-   *  and its interface is configured with the following proto declaration:
-   *  <pre>
-   *  service MyService {
-   *    rpc MyMethod(MyRequestProto) returns (MyResponseProto) {
-   *    }
-   *  };
-   *  </pre>
-   *  <p>then call this op with arguments:
-   *  <pre>
-   *  address = &quot;localhost:2345&quot;
-   *  method = &quot;MyService/MyMethod&quot;
-   *  </pre>
-   *  <p>The {@code request} tensor is a string tensor representing serialized {@code MyRequestProto}
-   *  strings; and the output string tensor {@code response} will have the same shape
-   *  and contain (upon successful completion) corresponding serialized
-   *  {@code MyResponseProto} strings.
-   *  <p>For example, to send a single, empty, {@code MyRequestProto}, call
-   *  this op with {@code request = ""}.  To send 5 <strong>parallel</strong> empty requests,
-   *  call this op with {@code request = ["", "", "", "", ""]}.
-   *  <p>More generally, one can create a batch of {@code MyRequestProto} serialized protos
-   *  from regular batched tensors using the {@code encode_proto} op, and convert
-   *  the response {@code MyResponseProto} serialized protos to batched tensors
-   *  using the {@code decode_proto} op.
-   *  <p><strong>NOTE</strong> Working with serialized proto strings is faster than instantiating
-   *  actual proto objects in memory, so no performance degradation is expected
-   *  compared to writing custom kernels for this workflow.
-   *  <p>Unlike the standard {@code Rpc} op, if the connection fails or the remote worker
-   *  returns an error status, this op does <strong>not</strong> reraise the exception.
-   *  Instead, the {@code status_code} and {@code status_message} entry for the corresponding RPC
-   *  call is set with the error returned from the RPC call.  The {@code response} tensor
-   *  will contain valid response values for those minibatch entries whose RPCs did
-   *  not fail; the rest of the entries will have empty strings.
-   *
-   * @param address {@code 0-D} or {@code 1-D}.  The address (i.e. host_name:port) of the RPC server.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code method} and {@code request}.
-   * @param method {@code 0-D} or {@code 1-D}.  The method address on the RPC server.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code address} and {@code request}.
-   * @param request {@code 0-D} or {@code 1-D}.  Serialized proto strings: the rpc request argument.
-   *  If this tensor has more than 1 element, then multiple parallel rpc requests
-   *  are sent.  This argument broadcasts with {@code address} and {@code method}.
-   * @param options carries optional attribute values
-   * @return a new instance of TryRpc
-   */
-  public TryRpc tryRpc(Operand<TString> address, Operand<TString> method, Operand<TString> request,
-      TryRpc.Options... options) {
-    return TryRpc.create(scope, address, method, request, options);
   }
 
   /**
@@ -7474,29 +7366,29 @@ public final class Ops {
    *  <p>{@code y[idx[i]] = x[i] for i in [0, 1,...,rank(x) - 1]}
    *  <p>For example:
    *  <pre>
-   *  # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
-   *  y, idx, count = unique_with_counts(x)
+   *  x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+   *  y, idx, count = UniqueWithCountsV2(x, axis = [0])
    *  y ==&gt; [1, 2, 4, 7, 8]
    *  idx ==&gt; [0, 0, 1, 2, 2, 2, 3, 4, 4]
    *  count ==&gt; [2, 1, 3, 1, 2]
    *  </pre>
-   *  <p>For an {@code 2-D} tensor {@code x} with {@code axis = 0}:
+   *  <p>For a {@code 2-D} tensor {@code x} with {@code axis = 0}:
    *  <pre>
-   *  # tensor 'x' is [[1, 0, 0],
-   *  #                [1, 0, 0],
-   *  #                [2, 0, 0]]
-   *  y, idx, count = unique_with_counts(x, axis=0)
+   *  x = tf.constant([[1, 0, 0],
+   *                  [1, 0, 0],
+   *                  [2, 0, 0]])
+   *  y, idx, count = UniqueWithCountsV2(x, axis=[0])
    *  y ==&gt; [[1, 0, 0],
    *         [2, 0, 0]]
    *  idx ==&gt; [0, 0, 1]
    *  count ==&gt; [2, 1]
    *  </pre>
-   *  <p>For an {@code 2-D} tensor {@code x} with {@code axis = 1}:
+   *  <p>For a {@code 2-D} tensor {@code x} with {@code axis = 1}:
    *  <pre>
-   *  # tensor 'x' is [[1, 0, 0],
-   *  #                [1, 0, 0],
-   *  #                [2, 0, 0]]
-   *  y, idx, count = unique_with_counts(x, axis=1)
+   *  x = tf.constant([[1, 0, 0],
+   *                  [1, 0, 0],
+   *                  [2, 0, 0]])
+   *  y, idx, count = UniqueWithCountsV2(x, axis=[1])
    *  y ==&gt; [[1, 0],
    *         [1, 0],
    *         [2, 0]]
@@ -7530,29 +7422,29 @@ public final class Ops {
    *  <p>{@code y[idx[i]] = x[i] for i in [0, 1,...,rank(x) - 1]}
    *  <p>For example:
    *  <pre>
-   *  # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
-   *  y, idx, count = unique_with_counts(x)
+   *  x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+   *  y, idx, count = UniqueWithCountsV2(x, axis = [0])
    *  y ==&gt; [1, 2, 4, 7, 8]
    *  idx ==&gt; [0, 0, 1, 2, 2, 2, 3, 4, 4]
    *  count ==&gt; [2, 1, 3, 1, 2]
    *  </pre>
-   *  <p>For an {@code 2-D} tensor {@code x} with {@code axis = 0}:
+   *  <p>For a {@code 2-D} tensor {@code x} with {@code axis = 0}:
    *  <pre>
-   *  # tensor 'x' is [[1, 0, 0],
-   *  #                [1, 0, 0],
-   *  #                [2, 0, 0]]
-   *  y, idx, count = unique_with_counts(x, axis=0)
+   *  x = tf.constant([[1, 0, 0],
+   *                  [1, 0, 0],
+   *                  [2, 0, 0]])
+   *  y, idx, count = UniqueWithCountsV2(x, axis=[0])
    *  y ==&gt; [[1, 0, 0],
    *         [2, 0, 0]]
    *  idx ==&gt; [0, 0, 1]
    *  count ==&gt; [2, 1]
    *  </pre>
-   *  <p>For an {@code 2-D} tensor {@code x} with {@code axis = 1}:
+   *  <p>For a {@code 2-D} tensor {@code x} with {@code axis = 1}:
    *  <pre>
-   *  # tensor 'x' is [[1, 0, 0],
-   *  #                [1, 0, 0],
-   *  #                [2, 0, 0]]
-   *  y, idx, count = unique_with_counts(x, axis=1)
+   *  x = tf.constant([[1, 0, 0],
+   *                  [1, 0, 0],
+   *                  [2, 0, 0]])
+   *  y, idx, count = UniqueWithCountsV2(x, axis=[1])
    *  y ==&gt; [[1, 0],
    *         [1, 0],
    *         [2, 0]]
@@ -7803,6 +7695,72 @@ public final class Ops {
    */
   public Where where(Operand<? extends TType> condition) {
     return Where.create(scope, condition);
+  }
+
+  /**
+   * Wraps the XLA ConvGeneralDilated operator, documented at
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+   *  .
+   *
+   * @param <W> data type for {@code output} output
+   * @param lhs the input tensor
+   * @param rhs the kernel tensor
+   * @param windowStrides the inter-window strides
+   * @param padding the padding to apply at the start and end of each input dimensions
+   * @param lhsDilation dilation to apply between input elements
+   * @param rhsDilation dilation to apply between kernel elements
+   * @param featureGroupCount number of feature groups for grouped convolution.
+   * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
+   * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param preferredElementType The type of the tensor.
+   * @param <W> data type for {@code XlaConvV2} output and operands
+   * @param <V> data type for {@code XlaConvV2} output and operands
+   * @return a new instance of XlaConvV2
+   */
+  public <W extends TType, V extends TNumber> XlaConvV2<W> xlaConvV2(Operand<? extends TType> lhs,
+      Operand<? extends TType> rhs, Operand<V> windowStrides, Operand<V> padding,
+      Operand<V> lhsDilation, Operand<V> rhsDilation, Operand<V> featureGroupCount,
+      String dimensionNumbers, String precisionConfig, Class<W> preferredElementType) {
+    return XlaConvV2.create(scope, lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation, featureGroupCount, dimensionNumbers, precisionConfig, preferredElementType);
+  }
+
+  /**
+   * Wraps the XLA DotGeneral operator, documented at
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+   *  .
+   *
+   * @param <V> data type for {@code output} output
+   * @param lhs the LHS tensor
+   * @param rhs the RHS tensor
+   * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
+   * @param precisionConfig a serialized xla::PrecisionConfig proto.
+   * @param preferredElementType The type of the tensor.
+   * @param <V> data type for {@code XlaDotV2} output and operands
+   * @return a new instance of XlaDotV2
+   */
+  public <V extends TType> XlaDotV2<V> xlaDotV2(Operand<? extends TType> lhs,
+      Operand<? extends TType> rhs, String dimensionNumbers, String precisionConfig,
+      Class<V> preferredElementType) {
+    return XlaDotV2.create(scope, lhs, rhs, dimensionNumbers, precisionConfig, preferredElementType);
+  }
+
+  /**
+   * Make a static dimension into a xla bounded dynamic dimension.
+   *  <pre>
+   *      The current static dimension size will become the bound and the second
+   *      operand becomes the dynamic size of the dimension.
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param dimIndex the dimIndex value
+   * @param sizeOutput the sizeOutput value
+   * @param <T> data type for {@code XlaSetDynamicDimensionSize} output and operands
+   * @return a new instance of XlaSetDynamicDimensionSize
+   */
+  public <T extends TType> XlaSetDynamicDimensionSize<T> xlaSetDynamicDimensionSize(
+      Operand<T> input, Operand<TInt32> dimIndex, Operand<TInt32> sizeOutput) {
+    return XlaSetDynamicDimensionSize.create(scope, input, dimIndex, sizeOutput);
   }
 
   /**

@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RiscCast"
+  endpoint {
+    name: "risc.RiscCast"
+  }
+}

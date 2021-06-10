@@ -501,6 +501,15 @@ private static final long serialVersionUID = 0L;
      * <code>int64 xla_fusion_autotuner_thresh = 15;</code>
      */
     long getXlaFusionAutotunerThresh();
+
+    /**
+     * <pre>
+     * Whether runtime execution uses TFRT.
+     * </pre>
+     *
+     * <code>bool use_tfrt = 18;</code>
+     */
+    boolean getUseTfrt();
   }
   /**
    * <pre>
@@ -647,6 +656,11 @@ private static final long serialVersionUID = 0L;
               mlirBridgeRollout_ = rawValue;
               break;
             }
+            case 144: {
+
+              useTfrt_ = input.readBool();
+              break;
+            }
             default: {
               if (!parseUnknownField(
                   input, unknownFields, extensionRegistry, tag)) {
@@ -713,6 +727,30 @@ private static final long serialVersionUID = 0L;
        * <code>MLIR_BRIDGE_ROLLOUT_DISABLED = 2;</code>
        */
       MLIR_BRIDGE_ROLLOUT_DISABLED(2),
+      /**
+       * <pre>
+       * Enable the MLIR bridge on a per graph basis based on an analysis of
+       * the features used in the graph. If the features used by the graph are
+       * supported by the MLIR bridge, the MLIR bridge will be used to run the
+       * graph.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_SAFE_MODE_ENABLED = 3;</code>
+       */
+      MLIR_BRIDGE_ROLLOUT_SAFE_MODE_ENABLED(3),
+      /**
+       * <pre>
+       * Enable the MLIR bridge in a fallback mode on a per graph basis based
+       * on an analysis of the features used in the graph.
+       * Running the MLIR bridge in the fallback mode means that it is
+       * executed and it commits all the changes to the TF graph in case
+       * of success. And it does not in case of failures and let the old bridge
+       * to process the TF graph.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_SAFE_MODE_FALLBACK_ENABLED = 4;</code>
+       */
+      MLIR_BRIDGE_ROLLOUT_SAFE_MODE_FALLBACK_ENABLED(4),
       UNRECOGNIZED(-1),
       ;
 
@@ -741,6 +779,30 @@ private static final long serialVersionUID = 0L;
        * <code>MLIR_BRIDGE_ROLLOUT_DISABLED = 2;</code>
        */
       public static final int MLIR_BRIDGE_ROLLOUT_DISABLED_VALUE = 2;
+      /**
+       * <pre>
+       * Enable the MLIR bridge on a per graph basis based on an analysis of
+       * the features used in the graph. If the features used by the graph are
+       * supported by the MLIR bridge, the MLIR bridge will be used to run the
+       * graph.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_SAFE_MODE_ENABLED = 3;</code>
+       */
+      public static final int MLIR_BRIDGE_ROLLOUT_SAFE_MODE_ENABLED_VALUE = 3;
+      /**
+       * <pre>
+       * Enable the MLIR bridge in a fallback mode on a per graph basis based
+       * on an analysis of the features used in the graph.
+       * Running the MLIR bridge in the fallback mode means that it is
+       * executed and it commits all the changes to the TF graph in case
+       * of success. And it does not in case of failures and let the old bridge
+       * to process the TF graph.
+       * </pre>
+       *
+       * <code>MLIR_BRIDGE_ROLLOUT_SAFE_MODE_FALLBACK_ENABLED = 4;</code>
+       */
+      public static final int MLIR_BRIDGE_ROLLOUT_SAFE_MODE_FALLBACK_ENABLED_VALUE = 4;
 
 
       public final int getNumber() {
@@ -764,6 +826,8 @@ private static final long serialVersionUID = 0L;
           case 0: return MLIR_BRIDGE_ROLLOUT_UNSPECIFIED;
           case 1: return MLIR_BRIDGE_ROLLOUT_ENABLED;
           case 2: return MLIR_BRIDGE_ROLLOUT_DISABLED;
+          case 3: return MLIR_BRIDGE_ROLLOUT_SAFE_MODE_ENABLED;
+          case 4: return MLIR_BRIDGE_ROLLOUT_SAFE_MODE_FALLBACK_ENABLED;
           default: return null;
         }
       }
@@ -1179,6 +1243,19 @@ private static final long serialVersionUID = 0L;
       return xlaFusionAutotunerThresh_;
     }
 
+    public static final int USE_TFRT_FIELD_NUMBER = 18;
+    private boolean useTfrt_;
+    /**
+     * <pre>
+     * Whether runtime execution uses TFRT.
+     * </pre>
+     *
+     * <code>bool use_tfrt = 18;</code>
+     */
+    public boolean getUseTfrt() {
+      return useTfrt_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -1240,6 +1317,9 @@ private static final long serialVersionUID = 0L;
       }
       if (mlirBridgeRollout_ != org.tensorflow.proto.framework.ConfigProto.Experimental.MlirBridgeRollout.MLIR_BRIDGE_ROLLOUT_UNSPECIFIED.getNumber()) {
         output.writeEnum(17, mlirBridgeRollout_);
+      }
+      if (useTfrt_ != false) {
+        output.writeBool(18, useTfrt_);
       }
       unknownFields.writeTo(output);
     }
@@ -1312,6 +1392,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(17, mlirBridgeRollout_);
       }
+      if (useTfrt_ != false) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(18, useTfrt_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -1361,6 +1445,8 @@ private static final long serialVersionUID = 0L;
           != other.getDisableOutputPartitionGraphs()) return false;
       if (getXlaFusionAutotunerThresh()
           != other.getXlaFusionAutotunerThresh()) return false;
+      if (getUseTfrt()
+          != other.getUseTfrt()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1417,6 +1503,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + XLA_FUSION_AUTOTUNER_THRESH_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getXlaFusionAutotunerThresh());
+      hash = (37 * hash) + USE_TFRT_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getUseTfrt());
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1592,6 +1681,8 @@ private static final long serialVersionUID = 0L;
 
         xlaFusionAutotunerThresh_ = 0L;
 
+        useTfrt_ = false;
+
         return this;
       }
 
@@ -1638,6 +1729,7 @@ private static final long serialVersionUID = 0L;
         result.enableMlirGraphOptimization_ = enableMlirGraphOptimization_;
         result.disableOutputPartitionGraphs_ = disableOutputPartitionGraphs_;
         result.xlaFusionAutotunerThresh_ = xlaFusionAutotunerThresh_;
+        result.useTfrt_ = useTfrt_;
         onBuilt();
         return result;
       }
@@ -1735,6 +1827,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getXlaFusionAutotunerThresh() != 0L) {
           setXlaFusionAutotunerThresh(other.getXlaFusionAutotunerThresh());
+        }
+        if (other.getUseTfrt() != false) {
+          setUseTfrt(other.getUseTfrt());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2805,6 +2900,44 @@ private static final long serialVersionUID = 0L;
       public Builder clearXlaFusionAutotunerThresh() {
         
         xlaFusionAutotunerThresh_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private boolean useTfrt_ ;
+      /**
+       * <pre>
+       * Whether runtime execution uses TFRT.
+       * </pre>
+       *
+       * <code>bool use_tfrt = 18;</code>
+       */
+      public boolean getUseTfrt() {
+        return useTfrt_;
+      }
+      /**
+       * <pre>
+       * Whether runtime execution uses TFRT.
+       * </pre>
+       *
+       * <code>bool use_tfrt = 18;</code>
+       */
+      public Builder setUseTfrt(boolean value) {
+        
+        useTfrt_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * Whether runtime execution uses TFRT.
+       * </pre>
+       *
+       * <code>bool use_tfrt = 18;</code>
+       */
+      public Builder clearUseTfrt() {
+        
+        useTfrt_ = false;
         onChanged();
         return this;
       }

@@ -27,17 +27,13 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * The DataServiceDataset operation
+ * Creates a dataset that reads data from the tf.data service.
  */
-@Operator(
-    group = "data.experimental"
-)
 public final class DataServiceDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -97,6 +93,9 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
         if (opts.taskRefreshIntervalHintMs != null) {
           opBuilder.setAttr("task_refresh_interval_hint_ms", opts.taskRefreshIntervalHintMs);
         }
+        if (opts.dataTransferProtocol != null) {
+          opBuilder.setAttr("data_transfer_protocol", opts.dataTransferProtocol);
+        }
       }
     }
     return new DataServiceDataset(opBuilder.build());
@@ -110,6 +109,16 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
    */
   public static Options taskRefreshIntervalHintMs(Long taskRefreshIntervalHintMs) {
     return new Options().taskRefreshIntervalHintMs(taskRefreshIntervalHintMs);
+  }
+
+  /**
+   * Sets the dataTransferProtocol option.
+   *
+   * @param dataTransferProtocol the dataTransferProtocol option
+   * @return this Options instance.
+   */
+  public static Options dataTransferProtocol(String dataTransferProtocol) {
+    return new Options().dataTransferProtocol(dataTransferProtocol);
   }
 
   /**
@@ -133,6 +142,8 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   public static class Options {
     private Long taskRefreshIntervalHintMs;
 
+    private String dataTransferProtocol;
+
     private Options() {
     }
 
@@ -144,6 +155,17 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
      */
     public Options taskRefreshIntervalHintMs(Long taskRefreshIntervalHintMs) {
       this.taskRefreshIntervalHintMs = taskRefreshIntervalHintMs;
+      return this;
+    }
+
+    /**
+     * Sets the dataTransferProtocol option.
+     *
+     * @param dataTransferProtocol the dataTransferProtocol option
+     * @return this Options instance.
+     */
+    public Options dataTransferProtocol(String dataTransferProtocol) {
+      this.dataTransferProtocol = dataTransferProtocol;
       return this;
     }
   }

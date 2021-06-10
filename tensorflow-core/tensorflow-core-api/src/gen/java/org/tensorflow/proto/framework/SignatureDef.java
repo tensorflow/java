@@ -8,7 +8,7 @@ package org.tensorflow.proto.framework;
  * SignatureDef defines the signature of a computation supported by a TensorFlow
  * graph.
  * For example, a model with two loss computations, sharing a single input,
- * might have the following signature_def map.
+ * might have the following signature_def map, in a MetaGraphDef message.
  * Note that across the two SignatureDefs "loss_A" and "loss_B", the input key,
  * output key, and method_name are identical, and will be used by system(s) that
  * implement or rely upon this particular loss method. The output tensor names
@@ -32,9 +32,9 @@ package org.tensorflow.proto.framework;
  *         tensor_shape: ...
  *       }
  *     }
+ *     method_name: "some/package/compute_loss"
  *   }
  *   ...
- *   method_name: "some/package/compute_loss"
  * }
  * signature_def {
  *   key: "loss_B"
@@ -55,9 +55,9 @@ package org.tensorflow.proto.framework;
  *         tensor_shape: ...
  *       }
  *     }
+ *     method_name: "some/package/compute_loss"
  *   }
  *   ...
- *   method_name: "some/package/compute_loss"
  * }
  * </pre>
  *
@@ -626,7 +626,7 @@ private static final long serialVersionUID = 0L;
    * SignatureDef defines the signature of a computation supported by a TensorFlow
    * graph.
    * For example, a model with two loss computations, sharing a single input,
-   * might have the following signature_def map.
+   * might have the following signature_def map, in a MetaGraphDef message.
    * Note that across the two SignatureDefs "loss_A" and "loss_B", the input key,
    * output key, and method_name are identical, and will be used by system(s) that
    * implement or rely upon this particular loss method. The output tensor names
@@ -650,9 +650,9 @@ private static final long serialVersionUID = 0L;
    *         tensor_shape: ...
    *       }
    *     }
+   *     method_name: "some/package/compute_loss"
    *   }
    *   ...
-   *   method_name: "some/package/compute_loss"
    * }
    * signature_def {
    *   key: "loss_B"
@@ -673,9 +673,9 @@ private static final long serialVersionUID = 0L;
    *         tensor_shape: ...
    *       }
    *     }
+   *     method_name: "some/package/compute_loss"
    *   }
    *   ...
-   *   method_name: "some/package/compute_loss"
    * }
    * </pre>
    *

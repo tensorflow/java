@@ -21,11 +21,13 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+import org.tensorflow.types.family.TType;
 
 /**
  * Mutually accumulates multiple tensors of identical type and shape.
@@ -54,6 +56,7 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
    * @param groupSize the groupSize value
    * @param groupKey the groupKey value
    * @param instanceKey the instanceKey value
+   * @param orderingToken the orderingToken value
    * @param options carries optional attribute values
    * @param <T> data type for {@code CollectiveGatherV2} output and operands
    * @return a new instance of GatherV2
@@ -63,12 +66,13 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> GatherV2<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
-      Options... options) {
+      Iterable<Operand<? extends TType>> orderingToken, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGatherV2", scope.makeOpName("GatherV2"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());
     opBuilder.addInput(instanceKey.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(orderingToken));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
@@ -77,6 +81,9 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
         }
         if (opts.timeoutSeconds != null) {
           opBuilder.setAttr("timeout_seconds", opts.timeoutSeconds);
+        }
+        if (opts.NorderingToken != null) {
+          opBuilder.setAttr("Nordering_token", opts.NorderingToken);
         }
       }
     }
@@ -104,6 +111,16 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
   }
 
   /**
+   * Sets the NorderingToken option.
+   *
+   * @param NorderingToken the NorderingToken option
+   * @return this Options instance.
+   */
+  public static Options NorderingToken(Long NorderingToken) {
+    return new Options().NorderingToken(NorderingToken);
+  }
+
+  /**
    * Gets data.
    *
    * @return data.
@@ -124,6 +141,8 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
     private String communicationHint;
 
     private Float timeoutSeconds;
+
+    private Long NorderingToken;
 
     private Options() {
     }
@@ -147,6 +166,17 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
      */
     public Options timeoutSeconds(Float timeoutSeconds) {
       this.timeoutSeconds = timeoutSeconds;
+      return this;
+    }
+
+    /**
+     * Sets the NorderingToken option.
+     *
+     * @param NorderingToken the NorderingToken option
+     * @return this Options instance.
+     */
+    public Options NorderingToken(Long NorderingToken) {
+      this.NorderingToken = NorderingToken;
       return this;
     }
   }

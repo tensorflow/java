@@ -161,26 +161,26 @@ int main(int argc, char* argv[]) {
   ApiDefMap python_api_map(op_defs);
 
   // Load Python API defs
-  string base_api_dir = tf_src_dir + "/tensorflow/core/api_def/base_api";
-  string python_api_dir = tf_src_dir + "/tensorflow/core/api_def/python_api";
+  string base_api_path = tf_src_dir + "/tensorflow/core/api_def/base_api/*.pbtxt";
+  string python_api_path = tf_src_dir + "/tensorflow/core/api_def/python_api/*.pbtxt";
   vector<string> api_files;
-  TF_CHECK_OK(env->GetChildren(base_api_dir, &api_files));
+  TF_CHECK_OK(env->GetMatchingPaths(base_api_path, &api_files));
   LOG(INFO) << "Loading " << api_files.size() << " Base API definition files";
   for (const auto& filename : api_files) {
-      TF_CHECK_OK(python_api_map.LoadFile(env, base_api_dir + "/" + filename)) << filename;
+      TF_CHECK_OK(python_api_map.LoadFile(env, filename)) << filename;
   }
-  TF_CHECK_OK(env->GetChildren(python_api_dir, &api_files));
+  TF_CHECK_OK(env->GetMatchingPaths(python_api_path, &api_files));
   LOG(INFO) << "Loading " << api_files.size() << " Python API definition files";
   for (const auto& filename : api_files) {
-      TF_CHECK_OK(python_api_map.LoadFile(env, python_api_dir + "/" + filename)) << filename;
+      TF_CHECK_OK(python_api_map.LoadFile(env, filename)) << filename;
   }
   python_api_map.UpdateDocs();
 
   // Load golden API member names with their module path
-  string golden_api_dir = tf_src_dir + "/tensorflow/tools/api/golden/v1";
+  string golden_api_path = tf_src_dir + "/tensorflow/tools/api/golden/v1/*.pbtxt";
   vector<pair<string, string>> golden_api_names;
   vector<string> golden_api_files;
-  TF_CHECK_OK(env->GetChildren(golden_api_dir, &golden_api_files));
+  TF_CHECK_OK(env->GetMatchingPaths(golden_api_path, &golden_api_files));
   LOG(INFO) << "Loading " << golden_api_files.size() << " Python API golden files";
   for (const auto& filename : golden_api_files) {
     // Skip the raw_ops API, as it contains all op endpoints
@@ -188,7 +188,7 @@ int main(int argc, char* argv[]) {
       continue;
     }
     string contents;
-    TF_CHECK_OK(ReadFileToString(env, golden_api_dir + "/" + filename, &contents));
+    TF_CHECK_OK(ReadFileToString(env, filename, &contents));
     third_party::tensorflow::tools::api::TFAPIObject object;
     google::protobuf::TextFormat::ParseFromString(contents, &object);
     if (object.has_tf_module()) {

@@ -174,7 +174,7 @@ private static final long serialVersionUID = 0L;
     FILE_VERSION(3),
     GRAPH_DEF(4),
     SUMMARY(5),
-    LOG_MESSAGE(6),
+    @java.lang.Deprecated LOG_MESSAGE(6),
     SESSION_LOG(7),
     TAGGED_RUN_METADATA(8),
     META_GRAPH_DEF(9),
@@ -354,24 +354,26 @@ private static final long serialVersionUID = 0L;
   public static final int LOG_MESSAGE_FIELD_NUMBER = 6;
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  public boolean hasLogMessage() {
+  @java.lang.Deprecated public boolean hasLogMessage() {
     return whatCase_ == 6;
   }
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  public org.tensorflow.proto.util.LogMessage getLogMessage() {
+  @java.lang.Deprecated public org.tensorflow.proto.util.LogMessage getLogMessage() {
     if (whatCase_ == 6) {
        return (org.tensorflow.proto.util.LogMessage) what_;
     }
@@ -379,13 +381,14 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  public org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder() {
+  @java.lang.Deprecated public org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder() {
     if (whatCase_ == 6) {
        return (org.tensorflow.proto.util.LogMessage) what_;
     }
@@ -1429,24 +1432,26 @@ private static final long serialVersionUID = 0L;
         org.tensorflow.proto.util.LogMessage, org.tensorflow.proto.util.LogMessage.Builder, org.tensorflow.proto.util.LogMessageOrBuilder> logMessageBuilder_;
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public boolean hasLogMessage() {
+    @java.lang.Deprecated public boolean hasLogMessage() {
       return whatCase_ == 6;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public org.tensorflow.proto.util.LogMessage getLogMessage() {
+    @java.lang.Deprecated public org.tensorflow.proto.util.LogMessage getLogMessage() {
       if (logMessageBuilder_ == null) {
         if (whatCase_ == 6) {
           return (org.tensorflow.proto.util.LogMessage) what_;
@@ -1461,13 +1466,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public Builder setLogMessage(org.tensorflow.proto.util.LogMessage value) {
+    @java.lang.Deprecated public Builder setLogMessage(org.tensorflow.proto.util.LogMessage value) {
       if (logMessageBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1482,13 +1488,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public Builder setLogMessage(
+    @java.lang.Deprecated public Builder setLogMessage(
         org.tensorflow.proto.util.LogMessage.Builder builderForValue) {
       if (logMessageBuilder_ == null) {
         what_ = builderForValue.build();
@@ -1501,13 +1508,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public Builder mergeLogMessage(org.tensorflow.proto.util.LogMessage value) {
+    @java.lang.Deprecated public Builder mergeLogMessage(org.tensorflow.proto.util.LogMessage value) {
       if (logMessageBuilder_ == null) {
         if (whatCase_ == 6 &&
             what_ != org.tensorflow.proto.util.LogMessage.getDefaultInstance()) {
@@ -1528,13 +1536,14 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public Builder clearLogMessage() {
+    @java.lang.Deprecated public Builder clearLogMessage() {
       if (logMessageBuilder_ == null) {
         if (whatCase_ == 6) {
           whatCase_ = 0;
@@ -1552,24 +1561,26 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public org.tensorflow.proto.util.LogMessage.Builder getLogMessageBuilder() {
+    @java.lang.Deprecated public org.tensorflow.proto.util.LogMessage.Builder getLogMessageBuilder() {
       return getLogMessageFieldBuilder().getBuilder();
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
-    public org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder() {
+    @java.lang.Deprecated public org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder() {
       if ((whatCase_ == 6) && (logMessageBuilder_ != null)) {
         return logMessageBuilder_.getMessageOrBuilder();
       } else {
@@ -1581,11 +1592,12 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * The user output a log message. Not all messages are logged, only ones
-     * generated via the Python tensorboard_logging module.
+     * The user output a log message. This was theoretically used by the defunct
+     * tensorboard_logging module, which has since been removed; this field is
+     * now deprecated and should not be used.
      * </pre>
      *
-     * <code>.tensorflow.LogMessage log_message = 6;</code>
+     * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         org.tensorflow.proto.util.LogMessage, org.tensorflow.proto.util.LogMessage.Builder, org.tensorflow.proto.util.LogMessageOrBuilder> 

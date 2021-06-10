@@ -7,7 +7,7 @@ package org.tensorflow.proto.profiler;
  * <pre>
  * Metadata for an XEvent, corresponds to an event type and is shared by
  * all XEvents with the same metadata_id.
- * Next ID: 6
+ * Next ID: 7
  * </pre>
  *
  * Protobuf type {@code tensorflow.profiler.XEventMetadata}
@@ -26,6 +26,7 @@ private static final long serialVersionUID = 0L;
     displayName_ = "";
     metadata_ = com.google.protobuf.ByteString.EMPTY;
     stats_ = java.util.Collections.emptyList();
+    childId_ = emptyLongList();
   }
 
   @java.lang.Override
@@ -90,6 +91,27 @@ private static final long serialVersionUID = 0L;
                 input.readMessage(org.tensorflow.proto.profiler.XStat.parser(), extensionRegistry));
             break;
           }
+          case 48: {
+            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+              childId_ = newLongList();
+              mutable_bitField0_ |= 0x00000002;
+            }
+            childId_.addLong(input.readInt64());
+            break;
+          }
+          case 50: {
+            int length = input.readRawVarint32();
+            int limit = input.pushLimit(length);
+            if (!((mutable_bitField0_ & 0x00000002) != 0) && input.getBytesUntilLimit() > 0) {
+              childId_ = newLongList();
+              mutable_bitField0_ |= 0x00000002;
+            }
+            while (input.getBytesUntilLimit() > 0) {
+              childId_.addLong(input.readInt64());
+            }
+            input.popLimit(limit);
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -107,6 +129,9 @@ private static final long serialVersionUID = 0L;
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
         stats_ = java.util.Collections.unmodifiableList(stats_);
+      }
+      if (((mutable_bitField0_ & 0x00000002) != 0)) {
+        childId_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -295,6 +320,41 @@ private static final long serialVersionUID = 0L;
     return stats_.get(index);
   }
 
+  public static final int CHILD_ID_FIELD_NUMBER = 6;
+  private com.google.protobuf.Internal.LongList childId_;
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  public java.util.List<java.lang.Long>
+      getChildIdList() {
+    return childId_;
+  }
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  public int getChildIdCount() {
+    return childId_.size();
+  }
+  /**
+   * <pre>
+   * XPlane.event_metadata map key for children events.
+   * </pre>
+   *
+   * <code>repeated int64 child_id = 6;</code>
+   */
+  public long getChildId(int index) {
+    return childId_.getLong(index);
+  }
+  private int childIdMemoizedSerializedSize = -1;
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -309,6 +369,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    getSerializedSize();
     if (id_ != 0L) {
       output.writeInt64(1, id_);
     }
@@ -323,6 +384,13 @@ private static final long serialVersionUID = 0L;
     }
     for (int i = 0; i < stats_.size(); i++) {
       output.writeMessage(5, stats_.get(i));
+    }
+    if (getChildIdList().size() > 0) {
+      output.writeUInt32NoTag(50);
+      output.writeUInt32NoTag(childIdMemoizedSerializedSize);
+    }
+    for (int i = 0; i < childId_.size(); i++) {
+      output.writeInt64NoTag(childId_.getLong(i));
     }
     unknownFields.writeTo(output);
   }
@@ -351,6 +419,20 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(5, stats_.get(i));
     }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < childId_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeInt64SizeNoTag(childId_.getLong(i));
+      }
+      size += dataSize;
+      if (!getChildIdList().isEmpty()) {
+        size += 1;
+        size += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(dataSize);
+      }
+      childIdMemoizedSerializedSize = dataSize;
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -376,6 +458,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getMetadata())) return false;
     if (!getStatsList()
         .equals(other.getStatsList())) return false;
+    if (!getChildIdList()
+        .equals(other.getChildIdList())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -399,6 +483,10 @@ private static final long serialVersionUID = 0L;
     if (getStatsCount() > 0) {
       hash = (37 * hash) + STATS_FIELD_NUMBER;
       hash = (53 * hash) + getStatsList().hashCode();
+    }
+    if (getChildIdCount() > 0) {
+      hash = (37 * hash) + CHILD_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getChildIdList().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -499,7 +587,7 @@ private static final long serialVersionUID = 0L;
    * <pre>
    * Metadata for an XEvent, corresponds to an event type and is shared by
    * all XEvents with the same metadata_id.
-   * Next ID: 6
+   * Next ID: 7
    * </pre>
    *
    * Protobuf type {@code tensorflow.profiler.XEventMetadata}
@@ -554,6 +642,8 @@ private static final long serialVersionUID = 0L;
       } else {
         statsBuilder_.clear();
       }
+      childId_ = emptyLongList();
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -594,6 +684,11 @@ private static final long serialVersionUID = 0L;
       } else {
         result.stats_ = statsBuilder_.build();
       }
+      if (((bitField0_ & 0x00000002) != 0)) {
+        childId_.makeImmutable();
+        bitField0_ = (bitField0_ & ~0x00000002);
+      }
+      result.childId_ = childId_;
       onBuilt();
       return result;
     }
@@ -681,6 +776,16 @@ private static final long serialVersionUID = 0L;
             statsBuilder_.addAllMessages(other.stats_);
           }
         }
+      }
+      if (!other.childId_.isEmpty()) {
+        if (childId_.isEmpty()) {
+          childId_ = other.childId_;
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          ensureChildIdIsMutable();
+          childId_.addAll(other.childId_);
+        }
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1297,6 +1402,101 @@ private static final long serialVersionUID = 0L;
         stats_ = null;
       }
       return statsBuilder_;
+    }
+
+    private com.google.protobuf.Internal.LongList childId_ = emptyLongList();
+    private void ensureChildIdIsMutable() {
+      if (!((bitField0_ & 0x00000002) != 0)) {
+        childId_ = mutableCopy(childId_);
+        bitField0_ |= 0x00000002;
+       }
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public java.util.List<java.lang.Long>
+        getChildIdList() {
+      return ((bitField0_ & 0x00000002) != 0) ?
+               java.util.Collections.unmodifiableList(childId_) : childId_;
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public int getChildIdCount() {
+      return childId_.size();
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public long getChildId(int index) {
+      return childId_.getLong(index);
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public Builder setChildId(
+        int index, long value) {
+      ensureChildIdIsMutable();
+      childId_.setLong(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public Builder addChildId(long value) {
+      ensureChildIdIsMutable();
+      childId_.addLong(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public Builder addAllChildId(
+        java.lang.Iterable<? extends java.lang.Long> values) {
+      ensureChildIdIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, childId_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * XPlane.event_metadata map key for children events.
+     * </pre>
+     *
+     * <code>repeated int64 child_id = 6;</code>
+     */
+    public Builder clearChildId() {
+      childId_ = emptyLongList();
+      bitField0_ = (bitField0_ & ~0x00000002);
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

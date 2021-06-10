@@ -37,6 +37,7 @@ private static final long serialVersionUID = 0L;
     implementationSelector_ = 0;
     autoMixedPrecision_ = 0;
     autoMixedPrecisionMkl_ = 0;
+    usePluginOptimizers_ = 0;
     metaOptimizerIterations_ = 0;
     memoryOptimization_ = 0;
     memoryOptimizerTargetNodeNameScope_ = "";
@@ -237,6 +238,17 @@ private static final long serialVersionUID = 0L;
           case 208: {
 
             experimentalDisableCompressedTensorOptimization_ = input.readBool();
+            break;
+          }
+          case 216: {
+
+            experimentalDisableFoldingQuantizationEmulation_ = input.readBool();
+            break;
+          }
+          case 224: {
+            int rawValue = input.readEnum();
+
+            usePluginOptimizers_ = rawValue;
             break;
           }
           case 400: {
@@ -2212,6 +2224,31 @@ private static final long serialVersionUID = 0L;
     return disableMetaOptimizer_;
   }
 
+  public static final int USE_PLUGIN_OPTIMIZERS_FIELD_NUMBER = 28;
+  private int usePluginOptimizers_;
+  /**
+   * <pre>
+   * Optimizers registered by plugin (default is ON)
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+   */
+  public int getUsePluginOptimizersValue() {
+    return usePluginOptimizers_;
+  }
+  /**
+   * <pre>
+   * Optimizers registered by plugin (default is ON)
+   * </pre>
+   *
+   * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+   */
+  public org.tensorflow.proto.framework.RewriterConfig.Toggle getUsePluginOptimizers() {
+    @SuppressWarnings("deprecation")
+    org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(usePluginOptimizers_);
+    return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+  }
+
   public static final int META_OPTIMIZER_ITERATIONS_FIELD_NUMBER = 12;
   private int metaOptimizerIterations_;
   /**
@@ -2267,6 +2304,24 @@ private static final long serialVersionUID = 0L;
    */
   public boolean getExperimentalDisableCompressedTensorOptimization() {
     return experimentalDisableCompressedTensorOptimization_;
+  }
+
+  public static final int EXPERIMENTAL_DISABLE_FOLDING_QUANTIZATION_EMULATION_FIELD_NUMBER = 27;
+  private boolean experimentalDisableFoldingQuantizationEmulation_;
+  /**
+   * <pre>
+   * Disable folding quantization emulation ops such as FakeQuantWithMinMax* and
+   * QuantizeAndDequantize*. Some compilers (e.g. the TF-to-tflite converter)
+   * have to extract quantization configs (e.g. min/max range, number of bits,
+   * and per-channel) from the quantization emulation ops. Note that this flag
+   * is experimental and may be removed in the future. See b/174138564 for more
+   * details.
+   * </pre>
+   *
+   * <code>bool experimental_disable_folding_quantization_emulation = 27;</code>
+   */
+  public boolean getExperimentalDisableFoldingQuantizationEmulation() {
+    return experimentalDisableFoldingQuantizationEmulation_;
   }
 
   public static final int MEMORY_OPTIMIZATION_FIELD_NUMBER = 4;
@@ -2738,6 +2793,12 @@ private static final long serialVersionUID = 0L;
     if (experimentalDisableCompressedTensorOptimization_ != false) {
       output.writeBool(26, experimentalDisableCompressedTensorOptimization_);
     }
+    if (experimentalDisableFoldingQuantizationEmulation_ != false) {
+      output.writeBool(27, experimentalDisableFoldingQuantizationEmulation_);
+    }
+    if (usePluginOptimizers_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      output.writeEnum(28, usePluginOptimizers_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       output.writeEnum(50, cpuLayoutConversion_);
     }
@@ -2865,6 +2926,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(26, experimentalDisableCompressedTensorOptimization_);
     }
+    if (experimentalDisableFoldingQuantizationEmulation_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(27, experimentalDisableFoldingQuantizationEmulation_);
+    }
+    if (usePluginOptimizers_ != org.tensorflow.proto.framework.RewriterConfig.Toggle.DEFAULT.getNumber()) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(28, usePluginOptimizers_);
+    }
     if (cpuLayoutConversion_ != org.tensorflow.proto.framework.RewriterConfig.CpuLayout.NO_CONVERSION_ON_CPU.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(50, cpuLayoutConversion_);
@@ -2924,11 +2993,14 @@ private static final long serialVersionUID = 0L;
     if (autoMixedPrecisionMkl_ != other.autoMixedPrecisionMkl_) return false;
     if (getDisableMetaOptimizer()
         != other.getDisableMetaOptimizer()) return false;
+    if (usePluginOptimizers_ != other.usePluginOptimizers_) return false;
     if (metaOptimizerIterations_ != other.metaOptimizerIterations_) return false;
     if (getMinGraphNodes()
         != other.getMinGraphNodes()) return false;
     if (getExperimentalDisableCompressedTensorOptimization()
         != other.getExperimentalDisableCompressedTensorOptimization()) return false;
+    if (getExperimentalDisableFoldingQuantizationEmulation()
+        != other.getExperimentalDisableFoldingQuantizationEmulation()) return false;
     if (memoryOptimization_ != other.memoryOptimization_) return false;
     if (!getMemoryOptimizerTargetNodeNameScope()
         .equals(other.getMemoryOptimizerTargetNodeNameScope())) return false;
@@ -3009,6 +3081,8 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + DISABLE_META_OPTIMIZER_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getDisableMetaOptimizer());
+    hash = (37 * hash) + USE_PLUGIN_OPTIMIZERS_FIELD_NUMBER;
+    hash = (53 * hash) + usePluginOptimizers_;
     hash = (37 * hash) + META_OPTIMIZER_ITERATIONS_FIELD_NUMBER;
     hash = (53 * hash) + metaOptimizerIterations_;
     hash = (37 * hash) + MIN_GRAPH_NODES_FIELD_NUMBER;
@@ -3016,6 +3090,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + EXPERIMENTAL_DISABLE_COMPRESSED_TENSOR_OPTIMIZATION_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getExperimentalDisableCompressedTensorOptimization());
+    hash = (37 * hash) + EXPERIMENTAL_DISABLE_FOLDING_QUANTIZATION_EMULATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getExperimentalDisableFoldingQuantizationEmulation());
     hash = (37 * hash) + MEMORY_OPTIMIZATION_FIELD_NUMBER;
     hash = (53 * hash) + memoryOptimization_;
     hash = (37 * hash) + MEMORY_OPTIMIZER_TARGET_NODE_NAME_SCOPE_FIELD_NUMBER;
@@ -3225,11 +3302,15 @@ private static final long serialVersionUID = 0L;
 
       disableMetaOptimizer_ = false;
 
+      usePluginOptimizers_ = 0;
+
       metaOptimizerIterations_ = 0;
 
       minGraphNodes_ = 0;
 
       experimentalDisableCompressedTensorOptimization_ = false;
+
+      experimentalDisableFoldingQuantizationEmulation_ = false;
 
       memoryOptimization_ = 0;
 
@@ -3316,9 +3397,11 @@ private static final long serialVersionUID = 0L;
       result.autoMixedPrecision_ = autoMixedPrecision_;
       result.autoMixedPrecisionMkl_ = autoMixedPrecisionMkl_;
       result.disableMetaOptimizer_ = disableMetaOptimizer_;
+      result.usePluginOptimizers_ = usePluginOptimizers_;
       result.metaOptimizerIterations_ = metaOptimizerIterations_;
       result.minGraphNodes_ = minGraphNodes_;
       result.experimentalDisableCompressedTensorOptimization_ = experimentalDisableCompressedTensorOptimization_;
+      result.experimentalDisableFoldingQuantizationEmulation_ = experimentalDisableFoldingQuantizationEmulation_;
       result.memoryOptimization_ = memoryOptimization_;
       result.memoryOptimizerTargetNodeNameScope_ = memoryOptimizerTargetNodeNameScope_;
       result.metaOptimizerTimeoutMs_ = metaOptimizerTimeoutMs_;
@@ -3459,6 +3542,9 @@ private static final long serialVersionUID = 0L;
       if (other.getDisableMetaOptimizer() != false) {
         setDisableMetaOptimizer(other.getDisableMetaOptimizer());
       }
+      if (other.usePluginOptimizers_ != 0) {
+        setUsePluginOptimizersValue(other.getUsePluginOptimizersValue());
+      }
       if (other.metaOptimizerIterations_ != 0) {
         setMetaOptimizerIterationsValue(other.getMetaOptimizerIterationsValue());
       }
@@ -3467,6 +3553,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getExperimentalDisableCompressedTensorOptimization() != false) {
         setExperimentalDisableCompressedTensorOptimization(other.getExperimentalDisableCompressedTensorOptimization());
+      }
+      if (other.getExperimentalDisableFoldingQuantizationEmulation() != false) {
+        setExperimentalDisableFoldingQuantizationEmulation(other.getExperimentalDisableFoldingQuantizationEmulation());
       }
       if (other.memoryOptimization_ != 0) {
         setMemoryOptimizationValue(other.getMemoryOptimizationValue());
@@ -4750,6 +4839,71 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int usePluginOptimizers_ = 0;
+    /**
+     * <pre>
+     * Optimizers registered by plugin (default is ON)
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+     */
+    public int getUsePluginOptimizersValue() {
+      return usePluginOptimizers_;
+    }
+    /**
+     * <pre>
+     * Optimizers registered by plugin (default is ON)
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+     */
+    public Builder setUsePluginOptimizersValue(int value) {
+      usePluginOptimizers_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimizers registered by plugin (default is ON)
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+     */
+    public org.tensorflow.proto.framework.RewriterConfig.Toggle getUsePluginOptimizers() {
+      @SuppressWarnings("deprecation")
+      org.tensorflow.proto.framework.RewriterConfig.Toggle result = org.tensorflow.proto.framework.RewriterConfig.Toggle.valueOf(usePluginOptimizers_);
+      return result == null ? org.tensorflow.proto.framework.RewriterConfig.Toggle.UNRECOGNIZED : result;
+    }
+    /**
+     * <pre>
+     * Optimizers registered by plugin (default is ON)
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+     */
+    public Builder setUsePluginOptimizers(org.tensorflow.proto.framework.RewriterConfig.Toggle value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      usePluginOptimizers_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Optimizers registered by plugin (default is ON)
+     * </pre>
+     *
+     * <code>.tensorflow.RewriterConfig.Toggle use_plugin_optimizers = 28;</code>
+     */
+    public Builder clearUsePluginOptimizers() {
+      
+      usePluginOptimizers_ = 0;
+      onChanged();
+      return this;
+    }
+
     private int metaOptimizerIterations_ = 0;
     /**
      * <pre>
@@ -4904,6 +5058,59 @@ private static final long serialVersionUID = 0L;
     public Builder clearExperimentalDisableCompressedTensorOptimization() {
       
       experimentalDisableCompressedTensorOptimization_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean experimentalDisableFoldingQuantizationEmulation_ ;
+    /**
+     * <pre>
+     * Disable folding quantization emulation ops such as FakeQuantWithMinMax* and
+     * QuantizeAndDequantize*. Some compilers (e.g. the TF-to-tflite converter)
+     * have to extract quantization configs (e.g. min/max range, number of bits,
+     * and per-channel) from the quantization emulation ops. Note that this flag
+     * is experimental and may be removed in the future. See b/174138564 for more
+     * details.
+     * </pre>
+     *
+     * <code>bool experimental_disable_folding_quantization_emulation = 27;</code>
+     */
+    public boolean getExperimentalDisableFoldingQuantizationEmulation() {
+      return experimentalDisableFoldingQuantizationEmulation_;
+    }
+    /**
+     * <pre>
+     * Disable folding quantization emulation ops such as FakeQuantWithMinMax* and
+     * QuantizeAndDequantize*. Some compilers (e.g. the TF-to-tflite converter)
+     * have to extract quantization configs (e.g. min/max range, number of bits,
+     * and per-channel) from the quantization emulation ops. Note that this flag
+     * is experimental and may be removed in the future. See b/174138564 for more
+     * details.
+     * </pre>
+     *
+     * <code>bool experimental_disable_folding_quantization_emulation = 27;</code>
+     */
+    public Builder setExperimentalDisableFoldingQuantizationEmulation(boolean value) {
+      
+      experimentalDisableFoldingQuantizationEmulation_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Disable folding quantization emulation ops such as FakeQuantWithMinMax* and
+     * QuantizeAndDequantize*. Some compilers (e.g. the TF-to-tflite converter)
+     * have to extract quantization configs (e.g. min/max range, number of bits,
+     * and per-channel) from the quantization emulation ops. Note that this flag
+     * is experimental and may be removed in the future. See b/174138564 for more
+     * details.
+     * </pre>
+     *
+     * <code>bool experimental_disable_folding_quantization_emulation = 27;</code>
+     */
+    public Builder clearExperimentalDisableFoldingQuantizationEmulation() {
+      
+      experimentalDisableFoldingQuantizationEmulation_ = false;
       onChanged();
       return this;
     }

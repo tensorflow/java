@@ -1960,7 +1960,7 @@ public final class MathOps {
   }
 
   /**
-   * Computes softplus: {@code log(exp(features) + 1)}.
+   * The Softplus operation
    *
    * @param <T> data type for {@code activations} output
    * @param features the features value

@@ -43,29 +43,29 @@ import org.tensorflow.types.family.TType;
  * <p>{@code y[idx[i]] = x[i] for i in [0, 1,...,rank(x) - 1]}
  * <p>For example:
  * <pre>
- * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
- * y, idx, count = unique_with_counts(x)
+ * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+ * y, idx, count = UniqueWithCountsV2(x, axis = [0])
  * y ==&gt; [1, 2, 4, 7, 8]
  * idx ==&gt; [0, 0, 1, 2, 2, 2, 3, 4, 4]
  * count ==&gt; [2, 1, 3, 1, 2]
  * </pre>
- * <p>For an {@code 2-D} tensor {@code x} with {@code axis = 0}:
+ * <p>For a {@code 2-D} tensor {@code x} with {@code axis = 0}:
  * <pre>
- * # tensor 'x' is [[1, 0, 0],
- * #                [1, 0, 0],
- * #                [2, 0, 0]]
- * y, idx, count = unique_with_counts(x, axis=0)
+ * x = tf.constant([[1, 0, 0],
+ *                 [1, 0, 0],
+ *                 [2, 0, 0]])
+ * y, idx, count = UniqueWithCountsV2(x, axis=[0])
  * y ==&gt; [[1, 0, 0],
  *        [2, 0, 0]]
  * idx ==&gt; [0, 0, 1]
  * count ==&gt; [2, 1]
  * </pre>
- * <p>For an {@code 2-D} tensor {@code x} with {@code axis = 1}:
+ * <p>For a {@code 2-D} tensor {@code x} with {@code axis = 1}:
  * <pre>
- * # tensor 'x' is [[1, 0, 0],
- * #                [1, 0, 0],
- * #                [2, 0, 0]]
- * y, idx, count = unique_with_counts(x, axis=1)
+ * x = tf.constant([[1, 0, 0],
+ *                 [1, 0, 0],
+ *                 [2, 0, 0]])
+ * y, idx, count = UniqueWithCountsV2(x, axis=[1])
  * y ==&gt; [[1, 0],
  *        [1, 0],
  *        [2, 0]]

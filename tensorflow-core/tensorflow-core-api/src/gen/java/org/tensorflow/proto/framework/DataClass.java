@@ -20,8 +20,7 @@ public enum DataClass
   /**
    * <pre>
    * Scalar time series. Each `Value` for the corresponding tag must have
-   * `tensor` set to a rank-0 tensor of floating-point dtype, which will be
-   * converted to float64.
+   * `tensor` set to a rank-0 tensor of type `DT_FLOAT` (float32).
    * </pre>
    *
    * <code>DATA_CLASS_SCALAR = 1;</code>
@@ -62,8 +61,7 @@ public enum DataClass
   /**
    * <pre>
    * Scalar time series. Each `Value` for the corresponding tag must have
-   * `tensor` set to a rank-0 tensor of floating-point dtype, which will be
-   * converted to float64.
+   * `tensor` set to a rank-0 tensor of type `DT_FLOAT` (float32).
    * </pre>
    *
    * <code>DATA_CLASS_SCALAR = 1;</code>

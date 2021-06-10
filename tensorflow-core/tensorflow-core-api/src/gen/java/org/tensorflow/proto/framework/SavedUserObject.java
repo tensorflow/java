@@ -194,6 +194,9 @@ private static final long serialVersionUID = 0L;
   private volatile java.lang.Object metadata_;
   /**
    * <pre>
+   * Deprecated! At the time of deprecation, Keras was the only user of this
+   * field, and its saving and loading code will be updated shortly.
+   * Please save your application-specific metadata to separate file
    * Initialization-related metadata.
    * </pre>
    *
@@ -213,6 +216,9 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
+   * Deprecated! At the time of deprecation, Keras was the only user of this
+   * field, and its saving and loading code will be updated shortly.
+   * Please save your application-specific metadata to separate file
    * Initialization-related metadata.
    * </pre>
    *
@@ -834,6 +840,9 @@ private static final long serialVersionUID = 0L;
     private java.lang.Object metadata_ = "";
     /**
      * <pre>
+     * Deprecated! At the time of deprecation, Keras was the only user of this
+     * field, and its saving and loading code will be updated shortly.
+     * Please save your application-specific metadata to separate file
      * Initialization-related metadata.
      * </pre>
      *
@@ -853,6 +862,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Deprecated! At the time of deprecation, Keras was the only user of this
+     * field, and its saving and loading code will be updated shortly.
+     * Please save your application-specific metadata to separate file
      * Initialization-related metadata.
      * </pre>
      *
@@ -873,6 +885,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Deprecated! At the time of deprecation, Keras was the only user of this
+     * field, and its saving and loading code will be updated shortly.
+     * Please save your application-specific metadata to separate file
      * Initialization-related metadata.
      * </pre>
      *
@@ -890,6 +905,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Deprecated! At the time of deprecation, Keras was the only user of this
+     * field, and its saving and loading code will be updated shortly.
+     * Please save your application-specific metadata to separate file
      * Initialization-related metadata.
      * </pre>
      *
@@ -903,6 +921,9 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
+     * Deprecated! At the time of deprecation, Keras was the only user of this
+     * field, and its saving and loading code will be updated shortly.
+     * Please save your application-specific metadata to separate file
      * Initialization-related metadata.
      * </pre>
      *

@@ -85,31 +85,34 @@ public interface EventOrBuilder extends
 
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  boolean hasLogMessage();
+  @java.lang.Deprecated boolean hasLogMessage();
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  org.tensorflow.proto.util.LogMessage getLogMessage();
+  @java.lang.Deprecated org.tensorflow.proto.util.LogMessage getLogMessage();
   /**
    * <pre>
-   * The user output a log message. Not all messages are logged, only ones
-   * generated via the Python tensorboard_logging module.
+   * The user output a log message. This was theoretically used by the defunct
+   * tensorboard_logging module, which has since been removed; this field is
+   * now deprecated and should not be used.
    * </pre>
    *
-   * <code>.tensorflow.LogMessage log_message = 6;</code>
+   * <code>.tensorflow.LogMessage log_message = 6 [deprecated = true];</code>
    */
-  org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder();
+  @java.lang.Deprecated org.tensorflow.proto.util.LogMessageOrBuilder getLogMessageOrBuilder();
 
   /**
    * <pre>

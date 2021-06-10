@@ -781,7 +781,51 @@ limitations under the License.
 // #ifndef TENSORFLOW_C_TF_TSTRING_H_
 // #define TENSORFLOW_C_TF_TSTRING_H_
 
+// #include "tensorflow/c/tf_tensor.h"
 // #include "tensorflow/core/platform/ctstring.h"
+
+// #ifdef SWIG
+// #define TF_CAPI_EXPORT
+// #else
+// #if defined(_WIN32)
+// #ifdef TF_COMPILE_LIBRARY
+// #define TF_CAPI_EXPORT __declspec(dllexport)
+// #else
+// #define TF_CAPI_EXPORT __declspec(dllimport)
+// #endif  // TF_COMPILE_LIBRARY
+// #else
+// #define TF_CAPI_EXPORT __attribute__((visibility("default")))
+// #endif  // _WIN32
+// #endif  // SWIG
+
+// #ifdef __cplusplus
+// #endif
+
+public static native void TF_StringInit(TF_TString t);
+
+public static native void TF_StringCopy(TF_TString dst, @Cast("const char*") BytePointer src,
+                                         @Cast("size_t") long size);
+public static native void TF_StringCopy(TF_TString dst, String src,
+                                         @Cast("size_t") long size);
+
+public static native void TF_StringAssignView(TF_TString dst, @Cast("const char*") BytePointer src,
+                                               @Cast("size_t") long size);
+public static native void TF_StringAssignView(TF_TString dst, String src,
+                                               @Cast("size_t") long size);
+
+public static native @Cast("const char*") BytePointer TF_StringGetDataPointer(
+    @Const TF_TString tstr);
+
+public static native @Cast("TF_TString_Type") int TF_StringGetType(@Const TF_TString str);
+
+public static native @Cast("size_t") long TF_StringGetSize(@Const TF_TString tstr);
+
+public static native @Cast("size_t") long TF_StringGetCapacity(@Const TF_TString str);
+
+public static native void TF_StringDealloc(TF_TString tstr);
+
+// #ifdef __cplusplus /* end extern "C" */
+// #endif
 
 // #endif  // THIRD_PARTY_TENSORFLOW_C_TF_TSTRING_H_
 
@@ -2530,7 +2574,7 @@ public static native @Cast("unsigned char") byte TF_TryEvaluateConstant(TF_Graph
 // Return a new execution session with the associated graph, or NULL on
 // error. Does not take ownership of any input parameters.
 //
-// *`graph` must be a valid graph (not deleted or nullptr). `graph` will be be
+// *`graph` must be a valid graph (not deleted or nullptr). `graph` will be
 // kept alive for the lifetime of the returned TF_Session. New nodes can still
 // be added to `graph` after this call.
 public static native TF_Session TF_NewSession(TF_Graph graph,
@@ -3067,6 +3111,7 @@ limitations under the License.
 // #include <stdint.h>
 
 // #include "tensorflow/c/c_api.h"
+// #include "tensorflow/c/experimental/stream_executor/stream_executor.h"
 // #include "tensorflow/c/tf_datatype.h"
 // #include "tensorflow/c/tf_status.h"
 // #include "tensorflow/c/tf_tensor.h"
@@ -3101,6 +3146,11 @@ limitations under the License.
 // Targeting ../TF_OpKernelContext.java
 
 
+
+// TF_InitKernel to do op/kernel registration.
+// Plugin should implement TF_InitKernel to register kernels. This function
+// should register all kernels in a plugin.
+public static native void TF_InitKernel();
 // Targeting ../Create_func_TF_OpKernelConstruction.java
 
 
@@ -3158,6 +3208,16 @@ public static native void TF_DeleteKernelBuilder(TF_KernelBuilder builder);
 // --------------------------------------------------------------------------
 // OpKernelContext routines
 
+// TF_GetStream returns the SP_Stream available in ctx.
+// This function returns a stream only for devices registered using the
+// StreamExecutor C API
+// (tensorflow/c/experimental/stream_executor/stream_executor.h). It will return
+// nullptr and set error status in all other cases.
+// Experimental: this function doesn't have compatibility guarantees and subject
+// to change at any time.
+public static native @ByVal @Cast("SP_Stream*") Pointer TF_GetStream(TF_OpKernelContext ctx,
+                                             TF_Status status);
+
 // TF_NumInputs returns the number of inputs available in ctx.
 public static native int TF_NumInputs(TF_OpKernelContext ctx);
 
@@ -3199,6 +3259,39 @@ public static native @Cast("TF_DataType") int TF_ExpectedOutputDataType(
 
 // Returns the step ID of the given context.
 public static native @Cast("int64_t") long TF_StepId(TF_OpKernelContext ctx);
+
+// Get the list_size and total_size of the attribute `attr_name` of `oper`.
+// list_size - the length of the list.
+// total_size - total size of the list.
+//   (1) If attr_type == TF_ATTR_STRING
+//       then total_size is the cumulative byte size
+//       of all the strings in the list.
+//   (3) If attr_type == TF_ATTR_SHAPE
+//       then total_size is the number of dimensions
+//       of the shape valued attribute, or -1
+//       if its rank is unknown.
+//   (4) If attr_type == TF_ATTR_SHAPE
+//       then total_size is the cumulative number
+//       of dimensions of all shapes in the list.
+//   (5) Otherwise, total_size is undefined.
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, IntPointer list_size,
+    IntPointer total_size, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, String attr_name, IntBuffer list_size,
+    IntBuffer total_size, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, int[] list_size,
+    int[] total_size, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, String attr_name, IntPointer list_size,
+    IntPointer total_size, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, IntBuffer list_size,
+    IntBuffer total_size, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrSize(
+    TF_OpKernelConstruction ctx, String attr_name, int[] list_size,
+    int[] total_size, TF_Status status);
 
 // Interprets the named kernel construction attribute as a TF_DataType and
 // places it into *val. *status is set to TF_OK.
@@ -3247,6 +3340,273 @@ public static native void TF_OpKernelConstruction_GetAttrInt32(
 public static native void TF_OpKernelConstruction_GetAttrInt32(
     TF_OpKernelConstruction ctx, String attr_name, int[] val,
     TF_Status status);
+
+// Interprets the named kernel construction attribute as int64_t and
+// places it into *val. *status is set to TF_OK.
+//
+// If the attribute could not be found or could not be interpreted as
+// int64, *status is populated with an error.
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") LongPointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") LongBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") long[] val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") LongPointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") LongBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") long[] val,
+    TF_Status status);
+
+// Interprets the named kernel construction attribute as float and
+// places it into *val. *status is set to TF_OK.
+//
+// If the attribute could not be found or could not be interpreted as
+// float, *status is populated with an error.
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, FloatPointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, String attr_name, FloatBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, float[] val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, String attr_name, FloatPointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, FloatBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloat(
+    TF_OpKernelConstruction ctx, String attr_name, float[] val,
+    TF_Status status);
+
+// Interprets the named kernel construction attribute as bool and
+// places it into *val. *status is set to TF_OK.
+//
+// If the attribute could not be found or could not be interpreted as
+// bool, *status is populated with an error.
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") BytePointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") ByteBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") byte[] val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") BytePointer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") ByteBuffer val,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBool(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") byte[] val,
+    TF_Status status);
+
+// Interprets the named kernel construction attribute as string and
+// places it into *val. `val` must
+// point to an array of length at least `max_length` (ideally set to
+// total_size from TF_OpKernelConstruction_GetAttrSize(ctx,
+// attr_name, list_size, total_size)). *status is set to TF_OK.
+//
+// If the attribute could not be found or could not be interpreted as
+// string, *status is populated with an error.
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char*") BytePointer val,
+    @Cast("size_t") long max_length, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char*") ByteBuffer val,
+    @Cast("size_t") long max_length, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char*") byte[] val,
+    @Cast("size_t") long max_length, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char*") BytePointer val,
+    @Cast("size_t") long max_length, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char*") ByteBuffer val,
+    @Cast("size_t") long max_length, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrString(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char*") byte[] val,
+    @Cast("size_t") long max_length, TF_Status status);
+
+// Interprets the named kernel construction attribute as a TF_DataType array and
+// places it into *vals. *status is set to TF_OK.
+// `vals` must point to an array of length at least `max_values` (ideally set
+// to list_size from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size)).
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("TF_DataType*") IntPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("TF_DataType*") IntBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("TF_DataType*") int[] vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("TF_DataType*") IntPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("TF_DataType*") IntBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrTypeList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("TF_DataType*") int[] vals,
+    int max_vals, TF_Status status);
+
+// Interprets the named kernel construction attribute as int32_t array and
+// places it into *vals. *status is set to TF_OK.
+// `vals` must point to an array of length at least `max_values` (ideally set
+// to list_size from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size)).
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, IntPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, String attr_name, IntBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, int[] vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, String attr_name, IntPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, IntBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt32List(
+    TF_OpKernelConstruction ctx, String attr_name, int[] vals,
+    int max_vals, TF_Status status);
+
+// Interprets the named kernel construction attribute as int64_t array and
+// places it into *vals. *status is set to TF_OK.
+// `vals` must point to an array of length at least `max_values` (ideally set
+// to list_size from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size)).
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") LongPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") LongBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") long[] vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") LongPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("int64_t*") LongBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrInt64List(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("int64_t*") long[] vals,
+    int max_vals, TF_Status status);
+
+// Interprets the named kernel construction attribute as float array and
+// places it into *vals. *status is set to TF_OK.
+// `vals` must point to an array of length at least `max_values` (ideally set
+// to list_size from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size)).
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, FloatPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, String attr_name, FloatBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, float[] vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, String attr_name, FloatPointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, FloatBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrFloatList(
+    TF_OpKernelConstruction ctx, String attr_name, float[] vals,
+    int max_vals, TF_Status status);
+
+// Interprets the named kernel construction attribute as bool array and
+// places it into *vals. *status is set to TF_OK.
+// `vals` must point to an array of length at least `max_values` (ideally set
+// to list_size from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size)).
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") BytePointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") ByteBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") byte[] vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") BytePointer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("unsigned char*") ByteBuffer vals,
+    int max_vals, TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrBoolList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("unsigned char*") byte[] vals,
+    int max_vals, TF_Status status);
+
+// Interprets the named kernel construction attribute as string array and fills
+// in `vals` and `lengths`, each of which must point to an array of length at
+// least `max_values`. *status is set to TF_OK. The elements of values will
+// point to addresses in `storage` which must be at least `storage_size` bytes
+// in length. Ideally, max_values would be set to list_size and `storage` would
+// be at least total_size, obtained from
+// TF_OpKernelConstruction_GetAttrSize(ctx, attr_name, list_size,
+// total_size).
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char**") PointerPointer vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char**") @ByPtrPtr BytePointer vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char**") @ByPtrPtr ByteBuffer vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char**") @ByPtrPtr byte[] vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char**") @ByPtrPtr BytePointer vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, @Cast("char**") @ByPtrPtr ByteBuffer vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+public static native void TF_OpKernelConstruction_GetAttrStringList(
+    TF_OpKernelConstruction ctx, String attr_name, @Cast("char**") @ByPtrPtr byte[] vals,
+    @Cast("size_t*") SizeTPointer lengths, int max_values, Pointer storage, @Cast("size_t") long storage_size,
+    TF_Status status);
+
+// Return true if the kernel construction has the attr_name
+public static native @Cast("bool") boolean TF_OpKernelConstruction_HasAttr(
+    TF_OpKernelConstruction ctx, @Cast("const char*") BytePointer attr_name, TF_Status status);
+public static native @Cast("bool") boolean TF_OpKernelConstruction_HasAttr(
+    TF_OpKernelConstruction ctx, String attr_name, TF_Status status);
 
 // Returns the unique operation name for this OpKernel.
 public static native @ByVal TF_StringView TF_OpKernelConstruction_GetName(

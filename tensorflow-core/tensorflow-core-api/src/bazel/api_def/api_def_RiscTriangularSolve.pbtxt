@@ -1,0 +1,6 @@
+op {
+  graph_op_name: "RiscTriangularSolve"
+  endpoint {
+    name: "risc.RiscTriangularSolve"
+  }
+}

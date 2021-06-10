@@ -96,13 +96,14 @@ public final class XPlaneProtos {
       "ouble_value\030\002 \001(\001H\000\022\026\n\014uint64_value\030\003 \001(" +
       "\004H\000\022\025\n\013int64_value\030\004 \001(\003H\000\022\023\n\tstr_value\030" +
       "\005 \001(\tH\000\022\025\n\013bytes_value\030\006 \001(\014H\000\022\023\n\tref_va" +
-      "lue\030\007 \001(\004H\000B\007\n\005value\"}\n\016XEventMetadata\022\n" +
-      "\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\024\n\014display_name" +
-      "\030\004 \001(\t\022\020\n\010metadata\030\003 \001(\014\022)\n\005stats\030\005 \003(\0132" +
-      "\032.tensorflow.profiler.XStat\">\n\rXStatMeta" +
-      "data\022\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\023\n\013descri" +
-      "ption\030\003 \001(\tB2\n\035org.tensorflow.proto.prof" +
-      "ilerB\014XPlaneProtosP\001\370\001\001b\006proto3"
+      "lue\030\007 \001(\004H\000B\007\n\005value\"\217\001\n\016XEventMetadata\022" +
+      "\n\n\002id\030\001 \001(\003\022\014\n\004name\030\002 \001(\t\022\024\n\014display_nam" +
+      "e\030\004 \001(\t\022\020\n\010metadata\030\003 \001(\014\022)\n\005stats\030\005 \003(\013" +
+      "2\032.tensorflow.profiler.XStat\022\020\n\010child_id" +
+      "\030\006 \003(\003\">\n\rXStatMetadata\022\n\n\002id\030\001 \001(\003\022\014\n\004n" +
+      "ame\030\002 \001(\t\022\023\n\013description\030\003 \001(\tB2\n\035org.te" +
+      "nsorflow.proto.profilerB\014XPlaneProtosP\001\370" +
+      "\001\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -155,7 +156,7 @@ public final class XPlaneProtos {
     internal_static_tensorflow_profiler_XEventMetadata_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_profiler_XEventMetadata_descriptor,
-        new java.lang.String[] { "Id", "Name", "DisplayName", "Metadata", "Stats", });
+        new java.lang.String[] { "Id", "Name", "DisplayName", "Metadata", "Stats", "ChildId", });
     internal_static_tensorflow_profiler_XStatMetadata_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_tensorflow_profiler_XStatMetadata_fieldAccessorTable = new

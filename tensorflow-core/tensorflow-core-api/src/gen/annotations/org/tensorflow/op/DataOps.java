@@ -55,8 +55,6 @@ import org.tensorflow.types.family.TType;
  * @see {@link Ops}
  */
 public final class DataOps {
-  public final DataExperimentalOps experimental;
-
   private final Scope scope;
 
   private final Ops ops;
@@ -64,7 +62,6 @@ public final class DataOps {
   DataOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
-    experimental = new DataExperimentalOps(ops);
   }
 
   /**

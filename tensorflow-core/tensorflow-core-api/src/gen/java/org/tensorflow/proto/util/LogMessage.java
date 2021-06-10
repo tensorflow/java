@@ -6,11 +6,13 @@ package org.tensorflow.proto.util;
 /**
  * <pre>
  * Protocol buffer used for logging messages to the events file.
+ * This was theoretically used by the defunct tensorboard_logging module, which
+ * has been removed; this message is now deprecated and should not be used.
  * </pre>
  *
  * Protobuf type {@code tensorflow.LogMessage}
  */
-public  final class LogMessage extends
+@java.lang.Deprecated public  final class LogMessage extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:tensorflow.LogMessage)
     LogMessageOrBuilder {
@@ -464,6 +466,8 @@ private static final long serialVersionUID = 0L;
   /**
    * <pre>
    * Protocol buffer used for logging messages to the events file.
+   * This was theoretically used by the defunct tensorboard_logging module, which
+   * has been removed; this message is now deprecated and should not be used.
    * </pre>
    *
    * Protobuf type {@code tensorflow.LogMessage}

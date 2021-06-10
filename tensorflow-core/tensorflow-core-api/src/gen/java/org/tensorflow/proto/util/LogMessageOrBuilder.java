@@ -3,7 +3,7 @@
 
 package org.tensorflow.proto.util;
 
-public interface LogMessageOrBuilder extends
+@java.lang.Deprecated public interface LogMessageOrBuilder extends
     // @@protoc_insertion_point(interface_extends:tensorflow.LogMessage)
     com.google.protobuf.MessageOrBuilder {
 

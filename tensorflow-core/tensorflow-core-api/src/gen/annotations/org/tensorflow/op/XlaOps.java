@@ -261,9 +261,13 @@ public final class XlaOps {
    * @param <T> data type for {@code output} output
    * @param input A {@code Tensor} of type T.
    * @param paddingValue A scalar {@code Tensor} of type T.
-   * @param paddingLow the padding to apply at the start of each input dimensions
-   * @param paddingHigh the padding to apply at the end of each input dimension.
-   * @param paddingInterior the padding to apply between each input element.
+   * @param paddingLow the padding to apply at the start of each input dimensions. Must
+   *  be a compile-time constant 1D tensor of length equal to rank of input.
+   * @param paddingHigh the padding to apply at the end of each input dimension. Must
+   *  be a compile-time constant 1D tensor of length equal to rank of input.
+   * @param paddingInterior the padding to apply between each input element. Must
+   *  be a compile-time constant 1D tensor of length equal to rank of input,
+   *  containing only non-negative values.
    * @param <T> data type for {@code XlaPad} output and operands
    * @param <U> data type for {@code XlaPad} output and operands
    * @return a new instance of Pad
@@ -340,11 +344,12 @@ public final class XlaOps {
    *
    * @param <T> data type for {@code output} output
    * @param input the input value
+   * @param options carries optional attribute values
    * @param <T> data type for {@code XlaSharding} output and operands
    * @return a new instance of Sharding
    */
-  public <T extends TType> Sharding<T> sharding(Operand<T> input) {
-    return Sharding.create(scope, input);
+  public <T extends TType> Sharding<T> sharding(Operand<T> input, Sharding.Options... options) {
+    return Sharding.create(scope, input, options);
   }
 
   /**

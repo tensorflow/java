@@ -11,7 +11,7 @@ public interface SavedObjectOrBuilder extends
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -22,7 +22,7 @@ public interface SavedObjectOrBuilder extends
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -32,7 +32,7 @@ public interface SavedObjectOrBuilder extends
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -42,7 +42,7 @@ public interface SavedObjectOrBuilder extends
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>
@@ -53,7 +53,7 @@ public interface SavedObjectOrBuilder extends
    * <pre>
    * Objects which this object depends on: named edges in the dependency
    * graph.
-   * Note: currently only valid if kind == "user_object".
+   * Note: currently only valid if kind == "user_object" or "resource".
    * </pre>
    *
    * <code>repeated .tensorflow.TrackableObjectGraph.TrackableObject.ObjectReference children = 1;</code>

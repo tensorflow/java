@@ -68,7 +68,7 @@ public final class RaggedTensorToTensor<U extends TType> extends RawOp implement
    * Factory method to create a class wrapping a new RaggedTensorToTensor operation.
    *
    * @param scope current scope
-   * @param shape The desired shape of the the output tensor. If left unspecified (empty),
+   * @param shape The desired shape of the output tensor. If left unspecified (empty),
    * the minimal shape required to contain all the elements in the ragged tensor
    * (the natural shape) will be used. If some dimensions are left unspecified, then
    * the size of the natural shape is used in that dimension.
