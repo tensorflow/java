@@ -15,6 +15,7 @@ limitations under the License.
 */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_NewGraph;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -504,7 +505,7 @@ public class SavedModelBundle implements AutoCloseable {
       TF_Buffer runOpts = TF_Buffer.newBufferFromString(runOptions);
 
       // load the session
-      TF_Graph graph = TF_Graph.newGraph();
+      TF_Graph graph = TF_NewGraph();
       TF_Buffer metagraphDef = TF_Buffer.newBuffer();
       TF_Session session =
           TF_Session.loadSessionFromSavedModel(
