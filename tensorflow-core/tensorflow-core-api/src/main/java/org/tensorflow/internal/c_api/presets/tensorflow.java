@@ -383,7 +383,8 @@ public class tensorflow implements LoadEnabled, InfoMapper {
         .put(
             new Info(
                     "TF_ShapeInferenceContextDimValueKnown",
-                    "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)")
+                    "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
+                    "TF_InitKernel")
                 .skip());
   }
 }
