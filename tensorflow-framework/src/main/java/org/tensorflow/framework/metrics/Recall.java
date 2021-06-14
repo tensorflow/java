@@ -496,16 +496,7 @@ public class Recall<T extends TNumber> extends Metric<T> {
       Integer classId,
       long seed,
       Class<T> type) {
-    super(tf, name, seed);
-    this.type = type;
-    this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
-    this.falseNegativesName = this.getVariableName(FALSE_NEGATIVES);
-    float defaultThreshold = topK == null ? DEFAULT_THRESHOLD : MetricsHelper.NEG_INF;
-
-    this.thresholds = thresholds == null ? new float[] {defaultThreshold} : thresholds;
-    this.topK = topK;
-    this.classId = classId;
-
+    this(name, thresholds, topK, classId, seed, type);
     init(tf);
   }
 
