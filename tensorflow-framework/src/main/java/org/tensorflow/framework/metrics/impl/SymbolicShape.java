@@ -14,11 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import org.tensorflow.Operand;
+import org.tensorflow.types.family.TNumber;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.tensorflow.Operand;
-import org.tensorflow.types.family.TNumber;
 
 /**
  * A class that represents a Symbolic shape.

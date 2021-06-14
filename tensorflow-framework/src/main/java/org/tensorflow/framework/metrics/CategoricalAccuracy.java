@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
@@ -23,6 +21,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Metric that calculates how often predictions matches one-hot labels.
@@ -49,6 +49,30 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Creates a CategoricalAccuracy metric, using {@link Class#getSimpleName()} for the metric name
    *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public CategoricalAccuracy(long seed, Class<T> type) {
+    this((String) null, seed, type);
+  }
+
+  /**
+   * Creates a CategoricalAccuracy metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public CategoricalAccuracy(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+    super.setLoss(this);
+  }
+
+  /**
+   * Creates a CategoricalAccuracy metric, using {@link Class#getSimpleName()} for the metric name
+   *
    * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -68,8 +92,8 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the data type for the variables
    */
   public CategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    super.setLoss(this);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**
@@ -86,9 +110,10 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<TInt64> trueMax = getTF().math.argMax(labels, getTF().constant(-1));
+    Ops tf = checkTF();
+    Operand<TInt64> trueMax = tf.math.argMax(labels, tf.constant(-1));
 
-    Operand<TInt64> predMax = getTF().math.argMax(predictions, getTF().constant(-1));
-    return cast(getTF(), getTF().math.equal(trueMax, predMax), getResultType());
+    Operand<TInt64> predMax = tf.math.argMax(predictions, tf.constant(-1));
+    return cast(tf, tf.math.equal(trueMax, predMax), getResultType());
   }
 }

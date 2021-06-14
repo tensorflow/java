@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.SparseOps;
 import org.tensorflow.op.sparse.DenseToDenseSetOperation;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Implementation of set operations */
 public class SetsOps {

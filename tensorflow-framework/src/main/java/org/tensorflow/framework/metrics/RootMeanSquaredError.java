@@ -15,9 +15,6 @@
  */
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
@@ -25,12 +22,40 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
+import java.util.List;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 /**
  * Computes root mean squared error metric between {@code labels} and {@code predictions} .
  *
  * @param <T> The data type for the metric result
  */
 public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
+
+  /**
+   * Creates a RootMeanSquaredError metric with a name of {@link Class#getSimpleName()}
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public RootMeanSquaredError(long seed, Class<T> type) {
+    this((String) null, seed, type);
+  }
+
+  /**
+   * Creates a RootMeanSquaredError metric
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public RootMeanSquaredError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+  }
 
   /**
    * Creates a RootMeanSquaredError metric with a name of {@link Class#getSimpleName()}
@@ -55,7 +80,8 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
    * @param type the data type for the variables
    */
   public RootMeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**

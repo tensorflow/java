@@ -34,13 +34,36 @@ public class Sum<T extends TNumber> extends Reduce<T> {
   /**
    * Creates a Sum metric with a name of {@link Class#getSimpleName()}
    *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public Sum(long seed, Class<T> type) {
+    super(null, MetricReduction.SUM, seed, type);
+  }
+
+  /**
+   * Creates a Sum metric.
+   *
+   * @param name the name of the metric instance. If null, defaults to {@link Class#getSimpleName()}
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public Sum(String name, long seed, Class<T> type) {
+    super(name, MetricReduction.SUM, seed, type);
+  }
+
+  /**
+   * Creates a Sum metric with a name of {@link Class#getSimpleName()}
+   *
    * @param tf The TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
   public Sum(Ops tf, long seed, Class<T> type) {
-    super(tf, null, MetricReduction.SUM, seed, type);
+    this(tf, null, seed, type);
   }
 
   /**
@@ -53,6 +76,7 @@ public class Sum<T extends TNumber> extends Reduce<T> {
    * @param type the type for the variables and result
    */
   public Sum(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, MetricReduction.SUM, seed, type);
+    this(name, seed, type);
+    init(tf);
   }
 }

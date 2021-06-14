@@ -14,11 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.Metric;
@@ -28,6 +23,12 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Abstract base class that calculates the value of the given confusion matrix condition based on
@@ -44,6 +45,66 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
   private final Class<T> type;
   private Variable<T> accumulator;
   private Assign<T> initializer;
+
+  /**
+   * Creates a ConfusionMatrixConditionCount type of Metric, using a threshold of {@link
+   * #DEFAULT_THRESHOLD}
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param confusionMatrixCond the confusion matrix condition to calculate
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public ConfusionMatrixConditionCount(
+      String name, ConfusionMatrixEnum confusionMatrixCond, long seed, Class<T> type) {
+    this(name, confusionMatrixCond, DEFAULT_THRESHOLD, seed, type);
+  }
+  /**
+   * Creates a ConfusionMatrixConditionCount type of Metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param confusionMatrixCond the confusion matrix condition to calculate
+   * @param threshold a threshold value in {@code [0, 1]}. A threshold is compared with prediction
+   *     values to determine the truth value of predictions (i.e., above the threshold is {@code
+   *     true}, below is {@code false}). One metric value is generated for each threshold value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public ConfusionMatrixConditionCount(
+      String name,
+      ConfusionMatrixEnum confusionMatrixCond,
+      float threshold,
+      long seed,
+      Class<T> type) {
+    this(name, confusionMatrixCond, new float[] {threshold}, seed, type);
+  }
+
+  /**
+   * Creates a ConfusionMatrixConditionCount type of Metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param confusionMatrixCond the confusion matrix condition to calculate
+   * @param thresholds threshold values in {@code [0, 1]}. A threshold is compared with prediction
+   *     values to determine the truth value of predictions (i.e., above the threshold is {@code
+   *     true}, below is {@code false}). One metric value is generated for each threshold value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public ConfusionMatrixConditionCount(
+      String name,
+      ConfusionMatrixEnum confusionMatrixCond,
+      float[] thresholds,
+      long seed,
+      Class<T> type) {
+    super(name, seed);
+    accumulatorName = this.getVariableName(ACCUMULATOR);
+    this.type = type;
+    this.confusionMatrixCond = confusionMatrixCond;
+    this.thresholds = thresholds;
+  }
 
   /**
    * Creates a ConfusionMatrixConditionCount type of Metric, using a threshold of {@link
@@ -103,16 +164,18 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
       float[] thresholds,
       long seed,
       Class<T> type) {
-    super(tf, name, seed);
-    accumulatorName = this.getVariableName(ACCUMULATOR);
-    this.type = type;
-    this.confusionMatrixCond = confusionMatrixCond;
-    this.thresholds = thresholds;
-    init();
+    this(name, confusionMatrixCond, thresholds, seed, type);
+    init(tf);
   }
 
   /** Initialize the metric */
-  private void init() {
+  public Ops init(Ops tf) {
+    if (!tf.scope().env().isGraph()) {
+      throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
+    }
+
+    super.init(tf);
+
     Shape variableShape = Shape.of(this.thresholds.length);
 
     Zeros<T> zeros = new Zeros<>();
@@ -122,6 +185,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
             .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
     initializer =
         getTF().assign(accumulator, zeros.call(getTF(), getTF().constant(variableShape), type));
+    return getTF();
   }
 
   /**
@@ -147,7 +211,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
+    Ops tf = checkTF();
     Operand<T> tLabels = cast(tf, labels, type);
     Operand<T> tPredictions = cast(tf, predictions, type);
     Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
@@ -169,7 +233,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
   /** {@inheritDoc} */
   @Override
   public Operand<T> result() {
-    return getTF().identity(accumulator);
+    return checkTF().identity(accumulator);
   }
 
   /** {@inheritDoc} */

@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Metric that calculates how often predictions matches binary labels.
@@ -40,6 +40,45 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
 
   /** the threshold value for deciding whether prediction values are 1 or 0 */
   private final float threshold;
+
+  /**
+   * Creates a BinaryAccuracy Metric using {@link Class#getSimpleName()} for the metric name and
+   * {@link #DEFAULT_THRESHOLD} for the threshold value.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public BinaryAccuracy(long seed, Class<T> type) {
+    this((String) null, DEFAULT_THRESHOLD, seed, type);
+  }
+
+  /**
+   * Creates a BinaryAccuracy Metric using {@link Class#getSimpleName()} for the metric name
+   *
+   * @param threshold a threshold for deciding whether prediction values are 1 or 0
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public BinaryAccuracy(float threshold, long seed, Class<T> type) {
+    this((String) null, threshold, seed, type);
+  }
+
+  /**
+   * Creates a BinaryAccuracy Metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param threshold a threshold for deciding whether prediction values are 1 or 0
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public BinaryAccuracy(String name, float threshold, long seed, Class<T> type) {
+    super(name, seed, type);
+    this.threshold = threshold;
+    setLoss(this);
+  }
 
   /**
    * Creates a BinaryAccuracy Metric using {@link Class#getSimpleName()} for the metric name and
@@ -78,9 +117,8 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the data type for the variables
    */
   public BinaryAccuracy(Ops tf, String name, float threshold, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    this.threshold = threshold;
-    setLoss(this);
+    this(name, threshold, seed, type);
+    init(tf);
   }
 
   /**
@@ -93,12 +131,11 @@ public class BinaryAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    Operand<T> thresholdCast = cast(getTF(), getTF().constant(threshold), getResultType());
-    tPredictions =
-        cast(getTF(), getTF().math.greater(tPredictions, thresholdCast), getResultType());
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    return cast(getTF(), getTF().math.equal(tLabels, tPredictions), getResultType());
+    Ops tf = checkTF();
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+    Operand<T> thresholdCast = cast(tf, getTF().constant(threshold), getResultType());
+    tPredictions = cast(tf, tf.math.greater(tPredictions, thresholdCast), getResultType());
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    return cast(tf, tf.math.equal(tLabels, tPredictions), getResultType());
   }
 }

@@ -14,13 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.ConfusionMatrixEnum;
@@ -31,6 +24,14 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the recall of the predictions with respect to the labels.
@@ -66,6 +67,213 @@ public class Recall<T extends TNumber> extends Metric<T> {
   private final List<Op> initializers = new ArrayList<>();
   private Variable<T> truePositives;
   private Variable<T> falseNegatives;
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()}, and topK and classId set
+   * to null, and thresholds set to {@link #DEFAULT_THRESHOLD}
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(long seed, Class<T> type) {
+    this((String) null, null, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with topK and classId set to null and thresholds set to {@link
+   * #DEFAULT_THRESHOLD}.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(String name, long seed, Class<T> type) {
+    this(name, null, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()}, and topK and classId set
+   * to null.
+   *
+   * @param threshold A threshold is compared with prediction values to determine the truth value of
+   *     predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults to
+   *     {@link #DEFAULT_THRESHOLD}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(float threshold, long seed, Class<T> type) {
+    this((String) null, threshold, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()}, and topK and classId set
+   * to null.
+   *
+   * @param thresholds A threshold is compared with prediction values to determine the truth value
+   *     of predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults
+   *     to {@link #DEFAULT_THRESHOLD}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(float[] thresholds, long seed, Class<T> type) {
+    this((String) null, thresholds, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with topK and classId set to null.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param threshold A threshold is compared with prediction values to determine the truth value of
+   *     predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults to
+   *     {@link #DEFAULT_THRESHOLD}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(String name, float threshold, long seed, Class<T> type) {
+    this(name, threshold, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with topK and classId set to null.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param thresholds A threshold is compared with prediction values to determine the truth value
+   *     of predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults
+   *     to {@link #DEFAULT_THRESHOLD}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(String name, float[] thresholds, long seed, Class<T> type) {
+    this(name, thresholds, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()} and using a threshold
+   * value of {@link #DEFAULT_THRESHOLD}.
+   *
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(Integer topK, Integer classId, long seed, Class<T> type) {
+    this((String) null, null, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric using a threshold value of {@link #DEFAULT_THRESHOLD}.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(String name, Integer topK, Integer classId, long seed, Class<T> type) {
+    this(name, null, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()}
+   *
+   * @param threshold A threshold is compared with prediction values to determine the truth value of
+   *     predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults to
+   *     {@link #DEFAULT_THRESHOLD}.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(float threshold, Integer topK, Integer classId, long seed, Class<T> type) {
+    this((String) null, new float[] {threshold}, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric with a name of {@link Class#getSimpleName()}
+   *
+   * @param thresholds A threshold is compared with prediction values to determine the truth value
+   *     of predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults
+   *     to {@link #DEFAULT_THRESHOLD}.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(float[] thresholds, Integer topK, Integer classId, long seed, Class<T> type) {
+    this((String) null, thresholds, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param threshold A threshold is compared with prediction values to determine the truth value of
+   *     predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults to
+   *     {@link #DEFAULT_THRESHOLD}.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(
+      String name, float threshold, Integer topK, Integer classId, long seed, Class<T> type) {
+    this(name, new float[] {threshold}, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Recall metric.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param thresholds A threshold is compared with prediction values to determine the truth value
+   *     of predictions (i.e., above the threshold is `true`, below is `false`). If null, defaults
+   *     to {@link #DEFAULT_THRESHOLD}.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Recall(
+      String name, float[] thresholds, Integer topK, Integer classId, long seed, Class<T> type) {
+    super(name, seed);
+    this.type = type;
+    this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
+    this.falseNegativesName = this.getVariableName(FALSE_NEGATIVES);
+    float defaultThreshold = topK == null ? DEFAULT_THRESHOLD : MetricsHelper.NEG_INF;
+
+    this.thresholds = thresholds == null ? new float[] {defaultThreshold} : thresholds;
+    this.topK = topK;
+    this.classId = classId;
+  }
 
   /**
    * Creates a Recall metric with a name of {@link Class#getSimpleName()}, and topK and classId set
@@ -298,25 +506,28 @@ public class Recall<T extends TNumber> extends Metric<T> {
     this.topK = topK;
     this.classId = classId;
 
-    init();
+    init(tf);
   }
 
-  /** Initializes the Variables */
-  private void init() {
-    Ops tf = getTF();
+  /** {@inheritDoc} */
+  @Override
+  public Ops init(Ops tf) {
+    super.init(tf);
+
     Zeros<T> zeros = new Zeros<>();
     Operand<T> zero = zeros.call(tf, tf.constant(Shape.of(this.thresholds.length)), type);
     if (truePositives == null) {
 
-      truePositives = tf.withName(truePositivesName).variable(zero);
-      initializers.add(tf.assign(truePositives, zero));
+      truePositives = getTF().withName(truePositivesName).variable(zero);
+      initializers.add(getTF().assign(truePositives, zero));
     }
 
     if (this.falseNegatives == null) {
 
-      falseNegatives = tf.withName(falseNegativesName).variable(zero);
-      initializers.add(tf.assign(falseNegatives, zero));
+      falseNegatives = getTF().withName(falseNegativesName).variable(zero);
+      initializers.add(getTF().assign(falseNegatives, zero));
     }
+    return getTF();
   }
 
   /** {@inheritDoc} */

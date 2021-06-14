@@ -37,6 +37,34 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
    * Creates a SparseTopKCategoricalAccuracy metric using {@link #DEFAULT_K} for the number of top
    * elements.
    *
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the date type for the result
+   */
+  public SparseTopKCategoricalAccuracy(String name, long seed, Class<T> type) {
+    this(name, DEFAULT_K, seed, type);
+  }
+
+  /**
+   * Creates a SparseTopKCategoricalAccuracy metric.
+   *
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param k Number of top elements to look at for computing accuracy.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the date type for the result
+   */
+  public SparseTopKCategoricalAccuracy(String name, int k, long seed, Class<T> type) {
+    super(name, seed, type);
+    this.k = k;
+    setLoss(this);
+  }
+
+  /**
+   * Creates a SparseTopKCategoricalAccuracy metric using {@link #DEFAULT_K} for the number of top
+   * elements.
+   *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -58,9 +86,8 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
    * @param type the date type for the result
    */
   public SparseTopKCategoricalAccuracy(Ops tf, String name, int k, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    this.k = k;
-    setLoss(this);
+    this(name, k, seed, type);
+    init(tf);
   }
 
   /**
@@ -73,8 +100,9 @@ public class SparseTopKCategoricalAccuracy<T extends TNumber> extends MeanMetric
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Metrics.sparseTopKCategoricalAccuracy(getTF(), tLabels, tPredictions, k);
+    Ops tf = checkTF();
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+    return Metrics.sparseTopKCategoricalAccuracy(tf, tLabels, tPredictions, k);
   }
 }

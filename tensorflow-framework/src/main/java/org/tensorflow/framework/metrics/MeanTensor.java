@@ -14,10 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.losses.impl.LossTuple;
@@ -29,6 +25,11 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Metric that computes the element-wise (weighted) mean of the given tensors.
@@ -51,6 +52,31 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
   /**
    * Creates a MeanTensor metric, using {@link Class#getSimpleName()} as the name
    *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public MeanTensor(long seed, Class<T> type) {
+    this((String) null, seed, type);
+  }
+  /**
+   * Creates a MeanTensor metric
+   *
+   * @param name the name of this metric, if null then {@link Class#getSimpleName()} is used
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public MeanTensor(String name, long seed, Class<T> type) {
+    super(name, seed);
+    this.type = type;
+    this.totalName = this.getVariableName(TOTAL);
+    this.countName = this.getVariableName(COUNT);
+  }
+
+  /**
+   * Creates a MeanTensor metric, using {@link Class#getSimpleName()} as the name
+   *
    * @param tf the TensorFlow ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -69,10 +95,8 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   public MeanTensor(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed);
-    this.type = type;
-    this.totalName = this.getVariableName(TOTAL);
-    this.countName = this.getVariableName(COUNT);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**

@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.SensitivitySpecificityBase;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes best specificity where sensitivity is &gt;= specified value. {@code Sensitivity}
@@ -45,6 +45,74 @@ import org.tensorflow.types.family.TNumber;
 public class SpecificityAtSensitivity<T extends TNumber> extends SensitivitySpecificityBase<T> {
 
   private final float sensitivity;
+
+  /**
+   * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()} and
+   * {@link #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
+   *
+   * @param sensitivity the sensitivity. A scalar value in range [0, 1]
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if sensitivity is not in the range
+   *     [0-1].
+   */
+  public SpecificityAtSensitivity(float sensitivity, long seed, Class<T> type) {
+    this((String) null, sensitivity, DEFAULT_NUM_THRESHOLDS, seed, type);
+  }
+
+  /**
+   * Creates a SpecificityAtSensitivity metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number
+   * of thresholds
+   *
+   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
+   * @param sensitivity the sensitivity. A scalar value in range [0, 1]
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if sensitivity is not in the range
+   *     [0-1].
+   */
+  public SpecificityAtSensitivity(String name, float sensitivity, long seed, Class<T> type) {
+    this(name, sensitivity, DEFAULT_NUM_THRESHOLDS, seed, type);
+  }
+
+  /**
+   * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()}.
+   *
+   * @param sensitivity the sensitivity. A scalar value in range [0, 1]
+   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
+   *     sensitivity.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if sensitivity is not in the range
+   *     [0-1].
+   */
+  public SpecificityAtSensitivity(float sensitivity, int numThresholds, long seed, Class<T> type) {
+    this((String) null, sensitivity, numThresholds, seed, type);
+  }
+
+  /**
+   * Creates a SpecificityAtSensitivity metric.
+   *
+   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
+   * @param sensitivity the sensitivity. A scalar value in range [0, 1]
+   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
+   *     sensitivity.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if sensitivity is not in the range
+   *     [0-1].
+   */
+  public SpecificityAtSensitivity(
+      String name, float sensitivity, int numThresholds, long seed, Class<T> type) {
+    super(name, numThresholds, seed, type);
+    if (sensitivity < 0f || sensitivity > 1f)
+      throw new IllegalArgumentException("sensitivity must be in the range [0, 1].");
+    this.sensitivity = sensitivity;
+  }
 
   /**
    * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()} and
@@ -81,7 +149,7 @@ public class SpecificityAtSensitivity<T extends TNumber> extends SensitivitySpec
   }
 
   /**
-   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
+   * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()}.
    *
    * @param tf The TensorFlow Ops
    * @param sensitivity the sensitivity. A scalar value in range [0, 1]
@@ -99,7 +167,7 @@ public class SpecificityAtSensitivity<T extends TNumber> extends SensitivitySpec
   }
 
   /**
-   * Creates a PrecisionRecall metric.
+   * Creates a SpecificityAtSensitivity metric.
    *
    * @param tf The TensorFlow Ops
    * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
@@ -114,10 +182,8 @@ public class SpecificityAtSensitivity<T extends TNumber> extends SensitivitySpec
    */
   public SpecificityAtSensitivity(
       Ops tf, String name, float sensitivity, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, numThresholds, seed, type);
-    if (sensitivity < 0f || sensitivity > 1f)
-      throw new IllegalArgumentException("sensitivity must be in the range [0, 1].");
-    this.sensitivity = sensitivity;
+    this(name, sensitivity, numThresholds, seed, type);
+    init(tf);
   }
 
   /** {@inheritDoc} */

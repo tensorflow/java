@@ -14,15 +14,16 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.Mean;
 import org.tensorflow.framework.metrics.MetricReduction;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.List;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A class that bridges a stateless loss function with the {@link Mean} metric using a reduction of
@@ -38,6 +39,18 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
 
   /** The loss function interface */
   protected LossMetric<T> loss;
+
+  /**
+   * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
+   *
+   * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  protected MeanMetricWrapper(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+  }
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
@@ -93,12 +106,13 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
     if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
+    Ops tf = checkTF();
 
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
 
     Operand<T> losses = loss.call(tLabels, tPredictions);
 
-    return super.updateStateList(cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(cast(tf, losses, predictions.type()), sampleWeights);
   }
 }

@@ -47,6 +47,19 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Creates a Mean Absolute Error metric
    *
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public MeanSquaredError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+    setLoss(this);
+  }
+
+  /**
+   * Creates a Mean Absolute Error metric
+   *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -54,8 +67,8 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the type for the variables and result
    */
   public MeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    setLoss(this);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**
@@ -68,8 +81,9 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.meanSquaredError(getTF(), tLabels, tPredictions);
+    Ops tf = checkTF();
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+    return Losses.meanSquaredError(tf, tLabels, tPredictions);
   }
 }

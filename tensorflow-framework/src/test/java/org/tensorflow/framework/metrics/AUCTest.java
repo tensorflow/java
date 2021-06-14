@@ -23,9 +23,9 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -84,9 +84,6 @@ public class AUCTest {
       assertNull(instance.getTrueNegatives());
       assertNull(instance.getFalseNegatives());
 
-
-
-
       for (int i = 0; i < 3; i++) {
         Op update = instance.updateState(yTrue, yPred, null);
         session.run(update);
@@ -117,7 +114,6 @@ public class AUCTest {
       assertEquals(numThresholds, instance.getNumThresholds());
       float[] expectedThresholds = new float[] {-1e-7f, 0.5f, 1 + 1e-7f};
       assertArrayEquals(expectedThresholds, instance.getThresholds(), epsilon);
-
 
       Operand<TFloat32> yPred = tf.constant(new float[] {0, 0, 1, 1});
       Operand<TFloat32> yTrue = tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f});

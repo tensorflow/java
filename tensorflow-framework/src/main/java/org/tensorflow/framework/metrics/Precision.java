@@ -14,13 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.ConfusionMatrixEnum;
@@ -31,6 +24,14 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the precision of the predictions with respect to the labels.
@@ -68,6 +69,183 @@ public class Precision<T extends TNumber> extends Metric<T> {
   private final List<Op> initializers = new ArrayList<>();
   private Variable<T> truePositives;
   private Variable<T> falsePositives;
+
+  /**
+   * Creates a Precision Metric with a name of {@link Class#getSimpleName()} and no topK or classId
+   * values and with a threshold of {@link #DEFAULT_THRESHOLD}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(long seed, Class<T> type) {
+    this((String) null, null, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with no topK or classId values with a threshold of {@link
+   * #DEFAULT_THRESHOLD}.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(String name, long seed, Class<T> type) {
+    this(name, null, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with a name of {@link Class#getSimpleName()} and no topK or classId
+   * values.
+   *
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is compared
+   *     with prediction values to determine the truth value of predictions (i.e., above the
+   *     threshold is true, below is false). One metric value is generated for each threshold value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(float threshold, long seed, Class<T> type) {
+    this((String) null, new float[] {threshold}, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with a name of {@link Class#getSimpleName()} and no topK or classId
+   * values.
+   *
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
+   *     compared with prediction values to determine the truth value of predictions (i.e., above
+   *     the threshold is true, below is false). One metric value is generated for each threshold
+   *     value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(float[] thresholds, long seed, Class<T> type) {
+    this((String) null, thresholds, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with no topK or classId values.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is compared
+   *     with prediction values to determine the truth value of predictions (i.e., above the
+   *     threshold is true, below is false). One metric value is generated for each threshold value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(String name, float threshold, long seed, Class<T> type) {
+    this(name, new float[] {threshold}, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with no topK or classId values.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
+   *     compared with prediction values to determine the truth value of predictions (i.e., above
+   *     the threshold is true, below is false). One metric value is generated for each threshold
+   *     value.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(String name, float[] thresholds, long seed, Class<T> type) {
+    this(name, thresholds, null, null, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with a name of {@link Class#getSimpleName()}
+   *
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is compared
+   *     with prediction values to determine the truth value of predictions (i.e., above the
+   *     threshold is true, below is false). One metric value is generated for each threshold value.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(float threshold, Integer topK, Integer classId, long seed, Class<T> type) {
+    this((String) null, new float[] {threshold}, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric with a name of {@link Class#getSimpleName()}
+   *
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
+   *     compared with prediction values to determine the truth value of predictions (i.e., above
+   *     the threshold is true, below is false). One metric value is generated for each threshold
+   *     value.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(float[] thresholds, Integer topK, Integer classId, long seed, Class<T> type) {
+    this((String) null, thresholds, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param threshold Optional threshold value in the range {@code [0, 1]}. A threshold is compared
+   *     with prediction values to determine the truth value of predictions (i.e., above the
+   *     threshold is true, below is false). One metric value is generated for each threshold value.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(
+      String name, float threshold, Integer topK, Integer classId, long seed, Class<T> type) {
+    this(name, new float[] {threshold}, topK, classId, seed, type);
+  }
+
+  /**
+   * Creates a Precision Metric.
+   *
+   * @param name name of the metric instance. If null, name defaults to {@link
+   *     Class#getSimpleName()}.
+   * @param thresholds Optional threshold values in the range {@code [0, 1]}. A threshold is
+   *     compared with prediction values to determine the truth value of predictions (i.e., above
+   *     the threshold is true, below is false). One metric value is generated for each threshold
+   *     value.
+   * @param topK An optional value specifying the top-k predictions to consider when calculating
+   *     precision.
+   * @param classId Optional Integer class ID for which we want binary metrics. This must be in the
+   *     half-open interval [0, numClasses], where numClasses is the last dimension of predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Precision(
+      String name, float[] thresholds, Integer topK, Integer classId, long seed, Class<T> type) {
+    super(name, seed);
+    this.type = type;
+    this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
+    this.falsePositivesName = this.getVariableName(FALSE_POSITIVES);
+    float defaultThreshold = topK == null ? DEFAULT_THRESHOLD : MetricsHelper.NEG_INF;
+    this.thresholds = thresholds == null ? new float[] {defaultThreshold} : thresholds;
+    this.topK = topK;
+    this.classId = classId;
+  }
 
   /**
    * Creates a Precision Metric with a name of {@link Class#getSimpleName()} and no topK or classId
@@ -260,32 +438,27 @@ public class Precision<T extends TNumber> extends Metric<T> {
       Integer classId,
       long seed,
       Class<T> type) {
-    super(tf, name, seed);
-    this.type = type;
-    this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
-    this.falsePositivesName = this.getVariableName(FALSE_POSITIVES);
-    float defaultThreshold = topK == null ? DEFAULT_THRESHOLD : MetricsHelper.NEG_INF;
-    this.thresholds = thresholds == null ? new float[] {defaultThreshold} : thresholds;
-    this.topK = topK;
-    this.classId = classId;
+    this(name, thresholds, topK, classId, seed, type);
 
-    init();
+    init(tf);
   }
 
-  /** Initializes the variables */
-  private void init() {
-    Ops tf = getTF();
+  /** {@inheritDoc} */
+  @Override
+  public Ops init(Ops tf) {
+    super.init(tf);
     Zeros<T> zeros = new Zeros<>();
-    Operand<T> zero = zeros.call(tf, tf.constant(Shape.of(thresholds.length)), type);
+    Operand<T> zero = zeros.call(getTF(), getTF().constant(Shape.of(thresholds.length)), type);
 
     if (this.truePositives == null) {
-      this.truePositives = tf.withName(truePositivesName).variable(zero);
-      initializers.add(tf.assign(truePositives, zero));
+      this.truePositives = getTF().withName(truePositivesName).variable(zero);
+      initializers.add(getTF().assign(truePositives, zero));
     }
     if (this.falsePositives == null) {
-      this.falsePositives = tf.withName(falsePositivesName).variable(zero);
-      initializers.add(tf.assign(falsePositives, zero));
+      this.falsePositives = getTF().withName(falsePositivesName).variable(zero);
+      initializers.add(getTF().assign(falsePositives, zero));
     }
+    return getTF();
   }
 
   /**

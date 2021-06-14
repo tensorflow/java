@@ -34,6 +34,19 @@ public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implem
   /**
    * Creates a KLDivergence metric
    *
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public KLDivergence(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+    setLoss(this);
+  }
+
+  /**
+   * Creates a KLDivergence metric
+   *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -41,8 +54,8 @@ public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implem
    * @param type the type for the variables and result
    */
   public KLDivergence(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    setLoss(this);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**
@@ -55,8 +68,9 @@ public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implem
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.kullbackLeiblerDivergence(getTF(), tLabels, tPredictions);
+    Ops tf = checkTF();
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+    return Losses.kullbackLeiblerDivergence(tf, tLabels, tPredictions);
   }
 }

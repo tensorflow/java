@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.metrics.impl.LossMetric;
@@ -24,6 +22,8 @@ import org.tensorflow.framework.metrics.impl.MetricsHelper;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Metric that calculates how often predictions equals labels.
@@ -37,6 +37,30 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result
  */
 public class Accuracy<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
+
+  /**
+   * Creates an Accuracy Metric using {@link Class#getSimpleName()} for the metric name
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Accuracy(long seed, Class<T> type) {
+    this((String) null, seed, type);
+  }
+
+  /**
+   * Creates an Accuracy Metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  public Accuracy(String name, long seed, Class<T> type) {
+    super(name, seed, type);
+    setLoss(this);
+  }
 
   /**
    * Creates an Accuracy Metric using {@link Class#getSimpleName()} for the metric name
@@ -60,8 +84,8 @@ public class Accuracy<T extends TNumber> extends MeanMetricWrapper<T> implements
    * @param type the data type for the variables
    */
   public Accuracy(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    setLoss(this);
+    this(name, seed, type);
+    init(tf);
   }
 
   /**
@@ -76,10 +100,11 @@ public class Accuracy<T extends TNumber> extends MeanMetricWrapper<T> implements
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    Ops tf = checkTF();
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
     LossTuple<T> tuple =
-        MetricsHelper.raggedAssertCompatibleAndGetFlatValues(getTF(), tLabels, tPredictions);
+        MetricsHelper.raggedAssertCompatibleAndGetFlatValues(tf, tLabels, tPredictions);
     tLabels = tuple.getLabels();
     tPredictions = tuple.getTarget();
 
@@ -91,6 +116,6 @@ public class Accuracy<T extends TNumber> extends MeanMetricWrapper<T> implements
     }
 
     // cast TBool to result type
-    return cast(getTF(), getTF().math.equal(tLabels, tPredictions), getResultType());
+    return cast(tf, tf.math.equal(tLabels, tPredictions), getResultType());
   }
 }

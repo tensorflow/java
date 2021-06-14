@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.SensitivitySpecificityBase;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
+
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes best precision where recall is &gt;= specified value.
@@ -37,6 +37,73 @@ import org.tensorflow.types.family.TNumber;
 public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificityBase<T> {
 
   private final float recall;
+
+  /**
+   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()} and {@link
+   * #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
+   *
+   * @param recall the recall. A scalar value in range [0, 1]
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
+   */
+  public PrecisionAtRecall(float recall, long seed, Class<T> type) {
+    this((String) null, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
+  }
+
+  /**
+   * Creates a PrecisionRecall metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number of
+   * thresholds
+   *
+   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
+   * @param recall the recall. A scalar value in range [0, 1]
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
+   */
+  public PrecisionAtRecall(String name, float recall, long seed, Class<T> type) {
+    this(name, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
+  }
+
+  /**
+   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
+   *
+   * @param recall the recall. A scalar value in range [0, 1]
+   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
+   *     recall.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
+   */
+  public PrecisionAtRecall(float recall, int numThresholds, long seed, Class<T> type) {
+    this((String) null, recall, numThresholds, seed, type);
+  }
+
+  /**
+   * Creates a PrecisionRecall metric.
+   *
+   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
+   * @param recall the recall. A scalar value in range [0, 1]
+   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
+   *     recall.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
+   *     [0-1].
+   */
+  public PrecisionAtRecall(String name, float recall, int numThresholds, long seed, Class<T> type) {
+    super(name, numThresholds, seed, type);
+    if (recall < 0f || recall > 1f)
+      throw new IllegalArgumentException("recall must be in the range [0, 1].");
+    this.recall = recall;
+  }
 
   /**
    * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()} and {@link
@@ -104,10 +171,8 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    */
   public PrecisionAtRecall(
       Ops tf, String name, float recall, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, numThresholds, seed, type);
-    if (recall < 0f || recall > 1f)
-      throw new IllegalArgumentException("recall must be in the range [0, 1].");
-    this.recall = recall;
+    this(name, recall, numThresholds, seed, type);
+    init(tf);
   }
 
   /** {@inheritDoc} */

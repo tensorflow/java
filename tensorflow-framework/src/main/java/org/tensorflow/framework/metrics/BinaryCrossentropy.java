@@ -40,6 +40,28 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Creates a BinaryCrossentropy metric
    *
+   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
+   *     compute the loss between the predicted labels and a smoothed version of the true labels,
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     correspond to heavier smoothing.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public BinaryCrossentropy(
+      String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    super(name, seed, type);
+    setLoss(this);
+    this.fromLogits = fromLogits;
+    this.labelSmoothing = labelSmoothing;
+  }
+
+  /**
+   * Creates a BinaryCrossentropy metric
+   *
    * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
@@ -54,10 +76,8 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
    */
   public BinaryCrossentropy(
       Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    setLoss(this);
-    this.fromLogits = fromLogits;
-    this.labelSmoothing = labelSmoothing;
+    this(name, fromLogits, labelSmoothing, seed, type);
+    init(tf);
   }
 
   /**
@@ -71,8 +91,9 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
   @Override
   public Operand<T> call(
       Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.binaryCrossentropy(getTF(), tLabels, tPredictions, fromLogits, labelSmoothing);
+    Ops tf = checkTF();
+    Operand<T> tLabels = cast(tf, labels, getResultType());
+    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+    return Losses.binaryCrossentropy(tf, tLabels, tPredictions, fromLogits, labelSmoothing);
   }
 }

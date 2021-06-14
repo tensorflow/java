@@ -14,11 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
-import static org.tensorflow.framework.utils.CastHelper.cast;
-
-import java.util.Collections;
-import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.MetricsHelper;
@@ -28,6 +23,12 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
+
+import java.util.Collections;
+import java.util.List;
+
+import static org.tensorflow.framework.losses.impl.LossesHelper.allAxes;
+import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the mean Intersection-Over-Union metric.
@@ -60,6 +61,34 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
   /**
    * Creates a metric MeanIoU, using name as {@link Class#getSimpleName()}
    *
+   * @param numClasses The possible number of labels the prediction task can have
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  protected MeanIoU(long numClasses, long seed, Class<T> type) {
+    this((String) null, numClasses, seed, type);
+  }
+
+  /**
+   * Creates a MeanIoU metric
+   *
+   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
+   * @param numClasses The possible number of labels the prediction task can have
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the data type for the variables
+   */
+  protected MeanIoU(String name, long numClasses, long seed, Class<T> type) {
+    super(name, seed);
+    this.type = type;
+    this.totalCMName = this.getVariableName(TOTAL_CONFUSION_MATRIX);
+    this.numClasses = numClasses;
+  }
+
+  /**
+   * Creates a metric MeanIoU, using name as {@link Class#getSimpleName()}
+   *
    * @param tf the TensorFlow Ops
    * @param numClasses The possible number of labels the prediction task can have
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -81,14 +110,14 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   protected MeanIoU(Ops tf, String name, long numClasses, long seed, Class<T> type) {
-    super(tf, name, seed);
-    this.type = type;
-    this.totalCMName = this.getVariableName(TOTAL_CONFUSION_MATRIX);
-    this.numClasses = numClasses;
-    init();
+    this(name, numClasses, seed, type);
+    init(tf);
   }
 
-  private void init() {
+  /** {@inheritDoc} */
+  @Override
+  public Ops init(Ops tf) {
+    super.init(tf);
     Shape variableShape = Shape.of(numClasses, numClasses);
 
     if (totalConfusionMatrix == null) {
@@ -102,6 +131,7 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
               .assign(
                   totalConfusionMatrix, zeros.call(getTF(), getTF().constant(variableShape), type));
     }
+    return getTF();
   }
 
   /** {@inheritDoc} */
