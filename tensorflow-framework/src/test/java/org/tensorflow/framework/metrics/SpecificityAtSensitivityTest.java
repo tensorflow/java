@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Random;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -25,11 +29,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-
-import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class SpecificityAtSensitivityTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;

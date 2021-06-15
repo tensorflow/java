@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -24,8 +26,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SparseCategoricalCrossentropyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -159,7 +159,8 @@ class SparseCategoricalCrossentropyTest {
         () -> {
           try (TestSession session = TestSession.createTestSession(tfMode)) {
             SparseCategoricalCrossentropy<TFloat64> instance =
-                new SparseCategoricalCrossentropy<>("testIllegalState", true, -1, 1001L, TFloat64.class);
+                new SparseCategoricalCrossentropy<>(
+                    "testIllegalState", true, -1, 1001L, TFloat64.class);
             session.run(instance.resetStates());
             instance.result();
           }

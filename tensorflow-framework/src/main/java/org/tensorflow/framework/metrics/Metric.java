@@ -14,16 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.Initializable;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * Base class for Metrics

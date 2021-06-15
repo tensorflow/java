@@ -14,20 +14,19 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
 import org.tensorflow.ndarray.DoubleNdArray;
-import org.tensorflow.ndarray.FloatNdArray;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class MeanRelativeErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;

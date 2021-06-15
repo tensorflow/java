@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
@@ -22,12 +27,6 @@ import org.tensorflow.op.core.NoOp;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Weight broadcasting operations.

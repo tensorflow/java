@@ -14,13 +14,13 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.SensitivitySpecificityBase;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes best sensitivity where sensitivity is &gt;= specified value.

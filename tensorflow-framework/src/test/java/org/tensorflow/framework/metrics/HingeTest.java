@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -24,8 +26,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class HingeTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -62,10 +62,7 @@ class HingeTest {
         -1, 1, -1, 1,
         -1, -1, 1, 1
       };
-      float[] predArray = {
-        -0.3f, 0.2f, -0.1f, 1.6f,
-        -0.25f, -1.f, 0.5f, 0.6f
-      };
+      float[] predArray = {-0.3f, 0.2f, -0.1f, 1.6f, -0.25f, -1.f, 0.5f, 0.6f};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));

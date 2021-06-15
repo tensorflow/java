@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.Metric;
@@ -23,12 +28,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Abstract base class that calculates the value of the given confusion matrix condition based on

@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
@@ -24,11 +28,6 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Encapsulates metrics that perform a reduce operation on the metric values.

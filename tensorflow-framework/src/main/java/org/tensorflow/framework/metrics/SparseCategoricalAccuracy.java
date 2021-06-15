@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
@@ -23,10 +26,6 @@ import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.op.math.Equal;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Collections;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Calculates how often predictions matches integer labels.

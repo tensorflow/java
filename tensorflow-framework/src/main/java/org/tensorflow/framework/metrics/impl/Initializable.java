@@ -14,9 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
-import org.tensorflow.op.Ops;
-
 import java.util.function.Consumer;
+import org.tensorflow.op.Ops;
 
 public interface Initializable {
 

@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.List;
+import java.util.stream.IntStream;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
@@ -22,11 +26,6 @@ import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.List;
-import java.util.stream.IntStream;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * Computes the mean relative error by normalizing with the given values.
