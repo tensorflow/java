@@ -446,7 +446,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+    setTensorFlowOps(tf);
     Zeros<T> zeros = new Zeros<>();
     Operand<T> zero = zeros.call(getTF(), getTF().constant(Shape.of(thresholds.length)), type);
 
@@ -458,6 +458,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
       this.falsePositives = getTF().withName(falsePositivesName).variable(zero);
       initializers.add(getTF().assign(falsePositives, zero));
     }
+    applyOnInit();
     return getTF();
   }
 
@@ -519,6 +520,7 @@ public class Precision<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     return getTF().withSubScope("resetStates").withControlDependencies(initializers).noOp();
   }
 

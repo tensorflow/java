@@ -23,6 +23,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class FalsePositivesTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -46,7 +48,7 @@ public class FalsePositivesTest {
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
       FalsePositives<TFloat64> instance = new FalsePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
+      session.run(instance.resetStates());
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat64> result = instance.result();
@@ -64,7 +66,7 @@ public class FalsePositivesTest {
       Operand<TInt64> labels = tf.constant(this.trueArray);
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
       FalsePositives<TFloat64> instance = new FalsePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
+      session.run(instance.resetStates());
       Op update = instance.updateState(labels, predictions, sampleWeight);
       session.run(update);
       Operand<TFloat64> result = instance.result();
@@ -96,7 +98,7 @@ public class FalsePositivesTest {
               });
       FalsePositives<TFloat32> instance =
           new FalsePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
+      session.run(instance.resetStates());
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -137,12 +139,58 @@ public class FalsePositivesTest {
               });
       FalsePositives<TFloat64> instance =
           new FalsePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
+      session.run(instance.resetStates());
       Op update = instance.updateState(labels, predictions, sampleWeight);
       session.run(update);
       Operand<TFloat64> result = instance.result();
       double[] expected = new double[] {125., 42., 12.};
       session.evaluate(expected, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+
+      Operand<TFloat32> predictions =
+          tf.constant(
+              new float[][] {
+                {0.9f, 0.2f, 0.8f, 0.1f},
+                {0.2f, 0.9f, 0.7f, 0.6f},
+                {0.1f, 0.2f, 0.4f, 0.3f},
+                {0f, 1f, 0.7f, 0.3f}
+              });
+      Operand<TInt64> labels =
+          tf.constant(
+              new long[][] {
+                {0, 1, 1, 0},
+                {1, 0, 0, 0},
+                {0, 0, 0, 0},
+                {1, 1, 1, 1}
+              });
+      FalsePositives<TFloat32> instance =
+          new FalsePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      Op update = instance.updateState(labels, predictions, null);
+      session.run(update);
+      Operand<TFloat32> result = instance.result();
+      float[] expected = new float[] {7.f, 4.f, 2.f};
+      session.evaluate(expected, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            FalsePositives<TFloat64> instance =
+                new FalsePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

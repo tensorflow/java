@@ -1038,14 +1038,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+    setTensorFlowOps(tf);
     if (labelWeights != null) {
       // assert that labelWeights are non-negative.
       Op checks =
           getTF()
               .withSubScope("AUC")
               .assertThat(
-                  tf.math.greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
+                  getTF()
+                      .math
+                      .greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
                   Collections.singletonList(
                       tf.constant("All values of labelWeights must be non-negative.")));
 
@@ -1054,6 +1056,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
       this.labelWeights = ltf.identity(this.labelWeights);
     }
+    applyOnInit();
     return getTF();
   }
 
@@ -1392,6 +1395,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     List<Op> updateOperations = new ArrayList<>(initializers.values());
     return checkTF().withSubScope("resetStates").withControlDependencies(updateOperations).noOp();
   }

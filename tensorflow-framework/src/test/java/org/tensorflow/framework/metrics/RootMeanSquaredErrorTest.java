@@ -23,6 +23,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class RootMeanSquaredErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -68,5 +70,40 @@ public class RootMeanSquaredErrorTest {
       session.evaluate(2, count);
       session.evaluate(Math.sqrt(13), result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      RootMeanSquaredError<TFloat32> instance = new RootMeanSquaredError<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+
+      Operand<TFloat32> labels = tf.constant(new float[] {2, 4, 6});
+      Operand<TFloat32> predictions = tf.constant(new float[] {1, 3, 2});
+
+      Op op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      Variable<TFloat32> total = instance.getTotal();
+      Variable<TFloat32> count = instance.getCount();
+      Operand<TFloat32> result = instance.result();
+      session.evaluate(18, total);
+      session.evaluate(3, count);
+      session.evaluate(Math.sqrt(6), result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            RootMeanSquaredError<TFloat32> instance =
+                new RootMeanSquaredError<>(1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

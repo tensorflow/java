@@ -25,6 +25,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class LogCoshErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -76,5 +78,44 @@ class LogCoshErrorTest {
       session.evaluate(24.002228, total);
       session.evaluate(4.6, count);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      LogCoshError<TFloat64> instance = new LogCoshError<>("testInitTF", 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {1, 9, 2, -5, -2, 6};
+      float[] predArray = {4, 8, 12, 8, 1, 3};
+      double[][] sampleArray = {{1.2}, {3.4}};
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat32> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat64> sampleWeight = tf.constant(sampleArray);
+
+      Op op = instance.updateState(labels, predictions, sampleWeight);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(5.2178759, result);
+      session.evaluate(24.002228, total);
+      session.evaluate(4.6, count);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            LogCoshError<TFloat64> instance =
+                new LogCoshError<>("testIllegalState", 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

@@ -24,6 +24,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class BinaryAccuracyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -46,6 +48,19 @@ public class BinaryAccuracyTest {
       session.evaluate(2F, total);
       session.evaluate(2, count);
       session.evaluate(1F, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result();
+      session.evaluate(2F, total);
+      session.evaluate(2, count);
+      session.evaluate(1F, result);
     }
   }
 
@@ -65,6 +80,19 @@ public class BinaryAccuracyTest {
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
       Operand<TFloat32> result = instance.result();
+      session.evaluate(2F, total);
+      session.evaluate(4, count);
+      session.evaluate(0.5F, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result();
       session.evaluate(2F, total);
       session.evaluate(4, count);
       session.evaluate(0.5F, result);
@@ -91,6 +119,19 @@ public class BinaryAccuracyTest {
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
       Operand<TFloat32> result = instance.result();
+      session.evaluate(0.5F, total);
+      session.evaluate(.7, count);
+      session.evaluate(0.71428573f, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      op = instance.updateState(labels, predictions, sampleWeight);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result();
       session.evaluate(0.5F, total);
       session.evaluate(.7, count);
       session.evaluate(0.71428573f, result);
@@ -148,6 +189,19 @@ public class BinaryAccuracyTest {
       session.evaluate(0.2F, total);
       session.evaluate(.7, count);
       session.evaluate(0.2857143F, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      op = instance.updateState(labels, labels, sampleWeight);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result();
+      session.evaluate(0.2F, total);
+      session.evaluate(.7, count);
+      session.evaluate(0.2857143F, result);
     }
   }
 
@@ -171,6 +225,32 @@ public class BinaryAccuracyTest {
       session.evaluate(2F, total);
       session.evaluate(4, count);
       session.evaluate(0.5F, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(0.7f, 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+
+      op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result();
+      session.evaluate(2F, total);
+      session.evaluate(4, count);
+      session.evaluate(0.5F, result);
     }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

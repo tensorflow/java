@@ -213,9 +213,14 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
-    List<Op> controlOpsPre = new ArrayList<>();
-    controlOpsPre.add(countInitializer);
-    controlOpsPre.add(totalInitializer);
-    return getTF().withSubScope("resetStates").withControlDependencies(controlOpsPre).noOp();
+    checkTF();
+    if (countInitializer != null && totalInitializer != null) {
+      List<Op> controlOpsPre = new ArrayList<>();
+      controlOpsPre.add(countInitializer);
+      controlOpsPre.add(totalInitializer);
+      return getTF().withSubScope("resetStates").withControlDependencies(controlOpsPre).noOp();
+    } else {
+      return getTF().withSubScope("resetStates").noOp();
+    }
   }
 }

@@ -17,11 +17,14 @@ package org.tensorflow.framework.metrics;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
@@ -41,8 +44,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   private Operand<T> normalizer;
 
   // holders for the init(Ops) method
-  private float[] normalizerFloat;
-  private double[] normalizerDouble;
+  private DoubleNdArray normalizerArray;
 
   /**
    * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
@@ -66,8 +68,11 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
    * @param type the type for the variables and result
    */
   protected MeanRelativeError(String name, float[] normalizer, long seed, Class<T> type) {
-    super(name, seed, type);
-    this.normalizerFloat = normalizer;
+    this(
+        name,
+        IntStream.range(0, normalizer.length).mapToDouble(i -> normalizer[i]).toArray(),
+        seed,
+        type);
   }
 
   /**
@@ -92,8 +97,22 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
    * @param type the type for the variables and result
    */
   protected MeanRelativeError(String name, double[] normalizer, long seed, Class<T> type) {
+    this(name, StdArrays.ndCopyOf(normalizer), seed, type);
+  }
+
+  /**
+   * Creates a MeanRelativeError metric
+   *
+   * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
+   * @param normalizerArray The normalizer values with same shape as predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  protected MeanRelativeError(
+      String name, DoubleNdArray normalizerArray, long seed, Class<T> type) {
     super(name, seed, type);
-    this.normalizerDouble = normalizer;
+    this.normalizerArray = normalizerArray;
   }
 
   /**
@@ -201,8 +220,8 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
    */
   protected MeanRelativeError(
       Ops tf, String name, Operand<T> normalizer, long seed, Class<T> type) {
-    super(tf, name, seed, type);
-    this.normalizer = normalizer;
+    this(name, normalizer, seed, type);
+    init(tf);
   }
 
   /** {@inheritDoc} */
@@ -210,10 +229,8 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   public Ops init(Ops tf) {
     super.init(tf);
     if (normalizer == null) {
-      if (normalizerFloat != null) {
-        normalizer = cast(getTF(), getTF().constant(normalizerFloat), getResultType());
-      } else if (normalizerDouble != null) {
-        normalizer = cast(getTF(), getTF().constant(normalizerDouble), getResultType());
+      if (normalizerArray != null) {
+        normalizer = cast(getTF(), getTF().constant(normalizerArray), getResultType());
       }
     }
     return getTF();

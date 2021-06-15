@@ -25,6 +25,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class HingeTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -78,5 +80,40 @@ class HingeTest {
       session.evaluate(3.5, count);
       session.evaluate(.49285714f, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Hinge<TFloat64> instance = new Hinge<>("Hinge_testUnweighted", 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
+      double[] predArray = {-0.3, 0.2, -0.1, 1.6, -0.25, -1., 0.5, 0.6};
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
+      Operand<TFloat64> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
+      Op op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(1.0125, total);
+      session.evaluate(2, count);
+      session.evaluate(.5062500, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            Hinge<TFloat64> instance = new Hinge<>("Hinge_testWeighted", 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

@@ -23,6 +23,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class MeanTensorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -32,7 +34,7 @@ public class MeanTensorTest {
       Ops tf = session.getTF();
       Operand<TInt64> values = tf.constant(new long[] {100, 40});
       MeanTensor<TFloat64> instance = new MeanTensor<>(tf, 1001L, TFloat64.class);
-      session.run(tf.init());
+      session.run(instance.resetStates());
       Op update = instance.updateState(values, null);
       session.run(update);
       Operand<TFloat64> result = instance.result();
@@ -54,7 +56,7 @@ public class MeanTensorTest {
       Ops tf = session.getTF();
       Operand<TInt64> values = tf.constant(new long[] {100, 30});
       MeanTensor<TFloat64> instance = new MeanTensor<>(tf, 1001L, TFloat64.class);
-      session.run(tf.init());
+      session.run(instance.resetStates());
 
       // check scalar weight
       Op update = instance.updateState(values, tf.constant(0.5f));
@@ -115,5 +117,40 @@ public class MeanTensorTest {
       session.evaluate(tf.constant(new float[][] {{1f}, {1f}}), instance.getTotal());
       session.evaluate(tf.constant(new float[][] {{1f}, {0.2f}}), instance.getCount());
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Operand<TInt64> values = tf.constant(new long[] {100, 40});
+      MeanTensor<TFloat64> instance = new MeanTensor<>(1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      Op update = instance.updateState(values, null);
+      session.run(update);
+      Operand<TFloat64> result = instance.result();
+      double[] expected_result = new double[] {100, 40};
+      session.evaluate(expected_result, result);
+
+      session.evaluate(expected_result, instance.getTotal());
+      session.evaluate(new double[] {1, 1}, instance.getCount());
+
+      session.run(instance.resetStates());
+      session.evaluate(new double[] {0, 0}, instance.getTotal());
+      session.evaluate(new double[] {0, 0}, instance.getCount());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            MeanTensor<TFloat64> instance = new MeanTensor<>(1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

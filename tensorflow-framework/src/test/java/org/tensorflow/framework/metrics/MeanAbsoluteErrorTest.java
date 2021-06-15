@@ -25,6 +25,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class MeanAbsoluteErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -112,5 +114,61 @@ class MeanAbsoluteErrorTest {
       session.evaluate(0, instance.getCount());
       session.evaluate(0., instance.getCount());
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      MeanAbsoluteError<TFloat64> instance =
+          new MeanAbsoluteError<>("MAE_testUnweighted", 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      session.evaluate(0.0f, instance.getTotal());
+      session.evaluate(0f, instance.getCount());
+      session.evaluate(0.f, instance.getCount());
+
+      int[] trueArray = {
+        0, 1, 0, 1, 0,
+        0, 0, 1, 1, 1,
+        1, 1, 1, 1, 0,
+        0, 0, 0, 0, 1
+      };
+      float[] predictionArray = {
+        0, 0, 1, 1, 0,
+        1, 1, 1, 1, 1,
+        0, 1, 0, 1, 0,
+        1, 1, 1, 1, 1
+      };
+      Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 5)));
+      Operand<TFloat32> yPrediction =
+          tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
+      Op op = instance.updateState(yTrue, yPrediction, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(2.0, total);
+      session.evaluate(4, count);
+      session.evaluate(0.5, result);
+
+      session.run(instance.resetStates());
+      session.evaluate(0.0, instance.getTotal());
+      session.evaluate(0, instance.getCount());
+      session.evaluate(0., instance.getCount());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            MeanAbsoluteError<TFloat64> instance =
+                new MeanAbsoluteError<>("testIllegalState", 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

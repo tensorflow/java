@@ -503,7 +503,7 @@ public class Recall<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+    setTensorFlowOps(tf);
 
     Zeros<T> zeros = new Zeros<>();
     Operand<T> zero = zeros.call(tf, tf.constant(Shape.of(this.thresholds.length)), type);
@@ -518,12 +518,14 @@ public class Recall<T extends TNumber> extends Metric<T> {
       falseNegatives = getTF().withName(falseNegativesName).variable(zero);
       initializers.add(getTF().assign(falseNegatives, zero));
     }
+    applyOnInit();
     return getTF();
   }
 
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     return getTF().withSubScope("resetStates").withControlDependencies(initializers).noOp();
   }
 

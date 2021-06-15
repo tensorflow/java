@@ -25,6 +25,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class PoissonTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -74,5 +76,40 @@ class PoissonTest {
       session.evaluate(4.6f, count);
       session.evaluate(-2.6727562f, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Poisson<TFloat64> instance = new Poisson<>("testInitTF", 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {4, 8, 12, 8, 1, 3};
+      float[] predArray = {1, 9, 2, 5, 2, 6};
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat32> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+      Op op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(-6.6131644, total);
+      session.evaluate(2, count);
+      session.evaluate(-3.3065822, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            Poisson<TFloat64> instance = new Poisson<>("testIllegalState", 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

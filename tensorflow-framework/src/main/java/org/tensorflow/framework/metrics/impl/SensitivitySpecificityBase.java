@@ -101,7 +101,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+    setTensorFlowOps(tf);
     Zeros<T> zeros = new Zeros<>();
     Shape varShape = Shape.of(numThresholds);
     Operand<T> zero = zeros.call(getTF(), getTF().constant(varShape), type);
@@ -126,6 +126,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
       falseNegatives = getTF().withName(falseNegativesName).variable(zero);
       falseNegativesInitializer = getTF().assign(falseNegatives, zero);
     }
+    applyOnInit();
     return getTF();
   }
 
@@ -196,6 +197,7 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     return initializeVariables();
   }
 

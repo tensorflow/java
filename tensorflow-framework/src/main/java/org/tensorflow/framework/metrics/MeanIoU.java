@@ -117,7 +117,7 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+    setTensorFlowOps(tf);
     Shape variableShape = Shape.of(numClasses, numClasses);
 
     if (totalConfusionMatrix == null) {
@@ -131,12 +131,14 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
               .assign(
                   totalConfusionMatrix, zeros.call(getTF(), getTF().constant(variableShape), type));
     }
+    applyOnInit();
     return getTF();
   }
 
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     return initializer;
   }
 

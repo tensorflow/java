@@ -23,6 +23,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SumTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -109,5 +110,43 @@ public class SumTest {
       session.evaluate(63.75, instance.getTotal());
       session.evaluate(63.75, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Sum<TFloat32> instance = new Sum<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      assertEquals(TFloat32.class, instance.getResultType());
+      session.evaluate(0f, instance.getTotal());
+
+      Op update = instance.updateState(tf.constant(100f), null);
+      session.run(update);
+      session.evaluate(100f, instance.result());
+      session.evaluate(100f, instance.getTotal());
+
+      update = instance.updateState(tf.constant(new float[] {1, 5}), null);
+      session.run(update);
+      session.evaluate(106f, instance.result());
+      session.evaluate(106f, instance.getTotal());
+
+      session.run(instance.resetStates());
+      session.evaluate(0f, instance.getTotal());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            Sum<TFloat32> instance = new Sum<>(1001L, TFloat32.class);
+            instance.result();
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

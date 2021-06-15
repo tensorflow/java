@@ -24,6 +24,8 @@ import org.tensorflow.types.TFloat32;
 
 import java.util.Random;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class RecallTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
   private final Random random = new Random();
@@ -329,5 +331,37 @@ public class RecallTest {
       session.evaluate(1f, instance.getTruePositives());
       session.evaluate(3f, instance.getFalseNegatives());
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Recall<TFloat32> instance = new Recall<>((String) null, 0.7f, 2, null, 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+
+      Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});
+      Operand<TFloat32> labels = tf.constant(new float[][] {{1, 1, 1, 0, 1}});
+      Op update = instance.updateState(labels, predictions, null);
+      session.run(update);
+
+      session.evaluate(0.25f, instance.result());
+      session.evaluate(1f, instance.getTruePositives());
+      session.evaluate(3f, instance.getFalseNegatives());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            Recall<TFloat32> instance =
+                new Recall<>((String) null, 0.7f, 2, null, 1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

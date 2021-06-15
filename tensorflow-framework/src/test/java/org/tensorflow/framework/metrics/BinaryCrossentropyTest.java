@@ -25,6 +25,8 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class BinaryCrossentropyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -147,5 +149,46 @@ class BinaryCrossentropyTest {
       session.evaluate(1, count);
       session.evaluate(35, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      float labelSmoothing = 0.1F;
+      BinaryCrossentropy<TFloat64> instance =
+          new BinaryCrossentropy<>(
+              "BCE_testWeightedLabS", true, labelSmoothing, 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      float[] trueArray = {1, 0, 1};
+      double[] logitsArray = {100., -100., -100.};
+      Operand<TFloat32> labels = tf.constant(trueArray);
+      Operand<TFloat64> logits = tf.constant(logitsArray);
+
+      Op op = instance.updateState(labels, logits, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+
+      session.evaluate(35, total);
+      session.evaluate(1, count);
+      session.evaluate(35, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            BinaryCrossentropy<TFloat64> instance =
+                new BinaryCrossentropy<>(
+                    "BCE_testWeightedLabS", false, 1.0f, 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

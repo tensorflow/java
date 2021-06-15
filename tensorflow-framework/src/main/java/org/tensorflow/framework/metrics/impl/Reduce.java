@@ -110,7 +110,8 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    super.init(tf);
+
+    setTensorFlowOps(tf);
     if (total == null) {
       total = getTF().withName(totalName).variable(Shape.scalar(), resultType);
     }
@@ -120,11 +121,13 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
         count = getTF().withName(countName).variable(Shape.scalar(), resultType);
       }
     }
+    applyOnInit();
     return getTF();
   }
 
   /** {@inheritDoc} */
   public Op resetStates() {
+    checkTF();
     List<Op> controls = new ArrayList<>();
     if (total != null) {
       controls.add(checkTF().assign(total, cast(getTF(), getTF().constant(0), total.type())));

@@ -24,6 +24,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class CosineSimilarityTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -97,5 +99,44 @@ class CosineSimilarityTest {
       session.evaluate(2, count);
       session.evaluate(0.18721905F, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      CosineSimilarity<TFloat32> instance =
+          new CosineSimilarity<>("CS_testWeighted", 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {1, 9, 2, -5, -2, 6};
+      float[] predArray = {4, 8, 12, 8, 1, 3};
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat32> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+
+      Operand<TFloat32> sampleWeight = tf.constant(new float[] {1.2f, 3.4f});
+      Op op = instance.updateState(labels, predictions, sampleWeight);
+      session.run(op);
+      Variable<TFloat32> total = instance.getTotal();
+      Variable<TFloat32> count = instance.getCount();
+      Operand<TFloat32> result = instance.result();
+      session.evaluate(-0.3119840621948241F, total);
+      session.evaluate(4.6, count);
+      session.evaluate(-0.06782262221626612F, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            CosineSimilarity<TFloat32> instance =
+                new CosineSimilarity<>("CS_testWeighted", -1, 1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

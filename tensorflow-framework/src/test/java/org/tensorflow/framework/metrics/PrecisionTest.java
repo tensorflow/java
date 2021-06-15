@@ -26,6 +26,8 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class PrecisionTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -329,5 +331,37 @@ public class PrecisionTest {
       session.evaluate(1, instance.getTruePositives());
       session.evaluate(0, instance.getFalsePositives());
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      Precision<TFloat32> instance = new Precision<>(0.7f, 2, null, 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+
+      Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});
+      Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 1}});
+      Op update = instance.updateState(labels, predictions, null);
+      session.run(update);
+      Operand<TFloat32> precision = instance.result();
+
+      session.evaluate(1, precision);
+      session.evaluate(1, instance.getTruePositives());
+      session.evaluate(0, instance.getFalsePositives());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            Precision<TFloat32> instance = new Precision<>(0.7f, 2, null, 1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

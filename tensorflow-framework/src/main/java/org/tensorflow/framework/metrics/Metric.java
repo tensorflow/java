@@ -38,6 +38,7 @@ public abstract class Metric<T extends TNumber> implements Initializable {
   private final String name;
   /** The TensorFlow Ops */
   protected Ops tf;
+
   protected List<Consumer<Ops>> onInits;
 
   /**
@@ -89,15 +90,10 @@ public abstract class Metric<T extends TNumber> implements Initializable {
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    if (!tf.scope().env().isGraph()) {
-      throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
-    }
-    if (this.tf == null) {
 
-      this.tf = tf.withName(this.getClass().getSimpleName());
-      if (onInits != null) {
-        onInits.forEach(c -> c.accept(this.tf));
-      }
+    if (this.tf == null) {
+      setTensorFlowOps(tf);
+      applyOnInit();
     }
     return this.tf;
   }
@@ -109,6 +105,33 @@ public abstract class Metric<T extends TNumber> implements Initializable {
       onInits = new ArrayList<>();
     }
     onInits.add(initFunction);
+  }
+
+  /**
+   * Sets the TensorFlow Ops. This is for sub classes that override the {@link #init(Ops)} method.
+   *
+   * @param tf the TensorFlow Ops
+   * @throws IllegalArgumentException if the TensorFlow environment is not in Graph mode.
+   */
+  protected Ops setTensorFlowOps(Ops tf) {
+    if (!tf.scope().env().isGraph()) {
+      throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
+    }
+    this.tf = this.tf = tf.withName(this.getClass().getSimpleName());
+    return this.tf;
+  }
+
+  /**
+   * Applies the registered onInit functions with the TensorFlow platform. This is for sub classes
+   * that override the {@link #init(Ops)} method.
+   *
+   * @throws IllegalStateException if the TensorFlow Ops has not been assigned.
+   */
+  protected void applyOnInit() {
+    if (onInits != null) {
+      checkTF();
+      onInits.forEach(c -> c.accept(this.tf));
+    }
   }
 
   /**

@@ -24,6 +24,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class CategoricalCrossentropyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -147,5 +149,44 @@ class CategoricalCrossentropyTest {
       session.evaluate(2, count);
       session.evaluate(3.6678069, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      CategoricalCrossentropy<TFloat64> instance =
+          new CategoricalCrossentropy<>(
+              "CCE_testUnweightedLogits", true, 0, -1, 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {0, 1, 0, 0, 0, 1};
+      double[] predArray = {1, 9, 0, 1, 8, 1};
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat64> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+      Op op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(7.0022807, total);
+      session.evaluate(2, count);
+      session.evaluate(3.5011404, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            CategoricalCrossentropy<TFloat64> instance =
+                new CategoricalCrossentropy<>(
+                    "testIllegalState", true, 0, -1, 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

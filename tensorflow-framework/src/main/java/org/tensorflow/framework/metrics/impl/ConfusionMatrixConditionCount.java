@@ -170,11 +170,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
 
   /** Initialize the metric */
   public Ops init(Ops tf) {
-    if (!tf.scope().env().isGraph()) {
-      throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
-    }
-
-    super.init(tf);
+    setTensorFlowOps(tf);
 
     Shape variableShape = Shape.of(this.thresholds.length);
 
@@ -185,6 +181,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
             .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
     initializer =
         getTF().assign(accumulator, zeros.call(getTF(), getTF().constant(variableShape), type));
+    applyOnInit();
     return getTF();
   }
 
@@ -239,6 +236,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
   /** {@inheritDoc} */
   @Override
   public Op resetStates() {
+    checkTF();
     return initializer;
   }
 

@@ -24,6 +24,8 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class CategoricalAccuracyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -149,5 +151,47 @@ public class CategoricalAccuracyTest {
       session.evaluate(.7, count);
       session.evaluate(1.0F, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      CategoricalAccuracy<TFloat32> instance = new CategoricalAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      int[] trueArray = {
+        0, 0, 1,
+        0, 1, 0
+      };
+      float[] predArray = {
+        0.1f, 0.1f, 0.8f,
+        0.05f, 0.95f, 0f
+      };
+      Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat32> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+      Op op = instance.updateState(labels, predictions, null);
+      session.run(op);
+      Variable<TFloat32> total = instance.getTotal();
+      Variable<TFloat32> count = instance.getCount();
+      Operand<TFloat32> result = instance.result();
+      session.evaluate(2F, total);
+      session.evaluate(2, count);
+      session.evaluate(1F, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            CategoricalAccuracy<TFloat32> instance =
+                new CategoricalAccuracy<>(1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

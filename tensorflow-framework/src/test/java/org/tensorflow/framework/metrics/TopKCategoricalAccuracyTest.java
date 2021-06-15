@@ -22,6 +22,8 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TFloat64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class TopKCategoricalAccuracyTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -99,5 +101,50 @@ class TopKCategoricalAccuracyTest {
       session.run(update);
       session.evaluate(1., instance.result());
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      TopKCategoricalAccuracy<TFloat64> instance =
+          new TopKCategoricalAccuracy<>("testInitTF", 5, 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+
+      Operand<TFloat64> labels =
+          tf.constant(
+              new double[][] {
+                {1, 0, 2},
+                {1, 0, 0},
+                {0, 0, 1}
+              });
+      Operand<TFloat64> predictions =
+          tf.constant(
+              new double[][] {
+                {0f, 0.9f, 0.1f},
+                {0f, 0.9f, 0.1f},
+                {0f, 0.9f, 0.1f}
+              });
+
+      Operand<TFloat64> sampleWeight = tf.constant(new double[] {1, 0, 1});
+
+      Op update = instance.updateState(labels, predictions, sampleWeight);
+      session.run(update);
+      session.evaluate(1., instance.result());
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            TopKCategoricalAccuracy<TFloat64> instance =
+                new TopKCategoricalAccuracy<>("testIllegalState", 5, 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }

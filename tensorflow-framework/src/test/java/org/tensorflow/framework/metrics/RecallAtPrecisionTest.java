@@ -204,4 +204,37 @@ public class RecallAtPrecisionTest {
           }
         });
   }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      RecallAtPrecision<TFloat32> instance =
+          new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      Operand<TFloat32> predictions = tf.constant(new float[] {0.1f, 0.2f, 0.3f, 0.9f});
+      Operand<TInt64> labels = tf.constant(new long[] {1, 1, 0, 0});
+
+      Op update = instance.updateState(labels, predictions, null);
+      session.run(update);
+
+      Operand<TFloat32> precision = instance.result();
+      // The highest possible precision is 1/2 which is below the required
+      session.evaluate(0f, precision);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            RecallAtPrecision<TFloat32> instance =
+                new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
+            session.run(instance.resetStates());
+          }
+        });
+  }
 }

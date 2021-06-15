@@ -26,6 +26,8 @@ import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class MeanSquaredErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
 
@@ -103,5 +105,56 @@ class MeanSquaredErrorTest {
       session.evaluate(7, count);
       session.evaluate(0.542857, result);
     }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      MeanSquaredError<TFloat64> instance =
+          new MeanSquaredError<>("testInitTF", 1001L, TFloat64.class);
+      instance.init(tf);
+      session.run(instance.resetStates());
+      session.evaluate(0.0, instance.getTotal());
+      session.evaluate(0, instance.getCount());
+      session.evaluate(0., instance.getCount());
+
+      int[] trueArray = {
+        0, 1, 0, 1, 0,
+        0, 0, 1, 1, 1,
+        1, 1, 1, 1, 0,
+        0, 0, 0, 0, 1
+      };
+      float[] predictionArray = {
+        0, 0, 1, 1, 0,
+        1, 1, 1, 1, 1,
+        0, 1, 0, 1, 0,
+        1, 1, 1, 1, 1
+      };
+      Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 5)));
+      Operand<TFloat32> yPrediction =
+          tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
+      Op op = instance.updateState(yTrue, yPrediction, null);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result();
+      session.evaluate(2.0, total);
+      session.evaluate(4, count);
+      session.evaluate(0.5, result);
+    }
+  }
+
+  @Test
+  public void testIllegalState() {
+    assertThrows(
+        IllegalStateException.class,
+        () -> {
+          try (TestSession session = TestSession.createTestSession(tfMode)) {
+            MeanSquaredError<TFloat64> instance =
+                new MeanSquaredError<>("testIllegalState", 1001L, TFloat64.class);
+            session.run(instance.resetStates());
+          }
+        });
   }
 }
