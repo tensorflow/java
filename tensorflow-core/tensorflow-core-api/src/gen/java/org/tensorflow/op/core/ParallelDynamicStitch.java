@@ -115,7 +115,7 @@ public final class ParallelDynamicStitch<T extends TType> extends RawOp implemen
   )
   public static <T extends TType> ParallelDynamicStitch<T> create(Scope scope,
       Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParallelDynamicStitch", scope.makeOpName("ParallelDynamicStitch"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelDynamicStitch"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(data));
     opBuilder = scope.apply(opBuilder);

@@ -61,7 +61,7 @@ public final class LeakyReluGrad<T extends TNumber> extends RawOp implements Ope
   )
   public static <T extends TNumber> LeakyReluGrad<T> create(Scope scope, Operand<T> gradients,
       Operand<T> features, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LeakyReluGrad", scope.makeOpName("LeakyReluGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LeakyReluGrad"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.apply(opBuilder);

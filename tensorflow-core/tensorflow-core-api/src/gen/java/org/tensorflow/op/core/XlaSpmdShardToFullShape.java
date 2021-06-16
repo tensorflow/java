@@ -66,7 +66,7 @@ public final class XlaSpmdShardToFullShape<T extends TType> extends RawOp implem
   )
   public static <T extends TType> XlaSpmdShardToFullShape<T> create(Scope scope, Operand<T> input,
       String manualSharding, Shape fullShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSpmdShardToFullShape", scope.makeOpName("XlaSpmdShardToFullShape"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaSpmdShardToFullShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("manual_sharding", manualSharding);

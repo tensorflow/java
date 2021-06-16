@@ -91,7 +91,7 @@ public final class CudnnRnnParamsSize<T extends TNumber> extends RawOp implement
   public static <T extends TNumber, U extends TNumber> CudnnRnnParamsSize<T> create(Scope scope,
       Operand<TInt32> numLayers, Operand<TInt32> numUnits, Operand<TInt32> inputSize, Class<U> T,
       Class<T> S, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CudnnRNNParamsSize", scope.makeOpName("CudnnRnnParamsSize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CudnnRnnParamsSize"));
     opBuilder.addInput(numLayers.asOutput());
     opBuilder.addInput(numUnits.asOutput());
     opBuilder.addInput(inputSize.asOutput());

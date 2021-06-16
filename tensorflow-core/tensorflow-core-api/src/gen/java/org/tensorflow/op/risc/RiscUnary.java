@@ -58,7 +58,7 @@ public final class RiscUnary<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> RiscUnary<T> create(Scope scope, Operand<T> x, String opType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscUnary", scope.makeOpName("RiscUnary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscUnary"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("op_type", opType);

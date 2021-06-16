@@ -54,7 +54,7 @@ public final class ConfigureDistributedTPU extends RawOp implements Operand<TStr
       describeByClass = true
   )
   public static ConfigureDistributedTPU create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ConfigureDistributedTPU", scope.makeOpName("ConfigureDistributedTPU"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ConfigureDistributedTPU"));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {

@@ -90,7 +90,7 @@ public final class ParseExampleDataset extends RawOp implements Operand<TType> {
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       List<Class<? extends TType>> raggedValueTypes,
       List<Class<? extends TNumber>> raggedSplitTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseExampleDatasetV2", scope.makeOpName("ParseExampleDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseExampleDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));

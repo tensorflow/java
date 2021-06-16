@@ -71,7 +71,7 @@ public final class RandomUniformInt<U extends TNumber> extends RawOp implements 
   )
   public static <U extends TNumber> RandomUniformInt<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<U> minval, Operand<U> maxval, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomUniformInt", scope.makeOpName("RandomUniformInt"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomUniformInt"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());

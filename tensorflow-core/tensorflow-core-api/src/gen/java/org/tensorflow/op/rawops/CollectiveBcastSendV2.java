@@ -64,7 +64,7 @@ public final class CollectiveBcastSendV2<T extends TType> extends RawOp implemen
   public static <T extends TType> CollectiveBcastSendV2<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveBcastSendV2", scope.makeOpName("CollectiveBcastSendV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CollectiveBcastSendV2"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());

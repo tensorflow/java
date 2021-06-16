@@ -64,7 +64,7 @@ public final class ScatterNdMax<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType> ScatterNdMax<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScatterNdMax", scope.makeOpName("ScatterNdMax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterNdMax"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

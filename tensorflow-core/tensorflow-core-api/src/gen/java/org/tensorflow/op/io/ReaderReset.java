@@ -53,7 +53,7 @@ public final class ReaderReset extends RawOp {
       describeByClass = true
   )
   public static ReaderReset create(Scope scope, Operand<? extends TType> readerHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReaderResetV2", scope.makeOpName("ReaderReset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderReset"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ReaderReset(opBuilder.build());

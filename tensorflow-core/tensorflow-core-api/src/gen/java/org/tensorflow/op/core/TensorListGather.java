@@ -71,7 +71,7 @@ public final class TensorListGather<T extends TType> extends RawOp implements Op
   public static <T extends TType> TensorListGather<T> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<TInt32> indices, Operand<TInt32> elementShape,
       Class<T> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListGather", scope.makeOpName("TensorListGather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListGather"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());

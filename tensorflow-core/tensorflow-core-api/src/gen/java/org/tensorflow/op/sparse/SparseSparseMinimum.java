@@ -74,7 +74,7 @@ public final class SparseSparseMinimum<T extends TType> extends RawOp {
   public static <T extends TType> SparseSparseMinimum<T> create(Scope scope,
       Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape,
       Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSparseMinimum", scope.makeOpName("SparseSparseMinimum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSparseMinimum"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());

@@ -67,7 +67,7 @@ public final class ReaderRead extends RawOp {
   )
   public static ReaderRead create(Scope scope, Operand<? extends TType> readerHandle,
       Operand<? extends TType> queueHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReaderReadV2", scope.makeOpName("ReaderRead"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderRead"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(queueHandle.asOutput());
     opBuilder = scope.apply(opBuilder);

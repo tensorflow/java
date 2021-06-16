@@ -78,7 +78,7 @@ public final class DepthwiseConv2dNativeBackpropFilter<T extends TNumber> extend
   public static <T extends TNumber> DepthwiseConv2dNativeBackpropFilter<T> create(Scope scope,
       Operand<T> input, Operand<TInt32> filterSizes, Operand<T> outBackprop, List<Long> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DepthwiseConv2dNativeBackpropFilter", scope.makeOpName("DepthwiseConv2dNativeBackpropFilter"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DepthwiseConv2dNativeBackpropFilter"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filterSizes.asOutput());
     opBuilder.addInput(outBackprop.asOutput());

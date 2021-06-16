@@ -61,7 +61,7 @@ public final class UnbatchDataset extends RawOp implements Operand<TType> {
   )
   public static UnbatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UnbatchDataset", scope.makeOpName("UnbatchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnbatchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

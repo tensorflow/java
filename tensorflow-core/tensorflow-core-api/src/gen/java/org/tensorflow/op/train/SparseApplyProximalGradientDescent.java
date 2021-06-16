@@ -73,7 +73,7 @@ public final class SparseApplyProximalGradientDescent<T extends TType> extends R
   public static <T extends TType> SparseApplyProximalGradientDescent<T> create(Scope scope,
       Operand<T> var, Operand<T> alpha, Operand<T> l1, Operand<T> l2, Operand<T> grad,
       Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyProximalGradientDescent", scope.makeOpName("SparseApplyProximalGradientDescent"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyProximalGradientDescent"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder.addInput(l1.asOutput());

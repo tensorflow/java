@@ -63,7 +63,7 @@ public final class ScalarSummary extends RawOp implements Operand<TString> {
   )
   public static ScalarSummary create(Scope scope, Operand<TString> tags,
       Operand<? extends TNumber> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScalarSummary", scope.makeOpName("ScalarSummary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScalarSummary"));
     opBuilder.addInput(tags.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);

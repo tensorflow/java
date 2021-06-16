@@ -74,7 +74,7 @@ public final class SparseFillEmptyRowsGrad<T extends TType> extends RawOp {
   )
   public static <T extends TType> SparseFillEmptyRowsGrad<T> create(Scope scope,
       Operand<TInt64> reverseIndexMap, Operand<T> gradValues) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseFillEmptyRowsGrad", scope.makeOpName("SparseFillEmptyRowsGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseFillEmptyRowsGrad"));
     opBuilder.addInput(reverseIndexMap.asOutput());
     opBuilder.addInput(gradValues.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -55,7 +55,7 @@ public final class AssignSubVariableOp extends RawOp {
   )
   public static AssignSubVariableOp create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TType> value) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AssignSubVariableOp", scope.makeOpName("AssignSubVariableOp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssignSubVariableOp"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -112,7 +112,7 @@ public final class SparseConcat<T extends TType> extends RawOp {
   public static <T extends TType> SparseConcat<T> create(Scope scope,
       Iterable<Operand<TInt64>> indices, Iterable<Operand<T>> values,
       Iterable<Operand<TInt64>> shapes, Long concatDim) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseConcat", scope.makeOpName("SparseConcat"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseConcat"));
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(shapes));

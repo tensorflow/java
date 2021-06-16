@@ -62,7 +62,7 @@ public final class Sigmoid<T extends TType> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TType> Sigmoid<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Sigmoid", scope.makeOpName("Sigmoid"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Sigmoid"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Sigmoid<>(opBuilder.build());

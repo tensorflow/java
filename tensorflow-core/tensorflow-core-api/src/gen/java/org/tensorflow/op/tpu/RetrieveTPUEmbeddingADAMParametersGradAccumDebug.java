@@ -69,7 +69,7 @@ public final class RetrieveTPUEmbeddingADAMParametersGradAccumDebug extends RawO
   )
   public static RetrieveTPUEmbeddingADAMParametersGradAccumDebug create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingADAMParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingADAMParametersGradAccumDebug"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingADAMParametersGradAccumDebug"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

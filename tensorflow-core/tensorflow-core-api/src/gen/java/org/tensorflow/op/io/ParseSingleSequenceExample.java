@@ -148,7 +148,7 @@ public final class ParseSingleSequenceExample extends RawOp {
       Operand<TString> debugName, List<Class<? extends TType>> contextSparseTypes,
       List<Class<? extends TType>> featureListDenseTypes,
       List<Class<? extends TType>> featureListSparseTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseSingleSequenceExample", scope.makeOpName("ParseSingleSequenceExample"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseSingleSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
     opBuilder.addInputList(Operands.asOutputs(contextSparseKeys));

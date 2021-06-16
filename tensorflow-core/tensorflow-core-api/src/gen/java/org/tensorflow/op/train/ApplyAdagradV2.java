@@ -65,7 +65,7 @@ public final class ApplyAdagradV2<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> ApplyAdagradV2<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradV2", scope.makeOpName("ApplyAdagradV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyAdagradV2"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());

@@ -68,7 +68,7 @@ public final class RangeDataset extends RawOp implements Operand<TType> {
   )
   public static RangeDataset create(Scope scope, Operand<TInt64> start, Operand<TInt64> stop,
       Operand<TInt64> step, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RangeDataset", scope.makeOpName("RangeDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RangeDataset"));
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
     opBuilder.addInput(step.asOutput());

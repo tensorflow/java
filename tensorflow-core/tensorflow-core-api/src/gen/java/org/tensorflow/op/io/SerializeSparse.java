@@ -70,7 +70,7 @@ public final class SerializeSparse<U extends TType> extends RawOp implements Ope
   public static <U extends TType> SerializeSparse<U> create(Scope scope,
       Operand<TInt64> sparseIndices, Operand<? extends TType> sparseValues,
       Operand<TInt64> sparseShape, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SerializeSparse", scope.makeOpName("SerializeSparse"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SerializeSparse"));
     opBuilder.addInput(sparseIndices.asOutput());
     opBuilder.addInput(sparseValues.asOutput());
     opBuilder.addInput(sparseShape.asOutput());

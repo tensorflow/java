@@ -72,7 +72,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
   )
   public static <T extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope,
       Operand<T> features, Operand<? extends TNumber> labels) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSoftmaxCrossEntropyWithLogits", scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
     opBuilder = scope.apply(opBuilder);

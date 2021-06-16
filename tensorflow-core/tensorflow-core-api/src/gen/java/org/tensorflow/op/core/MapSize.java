@@ -61,7 +61,7 @@ public final class MapSize extends RawOp implements Operand<TInt32> {
   )
   public static MapSize create(Scope scope, List<Class<? extends TType>> dtypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MapSize", scope.makeOpName("MapSize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapSize"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {

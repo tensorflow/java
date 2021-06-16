@@ -75,7 +75,7 @@ public final class DecodeCsv extends RawOp implements Iterable<Operand<TType>> {
   )
   public static DecodeCsv create(Scope scope, Operand<TString> records,
       Iterable<Operand<?>> recordDefaults, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DecodeCSV", scope.makeOpName("DecodeCsv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DecodeCsv"));
     opBuilder.addInput(records.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
     opBuilder = scope.apply(opBuilder);

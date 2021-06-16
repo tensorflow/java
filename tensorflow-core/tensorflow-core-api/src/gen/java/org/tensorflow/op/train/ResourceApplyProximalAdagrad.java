@@ -65,7 +65,7 @@ public final class ResourceApplyProximalAdagrad extends RawOp {
   public static <T extends TType> ResourceApplyProximalAdagrad create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> l1,
       Operand<T> l2, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyProximalAdagrad", scope.makeOpName("ResourceApplyProximalAdagrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());

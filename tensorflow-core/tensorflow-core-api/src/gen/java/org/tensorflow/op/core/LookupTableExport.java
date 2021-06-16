@@ -69,7 +69,7 @@ public final class LookupTableExport<T extends TType, U extends TType> extends R
   )
   public static <T extends TType, U extends TType> LookupTableExport<T, U> create(Scope scope,
       Operand<? extends TType> tableHandle, Class<T> Tkeys, Class<U> Tvalues) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LookupTableExportV2", scope.makeOpName("LookupTableExport"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LookupTableExport"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tkeys", Operands.toDataType(Tkeys));

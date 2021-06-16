@@ -72,7 +72,7 @@ public final class ApplyAdagradDa<T extends TType> extends RawOp implements Oper
   public static <T extends TType> ApplyAdagradDa<T> create(Scope scope, Operand<T> var,
       Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad,
       Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdagradDA", scope.makeOpName("ApplyAdagradDa"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
     opBuilder.addInput(gradientSquaredAccumulator.asOutput());

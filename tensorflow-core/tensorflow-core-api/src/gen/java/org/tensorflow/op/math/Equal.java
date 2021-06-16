@@ -74,7 +74,7 @@ public final class Equal extends RawOp implements Operand<TBool> {
   )
   public static <T extends TType> Equal create(Scope scope, Operand<T> x, Operand<T> y,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Equal", scope.makeOpName("Equal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Equal"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

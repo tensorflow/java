@@ -87,7 +87,7 @@ public final class Roll<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Roll<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> shift, Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Roll", scope.makeOpName("Roll"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Roll"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shift.asOutput());
     opBuilder.addInput(axis.asOutput());

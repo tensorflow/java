@@ -80,7 +80,7 @@ public final class BoostedTreesUpdateEnsembleV2 extends RawOp {
       Iterable<Operand<TFloat32>> leftNodeContribs, Iterable<Operand<TFloat32>> rightNodeContribs,
       Iterable<Operand<TString>> splitTypes, Operand<TInt32> maxDepth,
       Operand<TFloat32> learningRate, Operand<TInt32> pruningMode, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesUpdateEnsembleV2", scope.makeOpName("BoostedTreesUpdateEnsembleV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesUpdateEnsembleV2"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(featureIds));
     opBuilder.addInputList(Operands.asOutputs(dimensionIds));

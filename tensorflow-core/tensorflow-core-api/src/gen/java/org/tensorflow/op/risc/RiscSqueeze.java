@@ -61,7 +61,7 @@ public final class RiscSqueeze<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> RiscSqueeze<T> create(Scope scope, Operand<T> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscSqueeze", scope.makeOpName("RiscSqueeze"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscSqueeze"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

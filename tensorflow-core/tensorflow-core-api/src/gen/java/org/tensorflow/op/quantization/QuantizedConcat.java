@@ -77,7 +77,7 @@ public final class QuantizedConcat<T extends TType> extends RawOp {
   public static <T extends TType> QuantizedConcat<T> create(Scope scope, Operand<TInt32> concatDim,
       Iterable<Operand<T>> values, Iterable<Operand<TFloat32>> inputMins,
       Iterable<Operand<TFloat32>> inputMaxes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConcat", scope.makeOpName("QuantizedConcat"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConcat"));
     opBuilder.addInput(concatDim.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(inputMins));

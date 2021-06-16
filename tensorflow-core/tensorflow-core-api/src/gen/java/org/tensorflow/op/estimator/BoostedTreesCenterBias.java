@@ -62,7 +62,7 @@ public final class BoostedTreesCenterBias extends RawOp implements Operand<TBool
   public static BoostedTreesCenterBias create(Scope scope,
       Operand<? extends TType> treeEnsembleHandle, Operand<TFloat32> meanGradients,
       Operand<TFloat32> meanHessians, Operand<TFloat32> l1, Operand<TFloat32> l2) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCenterBias", scope.makeOpName("BoostedTreesCenterBias"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesCenterBias"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(meanGradients.asOutput());
     opBuilder.addInput(meanHessians.asOutput());

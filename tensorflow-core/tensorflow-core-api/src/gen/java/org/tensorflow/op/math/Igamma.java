@@ -69,7 +69,7 @@ public final class Igamma<T extends TNumber> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TNumber> Igamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Igamma", scope.makeOpName("Igamma"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Igamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

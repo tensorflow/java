@@ -70,7 +70,7 @@ public final class StatelessRandomBinomial<W extends TNumber> extends RawOp impl
   public static <W extends TNumber, V extends TNumber> StatelessRandomBinomial<W> create(
       Scope scope, Operand<? extends TNumber> shape, Operand<? extends TNumber> seed,
       Operand<V> counts, Operand<V> probs, Class<W> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomBinomial", scope.makeOpName("StatelessRandomBinomial"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomBinomial"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(counts.asOutput());

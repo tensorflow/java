@@ -77,7 +77,7 @@ public final class QuantizedResizeBilinear<T extends TNumber> extends RawOp {
   public static <T extends TNumber> QuantizedResizeBilinear<T> create(Scope scope,
       Operand<T> images, Operand<TInt32> sizeOutput, Operand<TFloat32> min, Operand<TFloat32> max,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedResizeBilinear", scope.makeOpName("QuantizedResizeBilinear"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedResizeBilinear"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(min.asOutput());

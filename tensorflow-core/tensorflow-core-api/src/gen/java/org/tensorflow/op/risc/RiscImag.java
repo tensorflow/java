@@ -62,7 +62,7 @@ public final class RiscImag<U extends TNumber> extends RawOp implements Operand<
   )
   public static <U extends TNumber> RiscImag<U> create(Scope scope, Operand<? extends TType> input,
       Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscImag", scope.makeOpName("RiscImag"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscImag"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));

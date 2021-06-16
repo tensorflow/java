@@ -60,7 +60,7 @@ public final class QueueClose extends RawOp {
   )
   public static QueueClose create(Scope scope, Operand<? extends TType> handle,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QueueCloseV2", scope.makeOpName("QueueClose"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QueueClose"));
     opBuilder.addInput(handle.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

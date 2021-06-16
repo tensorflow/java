@@ -109,7 +109,7 @@ public final class EncodeProto extends RawOp implements Operand<TString> {
   )
   public static EncodeProto create(Scope scope, Operand<TInt32> sizes, Iterable<Operand<?>> values,
       List<String> fieldNames, String messageType, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("EncodeProto", scope.makeOpName("EncodeProto"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EncodeProto"));
     opBuilder.addInput(sizes.asOutput());
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder = scope.apply(opBuilder);

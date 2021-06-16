@@ -49,7 +49,7 @@ public final class OutfeedEnqueue extends RawOp {
       describeByClass = true
   )
   public static OutfeedEnqueue create(Scope scope, Operand<? extends TType> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OutfeedEnqueue", scope.makeOpName("OutfeedEnqueue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OutfeedEnqueue"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new OutfeedEnqueue(opBuilder.build());

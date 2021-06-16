@@ -63,7 +63,7 @@ public final class StatelessRandomGamma<V extends TNumber> extends RawOp impleme
   )
   public static <V extends TNumber> StatelessRandomGamma<V> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Operand<V> alpha) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGammaV2", scope.makeOpName("StatelessRandomGamma"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(alpha.asOutput());

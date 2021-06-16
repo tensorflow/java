@@ -66,7 +66,7 @@ public final class PrefetchDataset extends RawOp implements Operand<TType> {
   public static PrefetchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> bufferSize, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PrefetchDataset", scope.makeOpName("PrefetchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PrefetchDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -68,7 +68,7 @@ public final class RepeatDataset extends RawOp implements Operand<TType> {
   )
   public static RepeatDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RepeatDataset", scope.makeOpName("RepeatDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RepeatDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(count.asOutput());
     opBuilder = scope.apply(opBuilder);

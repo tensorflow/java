@@ -76,7 +76,7 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
   )
   public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> a, Boolean lower,
       Long maxIter, Float epsilon) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSelfAdjointEig", scope.makeOpName("SelfAdjointEig"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SelfAdjointEig"));
     opBuilder.addInput(a.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("lower", lower);

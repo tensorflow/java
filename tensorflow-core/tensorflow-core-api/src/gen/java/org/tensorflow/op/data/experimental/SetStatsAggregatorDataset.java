@@ -67,7 +67,7 @@ public final class SetStatsAggregatorDataset extends RawOp implements Operand<TT
       Operand<? extends TType> statsAggregator, Operand<TString> tag,
       Operand<TString> counterPrefix, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSetStatsAggregatorDataset", scope.makeOpName("SetStatsAggregatorDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SetStatsAggregatorDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(tag.asOutput());

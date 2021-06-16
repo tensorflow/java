@@ -81,7 +81,7 @@ public final class QuantizedDepthwiseConv2DWithBiasAndRelu<V extends TNumber> ex
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
       Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2DWithBiasAndRelu", scope.makeOpName("QuantizedDepthwiseConv2DWithBiasAndRelu"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedDepthwiseConv2DWithBiasAndRelu"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(bias.asOutput());

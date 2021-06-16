@@ -84,7 +84,7 @@ public final class QuantizedConv2DWithBiasAndRequantize<W extends TNumber> exten
       Operand<TFloat32> minFilter, Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
       Operand<TFloat32> maxFreezedOutput, Class<W> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBiasAndRequantize", scope.makeOpName("QuantizedConv2DWithBiasAndRequantize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConv2DWithBiasAndRequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(bias.asOutput());

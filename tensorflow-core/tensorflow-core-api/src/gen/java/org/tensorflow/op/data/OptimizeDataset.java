@@ -67,7 +67,7 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
   public static OptimizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> optimizations, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OptimizeDataset", scope.makeOpName("OptimizeDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptimizeDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(optimizations.asOutput());
     opBuilder = scope.apply(opBuilder);

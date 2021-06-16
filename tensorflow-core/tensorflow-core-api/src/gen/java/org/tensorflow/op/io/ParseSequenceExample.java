@@ -186,7 +186,7 @@ public final class ParseSequenceExample extends RawOp {
       List<Class<? extends TType>> featureListSparseTypes,
       List<Class<? extends TType>> featureListRaggedValueTypes,
       List<Class<? extends TNumber>> featureListRaggedSplitTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParseSequenceExampleV2", scope.makeOpName("ParseSequenceExample"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseSequenceExample"));
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(debugName.asOutput());
     opBuilder.addInput(contextSparseKeys.asOutput());

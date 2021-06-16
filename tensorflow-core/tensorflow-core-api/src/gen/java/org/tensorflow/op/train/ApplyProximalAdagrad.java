@@ -72,7 +72,7 @@ public final class ApplyProximalAdagrad<T extends TType> extends RawOp implement
   public static <T extends TType> ApplyProximalAdagrad<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyProximalAdagrad", scope.makeOpName("ApplyProximalAdagrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyProximalAdagrad"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());

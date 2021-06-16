@@ -61,7 +61,7 @@ public final class WriteAudioSummary extends RawOp {
   public static WriteAudioSummary create(Scope scope, Operand<? extends TType> writer,
       Operand<TInt64> step, Operand<TString> tag, Operand<TFloat32> tensor,
       Operand<TFloat32> sampleRate, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("WriteAudioSummary", scope.makeOpName("WriteAudioSummary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WriteAudioSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tag.asOutput());

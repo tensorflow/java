@@ -55,7 +55,7 @@ public final class SparseMatrixNNZ extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static SparseMatrixNNZ create(Scope scope, Operand<? extends TType> sparseMatrix) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixNNZ", scope.makeOpName("SparseMatrixNNZ"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixNNZ"));
     opBuilder.addInput(sparseMatrix.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new SparseMatrixNNZ(opBuilder.build());

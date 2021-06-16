@@ -113,7 +113,7 @@ public final class Dequantize<U extends TNumber> extends RawOp implements Operan
   public static <U extends TNumber> Dequantize<U> create(Scope scope,
       Operand<? extends TNumber> input, Operand<TFloat32> minRange, Operand<TFloat32> maxRange,
       Class<U> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Dequantize", scope.makeOpName("Dequantize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());

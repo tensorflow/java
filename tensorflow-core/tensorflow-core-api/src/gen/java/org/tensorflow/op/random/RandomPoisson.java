@@ -78,7 +78,7 @@ public final class RandomPoisson<V extends TNumber> extends RawOp implements Ope
   public static <V extends TNumber> RandomPoisson<V> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> rate, Class<V> dtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomPoissonV2", scope.makeOpName("RandomPoisson"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomPoisson"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(rate.asOutput());
     opBuilder = scope.apply(opBuilder);

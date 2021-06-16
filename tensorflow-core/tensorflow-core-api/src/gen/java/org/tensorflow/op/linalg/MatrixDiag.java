@@ -156,7 +156,7 @@ public final class MatrixDiag<T extends TType> extends RawOp implements Operand<
   public static <T extends TType> MatrixDiag<T> create(Scope scope, Operand<T> diagonal,
       Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols,
       Operand<T> paddingValue) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MatrixDiagV2", scope.makeOpName("MatrixDiag"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixDiag"));
     opBuilder.addInput(diagonal.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(numRows.asOutput());

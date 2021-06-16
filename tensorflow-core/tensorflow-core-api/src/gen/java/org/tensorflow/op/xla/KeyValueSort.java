@@ -73,7 +73,7 @@ public final class KeyValueSort<T extends TNumber, U extends TType> extends RawO
   )
   public static <T extends TNumber, U extends TType> KeyValueSort<T, U> create(Scope scope,
       Operand<T> keys, Operand<U> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaKeyValueSort", scope.makeOpName("KeyValueSort"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("KeyValueSort"));
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder = scope.apply(opBuilder);

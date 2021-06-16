@@ -64,7 +64,7 @@ public final class AssignSub<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> AssignSub<T> create(Scope scope, Operand<T> ref, Operand<T> value,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AssignSub", scope.makeOpName("AssignSub"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssignSub"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);

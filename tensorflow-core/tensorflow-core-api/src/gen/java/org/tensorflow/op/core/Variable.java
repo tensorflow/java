@@ -67,7 +67,7 @@ public final class Variable<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType> Variable<T> create(Scope scope, Shape shape, Class<T> dtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("VariableV2", scope.makeOpName("Variable"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Variable"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

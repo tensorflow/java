@@ -65,7 +65,7 @@ public final class TruncateMod<T extends TNumber> extends RawOp implements Opera
       describeByClass = true
   )
   public static <T extends TNumber> TruncateMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TruncateMod", scope.makeOpName("TruncateMod"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TruncateMod"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

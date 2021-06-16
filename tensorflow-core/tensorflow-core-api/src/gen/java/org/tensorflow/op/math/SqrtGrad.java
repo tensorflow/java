@@ -60,7 +60,7 @@ public final class SqrtGrad<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> SqrtGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SqrtGrad", scope.makeOpName("SqrtGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SqrtGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
     opBuilder = scope.apply(opBuilder);

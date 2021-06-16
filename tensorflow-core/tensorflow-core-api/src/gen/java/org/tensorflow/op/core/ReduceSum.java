@@ -68,7 +68,7 @@ public final class ReduceSum<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> ReduceSum<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Sum", scope.makeOpName("ReduceSum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceSum"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

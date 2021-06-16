@@ -52,7 +52,7 @@ public final class Abort extends RawOp {
       describeByClass = true
   )
   public static Abort create(Scope scope, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Abort", scope.makeOpName("Abort"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Abort"));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {

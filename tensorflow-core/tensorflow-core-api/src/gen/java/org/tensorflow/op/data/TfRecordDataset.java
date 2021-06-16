@@ -67,7 +67,7 @@ public final class TfRecordDataset extends RawOp implements Operand<TType> {
   )
   public static TfRecordDataset create(Scope scope, Operand<TString> filenames,
       Operand<TString> compressionType, Operand<TInt64> bufferSize) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TFRecordDataset", scope.makeOpName("TfRecordDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TfRecordDataset"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());

@@ -62,7 +62,7 @@ public final class ResizeBicubicGrad<T extends TNumber> extends RawOp implements
   )
   public static <T extends TNumber> ResizeBicubicGrad<T> create(Scope scope,
       Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubicGrad", scope.makeOpName("ResizeBicubicGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResizeBicubicGrad"));
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());
     opBuilder = scope.apply(opBuilder);

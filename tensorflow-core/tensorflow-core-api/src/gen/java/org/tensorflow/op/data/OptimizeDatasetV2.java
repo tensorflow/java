@@ -70,7 +70,7 @@ public final class OptimizeDatasetV2 extends RawOp implements Operand<TType> {
       Operand<TString> optimizationsEnabled, Operand<TString> optimizationsDisabled,
       Operand<TString> optimizationsDefault, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OptimizeDatasetV2", scope.makeOpName("OptimizeDatasetV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptimizeDatasetV2"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(optimizationsEnabled.asOutput());
     opBuilder.addInput(optimizationsDisabled.asOutput());

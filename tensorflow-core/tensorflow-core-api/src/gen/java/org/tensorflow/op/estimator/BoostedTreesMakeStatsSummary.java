@@ -64,7 +64,7 @@ public final class BoostedTreesMakeStatsSummary extends RawOp implements Operand
   public static BoostedTreesMakeStatsSummary create(Scope scope, Operand<TInt32> nodeIds,
       Operand<TFloat32> gradients, Operand<TFloat32> hessians,
       Iterable<Operand<TInt32>> bucketizedFeaturesList, Long maxSplits, Long numBuckets) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeStatsSummary", scope.makeOpName("BoostedTreesMakeStatsSummary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesMakeStatsSummary"));
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(hessians.asOutput());

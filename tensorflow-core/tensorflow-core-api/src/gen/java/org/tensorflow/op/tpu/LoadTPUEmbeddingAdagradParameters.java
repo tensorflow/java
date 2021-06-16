@@ -59,7 +59,7 @@ public final class LoadTPUEmbeddingAdagradParameters extends RawOp {
   )
   public static LoadTPUEmbeddingAdagradParameters create(Scope scope, Operand<TFloat32> parameters,
       Operand<TFloat32> accumulators, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingAdagradParameters", scope.makeOpName("LoadTPUEmbeddingAdagradParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingAdagradParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
     opBuilder = scope.apply(opBuilder);

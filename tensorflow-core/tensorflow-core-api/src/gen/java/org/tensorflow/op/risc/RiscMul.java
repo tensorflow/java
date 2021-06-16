@@ -58,7 +58,7 @@ public final class RiscMul<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> RiscMul<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscMul", scope.makeOpName("RiscMul"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscMul"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -160,7 +160,7 @@ public final class BatchToSpaceNd<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> BatchToSpaceNd<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> blockShape, Operand<? extends TNumber> crops) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchToSpaceND", scope.makeOpName("BatchToSpaceNd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchToSpaceNd"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());
     opBuilder.addInput(crops.asOutput());

@@ -86,7 +86,7 @@ public final class FakeQuantWithMinMaxVarsPerChannel extends RawOp implements Op
   )
   public static FakeQuantWithMinMaxVarsPerChannel create(Scope scope, Operand<TFloat32> inputs,
       Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxVarsPerChannel", scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FakeQuantWithMinMaxVarsPerChannel"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());

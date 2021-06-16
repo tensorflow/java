@@ -71,7 +71,7 @@ public final class MaxPoolGradGrad<T extends TNumber> extends RawOp implements O
   public static <T extends TNumber> MaxPoolGradGrad<T> create(Scope scope, Operand<T> origInput,
       Operand<T> origOutput, Operand<T> grad, Operand<TInt32> ksize, Operand<TInt32> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MaxPoolGradGradV2", scope.makeOpName("MaxPoolGradGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPoolGradGrad"));
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());
     opBuilder.addInput(grad.asOutput());

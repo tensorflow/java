@@ -99,7 +99,7 @@ public final class RaggedGather<T extends TNumber, U extends TType> extends RawO
   public static <T extends TNumber, U extends TType> RaggedGather<T, U> create(Scope scope,
       Iterable<Operand<T>> paramsNestedSplits, Operand<U> paramsDenseValues,
       Operand<? extends TNumber> indices, Long OUTPUTRAGGEDRANK) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RaggedGather", scope.makeOpName("RaggedGather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedGather"));
     opBuilder.addInputList(Operands.asOutputs(paramsNestedSplits));
     opBuilder.addInput(paramsDenseValues.asOutput());
     opBuilder.addInput(indices.asOutput());

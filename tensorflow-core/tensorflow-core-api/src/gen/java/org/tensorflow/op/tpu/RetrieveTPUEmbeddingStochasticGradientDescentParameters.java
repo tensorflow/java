@@ -61,7 +61,7 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParameters exten
   )
   public static RetrieveTPUEmbeddingStochasticGradientDescentParameters create(Scope scope,
       Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingStochasticGradientDescentParameters", scope.makeOpName("RetrieveTPUEmbeddingStochasticGradientDescentParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingStochasticGradientDescentParameters"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

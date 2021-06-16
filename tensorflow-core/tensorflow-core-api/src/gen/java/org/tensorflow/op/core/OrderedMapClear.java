@@ -54,7 +54,7 @@ public final class OrderedMapClear extends RawOp {
   )
   public static OrderedMapClear create(Scope scope, List<Class<? extends TType>> dtypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OrderedMapClear", scope.makeOpName("OrderedMapClear"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OrderedMapClear"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {

@@ -74,7 +74,7 @@ public final class ApplyAdadelta<T extends TType> extends RawOp implements Opera
   public static <T extends TType> ApplyAdadelta<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
       Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyAdadelta", scope.makeOpName("ApplyAdadelta"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyAdadelta"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(accumUpdate.asOutput());

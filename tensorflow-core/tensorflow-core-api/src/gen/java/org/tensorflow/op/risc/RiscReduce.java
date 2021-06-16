@@ -60,7 +60,7 @@ public final class RiscReduce<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> RiscReduce<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> axis, String reduceType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscReduce", scope.makeOpName("RiscReduce"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscReduce"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

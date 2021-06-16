@@ -76,7 +76,7 @@ public final class Rfft2d<U extends TType> extends RawOp implements Operand<U> {
   )
   public static <U extends TType> Rfft2d<U> create(Scope scope, Operand<? extends TNumber> input,
       Operand<TInt32> fftLength, Class<U> Tcomplex) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RFFT2D", scope.makeOpName("Rfft2d"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Rfft2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
     opBuilder = scope.apply(opBuilder);

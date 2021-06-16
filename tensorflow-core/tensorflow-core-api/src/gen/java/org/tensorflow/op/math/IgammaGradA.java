@@ -58,7 +58,7 @@ public final class IgammaGradA<T extends TNumber> extends RawOp implements Opera
       describeByClass = true
   )
   public static <T extends TNumber> IgammaGradA<T> create(Scope scope, Operand<T> a, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IgammaGradA", scope.makeOpName("IgammaGradA"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IgammaGradA"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

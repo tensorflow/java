@@ -61,7 +61,7 @@ public final class LogicalOr extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static LogicalOr create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LogicalOr", scope.makeOpName("LogicalOr"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LogicalOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

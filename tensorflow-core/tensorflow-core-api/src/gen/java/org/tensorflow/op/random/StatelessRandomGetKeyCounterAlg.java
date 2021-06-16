@@ -65,7 +65,7 @@ public final class StatelessRandomGetKeyCounterAlg extends RawOp {
   )
   public static StatelessRandomGetKeyCounterAlg create(Scope scope,
       Operand<? extends TNumber> seed) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGetKeyCounterAlg", scope.makeOpName("StatelessRandomGetKeyCounterAlg"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomGetKeyCounterAlg"));
     opBuilder.addInput(seed.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new StatelessRandomGetKeyCounterAlg(opBuilder.build());

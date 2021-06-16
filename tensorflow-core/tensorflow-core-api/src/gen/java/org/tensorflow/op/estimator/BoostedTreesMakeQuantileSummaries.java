@@ -67,7 +67,7 @@ public final class BoostedTreesMakeQuantileSummaries extends RawOp implements It
   public static BoostedTreesMakeQuantileSummaries create(Scope scope,
       Iterable<Operand<TFloat32>> floatValues, Operand<TFloat32> exampleWeights,
       Operand<TFloat32> epsilon) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesMakeQuantileSummaries", scope.makeOpName("BoostedTreesMakeQuantileSummaries"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesMakeQuantileSummaries"));
     opBuilder.addInputList(Operands.asOutputs(floatValues));
     opBuilder.addInput(exampleWeights.asOutput());
     opBuilder.addInput(epsilon.asOutput());

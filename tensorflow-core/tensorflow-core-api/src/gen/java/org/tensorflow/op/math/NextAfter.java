@@ -67,7 +67,7 @@ public final class NextAfter<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> NextAfter<T> create(Scope scope, Operand<T> x1, Operand<T> x2) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NextAfter", scope.makeOpName("NextAfter"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NextAfter"));
     opBuilder.addInput(x1.asOutput());
     opBuilder.addInput(x2.asOutput());
     opBuilder = scope.apply(opBuilder);

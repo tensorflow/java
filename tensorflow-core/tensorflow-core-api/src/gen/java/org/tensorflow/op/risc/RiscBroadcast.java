@@ -60,7 +60,7 @@ public final class RiscBroadcast<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> RiscBroadcast<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscBroadcast", scope.makeOpName("RiscBroadcast"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscBroadcast"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);

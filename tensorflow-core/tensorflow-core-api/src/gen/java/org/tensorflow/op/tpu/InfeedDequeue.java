@@ -61,7 +61,7 @@ public final class InfeedDequeue<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> InfeedDequeue<T> create(Scope scope, Class<T> dtype,
       Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("InfeedDequeue", scope.makeOpName("InfeedDequeue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InfeedDequeue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);

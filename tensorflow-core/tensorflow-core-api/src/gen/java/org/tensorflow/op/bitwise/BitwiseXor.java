@@ -79,7 +79,7 @@ public final class BitwiseXor<T extends TNumber> extends RawOp implements Operan
       describeByClass = true
   )
   public static <T extends TNumber> BitwiseXor<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BitwiseXor", scope.makeOpName("BitwiseXor"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BitwiseXor"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

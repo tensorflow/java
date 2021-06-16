@@ -67,7 +67,7 @@ public final class StatefulUniform<U extends TType> extends RawOp implements Ope
   public static <U extends TType> StatefulUniform<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
       Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatefulUniform", scope.makeOpName("StatefulUniform"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulUniform"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());

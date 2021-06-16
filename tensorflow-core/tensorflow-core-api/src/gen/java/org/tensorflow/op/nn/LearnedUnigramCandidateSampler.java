@@ -81,7 +81,7 @@ public final class LearnedUnigramCandidateSampler extends RawOp {
   )
   public static LearnedUnigramCandidateSampler create(Scope scope, Operand<TInt64> trueClasses,
       Long numTrue, Long numSampled, Boolean unique, Long rangeMax, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LearnedUnigramCandidateSampler", scope.makeOpName("LearnedUnigramCandidateSampler"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LearnedUnigramCandidateSampler"));
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);

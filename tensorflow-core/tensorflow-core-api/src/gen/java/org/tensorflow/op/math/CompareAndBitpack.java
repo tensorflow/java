@@ -81,7 +81,7 @@ public final class CompareAndBitpack extends RawOp implements Operand<TUint8> {
   )
   public static <T extends TType> CompareAndBitpack create(Scope scope, Operand<T> input,
       Operand<T> threshold) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CompareAndBitpack", scope.makeOpName("CompareAndBitpack"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompareAndBitpack"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(threshold.asOutput());
     opBuilder = scope.apply(opBuilder);

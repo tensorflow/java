@@ -63,7 +63,7 @@ public final class Select<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Select<T> create(Scope scope, Operand<TBool> condition,
       Operand<T> t, Operand<T> e) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SelectV2", scope.makeOpName("Select"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Select"));
     opBuilder.addInput(condition.asOutput());
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(e.asOutput());

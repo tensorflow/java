@@ -71,7 +71,7 @@ public final class MultiDeviceIteratorGetNextFromShard extends RawOp implements 
       Operand<? extends TType> multiDeviceIterator, Operand<TInt32> shardNum,
       Operand<TInt64> incarnationId, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MultiDeviceIteratorGetNextFromShard", scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MultiDeviceIteratorGetNextFromShard"));
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(shardNum.asOutput());
     opBuilder.addInput(incarnationId.asOutput());

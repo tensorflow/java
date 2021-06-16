@@ -119,7 +119,7 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> TensorScatterNdAdd<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> indices, Operand<T> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorScatterAdd", scope.makeOpName("TensorScatterNdAdd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorScatterNdAdd"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

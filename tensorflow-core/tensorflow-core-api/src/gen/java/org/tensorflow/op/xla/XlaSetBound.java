@@ -62,7 +62,7 @@ public final class XlaSetBound extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static XlaSetBound create(Scope scope, Operand<TInt32> input, Operand<TInt32> bound) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSetBound", scope.makeOpName("XlaSetBound"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaSetBound"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(bound.asOutput());
     opBuilder = scope.apply(opBuilder);

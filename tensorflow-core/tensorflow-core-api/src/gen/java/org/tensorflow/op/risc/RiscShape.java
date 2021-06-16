@@ -61,7 +61,7 @@ public final class RiscShape<U extends TNumber> extends RawOp implements Operand
   )
   public static <U extends TNumber> RiscShape<U> create(Scope scope,
       Operand<? extends TNumber> input, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscShape", scope.makeOpName("RiscShape"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscShape"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));

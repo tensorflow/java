@@ -60,7 +60,7 @@ public final class RiscMax<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> RiscMax<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscMax", scope.makeOpName("RiscMax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscMax"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

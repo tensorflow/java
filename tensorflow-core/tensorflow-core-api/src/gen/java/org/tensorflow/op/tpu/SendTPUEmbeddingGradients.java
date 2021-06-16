@@ -64,7 +64,7 @@ public final class SendTPUEmbeddingGradients extends RawOp {
   )
   public static SendTPUEmbeddingGradients create(Scope scope, Iterable<Operand<TFloat32>> inputs,
       Iterable<Operand<TFloat32>> learningRates, String config, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SendTPUEmbeddingGradients", scope.makeOpName("SendTPUEmbeddingGradients"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SendTPUEmbeddingGradients"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder.addInputList(Operands.asOutputs(learningRates));
     opBuilder = scope.apply(opBuilder);

@@ -75,7 +75,7 @@ public final class SparseApplyAdagradDa<T extends TType> extends RawOp implement
       Operand<T> gradientAccumulator, Operand<T> gradientSquaredAccumulator, Operand<T> grad,
       Operand<? extends TNumber> indices, Operand<T> lr, Operand<T> l1, Operand<T> l2,
       Operand<TInt64> globalStep, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseApplyAdagradDA", scope.makeOpName("SparseApplyAdagradDa"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyAdagradDa"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
     opBuilder.addInput(gradientSquaredAccumulator.asOutput());

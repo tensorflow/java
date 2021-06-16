@@ -106,7 +106,7 @@ public final class LoadAndRemapMatrix extends RawOp implements Operand<TFloat32>
   public static LoadAndRemapMatrix create(Scope scope, Operand<TString> ckptPath,
       Operand<TString> oldTensorName, Operand<TInt64> rowRemapping, Operand<TInt64> colRemapping,
       Operand<TFloat32> initializingValues, Long numRows, Long numCols, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LoadAndRemapMatrix", scope.makeOpName("LoadAndRemapMatrix"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadAndRemapMatrix"));
     opBuilder.addInput(ckptPath.asOutput());
     opBuilder.addInput(oldTensorName.asOutput());
     opBuilder.addInput(rowRemapping.asOutput());

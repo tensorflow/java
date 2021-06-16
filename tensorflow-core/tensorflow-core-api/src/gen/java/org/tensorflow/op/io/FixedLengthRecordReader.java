@@ -60,7 +60,7 @@ public final class FixedLengthRecordReader extends RawOp implements Operand<TTyp
       describeByClass = true
   )
   public static FixedLengthRecordReader create(Scope scope, Long recordBytes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FixedLengthRecordReaderV2", scope.makeOpName("FixedLengthRecordReader"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FixedLengthRecordReader"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("record_bytes", recordBytes);
     if (options != null) {

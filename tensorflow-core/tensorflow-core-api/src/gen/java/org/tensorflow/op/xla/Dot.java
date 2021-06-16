@@ -67,7 +67,7 @@ public final class Dot<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs,
       String dimensionNumbers, String precisionConfig) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaDot", scope.makeOpName("Dot"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dot"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -79,7 +79,7 @@ public final class ApplyFtrl<T extends TType> extends RawOp implements Operand<T
   public static <T extends TType> ApplyFtrl<T> create(Scope scope, Operand<T> var, Operand<T> accum,
       Operand<T> linear, Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2,
       Operand<T> l2Shrinkage, Operand<T> lrPower, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyFtrlV2", scope.makeOpName("ApplyFtrl"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyFtrl"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(linear.asOutput());

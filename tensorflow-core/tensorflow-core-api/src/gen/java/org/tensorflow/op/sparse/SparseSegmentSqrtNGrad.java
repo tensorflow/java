@@ -69,7 +69,7 @@ public final class SparseSegmentSqrtNGrad<T extends TNumber> extends RawOp imple
   public static <T extends TNumber> SparseSegmentSqrtNGrad<T> create(Scope scope, Operand<T> grad,
       Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
       Operand<TInt32> outputDim0) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtNGrad", scope.makeOpName("SparseSegmentSqrtNGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSegmentSqrtNGrad"));
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

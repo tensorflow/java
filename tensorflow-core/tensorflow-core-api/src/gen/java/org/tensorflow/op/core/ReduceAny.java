@@ -65,7 +65,7 @@ public final class ReduceAny extends RawOp implements Operand<TBool> {
   )
   public static ReduceAny create(Scope scope, Operand<TBool> input, Operand<? extends TNumber> axis,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Any", scope.makeOpName("ReduceAny"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceAny"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

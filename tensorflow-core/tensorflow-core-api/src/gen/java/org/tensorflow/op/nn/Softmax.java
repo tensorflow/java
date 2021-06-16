@@ -65,7 +65,7 @@ public final class Softmax<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> Softmax<T> create(Scope scope, Operand<T> logits) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Softmax", scope.makeOpName("Softmax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Softmax"));
     opBuilder.addInput(logits.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Softmax<>(opBuilder.build());

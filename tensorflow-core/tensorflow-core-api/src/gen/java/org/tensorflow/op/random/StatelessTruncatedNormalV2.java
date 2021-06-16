@@ -71,7 +71,7 @@ public final class StatelessTruncatedNormalV2<U extends TNumber> extends RawOp i
   public static <U extends TNumber> StatelessTruncatedNormalV2<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TType> key,
       Operand<? extends TType> counter, Operand<TInt32> alg, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessTruncatedNormalV2", scope.makeOpName("StatelessTruncatedNormalV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessTruncatedNormalV2"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(counter.asOutput());

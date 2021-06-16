@@ -73,7 +73,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
       Operand<TString> jobName, Operand<TInt64> maxOutstandingRequests,
       Operand<? extends TType> iterationCounter, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DataServiceDataset", scope.makeOpName("DataServiceDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DataServiceDataset"));
     opBuilder.addInput(datasetId.asOutput());
     opBuilder.addInput(processingMode.asOutput());
     opBuilder.addInput(address.asOutput());

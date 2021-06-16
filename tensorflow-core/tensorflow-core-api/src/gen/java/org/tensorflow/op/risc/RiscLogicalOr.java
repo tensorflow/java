@@ -55,7 +55,7 @@ public final class RiscLogicalOr extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static RiscLogicalOr create(Scope scope, Operand<TBool> x, Operand<TBool> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscLogicalOr", scope.makeOpName("RiscLogicalOr"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscLogicalOr"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

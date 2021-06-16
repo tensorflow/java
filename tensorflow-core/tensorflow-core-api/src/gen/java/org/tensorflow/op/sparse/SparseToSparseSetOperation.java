@@ -104,7 +104,7 @@ public final class SparseToSparseSetOperation<T extends TType> extends RawOp {
       Operand<TInt64> set1Indices, Operand<T> set1Values, Operand<TInt64> set1Shape,
       Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape,
       String setOperation, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseToSparseSetOperation", scope.makeOpName("SparseToSparseSetOperation"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseToSparseSetOperation"));
     opBuilder.addInput(set1Indices.asOutput());
     opBuilder.addInput(set1Values.asOutput());
     opBuilder.addInput(set1Shape.asOutput());

@@ -65,7 +65,7 @@ public final class Enter<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Enter<T> create(Scope scope, Operand<T> data, String frameName,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Enter", scope.makeOpName("Enter"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Enter"));
     opBuilder.addInput(data.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("frame_name", frameName);

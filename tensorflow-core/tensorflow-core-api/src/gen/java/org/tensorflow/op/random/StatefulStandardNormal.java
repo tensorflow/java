@@ -70,7 +70,7 @@ public final class StatefulStandardNormal<U extends TType> extends RawOp impleme
   public static <U extends TType> StatefulStandardNormal<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm, Operand<? extends TType> shape,
       Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatefulStandardNormalV2", scope.makeOpName("StatefulStandardNormal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulStandardNormal"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());

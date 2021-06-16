@@ -67,7 +67,7 @@ public final class TensorArrayPack<T extends TType> extends RawOp implements Ope
   )
   public static <T extends TType> TensorArrayPack<T> create(Scope scope, Operand<TString> handle,
       Operand<TFloat32> flowIn, Class<T> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayPack", scope.makeOpName("TensorArrayPack"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayPack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
     opBuilder = scope.apply(opBuilder);

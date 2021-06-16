@@ -86,7 +86,7 @@ public final class ApplyCenteredRmsProp<T extends TType> extends RawOp implement
   public static <T extends TType> ApplyCenteredRmsProp<T> create(Scope scope, Operand<T> var,
       Operand<T> mg, Operand<T> ms, Operand<T> mom, Operand<T> lr, Operand<T> rho,
       Operand<T> momentum, Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ApplyCenteredRMSProp", scope.makeOpName("ApplyCenteredRmsProp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyCenteredRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(mg.asOutput());
     opBuilder.addInput(ms.asOutput());

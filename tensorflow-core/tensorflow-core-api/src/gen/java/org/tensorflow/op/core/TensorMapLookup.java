@@ -66,7 +66,7 @@ public final class TensorMapLookup<U extends TType> extends RawOp implements Ope
   )
   public static <U extends TType> TensorMapLookup<U> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorMapLookup", scope.makeOpName("TensorMapLookup"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapLookup"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder = scope.apply(opBuilder);

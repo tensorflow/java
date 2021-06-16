@@ -75,7 +75,7 @@ public final class CSVDatasetV2 extends RawOp implements Operand<TType> {
       Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue,
       Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, Operand<TInt64> excludeCols,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CSVDatasetV2", scope.makeOpName("CSVDatasetV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSVDatasetV2"));
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());

@@ -78,7 +78,7 @@ public final class SparseBincount<U extends TNumber> extends RawOp implements Op
   public static <U extends TNumber, T extends TNumber> SparseBincount<U> create(Scope scope,
       Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape, Operand<T> sizeOutput,
       Operand<U> weights, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseBincount", scope.makeOpName("SparseBincount"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseBincount"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());

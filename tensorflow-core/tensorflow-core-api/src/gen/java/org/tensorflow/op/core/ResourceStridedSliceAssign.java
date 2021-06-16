@@ -65,7 +65,7 @@ public final class ResourceStridedSliceAssign extends RawOp {
   public static <T extends TNumber> ResourceStridedSliceAssign create(Scope scope,
       Operand<? extends TType> ref, Operand<T> begin, Operand<T> end, Operand<T> strides,
       Operand<? extends TType> value, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceStridedSliceAssign", scope.makeOpName("ResourceStridedSliceAssign"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceStridedSliceAssign"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(end.asOutput());

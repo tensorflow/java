@@ -68,7 +68,7 @@ public final class SparseTensorDenseAdd<U extends TType> extends RawOp implement
   )
   public static <U extends TType, T extends TNumber> SparseTensorDenseAdd<U> create(Scope scope,
       Operand<T> aIndices, Operand<U> aValues, Operand<T> aShape, Operand<U> b) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseTensorDenseAdd", scope.makeOpName("SparseTensorDenseAdd"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseTensorDenseAdd"));
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());

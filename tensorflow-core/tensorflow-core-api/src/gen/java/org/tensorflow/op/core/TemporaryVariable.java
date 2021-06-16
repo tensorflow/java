@@ -75,7 +75,7 @@ public final class TemporaryVariable<T extends TType> extends RawOp implements O
   )
   public static <T extends TType> TemporaryVariable<T> create(Scope scope, Shape shape,
       Class<T> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TemporaryVariable", scope.makeOpName("TemporaryVariable"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TemporaryVariable"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

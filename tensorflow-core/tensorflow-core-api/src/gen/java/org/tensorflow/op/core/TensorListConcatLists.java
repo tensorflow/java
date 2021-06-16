@@ -62,7 +62,7 @@ public final class TensorListConcatLists extends RawOp implements Operand<TType>
   )
   public static <T extends TType> TensorListConcatLists create(Scope scope,
       Operand<? extends TType> inputA, Operand<? extends TType> inputB, Class<T> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListConcatLists", scope.makeOpName("TensorListConcatLists"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListConcatLists"));
     opBuilder.addInput(inputA.asOutput());
     opBuilder.addInput(inputB.asOutput());
     opBuilder = scope.apply(opBuilder);

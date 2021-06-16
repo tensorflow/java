@@ -63,7 +63,7 @@ public final class TensorListFromTensor extends RawOp implements Operand<TType> 
   )
   public static TensorListFromTensor create(Scope scope, Operand<? extends TType> tensor,
       Operand<? extends TNumber> elementShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListFromTensor", scope.makeOpName("TensorListFromTensor"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListFromTensor"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder = scope.apply(opBuilder);

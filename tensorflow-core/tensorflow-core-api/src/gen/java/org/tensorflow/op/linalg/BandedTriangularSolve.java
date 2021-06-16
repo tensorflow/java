@@ -60,7 +60,7 @@ public final class BandedTriangularSolve<T extends TType> extends RawOp implemen
   )
   public static <T extends TType> BandedTriangularSolve<T> create(Scope scope, Operand<T> matrix,
       Operand<T> rhs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BandedTriangularSolve", scope.makeOpName("BandedTriangularSolve"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BandedTriangularSolve"));
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);

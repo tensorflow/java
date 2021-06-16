@@ -66,7 +66,7 @@ public final class Polygamma<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> Polygamma<T> create(Scope scope, Operand<T> a, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Polygamma", scope.makeOpName("Polygamma"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Polygamma"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

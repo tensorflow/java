@@ -60,7 +60,7 @@ public final class CSRSparseMatrixToDense<T extends TType> extends RawOp impleme
   )
   public static <T extends TType> CSRSparseMatrixToDense<T> create(Scope scope,
       Operand<? extends TType> sparseInput, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CSRSparseMatrixToDense", scope.makeOpName("CSRSparseMatrixToDense"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSRSparseMatrixToDense"));
     opBuilder.addInput(sparseInput.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("type", Operands.toDataType(type));

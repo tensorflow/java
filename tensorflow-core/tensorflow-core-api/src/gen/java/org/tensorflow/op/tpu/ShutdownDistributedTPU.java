@@ -47,7 +47,7 @@ public final class ShutdownDistributedTPU extends RawOp {
       describeByClass = true
   )
   public static ShutdownDistributedTPU create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ShutdownDistributedTPU", scope.makeOpName("ShutdownDistributedTPU"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ShutdownDistributedTPU"));
     opBuilder = scope.apply(opBuilder);
     return new ShutdownDistributedTPU(opBuilder.build());
   }

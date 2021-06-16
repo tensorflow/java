@@ -60,7 +60,7 @@ public final class DebugGradientIdentity<T extends TType> extends RawOp implemen
       describeByClass = true
   )
   public static <T extends TType> DebugGradientIdentity<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DebugGradientIdentity", scope.makeOpName("DebugGradientIdentity"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DebugGradientIdentity"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new DebugGradientIdentity<>(opBuilder.build());

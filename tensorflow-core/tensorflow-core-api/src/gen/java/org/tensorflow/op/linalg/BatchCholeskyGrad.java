@@ -63,7 +63,7 @@ public final class BatchCholeskyGrad<T extends TNumber> extends RawOp implements
   )
   public static <T extends TNumber> BatchCholeskyGrad<T> create(Scope scope, Operand<T> l,
       Operand<T> grad) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchCholeskyGrad", scope.makeOpName("BatchCholeskyGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchCholeskyGrad"));
     opBuilder.addInput(l.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder = scope.apply(opBuilder);

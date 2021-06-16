@@ -69,7 +69,7 @@ public final class ResourceConditionalAccumulator extends RawOp implements Opera
   )
   public static <T extends TType> ResourceConditionalAccumulator create(Scope scope, Class<T> dtype,
       Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceConditionalAccumulator", scope.makeOpName("ResourceConditionalAccumulator"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceConditionalAccumulator"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);

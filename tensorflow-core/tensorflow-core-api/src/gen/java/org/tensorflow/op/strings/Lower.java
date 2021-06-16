@@ -68,7 +68,7 @@ public final class Lower extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static Lower create(Scope scope, Operand<TString> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StringLower", scope.makeOpName("Lower"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Lower"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

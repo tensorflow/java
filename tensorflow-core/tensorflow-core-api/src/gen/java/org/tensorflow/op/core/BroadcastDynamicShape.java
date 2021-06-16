@@ -63,7 +63,7 @@ public final class BroadcastDynamicShape<T extends TNumber> extends RawOp implem
   )
   public static <T extends TNumber> BroadcastDynamicShape<T> create(Scope scope, Operand<T> s0,
       Operand<T> s1) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BroadcastArgs", scope.makeOpName("BroadcastDynamicShape"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastDynamicShape"));
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());
     opBuilder = scope.apply(opBuilder);

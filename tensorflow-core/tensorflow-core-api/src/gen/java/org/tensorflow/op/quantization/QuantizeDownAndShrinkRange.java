@@ -93,7 +93,7 @@ public final class QuantizeDownAndShrinkRange<U extends TNumber> extends RawOp {
   public static <U extends TNumber> QuantizeDownAndShrinkRange<U> create(Scope scope,
       Operand<? extends TNumber> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
       Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizeDownAndShrinkRange", scope.makeOpName("QuantizeDownAndShrinkRange"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizeDownAndShrinkRange"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());

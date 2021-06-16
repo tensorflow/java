@@ -70,7 +70,7 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
       Iterable<Operand<? extends TType>> orderingToken, String mergeOp, String finalOp,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveReduceV2", scope.makeOpName("ReduceV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceV2"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());

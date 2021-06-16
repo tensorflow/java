@@ -72,7 +72,7 @@ public final class ResourceScatterMax extends RawOp {
   )
   public static ResourceScatterMax create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceScatterMax", scope.makeOpName("ResourceScatterMax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterMax"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

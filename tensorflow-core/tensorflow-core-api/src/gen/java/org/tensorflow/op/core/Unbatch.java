@@ -82,7 +82,7 @@ public final class Unbatch<T extends TType> extends RawOp implements Operand<T> 
   )
   public static <T extends TType> Unbatch<T> create(Scope scope, Operand<T> batchedTensor,
       Operand<TInt64> batchIndex, Operand<TInt64> id, Long timeoutMicros, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Unbatch", scope.makeOpName("Unbatch"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Unbatch"));
     opBuilder.addInput(batchedTensor.asOutput());
     opBuilder.addInput(batchIndex.asOutput());
     opBuilder.addInput(id.asOutput());

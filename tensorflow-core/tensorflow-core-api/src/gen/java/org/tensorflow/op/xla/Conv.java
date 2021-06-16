@@ -76,7 +76,7 @@ public final class Conv<T extends TType> extends RawOp implements Operand<T> {
       Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation,
       Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers,
       String precisionConfig) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaConv", scope.makeOpName("Conv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Conv"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(windowStrides.asOutput());

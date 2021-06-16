@@ -70,7 +70,7 @@ public final class Betainc<T extends TNumber> extends RawOp implements Operand<T
   )
   public static <T extends TNumber> Betainc<T> create(Scope scope, Operand<T> a, Operand<T> b,
       Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Betainc", scope.makeOpName("Betainc"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Betainc"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(x.asOutput());

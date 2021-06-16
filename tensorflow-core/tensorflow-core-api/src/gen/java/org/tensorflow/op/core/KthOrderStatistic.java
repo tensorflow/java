@@ -71,7 +71,7 @@ public final class KthOrderStatistic extends RawOp implements Operand<TFloat32> 
       describeByClass = true
   )
   public static KthOrderStatistic create(Scope scope, Operand<TFloat32> input, Long k) {
-    OperationBuilder opBuilder = scope.env().opBuilder("KthOrderStatistic", scope.makeOpName("KthOrderStatistic"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("KthOrderStatistic"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("k", k);

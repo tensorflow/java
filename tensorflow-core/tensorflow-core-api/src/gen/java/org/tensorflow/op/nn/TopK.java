@@ -78,7 +78,7 @@ public final class TopK<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> TopK<T> create(Scope scope, Operand<T> input, Operand<TInt32> k,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TopKV2", scope.makeOpName("TopK"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TopK"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder = scope.apply(opBuilder);

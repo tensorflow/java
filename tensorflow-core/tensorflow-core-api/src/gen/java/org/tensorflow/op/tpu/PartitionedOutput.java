@@ -71,7 +71,7 @@ public final class PartitionedOutput<T extends TType> extends RawOp implements I
   )
   public static <T extends TType> PartitionedOutput<T> create(Scope scope, Operand<T> inputs,
       Long numSplits, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUPartitionedOutput", scope.makeOpName("PartitionedOutput"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PartitionedOutput"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_splits", numSplits);
