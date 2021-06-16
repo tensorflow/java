@@ -1357,12 +1357,9 @@ public final class Constant<T extends TType> extends RawOp implements Operand<T>
   @Endpoint(name = "constantOf")
   public static <T extends TType> Constant<T> create(Scope scope, T tensor) {
     OperationBuilder builder = scope
-        .env()
-        .opBuilder(OP_NAME, scope.makeOpName(OP_NAME), scope)
+        .opBuilder(OP_NAME, OP_NAME)
         .setAttr("value", tensor)
         .setAttr("dtype", tensor.dataType());
-
-    scope.apply(builder);
 
     return new Constant<>(builder.build());
   }

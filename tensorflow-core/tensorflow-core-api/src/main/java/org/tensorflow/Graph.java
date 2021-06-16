@@ -33,6 +33,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -537,6 +538,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     synchronized (nativeHandleLock) {
       return toGraphDef(nativeHandle);
     }
+  }
+
+  /**
+   * Adds {@code op} and all of it's predecessors as init ops.
+   * @param op
+   */
+  public synchronized void registerRestoreOp(GraphOperation op){
+    subgraphToOps(Collections.singleton(op)).forEach(x -> addInitOp(x));
+    addInitOp(op);
   }
 
   @Override

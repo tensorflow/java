@@ -199,13 +199,13 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
-
-
   /**
    * Returns a builder to create a new {@link Operation}.
    *
+   * Note that {@code name} is automatically made unique.
+   *
    * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope.
+   * @param name to refer to the created Operation in this environment scope.  Is uniquified.
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
@@ -261,6 +261,9 @@ public final class Scope {
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
    * the provided builder.
+   * <p>
+   *
+   * <b>Should only be used from {@link OperationBuilder} implementations</b>
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
