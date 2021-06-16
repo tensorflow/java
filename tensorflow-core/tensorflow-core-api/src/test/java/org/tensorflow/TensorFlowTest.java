@@ -23,13 +23,12 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.nio.file.Paths;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.proto.framework.OpList;
 
 /** Unit tests for {@link org.tensorflow.TensorFlow}. */
 public class TensorFlowTest {
-    
+
   @Test
   public void version() {
     assertTrue(TensorFlow.version().length() > 0);

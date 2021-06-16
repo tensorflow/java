@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
@@ -30,7 +30,8 @@ public interface ExecutionEnvironment {
    * Returns a builder to create a new {@link Operation}.
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope.  Should already have been made unique.
+   * @param name to refer to the created Operation in this environment scope. Should already have
+   *     been made unique.
    * @param scope the scope that owns the created op
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
@@ -89,20 +90,24 @@ public interface ExecutionEnvironment {
   Scope baseScope();
 
   /**
-   * Get the execution environment to use for initialization.  In most cases is {@code this}.
+   * Get the execution environment to use for initialization. In most cases is {@code this}.
+   *
    * <p><b>FOR INTERNAL USE ONLY</b>
    */
   ExecutionEnvironment initEnv();
 
   /**
    * Register an op as an initialization op.
+   *
    * <p><b>FOR INTERNAL USE ONLY</b>
+   *
    * <p>To do this yourself, use {@link org.tensorflow.op.Ops#initScope()}.
    */
   void registerInitOp(Operation op);
 
   /**
    * Get whether an op is an initialization op.
+   *
    * <p><b>FOR INTERNAL USE ONLY</b>
    */
   boolean isInitOp(Operation op);

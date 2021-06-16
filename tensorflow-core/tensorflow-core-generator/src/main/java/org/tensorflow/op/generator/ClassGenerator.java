@@ -1,4 +1,5 @@
-/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/*
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -258,10 +259,8 @@ final class ClassGenerator {
 
       if (iterable) {
         mode = RenderMode.LIST_OPERAND;
-        if (!isStateSubclass) {
-          builder.addSuperinterface(
-              ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));
-        }
+        if (!isStateSubclass) {builder.addSuperinterface(
+            ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));}
       } else {
         mode = RenderMode.OPERAND;
         if (!isStateSubclass) {
@@ -316,12 +315,10 @@ final class ClassGenerator {
       buildInterfaceImpl();
     }
 
-    if (!isStateSelector) {
-      // add op name field
-      builder.addField(
-          FieldSpec.builder(
-                  TypeResolver.STRING,
-                  OP_NAME_FIELD,
+    if (!isStateSelector) {// add op name field
+    builder.addField(
+        FieldSpec.builder(
+                TypeResolver.STRING, OP_NAME_FIELD,
                   Modifier.PUBLIC,
                   Modifier.STATIC,
                   Modifier.FINAL)
@@ -329,15 +326,15 @@ final class ClassGenerator {
               .initializer("$S", op.getName())
               .build());
 
-      // add output fields
-      if (op.getOutputArgCount() > 0) {
-        for (ArgDef output : op.getOutputArgList()) {
-          builder.addField(
-              resolver.typeOf(output).listIfIterable().javaType,
-              getJavaName(output),
-              Modifier.PRIVATE);
-        }
+    // add output fields
+    if (op.getOutputArgCount() > 0) {
+      for (ArgDef output : op.getOutputArgList()) {
+        builder.addField(
+            resolver.typeOf(output).listIfIterable().javaType,
+            getJavaName(output),
+            Modifier.PRIVATE);
       }
+    }
 
       buildConstructor();
     }
@@ -414,7 +411,8 @@ final class ClassGenerator {
       }
 
       // add the field
-      optionsBuilder.addField(field.build());
+      optionsBuilder.addField(
+          field.build());
     }
 
     // add a private constructor
@@ -505,10 +503,8 @@ final class ClassGenerator {
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
     body.addStatement(
-        "$T opBuilder = scope.opBuilder($L, $S)",
-        Names.OperationBuilder,
-        OP_NAME_FIELD,
-        className);
+        "$T opBuilder = scope.opBuilder($L, $S)", Names.OperationBuilder,
+        OP_NAME_FIELD, className);
 
     List<String> functionArgs = new ArrayList<>();
     List<String> iterableFunctionArgs = new ArrayList<>();
@@ -603,7 +599,9 @@ final class ClassGenerator {
       }
 
       factoryBuilder.addParameter(
-          ParameterSpec.builder(ArrayTypeName.of(optionsClassName), "options").build());
+          ParameterSpec.builder(
+                  ArrayTypeName.of(optionsClassName), "options")
+              .build());
       paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values"));
       factoryBuilder.varargs();
 
@@ -621,7 +619,7 @@ final class ClassGenerator {
       body.endControlFlow();
 
       body.endControlFlow();
-    }
+}
 
     body.addStatement(
         "return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
@@ -828,16 +826,14 @@ final class ClassGenerator {
 
       if (isStateSelector) {
         asOutput.addModifiers(Modifier.ABSTRACT);
+      } else {if (uncheckedCast) {
+        asOutput.addAnnotation(
+            AnnotationSpec.builder(SuppressWarnings.class)
+                .addMember("value", "$S", "unchecked")
+                .build());
+        asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
       } else {
-        if (uncheckedCast) {
-          asOutput.addAnnotation(
-              AnnotationSpec.builder(SuppressWarnings.class)
-                  .addMember("value", "$S", "unchecked")
-                  .build());
-          asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
-        } else {
-          asOutput.addCode("return $L;", getJavaName(output));
-        }
+        asOutput.addCode("return $L;", getJavaName(output));}
       }
 
       builder.addMethod(asOutput.build());

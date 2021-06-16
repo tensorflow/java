@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -324,7 +324,10 @@ public class SavedModelBundleTest {
     Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
     Variable<TFloat32> y =
         tf.withName("variable")
-            .variable(tf.initScope().random.randomUniform(tf.initScope().constant(xShape), TFloat32.class));
+            .variable(
+                tf.initScope()
+                    .random
+                    .randomUniform(tf.initScope().constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }

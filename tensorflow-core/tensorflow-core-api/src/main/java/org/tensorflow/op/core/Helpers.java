@@ -22,31 +22,30 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Container class for core methods which add or perform several operations
- * and return one of them.
+ * Container class for core methods which add or perform several operations and return one of them.
  */
 @Operator
 public abstract class Helpers {
 
-    /**
-     * This class contains static factories.
-     */
-    private Helpers() {}
+  /** This class contains static factories. */
+  private Helpers() {}
 
-    /**
-     * Factory method to create a new Variable with it's initializer.
-     * <p>
-     * Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op
-     * does not work in an EagerSession.
-     * @param scope current scope
-     * @param init The op to use to initialise this variable.
-     * @param options carries optional attributes values
-     * @return a new instance of Variable
-     */
-    @Endpoint(name = "variable")
-    public static <T extends TType> Variable<T> createVariableWithInit(Scope scope, Operand<T> init, Variable.Options... options) {
-        Variable<T> newVar = Variable.create(scope.initScope(), init.shape(), init.type(), options);
-        Assign<T> assignOp = Assign.create(scope.initScope(), newVar, init);
-        return newVar;
-    }
+  /**
+   * Factory method to create a new Variable with it's initializer.
+   *
+   * <p>Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op does not
+   * work in an EagerSession.
+   *
+   * @param scope current scope
+   * @param init The op to use to initialise this variable.
+   * @param options carries optional attributes values
+   * @return a new instance of Variable
+   */
+  @Endpoint(name = "variable")
+  public static <T extends TType> Variable<T> createVariableWithInit(
+      Scope scope, Operand<T> init, Variable.Options... options) {
+    Variable<T> newVar = Variable.create(scope.initScope(), init.shape(), init.type(), options);
+    Assign<T> assignOp = Assign.create(scope.initScope(), newVar, init);
+    return newVar;
+  }
 }

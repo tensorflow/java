@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.op;
 
 import java.util.ArrayList;
@@ -166,16 +166,13 @@ public final class Scope {
    * @return a new Scope that uses opName for operations.
    */
   public Scope withDevice(DeviceSpec deviceSpec) {
-    return new Scope(env, nameScope, controlDependencies, deviceSpec,
-        isInit);
+    return new Scope(env, nameScope, controlDependencies, deviceSpec, isInit);
   }
 
-  //TODO stop gradient recording in init scopes (once we have gradient recording)
+  // TODO stop gradient recording in init scopes (once we have gradient recording)
 
-  /**
-   * Get an extension of this scope that generated initialization ops.
-   */
-  public Scope initScope(){
+  /** Get an extension of this scope that generated initialization ops. */
+  public Scope initScope() {
     return new Scope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
@@ -206,15 +203,15 @@ public final class Scope {
   /**
    * Returns a builder to create a new {@link Operation}.
    *
-   * Note that {@code name} is automatically made unique.
+   * <p>Note that {@code name} is automatically made unique.
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope.  Is uniquified.
+   * @param name to refer to the created Operation in this environment scope. Is uniquified.
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
    */
-  public OperationBuilder opBuilder(String type, String name){
+  public OperationBuilder opBuilder(String type, String name) {
     return env.opBuilder(type, makeOpName(name), this);
   }
 
@@ -241,8 +238,8 @@ public final class Scope {
    * <p>Ops created with this scope will have a control edge from each of the provided controls. All
    * other properties are inherited from the current scope.
    *
-   * <p>Init ops will never be used as control dependencies, they are assumed to be created
-   * during session initialization.
+   * <p>Init ops will never be used as control dependencies, they are assumed to be created during
+   * session initialization.
    *
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
@@ -253,8 +250,8 @@ public final class Scope {
     }
 
     List<Op> nonInitControls = new ArrayList<>();
-    for(Op op : controls){
-      if(!env.isInitOp(op.op())){
+    for (Op op : controls) {
+      if (!env.isInitOp(op.op())) {
         nonInitControls.add(op);
       }
     }
@@ -265,9 +262,8 @@ public final class Scope {
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
    * the provided builder.
-   * <p>
    *
-   * <b>Should only be used from {@link OperationBuilder} implementations</b>
+   * <p><b>Should only be used from {@link OperationBuilder} implementations</b>
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
@@ -281,10 +277,11 @@ public final class Scope {
 
   /**
    * Handle op creation, like registering it as an init op if the scope is init.
+   *
    * <p><b>FOR INTERNAL USE ONLY</b>
    */
-  public void onOpCreated(Operation op){
-    if(isInit){
+  public void onOpCreated(Operation op) {
+    if (isInit) {
       env.registerInitOp(op);
     }
   }
@@ -300,9 +297,7 @@ public final class Scope {
     return deviceSpec.toString();
   }
 
-  /**
-   * Get whether this scope is building init ops.
-   */
+  /** Get whether this scope is building init ops. */
   public boolean isInit() {
     return isInit;
   }

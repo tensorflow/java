@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,7 +35,10 @@ public class GraphOperationBuilderTest {
     try (Graph g = new Graph();
         TInt32 t = TInt32.scalarOf(1)) {
       OperationBuilder b =
-          g.baseScope().opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
+          g.baseScope()
+              .opBuilder("Const", "Const")
+              .setAttr("dtype", t.dataType())
+              .setAttr("value", t);
       b.build();
       try {
         b.setAttr("dtype", t.dataType());
@@ -50,7 +53,11 @@ public class GraphOperationBuilderTest {
     OperationBuilder b = null;
     try (Graph g = new Graph();
         TInt32 t = TInt32.scalarOf(1)) {
-      b = g.baseScope().opBuilder("Const", "Const").setAttr("dtype", t.dataType()).setAttr("value", t);
+      b =
+          g.baseScope()
+              .opBuilder("Const", "Const")
+              .setAttr("dtype", t.dataType())
+              .setAttr("value", t);
     }
     try {
       b.build();
@@ -72,7 +79,8 @@ public class GraphOperationBuilderTest {
       Ops tf = Ops.create(g);
       // dtype, tensor attributes.
       try (TInt32 t = TInt32.scalarOf(1)) {
-        g.baseScope().opBuilder("Const", "DataTypeAndTensor")
+        g.baseScope()
+            .opBuilder("Const", "DataTypeAndTensor")
             .setAttr("dtype", t.dataType())
             .setAttr("value", t)
             .build()
@@ -80,20 +88,23 @@ public class GraphOperationBuilderTest {
         assertTrue(hasNode(g, "DataTypeAndTensor"));
       }
       // string, bool attributes.
-      g.baseScope().opBuilder("Abort", "StringAndBool")
+      g.baseScope()
+          .opBuilder("Abort", "StringAndBool")
           .setAttr("error_msg", "SomeErrorMessage")
           .setAttr("exit_without_error", false)
           .build();
       assertTrue(hasNode(g, "StringAndBool"));
       // int (TF "int" attributes are 64-bit signed, so a Java long).
-      g.baseScope().opBuilder("RandomUniform", "Int")
+      g.baseScope()
+          .opBuilder("RandomUniform", "Int")
           .addInput(tf.array(1).asOutput())
           .setAttr("seed", 10)
           .setAttr("dtype", DataType.DT_FLOAT)
           .build();
       assertTrue(hasNode(g, "Int"));
       // list(int)
-      g.baseScope().opBuilder("MaxPool", "IntList")
+      g.baseScope()
+          .opBuilder("MaxPool", "IntList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("ksize", new long[] {1, 1, 1, 1})
           .setAttr("strides", new long[] {1, 1, 1, 1})
@@ -101,7 +112,8 @@ public class GraphOperationBuilderTest {
           .build();
       assertTrue(hasNode(g, "IntList"));
       // list(float)
-      g.baseScope().opBuilder("FractionalMaxPool", "FloatList")
+      g.baseScope()
+          .opBuilder("FractionalMaxPool", "FloatList")
           .addInput(tf.constant(new float[2][2][2][2]).asOutput())
           .setAttr("pooling_ratio", new float[] {1.0f, 1.44f, 1.73f, 1.0f})
           .build();
@@ -115,7 +127,8 @@ public class GraphOperationBuilderTest {
   public void setAttrShape() {
     try (Graph g = new Graph()) {
       Output<?> n =
-          g.baseScope().opBuilder("Placeholder", "unknown")
+          g.baseScope()
+              .opBuilder("Placeholder", "unknown")
               .setAttr("dtype", DataType.DT_FLOAT)
               .setAttr("shape", Shape.unknown())
               .build()
@@ -124,7 +137,8 @@ public class GraphOperationBuilderTest {
       assertEquals(DataType.DT_FLOAT, n.dataType());
 
       n =
-          g.baseScope().opBuilder("Placeholder", "batch_of_vectors")
+          g.baseScope()
+              .opBuilder("Placeholder", "batch_of_vectors")
               .setAttr("dtype", DataType.DT_FLOAT)
               .setAttr("shape", Shape.of(-1, 784))
               .build()
@@ -158,10 +172,12 @@ public class GraphOperationBuilderTest {
       Ops tf = Ops.create(g);
       Output<TBool> placeholder = tf.placeholder(TBool.class).asOutput();
       GraphOperation check =
-          (GraphOperation) g.baseScope().opBuilder("Assert", "assert")
-              .addInput(placeholder)
-              .addInputList(new Output<?>[] {placeholder})
-              .build();
+          (GraphOperation)
+              g.baseScope()
+                  .opBuilder("Assert", "assert")
+                  .addInput(placeholder)
+                  .addInputList(new Output<?>[] {placeholder})
+                  .build();
       Operation noop = g.baseScope().opBuilder("NoOp", "noop").addControlInput(check).build();
 
       // No problems when the Assert check succeeds
@@ -183,7 +199,8 @@ public class GraphOperationBuilderTest {
       Ops tf = Ops.create(g);
       int[][] matrix = new int[][] {{0, 0}, {0, 0}};
       Output<?> queue =
-          g.baseScope().opBuilder("FIFOQueue", "queue")
+          g.baseScope()
+              .opBuilder("FIFOQueue", "queue")
               .setAttr("component_types", new DataType[] {DataType.DT_INT32, DataType.DT_INT32})
               .setAttr("shapes", shapes)
               .build()
@@ -192,7 +209,8 @@ public class GraphOperationBuilderTest {
       Output<TInt32> c1 = tf.constant(matrix).asOutput();
       Output<TInt32> c2 = tf.constant(new int[][][] {matrix, matrix}).asOutput();
       Operation enqueue =
-          g.baseScope().opBuilder("QueueEnqueue", "enqueue")
+          g.baseScope()
+              .opBuilder("QueueEnqueue", "enqueue")
               .addInput(queue)
               .addInputList(new Output<?>[] {c1, c2})
               .build();
