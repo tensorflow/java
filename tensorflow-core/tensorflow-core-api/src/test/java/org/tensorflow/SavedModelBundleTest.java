@@ -36,7 +36,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Identity;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
@@ -327,7 +326,6 @@ public class SavedModelBundleTest {
         tf.withName("variable")
             .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
-    Init init = tf.init();
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }
 

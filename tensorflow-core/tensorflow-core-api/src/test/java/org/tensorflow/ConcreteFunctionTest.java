@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.math.Add;
 import org.tensorflow.op.math.Sub;
@@ -33,7 +32,6 @@ public class ConcreteFunctionTest {
   private static Signature plusFive(Ops tf) {
     Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
     Add<TFloat32> output = tf.math.add(input, tf.constant(5.0f));
-    Init init = tf.init(); // for native resource management tests
     return Signature.builder().key("plusFive").input("x", input).output("y", output).build();
   }
 

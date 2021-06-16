@@ -31,11 +31,12 @@ public interface ExecutionEnvironment {
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
    * @param name to refer to the created Operation in this environment scope.
+   * @param scope
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
    */
-  OperationBuilder opBuilder(String type, String name);
+  OperationBuilder opBuilder(String type, String name, Scope scope);
 
   /**
    * Attach the function and its dependencies to this execution environment, allowing it to be
@@ -86,4 +87,8 @@ public interface ExecutionEnvironment {
    * prevent name collisions.
    */
   Scope baseScope();
+
+  ExecutionEnvironment initEnv();
+  void addInitOp(Operation op);
+  boolean isInitOp(Operation op);
 }

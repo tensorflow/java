@@ -31,7 +31,7 @@ public class EagerOperationBuilderTest {
     EagerSession session = EagerSession.create();
     session.close();
     try {
-      new EagerOperationBuilder(session, "Add", "add");
+      new EagerOperationBuilder(session, "Add", "add", session.baseScope());
       fail();
     } catch (IllegalStateException e) {
       // expected
@@ -42,7 +42,7 @@ public class EagerOperationBuilderTest {
   public void failToBuildOpIfSessionIsClosed() {
     EagerOperationBuilder opBuilder;
     try (EagerSession session = EagerSession.create()) {
-      opBuilder = new EagerOperationBuilder(session, "Empty", "empty");
+      opBuilder = new EagerOperationBuilder(session, "Empty", "empty", session.baseScope());
     }
     try {
       opBuilder.setAttr("dtype", DataType.DT_FLOAT);
@@ -140,6 +140,6 @@ public class EagerOperationBuilderTest {
   }
 
   private static EagerOperationBuilder opBuilder(EagerSession session, String type, String name) {
-    return new EagerOperationBuilder(session, type, name);
+    return new EagerOperationBuilder(session, type, name, session.baseScope());
   }
 }

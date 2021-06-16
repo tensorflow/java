@@ -551,6 +551,15 @@ public final class OperatorProcessor extends AbstractProcessor {
             .build());
 
     opsBuilder.addMethod(
+        MethodSpec.methodBuilder("initScope")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(Names.Ops)
+            .addStatement("return new $T(scope.initScope())", Names.Ops)
+            .addJavadoc(
+                "Returns an API that builds operations in the init scope.\n")
+            .build());
+
+    opsBuilder.addMethod(
         MethodSpec.methodBuilder("withName")
             .addModifiers(Modifier.PUBLIC)
             .addParameter(Names.String, "opName")

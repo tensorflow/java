@@ -33,7 +33,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -371,16 +370,17 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
    * @param name to refer to the created Operation in the graph.
+   * @param scope
    * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
    */
   @Override
-  public GraphOperationBuilder opBuilder(String type, String name) {
+  public GraphOperationBuilder opBuilder(String type, String name, Scope scope) {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    return new GraphOperationBuilder(this, type, name);
+    return new GraphOperationBuilder(this, type, name, scope);
   }
 
   @Override
@@ -539,18 +539,24 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  /**
-   * Adds an initializer to the graph initializer list.
-   *
-   * @param initializer An initializer to add to the list.
-   */
-  public synchronized void addInitializer(Op initializer) {
-    initializers.add(initializer);
+  @Override
+  public synchronized void addInitOp(Operation op) {
+    initializers.add(op);
   }
 
-  /** Returns all initializers added to the graph via {@link #addInitializer(Op)} */
-  public List<Op> initializers() {
-    return Collections.unmodifiableList(initializers);
+  @Override
+  public ExecutionEnvironment initEnv() {
+    return this;
+  }
+
+  @Override
+  public boolean isInitOp(Operation op) {
+    return initializers.contains(op);
+  }
+
+  /** Returns all initializers added to the graph via {@link #addInitOp(Operation)} */
+  public List<Operation> initializers() {
+    return List.copyOf(initializers);
   }
 
   /**
@@ -808,7 +814,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
   private final Scope baseScope;
 
-  private final List<Op> initializers = new ArrayList<>();
+  private final Set<Operation> initializers = new LinkedHashSet<>();
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not

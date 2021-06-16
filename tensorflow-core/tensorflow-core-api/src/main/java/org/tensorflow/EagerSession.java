@@ -277,12 +277,12 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public OperationBuilder opBuilder(String type, String name) {
+  public OperationBuilder opBuilder(String type, String name, Scope scope) {
     checkSession();
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
     }
-    return new EagerOperationBuilder(this, type, name);
+    return new EagerOperationBuilder(this, type, name, scope);
   }
 
   @Override
@@ -331,6 +331,22 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   @Override
   public Scope baseScope() {
     return baseScope;
+  }
+
+  // initialization is meaningless for init scopes
+
+  @Override
+  public ExecutionEnvironment initEnv() {
+    return this;
+  }
+
+  @Override
+  public boolean isInitOp(Operation op) {
+    return false;
+  }
+
+  @Override
+  public void addInitOp(Operation op) {
   }
 
   TFE_Context nativeHandle() {

@@ -38,9 +38,9 @@ public class RawOpTest {
       Output<TInt32> array = tf.constant(new int[2]).asOutput();
 
       RawOp test1 =
-          new RawOp(g.opBuilder("Shape", "shape1").addInput(array).build()) {};
+          new RawOp(g.baseScope().opBuilder("Shape", "shape1").addInput(array).build()) {};
       RawOp test2 =
-          new RawOp(g.opBuilder("Shape", "shape2").addInput(array).build()) {};
+          new RawOp(g.baseScope().opBuilder("Shape", "shape2").addInput(array).build()) {};
       RawOp test3 = new RawOp(test1.operation) {};
 
       // equals() tests

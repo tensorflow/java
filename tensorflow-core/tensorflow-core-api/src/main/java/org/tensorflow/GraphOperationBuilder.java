@@ -58,6 +58,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Scope;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.AttrValue.ListValue;
 import org.tensorflow.proto.framework.DataType;
@@ -66,8 +67,9 @@ import org.tensorflow.proto.framework.NameAttrList;
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  GraphOperationBuilder(Graph graph, String type, String name) {
+  GraphOperationBuilder(Graph graph, String type, String name, Scope scope) {
     this.graph = graph;
+    this.scope = scope;
     Graph.Reference r = graph.ref();
     try {
       this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
@@ -83,13 +85,21 @@ public final class GraphOperationBuilder implements OperationBuilder {
    */
   @Override
   public GraphOperation build() {
+    scope.apply(this);
     Graph.Reference r = graph.ref();
     try {
       GraphOperation op = new GraphOperation(graph, finish(unsafeNativeHandle));
       unsafeNativeHandle = null;
+      scope.onOpCreated(op);
       return op;
     } finally {
       r.close();
+    }
+  }
+
+  private void checkInput(Operation input){
+    if(scope.isInit() && !graph.isInitOp(input)){
+      throw new IllegalArgumentException("Init op can't depend on non init op " + input);
     }
   }
 
@@ -105,6 +115,11 @@ public final class GraphOperationBuilder implements OperationBuilder {
           "Control input " + control + " was from a different graph, can't use.");
     }
 
+    if(graph.isInitOp(control))
+      return this;
+
+    checkInput(control);
+
     Graph.Reference r = graph.ref();
     try {
       addControlInput(unsafeNativeHandle, ((GraphOperation) control).getUnsafeNativeHandle());
@@ -117,6 +132,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   @Override
   public GraphOperationBuilder addInput(Output<?> input) {
     graph.checkInput(input);
+    checkInput(input.op());
     Graph.Reference r = graph.ref();
     try {
       addInput(unsafeNativeHandle, (TF_Operation) input.getUnsafeNativeHandle(), input.index());
@@ -130,6 +146,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder addInputList(Output<?>[] inputs) {
     for (Output<?> input : inputs) {
       graph.checkInput(input);
+      checkInput(input.op());
     }
 
     Graph.Reference r = graph.ref();
@@ -378,6 +395,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private TF_OperationDescription unsafeNativeHandle;
   private Graph graph;
+  private final Scope scope;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {

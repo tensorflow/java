@@ -207,8 +207,7 @@ public class ScopeTest {
 
     static <T extends TType> Const<T> create(Scope s, T value) {
       return new Const<>(
-          s.env()
-              .opBuilder("Const", s.makeOpName("Const"))
+          s.opBuilder("Const", s.makeOpName("Const"))
               .setAttr("dtype", value.dataType())
               .setAttr("value", value)
               .build()
@@ -229,8 +228,7 @@ public class ScopeTest {
 
     static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
       return new Mean<>(
-          s.env()
-              .opBuilder("Mean", s.makeOpName("Mean"))
+          s.opBuilder("Mean", s.makeOpName("Mean"))
               .addInput(input)
               .addInput(reductionIndices)
               .build()
@@ -251,8 +249,7 @@ public class ScopeTest {
 
     static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
       return new SquaredDifference<>(
-          s.env()
-              .opBuilder("SquaredDifference", s.makeOpName("SquaredDifference"))
+          s.opBuilder("SquaredDifference", s.makeOpName("SquaredDifference"))
               .addInput(x)
               .addInput(y)
               .build()

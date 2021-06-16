@@ -53,6 +53,7 @@ import org.tensorflow.internal.c_api.TFE_TensorHandle;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Scope;
 import org.tensorflow.proto.framework.DataType;
 
 /**
@@ -60,17 +61,22 @@ import org.tensorflow.proto.framework.DataType;
  */
 final class EagerOperationBuilder implements OperationBuilder {
 
-  EagerOperationBuilder(EagerSession session, String type, String name) {
+  EagerOperationBuilder(EagerSession session, String type, String name,
+      Scope scope) {
     this.session = session;
     this.type = type;
     this.name = name;
+    this.scope = scope;
     this.opHandle = allocate(session, type);
   }
 
   @Override
   public EagerOperation build() {
+    scope.apply(this);
     TFE_TensorHandle[] tensorHandles = execute(opHandle, session);
-    return new EagerOperation(session, opHandle, tensorHandles, type, name);
+    EagerOperation op = new EagerOperation(session, opHandle, tensorHandles, type, name);
+    scope.onOpCreated(op);
+    return op;
   }
 
   @Override
@@ -250,6 +256,7 @@ final class EagerOperationBuilder implements OperationBuilder {
   private final EagerSession session;
   private final String type;
   private final String name;
+  private final Scope scope;
 
   /** This value should be >= to the maximum number of outputs in any op */
   private static final int MAX_OUTPUTS_PER_OP = 1000;

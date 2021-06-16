@@ -62,8 +62,6 @@ final class ClassGenerator {
             .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
-  private static final String OP_NAME_FIELD_NAME = "OP_NAME";
-
   enum RenderMode {
     DEFAULT,
     LIST_OPERAND,
@@ -507,7 +505,7 @@ final class ClassGenerator {
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
     body.addStatement(
-        "$T opBuilder = scope.env().opBuilder($L, scope.makeOpName($S))",
+        "$T opBuilder = scope.opBuilder($L, $S)",
         Names.OperationBuilder,
         OP_NAME_FIELD,
         className);
@@ -545,8 +543,6 @@ final class ClassGenerator {
         body.addStatement("opBuilder.addInput($L.asOutput())", name);
       }
     }
-
-    body.addStatement("opBuilder = scope.apply(opBuilder)");
 
     // add the required attribute params, and build the default type maps for use in the secondary
     // factory

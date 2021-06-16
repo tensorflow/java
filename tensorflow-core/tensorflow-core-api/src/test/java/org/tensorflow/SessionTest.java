@@ -32,7 +32,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
@@ -185,42 +184,15 @@ public class SessionTest {
       Ops tf = Ops.create(g);
 
       Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
-      tf.initAdd(tf.assign(var1, tf.constant(10)));
+      tf.initScope().assign(var1, tf.constant(10));
       Variable<TInt32> var2 = tf.variable(tf.constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
 
       try (Session s = new Session(g)) {
-        s.run(tf.init());
+        s.runInit();
 
         try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
           assertEquals(30, t.getInt());
-        }
-      }
-    }
-  }
-
-  @Test
-  public void runInitByName() {
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
-      tf.initAdd(tf.assign(var1, tf.constant(10)));
-      Variable<TInt32> var2 = tf.variable(tf.constant(20));
-      Add<TInt32> add = tf.math.add(var1, var2);
-      tf.withName("init_test").init();
-
-      try (Session s = new Session(g)) {
-        s.run("init_test");
-
-        try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
-          assertEquals(30, t.getInt());
-        }
-        try {
-          s.run("wrong_name");
-          fail();
-        } catch (IllegalArgumentException e) {
-          // as expected
         }
       }
     }
@@ -237,10 +209,9 @@ public class SessionTest {
       Variable<TFloat32> y =
           tf.withName("y")
               .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
-      Init init = tf.init();
 
       try (Session s = new Session(g)) {
-        s.run(init);
+        s.runInit();
         s.save(testFolder.resolve("checkpoint").toString());
         GraphDef graphDef = g.toGraphDef();
 

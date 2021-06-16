@@ -34,7 +34,6 @@ public class FunctionTest {
   private static Signature plusFive(Ops tf) {
     Placeholder<TFloat32> input = tf.placeholder(TFloat32.class);
     Add<TFloat32> output = tf.math.add(input, tf.constant(5.0f));
-    Init init = tf.init(); // for native resource management tests
     return Signature.builder().key("plusFive").input("x", input).output("y", output).build();
   }
 

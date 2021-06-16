@@ -189,6 +189,6 @@ public class EagerOperationTest {
   }
 
   private static EagerOperationBuilder opBuilder(EagerSession session, String type, String name) {
-    return new EagerOperationBuilder(session, type, name);
+    return new EagerOperationBuilder(session, type, name, session.baseScope());
   }
 }
