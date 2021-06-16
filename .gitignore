@@ -56,3 +56,4 @@ gradleBuild
 **/target
 .tf_configure.bazelrc
 .clwb/
+/tensorflow-core/tensorflow-core-api/config.log
