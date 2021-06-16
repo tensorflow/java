@@ -607,7 +607,8 @@ public final class XlaOps {
   }
 
   /**
-   * Wraps the variadic XLA Reduce operator, documented at
+   * Wraps the variadic XLA Reduce operator.
+   *  Semantics are documented at
    *  https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
    *
    * @param <T> data type for {@code output} output

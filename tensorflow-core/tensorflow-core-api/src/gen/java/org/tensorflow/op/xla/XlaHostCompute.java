@@ -95,6 +95,12 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
     opBuilder.setAttr("key", key);
     if (options != null) {
       for (Options opts : options) {
+        if (opts.sendKey != null) {
+          opBuilder.setAttr("send_key", opts.sendKey);
+        }
+        if (opts.recvKey != null) {
+          opBuilder.setAttr("recv_key", opts.recvKey);
+        }
         if (opts.costEstimateNs != null) {
           opBuilder.setAttr("cost_estimate_ns", opts.costEstimateNs);
         }
@@ -104,6 +110,26 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
       }
     }
     return new XlaHostCompute(opBuilder.build());
+  }
+
+  /**
+   * Sets the sendKey option.
+   *
+   * @param sendKey the sendKey option
+   * @return this Options instance.
+   */
+  public static Options sendKey(String sendKey) {
+    return new Options().sendKey(sendKey);
+  }
+
+  /**
+   * Sets the recvKey option.
+   *
+   * @param recvKey the recvKey option
+   * @return this Options instance.
+   */
+  public static Options recvKey(String recvKey) {
+    return new Options().recvKey(recvKey);
   }
 
   /**
@@ -145,11 +171,37 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
    * Optional attributes for {@link org.tensorflow.op.xla.XlaHostCompute}
    */
   public static class Options {
+    private String sendKey;
+
+    private String recvKey;
+
     private Long costEstimateNs;
 
     private Long tpuCore;
 
     private Options() {
+    }
+
+    /**
+     * Sets the sendKey option.
+     *
+     * @param sendKey the sendKey option
+     * @return this Options instance.
+     */
+    public Options sendKey(String sendKey) {
+      this.sendKey = sendKey;
+      return this;
+    }
+
+    /**
+     * Sets the recvKey option.
+     *
+     * @param recvKey the recvKey option
+     * @return this Options instance.
+     */
+    public Options recvKey(String recvKey) {
+      this.recvKey = recvKey;
+      return this;
     }
 
     /**

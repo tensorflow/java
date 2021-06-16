@@ -33,7 +33,8 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * Wraps the variadic XLA Reduce operator, documented at
+ * Wraps the variadic XLA Reduce operator.
+ * Semantics are documented at
  * https://www.tensorflow.org/performance/xla/operation_semantics#variadic_reduce.
  *
  * @param <T> data type for {@code output} output

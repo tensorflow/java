@@ -237,6 +237,33 @@
     </profile>
 
     <!--
+      Profile to run spotless:apply on builds.  Will run before format's check.
+    -->
+    <profile>
+      <id>apply-format</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>${spotless.version}</version>
+
+            <executions>
+              <execution>
+                <!-- Runs in initialize phase to fail fast in case of formatting issues (should be before codegen).-->
+                <id>spotless-apply</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
       Profile that enables format checks on compilation
       Can auto-format using spotless:apply.
     -->
@@ -252,37 +279,10 @@
             <executions>
               <execution>
                 <!-- Runs in initialize phase to fail fast in case of formatting issues (should be before codegen).-->
-                <id>spotless-apply</id>
-                <phase>initialize</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!--
-      Profile to run spotless:apply on builds.  Will run before format's check.
-    -->
-    <profile>
-      <id>apply-format</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.diffplug.spotless</groupId>
-            <artifactId>spotless-maven-plugin</artifactId>
-            <version>${spotless.version}</version>
-
-            <executions>
-              <execution>
-                <!-- Runs in initialize phase to fail fast in case of formatting issues (should be before codegen).-->
                 <id>spotless-check</id>
                 <phase>initialize</phase>
                 <goals>
-                  <goal>apply</goal>
+                  <goal>check</goal>
                 </goals>
               </execution>
             </executions>

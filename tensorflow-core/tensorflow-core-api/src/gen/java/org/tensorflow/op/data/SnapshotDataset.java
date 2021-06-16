@@ -101,6 +101,12 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
         if (opts.writerPrefix != null) {
           opBuilder.setAttr("writer_prefix", opts.writerPrefix);
         }
+        if (opts.hashValid != null) {
+          opBuilder.setAttr("hash_valid", opts.hashValid);
+        }
+        if (opts.hash != null) {
+          opBuilder.setAttr("hash", opts.hash);
+        }
       }
     }
     return new SnapshotDataset(opBuilder.build());
@@ -137,6 +143,26 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
   }
 
   /**
+   * Sets the hashValid option.
+   *
+   * @param hashValid the hashValid option
+   * @return this Options instance.
+   */
+  public static Options hashValid(Boolean hashValid) {
+    return new Options().hashValid(hashValid);
+  }
+
+  /**
+   * Sets the hash option.
+   *
+   * @param hash the hash option
+   * @return this Options instance.
+   */
+  public static Options hash(Long hash) {
+    return new Options().hash(hash);
+  }
+
+  /**
    * Gets handle.
    *
    * @return handle.
@@ -160,6 +186,10 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
     private String readerPrefix;
 
     private String writerPrefix;
+
+    private Boolean hashValid;
+
+    private Long hash;
 
     private Options() {
     }
@@ -194,6 +224,28 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
      */
     public Options writerPrefix(String writerPrefix) {
       this.writerPrefix = writerPrefix;
+      return this;
+    }
+
+    /**
+     * Sets the hashValid option.
+     *
+     * @param hashValid the hashValid option
+     * @return this Options instance.
+     */
+    public Options hashValid(Boolean hashValid) {
+      this.hashValid = hashValid;
+      return this;
+    }
+
+    /**
+     * Sets the hash option.
+     *
+     * @param hash the hash option
+     * @return this Options instance.
+     */
+    public Options hash(Long hash) {
+      this.hash = hash;
       return this;
     }
   }

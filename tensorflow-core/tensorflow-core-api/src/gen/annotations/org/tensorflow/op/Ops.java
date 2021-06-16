@@ -172,7 +172,6 @@ import org.tensorflow.op.core.RefNextIteration;
 import org.tensorflow.op.core.RefSelect;
 import org.tensorflow.op.core.RefSwitch;
 import org.tensorflow.op.core.RemoteCall;
-import org.tensorflow.op.core.RemoteFusedGraphExecute;
 import org.tensorflow.op.core.Reshape;
 import org.tensorflow.op.core.ResourceCountUpTo;
 import org.tensorflow.op.core.ResourceGather;
@@ -301,6 +300,7 @@ import org.tensorflow.op.core.XlaDotV2;
 import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
 import org.tensorflow.op.core.XlaSpmdFullToShardShape;
 import org.tensorflow.op.core.XlaSpmdShardToFullShape;
+import org.tensorflow.op.core.XlaVariadicSort;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -4357,27 +4357,6 @@ public final class Ops {
   }
 
   /**
-   * Execute a sub graph on a remote processor.
-   *  The graph specifications(such as graph itself, input tensors and output names)
-   *  are stored as a serialized protocol buffer of RemoteFusedGraphExecuteInfo
-   *  as serialized_remote_fused_graph_execute_info.
-   *  The specifications will be passed to a dedicated registered
-   *  remote fused graph executor.  The executor will send the graph specifications
-   *  to a remote processor and execute that graph.  The execution results
-   *  will be passed to consumer nodes as outputs of this node.
-   *
-   * @param inputs Arbitrary number of tensors with arbitrary data types
-   * @param Toutputs the value of the Toutputs property
-   * @param serializedRemoteFusedGraphExecuteInfo Serialized protocol buffer
-   *  of RemoteFusedGraphExecuteInfo which contains graph specifications.
-   * @return a new instance of RemoteFusedGraphExecute
-   */
-  public RemoteFusedGraphExecute remoteFusedGraphExecute(Iterable<Operand<?>> inputs,
-      List<Class<? extends TType>> Toutputs, String serializedRemoteFusedGraphExecuteInfo) {
-    return RemoteFusedGraphExecute.create(scope, inputs, Toutputs, serializedRemoteFusedGraphExecuteInfo);
-  }
-
-  /**
    * Reshapes a tensor.
    *  Given {@code tensor}, this operation returns a tensor that has the same values
    *  as {@code tensor} with shape {@code shape}.
@@ -8237,6 +8216,26 @@ public final class Ops {
   public <T extends TType> XlaSpmdShardToFullShape<T> xlaSpmdShardToFullShape(Operand<T> input,
       String manualSharding, Shape fullShape) {
     return XlaSpmdShardToFullShape.create(scope, input, manualSharding, fullShape);
+  }
+
+  /**
+   * Wraps the XLA Sort operator, documented at
+   *  https://www.tensorflow.org/performance/xla/operation_semantics#sort
+   *  .
+   *  <p>Sorts one or more tensors, with support for custom comparator, dimension, and
+   *  is_stable attributes.
+   *
+   * @param inputs A list of {@code Tensor} of identical shape but possibly different types.
+   * @param dimension The dimension along which to sort. Must be a compile-time constant.
+   * @param comparator A comparator function to apply to 2*N scalars and returning a
+   *  boolean. N is the number of sort inputs. If you want to sort in ascending
+   *  order then the comparator should perform a less-than comparison.
+   * @param isStable Whether to use stable sort.
+   * @return a new instance of XlaVariadicSort
+   */
+  public XlaVariadicSort xlaVariadicSort(Iterable<Operand<?>> inputs, Operand<TInt32> dimension,
+      ConcreteFunction comparator, Boolean isStable) {
+    return XlaVariadicSort.create(scope, inputs, dimension, comparator, isStable);
   }
 
   /**
