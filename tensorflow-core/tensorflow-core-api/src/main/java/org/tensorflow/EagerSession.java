@@ -346,7 +346,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void addInitOp(Operation op) {
+  public void registerInitOp(Operation op) {
   }
 
   TFE_Context nativeHandle() {

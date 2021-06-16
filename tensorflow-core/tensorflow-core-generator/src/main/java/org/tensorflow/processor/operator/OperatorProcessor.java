@@ -556,7 +556,9 @@ public final class OperatorProcessor extends AbstractProcessor {
             .returns(Names.Ops)
             .addStatement("return new $T(scope.initScope())", Names.Ops)
             .addJavadoc(
-                "Returns an API that builds operations in the init scope.\n")
+                "Returns an API that builds init operations.\n"
+                    + "<p>Init operations will be initialized at session creation, must only depend on other init ops, and are never used as control dependencies.\n"
+                    + "Additionally, this scope drops all of its control dependencies.")
             .build());
 
     opsBuilder.addMethod(

@@ -115,9 +115,6 @@ public final class GraphOperationBuilder implements OperationBuilder {
           "Control input " + control + " was from a different graph, can't use.");
     }
 
-    if(graph.isInitOp(control))
-      return this;
-
     checkInput(control);
 
     Graph.Reference r = graph.ref();

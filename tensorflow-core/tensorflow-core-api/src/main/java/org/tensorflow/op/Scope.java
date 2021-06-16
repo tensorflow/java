@@ -171,6 +171,10 @@ public final class Scope {
   }
 
   //TODO stop gradient recording in init scopes (once we have gradient recording)
+
+  /**
+   * Get an extension of this scope that generated initialization ops.
+   */
   public Scope initScope(){
     return new Scope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
@@ -275,9 +279,13 @@ public final class Scope {
     return builder;
   }
 
+  /**
+   * Handle op creation, like registering it as an init op if the scope is init.
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   */
   public void onOpCreated(Operation op){
     if(isInit){
-      env.addInitOp(op);
+      env.registerInitOp(op);
     }
   }
 
@@ -292,6 +300,9 @@ public final class Scope {
     return deviceSpec.toString();
   }
 
+  /**
+   * Get whether this scope is building init ops.
+   */
   public boolean isInit() {
     return isInit;
   }

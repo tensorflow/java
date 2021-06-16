@@ -30,8 +30,8 @@ public interface ExecutionEnvironment {
    * Returns a builder to create a new {@link Operation}.
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope.
-   * @param scope
+   * @param name to refer to the created Operation in this environment scope.  Should already have been made unique.
+   * @param scope the scope that owns the created op
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
@@ -88,7 +88,22 @@ public interface ExecutionEnvironment {
    */
   Scope baseScope();
 
+  /**
+   * Get the execution environment to use for initialization.  In most cases is {@code this}.
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   */
   ExecutionEnvironment initEnv();
-  void addInitOp(Operation op);
+
+  /**
+   * Register an op as an initialization op.
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   * <p>To do this yourself, use {@link org.tensorflow.op.Ops#initScope()}.
+   */
+  void registerInitOp(Operation op);
+
+  /**
+   * Get whether an op is an initialization op.
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   */
   boolean isInitOp(Operation op);
 }

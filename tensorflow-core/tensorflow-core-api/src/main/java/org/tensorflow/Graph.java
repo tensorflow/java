@@ -366,16 +366,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return downstream;
   }
 
-  /**
-   * Returns a builder to add {@link Operation}s to the Graph.
-   *
-   * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in the graph.
-   * @param scope
-   * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
-   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then some resources may leak.
-   */
   @Override
   public GraphOperationBuilder opBuilder(String type, String name, Scope scope) {
     if (!isOpEnabled(type)) {
@@ -545,12 +535,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param op
    */
   public synchronized void registerRestoreOp(GraphOperation op){
-    subgraphToOps(Collections.singleton(op)).forEach(x -> addInitOp(x));
-    addInitOp(op);
+    subgraphToOps(Collections.singleton(op)).forEach(x -> registerInitOp(x));
+    registerInitOp(op);
   }
 
   @Override
-  public synchronized void addInitOp(Operation op) {
+  public synchronized void registerInitOp(Operation op) {
     initializers.add(op);
   }
 
@@ -564,7 +554,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return initializers.contains(op);
   }
 
-  /** Returns all initializers added to the graph via {@link #addInitOp(Operation)} */
+  /** Returns all initializers added to the graph via {@link #registerInitOp(Operation)} */
   public List<Operation> initializers() {
     return List.copyOf(initializers);
   }
