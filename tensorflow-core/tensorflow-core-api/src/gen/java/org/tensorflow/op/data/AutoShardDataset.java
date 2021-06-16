@@ -72,7 +72,7 @@ public final class AutoShardDataset extends RawOp implements Operand<TType> {
   public static AutoShardDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> numWorkers, Operand<TInt64> index, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AutoShardDataset", scope.makeOpName("AutoShardDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AutoShardDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numWorkers.asOutput());
     opBuilder.addInput(index.asOutput());

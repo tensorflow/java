@@ -66,7 +66,7 @@ public final class HashTable extends RawOp implements Operand<TType> {
   )
   public static <T extends TType, U extends TType> HashTable create(Scope scope, Class<T> keyDtype,
       Class<U> valueDtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("HashTableV2", scope.makeOpName("HashTable"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("HashTable"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_dtype", Operands.toDataType(keyDtype));
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));

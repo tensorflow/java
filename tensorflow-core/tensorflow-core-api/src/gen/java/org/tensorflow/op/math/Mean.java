@@ -70,7 +70,7 @@ public final class Mean<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Mean<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Mean", scope.makeOpName("Mean"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Mean"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

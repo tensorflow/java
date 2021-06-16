@@ -83,7 +83,7 @@ public final class SegmentMean<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> SegmentMean<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SegmentMean", scope.makeOpName("SegmentMean"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SegmentMean"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder = scope.apply(opBuilder);

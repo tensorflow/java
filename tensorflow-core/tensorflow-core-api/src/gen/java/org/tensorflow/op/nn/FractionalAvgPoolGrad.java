@@ -72,7 +72,7 @@ public final class FractionalAvgPoolGrad<T extends TNumber> extends RawOp implem
   public static <T extends TNumber> FractionalAvgPoolGrad<T> create(Scope scope,
       Operand<TInt64> origInputTensorShape, Operand<T> outBackprop,
       Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FractionalAvgPoolGrad", scope.makeOpName("FractionalAvgPoolGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FractionalAvgPoolGrad"));
     opBuilder.addInput(origInputTensorShape.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder.addInput(rowPoolingSequence.asOutput());

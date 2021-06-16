@@ -60,7 +60,7 @@ public final class TanhGrad<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> TanhGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TanhGrad", scope.makeOpName("TanhGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TanhGrad"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
     opBuilder = scope.apply(opBuilder);

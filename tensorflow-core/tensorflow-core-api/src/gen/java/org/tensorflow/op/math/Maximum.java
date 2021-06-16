@@ -64,7 +64,7 @@ public final class Maximum<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> Maximum<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Maximum", scope.makeOpName("Maximum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Maximum"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

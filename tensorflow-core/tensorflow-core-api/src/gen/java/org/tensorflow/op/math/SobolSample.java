@@ -68,7 +68,7 @@ public final class SobolSample<T extends TNumber> extends RawOp implements Opera
   )
   public static <T extends TNumber> SobolSample<T> create(Scope scope, Operand<TInt32> dim,
       Operand<TInt32> numResults, Operand<TInt32> skip, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SobolSample", scope.makeOpName("SobolSample"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SobolSample"));
     opBuilder.addInput(dim.asOutput());
     opBuilder.addInput(numResults.asOutput());
     opBuilder.addInput(skip.asOutput());

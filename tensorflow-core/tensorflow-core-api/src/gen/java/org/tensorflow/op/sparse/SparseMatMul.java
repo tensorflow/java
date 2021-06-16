@@ -70,7 +70,7 @@ public final class SparseMatMul extends RawOp implements Operand<TFloat32> {
   )
   public static SparseMatMul create(Scope scope, Operand<? extends TNumber> a,
       Operand<? extends TNumber> b, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatMul", scope.makeOpName("SparseMatMul"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatMul"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder = scope.apply(opBuilder);

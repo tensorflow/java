@@ -63,7 +63,7 @@ public final class IteratorFromStringHandle extends RawOp implements Operand<TTy
   )
   public static IteratorFromStringHandle create(Scope scope, Operand<TString> stringHandle,
       List<Class<? extends TType>> outputTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorFromStringHandleV2", scope.makeOpName("IteratorFromStringHandle"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IteratorFromStringHandle"));
     opBuilder.addInput(stringHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

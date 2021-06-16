@@ -70,7 +70,7 @@ public final class EuclideanNorm<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> EuclideanNorm<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("EuclideanNorm", scope.makeOpName("EuclideanNorm"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EuclideanNorm"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

@@ -64,7 +64,7 @@ public final class DivNoNan<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> DivNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DivNoNan", scope.makeOpName("DivNoNan"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DivNoNan"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

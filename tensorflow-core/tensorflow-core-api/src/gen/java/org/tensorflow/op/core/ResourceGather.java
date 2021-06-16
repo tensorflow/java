@@ -78,7 +78,7 @@ public final class ResourceGather<U extends TType> extends RawOp implements Oper
   public static <U extends TType> ResourceGather<U> create(Scope scope,
       Operand<? extends TType> resource, Operand<? extends TNumber> indices, Class<U> dtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceGather", scope.makeOpName("ResourceGather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceGather"));
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder = scope.apply(opBuilder);

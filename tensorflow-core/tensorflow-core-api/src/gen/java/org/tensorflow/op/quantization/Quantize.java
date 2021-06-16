@@ -171,7 +171,7 @@ public final class Quantize<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> Quantize<T> create(Scope scope, Operand<TFloat32> input,
       Operand<TFloat32> minRange, Operand<TFloat32> maxRange, Class<T> T, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizeV2", scope.makeOpName("Quantize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Quantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minRange.asOutput());
     opBuilder.addInput(maxRange.asOutput());

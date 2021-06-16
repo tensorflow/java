@@ -77,7 +77,7 @@ public final class XlaConvV2<W extends TType> extends RawOp implements Operand<W
       Operand<V> padding, Operand<V> lhsDilation, Operand<V> rhsDilation,
       Operand<V> featureGroupCount, String dimensionNumbers, String precisionConfig,
       Class<W> preferredElementType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaConvV2", scope.makeOpName("XlaConvV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaConvV2"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(windowStrides.asOutput());

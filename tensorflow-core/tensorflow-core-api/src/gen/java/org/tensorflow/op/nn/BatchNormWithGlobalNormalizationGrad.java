@@ -89,7 +89,7 @@ public final class BatchNormWithGlobalNormalizationGrad<T extends TType> extends
   public static <T extends TType> BatchNormWithGlobalNormalizationGrad<T> create(Scope scope,
       Operand<T> t, Operand<T> m, Operand<T> v, Operand<T> gamma, Operand<T> backprop,
       Float varianceEpsilon, Boolean scaleAfterNormalization) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BatchNormWithGlobalNormalizationGrad", scope.makeOpName("BatchNormWithGlobalNormalizationGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchNormWithGlobalNormalizationGrad"));
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(v.asOutput());

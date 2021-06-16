@@ -71,7 +71,7 @@ public final class ResourceApplyAdam extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> m, Operand<? extends TType> v,
       Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr, Operand<T> beta1,
       Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAdam", scope.makeOpName("ResourceApplyAdam"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyAdam"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(v.asOutput());

@@ -64,7 +64,7 @@ public final class TensorListPushBack extends RawOp implements Operand<TType> {
   )
   public static TensorListPushBack create(Scope scope, Operand<? extends TType> inputHandle,
       Operand<? extends TType> tensor) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListPushBack", scope.makeOpName("TensorListPushBack"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListPushBack"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder = scope.apply(opBuilder);

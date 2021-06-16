@@ -80,7 +80,7 @@ public final class ScatterDiv<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> ScatterDiv<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScatterDiv", scope.makeOpName("ScatterDiv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterDiv"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

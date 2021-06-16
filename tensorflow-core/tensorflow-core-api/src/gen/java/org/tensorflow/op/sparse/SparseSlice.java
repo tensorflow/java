@@ -91,7 +91,7 @@ public final class SparseSlice<T extends TType> extends RawOp {
   )
   public static <T extends TType> SparseSlice<T> create(Scope scope, Operand<TInt64> indices,
       Operand<T> values, Operand<TInt64> shape, Operand<TInt64> start, Operand<TInt64> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSlice", scope.makeOpName("SparseSlice"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSlice"));
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(shape.asOutput());

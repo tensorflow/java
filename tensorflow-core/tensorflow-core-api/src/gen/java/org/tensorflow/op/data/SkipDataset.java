@@ -68,7 +68,7 @@ public final class SkipDataset extends RawOp implements Operand<TType> {
   )
   public static SkipDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SkipDataset", scope.makeOpName("SkipDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SkipDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(count.asOutput());
     opBuilder = scope.apply(opBuilder);

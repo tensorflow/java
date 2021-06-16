@@ -68,7 +68,7 @@ public final class ResourceAccumulatorTakeGradient<T extends TType> extends RawO
   )
   public static <T extends TType> ResourceAccumulatorTakeGradient<T> create(Scope scope,
       Operand<? extends TType> handle, Operand<TInt32> numRequired, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceAccumulatorTakeGradient", scope.makeOpName("ResourceAccumulatorTakeGradient"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceAccumulatorTakeGradient"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
     opBuilder = scope.apply(opBuilder);

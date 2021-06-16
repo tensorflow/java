@@ -84,7 +84,7 @@ public final class ToHashBucketStrong extends RawOp implements Operand<TInt64> {
   )
   public static ToHashBucketStrong create(Scope scope, Operand<TString> input, Long numBuckets,
       List<Long> key) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StringToHashBucketStrong", scope.makeOpName("ToHashBucketStrong"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ToHashBucketStrong"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_buckets", numBuckets);

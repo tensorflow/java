@@ -85,7 +85,7 @@ public final class ScatterUpdate<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> ScatterUpdate<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScatterUpdate", scope.makeOpName("ScatterUpdate"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterUpdate"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

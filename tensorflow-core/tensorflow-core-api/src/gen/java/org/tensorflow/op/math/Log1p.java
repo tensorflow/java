@@ -67,7 +67,7 @@ public final class Log1p<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Log1p<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Log1p", scope.makeOpName("Log1p"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Log1p"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Log1p<>(opBuilder.build());

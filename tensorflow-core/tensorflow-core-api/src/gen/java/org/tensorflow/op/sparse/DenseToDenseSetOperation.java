@@ -80,7 +80,7 @@ public final class DenseToDenseSetOperation<T extends TType> extends RawOp {
   )
   public static <T extends TType> DenseToDenseSetOperation<T> create(Scope scope, Operand<T> set1,
       Operand<T> set2, String setOperation, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DenseToDenseSetOperation", scope.makeOpName("DenseToDenseSetOperation"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseToDenseSetOperation"));
     opBuilder.addInput(set1.asOutput());
     opBuilder.addInput(set2.asOutput());
     opBuilder = scope.apply(opBuilder);

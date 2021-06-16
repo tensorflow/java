@@ -62,7 +62,7 @@ public final class Xlog1py<T extends TType> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TType> Xlog1py<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Xlog1py", scope.makeOpName("Xlog1py"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Xlog1py"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

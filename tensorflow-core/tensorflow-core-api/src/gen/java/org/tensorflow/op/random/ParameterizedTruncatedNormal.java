@@ -71,7 +71,7 @@ public final class ParameterizedTruncatedNormal<U extends TNumber> extends RawOp
   public static <U extends TNumber> ParameterizedTruncatedNormal<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<U> means, Operand<U> stdevs, Operand<U> minvals,
       Operand<U> maxvals, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ParameterizedTruncatedNormal", scope.makeOpName("ParameterizedTruncatedNormal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParameterizedTruncatedNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(means.asOutput());
     opBuilder.addInput(stdevs.asOutput());

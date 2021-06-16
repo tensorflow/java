@@ -65,7 +65,7 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
   )
   public static UncompressElement create(Scope scope, Operand<? extends TType> compressed,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UncompressElement", scope.makeOpName("UncompressElement"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UncompressElement"));
     opBuilder.addInput(compressed.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

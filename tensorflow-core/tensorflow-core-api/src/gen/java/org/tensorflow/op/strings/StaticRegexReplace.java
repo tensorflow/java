@@ -59,7 +59,7 @@ public final class StaticRegexReplace extends RawOp implements Operand<TString> 
   )
   public static StaticRegexReplace create(Scope scope, Operand<TString> input, String pattern,
       String rewrite, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StaticRegexReplace", scope.makeOpName("StaticRegexReplace"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StaticRegexReplace"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("pattern", pattern);

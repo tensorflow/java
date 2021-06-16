@@ -73,7 +73,7 @@ public final class PriorityQueue extends RawOp implements Operand<TType> {
   )
   public static PriorityQueue create(Scope scope, List<Class<? extends TType>> componentTypes,
       List<Shape> shapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("PriorityQueueV2", scope.makeOpName("PriorityQueue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PriorityQueue"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     Shape[] shapesArray = new Shape[shapes.size()];

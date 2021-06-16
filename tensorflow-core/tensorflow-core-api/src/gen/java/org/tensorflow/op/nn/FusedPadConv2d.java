@@ -84,7 +84,7 @@ public final class FusedPadConv2d<T extends TNumber> extends RawOp implements Op
   public static <T extends TNumber> FusedPadConv2d<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> paddings, Operand<T> filter, String mode, List<Long> strides,
       String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FusedPadConv2D", scope.makeOpName("FusedPadConv2d"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FusedPadConv2d"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(filter.asOutput());

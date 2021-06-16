@@ -57,7 +57,7 @@ public final class LoadTPUEmbeddingProximalYogiParametersGradAccumDebug extends 
   public static LoadTPUEmbeddingProximalYogiParametersGradAccumDebug create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> v, Operand<TFloat32> m,
       Operand<TFloat32> gradientAccumulators, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingProximalYogiParametersGradAccumDebug", scope.makeOpName("LoadTPUEmbeddingProximalYogiParametersGradAccumDebug"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingProximalYogiParametersGradAccumDebug"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(m.asOutput());

@@ -82,7 +82,7 @@ public final class Fill<U extends TType> extends RawOp implements Operand<U> {
   )
   public static <U extends TType> Fill<U> create(Scope scope, Operand<? extends TNumber> dims,
       Operand<U> value) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Fill", scope.makeOpName("Fill"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Fill"));
     opBuilder.addInput(dims.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);

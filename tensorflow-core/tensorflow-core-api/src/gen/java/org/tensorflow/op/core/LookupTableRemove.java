@@ -53,7 +53,7 @@ public final class LookupTableRemove extends RawOp {
   )
   public static LookupTableRemove create(Scope scope, Operand<? extends TType> tableHandle,
       Operand<? extends TType> keys) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LookupTableRemoveV2", scope.makeOpName("LookupTableRemove"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LookupTableRemove"));
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder = scope.apply(opBuilder);

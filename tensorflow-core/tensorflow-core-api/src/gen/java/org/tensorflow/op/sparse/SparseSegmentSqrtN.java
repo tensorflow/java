@@ -66,7 +66,7 @@ public final class SparseSegmentSqrtN<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> SparseSegmentSqrtN<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseSegmentSqrtN", scope.makeOpName("SparseSegmentSqrtN"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSegmentSqrtN"));
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());

@@ -69,7 +69,7 @@ public final class SlidingWindowDataset extends RawOp implements Operand<TType> 
   public static SlidingWindowDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> windowSize, Operand<TInt64> windowShift, Operand<TInt64> windowStride,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSlidingWindowDataset", scope.makeOpName("SlidingWindowDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SlidingWindowDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(windowSize.asOutput());
     opBuilder.addInput(windowShift.asOutput());

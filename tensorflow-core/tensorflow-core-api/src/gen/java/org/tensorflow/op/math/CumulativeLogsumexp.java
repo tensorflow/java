@@ -77,7 +77,7 @@ public final class CumulativeLogsumexp<T extends TNumber> extends RawOp implemen
   )
   public static <T extends TNumber> CumulativeLogsumexp<T> create(Scope scope, Operand<T> x,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CumulativeLogsumexp", scope.makeOpName("CumulativeLogsumexp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CumulativeLogsumexp"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

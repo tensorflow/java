@@ -86,7 +86,7 @@ public final class SparseReduceMaxSparse<T extends TNumber> extends RawOp {
   public static <T extends TNumber> SparseReduceMaxSparse<T> create(Scope scope,
       Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
       Operand<TInt32> reductionAxes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceMaxSparse", scope.makeOpName("SparseReduceMaxSparse"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseReduceMaxSparse"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputShape.asOutput());

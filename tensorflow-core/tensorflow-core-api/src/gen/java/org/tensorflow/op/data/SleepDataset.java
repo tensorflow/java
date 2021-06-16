@@ -64,7 +64,7 @@ public final class SleepDataset extends RawOp implements Operand<TType> {
   public static SleepDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> sleepMicroseconds, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SleepDataset", scope.makeOpName("SleepDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SleepDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(sleepMicroseconds.asOutput());
     opBuilder = scope.apply(opBuilder);

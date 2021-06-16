@@ -60,7 +60,7 @@ public final class BoostedTreesSerializeEnsemble extends RawOp {
   )
   public static BoostedTreesSerializeEnsemble create(Scope scope,
       Operand<? extends TType> treeEnsembleHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesSerializeEnsemble", scope.makeOpName("BoostedTreesSerializeEnsemble"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesSerializeEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new BoostedTreesSerializeEnsemble(opBuilder.build());

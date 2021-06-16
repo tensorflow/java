@@ -78,7 +78,7 @@ public final class Qr<T extends TType> extends RawOp {
       describeByClass = true
   )
   public static <T extends TType> Qr<T> create(Scope scope, Operand<T> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Qr", scope.makeOpName("Qr"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Qr"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

@@ -54,7 +54,7 @@ public final class StageClear extends RawOp {
   )
   public static StageClear create(Scope scope, List<Class<? extends TType>> dtypes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StageClear", scope.makeOpName("StageClear"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StageClear"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {

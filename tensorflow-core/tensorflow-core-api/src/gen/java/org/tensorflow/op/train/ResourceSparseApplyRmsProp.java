@@ -75,7 +75,7 @@ public final class ResourceSparseApplyRmsProp extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> ms, Operand<? extends TType> mom,
       Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon, Operand<T> grad,
       Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceSparseApplyRMSProp", scope.makeOpName("ResourceSparseApplyRmsProp"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceSparseApplyRmsProp"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());
     opBuilder.addInput(mom.asOutput());

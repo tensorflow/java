@@ -78,7 +78,7 @@ public final class QuantizedMaxPool<T extends TNumber> extends RawOp {
   public static <T extends TNumber> QuantizedMaxPool<T> create(Scope scope, Operand<T> input,
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, List<Long> ksize, List<Long> strides,
       String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMaxPool", scope.makeOpName("QuantizedMaxPool"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedMaxPool"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(minInput.asOutput());
     opBuilder.addInput(maxInput.asOutput());

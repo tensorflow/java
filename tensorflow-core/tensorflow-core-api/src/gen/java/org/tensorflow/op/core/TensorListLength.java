@@ -59,7 +59,7 @@ public final class TensorListLength extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static TensorListLength create(Scope scope, Operand<? extends TType> inputHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListLength", scope.makeOpName("TensorListLength"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListLength"));
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new TensorListLength(opBuilder.build());

@@ -56,7 +56,7 @@ public final class BoostedTreesDeserializeEnsemble extends RawOp {
   public static BoostedTreesDeserializeEnsemble create(Scope scope,
       Operand<? extends TType> treeEnsembleHandle, Operand<TInt64> stampToken,
       Operand<TString> treeEnsembleSerialized) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesDeserializeEnsemble", scope.makeOpName("BoostedTreesDeserializeEnsemble"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesDeserializeEnsemble"));
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(stampToken.asOutput());
     opBuilder.addInput(treeEnsembleSerialized.asOutput());

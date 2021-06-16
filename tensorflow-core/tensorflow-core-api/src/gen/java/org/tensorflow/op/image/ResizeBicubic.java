@@ -65,7 +65,7 @@ public final class ResizeBicubic extends RawOp implements Operand<TFloat32> {
   )
   public static ResizeBicubic create(Scope scope, Operand<? extends TNumber> images,
       Operand<TInt32> sizeOutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResizeBicubic", scope.makeOpName("ResizeBicubic"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResizeBicubic"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder = scope.apply(opBuilder);

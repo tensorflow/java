@@ -65,7 +65,7 @@ public final class SquaredDifference<T extends TType> extends RawOp implements O
   )
   public static <T extends TType> SquaredDifference<T> create(Scope scope, Operand<T> x,
       Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SquaredDifference", scope.makeOpName("SquaredDifference"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SquaredDifference"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

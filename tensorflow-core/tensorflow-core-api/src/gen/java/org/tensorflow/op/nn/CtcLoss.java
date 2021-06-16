@@ -76,7 +76,7 @@ public final class CtcLoss<T extends TNumber> extends RawOp {
   public static <T extends TNumber> CtcLoss<T> create(Scope scope, Operand<T> inputs,
       Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CTCLoss", scope.makeOpName("CtcLoss"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CtcLoss"));
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
     opBuilder.addInput(labelsValues.asOutput());

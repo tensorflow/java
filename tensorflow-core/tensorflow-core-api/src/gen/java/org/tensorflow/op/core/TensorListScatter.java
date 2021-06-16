@@ -74,7 +74,7 @@ public final class TensorListScatter extends RawOp implements Operand<TType> {
   public static TensorListScatter create(Scope scope, Operand<? extends TType> tensor,
       Operand<TInt32> indices, Operand<? extends TNumber> elementShape,
       Operand<TInt32> numElements) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorListScatterV2", scope.makeOpName("TensorListScatter"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListScatter"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(elementShape.asOutput());

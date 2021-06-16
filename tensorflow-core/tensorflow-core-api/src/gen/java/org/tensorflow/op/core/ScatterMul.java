@@ -80,7 +80,7 @@ public final class ScatterMul<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> ScatterMul<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ScatterMul", scope.makeOpName("ScatterMul"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterMul"));
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());

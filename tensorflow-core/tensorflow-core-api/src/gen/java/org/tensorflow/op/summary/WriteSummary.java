@@ -58,7 +58,7 @@ public final class WriteSummary extends RawOp {
   public static WriteSummary create(Scope scope, Operand<? extends TType> writer,
       Operand<TInt64> step, Operand<? extends TType> tensor, Operand<TString> tag,
       Operand<TString> summaryMetadata) {
-    OperationBuilder opBuilder = scope.env().opBuilder("WriteSummary", scope.makeOpName("WriteSummary"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WriteSummary"));
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tensor.asOutput());

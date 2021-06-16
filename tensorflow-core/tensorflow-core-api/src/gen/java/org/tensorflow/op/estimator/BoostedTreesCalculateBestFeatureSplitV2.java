@@ -95,7 +95,7 @@ public final class BoostedTreesCalculateBestFeatureSplitV2 extends RawOp {
       Operand<TString> splitTypes, Operand<TInt32> candidateFeatureIds, Operand<TFloat32> l1,
       Operand<TFloat32> l2, Operand<TFloat32> treeComplexity, Operand<TFloat32> minNodeWeight,
       Long logitsDimension) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BoostedTreesCalculateBestFeatureSplitV2", scope.makeOpName("BoostedTreesCalculateBestFeatureSplitV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesCalculateBestFeatureSplitV2"));
     opBuilder.addInput(nodeIdRange.asOutput());
     opBuilder.addInputList(Operands.asOutputs(statsSummariesList));
     opBuilder.addInput(splitTypes.asOutput());

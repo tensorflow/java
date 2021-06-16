@@ -66,7 +66,7 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
       Operand<? extends TType> selectorInputDataset,
       Iterable<Operand<? extends TType>> dataInputDatasets,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DirectedInterleaveDataset", scope.makeOpName("DirectedInterleaveDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DirectedInterleaveDataset"));
     opBuilder.addInput(selectorInputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(dataInputDatasets));
     opBuilder = scope.apply(opBuilder);

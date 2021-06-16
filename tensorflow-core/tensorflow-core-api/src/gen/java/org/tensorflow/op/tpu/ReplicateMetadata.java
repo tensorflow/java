@@ -51,7 +51,7 @@ public final class ReplicateMetadata extends RawOp {
       describeByClass = true
   )
   public static ReplicateMetadata create(Scope scope, Long numReplicas, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TPUReplicateMetadata", scope.makeOpName("ReplicateMetadata"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReplicateMetadata"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_replicas", numReplicas);
     if (options != null) {

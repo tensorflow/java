@@ -108,7 +108,7 @@ public final class BlockLSTM<T extends TNumber> extends RawOp {
   public static <T extends TNumber> BlockLSTM<T> create(Scope scope, Operand<TInt64> seqLenMax,
       Operand<T> x, Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci,
       Operand<T> wcf, Operand<T> wco, Operand<T> b, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMV2", scope.makeOpName("BlockLSTM"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BlockLSTM"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());

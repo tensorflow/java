@@ -103,7 +103,7 @@ public final class BlockLSTMGrad<T extends TNumber> extends RawOp {
       Operand<T> wcf, Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f,
       Operand<T> o, Operand<T> ci, Operand<T> co, Operand<T> h, Operand<T> csGrad, Operand<T> hGrad,
       Boolean usePeephole) {
-    OperationBuilder opBuilder = scope.env().opBuilder("BlockLSTMGradV2", scope.makeOpName("BlockLSTMGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BlockLSTMGrad"));
     opBuilder.addInput(seqLenMax.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());

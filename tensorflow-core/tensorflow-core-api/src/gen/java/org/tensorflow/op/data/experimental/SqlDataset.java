@@ -65,7 +65,7 @@ public final class SqlDataset extends RawOp implements Operand<TType> {
   public static SqlDataset create(Scope scope, Operand<TString> driverName,
       Operand<TString> dataSourceName, Operand<TString> query,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExperimentalSqlDataset", scope.makeOpName("SqlDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SqlDataset"));
     opBuilder.addInput(driverName.asOutput());
     opBuilder.addInput(dataSourceName.asOutput());
     opBuilder.addInput(query.asOutput());

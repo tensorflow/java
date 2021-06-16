@@ -67,7 +67,7 @@ public final class ConcatenateDataset extends RawOp implements Operand<TType> {
   public static ConcatenateDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<? extends TType> anotherDataset, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ConcatenateDataset", scope.makeOpName("ConcatenateDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ConcatenateDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(anotherDataset.asOutput());
     opBuilder = scope.apply(opBuilder);

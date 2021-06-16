@@ -67,7 +67,7 @@ public final class CollectiveGather<T extends TNumber> extends RawOp implements 
   )
   public static <T extends TNumber> CollectiveGather<T> create(Scope scope, Operand<T> input,
       Long groupSize, Long groupKey, Long instanceKey, Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CollectiveGather", scope.makeOpName("CollectiveGather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CollectiveGather"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("group_size", groupSize);

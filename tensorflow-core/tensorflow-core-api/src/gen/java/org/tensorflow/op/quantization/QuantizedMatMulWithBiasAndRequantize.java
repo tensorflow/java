@@ -79,7 +79,7 @@ public final class QuantizedMatMulWithBiasAndRequantize<W extends TNumber> exten
       Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
       Operand<TFloat32> maxB, Operand<TFloat32> minFreezedOutput,
       Operand<TFloat32> maxFreezedOutput, Class<W> Toutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedMatMulWithBiasAndRequantize", scope.makeOpName("QuantizedMatMulWithBiasAndRequantize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedMatMulWithBiasAndRequantize"));
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(bias.asOutput());

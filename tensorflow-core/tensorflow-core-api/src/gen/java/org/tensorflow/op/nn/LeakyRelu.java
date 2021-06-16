@@ -63,7 +63,7 @@ public final class LeakyRelu<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber> LeakyRelu<T> create(Scope scope, Operand<T> features,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LeakyRelu", scope.makeOpName("LeakyRelu"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LeakyRelu"));
     opBuilder.addInput(features.asOutput());
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

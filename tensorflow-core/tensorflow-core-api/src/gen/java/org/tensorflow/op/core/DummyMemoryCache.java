@@ -54,7 +54,7 @@ public final class DummyMemoryCache extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static DummyMemoryCache create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DummyMemoryCache", scope.makeOpName("DummyMemoryCache"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DummyMemoryCache"));
     opBuilder = scope.apply(opBuilder);
     return new DummyMemoryCache(opBuilder.build());
   }

@@ -69,7 +69,7 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
   public static CacheDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> filename, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("CacheDataset", scope.makeOpName("CacheDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CacheDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder = scope.apply(opBuilder);

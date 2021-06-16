@@ -69,7 +69,7 @@ public final class QuantizeAndDequantize<T extends TNumber> extends RawOp implem
   )
   public static <T extends TNumber> QuantizeAndDequantize<T> create(Scope scope, Operand<T> input,
       Operand<T> inputMin, Operand<T> inputMax, Operand<TInt32> numBits, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizeAndDequantizeV3", scope.makeOpName("QuantizeAndDequantize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizeAndDequantize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());

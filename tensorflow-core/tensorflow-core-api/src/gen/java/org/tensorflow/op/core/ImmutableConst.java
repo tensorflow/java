@@ -66,7 +66,7 @@ public final class ImmutableConst<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> ImmutableConst<T> create(Scope scope, Class<T> dtype, Shape shape,
       String memoryRegionName) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ImmutableConst", scope.makeOpName("ImmutableConst"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ImmutableConst"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);

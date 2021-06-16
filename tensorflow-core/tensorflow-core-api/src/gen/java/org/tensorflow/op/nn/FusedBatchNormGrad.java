@@ -96,7 +96,7 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
   public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope,
       Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1,
       Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FusedBatchNormGradV3", scope.makeOpName("FusedBatchNormGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FusedBatchNormGrad"));
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());

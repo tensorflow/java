@@ -66,7 +66,7 @@ public final class RandomStandardNormal<U extends TNumber> extends RawOp impleme
   )
   public static <U extends TNumber> RandomStandardNormal<U> create(Scope scope,
       Operand<? extends TNumber> shape, Class<U> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomStandardNormal", scope.makeOpName("RandomStandardNormal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomStandardNormal"));
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

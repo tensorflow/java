@@ -82,7 +82,7 @@ public final class HistogramFixedWidth<U extends TNumber> extends RawOp implemen
   )
   public static <U extends TNumber, T extends TNumber> HistogramFixedWidth<U> create(Scope scope,
       Operand<T> values, Operand<T> valueRange, Operand<TInt32> nbins, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder("HistogramFixedWidth", scope.makeOpName("HistogramFixedWidth"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("HistogramFixedWidth"));
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(valueRange.asOutput());
     opBuilder.addInput(nbins.asOutput());

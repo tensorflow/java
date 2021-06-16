@@ -61,7 +61,7 @@ public final class FakeQuantWithMinMaxArgsGradient extends RawOp implements Oper
   )
   public static FakeQuantWithMinMaxArgsGradient create(Scope scope, Operand<TFloat32> gradients,
       Operand<TFloat32> inputs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("FakeQuantWithMinMaxArgsGradient", scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FakeQuantWithMinMaxArgsGradient"));
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
     opBuilder = scope.apply(opBuilder);

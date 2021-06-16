@@ -59,7 +59,7 @@ public final class LoadTPUEmbeddingMomentumParameters extends RawOp {
   )
   public static LoadTPUEmbeddingMomentumParameters create(Scope scope, Operand<TFloat32> parameters,
       Operand<TFloat32> momenta, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LoadTPUEmbeddingMomentumParameters", scope.makeOpName("LoadTPUEmbeddingMomentumParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingMomentumParameters"));
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());
     opBuilder = scope.apply(opBuilder);

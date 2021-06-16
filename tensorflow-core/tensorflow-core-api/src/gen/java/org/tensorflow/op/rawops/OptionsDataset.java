@@ -63,7 +63,7 @@ public final class OptionsDataset extends RawOp implements Operand<TType> {
   public static OptionsDataset create(Scope scope, Operand<? extends TType> inputDataset,
       String serializedOptions, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("OptionsDataset", scope.makeOpName("OptionsDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptionsDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("serialized_options", serializedOptions);

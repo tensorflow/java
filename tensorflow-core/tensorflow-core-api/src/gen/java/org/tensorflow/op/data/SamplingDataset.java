@@ -73,7 +73,7 @@ public final class SamplingDataset extends RawOp implements Operand<TType> {
   public static SamplingDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TFloat32> rate, Operand<TInt64> seed, Operand<TInt64> seed2,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SamplingDataset", scope.makeOpName("SamplingDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SamplingDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(rate.asOutput());
     opBuilder.addInput(seed.asOutput());

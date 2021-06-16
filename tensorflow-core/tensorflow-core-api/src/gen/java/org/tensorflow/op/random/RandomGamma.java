@@ -69,7 +69,7 @@ public final class RandomGamma<U extends TNumber> extends RawOp implements Opera
   )
   public static <U extends TNumber> RandomGamma<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<U> alpha, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RandomGamma", scope.makeOpName("RandomGamma"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomGamma"));
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(alpha.asOutput());
     opBuilder = scope.apply(opBuilder);

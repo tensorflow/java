@@ -59,7 +59,7 @@ public final class RiscReshape<T extends TNumber> extends RawOp implements Opera
   )
   public static <T extends TNumber> RiscReshape<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscReshape", scope.makeOpName("RiscReshape"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscReshape"));
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder = scope.apply(opBuilder);

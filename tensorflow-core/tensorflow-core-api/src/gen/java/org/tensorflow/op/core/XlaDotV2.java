@@ -68,7 +68,7 @@ public final class XlaDotV2<V extends TType> extends RawOp implements Operand<V>
   public static <V extends TType> XlaDotV2<V> create(Scope scope, Operand<? extends TType> lhs,
       Operand<? extends TType> rhs, String dimensionNumbers, String precisionConfig,
       Class<V> preferredElementType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaDotV2", scope.makeOpName("XlaDotV2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaDotV2"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);

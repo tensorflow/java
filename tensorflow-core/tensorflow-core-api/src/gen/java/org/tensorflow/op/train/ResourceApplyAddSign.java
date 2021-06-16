@@ -66,7 +66,7 @@ public final class ResourceApplyAddSign extends RawOp {
   public static <T extends TType> ResourceApplyAddSign create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> m, Operand<T> lr, Operand<T> alpha,
       Operand<T> signDecay, Operand<T> beta, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ResourceApplyAddSign", scope.makeOpName("ResourceApplyAddSign"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyAddSign"));
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(lr.asOutput());

@@ -67,7 +67,7 @@ public final class Atan2<T extends TNumber> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TNumber> Atan2<T> create(Scope scope, Operand<T> y, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Atan2", scope.makeOpName("Atan2"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Atan2"));
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);

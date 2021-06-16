@@ -70,7 +70,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
   public static <T extends TType, U extends TNumber> Gather<T> create(Scope scope,
       Operand<T> operand, Operand<U> startIndices, Operand<U> sliceSizes, String dimensionNumbers,
       Boolean indicesAreSorted) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaGather", scope.makeOpName("Gather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Gather"));
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(startIndices.asOutput());
     opBuilder.addInput(sliceSizes.asOutput());

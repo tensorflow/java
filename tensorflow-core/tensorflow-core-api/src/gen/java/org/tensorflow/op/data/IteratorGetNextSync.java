@@ -73,7 +73,7 @@ public final class IteratorGetNextSync extends RawOp implements Iterable<Operand
   )
   public static IteratorGetNextSync create(Scope scope, Operand<? extends TType> iterator,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder("IteratorGetNextSync", scope.makeOpName("IteratorGetNextSync"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IteratorGetNextSync"));
     opBuilder.addInput(iterator.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));

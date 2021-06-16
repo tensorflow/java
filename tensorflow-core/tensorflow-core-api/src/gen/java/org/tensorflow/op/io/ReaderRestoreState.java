@@ -59,7 +59,7 @@ public final class ReaderRestoreState extends RawOp {
   )
   public static ReaderRestoreState create(Scope scope, Operand<? extends TType> readerHandle,
       Operand<TString> state) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ReaderRestoreStateV2", scope.makeOpName("ReaderRestoreState"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReaderRestoreState"));
     opBuilder.addInput(readerHandle.asOutput());
     opBuilder.addInput(state.asOutput());
     opBuilder = scope.apply(opBuilder);

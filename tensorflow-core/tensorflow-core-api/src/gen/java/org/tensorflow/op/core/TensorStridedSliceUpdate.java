@@ -73,7 +73,7 @@ public final class TensorStridedSliceUpdate<T extends TType> extends RawOp imple
   public static <T extends TType, U extends TNumber> TensorStridedSliceUpdate<T> create(Scope scope,
       Operand<T> input, Operand<U> begin, Operand<U> end, Operand<U> strides, Operand<T> value,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorStridedSliceUpdate", scope.makeOpName("TensorStridedSliceUpdate"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorStridedSliceUpdate"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(end.asOutput());

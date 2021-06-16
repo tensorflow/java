@@ -82,7 +82,7 @@ public final class RgbToHsv<T extends TNumber> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TNumber> RgbToHsv<T> create(Scope scope, Operand<T> images) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RGBToHSV", scope.makeOpName("RgbToHsv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RgbToHsv"));
     opBuilder.addInput(images.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new RgbToHsv<>(opBuilder.build());

@@ -66,7 +66,7 @@ public final class MutableHashTable extends RawOp implements Operand<TType> {
   )
   public static <T extends TType, U extends TType> MutableHashTable create(Scope scope,
       Class<T> keyDtype, Class<U> valueDtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("MutableHashTableV2", scope.makeOpName("MutableHashTable"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MutableHashTable"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_dtype", Operands.toDataType(keyDtype));
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));

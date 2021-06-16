@@ -57,7 +57,7 @@ public final class ConsumeMutexLock extends RawOp {
       describeByClass = true
   )
   public static ConsumeMutexLock create(Scope scope, Operand<? extends TType> mutexLock) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ConsumeMutexLock", scope.makeOpName("ConsumeMutexLock"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ConsumeMutexLock"));
     opBuilder.addInput(mutexLock.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new ConsumeMutexLock(opBuilder.build());

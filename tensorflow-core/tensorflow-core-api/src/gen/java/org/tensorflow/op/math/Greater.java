@@ -73,7 +73,7 @@ public final class Greater extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static <T extends TNumber> Greater create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Greater", scope.makeOpName("Greater"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Greater"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder = scope.apply(opBuilder);

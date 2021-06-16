@@ -108,7 +108,7 @@ public final class Unique<T extends TType, V extends TNumber> extends RawOp {
   )
   public static <T extends TType, V extends TNumber> Unique<T, V> create(Scope scope, Operand<T> x,
       Operand<? extends TNumber> axis, Class<V> outIdx) {
-    OperationBuilder opBuilder = scope.env().opBuilder("UniqueV2", scope.makeOpName("Unique"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Unique"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(axis.asOutput());
     opBuilder = scope.apply(opBuilder);

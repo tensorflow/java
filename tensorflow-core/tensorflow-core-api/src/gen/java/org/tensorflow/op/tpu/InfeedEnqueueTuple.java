@@ -55,7 +55,7 @@ public final class InfeedEnqueueTuple extends RawOp {
   )
   public static InfeedEnqueueTuple create(Scope scope, Iterable<Operand<?>> inputs,
       List<Shape> shapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("InfeedEnqueueTuple", scope.makeOpName("InfeedEnqueueTuple"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InfeedEnqueueTuple"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     Shape[] shapesArray = new Shape[shapes.size()];

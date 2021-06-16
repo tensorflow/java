@@ -96,7 +96,7 @@ public final class SparseMatrixOrderingAMD extends RawOp implements Operand<TInt
       describeByClass = true
   )
   public static SparseMatrixOrderingAMD create(Scope scope, Operand<? extends TType> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixOrderingAMD", scope.makeOpName("SparseMatrixOrderingAMD"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixOrderingAMD"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new SparseMatrixOrderingAMD(opBuilder.build());

@@ -54,7 +54,7 @@ public final class StatelessRandomGetAlg extends RawOp implements Operand<TInt32
       describeByClass = true
   )
   public static StatelessRandomGetAlg create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StatelessRandomGetAlg", scope.makeOpName("StatelessRandomGetAlg"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomGetAlg"));
     opBuilder = scope.apply(opBuilder);
     return new StatelessRandomGetAlg(opBuilder.build());
   }

@@ -61,7 +61,7 @@ public final class TensorArrayUnpack extends RawOp implements Operand<TFloat32> 
   )
   public static TensorArrayUnpack create(Scope scope, Operand<TString> handle,
       Operand<? extends TType> value, Operand<TFloat32> flowIn) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayUnpack", scope.makeOpName("TensorArrayUnpack"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayUnpack"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(flowIn.asOutput());

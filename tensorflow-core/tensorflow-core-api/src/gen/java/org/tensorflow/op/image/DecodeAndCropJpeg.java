@@ -78,7 +78,7 @@ public final class DecodeAndCropJpeg extends RawOp implements Operand<TUint8> {
   )
   public static DecodeAndCropJpeg create(Scope scope, Operand<TString> contents,
       Operand<TInt32> cropWindow, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DecodeAndCropJpeg", scope.makeOpName("DecodeAndCropJpeg"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DecodeAndCropJpeg"));
     opBuilder.addInput(contents.asOutput());
     opBuilder.addInput(cropWindow.asOutput());
     opBuilder = scope.apply(opBuilder);

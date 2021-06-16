@@ -79,7 +79,7 @@ public final class ArgMax<V extends TNumber> extends RawOp implements Operand<V>
   )
   public static <V extends TNumber> ArgMax<V> create(Scope scope, Operand<? extends TType> input,
       Operand<? extends TNumber> dimension, Class<V> outputType) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ArgMax", scope.makeOpName("ArgMax"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ArgMax"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
     opBuilder = scope.apply(opBuilder);

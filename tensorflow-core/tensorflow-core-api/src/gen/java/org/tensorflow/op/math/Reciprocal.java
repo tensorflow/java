@@ -62,7 +62,7 @@ public final class Reciprocal<T extends TType> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TType> Reciprocal<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Reciprocal", scope.makeOpName("Reciprocal"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reciprocal"));
     opBuilder.addInput(x.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new Reciprocal<>(opBuilder.build());

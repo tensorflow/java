@@ -82,7 +82,7 @@ public final class DecodeImage<T extends TNumber> extends RawOp implements Opera
   )
   public static <T extends TNumber> DecodeImage<T> create(Scope scope, Operand<TString> contents,
       Class<T> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("DecodeImage", scope.makeOpName("DecodeImage"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DecodeImage"));
     opBuilder.addInput(contents.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));

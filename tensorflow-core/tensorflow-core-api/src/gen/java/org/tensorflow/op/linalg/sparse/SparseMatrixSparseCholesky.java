@@ -125,7 +125,7 @@ public final class SparseMatrixSparseCholesky extends RawOp implements Operand<T
   )
   public static <T extends TType> SparseMatrixSparseCholesky create(Scope scope,
       Operand<? extends TType> input, Operand<TInt32> permutation, Class<T> type) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseMatrixSparseCholesky", scope.makeOpName("SparseMatrixSparseCholesky"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixSparseCholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(permutation.asOutput());
     opBuilder = scope.apply(opBuilder);

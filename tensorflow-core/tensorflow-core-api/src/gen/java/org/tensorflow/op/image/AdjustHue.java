@@ -69,7 +69,7 @@ public final class AdjustHue<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber> AdjustHue<T> create(Scope scope, Operand<T> images,
       Operand<TFloat32> delta) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AdjustHue", scope.makeOpName("AdjustHue"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AdjustHue"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(delta.asOutput());
     opBuilder = scope.apply(opBuilder);

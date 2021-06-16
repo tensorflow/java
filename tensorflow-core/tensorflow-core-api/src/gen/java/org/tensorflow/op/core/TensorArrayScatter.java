@@ -63,7 +63,7 @@ public final class TensorArrayScatter extends RawOp implements Operand<TFloat32>
   )
   public static TensorArrayScatter create(Scope scope, Operand<? extends TType> handle,
       Operand<TInt32> indices, Operand<? extends TType> value, Operand<TFloat32> flowIn) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TensorArrayScatterV3", scope.makeOpName("TensorArrayScatter"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayScatter"));
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(value.asOutput());

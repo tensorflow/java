@@ -66,7 +66,7 @@ public final class RetrieveTPUEmbeddingAdadeltaParameters extends RawOp {
   )
   public static RetrieveTPUEmbeddingAdadeltaParameters create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingAdadeltaParameters", scope.makeOpName("RetrieveTPUEmbeddingAdadeltaParameters"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingAdadeltaParameters"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

@@ -61,7 +61,7 @@ public final class RiscSlice<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber, U extends TNumber> RiscSlice<T> create(Scope scope,
       Operand<T> input, Operand<U> begin, Operand<U> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscSlice", scope.makeOpName("RiscSlice"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscSlice"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());

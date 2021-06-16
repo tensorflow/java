@@ -73,7 +73,7 @@ public final class Bincount<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> Bincount<T> create(Scope scope, Operand<TInt32> arr,
       Operand<TInt32> sizeOutput, Operand<T> weights) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Bincount", scope.makeOpName("Bincount"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Bincount"));
     opBuilder.addInput(arr.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(weights.asOutput());

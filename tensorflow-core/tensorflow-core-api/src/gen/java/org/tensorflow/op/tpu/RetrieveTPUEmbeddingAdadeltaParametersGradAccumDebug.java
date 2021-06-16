@@ -69,7 +69,7 @@ public final class RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug extends 
   )
   public static RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug create(Scope scope,
       Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug", scope.makeOpName("RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingAdadeltaParametersGradAccumDebug"));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);

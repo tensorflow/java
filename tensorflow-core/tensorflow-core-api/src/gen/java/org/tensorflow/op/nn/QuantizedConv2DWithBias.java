@@ -81,7 +81,7 @@ public final class QuantizedConv2DWithBias<V extends TNumber> extends RawOp {
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
       Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedConv2DWithBias", scope.makeOpName("QuantizedConv2DWithBias"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConv2DWithBias"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(bias.asOutput());

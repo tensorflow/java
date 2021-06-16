@@ -81,7 +81,7 @@ public final class ExtractGlimpse extends RawOp implements Operand<TFloat32> {
   )
   public static ExtractGlimpse create(Scope scope, Operand<TFloat32> input,
       Operand<TInt32> sizeOutput, Operand<TFloat32> offsets, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("ExtractGlimpseV2", scope.makeOpName("ExtractGlimpse"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ExtractGlimpse"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(offsets.asOutput());

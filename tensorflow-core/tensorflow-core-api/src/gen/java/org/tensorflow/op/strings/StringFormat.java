@@ -61,7 +61,7 @@ public final class StringFormat extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static StringFormat create(Scope scope, Iterable<Operand<?>> inputs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("StringFormat", scope.makeOpName("StringFormat"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StringFormat"));
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder = scope.apply(opBuilder);
     if (options != null) {

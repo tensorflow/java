@@ -69,7 +69,7 @@ public final class Bucketize extends RawOp implements Operand<TInt32> {
   )
   public static Bucketize create(Scope scope, Operand<? extends TNumber> input,
       List<Float> boundaries) {
-    OperationBuilder opBuilder = scope.env().opBuilder("Bucketize", scope.makeOpName("Bucketize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Bucketize"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     float[] boundariesArray = new float[boundaries.size()];

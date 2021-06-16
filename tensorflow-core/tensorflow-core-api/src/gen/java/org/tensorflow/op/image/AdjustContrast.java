@@ -71,7 +71,7 @@ public final class AdjustContrast<T extends TNumber> extends RawOp implements Op
   )
   public static <T extends TNumber> AdjustContrast<T> create(Scope scope, Operand<T> images,
       Operand<TFloat32> contrastFactor) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AdjustContrastv2", scope.makeOpName("AdjustContrast"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AdjustContrast"));
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(contrastFactor.asOutput());
     opBuilder = scope.apply(opBuilder);

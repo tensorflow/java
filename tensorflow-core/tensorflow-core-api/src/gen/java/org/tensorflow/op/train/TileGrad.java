@@ -67,7 +67,7 @@ public final class TileGrad<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType> TileGrad<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> multiples) {
-    OperationBuilder opBuilder = scope.env().opBuilder("TileGrad", scope.makeOpName("TileGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TileGrad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(multiples.asOutput());
     opBuilder = scope.apply(opBuilder);

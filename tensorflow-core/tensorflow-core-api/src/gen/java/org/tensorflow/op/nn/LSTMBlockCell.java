@@ -107,7 +107,7 @@ public final class LSTMBlockCell<T extends TNumber> extends RawOp {
   public static <T extends TNumber> LSTMBlockCell<T> create(Scope scope, Operand<T> x,
       Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
       Operand<T> wco, Operand<T> b, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("LSTMBlockCell", scope.makeOpName("LSTMBlockCell"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LSTMBlockCell"));
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());
     opBuilder.addInput(hPrev.asOutput());

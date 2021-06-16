@@ -88,7 +88,7 @@ public final class Gather<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Gather<T> create(Scope scope, Operand<T> params,
       Operand<? extends TNumber> indices, Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("GatherV2", scope.makeOpName("Gather"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Gather"));
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(axis.asOutput());

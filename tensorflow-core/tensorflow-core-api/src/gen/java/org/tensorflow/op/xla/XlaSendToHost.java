@@ -57,7 +57,7 @@ public final class XlaSendToHost extends RawOp {
       describeByClass = true
   )
   public static XlaSendToHost create(Scope scope, Operand<? extends TType> input, String key) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSendToHost", scope.makeOpName("XlaSendToHost"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaSendToHost"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key", key);

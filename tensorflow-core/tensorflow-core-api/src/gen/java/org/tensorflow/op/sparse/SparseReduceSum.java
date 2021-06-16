@@ -80,7 +80,7 @@ public final class SparseReduceSum<T extends TType> extends RawOp implements Ope
   public static <T extends TType> SparseReduceSum<T> create(Scope scope,
       Operand<TInt64> inputIndices, Operand<T> inputValues, Operand<TInt64> inputShape,
       Operand<TInt32> reductionAxes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("SparseReduceSum", scope.makeOpName("SparseReduceSum"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseReduceSum"));
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputShape.asOutput());

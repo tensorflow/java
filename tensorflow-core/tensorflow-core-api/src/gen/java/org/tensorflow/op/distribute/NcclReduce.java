@@ -66,7 +66,7 @@ public final class NcclReduce<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> NcclReduce<T> create(Scope scope, Iterable<Operand<T>> input,
       String reduction) {
-    OperationBuilder opBuilder = scope.env().opBuilder("NcclReduce", scope.makeOpName("NcclReduce"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NcclReduce"));
     opBuilder.addInputList(Operands.asOutputs(input));
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("reduction", reduction);

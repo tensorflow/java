@@ -80,7 +80,7 @@ public final class QuantizedDepthwiseConv2D<V extends TNumber> extends RawOp {
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
       Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("QuantizedDepthwiseConv2D", scope.makeOpName("QuantizedDepthwiseConv2D"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedDepthwiseConv2D"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(minInput.asOutput());

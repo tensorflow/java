@@ -72,7 +72,7 @@ public final class AvgPool3dGrad<T extends TNumber> extends RawOp implements Ope
   public static <T extends TNumber> AvgPool3dGrad<T> create(Scope scope,
       Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("AvgPool3DGrad", scope.makeOpName("AvgPool3dGrad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AvgPool3dGrad"));
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder = scope.apply(opBuilder);
