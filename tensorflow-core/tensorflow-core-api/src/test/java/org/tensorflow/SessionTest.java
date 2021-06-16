@@ -189,7 +189,7 @@ public class SessionTest {
       Add<TInt32> add = tf.math.add(var1, var2);
 
       try (Session s = new Session(g)) {
-        s.runInit();
+        s.initialize();
 
         try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
           assertEquals(30, t.getInt());
@@ -211,7 +211,7 @@ public class SessionTest {
               .variable(tf.initScope().random.randomUniform(tf.initScope().constant(Shape.of(3, 3L)), TFloat32.class));
 
       try (Session s = new Session(g)) {
-        s.runInit();
+        s.initialize();
         s.save(testFolder.resolve("checkpoint").toString());
         GraphDef graphDef = g.toGraphDef();
 

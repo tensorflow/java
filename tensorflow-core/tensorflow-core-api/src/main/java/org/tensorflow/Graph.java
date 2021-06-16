@@ -560,6 +560,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   /**
+   * Get whether the graph has any initializers
+   */
+  public boolean hasInitializers(){
+    return !initializers.isEmpty();
+  }
+
+  /**
    * Adds operations to compute the partial derivatives of sum of {@code y}s w.r.t {@code x}s, i.e.,
    * {@code d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...}
    *

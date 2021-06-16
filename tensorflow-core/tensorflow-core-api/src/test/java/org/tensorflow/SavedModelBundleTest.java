@@ -111,7 +111,7 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
-        s.runInit();
+        s.initialize();
         try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
             TFloat32 t = (TFloat32) f1.call(x)) {
           reducedSum = t.getFloat();
@@ -153,7 +153,7 @@ public class SavedModelBundleTest {
       Ops tf = Ops.create(g);
       SessionFunction f = session.function(buildGraphWithVariables(tf, xyShape));
       // Init variable state by running the Init operation directly
-      session.runInit();
+      session.initialize();
 
       // Call the graph and remember the result of computation for later
       try (TFloat32 xTensor = TFloat32.tensorOf(xValue);
@@ -229,8 +229,8 @@ public class SavedModelBundleTest {
       Signature f2Signature = buildIdentityGraph(tf, "identity");
       SessionFunction f1 = s1.function(f1Signature);
       SessionFunction f2 = s2.function(f2Signature);
-      s1.runInit();
-      s2.runInit();
+      s1.initialize();
+      s2.initialize();
       try {
         SavedModelBundle.exporter(testFolder.toString()).withFunction(f1).withFunction(f2).export();
         fail();
@@ -250,7 +250,7 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
-        s.runInit();
+        s.initialize();
         try {
           SavedModelBundle.exporter(testFolder.toString()).withFunctions(f1, f2).export();
           fail();

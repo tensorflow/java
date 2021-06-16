@@ -142,6 +142,51 @@ public final class Session implements AutoCloseable {
   }
 
   /**
+   * Execute the graph's initializers.
+   *
+   * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
+   */
+  public void initialize() {
+    synchronized (initLock) {
+      if (hasInitialized) {
+        throw new IllegalStateException("Session has already been initialized.");
+      }
+
+      if(!graph.hasInitializers()){
+        hasInitialized = true;
+        return;
+      }
+
+      List<Operation> initializers = graph.initializers();
+      if (!initializers.isEmpty()) {
+        Runner runner = runner();
+        initializers.forEach(runner::addTarget);
+        runner.runNoInit();
+      }
+      hasInitialized = true;
+    }
+  }
+
+  /**
+   * Create a session and initialize it.
+   */
+  public static Session initialized(Graph graph){
+    Session s = new Session(graph);
+    s.initialize();
+    return s;
+  }
+
+
+  /**
+   * Create a session and initialize it.
+   */
+  public static Session initialized(Graph graph, ConfigProto config){
+    Session s = new Session(graph, config);
+    s.initialize();
+    return s;
+  }
+
+  /**
    * Run {@link Operation}s and evaluate {@link Tensor Tensors}.
    *
    * <p>A Runner runs the necessary graph fragments to execute every {@link Operation} required to
@@ -373,6 +418,14 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
+    private void checkInitialization(){
+      synchronized (initLock){
+        if(!hasInitialized && graph.hasInitializers()){
+          throw new IllegalStateException("Graph has initializers, but session has not been initialized.");
+        }
+      }
+    }
+
     /**
      * Execute the graph fragments necessary to compute all requested fetches.
      *
@@ -391,6 +444,11 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner
      */
     public List<Tensor> run() {
+      checkInitialization();
+      return runNoInit();
+    }
+
+    List<Tensor> runNoInit() {
       return runHelper(false).outputs;
     }
 
@@ -405,6 +463,7 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
     public Run runAndFetchMetadata() {
+      checkInitialization();
       return runHelper(true);
     }
 
@@ -548,20 +607,6 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Execute the graph's initializers.
-   *
-   * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
-   */
-  public void runInit() {
-    List<Operation> initializers = graph.initializers();
-    if (!initializers.isEmpty()) {
-      Runner runner = runner();
-      initializers.forEach(runner::addTarget);
-      runner.run();
-    }
-  }
-
-  /**
    * Saves the actual state of the variables of this session's graph.
    *
    * <p>{@code prefix} is a path where the files containing the variables state will be saved,
@@ -633,6 +678,8 @@ public final class Session implements AutoCloseable {
   private final Object nativeHandleLock = new Object();
   private TF_Session nativeHandle;
   private int numActiveRuns;
+  private final Object initLock = new Object();
+  private boolean hasInitialized;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
