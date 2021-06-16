@@ -67,7 +67,7 @@ public final class XlaSetDynamicDimensionSize<T extends TType> extends RawOp imp
   )
   public static <T extends TType> XlaSetDynamicDimensionSize<T> create(Scope scope,
       Operand<T> input, Operand<TInt32> dimIndex, Operand<TInt32> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder("XlaSetDynamicDimensionSize", scope.makeOpName("XlaSetDynamicDimensionSize"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaSetDynamicDimensionSize"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimIndex.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());

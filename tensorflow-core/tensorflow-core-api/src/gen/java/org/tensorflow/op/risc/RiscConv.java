@@ -63,7 +63,7 @@ public final class RiscConv<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> RiscConv<T> create(Scope scope, Operand<T> input,
       Operand<T> filter, List<Long> strides, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscConv", scope.makeOpName("RiscConv"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscConv"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder = scope.apply(opBuilder);

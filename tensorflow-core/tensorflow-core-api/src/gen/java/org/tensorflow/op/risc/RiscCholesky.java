@@ -57,7 +57,7 @@ public final class RiscCholesky<T extends TNumber> extends RawOp implements Oper
       describeByClass = true
   )
   public static <T extends TNumber> RiscCholesky<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscCholesky", scope.makeOpName("RiscCholesky"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscCholesky"));
     opBuilder.addInput(input.asOutput());
     opBuilder = scope.apply(opBuilder);
     return new RiscCholesky<>(opBuilder.build());

@@ -63,7 +63,7 @@ public final class RiscPool<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> RiscPool<T> create(Scope scope, Operand<T> value,
       List<Long> ksize, List<Long> strides, String poolingType, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscPool", scope.makeOpName("RiscPool"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscPool"));
     opBuilder.addInput(value.asOutput());
     opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];

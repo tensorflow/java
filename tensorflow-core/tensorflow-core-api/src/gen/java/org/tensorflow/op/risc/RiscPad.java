@@ -60,7 +60,7 @@ public final class RiscPad<T extends TNumber> extends RawOp implements Operand<T
   )
   public static <T extends TNumber> RiscPad<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> paddings, Operand<T> constantValues) {
-    OperationBuilder opBuilder = scope.env().opBuilder("RiscPad", scope.makeOpName("RiscPad"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscPad"));
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
     opBuilder.addInput(constantValues.asOutput());
