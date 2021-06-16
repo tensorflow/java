@@ -333,12 +333,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
     return baseScope;
   }
 
-  // initialization is meaningless for init scopes
-
-  @Override
-  public ExecutionEnvironment initEnv() {
-    return this;
-  }
+  // initialization is meaningless for eager sessions
 
   @Override
   public boolean isInitOp(Operation op) {

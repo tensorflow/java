@@ -546,11 +546,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public ExecutionEnvironment initEnv() {
-    return this;
-  }
-
-  @Override
   public boolean isInitOp(Operation op) {
     return initializers.contains(op);
   }

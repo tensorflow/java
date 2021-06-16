@@ -94,7 +94,9 @@ public interface ExecutionEnvironment {
    *
    * <p><b>FOR INTERNAL USE ONLY</b>
    */
-  ExecutionEnvironment initEnv();
+  default ExecutionEnvironment initEnv(){
+    return this;
+  }
 
   /**
    * Register an op as an initialization op.
