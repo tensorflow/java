@@ -44,9 +44,9 @@ configuration script (`./configure`), and copy the resulting
 `.tf_configure.bazelrc` to `tensorflow-core-api`. This overrides the default options, and you can add to it manually (i.e. adding `build --copt="-g"`
 to build with debugging info).
 
-The `tensorflow-core/tensorflow-core-api/.bazelversion` file must  be kept in sync with `@org_tensorflow/.bazel_version`. 
+The `tensorflow-core/tensorflow-core-api/.bazelversion` file must be kept in sync with `@org_tensorflow/.bazel_version`. 
 This allows using [Bazelisk](https://github.com/bazelbuild/bazelisk) which runs the bazel version given in .bazelversion instead of having to 
-physically reinstall a specifc `bazel` version each time the TensorFlow version changes.
+physically reinstall a specific `bazel` version each time the TensorFlow version changes.
 
 
 ### GPU Support
