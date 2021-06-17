@@ -163,7 +163,7 @@ public class GradientDescentTest {
           tf.withName("output").placeholder(TFloat32.class, Placeholder.shape(Shape.of(-1, 2)));
       Mean<TFloat32> loss =
           tf.math.mean(
-              tf.nn.raw.softmaxCrossEntropyWithLogits(output, placeholder).loss(), tf.constant(0));
+              tf.nn.softmaxCrossEntropyWithLogits(output, placeholder).loss(), tf.constant(0));
       lossName = loss.op().name();
 
       GradientDescent gd = new GradientDescent(g, 10.0f);

@@ -16,7 +16,6 @@ import org.tensorflow.op.math.Sub;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
 
-// @Operator(group = "nn")
 public class SigmoidCrossEntropyWithLogits {
 
   /**
@@ -26,8 +25,7 @@ public class SigmoidCrossEntropyWithLogits {
    * independent and not mutually exclusive. For instance, one could perform multilabel
    * classification where a picture can contain both an elephant and a dog at the same time.
    *
-   * <p>For brevity, let {@code x = logits}, {@code z = labels}. The logistic loss in
-   * pseudo-code is
+   * <p>For brevity, let {@code x = logits}, {@code z = labels}. The logistic loss in pseudo-code is
    *
    * <pre>
    * z * -log(sigmoid(x)) + (1 - z) * -log(1 - sigmoid(x))
@@ -64,7 +62,7 @@ public class SigmoidCrossEntropyWithLogits {
    * @return the component-wise logistic losses.
    * @throws IllegalArgumentException if logits' and labels' do not have the same shape
    */
-  // @Endpoint(name = "sigmoidCrossEntropyWithLogits")
+  // @(name = "sigmoidCrossEntropyWithLogits")
   public static <T extends TNumber> Operand<T> sigmoidCrossEntropyWithLogits(
       Scope scope, Operand<T> labels, Operand<T> logits) {
     if (!isCompatible(labels.shape(), logits.shape())) {

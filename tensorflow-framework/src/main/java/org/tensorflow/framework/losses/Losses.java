@@ -14,12 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
-import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.op.core.ReduceAll;
 import org.tensorflow.op.core.ReduceMax;
 import org.tensorflow.op.core.ReduceSum;
@@ -28,8 +30,6 @@ import org.tensorflow.op.math.Softplus;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Built-in loss functions. */
 public class Losses {
@@ -183,7 +183,9 @@ public class Losses {
   private static <T extends TNumber> Operand<T> binaryCrossentropyHelper(
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
     FrameworkOps fop = FrameworkOps.create(tf);
-    if (fromLogits) { return fop.nn.sigmoidCrossEntropyWithLogits(target, output);}
+    if (fromLogits) {
+      return fop.nn.sigmoidCrossEntropyWithLogits(target, output);
+    }
 
     /* TODO - skip this logic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {
@@ -519,6 +521,7 @@ public class Losses {
       Operand<T> predictions,
       boolean fromLogits,
       int axis) {
+    FrameworkOps fop = FrameworkOps.create(tf);
     Class<T> predictionType = predictions.type();
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
@@ -650,8 +653,6 @@ public class Losses {
     Operand<T> oneMinusSmoothing = cast(tf, tf.constant(1.f - labelSmoothing), labelType);
     return tf.math.add(tf.math.mul(labels, oneMinusSmoothing), tf.math.div(smoothing, numClasses));
   }
-
-
 
   /**
    * Converts binary labels into -1/1.

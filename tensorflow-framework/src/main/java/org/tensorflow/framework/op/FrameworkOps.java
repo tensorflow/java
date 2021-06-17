@@ -29,7 +29,7 @@ import org.tensorflow.op.Scope;
  * a core level Op.
  */
 public class FrameworkOps {
-  public final Ops coreOps;
+  public final Ops core;
   public final NnOps nn;
   public final SetOps sets;
   public final MathOps math;
@@ -42,7 +42,7 @@ public class FrameworkOps {
    * @param scope the scope
    */
   private FrameworkOps(Scope scope) {
-    this.coreOps = Ops.create(scope.env());
+    this.core = Ops.create(scope.env());
     this.scope = scope;
     nn = new NnOps(this);
     sets = new SetOps(this);
@@ -53,16 +53,15 @@ public class FrameworkOps {
   /**
    * Creates a FrameworkOps instance based on the provided Core Ops
    *
-   * @param coreOps The TensorFlow Core Ops
+   * @param core The TensorFlow Core Ops
    */
-  private FrameworkOps(Ops coreOps) {
-    this.coreOps = coreOps;
-    this.scope = coreOps.scope();
+  private FrameworkOps(Ops core) {
+    this.core = core;
+    this.scope = core.scope();
     nn = new NnOps(this);
     sets = new SetOps(this);
     math = new MathOps(this);
     linalg = new LinalgOps(this);
-
   }
 
   /**
@@ -104,15 +103,6 @@ public class FrameworkOps {
    */
   public final Scope scope() {
     return scope;
-  }
-
-  /**
-   * Gets the core Ops
-   *
-   * @return coreOps
-   */
-  public final Ops coreOps() {
-    return coreOps;
   }
 
   /**

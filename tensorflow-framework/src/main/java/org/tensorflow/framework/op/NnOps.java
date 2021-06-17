@@ -18,12 +18,11 @@ import org.tensorflow.Operand;
 import org.tensorflow.framework.op.nn.SigmoidCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SoftmaxCrossEntropyWithLogits;
 import org.tensorflow.framework.op.nn.SparseSoftmaxCrossEntropyWithLogits;
-import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.types.family.TNumber;
 
 /**
- * An API for building {@code nn} operations as {@link Op Op}s
+ * Creates Framework nerual network Operations
  *
  * <p>These are higher level ops that may invoke core ops. Higher level Ops may perform the
  * operation solely in the TensorFlow framework or do preprocessing of the Operands before invoking

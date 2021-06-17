@@ -1,10 +1,12 @@
 package org.tensorflow.framework.op.nn;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.core.AssertThat;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Reshape;
@@ -17,11 +19,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-// @Operator(group = "nn")
 public class SparseSoftmaxCrossEntropyWithLogits {
 
   /**
@@ -34,42 +31,39 @@ public class SparseSoftmaxCrossEntropyWithLogits {
    * <p><b>NOTE:</b>
    *
    * <p>For this operation, the probability of a given label is considered exclusive. That is, soft
-   * classes are not allowed, and the {@code labels} vector must provide a single specific
-   * index for the true class for each row of {@code logits} (each minibatch entry). For soft
-   * softmax classification with a probability distribution for each entry, {@link
+   * classes are not allowed, and the {@code labels} vector must provide a single specific index for
+   * the true class for each row of {@code logits} (each minibatch entry). For soft softmax
+   * classification with a probability distribution for each entry, {@link
    * org.tensorflow.op.NnOps#softmaxCrossEntropyWithLogits}.
    *
    * <p><b>WARNING:</b>
    *
-   * <p>This op expects unscaled logits, since it performs a {@code softmax} on {@code logits
-   * } internally for efficiency. Do not call this op with the output of {@code softmax},
-   * as it will produce incorrect results.
+   * <p>This op expects unscaled logits, since it performs a {@code softmax} on {@code logits }
+   * internally for efficiency. Do not call this op with the output of {@code softmax}, as it will
+   * produce incorrect results.
    *
-   * <p>A common use case is to have logits of shape {@code [batchSize, numClasses]} and have
-   * labels of shape {@code [batchSize]}, but higher dimensions are supported, in which case
-   * the {@code dim}-th dimension is assumed to be of size {@code numClasses}. {@code 
-   * logits} must have the {@code dataType} of {@code TFloat16}, {@code TFloat32}
-   * , or {@code TFloat64}, and {@code labels} must have the dtype of {@code TInt32}
-   * or {@code TInt64}.
+   * <p>A common use case is to have logits of shape {@code [batchSize, numClasses]} and have labels
+   * of shape {@code [batchSize]}, but higher dimensions are supported, in which case the {@code
+   * dim}-th dimension is assumed to be of size {@code numClasses}. {@code logits} must have the
+   * {@code dataType} of {@code TFloat16}, {@code TFloat32} , or {@code TFloat64}, and {@code
+   * labels} must have the dtype of {@code TInt32} or {@code TInt64}.
    *
    * @param scope current scope
-   * @param labels {@code Tensor} of shape {@code [d_0, d_1, ..., d_{r-1}]} (where {@code r
-   *     } is rank of {@code labels} and result) and the dataType is {@code TInt32}
-   *     or {@code TInt64}. Each entry in {@code labels} must be an index in {@code [0,
-   *     numClasses)}. Other values will raise an exception when this op is run on CPU, and
-   *     return {@code NaN} for corresponding loss and gradient rows on GPU.
+   * @param labels {@code Tensor} of shape {@code [d_0, d_1, ..., d_{r-1}]} (where {@code r } is
+   *     rank of {@code labels} and result) and the dataType is {@code TInt32} or {@code TInt64}.
+   *     Each entry in {@code labels} must be an index in {@code [0, numClasses)}. Other values will
+   *     raise an exception when this op is run on CPU, and return {@code NaN} for corresponding
+   *     loss and gradient rows on GPU.
    * @param logits Per-label activations (typically a linear output) of shape {@code [d_0, d_1, ...,
-   *     d_{r-1}, numClasses]} and dataType of {@code TFloat16}, {@code TFloat32},
-   *     or {@code TFloat64}. These activation energies are interpreted as unnormalized log
-   *     probabilities.
+   *     d_{r-1}, numClasses]} and dataType of {@code TFloat16}, {@code TFloat32}, or {@code
+   *     TFloat64}. These activation energies are interpreted as unnormalized log probabilities.
    * @param <U> the data type for the labels
    * @param <T> the data tyoe for the loss and logits.
    * @return the loss
-   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if the rank
-   *     of the labels is not equal to the rank of the logits minus one.
+   * @throws IllegalArgumentException If logits are scalars (need to have {@code rank >= 1}) or if
+   *     the rank of the labels is not equal to the rank of the logits minus one.
    */
   @SuppressWarnings("unchecked")
-  @Endpoint(name = "sparseSoftmaxCrossEntropyWithLogits")
   public static <T extends TNumber, U extends TNumber>
       Operand<T> sparseSoftmaxCrossEntropyWithLogits(
           Scope scope, Operand<U> labels, Operand<T> logits) {

@@ -1,5 +1,7 @@
 package org.tensorflow.framework.op.nn;
 
+import java.util.Arrays;
+import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
@@ -19,10 +21,6 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.Arrays;
-import java.util.List;
-
-// @Operator(group = "nn")
 public class SoftmaxCrossEntropyWithLogits {
 
   /**

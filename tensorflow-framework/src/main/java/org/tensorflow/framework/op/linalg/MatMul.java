@@ -12,28 +12,24 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 =======================================================================*/
-package org.tensorflow.framework.op;
+package org.tensorflow.framework.op.linalg;
 
 import org.tensorflow.Operand;
-import org.tensorflow.framework.op.linalg.MatMul;
 import org.tensorflow.framework.utils.SparseTensor;
+import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.dtypes.Cast;
+import org.tensorflow.op.math.Conj;
+import org.tensorflow.op.sparse.SparseMatMul;
+import org.tensorflow.op.train.BatchMatMul;
+import org.tensorflow.types.TBfloat16;
+import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TInt32;
+import org.tensorflow.types.family.TFloating;
 import org.tensorflow.types.family.TNumber;
 
-public class LinalgOps {
-  private final Scope scope;
-
-  private final FrameworkOps frameworkOps;
-
-  /**
-   * Creates Framework linear algegra Operations
-   *
-   * @param frameworkOps the TensorFLow framework Ops
-   */
-  LinalgOps(FrameworkOps frameworkOps) {
-    this.scope = frameworkOps.scope();
-    this.frameworkOps = frameworkOps;
-  }
+/** Multiplication matrix operations */
+public class MatMul {
 
   /**
    * Multiplies matrix {@code a} by matrix {@code b}, producing {@code a} * {@code b }.
@@ -70,6 +66,7 @@ public class LinalgOps {
    *
    * <p>Note: This is matrix product, not element-wise product.
    *
+   * @param scope The TensorFlow scope
    * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64 }, {@code
    *     TInt32}. with a {@code rank > 1}
    * @param b an Operand with same type and rank as {@code a}.
@@ -80,8 +77,8 @@ public class LinalgOps {
    * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA} , or
    *     {@code transposeB} and {@code adjointB} are both set to `true`.
    */
-  public <T extends TNumber> Operand<T> matmul(Operand<T> a, Operand<T> b) {
-    return MatMul.matmul(scope, a, b, false, false, false, false, false, false);
+  public static <T extends TNumber> Operand<T> matmul(Scope scope, Operand<T> a, Operand<T> b) {
+    return matmul(scope, a, b, false, false, false, false, false, false);
   }
 
   /**
@@ -119,6 +116,7 @@ public class LinalgOps {
    *
    * }</pre>
    *
+   * @param scope The TensorFlow scope
    * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64 }, {@code
    *     TInt32}. with a {@code rank > 1}
    * @param b an Operand with same type and rank as {@code a}.
@@ -131,9 +129,9 @@ public class LinalgOps {
    * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA} , or
    *     {@code transposeB} and {@code adjointB} are both set to `true`.
    */
-  public <T extends TNumber> Operand<T> matmul(
-      Operand<T> a, Operand<T> b, boolean transposeA, boolean transposeB) {
-    return MatMul.matmul(scope, a, b, transposeA, transposeB, false, false, false, false);
+  public static <T extends TNumber> Operand<T> matmul(
+      Scope scope, Operand<T> a, Operand<T> b, boolean transposeA, boolean transposeB) {
+    return matmul(scope, a, b, transposeA, transposeB, false, false, false, false);
   }
 
   /**
@@ -171,6 +169,7 @@ public class LinalgOps {
    *
    * }</pre>
    *
+   * @param scope The TensorFlow scope
    * @param a an Operand of of type {@code TFloat16}, {@code TFloat32}, {@code TFloat64 }, {@code
    *     TInt32}. with a {@code rank > 1}
    * @param b an Operand with same type and rank as {@code a}.
@@ -191,7 +190,9 @@ public class LinalgOps {
    * @throws java.lang.IllegalArgumentException If {@code transposeA} and {@code adjointA} , or
    *     {@code transposeB} and {@code adjointB} are both set to `true`.
    */
-  public <T extends TNumber> Operand<T> matmul(
+  @SuppressWarnings("unchecked")
+  public static <T extends TNumber> Operand<T> matmul(
+      Scope scope,
       Operand<T> a,
       Operand<T> b,
       boolean transposeA,
@@ -200,7 +201,89 @@ public class LinalgOps {
       boolean adjointB,
       boolean aIsSparse,
       boolean bIsSparse) {
-    return MatMul.matmul(
-        scope, a, b, transposeA, transposeB, adjointA, adjointB, aIsSparse, bIsSparse);
+    Scope lscope = scope.withSubScope("MatMul");
+    if (transposeA && adjointA)
+      throw new IllegalArgumentException("Only one of transposeA and adjointA can be true.");
+    if (transposeB && adjointB)
+      throw new IllegalArgumentException("Only one of transposeB and adjointB can be true.");
+    if (!(TFloating.class.isAssignableFrom(a.type()) || a.type().equals(TInt32.class)))
+      throw new IllegalArgumentException(
+          String.format(
+              "Operand 'a' must be of type 'TBfloat16','TFloat16', 'TFloat32', 'TFloat64' or 'TInt32'. found type : %s",
+              a.type().getSimpleName()));
+    if (!(TFloating.class.isAssignableFrom(a.type()) || b.type().equals(TInt32.class)))
+      throw new IllegalArgumentException(
+          String.format(
+              "Operand 'b' must be of type 'TBfloat16', 'TFloat32', 'TFloat64' or 'TInt32'. found type : %s",
+              b.type().getSimpleName()));
+
+    Shape aShape = a.shape();
+    Shape bShape = b.shape();
+    if (aShape.numDimensions() != bShape.numDimensions())
+      throw new IllegalArgumentException(
+          String.format(
+              "Parameters 'a' and 'b' must the same rank: found a rank = %d, b rank = %d",
+              aShape.numDimensions(), bShape.numDimensions()));
+    boolean outputMayHaveNonEmptyBatchShape =
+        aShape.numDimensions() == Shape.UNKNOWN_SIZE
+            || aShape.numDimensions() > 2
+            || bShape.numDimensions() == Shape.UNKNOWN_SIZE;
+
+    if ((!aIsSparse && !bIsSparse) && outputMayHaveNonEmptyBatchShape) {
+      // BatchMatmul does not support transpose, so we conjugate the matrix and
+      // use adjoint instead. Conj() is a noop for real matrices.
+      if (transposeA) {
+        a = Conj.create(scope, a);
+        adjointA = true;
+      }
+      if (transposeB) {
+        b = Conj.create(scope, b);
+        adjointB = true;
+      }
+      return BatchMatMul.create(
+          lscope, a, b, BatchMatMul.adjX(adjointA), BatchMatMul.adjY(adjointB));
+    }
+
+    // Neither matmul nor sparse_matmul support adjoint, so we conjugate
+    // the matrix and use transpose instead. Conj() is a noop for real
+    // matrices.
+    if (adjointA) {
+      a = Conj.create(scope, a);
+      transposeA = true;
+    }
+    if (adjointB) {
+      b = Conj.create(scope, b);
+      transposeB = true;
+    }
+
+    boolean useSparseMatmul = false;
+    if (aIsSparse || bIsSparse) {
+      useSparseMatmul =
+          (a.type().equals(TBfloat16.class) || a.type().equals(TFloat32.class))
+              && (b.type().equals(TBfloat16.class) || b.type().equals(TFloat32.class));
+    }
+    if ((a.type().equals(TBfloat16.class) || b.type().equals(TBfloat16.class))
+        && !a.type().equals(b.type())) useSparseMatmul = true;
+
+    if (useSparseMatmul) {
+      Operand<TFloat32> result =
+          SparseMatMul.create(
+              lscope,
+              a,
+              b,
+              SparseMatMul.transposeA(transposeA),
+              SparseMatMul.transposeB(transposeB),
+              SparseMatMul.aIsSparse(aIsSparse),
+              SparseMatMul.bIsSparse(bIsSparse));
+      if (a.type().equals(TFloat32.class)) return (Operand<T>) result;
+      else return Cast.create(scope, result, a.type());
+    }
+
+    return org.tensorflow.op.linalg.MatMul.create(
+        lscope,
+        a,
+        b,
+        org.tensorflow.op.linalg.MatMul.transposeA(transposeA),
+        org.tensorflow.op.linalg.MatMul.transposeB(transposeB));
   }
 }

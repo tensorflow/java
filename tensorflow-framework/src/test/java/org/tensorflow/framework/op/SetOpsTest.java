@@ -1,5 +1,9 @@
 package org.tensorflow.framework.op;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -9,11 +13,6 @@ import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TUint8;
 import org.tensorflow.types.family.TType;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 class SetOpsTest {
 
