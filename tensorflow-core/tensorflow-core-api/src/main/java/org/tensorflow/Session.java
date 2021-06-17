@@ -144,27 +144,25 @@ public final class Session implements AutoCloseable {
   /**
    * Execute the graph's initializers.
    *
-   * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
+   * <p>This runs any ops that have been created with an init scope.
    */
-  public void initialize() {
-    synchronized (initLock) {
-      if (hasInitialized) {
-        throw new IllegalStateException("Session has already been initialized.");
-      }
-
-      if (!graph.hasInitializers()) {
-        hasInitialized = true;
-        return;
-      }
-
-      List<Operation> initializers = graph.initializers();
-      if (!initializers.isEmpty()) {
-        Runner runner = runner();
-        initializers.forEach(runner::addTarget);
-        runner.runNoInit();
-      }
-      hasInitialized = true;
+  public synchronized void initialize() {
+    if (hasInitialized) {
+      throw new IllegalStateException("Session has already been initialized.");
     }
+
+    if (!graph.hasInitializers()) {
+      hasInitialized = true;
+      return;
+    }
+
+    List<Operation> initializers = graph.initializers();
+    if (!initializers.isEmpty()) {
+      Runner runner = runner();
+      initializers.forEach(runner::addTarget);
+      runner.runNoInit();
+    }
+    hasInitialized = true;
   }
 
   /** Create a session and initialize it. */
@@ -414,7 +412,7 @@ public final class Session implements AutoCloseable {
     }
 
     private void checkInitialization() {
-      synchronized (initLock) {
+      synchronized (Session.this) {
         if (!hasInitialized && graph.hasInitializers()) {
           throw new IllegalStateException(
               "Graph has initializers, but session has not been initialized.");
@@ -674,7 +672,6 @@ public final class Session implements AutoCloseable {
   private final Object nativeHandleLock = new Object();
   private TF_Session nativeHandle;
   private int numActiveRuns;
-  private final Object initLock = new Object();
   private boolean hasInitialized;
 
   private static void requireHandle(Pointer handle) {
