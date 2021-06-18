@@ -1,5 +1,6 @@
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -7,8 +8,6 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyFtrl;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the FTRL algorithm.
@@ -230,7 +229,8 @@ public class Ftrl extends Optimizer {
    */
   private <T extends TType> void createFtrlSlot(Output<T> v) {
     Operand<T> initializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
+        tf.fill(
+            tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> linearInitializer =
         tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));

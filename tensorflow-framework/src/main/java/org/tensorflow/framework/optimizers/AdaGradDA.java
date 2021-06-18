@@ -15,19 +15,17 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdagradDa;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adagrad Dual-Averaging algorithm.
@@ -188,9 +186,8 @@ public class AdaGradDA extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdaGradDASlot(v);
     }
-    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
-    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
-    graph.addInitializer(globalStepInitializer);
+    globalStep = tf.initScope().withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
+    tf.initScope().assign(globalStep, tf.constant(0L));
   }
 
   /**
@@ -200,10 +197,12 @@ public class AdaGradDA extends Optimizer {
    * @param <T> the datatype of the variable.
    */
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+    Operand<T> initializer =
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> sqInitializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
+        tf.fill(
+            tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 

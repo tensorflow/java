@@ -15,6 +15,7 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -23,8 +24,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyCenteredRmsProp;
 import org.tensorflow.op.train.ApplyRmsProp;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the RMSProp algorithm.
@@ -177,13 +176,15 @@ public class RMSProp extends Optimizer {
    * @param <T> the datatype of the variable.
    */
   private <T extends TType> void createRMSPropSlot(Output<T> v) {
-    Operand<T> rmsInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.type()));
+    Operand<T> rmsInitializer =
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(1.0f), v.type()));
     createSlot(v.asOutput(), RMS, rmsInitializer);
     Operand<T> momentumInitializer =
         tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), MOMENTUM, momentumInitializer);
     if (centered) {
-      Operand<T> mgInitializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+      Operand<T> mgInitializer =
+          tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
       createSlot(v.asOutput(), MG, mgInitializer);
     }
   }

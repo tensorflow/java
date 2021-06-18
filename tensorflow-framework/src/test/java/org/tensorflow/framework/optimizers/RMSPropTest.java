@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
+import static org.tensorflow.framework.optimizers.RMSProp.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
 import org.tensorflow.framework.utils.ND;
@@ -28,11 +32,6 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.tensorflow.framework.optimizers.RMSProp.*;
 
 /** Test cases for RMSProp Optimizer */
 public class RMSPropTest {
@@ -90,8 +89,8 @@ public class RMSPropTest {
         Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
         Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-        Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
-        Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+        tf.initScope().assign(var0, tf.constant(var0Init));
+        tf.initScope().assign(var1, tf.constant(var1Init));
 
         Constant<TFloat32> grads0 = tf.constant(grads0Init);
         Constant<TFloat32> grads1 = tf.constant(grads1Init);
@@ -112,12 +111,8 @@ public class RMSPropTest {
 
         Op update = instance.applyGradients(gradsAndVars, "RMSPropTest");
 
-        /* initialize the local variables */
-        session.run(var0Initializer);
-        session.run(var1Initializer);
-
         /* initialize the accumulators */
-        session.run(tf.init());
+        session.initialize();
 
         /* make sure the variables were initialized properly */
         session.evaluate(var0Init, var0);

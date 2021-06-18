@@ -1,5 +1,7 @@
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -11,9 +13,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdaMax;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adamax algorithm.
@@ -135,9 +134,8 @@ public class Adamax extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamaxSlot(v.asOutput());
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne));
-    ((Graph) tf.scope().env()).addInitializer(betaOnePowerInit);
+    betaOnePower = tf.initScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
+    tf.initScope().assign(betaOnePower, tf.constant(betaOne));
   }
 
   /**

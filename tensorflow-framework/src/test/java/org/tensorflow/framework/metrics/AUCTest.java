@@ -14,6 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -22,12 +28,6 @@ import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.TInt64;
-
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class AUCTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -47,7 +47,7 @@ public class AUCTest {
       Operand<TInt32> yTrue = tf.constant(trueArray);
       AUC<TFloat32> instance = new AUC<>(tf, numThresholds, 1001L, TFloat32.class);
 
-      session.run(tf.init());
+      session.initialize();
 
       Op update = instance.updateState(yTrue, yPred, null);
 
@@ -77,15 +77,12 @@ public class AUCTest {
       Operand<TInt32> yTrue = tf.constant(trueArray);
       AUC<TFloat32> instance = new AUC<>(tf, numThresholds, 1001L, TFloat32.class);
 
-      session.run(tf.init());
+      session.initialize();
 
       assertNull(instance.getTruePositives());
       assertNull(instance.getFalsePositives());
       assertNull(instance.getTrueNegatives());
       assertNull(instance.getFalseNegatives());
-
-
-
 
       for (int i = 0; i < 3; i++) {
         Op update = instance.updateState(yTrue, yPred, null);
@@ -118,7 +115,6 @@ public class AUCTest {
       float[] expectedThresholds = new float[] {-1e-7f, 0.5f, 1 + 1e-7f};
       assertArrayEquals(expectedThresholds, instance.getThresholds(), epsilon);
 
-
       Operand<TFloat32> yPred = tf.constant(new float[] {0, 0, 1, 1});
       Operand<TFloat32> yTrue = tf.constant(new float[] {0f, 0.5f, 0.3f, 0.9f});
       Operand<TFloat32> sampleWeights = tf.constant(new float[] {1, 0, 0, 1});
@@ -136,7 +132,7 @@ public class AUCTest {
       Ops tf = session.getTF();
       Operand<TFloat32> yTrue = cast(tf, tf.constant(this.trueArray), TFloat32.class);
       AUC<TFloat32> instance = new AUC<>(tf, this.numThresholds, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
 
       Op update = instance.updateState(yTrue, yTrue, null);
       session.run(update);
@@ -153,7 +149,7 @@ public class AUCTest {
       Operand<TFloat32> yPred = tf.constant(this.predArray);
       Operand<TInt32> yTrue = tf.constant(this.trueArray);
       AUC<TFloat32> instance = new AUC<>(tf, this.numThresholds, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -172,7 +168,7 @@ public class AUCTest {
       AUC<TFloat32> instance = new AUC<>(tf, new float[] {0.5f}, 1001L, TFloat32.class);
       float[] expectedThresholds = new float[] {-AUC.EPSILON, 0.5f, 1 + AUC.EPSILON};
       assertArrayEquals(expectedThresholds, instance.getThresholds(), epsilon);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -191,7 +187,7 @@ public class AUCTest {
       Operand<TFloat32> sampleWights = tf.constant(this.sampleWeight);
 
       AUC<TFloat32> instance = new AUC<>(tf, this.numThresholds, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -217,7 +213,7 @@ public class AUCTest {
               AUCSummationMethod.MAJORING,
               1001L,
               TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -243,7 +239,7 @@ public class AUCTest {
               AUCSummationMethod.MINORING,
               1001L,
               TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -269,7 +265,7 @@ public class AUCTest {
               AUCSummationMethod.MAJORING,
               1001L,
               TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -294,7 +290,7 @@ public class AUCTest {
               AUCSummationMethod.MINORING,
               1001L,
               TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -313,7 +309,7 @@ public class AUCTest {
 
       AUC<TFloat32> instance =
           new AUC<>(tf, this.numThresholds, AUCCurve.PR, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(yTrue, yPred, sampleWights);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -362,7 +358,7 @@ public class AUCTest {
       Operand<TInt64> labels = tf.constant(labelArray);
 
       AUC<TFloat32> instance = new AUC<>(tf, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(labels, logits, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();

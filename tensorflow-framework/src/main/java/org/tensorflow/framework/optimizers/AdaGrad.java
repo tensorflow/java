@@ -15,15 +15,14 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.train.ApplyAdagrad;
 import org.tensorflow.op.core.Variable;
+import org.tensorflow.op.train.ApplyAdagrad;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Optimizer that implements the Adagrad algorithm.
@@ -43,8 +42,8 @@ public class AdaGrad extends Optimizer {
   public static final float LEARNING_RATE_DEFAULT = 0.001f;
   public static final float INITIAL_ACCUMULATOR_DEFAULT = 0.01f;
 
-  private static final ApplyAdagrad.Options[] opts = new ApplyAdagrad.Options[]{
-          ApplyAdagrad.updateSlots(true), ApplyAdagrad.useLocking(true)};
+  private static final ApplyAdagrad.Options[] opts =
+      new ApplyAdagrad.Options[] {ApplyAdagrad.updateSlots(true), ApplyAdagrad.useLocking(true)};
 
   private final float learningRate;
 
@@ -135,7 +134,8 @@ public class AdaGrad extends Optimizer {
    */
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
     Operand<T> initializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
+        tf.fill(
+            tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 

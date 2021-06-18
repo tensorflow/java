@@ -98,7 +98,7 @@ public class MeanIoUTest {
       Operand<TInt32> labels = tf.constant(new int[] {1});
 
       MeanIoU<TFloat32> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat32.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();

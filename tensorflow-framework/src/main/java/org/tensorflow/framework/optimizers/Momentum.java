@@ -15,6 +15,7 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -22,8 +23,6 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyMomentum;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
 
 /**
  * Stochastic gradient descent plus momentum, either nesterov or traditional.
@@ -125,7 +124,8 @@ public class Momentum extends Optimizer {
    * @param <T> the data type of the variable
    */
   private <T extends TType> void createMomentumSlot(Output<T> v) {
-    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+    Operand<T> initializer =
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), MOMENTUM, initializer);
   }
 

@@ -15,6 +15,8 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.*;
+import java.util.stream.Collectors;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -22,13 +24,9 @@ import org.tensorflow.Output;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /** Base class for gradient optimizers. */
 public abstract class Optimizer {
@@ -41,6 +39,7 @@ public abstract class Optimizer {
   protected final Graph graph;
   /** The ops builder for the graph. */
   protected final Ops tf;
+
   /** Top level map key is the variable name, lower level map key is the slot name. */
   private final Map<String, Map<String, Variable<?>>> slots;
 
@@ -221,9 +220,10 @@ public abstract class Optimizer {
   protected <T extends TType> void createSlot(
       Output<T> variable, String slotName, Operand<T> initializer) {
     Variable<T> slot =
-        tf.withName(createName(variable, slotName)).variable(variable.shape(), variable.type());
-    Assign<T> slotInit = tf.assign(slot, initializer);
-    graph.addInitializer(slotInit);
+        tf.initScope()
+            .withName(createName(variable, slotName))
+            .variable(variable.shape(), variable.type());
+    tf.initScope().assign(slot, initializer);
     String varName = variable.op().name();
     Map<String, Variable<? extends TType>> variables =
         slots.computeIfAbsent(slotName, (k) -> new HashMap<>());

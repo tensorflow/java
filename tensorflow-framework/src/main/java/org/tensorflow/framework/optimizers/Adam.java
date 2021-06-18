@@ -15,6 +15,8 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -29,9 +31,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdam;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adam algorithm.
@@ -190,12 +189,10 @@ public class Adam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamSlot(v.asOutput());
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne));
-    graph.addInitializer(betaOnePowerInit);
-    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo));
-    graph.addInitializer(betaTwoPowerInit);
+    betaOnePower = tf.initScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
+    tf.initScope().assign(betaOnePower, tf.constant(betaOne));
+    betaTwoPower = tf.initScope().withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
+    tf.initScope().assign(betaTwoPower, tf.constant(betaTwo));
   }
 
   /** {@inheritDoc} */

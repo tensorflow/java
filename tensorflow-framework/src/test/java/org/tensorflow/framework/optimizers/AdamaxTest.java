@@ -14,6 +14,11 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.tensorflow.framework.optimizers.Adamax.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
 import org.tensorflow.framework.utils.ND;
@@ -28,12 +33,6 @@ import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.tensorflow.framework.optimizers.Adamax.*;
 
 /** Test cases for Adamax Optimizer */
 public class AdamaxTest {
@@ -103,16 +102,11 @@ public class AdamaxTest {
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+      tf.initScope().assign(var0, tf.constant(var0Init));
+      tf.initScope().assign(var1, tf.constant(var1Init));
 
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
-
-      /* initialize the local variables */
-      session.run(var0Initializer);
-      session.run(var1Initializer);
-
 
       /* build the GradsAnvVars */
       List<GradAndVar<? extends TType>> gradsAndVars = new ArrayList<>();
@@ -138,23 +132,15 @@ public class AdamaxTest {
       assertEquals(secondMomentSlots[1].shape(), var1.shape());
 
       /* initialize the accumulators */
-      session.run(tf.init());
+      session.initialize();
 
-      /* initialize the local variables */
-      session.run(var0Initializer);
-      session.run(var1Initializer);
       session.setEpsilon(epsilon1);
       for (int step = 0; step < numSteps; step++) {
         // Test powers
         final float beta1Power = (float) Math.pow(BETA_ONE_DEFAULT, step + 1);
 
         try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("beta1_power")
-                .run()
-                .get(0)) {
+            (TFloat32) session.getGraphSession().runner().fetch("beta1_power").run().get(0)) {
           result.scalars().forEach(f -> assertEquals(beta1Power, f.getFloat(), epsilon1));
         }
         session.run(update);
