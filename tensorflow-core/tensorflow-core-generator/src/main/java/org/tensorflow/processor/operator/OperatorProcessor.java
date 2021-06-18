@@ -26,6 +26,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -559,6 +561,22 @@ public final class OperatorProcessor extends AbstractProcessor {
                 "Returns an API that builds init operations.\n"
                     + "<p>Init operations will be initialized at session creation, must only depend on other init ops, and are never used as control dependencies.\n"
                     + "Additionally, this scope drops all of its control dependencies.")
+            .build());
+
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withInitScope")
+            .addTypeVariable(TypeVariableName.get("R"))
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(
+                ParameterizedTypeName.get(
+                    ClassName.get(Function.class), Names.Ops, TypeVariableName.get("R")),
+                "block")
+            .returns(TypeVariableName.get("R"))
+            .addStatement("return block.apply(initScope())")
+            .addJavadoc(
+                "Call {@code block} with an init scope.\n"
+                    + "<p>Init operations will be initialized at session creation, must only depend on other init ops, and are never used as control dependencies.\n"
+                    + "Additionally, this scope drops all of its control dependencies.\n@see #initScope()")
             .build());
 
     opsBuilder.addMethod(

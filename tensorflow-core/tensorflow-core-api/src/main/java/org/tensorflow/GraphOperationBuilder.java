@@ -100,10 +100,11 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private void checkInput(Operation input) {
     if (scope.isInit() && !graph.isInitOp(input)) {
-      if (input.type().equals(Constant.OP_NAME)){
+      if (input.type().equals(Constant.OP_NAME)) {
         graph.registerInitOp(input);
       }
-      throw new IllegalArgumentException("Init op can't depend on non-init non-constant op " + input);
+      throw new IllegalArgumentException(
+          "Init op can't depend on non-init non-constant op " + input);
     }
   }
 
