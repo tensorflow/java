@@ -59,6 +59,7 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
+import org.tensorflow.op.core.Constant;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.AttrValue.ListValue;
 import org.tensorflow.proto.framework.DataType;
@@ -99,7 +100,10 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private void checkInput(Operation input) {
     if (scope.isInit() && !graph.isInitOp(input)) {
-      throw new IllegalArgumentException("Init op can't depend on non init op " + input);
+      if (input.type().equals(Constant.OP_NAME)){
+        graph.registerInitOp(input);
+      }
+      throw new IllegalArgumentException("Init op can't depend on non-init non-constant op " + input);
     }
   }
 
