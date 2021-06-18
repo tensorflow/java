@@ -569,15 +569,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   @Override
   public synchronized void registerInitOp(Operation op) {
-    if(isInitOp(op)) return;
+    if (isInitOp(op)) return;
     checkInput(op);
 
-    if(!(op instanceof GraphOperation)){
+    if (!(op instanceof GraphOperation)) {
       throw new IllegalArgumentException("Can't use a non-graph op as a graph's init op.");
     }
     GraphOperation graphOp = (GraphOperation) op;
 
-    if(op.type().equals(Placeholder.OP_NAME)){
+    if (op.type().equals(Placeholder.OP_NAME)) {
       throw new IllegalArgumentException("Can not make a placeholder an init op.");
     }
 

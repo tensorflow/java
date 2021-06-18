@@ -113,7 +113,8 @@ public interface ExecutionEnvironment {
   /**
    * Register an op and all of its inputs (and control inputs) as an initialization op.
    *
-   * <p><b>Should generally only be used internally, prefer {@link org.tensorflow.op.Ops#initScope()}.</b>
+   * <p><b>Should generally only be used internally, prefer {@link
+   * org.tensorflow.op.Ops#initScope()}.</b>
    */
   void registerInitOp(Operation op);
 

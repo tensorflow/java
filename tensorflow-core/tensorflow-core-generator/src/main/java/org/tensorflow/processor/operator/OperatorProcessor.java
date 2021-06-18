@@ -553,17 +553,17 @@ public final class OperatorProcessor extends AbstractProcessor {
                 Names.Scope)
             .build());
 
-    String initScopeComment = "<p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.\n"
-        + "Additionally, this scope drops all of its control dependencies."
-        + "  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.";
+    String initScopeComment =
+        "<p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.\n"
+            + "Additionally, this scope drops all of its control dependencies."
+            + "  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.";
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("initScope")
             .addModifiers(Modifier.PUBLIC)
             .returns(Names.Ops)
             .addStatement("return new $T(scope.initScope())", Names.Ops)
-            .addJavadoc(
-                "Returns an API that builds init operations.\n" + initScopeComment)
+            .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
             .build());
 
     opsBuilder.addMethod(
