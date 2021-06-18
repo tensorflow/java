@@ -98,29 +98,14 @@ public final class GraphOperationBuilder implements OperationBuilder {
     }
   }
 
-  private void checkInput(Operation input) {
-    if (scope.isInit() && !graph.isInitOp(input)) {
-      if (input.type().equals(Constant.OP_NAME)) {
-        graph.registerInitOp(input);
-      }
-      throw new IllegalArgumentException(
-          "Init op can't depend on non-init non-constant op " + input);
-    }
-  }
-
   @Override
   public GraphOperationBuilder addControlInput(Operation control) {
-    if (!(control instanceof GraphOperation)) {
-      throw new IllegalArgumentException(
-          "Only GraphOperation instances can be used as control inputs");
-    }
+    graph.checkInput(control);
 
     if (control.env() != graph) {
       throw new IllegalArgumentException(
           "Control input " + control + " was from a different graph, can't use.");
     }
-
-    checkInput(control);
 
     Graph.Reference r = graph.ref();
     try {
@@ -134,7 +119,6 @@ public final class GraphOperationBuilder implements OperationBuilder {
   @Override
   public GraphOperationBuilder addInput(Output<?> input) {
     graph.checkInput(input);
-    checkInput(input.op());
     Graph.Reference r = graph.ref();
     try {
       addInput(unsafeNativeHandle, (TF_Operation) input.getUnsafeNativeHandle(), input.index());
@@ -148,7 +132,6 @@ public final class GraphOperationBuilder implements OperationBuilder {
   public GraphOperationBuilder addInputList(Output<?>[] inputs) {
     for (Output<?> input : inputs) {
       graph.checkInput(input);
-      checkInput(input.op());
     }
 
     Graph.Reference r = graph.ref();
