@@ -536,7 +536,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .forEachRemaining(
             op -> {
               if (op.name().startsWith(initPrefix)) {
-                registerRestoreOp((GraphOperation) op);
+                registerInitOp(op);
               }
             });
   }
@@ -567,16 +567,24 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  /** Adds {@code op} and all of it's predecessors as init ops. */
-  public synchronized void registerRestoreOp(GraphOperation op) {
-    subgraphToOps(Collections.singleton(op)).forEach(this::registerInitOp);
-    if (!op.type().equals(NoOp.OP_NAME)) {
-      registerInitOp(op);
-    }
-  }
-
   @Override
   public synchronized void registerInitOp(Operation op) {
+    if(isInitOp(op)) return;
+    checkInput(op);
+
+    if(!(op instanceof GraphOperation)){
+      throw new IllegalArgumentException("Can't use a non-graph op as a graph's init op.");
+    }
+    GraphOperation graphOp = (GraphOperation) op;
+
+    if(op.type().equals(Placeholder.OP_NAME)){
+      throw new IllegalArgumentException("Can not make a placeholder an init op.");
+    }
+
+    graphOp.controlInputs().forEach(this::registerInitOp);
+    graphOp.inputs().forEach(x -> registerInitOp(x.op()));
+
+    initializers.removeAll(subgraphToOps(Collections.singleton(graphOp)));
     initializers.add(op);
     newInitializers = true;
   }
