@@ -145,12 +145,33 @@ public final class Session implements AutoCloseable {
    * Execute the graph's initializers.
    *
    * <p>This runs any ops that have been created with an init scope.
+   * @throws IllegalStateException if the session has already been initialized
    */
   public synchronized void initialize() {
     if (hasInitialized) {
       throw new IllegalStateException("Session has already been initialized.");
     }
 
+    if (!graph.hasInitializers()) {
+      hasInitialized = true;
+      return;
+    }
+
+    List<Operation> initializers = graph.initializers();
+    if (!initializers.isEmpty()) {
+      Runner runner = runner();
+      initializers.forEach(runner::addTarget);
+      runner.runNoInit();
+    }
+    hasInitialized = true;
+  }
+
+  /**
+   * Execute the graph's initializers, regardless of whether the session has been initialized.
+   *
+   * <p>This runs any ops that have been created with an init scope.
+   */
+  public synchronized void forceInitialize() {
     if (!graph.hasInitializers()) {
       hasInitialized = true;
       return;

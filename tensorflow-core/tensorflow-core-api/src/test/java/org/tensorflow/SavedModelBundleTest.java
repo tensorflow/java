@@ -323,11 +323,9 @@ public class SavedModelBundleTest {
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
     Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
     Variable<TFloat32> y =
-        tf.initScope().withName("variable")
-            .variable(
-                tf
-                    .random
-                    .randomUniform(tf.constant(xShape), TFloat32.class));
+        tf.initScope()
+            .withName("variable")
+            .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }

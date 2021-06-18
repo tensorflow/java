@@ -59,7 +59,6 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Scope;
-import org.tensorflow.op.core.Constant;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.AttrValue.ListValue;
 import org.tensorflow.proto.framework.DataType;
