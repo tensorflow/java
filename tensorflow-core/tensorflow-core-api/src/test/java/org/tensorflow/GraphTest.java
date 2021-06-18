@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.exceptions.TFInvalidArgumentException;
@@ -77,10 +78,21 @@ public class GraphTest {
 
     try (Graph g = new Graph()) {
       g.importGraphDef(graphDef);
-      System.out.println(g.initializers());
-      try (Session s = Session.initialized(g);
-          TInt32 result = (TInt32) s.runner().fetch("result").run().get(0)) {
+
+      Ops tf = Ops.create(g);
+      Ops init = tf.initScope();
+
+      Operand<TInt32> var2 = init.withName("var2").variable(init.constant(4));
+
+      try (Session s = Session.initialized(g)) {
+        List<Tensor> results = s.runner().fetch("result").fetch("var2").run();
+        TInt32 result = (TInt32) results.get(0);
         assertEquals(6, result.getInt());
+
+        TInt32 var2Result = (TInt32) results.get(1);
+        assertEquals(4, var2Result.getInt());
+
+        results.forEach(Tensor::close);
       }
     }
   }
