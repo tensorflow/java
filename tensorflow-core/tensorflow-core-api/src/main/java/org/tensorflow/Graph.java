@@ -469,7 +469,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void checkInput(Op input) {
+  public void checkInput(Operation input) {
     if (input.env().isEager()) {
       throw new IllegalArgumentException(
           "Input "
@@ -501,6 +501,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     importGraphDef(graphDef, "");
   }
 
+  private static final String INIT_OP_BASE_NAME = "tf_java_init";
+
   /**
    * Import a representation of a TensorFlow graph.
    *
@@ -513,9 +515,43 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (graphDef == null || prefix == null) {
       throw new IllegalArgumentException("graphDef and prefix cannot be null");
     }
+
     synchronized (nativeHandleLock) {
       importGraphDef(nativeHandle, graphDef, prefix);
     }
+    baseScope.refreshIds();
+
+    String initPrefix;
+    if (!prefix.isEmpty()) {
+      if (prefix.endsWith("/")) {
+        initPrefix = prefix + INIT_OP_BASE_NAME;
+      } else {
+        initPrefix = prefix + "/" + INIT_OP_BASE_NAME;
+      }
+    } else {
+      initPrefix = INIT_OP_BASE_NAME;
+    }
+
+    operations()
+        .forEachRemaining(
+            op -> {
+              if (op.name().startsWith(initPrefix)) {
+                registerRestoreOp((GraphOperation) op);
+              }
+            });
+  }
+
+  private synchronized void addInitOp() {
+    if (!newInitializers) {
+      return;
+    }
+    if (initializers.isEmpty()) return;
+
+    OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
+    initializers.forEach(builder::addControlInput);
+    builder.build();
+
+    newInitializers = false;
   }
 
   /**
@@ -525,24 +561,24 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @see #importGraphDef(GraphDef, String)
    */
   public GraphDef toGraphDef() {
+    addInitOp();
     synchronized (nativeHandleLock) {
       return toGraphDef(nativeHandle);
     }
   }
 
-  /**
-   * Adds {@code op} and all of it's predecessors as init ops.
-   *
-   * @param op
-   */
+  /** Adds {@code op} and all of it's predecessors as init ops. */
   public synchronized void registerRestoreOp(GraphOperation op) {
-    subgraphToOps(Collections.singleton(op)).forEach(x -> registerInitOp(x));
-    registerInitOp(op);
+    subgraphToOps(Collections.singleton(op)).forEach(this::registerInitOp);
+    if (!op.type().equals(NoOp.OP_NAME)) {
+      registerInitOp(op);
+    }
   }
 
   @Override
   public synchronized void registerInitOp(Operation op) {
     initializers.add(op);
+    newInitializers = true;
   }
 
   @Override
@@ -816,6 +852,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private final Scope baseScope;
 
   private final Set<Operation> initializers = new LinkedHashSet<>();
+  private boolean newInitializers = false;
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not

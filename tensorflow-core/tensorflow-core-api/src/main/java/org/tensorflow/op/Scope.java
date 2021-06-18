@@ -17,6 +17,8 @@ package org.tensorflow.op;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.Operation;
@@ -177,7 +179,7 @@ public final class Scope {
   }
 
   /**
-   * Create a unique name for an operator, using a provided default if necessary.
+   * Create a unique name for an operator and reserves it, using a provided default if necessary.
    *
    * <p>This is normally called only by operator building classes.
    *
@@ -200,6 +202,11 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
+  /** Makes a unique name from {@code id} and reserves it. */
+  public String makeUnique(String id) {
+    return nameScope.makeUnique(id);
+  }
+
   /**
    * Returns a builder to create a new {@link Operation}.
    *
@@ -219,10 +226,14 @@ public final class Scope {
     return NameScope.isValidName(name);
   }
 
+  public void refreshIds() {
+    nameScope.importIdsFrom(env);
+  }
+
   private Scope(
       ExecutionEnvironment env,
       NameScope nameScope,
-      Iterable<Op> controlDependencies,
+      Iterable<Operation> controlDependencies,
       DeviceSpec deviceSpec,
       boolean isInit) {
     this.env = env;
@@ -245,13 +256,32 @@ public final class Scope {
    * @return a new scope with the provided control dependencies
    */
   public Scope withControlDependencies(Iterable<Op> controls) {
-    for (Op control : controls) {
+    return withControlDependencyOps(
+        StreamSupport.stream(controls.spliterator(), false)
+            .map(Op::op)
+            .collect(Collectors.toList()));
+  }
+
+  /**
+   * Returns a new scope where added operations will have the provided control dependencies.
+   *
+   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
+   * other properties are inherited from the current scope.
+   *
+   * <p>Init ops will never be used as control dependencies, they are assumed to be created during
+   * session initialization.
+   *
+   * @param controls control dependencies for ops created with the returned scope
+   * @return a new scope with the provided control dependencies
+   */
+  public Scope withControlDependencyOps(Iterable<Operation> controls) {
+    for (Operation control : controls) {
       env.checkInput(control);
     }
 
-    List<Op> nonInitControls = new ArrayList<>();
-    for (Op op : controls) {
-      if (!env.isInitOp(op.op())) {
+    List<Operation> nonInitControls = new ArrayList<>();
+    for (Operation op : controls) {
+      if (!env.isInitOp(op)) {
         nonInitControls.add(op);
       }
     }
@@ -269,8 +299,8 @@ public final class Scope {
    */
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
-    for (Op control : controlDependencies) {
-      builder.addControlInput(control.op());
+    for (Operation control : controlDependencies) {
+      builder.addControlInput(control);
     }
     return builder;
   }
@@ -287,7 +317,7 @@ public final class Scope {
   }
 
   private final ExecutionEnvironment env;
-  private final Iterable<Op> controlDependencies;
+  private final Iterable<Operation> controlDependencies;
   private final NameScope nameScope;
   private final DeviceSpec deviceSpec;
   private final boolean isInit;

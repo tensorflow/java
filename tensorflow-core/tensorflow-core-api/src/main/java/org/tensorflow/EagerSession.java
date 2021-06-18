@@ -29,7 +29,6 @@ import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
@@ -322,7 +321,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void checkInput(Op input) {
+  public void checkInput(Operation input) {
     if (!input.env().isEager()) {
       throw new IllegalArgumentException("Can't use graph operation " + input + " in eager mode.");
     }

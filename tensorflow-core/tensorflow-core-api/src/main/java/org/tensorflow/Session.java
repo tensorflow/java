@@ -622,7 +622,8 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Restore the actual state of the variables of this session's graph.
+   * Restore the actual state of the variables of this session's graph. Counts as initialization,
+   * but can be done after other initializations.
    *
    * <p>{@code prefix} is the path where the files containing the variables state live, followed by
    * the filename prefix. For example, if {@code prefix} is set to
@@ -634,12 +635,13 @@ public final class Session implements AutoCloseable {
    *
    * @param prefix prefix to restore from
    */
-  public void restore(String prefix) {
+  public synchronized void restore(String prefix) {
     SaverDef saverDef = graph.saverDef();
     runner()
         .addTarget(saverDef.getRestoreOpName())
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
-        .run();
+        .runNoInit();
+    hasInitialized = true;
   }
 
   /**

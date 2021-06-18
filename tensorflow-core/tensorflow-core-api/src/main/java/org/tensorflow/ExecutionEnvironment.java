@@ -66,7 +66,19 @@ public interface ExecutionEnvironment {
    * @throws IllegalArgumentException if input can't be used as an input in this execution
    *     environment.
    */
-  void checkInput(Op input);
+  default void checkInput(Op input) {
+    checkInput(input.op());
+  }
+
+  /**
+   * Checks that {@code input} is valid to use as an input in this execution environment. Throws
+   * {@link IllegalArgumentException} if not.
+   *
+   * @param input The op to check
+   * @throws IllegalArgumentException if input can't be used as an input in this execution
+   *     environment.
+   */
+  void checkInput(Operation input);
 
   /**
    * Get the type of this environment (from the `Environments` enumeration.
