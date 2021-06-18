@@ -279,14 +279,7 @@ public final class Scope {
       env.checkInput(control);
     }
 
-    List<Operation> nonInitControls = new ArrayList<>();
-    for (Operation op : controls) {
-      if (!env.isInitOp(op)) {
-        nonInitControls.add(op);
-      }
-    }
-
-    return new Scope(env, nameScope, nonInitControls, deviceSpec, isInit);
+    return new Scope(env, nameScope, controls, deviceSpec, isInit);
   }
 
   /**
@@ -300,7 +293,9 @@ public final class Scope {
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
     for (Operation control : controlDependencies) {
-      builder.addControlInput(control);
+      if (isInit || !env.isInitOp(control)) {
+        builder.addControlInput(control);
+       }
     }
     return builder;
   }
