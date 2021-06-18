@@ -16,7 +16,6 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.tensorflow.DeviceSpec;
@@ -295,7 +294,7 @@ public final class Scope {
     for (Operation control : controlDependencies) {
       if (isInit || !env.isInitOp(control)) {
         builder.addControlInput(control);
-       }
+      }
     }
     return builder;
   }

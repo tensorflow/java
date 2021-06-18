@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.processing.AbstractProcessor;
@@ -573,6 +574,19 @@ public final class OperatorProcessor extends AbstractProcessor {
                 "block")
             .returns(TypeVariableName.get("R"))
             .addStatement("return block.apply(initScope())")
+            .addJavadoc(
+                "Call {@code block} with an init scope.\n"
+                    + "<p>Init operations will be initialized at session creation, must only depend on other init ops, and are never used as control dependencies.\n"
+                    + "Additionally, this scope drops all of its control dependencies.\n@see #initScope()")
+            .build());
+
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withInitScope")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(
+                ParameterizedTypeName.get(ClassName.get(Consumer.class), Names.Ops), "block")
+            .returns(TypeName.VOID)
+            .addStatement("block.accept(initScope())")
             .addJavadoc(
                 "Call {@code block} with an init scope.\n"
                     + "<p>Init operations will be initialized at session creation, must only depend on other init ops, and are never used as control dependencies.\n"
