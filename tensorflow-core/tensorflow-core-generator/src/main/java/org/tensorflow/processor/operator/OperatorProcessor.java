@@ -566,33 +566,17 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
             .build());
 
+    TypeVariableName T = TypeVariableName.get("T").withBounds(Names.Operand);
     opsBuilder.addMethod(
-        MethodSpec.methodBuilder("withInitScope")
-            .addTypeVariable(TypeVariableName.get("R"))
+        MethodSpec.methodBuilder("liftToInitScope")
+            .addTypeVariable(T)
             .addModifiers(Modifier.PUBLIC)
-            .addParameter(
-                ParameterizedTypeName.get(
-                    ClassName.get(Function.class), Names.Ops, TypeVariableName.get("R")),
-                "block")
-            .returns(TypeVariableName.get("R"))
-            .addStatement("return block.apply(initScope())")
-            .addJavadoc(
-                "Call {@code block} with an init scope.\n"
-                    + initScopeComment
-                    + "\n@see #initScope()")
-            .build());
-
-    opsBuilder.addMethod(
-        MethodSpec.methodBuilder("withInitScope")
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(
-                ParameterizedTypeName.get(ClassName.get(Consumer.class), Names.Ops), "block")
-            .returns(TypeName.VOID)
-            .addStatement("block.accept(initScope())")
-            .addJavadoc(
-                "Call {@code block} with an init scope.\n"
-                    + initScopeComment
-                    + "\n@see #initScope()")
+            .addParameter(T, "op")
+            .returns(T)
+            .addStatement("scope.env().registerInitOp(op.op())")
+            .addStatement("return op")
+            .addJavadoc("Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n" + initScopeComment +
+                "\n@throws IllegalArgumentException if the op or one of its inputs can't be made an init op.")
             .build());
 
     opsBuilder.addMethod(
