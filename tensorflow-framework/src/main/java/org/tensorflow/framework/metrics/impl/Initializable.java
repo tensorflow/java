@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,25 +14,23 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics.impl;
 
-import org.tensorflow.Operand;
+import java.util.function.Consumer;
 import org.tensorflow.op.Ops;
-import org.tensorflow.types.family.TNumber;
 
-/**
- * Interface for Metrics that wrap AbstractLoss functions.
- *
- * @param <T> The data type of the predictions.
- */
-public interface LossMetric<T extends TNumber> {
+public interface Initializable {
 
   /**
-   * Calculates the weighted loss between {@code labels} and {@code predictions}
+   * Initializes the TensorFlow platform with the Metric
    *
    * @param tf the TensorFlow Ops
-   * @param labels the truth values or labels
-   * @param predictions the predictions
-   * @return the loss
+   * @return the TensorFlow Ops possibly with a subScope;
    */
-  Operand<T> call(
-      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions);
+  Ops init(Ops tf);
+
+  /**
+   * Registers an initializer function to be executed upon {@link #init(Ops)}.
+   *
+   * @param initFunction the initializer function
+   */
+  void onInit(Consumer<Ops> initFunction);
 }

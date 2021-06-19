@@ -42,14 +42,13 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanMetricWrapper(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  protected MeanMetricWrapper(String name, long seed, Class<T> type) {
+    super(name, seed, type);
   }
 
   /**
@@ -75,6 +74,7 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
    * passing the loss to the Mean metric to calculate the weighted mean of the loss over many
    * iterations.
    *
+   * @param tf the TensorFlow Ops
    * @param labels the truth values or labels
    * @param predictions the predictions
    * @param sampleWeights Optional sampleWeights acts as a coefficient for the loss. If a scalar is
@@ -87,18 +87,20 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
    * @return a List of control operations that updates the Mean state variables.
    */
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
     if (labels == null || predictions == null) {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
+    init(tf);
 
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
 
-    Operand<T> losses = loss.call(tLabels, tPredictions);
+    Operand<T> losses = loss.call(getTF(), tLabels, tPredictions);
 
-    return super.updateStateList(cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(getTF(), cast(getTF(), losses, predictions.type()), sampleWeights);
   }
 }

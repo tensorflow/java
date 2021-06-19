@@ -30,18 +30,16 @@ public class RootMeanSquaredErrorTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RootMeanSquaredError<TFloat32> instance =
-          new RootMeanSquaredError<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      RootMeanSquaredError<TFloat32> instance = new RootMeanSquaredError<>(1001L, TFloat32.class);
 
       Operand<TFloat32> labels = tf.constant(new float[] {2, 4, 6});
       Operand<TFloat32> predictions = tf.constant(new float[] {1, 3, 2});
 
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(18, total);
       session.evaluate(3, count);
       session.evaluate(Math.sqrt(6), result);
@@ -52,21 +50,41 @@ public class RootMeanSquaredErrorTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RootMeanSquaredError<TFloat64> instance =
-          new RootMeanSquaredError<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      RootMeanSquaredError<TFloat64> instance = new RootMeanSquaredError<>(1001L, TFloat64.class);
+
       Operand<TFloat32> labels = tf.constant(new float[][] {{2, 4, 6, 8}});
       Operand<TFloat32> predictions = tf.constant(new float[][] {{1, 3, 2, 3}});
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{0, 1, 0, 1}});
 
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(26, total);
       session.evaluate(2, count);
       session.evaluate(Math.sqrt(13), result);
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      RootMeanSquaredError<TFloat32> instance = new RootMeanSquaredError<>(1001L, TFloat32.class);
+      instance.init(tf);
+
+      Operand<TFloat32> labels = tf.constant(new float[] {2, 4, 6});
+      Operand<TFloat32> predictions = tf.constant(new float[] {1, 3, 2});
+
+      Op op = instance.updateState(tf, labels, predictions, null);
+      session.run(op);
+      Variable<TFloat32> total = instance.getTotal();
+      Variable<TFloat32> count = instance.getCount();
+      Operand<TFloat32> result = instance.result(tf);
+      session.evaluate(18, total);
+      session.evaluate(3, count);
+      session.evaluate(Math.sqrt(6), result);
     }
   }
 }

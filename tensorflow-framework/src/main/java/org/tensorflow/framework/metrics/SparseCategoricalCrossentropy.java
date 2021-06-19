@@ -14,14 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the sparse categorical cross-entropy loss between true labels and
@@ -39,9 +39,23 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
   private final int axis;
 
   /**
+   * Creates a SparseCategoricalCrossentropy metric using a name based on {@link
+   * Class#getSimpleName()}.
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param axis The dimension along which the entropy is computed.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public SparseCategoricalCrossentropy(boolean fromLogits, int axis, long seed, Class<T> type) {
+    this(null, fromLogits, axis, seed, type);
+  }
+
+  /**
    * Creates a SparseCategoricalCrossentropy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
    *     probability distribution.
@@ -51,8 +65,8 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
    * @param type the type for the variables and result
    */
   public SparseCategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, int axis, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+      String name, boolean fromLogits, int axis, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
     this.fromLogits = fromLogits;
     this.axis = axis;
@@ -67,7 +81,8 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.sparseCategoricalCrossentropy(getTF(), tLabels, tPredictions, fromLogits, axis);

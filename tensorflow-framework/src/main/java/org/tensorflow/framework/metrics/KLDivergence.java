@@ -14,14 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the Kullback-Leibler divergence loss metric between labels and
@@ -32,16 +32,25 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   /**
+   * Creates a KLDivergence metric using an name based on @link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public KLDivergence(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
+  /**
    * Creates a KLDivergence metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  public KLDivergence(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public KLDivergence(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
   }
 
@@ -54,7 +63,8 @@ public class KLDivergence<T extends TNumber> extends MeanMetricWrapper<T> implem
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.kullbackLeiblerDivergence(getTF(), tLabels, tPredictions);

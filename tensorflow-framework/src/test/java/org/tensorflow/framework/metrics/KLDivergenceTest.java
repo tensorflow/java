@@ -32,18 +32,18 @@ class KLDivergenceTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       KLDivergence<TFloat64> instance =
-          new KLDivergence<>(tf, "KLD_testUnweighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new KLDivergence<>("KLD_testUnweighted", 1001L, TFloat64.class);
+
       float[][] trueArray = {{.5f, .8f, .12f}, {.7f, .43f, .8f}};
       float[][] predArray = {{.4f, .9f, .12f}, {.36f, .3f, .4f}};
       Operand<TFloat32> labels = tf.constant(trueArray);
       Operand<TFloat32> predictions = tf.constant(predArray);
 
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(1.1921477, total);
       session.evaluate(2, count);
       session.evaluate(0.5960738, result);
@@ -55,8 +55,8 @@ class KLDivergenceTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       KLDivergence<TFloat64> instance =
-          new KLDivergence<>(tf, "KLD_testWeighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new KLDivergence<>("KLD_testWeighted", 1001L, TFloat64.class);
+
       float[] trueArray = {
         .5f, .8f, .12f,
         .7f, .43f, .8f
@@ -70,11 +70,43 @@ class KLDivergenceTest {
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{1.2}, {3.4}});
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
+      session.evaluate(4.015142, total);
+      session.evaluate(4.6, count);
+      session.evaluate(0.872857, result);
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      KLDivergence<TFloat64> instance =
+          new KLDivergence<>("KLD_testWeighted", 1001L, TFloat64.class);
+      instance.init(tf);
+
+      float[] trueArray = {
+        .5f, .8f, .12f,
+        .7f, .43f, .8f
+      };
+      float[] predArray = {
+        .4f, .9f, .12f,
+        .36f, .3f, .4f
+      };
+      Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 3)));
+      Operand<TFloat32> predictions =
+          tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 3)));
+
+      Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{1.2}, {3.4}});
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
+      session.run(op);
+      Variable<TFloat64> total = instance.getTotal();
+      Variable<TFloat64> count = instance.getCount();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(4.015142, total);
       session.evaluate(4.6, count);
       session.evaluate(0.872857, result);

@@ -30,23 +30,22 @@ class TopKCategoricalAccuracyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       TopKCategoricalAccuracy<TFloat64> instance =
-          new TopKCategoricalAccuracy<>(tf, "TopK_testUnweighted", 5, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new TopKCategoricalAccuracy<>("TopK_testUnweighted", 5, 1001L, TFloat64.class);
+
       Operand<TFloat32> labels = tf.constant(new float[][] {{0, 0, 1}, {0, 1, 0}});
       Operand<TFloat64> predictions =
           tf.constant(new double[][] {{0.1f, 0.9f, 0.8f}, {0.05f, 0.95f, 0f}});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      session.evaluate(1., instance.result());
+      session.evaluate(1., instance.result(tf));
 
       // With `k` < 5.
-      instance =
-          new TopKCategoricalAccuracy<>(tf, "TopK_testUnweighted1", 1, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      update = instance.updateState(labels, predictions, null);
+      instance = new TopKCategoricalAccuracy<>("TopK_testUnweighted1", 1, 1001L, TFloat64.class);
+
+      update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      session.evaluate(0.5, instance.result());
+      session.evaluate(0.5, instance.result(tf));
 
       // With `k` > 5.
       labels =
@@ -61,12 +60,11 @@ class TopKCategoricalAccuracyTest {
                 {0.5f, 0.9f, 0.1f, 0.7f, 0.6f, 0.5f, 0.4f},
                 {0.05f, 0.95f, 0f, 0f, 0f, 0f, 0f}
               });
-      instance =
-          new TopKCategoricalAccuracy<>(tf, "TopK_testUnweighted6", 6, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      update = instance.updateState(labels, predictions, null);
+      instance = new TopKCategoricalAccuracy<>("TopK_testUnweighted6", 6, 1001L, TFloat64.class);
+
+      update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      session.evaluate(0.5, instance.result());
+      session.evaluate(0.5, instance.result(tf));
     }
   }
 
@@ -75,8 +73,7 @@ class TopKCategoricalAccuracyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       TopKCategoricalAccuracy<TFloat64> instance =
-          new TopKCategoricalAccuracy<>(tf, "TopK_testWeighted", 5, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new TopKCategoricalAccuracy<>("TopK_testWeighted", 5, 1001L, TFloat64.class);
 
       Operand<TFloat64> labels =
           tf.constant(
@@ -95,9 +92,40 @@ class TopKCategoricalAccuracyTest {
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1, 0, 1});
 
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      session.evaluate(1., instance.result());
+      session.evaluate(1., instance.result(tf));
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+      TopKCategoricalAccuracy<TFloat64> instance =
+          new TopKCategoricalAccuracy<>("testInitTF", 5, 1001L, TFloat64.class);
+      instance.init(tf);
+
+      Operand<TFloat64> labels =
+          tf.constant(
+              new double[][] {
+                {1, 0, 2},
+                {1, 0, 0},
+                {0, 0, 1}
+              });
+      Operand<TFloat64> predictions =
+          tf.constant(
+              new double[][] {
+                {0f, 0.9f, 0.1f},
+                {0f, 0.9f, 0.1f},
+                {0f, 0.9f, 0.1f}
+              });
+
+      Operand<TFloat64> sampleWeight = tf.constant(new double[] {1, 0, 1});
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
+      session.run(update);
+      session.evaluate(1., instance.result(tf));
     }
   }
 }

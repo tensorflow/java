@@ -17,9 +17,12 @@ package org.tensorflow.framework.metrics;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 import java.util.List;
+import java.util.stream.IntStream;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
@@ -39,87 +42,116 @@ import org.tensorflow.types.family.TNumber;
 public class MeanRelativeError<T extends TNumber> extends Mean<T> {
   private Operand<T> normalizer;
 
+  // holders for the init(Ops) method
+  private DoubleNdArray normalizerArray;
+
   /**
    * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
    *
-   * @param tf the TensorFlow Ops
    * @param normalizer The normalizer values with same shape as predictions.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanRelativeError(Ops tf, float[] normalizer, long seed, Class<T> type) {
-    this(tf, null, cast(tf, tf.constant(normalizer), type), seed, type);
+  protected MeanRelativeError(float[] normalizer, long seed, Class<T> type) {
+    this(null, normalizer, seed, type);
   }
 
   /**
    * Creates a MeanRelativeError metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param normalizer The normalizer values with same shape as predictions.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanRelativeError(Ops tf, String name, float[] normalizer, long seed, Class<T> type) {
-    this(tf, name, cast(tf, tf.constant(normalizer), type), seed, type);
+  protected MeanRelativeError(String name, float[] normalizer, long seed, Class<T> type) {
+    this(
+        name,
+        IntStream.range(0, normalizer.length).mapToDouble(i -> normalizer[i]).toArray(),
+        seed,
+        type);
   }
 
   /**
    * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
    *
-   * @param tf the TensorFlow Ops
    * @param normalizer The normalizer values with same shape as predictions.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanRelativeError(Ops tf, double[] normalizer, long seed, Class<T> type) {
-    this(tf, null, cast(tf, tf.constant(normalizer), type), seed, type);
+  protected MeanRelativeError(double[] normalizer, long seed, Class<T> type) {
+    this(null, normalizer, seed, type);
   }
 
   /**
    * Creates a MeanRelativeError metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param normalizer The normalizer values with same shape as predictions.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanRelativeError(Ops tf, String name, double[] normalizer, long seed, Class<T> type) {
-    this(tf, name, cast(tf, tf.constant(normalizer), type), seed, type);
-  }
-
-  /**
-   * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
-   *
-   * @param tf the TensorFlow Ops
-   * @param normalizer The normalizer values with same shape as predictions.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  protected MeanRelativeError(Ops tf, Operand<T> normalizer, long seed, Class<T> type) {
-    this(tf, null, normalizer, seed, type);
+  protected MeanRelativeError(String name, double[] normalizer, long seed, Class<T> type) {
+    this(name, StdArrays.ndCopyOf(normalizer), seed, type);
   }
 
   /**
    * Creates a MeanRelativeError metric
    *
-   * @param tf the TensorFlow ops
+   * @param name the name of the metric. If null, name defaults to {@link Class#getSimpleName()}.
+   * @param normalizerArray The normalizer values with same shape as predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  protected MeanRelativeError(
+      String name, DoubleNdArray normalizerArray, long seed, Class<T> type) {
+    super(name, seed, type);
+    this.normalizerArray = normalizerArray;
+  }
+
+  /**
+   * Creates a MeanRelativeError metric using {@link Class#getSimpleName()} as the name
+   *
+   * @param normalizer The normalizer values with same shape as predictions.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  protected MeanRelativeError(Operand<T> normalizer, long seed, Class<T> type) {
+    this(null, normalizer, seed, type);
+  }
+
+  /**
+   * Creates a MeanRelativeError metric
+   *
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param normalizer The normalizer values with same shape as predictions.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanRelativeError(
-      Ops tf, String name, Operand<T> normalizer, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  protected MeanRelativeError(String name, Operand<T> normalizer, long seed, Class<T> type) {
+    super(name, seed, type);
     this.normalizer = normalizer;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Ops init(Ops tf) {
+    if (this.tf == null) {
+      super.init(tf);
+      if (normalizer == null) {
+        if (normalizerArray != null) {
+          normalizer = cast(getTF(), getTF().constant(normalizerArray), getResultType());
+        }
+      }
+    }
+    return getTF();
   }
 
   /**
@@ -134,9 +166,11 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
    */
   @Override
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
+    init(tf);
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     Operand<T> tSampleWeights =
@@ -162,7 +196,7 @@ public class MeanRelativeError<T extends TNumber> extends Mean<T> {
             .divNoNan(
                 getTF().math.abs(getTF().math.sub(tLabels, tPredictions)), this.getNormalizer());
 
-    return super.updateStateList(relativeErrors, tSampleWeights);
+    return super.updateStateList(getTF(), relativeErrors, tSampleWeights);
   }
 
   /**

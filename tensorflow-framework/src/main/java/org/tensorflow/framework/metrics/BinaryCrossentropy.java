@@ -14,14 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
 import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
@@ -38,9 +38,25 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
   private final float labelSmoothing;
 
   /**
+   * Creates a BinaryCrossentropy metric using {@link Class#getSimpleName()} for the metric name
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
+   *     compute the loss between the predicted labels and a smoothed version of the true labels,
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     correspond to heavier smoothing.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public BinaryCrossentropy(boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    this(null, fromLogits, labelSmoothing, seed, type);
+  }
+
+  /**
    * Creates a BinaryCrossentropy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
    *     probability distribution.
@@ -53,8 +69,8 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the type for the variables and result
    */
   public BinaryCrossentropy(
-      Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+      String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
     this.fromLogits = fromLogits;
     this.labelSmoothing = labelSmoothing;
@@ -70,7 +86,8 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.binaryCrossentropy(getTF(), tLabels, tPredictions, fromLogits, labelSmoothing);

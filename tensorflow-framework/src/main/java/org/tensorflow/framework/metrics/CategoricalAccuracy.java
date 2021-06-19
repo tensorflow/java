@@ -49,26 +49,24 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Creates a CategoricalAccuracy metric, using {@link Class#getSimpleName()} for the metric name
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public CategoricalAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  public CategoricalAccuracy(long seed, Class<T> type) {
+    this(null, seed, type);
   }
 
   /**
    * Creates a CategoricalAccuracy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public CategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public CategoricalAccuracy(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     super.setLoss(this);
   }
 
@@ -85,7 +83,8 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<TInt64> trueMax = getTF().math.argMax(labels, getTF().constant(-1));
 
     Operand<TInt64> predMax = getTF().math.argMax(predictions, getTF().constant(-1));

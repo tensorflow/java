@@ -14,14 +14,14 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Static methods for computing metrics. */
 public class Metrics {
@@ -31,15 +31,16 @@ public class Metrics {
    *
    * <p>Standalone usage:
    *
-   * <pre>
-   *     Operand&lt;TInt32&gt; labels = tf.constant(new int[][]
-   *                                    {{0, 0, 1}, {0, 1, 0}});
-   *     Operand&lt;TFloat32&gt; predictions = tf.constant(new float[][]
-   *                                    {{0.1f, 0.9f, 0.8f}, {0.05f, 0.95f, 0f}});
-   *     Operand&lt;TFloat32&gt; m = Metrics.topKCategoricalAccuracy(
-   *                                    labels, predictions, 3)
-   *     //m.shape().toString == "[2]"
-   * </pre>
+   * <pre>{@code
+   * Operand<TInt32> labels = tf.constant(new int[][]
+   *                                {{0, 0, 1}, {0, 1, 0}});
+   * Operand<TFloat32> predictions = tf.constant(new float[][]
+   *                                {{0.1f, 0.9f, 0.8f}, {0.05f, 0.95f, 0f}});
+   * Operand<TFloat32> m = Metrics.topKCategoricalAccuracy(
+   *                                labels, predictions, 3)
+   * //m.shape().toString == "[2]"
+   *
+   * }</pre>
    *
    * @param tf the TensorFlow Ops.
    * @param labels the ground truth values.
@@ -79,7 +80,6 @@ public class Metrics {
    * @param <U> the data type ofr the labels.
    * @return the Operand for the Sparse top K categorical accuracy value.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends TNumber, U extends TNumber> Operand<T> sparseTopKCategoricalAccuracy(
       Ops tf, Operand<U> labels, Operand<T> predictions, int k) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());

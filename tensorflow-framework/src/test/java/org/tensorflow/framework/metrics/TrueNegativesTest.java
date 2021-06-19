@@ -45,11 +45,11 @@ public class TrueNegativesTest {
 
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
-      TrueNegatives<TFloat64> instance = new TrueNegatives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+      TrueNegatives<TFloat64> instance = new TrueNegatives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(3.0, result);
     }
@@ -63,11 +63,11 @@ public class TrueNegativesTest {
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
-      TrueNegatives<TFloat64> instance = new TrueNegatives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      TrueNegatives<TFloat64> instance = new TrueNegatives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(4.0, result);
     }
@@ -95,11 +95,11 @@ public class TrueNegativesTest {
                 {1, 1, 1, 1}
               });
       TrueNegatives<TFloat32> instance =
-          new TrueNegatives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+          new TrueNegatives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       float[] expected = new float[] {2.f, 5.f, 7.f};
       session.evaluate(expected, result);
     }
@@ -129,13 +129,31 @@ public class TrueNegativesTest {
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{0.0, 2.0, 3.0, 5.0}});
       TrueNegatives<TFloat64> instance =
-          new TrueNegatives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+          new TrueNegatives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       double[] expected = new double[] {5., 15., 23.};
       session.evaluate(expected, result);
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+
+      Operand<TInt64> predictions = tf.constant(this.predArray);
+      Operand<TInt64> labels = tf.constant(this.trueArray);
+      TrueNegatives<TFloat64> instance = new TrueNegatives<>(1001L, TFloat64.class);
+      instance.init(tf);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
+      session.run(update);
+      Operand<TFloat64> result = instance.result(tf);
+
+      session.evaluate(3.0, result);
     }
   }
 }

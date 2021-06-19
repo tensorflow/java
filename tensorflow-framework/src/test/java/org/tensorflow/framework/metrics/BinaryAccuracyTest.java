@@ -31,18 +31,18 @@ public class BinaryAccuracyTest {
   public void testCorrect() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+
       int[] trueArray = {1, 0};
       float[] predArray = {1, 0};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 1)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 1)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(2F, total);
       session.evaluate(2, count);
       session.evaluate(1F, result);
@@ -53,18 +53,18 @@ public class BinaryAccuracyTest {
   public void testPredictionSqueeze() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+
       int[] trueArray = {1, 0};
       float[] predArray = {1, 1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 1)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 1, 1)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(2F, total);
       session.evaluate(4, count);
       session.evaluate(0.5F, result);
@@ -75,8 +75,8 @@ public class BinaryAccuracyTest {
   public void testSampleWeight() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+
       int[] trueArray = {1, 1};
       float[] predArray = {1, 0};
 
@@ -86,11 +86,24 @@ public class BinaryAccuracyTest {
 
       Operand<TFloat32> sampleWeight =
           tf.reshape(tf.constant(new float[] {.5F, .2F}), tf.constant(Shape.of(2, 1)));
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
+      session.evaluate(0.5F, total);
+      session.evaluate(.7, count);
+      session.evaluate(0.71428573f, result);
+
+      // test init(tf)
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      instance.init(tf);
+
+      op = instance.updateState(tf, labels, predictions, sampleWeight);
+      session.run(op);
+      total = instance.getTotal();
+      count = instance.getCount();
+      result = instance.result(tf);
       session.evaluate(0.5F, total);
       session.evaluate(.7, count);
       session.evaluate(0.71428573f, result);
@@ -101,50 +114,50 @@ public class BinaryAccuracyTest {
   public void testVariableState() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+
       float[] trueArray = {2, 1};
       Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 1)));
 
       Operand<TFloat32> sampleWeight =
           tf.reshape(tf.constant(new float[] {.5F, .2F}), tf.constant(Shape.of(2, 1)));
-      Op op = instance.updateState(labels, labels, sampleWeight);
+      Op op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(0.2F, total);
       session.evaluate(.7, count);
       session.evaluate(0.2857143F, result);
 
       // 2nd run
-      op = instance.updateState(labels, labels, sampleWeight);
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(0.4F, total);
       session.evaluate(1.4, count);
       session.evaluate(0.2857143F, result);
 
       // new instance same graph
-      instance = new BinaryAccuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      op = instance.updateState(labels, labels, sampleWeight);
+      instance = new BinaryAccuracy<>(1001L, TFloat32.class);
+      session.run(instance.resetStates(tf));
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
       total = instance.getTotal();
       count = instance.getCount();
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(0.2F, total);
       session.evaluate(.7, count);
       session.evaluate(0.2857143F, result);
 
       // reset variables
-      session.run(instance.resetStates());
+      session.run(instance.resetStates(tf));
       session.evaluate(0.0, total);
       session.evaluate(0.0, count);
 
-      op = instance.updateState(labels, labels, sampleWeight);
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(0.2F, total);
       session.evaluate(.7, count);
       session.evaluate(0.2857143F, result);
@@ -155,19 +168,18 @@ public class BinaryAccuracyTest {
   public void testBinaryAccuracyAThreshold() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(tf, 0.7f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      BinaryAccuracy<TFloat32> instance = new BinaryAccuracy<>(0.7f, 1001L, TFloat32.class);
       int[] trueArray = {1, 1, 0, 0};
       float[] predArray = {0.9f, 0.6f, 0.4f, 0.8f};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 1)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(4, 1)));
 
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(2F, total);
       session.evaluate(4, count);
       session.evaluate(0.5F, result);

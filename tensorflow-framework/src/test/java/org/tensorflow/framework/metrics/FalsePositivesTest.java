@@ -45,11 +45,11 @@ public class FalsePositivesTest {
 
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
-      FalsePositives<TFloat64> instance = new FalsePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+      FalsePositives<TFloat64> instance = new FalsePositives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(7.0, result);
     }
@@ -63,11 +63,11 @@ public class FalsePositivesTest {
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
-      FalsePositives<TFloat64> instance = new FalsePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      FalsePositives<TFloat64> instance = new FalsePositives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(14.0, result);
     }
@@ -95,11 +95,11 @@ public class FalsePositivesTest {
                 {1, 1, 1, 1}
               });
       FalsePositives<TFloat32> instance =
-          new FalsePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+          new FalsePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       float[] expected = new float[] {7.f, 4.f, 2.f};
       session.evaluate(expected, result);
     }
@@ -136,12 +136,45 @@ public class FalsePositivesTest {
                 {19.0, 23.0, 29.0, 31.0}
               });
       FalsePositives<TFloat64> instance =
-          new FalsePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+          new FalsePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       double[] expected = new double[] {125., 42., 12.};
+      session.evaluate(expected, result);
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+
+      Operand<TFloat32> predictions =
+          tf.constant(
+              new float[][] {
+                {0.9f, 0.2f, 0.8f, 0.1f},
+                {0.2f, 0.9f, 0.7f, 0.6f},
+                {0.1f, 0.2f, 0.4f, 0.3f},
+                {0f, 1f, 0.7f, 0.3f}
+              });
+      Operand<TInt64> labels =
+          tf.constant(
+              new long[][] {
+                {0, 1, 1, 0},
+                {1, 0, 0, 0},
+                {0, 0, 0, 0},
+                {1, 1, 1, 1}
+              });
+      FalsePositives<TFloat32> instance =
+          new FalsePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+      instance.init(tf);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
+      session.run(update);
+      Operand<TFloat32> result = instance.result(tf);
+      float[] expected = new float[] {7.f, 4.f, 2.f};
       session.evaluate(expected, result);
     }
   }

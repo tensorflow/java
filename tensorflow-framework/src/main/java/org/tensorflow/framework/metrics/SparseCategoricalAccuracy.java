@@ -70,26 +70,24 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
   /**
    * Creates a SparseCategoricalAccuracy metric, using name of {@link Class#getSimpleName()}.
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type The data type for the metric result
    */
-  public SparseCategoricalAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  public SparseCategoricalAccuracy(long seed, Class<T> type) {
+    this(null, seed, type);
   }
 
   /**
    * Creates a SparseCategoricalAccuracy metric.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null use {@link Class#getSimpleName()}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type of the metric result.
    */
-  public SparseCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public SparseCategoricalAccuracy(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     super.setLoss(this);
   }
 
@@ -102,8 +100,8 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     Shape predShape = predictions.asOutput().shape();
@@ -124,6 +122,6 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
             getResultType());
 
     Equal equals = getTF().math.equal(tLabels, argMaxPred);
-    return getTF().dtypes.cast(equals, getResultType());
+    return cast(getTF(), equals, getResultType());
   }
 }

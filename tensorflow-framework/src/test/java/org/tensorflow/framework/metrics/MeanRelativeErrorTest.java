@@ -14,15 +14,18 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
+import org.tensorflow.ndarray.DoubleNdArray;
+import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
+import org.tensorflow.types.TFloat64;
 import org.tensorflow.types.TInt32;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class MeanRelativeErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -36,13 +39,11 @@ public class MeanRelativeErrorTest {
       Operand<TFloat32> predictions = tf.constant(predArray);
       Operand<TFloat32> labels = tf.constant(trueArray);
 
-      MeanRelativeError<TFloat32> instance =
-          new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      session.run(tf.init());
-      Op update = instance.updateState(labels, predictions, null);
+      MeanRelativeError<TFloat32> instance = new MeanRelativeError<>(labels, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expected_result = 1.25;
       session.evaluate(expected_result, result);
@@ -61,13 +62,11 @@ public class MeanRelativeErrorTest {
       Operand<TFloat32> labels = tf.constant(trueArray);
       Operand<TFloat32> sampleWeight = tf.constant(sampleWeightArray);
 
-      MeanRelativeError<TFloat32> instance =
-          new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      session.run(tf.init());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      MeanRelativeError<TFloat32> instance = new MeanRelativeError<>(labels, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expectedResult = 1.3;
       session.evaluate(expectedResult, result);
@@ -86,15 +85,39 @@ public class MeanRelativeErrorTest {
 
       MeanRelativeError<TFloat32> instance =
           new MeanRelativeError<>(
-              tf, cast(tf, tf.zerosLike(labels), TFloat32.class), 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      session.run(tf.init());
-      Op update = instance.updateState(labels, predictions, null);
+              cast(tf, tf.zerosLike(labels), TFloat32.class), 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expectedResult = 0;
       session.evaluate(expectedResult, result);
+    }
+  }
+
+  @Test
+  public void testInitTF() {
+    try (TestSession session = TestSession.createTestSession(tfMode)) {
+      Ops tf = session.getTF();
+
+      double[][] predArray = new double[][] {{2, 4, 6, 8}};
+      double[][] trueArray = new double[][] {{1, 3, 2, 3}};
+      Operand<TFloat64> predictions = tf.constant(predArray);
+      Operand<TFloat64> labels = tf.constant(trueArray);
+
+      DoubleNdArray normalizer = StdArrays.ndCopyOf(trueArray);
+
+      MeanRelativeError<TFloat64> instance =
+          new MeanRelativeError<>("testInitTF", normalizer, 1001L, TFloat64.class);
+      instance.init(tf);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
+      session.run(update);
+      Operand<TFloat64> result = instance.result(tf);
+
+      double expected_result = 1.25;
+      session.evaluate(expected_result, result);
     }
   }
 }
