@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.framework.metrics.impl.Reduce;
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -52,31 +51,5 @@ public class Sum<T extends TNumber> extends Reduce<T> {
    */
   public Sum(String name, long seed, Class<T> type) {
     super(name, MetricReduction.SUM, seed, type);
-  }
-
-  /**
-   * Creates a Sum metric with a name of {@link Class#getSimpleName()}
-   *
-   * @param tf The TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public Sum(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
-  }
-
-  /**
-   * Creates a Sum metric.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric instance. If null, defaults to {@link Class#getSimpleName()}
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public Sum(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
   }
 }

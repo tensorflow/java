@@ -93,12 +93,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
   /** Default Fuzz factor. */
   public static final float EPSILON = 1e-7f;
 
+  /** Name for the true positives variable */
   public static final String TRUE_POSITIVES = "TRUE_POSITIVES";
+  /** Name for the false positives variable */
   public static final String FALSE_POSITIVES = "FALSE_POSITIVES";
+  /** Name for the true negatives variable */
   public static final String TRUE_NEGATIVES = "TRUE_NEGATIVES";
+  /** Name for the false negatives variable */
   public static final String FALSE_NEGATIVES = "FALSE_NEGATIVES";
+  /** The default number of thresholds if thresholds are not provided */
   public static final int DEFAULT_NUM_THRESHOLDS = 200;
-  public static final String DEFAULT_NAME = "auc";
 
   private final int numThresholds;
   private final AUCCurve curve;
@@ -110,7 +114,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
   private final String trueNegativesName;
   private final String falseNegativesName;
   private final Map<ConfusionMatrixEnum, Assign<T>> initializers = new HashMap<>();
-  private final Class<T> type;
 
   /** The size of the label dimension. */
   private Integer numLabels;
@@ -152,16 +155,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
   private boolean initialized;
 
   /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link #DEFAULT_NUM_THRESHOLDS} for the numThresholds, {@link AUCCurve#ROC} for the curve type,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
+   * Creates an AUC (Area under the curve) metric using {@link Class#getSimpleName()} for the metric
+   * name, {@link #DEFAULT_NUM_THRESHOLDS} for the numThresholds, {@link AUCCurve#ROC} for the curve
+   * type, {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for
+   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(long seed, Class<T> type) {
+  public AUC(long seed, Class<T> resultType) {
     this(
         null,
         DEFAULT_NUM_THRESHOLDS,
@@ -171,7 +174,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -180,12 +183,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds, {@code
    * false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(String name, long seed, Class<T> type) {
+  public AUC(String name, long seed, Class<T> resultType) {
     this(
         name,
         DEFAULT_NUM_THRESHOLDS,
@@ -195,12 +198,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
+   * Creates an AUC (Area under the curve) metric using {@link Class#getSimpleName()} for the metric
+   * name, {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
    * summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code null}
    * for labelWeights.
    *
@@ -208,9 +211,9 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     must be &gt; 1.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(int numThresholds, long seed, Class<T> type) {
+  public AUC(int numThresholds, long seed, Class<T> resultType) {
     this(
         null,
         numThresholds,
@@ -220,12 +223,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
+   * Creates an AUC (Area under the curve) metric using {@link Class#getSimpleName()} for the metric
+   * name, {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
    * summation method, {@code null} for numThresholds, {@code false} for multiLabel, and {@code
    * null} for labelWeights.
    *
@@ -233,9 +236,9 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(float[] thresholds, long seed, Class<T> type) {
+  public AUC(float[] thresholds, long seed, Class<T> resultType) {
     this(
         null,
         DEFAULT_NUM_THRESHOLDS,
@@ -245,7 +248,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -253,14 +256,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
    * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(String name, int numThresholds, long seed, Class<T> type) {
+  public AUC(String name, int numThresholds, long seed, Class<T> resultType) {
     this(
         name,
         numThresholds,
@@ -270,7 +273,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -279,14 +282,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * method, {@link #DEFAULT_NUM_THRESHOLDS} num thresholds, {@code false} for multiLabel, and
    * {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(String name, float[] thresholds, long seed, Class<T> type) {
+  public AUC(String name, float[] thresholds, long seed, Class<T> resultType) {
     this(
         name,
         DEFAULT_NUM_THRESHOLDS,
@@ -296,7 +299,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -304,16 +307,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * the summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code
    * null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(String name, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(String name, int numThresholds, AUCCurve curve, long seed, Class<T> resultType) {
     this(
         name,
         numThresholds,
@@ -323,7 +326,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -331,16 +334,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * AUCSummationMethod#INTERPOLATION} for the summation method, {@link #DEFAULT_NUM_THRESHOLDS} num
    * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(String name, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(String name, float[] thresholds, AUCCurve curve, long seed, Class<T> resultType) {
     this(
         name,
         DEFAULT_NUM_THRESHOLDS,
@@ -350,13 +353,13 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
+   * Creates an AUC (Area under the curve) metric using {@link Class#getSimpleName()} for the metric
+   * name, {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for
+   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
@@ -364,9 +367,9 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(int numThresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(int numThresholds, AUCCurve curve, long seed, Class<T> resultType) {
     this(
         null,
         numThresholds,
@@ -376,7 +379,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
@@ -390,9 +393,9 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     AUCCurve#PR} for the Precision-Recall-curve.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
-  public AUC(float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(float[] thresholds, AUCCurve curve, long seed, Class<T> resultType) {
     this(
         null,
         DEFAULT_NUM_THRESHOLDS,
@@ -402,12 +405,13 @@ public class AUC<T extends TNumber> extends Metric<T> {
         false,
         null,
         seed,
-        type);
+        resultType);
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric. using {@link #DEFAULT_NAME} for the metric name,,
-   * {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
+   * Creates an AUC (Area under the curve) metric. using {@link Class#getSimpleName()} for the
+   * metric name,, {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for
+   * labelWeights.
    *
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
@@ -416,20 +420,20 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param summationMethod Specifies the Riemann summation method used
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
   public AUC(
       int numThresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
-      Class<T> type) {
-    this(null, numThresholds, curve, summationMethod, null, false, null, seed, type);
+      Class<T> resultType) {
+    this(null, numThresholds, curve, summationMethod, null, false, null, seed, resultType);
   }
 
   /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@code null} for numThresholds, {@code false} for multiLabel, and {@code null} for
+   * Creates an AUC (Area under the curve) metric using {@link Class#getSimpleName()} for the metric
+   * name, {@code null} for numThresholds, {@code false} for multiLabel, and {@code null} for
    * labelWeights.
    *
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
@@ -439,22 +443,31 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param summationMethod Specifies the Riemann summation method used
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
   public AUC(
       float[] thresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
-      Class<T> type) {
-    this(null, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
+      Class<T> resultType) {
+    this(
+        null,
+        DEFAULT_NUM_THRESHOLDS,
+        curve,
+        summationMethod,
+        thresholds,
+        false,
+        null,
+        seed,
+        resultType);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@code null} for thresholds, {@code false}
    * for multiLabel, and {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -462,7 +475,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param summationMethod Specifies the Riemann summation method used,
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
   public AUC(
       String name,
@@ -470,15 +483,15 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
-      Class<T> type) {
-    this(name, numThresholds, curve, summationMethod, null, false, null, seed, type);
+      Class<T> resultType) {
+    this(name, numThresholds, curve, summationMethod, null, false, null, seed, resultType);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@code null} for the numThresholds, {@code
    * false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
+   * @param name the name of the metric, if {@code null} defaults to {@link Class#getSimpleName()}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -486,7 +499,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param summationMethod Specifies the Riemann summation method used.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    */
   public AUC(
       String name,
@@ -494,14 +507,23 @@ public class AUC<T extends TNumber> extends Metric<T> {
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
-      Class<T> type) {
-    this(name, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
+      Class<T> resultType) {
+    this(
+        name,
+        DEFAULT_NUM_THRESHOLDS,
+        curve,
+        summationMethod,
+        thresholds,
+        false,
+        null,
+        seed,
+        resultType);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric.
    *
-   * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
+   * @param name the name of the metric, if name is null then use {@link Class#getSimpleName()}.
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. This
    *     includes the bracketing 0 and 1 thresholds, so the value must be &ge; 2.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -522,7 +544,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     individual label predictions in computing the confusion matrix on the flattened data.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
+   * @param resultType the data type for the metric result and the confusion matrix variables.
    * @throws IllegalArgumentException if numThresholds is less than 2 and thresholds is null, or if
    *     a threshold value is less than 0 or greater than 1.
    */
@@ -535,15 +557,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
       boolean multiLabel,
       Operand<T> labelWeights,
       long seed,
-      Class<T> type) {
-    super(name == null ? DEFAULT_NAME : name, seed);
+      Class<T> resultType) {
+    super(name, seed, resultType);
     truePositivesName = getVariableName(TRUE_POSITIVES);
     falsePositivesName = getVariableName(FALSE_POSITIVES);
     trueNegativesName = getVariableName(TRUE_NEGATIVES);
     falseNegativesName = getVariableName(FALSE_NEGATIVES);
     this.curve = curve;
     this.summationMethod = summationMethod;
-    this.type = type;
 
     this.multiLabel = multiLabel;
 
@@ -586,476 +607,31 @@ public class AUC<T extends TNumber> extends Metric<T> {
     }
   }
 
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link #DEFAULT_NUM_THRESHOLDS} for the numThresholds, {@link AUCCurve#ROC} for the curve type,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, long seed, Class<T> type) {
-    this(
-        tf,
-        null,
-        DEFAULT_NUM_THRESHOLDS,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NUM_THRESHOLDS} for the
-   * numThresholds, {@link AUCCurve#ROC} for the curve type, {@link
-   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds, {@code
-   * false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, String name, long seed, Class<T> type) {
-    this(
-        tf,
-        name,
-        DEFAULT_NUM_THRESHOLDS,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
-   * summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code null}
-   * for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, int numThresholds, long seed, Class<T> type) {
-    this(
-        tf,
-        null,
-        numThresholds,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the
-   * summation method, {@code null} for numThresholds, {@code false} for multiLabel, and {@code
-   * null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, float[] thresholds, long seed, Class<T> type) {
-    this(
-        tf,
-        null,
-        DEFAULT_NUM_THRESHOLDS,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric. using {@link AUCCurve#ROC} for the curve type,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, String name, int numThresholds, long seed, Class<T> type) {
-    this(
-        tf,
-        name,
-        numThresholds,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@code null} for numThresholds, {@link
-   * AUCCurve#ROC} for the curve type, {@link AUCSummationMethod#INTERPOLATION} for the summation
-   * method, {@link #DEFAULT_NUM_THRESHOLDS} num thresholds, {@code false} for multiLabel, and
-   * {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, String name, float[] thresholds, long seed, Class<T> type) {
-    this(
-        tf,
-        name,
-        DEFAULT_NUM_THRESHOLDS,
-        AUCCurve.ROC,
-        AUCSummationMethod.INTERPOLATION,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link AUCSummationMethod#INTERPOLATION} for
-   * the summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code
-   * null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, String name, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
-    this(
-        tf,
-        name,
-        numThresholds,
-        curve,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@code null} for numThresholds, {@link
-   * AUCSummationMethod#INTERPOLATION} for the summation method, {@link #DEFAULT_NUM_THRESHOLDS} num
-   * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, String name, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
-    this(
-        tf,
-        name,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        AUCSummationMethod.INTERPOLATION,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
-   * {@code false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
-    this(
-        tf,
-        null,
-        numThresholds,
-        curve,
-        AUCSummationMethod.INTERPOLATION,
-        null,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@code null} for numThresholds, {@link
-   * AUCSummationMethod#INTERPOLATION} for the summation method, {@code false} for multiLabel, and
-   * {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(Ops tf, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
-    this(
-        tf,
-        null,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        AUCSummationMethod.INTERPOLATION,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric. using {@link #DEFAULT_NAME} for the metric name,,
-   * {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param summationMethod Specifies the Riemann summation method used
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(
-      Ops tf,
-      int numThresholds,
-      AUCCurve curve,
-      AUCSummationMethod summationMethod,
-      long seed,
-      Class<T> type) {
-    this(tf, null, numThresholds, curve, summationMethod, null, false, null, seed, type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
-   * {@code null} for numThresholds, {@code false} for multiLabel, and {@code null} for
-   * labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param summationMethod Specifies the Riemann summation method used
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(
-      Ops tf,
-      float[] thresholds,
-      AUCCurve curve,
-      AUCSummationMethod summationMethod,
-      long seed,
-      Class<T> type) {
-    this(
-        tf,
-        null,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        summationMethod,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric. using {@code null} for thresholds, {@code false}
-   * for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
-   *     must be &gt; 1.
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param summationMethod Specifies the Riemann summation method used,
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(
-      Ops tf,
-      String name,
-      int numThresholds,
-      AUCCurve curve,
-      AUCSummationMethod summationMethod,
-      long seed,
-      Class<T> type) {
-    this(tf, name, numThresholds, curve, summationMethod, null, false, null, seed, type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric. using {@code null} for the numThresholds, {@code
-   * false} for multiLabel, and {@code null} for labelWeights.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1].
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param summationMethod Specifies the Riemann summation method used.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   */
-  public AUC(
-      Ops tf,
-      String name,
-      float[] thresholds,
-      AUCCurve curve,
-      AUCSummationMethod summationMethod,
-      long seed,
-      Class<T> type) {
-    this(
-        tf,
-        name,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        summationMethod,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
-  }
-
-  /**
-   * Creates an AUC (Area under the curve) metric.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
-   * @param numThresholds the number of thresholds to use when discretizing the roc curve. This
-   *     includes the bracketing 0 and 1 thresholds, so the value must be &ge; 2.
-   * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
-   *     AUCCurve#PR} for the Precision-Recall-curve.
-   * @param summationMethod Specifies the Riemann summation method used
-   * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
-   *     the numThresholds parameter is ignored. Values should be in [0, 1]. This method
-   *     automatically brackets the provided {@code thresholds} with a (-{@link #EPSILON}) below and
-   *     a (1 + {@link #EPSILON}) above.
-   * @param multiLabel boolean indicating whether multilabel data should be treated as such, wherein
-   *     AUC is computed separately for each label and then averaged across labels, or (when false)
-   *     if the data should be flattened into a single label before AUC computation. In the latter
-   *     case, when multilabel data is passed to AUC, each label-prediction pair is treated as an
-   *     individual data point. Should be set to {@code false} for multi-class data.
-   * @param labelWeights non-negative weights used to compute AUCs for multilabel data. When {@code
-   *     multiLabel} is true, the weights are applied to the individual label AUCs when they are
-   *     averaged to produce the multi-label AUC. When it's false, they are used to weight the
-   *     individual label predictions in computing the confusion matrix on the flattened data.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the confusion matrix variables.
-   * @throws IllegalArgumentException if numThresholds is less than 2 and thresholds is null, or if
-   *     a threshold value is less than 0 or greater than 1.
-   */
-  public AUC(
-      Ops tf,
-      String name,
-      int numThresholds,
-      AUCCurve curve,
-      AUCSummationMethod summationMethod,
-      float[] thresholds,
-      boolean multiLabel,
-      Operand<T> labelWeights,
-      long seed,
-      Class<T> type) {
-    this(
-        name,
-        numThresholds,
-        curve,
-        summationMethod,
-        thresholds,
-        multiLabel,
-        labelWeights,
-        seed,
-        type);
-    init(tf);
-  }
-
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-    setTensorFlowOps(tf);
-    if (labelWeights != null) {
-      // assert that labelWeights are non-negative.
-      Op checks =
-          getTF()
-              .withSubScope("AUC")
-              .assertThat(
-                  getTF()
-                      .math
-                      .greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
-                  Collections.singletonList(
-                      tf.constant("All values of labelWeights must be non-negative.")));
+    if (this.tf == null) {
+      setTensorFlowOps(tf);
+      if (labelWeights != null) {
+        // assert that labelWeights are non-negative.
+        Op checks =
+            getTF()
+                .withSubScope("AUC")
+                .assertThat(
+                    getTF()
+                        .math
+                        .greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
+                    Collections.singletonList(
+                        tf.constant("All values of labelWeights must be non-negative.")));
 
-      Ops ltf =
-          tf.withSubScope("updateState").withControlDependencies(Collections.singletonList(checks));
+        Ops ltf =
+            tf.withSubScope("updateState")
+                .withControlDependencies(Collections.singletonList(checks));
 
-      this.labelWeights = ltf.identity(this.labelWeights);
+        this.labelWeights = ltf.identity(this.labelWeights);
+      }
+      applyOnInit();
     }
-    applyOnInit();
     return getTF();
   }
 
@@ -1090,23 +666,27 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     // Create metric variables
     Zeros<T> zeros = new Zeros<>();
-    Operand<T> zero = zeros.call(tf, tf.constant(variableShape), type);
+    Operand<T> zero = zeros.call(tf, tf.constant(variableShape), getResultType());
     if (truePositives == null) {
+      variablesNeedAssign = true;
       truePositives = tf.withName(getTruePositivesName()).variable(zero);
       initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf.assign(truePositives, zero));
     }
 
     if (falsePositives == null) {
+      variablesNeedAssign = true;
       falsePositives = tf.withName(getFalsePositivesName()).variable(zero);
       initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, tf.assign(falsePositives, zero));
     }
 
     if (trueNegatives == null) {
+      variablesNeedAssign = true;
       trueNegatives = tf.withName(getTrueNegativesName()).variable(zero);
       initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, tf.assign(trueNegatives, zero));
     }
 
     if (falseNegatives == null) {
+      variablesNeedAssign = true;
       falseNegatives = tf.withName(getFalseNegativesName()).variable(zero);
       initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf.assign(falseNegatives, zero));
     }
@@ -1130,13 +710,15 @@ public class AUC<T extends TNumber> extends Metric<T> {
   @Override
   @SuppressWarnings("unchecked")
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, type);
-    Operand<T> tPredictions = cast(tf, predictions, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    Operand<T> tSampleWeights =
+        sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
     List<Op> updateOperations = new ArrayList<>();
     Map<ConfusionMatrixEnum, Assign<T>> varInitializers = Collections.EMPTY_MAP;
     if (!initialized) {
@@ -1158,7 +740,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
         symbols.add(new SymbolicShape<>(getLabelWeights(), "L"));
       }
       updateOperations.addAll(
-          MetricsHelper.assertShapes(tf, symbols, "Number of labels is not consistent."));
+          MetricsHelper.assertShapes(getTF(), symbols, "Number of labels is not consistent."));
     }
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
@@ -1172,17 +754,19 @@ public class AUC<T extends TNumber> extends Metric<T> {
     // handled in AUC.result
     updateOperations.addAll(
         MetricsHelper.updateConfusionMatrixVariables(
-            tf,
+            getTF(),
+            variablesNeedAssign,
             confusionMatrix,
             varInitializers,
             tLabels,
             tPredictions,
-            tf.constant(thresholds),
+            getTF().constant(thresholds),
             null,
             null,
             tSampleWeights,
             isMultiLabel(),
             isMultiLabel() ? null : getLabelWeights()));
+    variablesNeedAssign = false;
     return updateOperations;
   }
 
@@ -1321,8 +905,15 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = checkTF();
+  public Operand<T> result(Ops tf) {
+    init(tf);
+    if (truePositives == null
+        || falsePositives == null
+        || trueNegatives == null
+        || falseNegatives == null
+        || variablesNeedAssign) {
+      return getResultZero();
+    }
     if (getCurve() == AUCCurve.PR && getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
       // This use case is different and is handled separately.
       return interpolatePRAuc();
@@ -1330,15 +921,16 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     Operand<T> x;
     Operand<T> y;
-    Operand<T> recall = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
+    Operand<T> recall =
+        getTF().math.divNoNan(truePositives, getTF().math.add(truePositives, falseNegatives));
 
     switch (getCurve()) {
       case ROC:
-        x = tf.math.divNoNan(falsePositives, tf.math.add(falsePositives, trueNegatives));
+        x = getTF().math.divNoNan(falsePositives, getTF().math.add(falsePositives, trueNegatives));
         y = recall;
         break;
       case PR:
-        y = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
+        y = getTF().math.divNoNan(truePositives, getTF().math.add(truePositives, falsePositives));
         x = recall;
         break;
       default:
@@ -1354,13 +946,18 @@ public class AUC<T extends TNumber> extends Metric<T> {
     Operand<T> heights;
     switch (getSummationMethod()) {
       case INTERPOLATION:
-        heights = tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
+        heights =
+            getTF()
+                .math
+                .div(
+                    getTF().math.add(ySlice1, ySlice2),
+                    cast(getTF(), getTF().constant(2), y.type()));
         break;
       case MINORING:
-        heights = tf.math.minimum(ySlice1, ySlice2);
+        heights = getTF().math.minimum(ySlice1, ySlice2);
         break;
       case MAJORING:
-        heights = tf.math.maximum(ySlice1, ySlice2);
+        heights = getTF().math.maximum(ySlice1, ySlice2);
         break;
       default:
         throw new IllegalArgumentException(
@@ -1369,112 +966,182 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     if (isMultiLabel()) {
       Operand<T> riemannTerms =
-          tf.math.mul(tf.math.sub(slice(x, 0, getNumThresholds() - 1), slice(x, 1, -1)), heights);
-      Operand<T> byLabelAuc = tf.reduceSum(riemannTerms, tf.constant(0));
+          getTF()
+              .math
+              .mul(getTF().math.sub(slice(x, 0, getNumThresholds() - 1), slice(x, 1, -1)), heights);
+      Operand<T> byLabelAuc = getTF().reduceSum(riemannTerms, getTF().constant(0));
 
       if (getLabelWeights() == null) {
-        return MetricsHelper.mean(tf, byLabelAuc);
+        return MetricsHelper.mean(getTF(), byLabelAuc);
       } else {
         // Weighted average of the label AUCs.
-        return tf.math.divNoNan(
-            tf.reduceSum(
-                tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, getLabelWeights())),
-            tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights())));
+        return getTF()
+            .math
+            .divNoNan(
+                getTF()
+                    .reduceSum(
+                        getTF().math.mul(byLabelAuc, getLabelWeights()),
+                        allAxes(getTF(), getLabelWeights())),
+                getTF().reduceSum(getLabelWeights(), allAxes(getTF(), getLabelWeights())));
       }
 
     } else {
       Operand<T> slice1 = slice(x, 0, getNumThresholds() - 1);
       Operand<T> slice2 = slice(x, 1, -1);
-      Operand<T> sub = tf.math.sub(slice1, slice2);
-      Operand<T> operand = tf.math.mul(sub, heights);
-      return tf.reduceSum(operand, allAxes(tf, operand));
+      Operand<T> sub = getTF().math.sub(slice1, slice2);
+      Operand<T> operand = getTF().math.mul(sub, heights);
+      return getTF().reduceSum(operand, allAxes(tf, operand));
     }
   }
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    checkTF();
+  public Op resetStates(Ops tf) {
+    init(tf);
     List<Op> updateOperations = new ArrayList<>(initializers.values());
     return checkTF().withSubScope("resetStates").withControlDependencies(updateOperations).noOp();
   }
 
-  /** @return the numThresholds */
+  /**
+   * Gets the numThresholds
+   *
+   * @return the numThresholds
+   */
   public int getNumThresholds() {
     return numThresholds;
   }
 
-  /** @return the curve */
+  /**
+   * Gets the AUC curve
+   *
+   * @return the AUC curve
+   */
   public AUCCurve getCurve() {
     return curve;
   }
 
-  /** @return the summationMethod */
+  /**
+   * Gets the summationMethod
+   *
+   * @return the summationMethod
+   */
   public AUCSummationMethod getSummationMethod() {
     return summationMethod;
   }
 
-  /** @return the thresholds */
+  /**
+   * Gets the thresholds
+   *
+   * @return the thresholds
+   */
   public float[] getThresholds() {
     return thresholds;
   }
 
-  /** @return the multiLabel */
+  /**
+   * Gets the multiLabel indicator
+   *
+   * @return the multiLabel indicator
+   */
   public boolean isMultiLabel() {
     return multiLabel;
   }
 
-  /** @return the numLabels */
+  /**
+   * Gets the number of Labels
+   *
+   * @return the numLabels
+   */
   public Integer getNumLabels() {
     return numLabels;
   }
 
-  /** @param numLabels the numLabels to set */
+  /**
+   * Set the number of Labels
+   *
+   * @param numLabels the numLabels to set
+   */
   public void setNumLabels(Integer numLabels) {
     this.numLabels = numLabels;
   }
 
-  /** @return the labelWeights */
+  /**
+   * Gets the labelWeights
+   *
+   * @return the labelWeights
+   */
   public Operand<T> getLabelWeights() {
     return labelWeights;
   }
 
-  /** @return the truePositives */
+  /**
+   * Gets the truePositives variable
+   *
+   * @return the truePositives variable
+   */
   public Variable<T> getTruePositives() {
     return truePositives;
   }
 
-  /** @return the falsePositives */
+  /**
+   * Gets the falsePositives variable
+   *
+   * @return the falsePositives variable
+   */
   public Variable<T> getFalsePositives() {
     return falsePositives;
   }
 
-  /** @return the trueNegatives */
+  /**
+   * Gets the trueNegatives variable
+   *
+   * @return the trueNegatives variable
+   */
   public Variable<T> getTrueNegatives() {
     return trueNegatives;
   }
 
-  /** @return the falseNegatives */
+  /**
+   * Gets the falseNegatives variable
+   *
+   * @return the falseNegatives variable
+   */
   public Variable<T> getFalseNegatives() {
     return falseNegatives;
   }
 
-  /** @return the truePositivesName */
+  /**
+   * Gets the truePositives variable name
+   *
+   * @return the truePositivesName
+   */
   public String getTruePositivesName() {
     return truePositivesName;
   }
 
-  /** @return the falsePositivesName */
+  /**
+   * Gets the falsePositives variable name
+   *
+   * @return the falsePositivesName
+   */
   public String getFalsePositivesName() {
     return falsePositivesName;
   }
 
-  /** @return the trueNegativesName */
+  /**
+   * Gets the trueNegatives variable name
+   *
+   * @return the trueNegativesName
+   */
   public String getTrueNegativesName() {
     return trueNegativesName;
   }
 
-  /** @return the falseNegativesName */
+  /**
+   * Gets the falseNegative variable name
+   *
+   * @return the falseNegativesName
+   */
   public String getFalseNegativesName() {
     return falseNegativesName;
   }

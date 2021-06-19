@@ -39,8 +39,7 @@ public class SpecificityAtSensitivityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SpecificityAtSensitivity<TFloat32> instance =
-          new SpecificityAtSensitivity<>(tf, 0.7f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SpecificityAtSensitivity<>(0.7f, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions =
           tf.random.randomUniform(
@@ -50,13 +49,13 @@ public class SpecificityAtSensitivityTest {
               tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
 
       // instance.setDebug(session.getGraphSession());
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
 
       for (int i = 0; i < 10; i++) session.run(update);
 
-      Operand<TFloat32> initialSpecificity = instance.result();
+      Operand<TFloat32> initialSpecificity = instance.result(tf);
 
-      for (int i = 0; i < 10; i++) session.evaluate(initialSpecificity, instance.result());
+      for (int i = 0; i < 10; i++) session.evaluate(initialSpecificity, instance.result(tf));
     }
   }
 
@@ -76,8 +75,8 @@ public class SpecificityAtSensitivityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SpecificityAtSensitivity<TFloat32> instance =
-          new SpecificityAtSensitivity<>(tf, 0.7f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SpecificityAtSensitivity<>(0.7f, 1001L, TFloat32.class);
+
       int[][] predArray = generateRandomArray(100, 1);
       int[][] trueArray = new int[100][1]; // 100,1
       System.arraycopy(predArray, 0, trueArray, 0, predArray.length);
@@ -85,10 +84,10 @@ public class SpecificityAtSensitivityTest {
       Operand<TInt32> labels = tf.constant(trueArray);
       labels = tf.math.mul(labels, tf.constant(2));
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1f, precision);
     }
@@ -99,16 +98,16 @@ public class SpecificityAtSensitivityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SpecificityAtSensitivity<TFloat32> instance =
-          new SpecificityAtSensitivity<>(tf, 0.8f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SpecificityAtSensitivity<>(0.8f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions =
           tf.constant(new float[] {0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.1f, 0.45f, 0.5f, 0.8f, 0.9f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 0, 0, 0, 1, 1, 1, 1, 1});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(0.4f, precision);
     }
@@ -119,17 +118,17 @@ public class SpecificityAtSensitivityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SpecificityAtSensitivity<TFloat64> instance =
-          new SpecificityAtSensitivity<>(tf, 0.4f, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new SpecificityAtSensitivity<>(0.4f, 1001L, TFloat64.class);
+
       Operand<TFloat32> predictions =
           tf.constant(
               new float[] {0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.01f, 0.02f, 0.25f, 0.26f, 0.26f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 0, 0, 0, 1, 1, 1, 1, 1});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
 
       session.evaluate(0.6f, precision);
     }
@@ -140,18 +139,18 @@ public class SpecificityAtSensitivityTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SpecificityAtSensitivity<TFloat32> instance =
-          new SpecificityAtSensitivity<>(tf, 0.4f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SpecificityAtSensitivity<>(0.4f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions =
           tf.constant(
               new float[] {0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.01f, 0.02f, 0.25f, 0.26f, 0.26f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 0, 0, 0, 1, 1, 1, 1, 1});
       Operand<TFloat32> sampleWeight = tf.constant(new float[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
 
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(0.4f, precision);
     }
@@ -161,24 +160,14 @@ public class SpecificityAtSensitivityTest {
   public void testInvalidSensitivity() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Ops tf = session.getTF();
-            new SpecificityAtSensitivity<>(tf, -1f, 1001L, TFloat32.class);
-          }
-        });
+        () -> new SpecificityAtSensitivity<>(-1f, 1001L, TFloat32.class));
   }
 
   @Test
   public void testInvalidNumThresholds() {
     assertThrows(
         IllegalArgumentException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Ops tf = session.getTF();
-            new SpecificityAtSensitivity<>(tf, 0.4f, -1, 1001L, TFloat32.class);
-          }
-        });
+        () -> new SpecificityAtSensitivity<>(0.4f, -1, 1001L, TFloat32.class));
   }
 
   @Test
@@ -188,32 +177,18 @@ public class SpecificityAtSensitivityTest {
       SpecificityAtSensitivity<TFloat64> instance =
           new SpecificityAtSensitivity<>(0.4f, 1001L, TFloat64.class);
       instance.init(tf);
-      session.run(instance.resetStates());
+
       Operand<TFloat32> predictions =
           tf.constant(
               new float[] {0.0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.01f, 0.02f, 0.25f, 0.26f, 0.26f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 0, 0, 0, 1, 1, 1, 1, 1});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
 
       session.evaluate(0.6f, precision);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            SpecificityAtSensitivity<TFloat64> instance =
-                new SpecificityAtSensitivity<>(0.4f, 1001L, TFloat64.class);
-            session.run(instance.resetStates());
-            instance.result();
-          }
-        });
   }
 }

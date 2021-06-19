@@ -55,7 +55,7 @@ public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificity
    *     [0-1].
    */
   public RecallAtPrecision(float precision, long seed, Class<T> type) {
-    this((String) null, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
+    this(null, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
@@ -87,7 +87,7 @@ public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificity
    *     [0-1].
    */
   public RecallAtPrecision(float precision, int numThresholds, long seed, Class<T> type) {
-    this((String) null, precision, numThresholds, seed, type);
+    this(null, precision, numThresholds, seed, type);
   }
 
   /**
@@ -111,95 +111,39 @@ public class RecallAtPrecision<T extends TNumber> extends SensitivitySpecificity
     this.precision = precision;
   }
 
-  /**
-   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()} and {@link
-   * #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
-   *
-   * @param tf The TensorFlow Ops
-   * @param precision the precision. A scalar value in range [0, 1]
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
-   *     [0-1].
-   */
-  public RecallAtPrecision(Ops tf, float precision, long seed, Class<T> type) {
-    this(tf, null, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
-  }
-
-  /**
-   * Creates a PrecisionRecall metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number of
-   * thresholds
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric. If null, defaults to {@link Class#getSimpleName()}
-   * @param precision the precision. A scalar value in range [0, 1]
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
-   *     [0-1].
-   */
-  public RecallAtPrecision(Ops tf, String name, float precision, long seed, Class<T> type) {
-    this(tf, name, precision, DEFAULT_NUM_THRESHOLDS, seed, type);
-  }
-
-  /**
-   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
-   *
-   * @param tf The TensorFlow Ops
-   * @param precision the precision. A scalar value in range [0, 1]
-   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
-   *     recall.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
-   *     [0-1].
-   */
-  public RecallAtPrecision(Ops tf, float precision, int numThresholds, long seed, Class<T> type) {
-    this(tf, null, precision, numThresholds, seed, type);
-  }
-
-  /**
-   * Creates a PrecisionRecall metric.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
-   * @param precision the precision. A scalar value in range [0, 1]
-   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
-   *     recall.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
-   *     [0-1].
-   */
-  public RecallAtPrecision(
-      Ops tf, String name, float precision, int numThresholds, long seed, Class<T> type) {
-    this(name, precision, numThresholds, seed, type);
-    init(tf);
-  }
-
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = getTF();
+  public Operand<T> result(Ops tf) {
+    init(tf);
+    if (truePositives == null
+        || falsePositives == null
+        || trueNegatives == null
+        || falseNegatives == null
+        || variablesNeedAssign) {
+      return getResultZero();
+    }
 
     Operand<T> precisions =
-        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falsePositives));
+        getTF().math.divNoNan(truePositives, getTF().math.add(truePositives, falsePositives));
     Operand<T> recalls =
-        tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
+        getTF().math.divNoNan(truePositives, getTF().math.add(truePositives, falseNegatives));
     Operand<TBool> isFeasible =
-        tf.math.greaterEqual(precisions, cast(tf, tf.constant(precision), getType()));
-    Where feasible = tf.where(isFeasible);
-    Operand<TBool> feasibleExists = tf.math.greater(tf.size(feasible), tf.constant(0));
+        getTF()
+            .math
+            .greaterEqual(precisions, cast(getTF(), getTF().constant(precision), getResultType()));
+    Where feasible = getTF().where(isFeasible);
+    Operand<TBool> feasibleExists =
+        getTF().math.greater(getTF().size(feasible), getTF().constant(0));
 
-    Operand<T> gather = tf.expandDims(tf.gather(recalls, feasible, tf.constant(0)), tf.constant(0));
-    return tf.select(
-        feasibleExists,
-        tf.reduceMax(gather, allAxes(tf, gather)),
-        cast(tf, tf.constant(0), getType()));
+    Operand<T> gather =
+        getTF()
+            .expandDims(
+                getTF().gather(recalls, feasible, getTF().constant(0)), getTF().constant(0));
+    return getTF()
+        .select(
+            feasibleExists,
+            getTF().reduceMax(gather, allAxes(getTF(), gather)),
+            cast(getTF(), getTF().constant(0), getResultType()));
   }
 
   /**

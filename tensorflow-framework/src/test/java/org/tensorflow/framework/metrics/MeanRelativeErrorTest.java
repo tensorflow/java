@@ -14,7 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 import org.junit.jupiter.api.Test;
@@ -40,13 +39,11 @@ public class MeanRelativeErrorTest {
       Operand<TFloat32> predictions = tf.constant(predArray);
       Operand<TFloat32> labels = tf.constant(trueArray);
 
-      MeanRelativeError<TFloat32> instance =
-          new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, null);
+      MeanRelativeError<TFloat32> instance = new MeanRelativeError<>(labels, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expected_result = 1.25;
       session.evaluate(expected_result, result);
@@ -65,13 +62,11 @@ public class MeanRelativeErrorTest {
       Operand<TFloat32> labels = tf.constant(trueArray);
       Operand<TFloat32> sampleWeight = tf.constant(sampleWeightArray);
 
-      MeanRelativeError<TFloat32> instance =
-          new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      MeanRelativeError<TFloat32> instance = new MeanRelativeError<>(labels, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expectedResult = 1.3;
       session.evaluate(expectedResult, result);
@@ -90,11 +85,11 @@ public class MeanRelativeErrorTest {
 
       MeanRelativeError<TFloat32> instance =
           new MeanRelativeError<>(
-              tf, cast(tf, tf.zerosLike(labels), TFloat32.class), 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, null);
+              cast(tf, tf.zerosLike(labels), TFloat32.class), 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
 
       double expectedResult = 0;
       session.evaluate(expectedResult, result);
@@ -116,27 +111,13 @@ public class MeanRelativeErrorTest {
       MeanRelativeError<TFloat64> instance =
           new MeanRelativeError<>("testInitTF", normalizer, 1001L, TFloat64.class);
       instance.init(tf);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, null);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       double expected_result = 1.25;
       session.evaluate(expected_result, result);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            MeanRelativeError<TFloat32> instance =
-                new MeanRelativeError<>(
-                    "testIllegalState", new float[] {0, 0, 0}, 1001L, TFloat32.class);
-            session.run(instance.resetStates());
-          }
-        });
   }
 }

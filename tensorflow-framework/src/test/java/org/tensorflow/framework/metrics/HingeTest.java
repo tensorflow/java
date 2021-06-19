@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -34,18 +32,18 @@ class HingeTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Hinge<TFloat64> instance = new Hinge<>(tf, "Hinge_testUnweighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Hinge<TFloat64> instance = new Hinge<>("Hinge_testUnweighted", 1001L, TFloat64.class);
+
       int[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
       double[] predArray = {-0.3, 0.2, -0.1, 1.6, -0.25, -1., 0.5, 0.6};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
       Operand<TFloat64> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(1.0125, total);
       session.evaluate(2, count);
       session.evaluate(.5062500, result);
@@ -56,8 +54,8 @@ class HingeTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Hinge<TFloat64> instance = new Hinge<>(tf, "Hinge_testWeighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Hinge<TFloat64> instance = new Hinge<>("Hinge_testWeighted", 1001L, TFloat64.class);
+
       int[] trueArray = {
         -1, 1, -1, 1,
         -1, -1, 1, 1
@@ -68,11 +66,11 @@ class HingeTest {
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1.5, 2.});
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(1.7250f, total);
       session.evaluate(3.5, count);
       session.evaluate(.49285714f, result);
@@ -85,32 +83,20 @@ class HingeTest {
       Ops tf = session.getTF();
       Hinge<TFloat64> instance = new Hinge<>("Hinge_testUnweighted", 1001L, TFloat64.class);
       instance.init(tf);
-      session.run(instance.resetStates());
+
       int[] trueArray = {0, 1, 0, 1, 0, 0, 1, 1};
       double[] predArray = {-0.3, 0.2, -0.1, 1.6, -0.25, -1., 0.5, 0.6};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 4)));
       Operand<TFloat64> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(2, 4)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(1.0125, total);
       session.evaluate(2, count);
       session.evaluate(.5062500, result);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Hinge<TFloat64> instance = new Hinge<>("Hinge_testWeighted", 1001L, TFloat64.class);
-            session.run(instance.resetStates());
-          }
-        });
   }
 }

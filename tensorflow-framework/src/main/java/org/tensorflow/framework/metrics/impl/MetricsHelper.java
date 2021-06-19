@@ -33,6 +33,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Assign;
+import org.tensorflow.op.core.AssignAdd;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.op.core.Rank;
 import org.tensorflow.op.core.Squeeze;
@@ -70,7 +71,7 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param sampleWeights the sample weights.
    * @param values the values to which weights are applied.
-   * @return {@code Operation} with control dependencies to ensure {@code sampleWeight} can be
+   * @return {@code Operation} with control dependencies to ensure {@code sampleWeights} can be
    *     broadcast to {@code values}
    * @param <T> the type of Operand
    * @throws NotBroadcastableException If static checks determine {@code sampleWeights} has an
@@ -310,10 +311,12 @@ public class MetricsHelper {
    * broadcast to the shape of {@code predictions}.
    *
    * @param tf the TensorFlow Ops
+   * @param variablesNeedAssign indicator whether the variable should be set with {@link Assign} or
+   *     {@link AssignAdd}
    * @param variablesToUpdate map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding variables to update as values. If {@code multiLabel}, then the variable
    *     shapes are (T, D), where T is the number of thresholds and D is the number of classes
-   *     (after slicing by {@code classIndex}, if provided). If {@code multiLabels}, then the
+   *     (after slicing by {@code classIndex}, if provided). If {@code multiLabel}, then the
    *     variable shapes are (T).
    * @param varInitializers map with {@link ConfusionMatrixEnum} values as valid keys and
    *     corresponding initializer Operands to for {@code variablesToUpdate}.
@@ -349,6 +352,7 @@ public class MetricsHelper {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public static <T extends TNumber> List<Op> updateConfusionMatrixVariables(
       Ops tf,
+      boolean variablesNeedAssign,
       Map<ConfusionMatrixEnum, Variable<T>> variablesToUpdate,
       Map<ConfusionMatrixEnum, Assign<T>> varInitializers,
       Operand<T> labels,
@@ -599,6 +603,7 @@ public class MetricsHelper {
                 controlOps.add(
                     weightedAssignAdd(
                         tf,
+                        variablesNeedAssign,
                         op[0],
                         op[1],
                         weightsTiledF,
@@ -625,6 +630,7 @@ public class MetricsHelper {
    */
   private static <T extends TNumber> Operand<T> weightedAssignAdd(
       Ops tf,
+      boolean variablesNeedAssign,
       Operand<TBool> labels,
       Operand<TBool> predictions,
       Operand<T> weights,
@@ -641,16 +647,7 @@ public class MetricsHelper {
     // else:
     //   sum across ND, leaving shape (T)
     Operand<T> valueSum = tf.reduceSum(labelAndPred, tf.constant(1));
-    Operand<T> assignAdd;
-    if (initializer != null) {
-      Ops tfc =
-          tf.withSubScope("weightedAssignAdd")
-              .withControlDependencies(Collections.singletonList(initializer));
-      assignAdd = tfc.assignAdd(variable, valueSum);
-    } else {
-      assignAdd = tf.assignAdd(variable, valueSum);
-    }
-    return assignAdd;
+    return variablesNeedAssign ? tf.assign(variable, valueSum) : tf.assignAdd(variable, valueSum);
   }
 
   /**
@@ -724,9 +721,9 @@ public class MetricsHelper {
    *
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
-   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is {@code
-   *     false}, the rank of the tensor is reduced by 1 for each entry in {@code axes }. If {@code
-   *     keepdims} is {@code true}, the reduced dimensions are retained with length 1.
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepDims} is false,
+   *     the rank of the tensor is reduced by 1 for each entry in {@code axes }. If {@code keepDims}
+   *     is true, the reduced dimensions are retained with length 1.
    * @param <T> the type of the operand
    * @return the mean of elements of {@code x}.
    */
@@ -740,9 +737,9 @@ public class MetricsHelper {
    * @param tf the TensorFlow Ops
    * @param x the Operand used to calculate the mean
    * @param axes Axes to compute the mean.
-   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepdims} is {@code
-   *     false}, the rank of the tensor is reduced by 1 for each entry in {@code axes }. If {@code
-   *     keepdims} is {@code true}, the reduced dimensions are retained with length 1.
+   * @param keepDims Indicates whether to keep the dimensions or not. If {@code keepDims} is false,
+   *     the rank of the tensor is reduced by 1 for each entry in {@code axes }. If {@code keepDims}
+   *     is true, the reduced dimensions are retained with length 1.
    * @param <T> the data type of the Operand
    * @return the mean of elements of {@code x}.
    */
@@ -754,6 +751,20 @@ public class MetricsHelper {
     return tf.math.mean(x, axes, Mean.keepDims(keepDims));
   }
 
+  /**
+   * If ragged, it checks the compatibility and then returns the flat_values.
+   *
+   * <p>Note: If two tensors are dense, it does not check their compatibility. Note: Although two
+   * ragged tensors with different ragged ranks could have identical overall rank and dimension
+   * sizes and hence be compatible, we do not support those cases.
+   *
+   * @param tf The TensorFlow Ops
+   * @param labels A list of potentially ragged tensor of the same ragged_rank.
+   * @param predictions A potentially ragged tensor of the same ragged_rank as elements in Values.
+   * @param <V> the data type of the labels
+   * @param <T> the data type of the predictions and results
+   * @return a tuple
+   */
   public static <T extends TNumber, V extends TNumber>
       LossTuple<T> raggedAssertCompatibleAndGetFlatValues(
           Ops tf, Operand<V> labels, Operand<T> predictions) {

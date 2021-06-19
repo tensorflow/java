@@ -42,6 +42,49 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
 
   /**
    * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
+   * labels and predictions using a metric name based on {@link Class#getSimpleName()}.
+   *
+   * <p>Uses a {@link Losses#CHANNELS_LAST} for the channel axis.
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to
+   *     a probability distribution.
+   * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
+   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
+   *     {@code 1}
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CategoricalCrossentropy(
+      boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    this(null, fromLogits, labelSmoothing, Losses.CHANNELS_LAST, seed, type);
+  }
+
+  /**
+   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
+   * labels and predictions using a metric name based on {@link Class#getSimpleName()}.
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
+   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
+   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
+   *     {@code 1}
+   * @param axis Int specifying the channels axis. {@code axis={@link Losses#CHANNELS_LAST}}
+   *     corresponds to data format {@code channels_last}, and {@code axis={@link
+   *     Losses#CHANNELS_FIRST}} corresponds to data format {@code channels_first}.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CategoricalCrossentropy(
+      boolean fromLogits, float labelSmoothing, int axis, long seed, Class<T> type) {
+    this(null, fromLogits, labelSmoothing, axis, seed, type);
+  }
+
+  /**
+   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
    * labels and predictions.
    *
    * <p>Uses a {@link Losses#CHANNELS_LAST} for the channel axis.
@@ -90,60 +133,6 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
   }
 
   /**
-   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
-   * labels and predictions.
-   *
-   * <p>Uses a {@link Losses#CHANNELS_LAST} for the channel axis.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values oras opposed to
-   *     a probability distribution.
-   * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
-   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
-   *     {@code 1}
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
-    this(tf, name, fromLogits, labelSmoothing, Losses.CHANNELS_LAST, seed, type);
-  }
-
-  /**
-   * Creates a CategoricalCrossentropy metric that computes the crossentropy metric between the
-   * labels and predictions.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
-   *     probability distribution.
-   * @param labelSmoothing value used to smooth labels, When &gt; 0, label values are smoothed,
-   *     meaning the confidence on label values are relaxed. e.g. {@code labelSmoothing=0.2} means
-   *     that we will use a value of {@code 0.1} for label {@code 0} and {@code 0.9 } for label
-   *     {@code 1}
-   * @param axis Int specifying the channels axis. {@code axis={@link Losses#CHANNELS_LAST}}
-   *     corresponds to data format {@code channels_last}, and {@code axis={@link
-   *     Losses#CHANNELS_FIRST}} corresponds to data format {@code channels_first}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CategoricalCrossentropy(
-      Ops tf,
-      String name,
-      boolean fromLogits,
-      float labelSmoothing,
-      int axis,
-      long seed,
-      Class<T> type) {
-    this(name, fromLogits, labelSmoothing, axis, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the crossentropy loss between the labels and predictions.
    *
    * @param labels the truth values or labels, of one-hot true targets, same shape as predictions
@@ -152,11 +141,11 @@ public class CategoricalCrossentropy<T extends TNumber> extends MeanMetricWrappe
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     return Losses.categoricalCrossentropy(
-        tf, tLabels, tPredictions, fromLogits, labelSmoothing, axis);
+        getTF(), tLabels, tPredictions, fromLogits, labelSmoothing, axis);
   }
 }

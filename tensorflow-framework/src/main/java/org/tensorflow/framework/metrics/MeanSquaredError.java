@@ -45,6 +45,17 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
 
   /**
+   * Creates a Mean Absolute Error metric using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public MeanSquaredError(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
+
+  /**
    * Creates a Mean Absolute Error metric
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -58,20 +69,6 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
   }
 
   /**
-   * Creates a Mean Absolute Error metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public MeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the mean squared error between the labels and predictions.
    *
    * @param labels the truth values or labels. Must be the same shape as predictions.
@@ -80,10 +77,10 @@ public class MeanSquaredError<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.meanSquaredError(tf, tLabels, tPredictions);
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.meanSquaredError(getTF(), tLabels, tPredictions);
   }
 }

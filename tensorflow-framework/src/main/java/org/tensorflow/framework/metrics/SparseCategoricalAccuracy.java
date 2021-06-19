@@ -75,7 +75,7 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
    * @param type The data type for the metric result
    */
   public SparseCategoricalAccuracy(long seed, Class<T> type) {
-    this((String) null, seed, type);
+    this(null, seed, type);
   }
 
   /**
@@ -92,32 +92,6 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
   }
 
   /**
-   * Creates a SparseCategoricalAccuracy metric, using name of {@link Class#getSimpleName()}.
-   *
-   * @param tf the TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type The data type for the metric result
-   */
-  public SparseCategoricalAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
-  }
-
-  /**
-   * Creates a SparseCategoricalAccuracy metric.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of the metric, if null use {@link Class#getSimpleName()}
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type of the metric result.
-   */
-  public SparseCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Calculates how often predictions matches integer labels.
    *
    * @param labels Integer ground truth values.
@@ -126,10 +100,10 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
     Shape predShape = predictions.asOutput().shape();
     Shape labelsShape = labels.asOutput().shape();
     long predictionsRank = predShape.numDimensions();
@@ -139,12 +113,15 @@ public class SparseCategoricalAccuracy<T extends TNumber> extends MeanMetricWrap
     if (predictionsRank != Shape.UNKNOWN_SIZE
         && labelsRank != Shape.UNKNOWN_SIZE
         && labelsShape.size((int) labelsRank - 1) == 1) {
-      tLabels = tf.squeeze(tLabels, Squeeze.axis(Collections.singletonList(labelsRank - 1L)));
+      tLabels = getTF().squeeze(tLabels, Squeeze.axis(Collections.singletonList(labelsRank - 1L)));
     }
     Operand<T> argMaxPred =
-        cast(tf, tf.math.argMax(tPredictions, tf.constant(-1L), TInt64.class), getResultType());
+        cast(
+            getTF(),
+            getTF().math.argMax(tPredictions, getTF().constant(-1L), TInt64.class),
+            getResultType());
 
-    Equal equals = tf.math.equal(tLabels, argMaxPred);
-    return tf.dtypes.cast(equals, getResultType());
+    Equal equals = getTF().math.equal(tLabels, argMaxPred);
+    return cast(getTF(), equals, getResultType());
   }
 }

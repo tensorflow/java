@@ -36,9 +36,7 @@ public class RecallAtPrecisionTest {
   public void testValueIsIdempotent() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 0.7f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      RecallAtPrecision<TFloat32> instance = new RecallAtPrecision<>(0.7f, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions =
           tf.random.randomUniform(
@@ -48,16 +46,16 @@ public class RecallAtPrecisionTest {
               tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1L));
       labels = tf.math.mul(labels, tf.constant(2.0f));
 
-      Op update = instance.updateState(labels, predictions);
+      Op update = instance.updateState(tf, labels, predictions, null);
 
       for (int i = 0; i < 10; i++) {
         session.run(update);
       }
 
-      Operand<TFloat32> initialPrecision = instance.result();
+      Operand<TFloat32> initialPrecision = instance.result(tf);
 
       for (int i = 0; i < 10; i++) {
-        session.evaluate(initialPrecision, instance.result());
+        session.evaluate(initialPrecision, instance.result(tf));
       }
     }
   }
@@ -77,18 +75,17 @@ public class RecallAtPrecisionTest {
   public void test_unweighted_all_correct() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 0.7f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      RecallAtPrecision<TFloat32> instance = new RecallAtPrecision<>(0.7f, 1001L, TFloat32.class);
+
       int[][] predArray = generateRandomArray(100, 1, 2);
       int[][] trueArray = new int[100][1]; // 100,1
       System.arraycopy(predArray, 0, trueArray, 0, predArray.length);
       Operand<TFloat32> predictions = cast(tf, tf.constant(predArray), TFloat32.class);
       Operand<TFloat32> labels = cast(tf, tf.constant(trueArray), TFloat32.class);
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1f, precision);
     }
@@ -98,9 +95,8 @@ public class RecallAtPrecisionTest {
   public void testUnweightedHighPrecision() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 0.75f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      RecallAtPrecision<TFloat32> instance = new RecallAtPrecision<>(0.75f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions =
           tf.constant(
               new float[] {
@@ -108,10 +104,10 @@ public class RecallAtPrecisionTest {
               });
       Operand<TInt64> labels = tf.constant(new long[] {0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(0.5f, precision);
     }
@@ -122,8 +118,8 @@ public class RecallAtPrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 2.0f / 3f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions =
           tf.constant(
               new float[] {
@@ -131,10 +127,10 @@ public class RecallAtPrecisionTest {
               });
       Operand<TInt64> labels = tf.constant(new long[] {0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(5.f / 6f, precision);
     }
@@ -144,18 +140,17 @@ public class RecallAtPrecisionTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 0.75f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      RecallAtPrecision<TFloat32> instance = new RecallAtPrecision<>(0.75f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions =
           tf.constant(new float[] {0.1f, 0.2f, 0.3f, 0.5f, 0.6f, 0.9f, 0.9f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 1, 0, 0, 0, 1, 1});
       Operand<TFloat32> sampleWeight = tf.constant(new float[] {1, 2, 1, 2, 1, 2, 1});
 
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(0.6f, precision);
     }
@@ -166,15 +161,15 @@ public class RecallAtPrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       RecallAtPrecision<TFloat32> instance =
-          new RecallAtPrecision<>(tf, 2.0f / 3f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions = tf.constant(new float[] {0.1f, 0.2f, 0.3f, 0.9f});
       Operand<TInt64> labels = tf.constant(new long[] {1, 1, 0, 0});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
       // The highest possible precision is 1/2 which is below the required
       session.evaluate(0f, precision);
     }
@@ -187,7 +182,7 @@ public class RecallAtPrecisionTest {
         () -> {
           try (TestSession session = TestSession.createTestSession(tfMode)) {
             Ops tf = session.getTF();
-            new RecallAtPrecision<>(tf, -1f, 1001L, TFloat32.class);
+            new RecallAtPrecision<>(-1f, 1001L, TFloat32.class);
           }
         });
   }
@@ -199,7 +194,7 @@ public class RecallAtPrecisionTest {
         () -> {
           try (TestSession session = TestSession.createTestSession(tfMode)) {
             Ops tf = session.getTF();
-            new RecallAtPrecision<>(tf, 0.7f, -1, 1001L, TFloat32.class);
+            new RecallAtPrecision<>(0.7f, -1, 1001L, TFloat32.class);
           }
         });
   }
@@ -211,29 +206,16 @@ public class RecallAtPrecisionTest {
       RecallAtPrecision<TFloat32> instance =
           new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
       instance.init(tf);
-      session.run(instance.resetStates());
+
       Operand<TFloat32> predictions = tf.constant(new float[] {0.1f, 0.2f, 0.3f, 0.9f});
       Operand<TInt64> labels = tf.constant(new long[] {1, 1, 0, 0});
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
       // The highest possible precision is 1/2 which is below the required
       session.evaluate(0f, precision);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            RecallAtPrecision<TFloat32> instance =
-                new RecallAtPrecision<>(2.0f / 3f, 1001L, TFloat32.class);
-            session.run(instance.resetStates());
-          }
-        });
   }
 }

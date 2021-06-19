@@ -40,7 +40,7 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
    * @param type the data type for the variables
    */
   public RootMeanSquaredError(long seed, Class<T> type) {
-    this((String) null, seed, type);
+    this(null, seed, type);
   }
 
   /**
@@ -57,33 +57,6 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
   }
 
   /**
-   * Creates a RootMeanSquaredError metric with a name of {@link Class#getSimpleName()}
-   *
-   * @param tf the TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public RootMeanSquaredError(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
-  }
-
-  /**
-   * Creates a RootMeanSquaredError metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name name of the metric instance. If null, name defaults to {@link
-   *     Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public RootMeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Accumulates root mean squared error statistics.
    *
    * @param labels the labels
@@ -94,9 +67,11 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
    */
   @Override
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
+    init(tf);
 
     Operand<T> tLabels = cast(getTF(), labels, getResultType());
     Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
@@ -110,12 +85,16 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
     Operand<T> errorSquared =
         cast(getTF(), getTF().math.squaredDifference(tPredictions, tLabels), getResultType());
 
-    return super.updateStateList(errorSquared, tSampleWeights);
+    return super.updateStateList(getTF(), errorSquared, tSampleWeights);
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    return getTF().math.sqrt(getTF().math.divNoNan(this.total, this.count));
+  public Operand<T> result(Ops tf) {
+    init(tf);
+    if (total == null || count == null || variablesNeedAssign) {
+      return getResultZero();
+    }
+    return getTF().math.sqrt(getTF().math.divNoNan(total, count));
   }
 }

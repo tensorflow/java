@@ -31,6 +31,17 @@ import org.tensorflow.types.family.TNumber;
 public class Poisson<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
 
   /**
+   * Creates a Poisson metric using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public Poisson(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
+
+  /**
    * Creates a Poisson metric
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -44,20 +55,6 @@ public class Poisson<T extends TNumber> extends MeanMetricWrapper<T> implements 
   }
 
   /**
-   * Creates a Poisson metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public Poisson(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the Poisson loss between labels and predictions.
    *
    * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
@@ -66,10 +63,10 @@ public class Poisson<T extends TNumber> extends MeanMetricWrapper<T> implements 
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.poisson(tf, tLabels, tPredictions);
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.poisson(getTF(), tLabels, tPredictions);
   }
 }

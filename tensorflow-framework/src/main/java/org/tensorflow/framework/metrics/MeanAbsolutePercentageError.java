@@ -32,6 +32,17 @@ public class MeanAbsolutePercentageError<T extends TNumber> extends MeanMetricWr
     implements LossMetric<T> {
 
   /**
+   * Creates a Mean Absolute Error metric using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public MeanAbsolutePercentageError(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
+
+  /**
    * Creates a Mean Absolute Error metric
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -45,20 +56,6 @@ public class MeanAbsolutePercentageError<T extends TNumber> extends MeanMetricWr
   }
 
   /**
-   * Creates a Mean Absolute Error metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public MeanAbsolutePercentageError(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the mean absolute percentage error loss between labels and predictions.
    *
    * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
@@ -67,10 +64,10 @@ public class MeanAbsolutePercentageError<T extends TNumber> extends MeanMetricWr
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.meanAbsolutePercentageError(tf, tLabels, tPredictions);
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.meanAbsolutePercentageError(getTF(), tLabels, tPredictions);
   }
 }

@@ -54,7 +54,7 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the data type for the variables
    */
   public CategoricalAccuracy(long seed, Class<T> type) {
-    this((String) null, seed, type);
+    this(null, seed, type);
   }
 
   /**
@@ -71,32 +71,6 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
   }
 
   /**
-   * Creates a CategoricalAccuracy metric, using {@link Class#getSimpleName()} for the metric name
-   *
-   * @param tf the TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public CategoricalAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
-  }
-
-  /**
-   * Creates a CategoricalAccuracy metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public CategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the categorical crossentropy loss.
    *
    * <p>{@code predictions} and {@code labels} should be passed in as vectors of probabilities,
@@ -109,11 +83,11 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<TInt64> trueMax = tf.math.argMax(labels, tf.constant(-1));
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<TInt64> trueMax = getTF().math.argMax(labels, getTF().constant(-1));
 
-    Operand<TInt64> predMax = tf.math.argMax(predictions, tf.constant(-1));
-    return cast(tf, tf.math.equal(trueMax, predMax), getResultType());
+    Operand<TInt64> predMax = getTF().math.argMax(predictions, getTF().constant(-1));
+    return cast(getTF(), getTF().math.equal(trueMax, predMax), getResultType());
   }
 }

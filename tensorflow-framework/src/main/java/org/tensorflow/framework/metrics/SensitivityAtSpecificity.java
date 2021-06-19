@@ -59,7 +59,7 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    *     [0-1].
    */
   public SensitivityAtSpecificity(float specificity, long seed, Class<T> type) {
-    this((String) null, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
+    this(null, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
@@ -91,7 +91,7 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    *     [0-1].
    */
   public SensitivityAtSpecificity(float specificity, int numThresholds, long seed, Class<T> type) {
-    this((String) null, specificity, numThresholds, seed, type);
+    this(null, specificity, numThresholds, seed, type);
   }
 
   /**
@@ -115,91 +115,32 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
     this.specificity = specificity;
   }
 
-  /**
-   * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()} and
-   * {@link #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
-   *
-   * @param tf The TensorFlow Ops
-   * @param specificity the specificity. A scalar value in range [0, 1]
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
-   *     [0-1].
-   */
-  public SensitivityAtSpecificity(Ops tf, float specificity, long seed, Class<T> type) {
-    this(tf, null, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
-  }
-
-  /**
-   * Creates a SpecificityAtSensitivity metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number
-   * of thresholds
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
-   * @param specificity the specificity. A scalar value in range [0, 1]
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
-   *     [0-1].
-   */
-  public SensitivityAtSpecificity(
-      Ops tf, String name, float specificity, long seed, Class<T> type) {
-    this(tf, name, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
-  }
-
-  /**
-   * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
-   *
-   * @param tf The TensorFlow Ops
-   * @param specificity the specificity. A scalar value in range [0, 1]
-   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
-   *     specificity.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
-   *     [0-1].
-   */
-  public SensitivityAtSpecificity(
-      Ops tf, float specificity, int numThresholds, long seed, Class<T> type) {
-    this(tf, null, specificity, numThresholds, seed, type);
-  }
-
-  /**
-   * Creates a PrecisionRecall metric.
-   *
-   * @param tf The TensorFlow Ops
-   * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
-   * @param specificity the specificity. A scalar value in range [0, 1]
-   * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
-   *     specificity.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
-   *     [0-1].
-   */
-  public SensitivityAtSpecificity(
-      Ops tf, String name, float specificity, int numThresholds, long seed, Class<T> type) {
-    this(name, specificity, numThresholds, seed, type);
-    init(tf);
-  }
-
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = getTF();
-    Operand<T> specificities =
-        tf.math.divNoNan(trueNegatives, tf.math.add(trueNegatives, falsePositives));
-    Operand<T> sub = tf.math.sub(specificities, cast(tf, tf.constant(specificity), getType()));
-    Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
-    minIndex = tf.expandDims(minIndex, tf.constant(0));
+  public Operand<T> result(Ops tf) {
+    init(tf);
+    if (trueNegatives == null
+        || falsePositives == null
+        || truePositives == null
+        || trueNegatives == null
+        || variablesNeedAssign) {
+      return getResultZero();
+    }
 
-    Operand<T> trueSlice = tf.slice(truePositives, minIndex, tf.constant(new int[] {1}));
-    Operand<T> falseSlice = tf.slice(falseNegatives, minIndex, tf.constant(new int[] {1}));
-    return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
+    Operand<T> specificities =
+        getTF().math.divNoNan(trueNegatives, getTF().math.add(trueNegatives, falsePositives));
+    Operand<T> sub =
+        getTF()
+            .math
+            .sub(specificities, cast(getTF(), getTF().constant(specificity), getResultType()));
+    Operand<TInt32> minIndex =
+        getTF().math.argMin(getTF().math.abs(sub), getTF().constant(0), TInt32.class);
+    minIndex = getTF().expandDims(minIndex, getTF().constant(0));
+
+    Operand<T> trueSlice = getTF().slice(truePositives, minIndex, getTF().constant(new int[] {1}));
+    Operand<T> falseSlice =
+        getTF().slice(falseNegatives, minIndex, getTF().constant(new int[] {1}));
+    return getTF().math.divNoNan(trueSlice, getTF().math.add(trueSlice, falseSlice));
   }
 
   /**

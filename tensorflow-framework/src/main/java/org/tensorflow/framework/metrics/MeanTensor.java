@@ -36,11 +36,13 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result
  */
 public class MeanTensor<T extends TNumber> extends Metric<T> {
+  /** The name of the total variable */
   public static final String TOTAL = "total";
+  /** The name of the count variable */
   public static final String COUNT = "count";
+
   private final String totalName;
   private final String countName;
-  private final Class<T> type;
   private Shape shape;
   private Variable<T> total;
   private Variable<T> count;
@@ -56,7 +58,7 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   public MeanTensor(long seed, Class<T> type) {
-    this((String) null, seed, type);
+    this(null, seed, type);
   }
   /**
    * Creates a MeanTensor metric
@@ -67,61 +69,33 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    * @param type the data type for the variables
    */
   public MeanTensor(String name, long seed, Class<T> type) {
-    super(name, seed);
-    this.type = type;
+    super(name, seed, type);
     this.totalName = this.getVariableName(TOTAL);
     this.countName = this.getVariableName(COUNT);
-  }
-
-  /**
-   * Creates a MeanTensor metric, using {@link Class#getSimpleName()} as the name
-   *
-   * @param tf the TensorFlow ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public MeanTensor(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
-  }
-  /**
-   * Creates a MeanTensor metric
-   *
-   * @param tf the TensorFlow ops
-   * @param name the name of this metric, if null then {@link Class#getSimpleName()} is used
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
-   */
-  public MeanTensor(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
   }
 
   /**
    * Creates the Operations that initialize the total and count variables.
    *
    * @param shape the shape of the variables
-   * @return true if the variables need initialization, otherwise false;
    */
-  private boolean init(Shape shape) {
+  private void init(Shape shape) {
     if (!initialized) {
       this.shape = shape;
       Zeros<T> zeros = new Zeros<>();
-      Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), type);
+      Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), getResultType());
 
       if (total == null) {
+        variablesNeedAssign = true;
         total = getTF().withName(totalName).variable(zero);
         totalInitializer = getTF().assign(total, zero);
       }
       if (count == null) {
+        variablesNeedAssign = true;
         count = getTF().withName(countName).variable(zero);
         countInitializer = getTF().assign(count, zero);
       }
       this.initialized = true;
-      return true;
-    } else {
-      return false;
     }
   }
 
@@ -136,13 +110,14 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    */
   @Override
   public List<Op> updateStateList(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
-    Operand<T> tValues = cast(tf, values, type);
-    Operand<T> tSampleWeights = sampleWeights == null ? null : cast(tf, sampleWeights, type);
+      Ops tf, Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
+    init(tf);
+    Operand<T> tValues = cast(getTF(), values, getResultType());
+    Operand<T> tSampleWeights =
+        sampleWeights == null ? null : cast(getTF(), sampleWeights, getResultType());
 
     // update the shape if it is the first call.
-    boolean needsInitialization = init(values.shape());
+    init(values.shape());
 
     if (!this.shape.equals(values.shape())) {
       throw new IllegalArgumentException(
@@ -151,16 +126,16 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
               this.shape.toString(), values.shape().toString()));
     }
 
-    Operand<T> numValues = tf.onesLike(tValues);
+    Operand<T> numValues = getTF().onesLike(tValues);
     if (tSampleWeights != null) {
       // Update dimensions of weights to match with values if possible.
       LossTuple<T> tuple =
-          LossesHelper.squeezeOrExpandDimensions(tf, null, tValues, tSampleWeights);
+          LossesHelper.squeezeOrExpandDimensions(getTF(), null, tValues, tSampleWeights);
       tValues = tuple.getTarget();
       tSampleWeights = tuple.getSampleWeights();
       try {
         // Broadcast weights if possible.
-        tSampleWeights = WeightsBroadcastOps.broadcastWeights(tf, tSampleWeights, tValues);
+        tSampleWeights = WeightsBroadcastOps.broadcastWeights(getTF(), tSampleWeights, tValues);
       } catch (IllegalArgumentException ex) {
         // sampleWeights cannot be broadcast to values
         //  Reduce values to same ndim as weight array
@@ -170,49 +145,58 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
         for (int i = weightNdim; i < ndim; i++) {
           range[i] = i;
         }
-        tValues = tf.math.mean(tValues, tf.constant(range));
+        tValues = getTF().math.mean(tValues, getTF().constant(range));
       }
-      numValues = tf.math.mul(numValues, tSampleWeights);
-      tValues = tf.math.mul(tValues, tSampleWeights);
+      numValues = getTF().math.mul(numValues, tSampleWeights);
+      tValues = getTF().math.mul(tValues, tSampleWeights);
     }
-
-    List<Op> controlOpsPre = new ArrayList<>();
-    if (needsInitialization) {
-      controlOpsPre.add(countInitializer);
-      controlOpsPre.add(totalInitializer);
-    }
-    Ops tf1 = tf.withSubScope("variables").withControlDependencies(controlOpsPre);
 
     List<Op> controlOps = new ArrayList<>();
-    controlOps.add(tf1.assignAdd(this.count, numValues));
-    controlOps.add(tf1.assignAdd(this.total, tValues));
+    controlOps.add(
+        variablesNeedAssign
+            ? getTF().assign(this.count, numValues)
+            : getTF().assignAdd(this.count, numValues));
+    controlOps.add(
+        variablesNeedAssign
+            ? getTF().assign(this.total, tValues)
+            : getTF().assignAdd(this.total, tValues));
+    variablesNeedAssign = false;
     return controlOps;
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    if (!this.initialized) {
-      throw new IllegalStateException(
-          "MeanTensor does not have any result yet. Please  use `.update_state(value)` before retrieving the result.");
+  public Operand<T> result(Ops tf) {
+    init(tf);
+    if (total == null || count == null || variablesNeedAssign) {
+      return getResultZero();
+    } else {
+      return getTF().math.divNoNan(total, count);
     }
-    return getTF().math.divNoNan(total, count);
   }
 
-  /** @return the total */
+  /**
+   * Gets the total variable
+   *
+   * @return the total
+   */
   public Variable<T> getTotal() {
     return total;
   }
 
-  /** @return the count */
+  /**
+   * Gets the count count variable
+   *
+   * @return the count variable
+   */
   public Variable<T> getCount() {
     return count;
   }
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    checkTF();
+  public Op resetStates(Ops tf) {
+    init(tf);
     if (countInitializer != null && totalInitializer != null) {
       List<Op> controlOpsPre = new ArrayList<>();
       controlOpsPre.add(countInitializer);

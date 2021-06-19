@@ -15,7 +15,6 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import org.tensorflow.framework.metrics.impl.Reduce;
-import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
 /**
@@ -24,6 +23,18 @@ import org.tensorflow.types.family.TNumber;
  * @param <T> The data type for the metric result
  */
 public class Mean<T extends TNumber> extends Reduce<T> {
+
+  /**
+   * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM} using name
+   * based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  protected Mean(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}
@@ -35,18 +46,5 @@ public class Mean<T extends TNumber> extends Reduce<T> {
    */
   protected Mean(String name, long seed, Class<T> type) {
     super(name, MetricReduction.WEIGHTED_MEAN, seed, type);
-  }
-
-  /**
-   * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  protected Mean(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, MetricReduction.WEIGHTED_MEAN, seed, type);
   }
 }

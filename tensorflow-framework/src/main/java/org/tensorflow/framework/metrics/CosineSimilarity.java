@@ -48,6 +48,41 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
 
   /**
    * Creates a metric that computes the cosine similarity metric between labels and predictions with
+   * a default axis, {@link #DEFAULT_AXIS} and using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CosineSimilarity(long seed, Class<T> type) {
+    this(null, DEFAULT_AXIS, seed, type);
+  }
+
+  /**
+   * Creates a metric that computes the cosine similarity metric between labels and predictions
+   * using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param axis The dimension along which the cosine similarity is computed.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CosineSimilarity(int axis, long seed, Class<T> type) {
+    this(null, new int[] {axis}, seed, type);
+  }
+  /**
+   * Creates a CosineSimilarity metric using a name based on {@link Class#getSimpleName()}.
+   *
+   * @param axis The dimension along which the cosine similarity is computed.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CosineSimilarity(int[] axis, long seed, Class<T> type) {
+    this(null, axis, seed, type);
+  }
+  /**
+   * Creates a metric that computes the cosine similarity metric between labels and predictions with
    * a default axis, {@link #DEFAULT_AXIS}
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -87,48 +122,6 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
   }
 
   /**
-   * Creates a metric that computes the cosine similarity metric between labels and predictions with
-   * a default axis, {@link #DEFAULT_AXIS}
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CosineSimilarity(Ops tf, String name, long seed, Class<T> type) {
-    this(tf, name, DEFAULT_AXIS, seed, type);
-  }
-
-  /**
-   * Creates a metric that computes the cosine similarity metric between labels and predictions.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param axis The dimension along which the cosine similarity is computed.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CosineSimilarity(Ops tf, String name, int axis, long seed, Class<T> type) {
-    this(tf, name, new int[] {axis}, seed, type);
-  }
-  /**
-   * Creates a CosineSimilarity metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param axis The dimension along which the cosine similarity is computed.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CosineSimilarity(Ops tf, String name, int[] axis, long seed, Class<T> type) {
-    this(name, axis, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the cosine similarity loss between labels and predictions.
    *
    * @param labels the truth values or labels
@@ -137,12 +130,12 @@ public class CosineSimilarity<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     // NOTE: metrics.CosineSimilarity is Losses.cosineSimilarity,
     // while losses.CosineSimilarity is the negative of Losses.cosineSimilarity
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.cosineSimilarity(tf, tLabels, tPredictions, axis);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.cosineSimilarity(getTF(), tLabels, tPredictions, axis);
   }
 }

@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -36,18 +34,18 @@ class SparseCategoricalCrossentropyTest {
       Ops tf = session.getTF();
       SparseCategoricalCrossentropy<TFloat64> instance =
           new SparseCategoricalCrossentropy<>(
-              tf, "SCE_testUnweighted", false, -1, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+              "SCE_testUnweighted", false, -1, 1001L, TFloat64.class);
+
       int[] trueArray = {1, 2};
       double[] predictionArray = {0.05, 0.95, 0, 0.1, 0.8, 0.1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2)));
       Operand<TFloat64> predictions =
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(2, 3)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(2.3538785, total);
       session.evaluate(2, count);
       session.evaluate(1.1769392, result);
@@ -59,18 +57,17 @@ class SparseCategoricalCrossentropyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SparseCategoricalCrossentropy<TFloat64> instance =
-          new SparseCategoricalCrossentropy<>(
-              tf, "SCE_testWeighted", true, -1, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new SparseCategoricalCrossentropy<>("SCE_testWeighted", true, -1, 1001L, TFloat64.class);
+
       int[] trueArray = {1, 2};
       double[] logitsArray = {1, 9, 0, 1, 8, 1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2)));
       Operand<TFloat64> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
-      Op op = instance.updateState(labels, logits, null);
+      Op op = instance.updateState(tf, labels, logits, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(7.002277, total);
       session.evaluate(2, count);
       session.evaluate(3.501135, result);
@@ -82,9 +79,8 @@ class SparseCategoricalCrossentropyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SparseCategoricalCrossentropy<TFloat32> instance =
-          new SparseCategoricalCrossentropy<>(
-              tf, "SCE_testWeighted", false, -1, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new SparseCategoricalCrossentropy<>("SCE_testWeighted", false, -1, 1001L, TFloat32.class);
+
       int[] trueArray = {1, 2};
       double[] predictionArray = {0.05, 0.95, 0, 0.1, 0.8, 0.1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2)));
@@ -92,11 +88,11 @@ class SparseCategoricalCrossentropyTest {
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(2, 3)));
 
       Operand<TFloat32> sampleWeight = tf.constant(new float[] {1.5F, 2.F});
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       session.evaluate(4.6821103f, total);
       session.evaluate(3.5f, count);
       session.evaluate(1.3377458f, result);
@@ -108,9 +104,8 @@ class SparseCategoricalCrossentropyTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       SparseCategoricalCrossentropy<TFloat64> instance =
-          new SparseCategoricalCrossentropy<>(
-              tf, "SCE_testWeighted", true, -1, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new SparseCategoricalCrossentropy<>("SCE_testWeighted", true, -1, 1001L, TFloat64.class);
+
       int[] trueArray = {1, 2};
       double[] predictionArray = {1, 9, 0, 1, 8, 1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2)));
@@ -118,11 +113,11 @@ class SparseCategoricalCrossentropyTest {
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(2, 3)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1.5, 2});
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(14.004333, total);
       session.evaluate(3.5, count);
       session.evaluate(4.001232, result);
@@ -136,34 +131,19 @@ class SparseCategoricalCrossentropyTest {
       SparseCategoricalCrossentropy<TFloat64> instance =
           new SparseCategoricalCrossentropy<>("testInitTF", true, -1, 1001L, TFloat64.class);
       instance.init(tf);
-      session.run(instance.resetStates());
+
       int[] trueArray = {1, 2};
       double[] logitsArray = {1, 9, 0, 1, 8, 1};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2)));
       Operand<TFloat64> logits = tf.reshape(tf.constant(logitsArray), tf.constant(Shape.of(2, 3)));
-      Op op = instance.updateState(labels, logits, null);
+      Op op = instance.updateState(tf, labels, logits, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(7.002277, total);
       session.evaluate(2, count);
       session.evaluate(3.501135, result);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            SparseCategoricalCrossentropy<TFloat64> instance =
-                new SparseCategoricalCrossentropy<>(
-                    "testIllegalState", true, -1, 1001L, TFloat64.class);
-            session.run(instance.resetStates());
-            instance.result();
-          }
-        });
   }
 }

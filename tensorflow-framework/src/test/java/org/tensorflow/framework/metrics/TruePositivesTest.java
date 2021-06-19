@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -47,11 +45,11 @@ public class TruePositivesTest {
 
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
-      TruePositives<TFloat64> instance = new TruePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, null);
+      TruePositives<TFloat64> instance = new TruePositives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(7.0, result);
     }
@@ -65,11 +63,11 @@ public class TruePositivesTest {
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
-      TruePositives<TFloat64> instance = new TruePositives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      TruePositives<TFloat64> instance = new TruePositives<>(1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(12.0, result);
     }
@@ -97,11 +95,11 @@ public class TruePositivesTest {
                 {1, 1, 1, 1}
               });
       TruePositives<TFloat32> instance =
-          new TruePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, null);
+          new TruePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf);
       float[] expected = new float[] {6.f, 3.f, 1.f};
       session.evaluate(expected, result);
     }
@@ -131,11 +129,11 @@ public class TruePositivesTest {
 
       Operand<TFloat64> sampleWeight = tf.constant(37.);
       TruePositives<TFloat64> instance =
-          new TruePositives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+          new TruePositives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       double[] expected = new double[] {222., 111., 37.};
       session.evaluate(expected, result);
     }
@@ -150,24 +148,12 @@ public class TruePositivesTest {
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
       TruePositives<TFloat64> instance = new TruePositives<>(1001L, TFloat64.class);
       instance.init(tf);
-      session.run(instance.resetStates());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
 
       session.evaluate(12.0, result);
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            TruePositives<TFloat64> instance = new TruePositives<>(1001L, TFloat64.class);
-            session.run(instance.resetStates());
-          }
-        });
   }
 }

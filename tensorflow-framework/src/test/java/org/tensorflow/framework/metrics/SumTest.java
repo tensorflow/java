@@ -15,7 +15,7 @@ limitations under the License.
 package org.tensorflow.framework.metrics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
@@ -33,22 +33,23 @@ public class SumTest {
   public void testUnWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Sum<TFloat32> instance = new Sum<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      assertEquals(TFloat32.class, instance.getResultType());
-      session.evaluate(0f, instance.getTotal());
+      Sum<TFloat32> instance = new Sum<>(1001L, TFloat32.class);
 
-      Op update = instance.updateState(tf.constant(100f), null);
+      assertEquals(TFloat32.class, instance.getResultType());
+      assertNull(instance.getTotal());
+
+      Op update = instance.updateState(tf, tf.constant(100f), null);
       session.run(update);
-      session.evaluate(100f, instance.result());
+      session.evaluate(100f, instance.result(tf));
       session.evaluate(100f, instance.getTotal());
 
-      update = instance.updateState(tf.constant(new float[] {1, 5}), null);
+      update = instance.updateState(tf, tf.constant(new float[] {1, 5}), null);
       session.run(update);
-      session.evaluate(106f, instance.result());
+      session.evaluate(106f, instance.result(tf));
       session.evaluate(106f, instance.getTotal());
 
-      session.run(instance.resetStates());
+      // test reset state
+      session.run(instance.resetStates(tf));
       session.evaluate(0f, instance.getTotal());
     }
   }
@@ -57,56 +58,57 @@ public class SumTest {
   public void testSumWithSampleWeight() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Sum<TFloat64> instance = new Sum<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Sum<TFloat64> instance = new Sum<>(1001L, TFloat64.class);
 
       // check scalar weight
-      Op op = instance.updateState(tf.constant(100f), tf.constant(0.5));
+      Op op = instance.updateState(tf, tf.constant(100f), tf.constant(0.5));
       session.run(op);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf);
       session.evaluate(50.0, instance.getTotal());
       session.evaluate(50.0, result);
 
       //  check weights not scalar and weights rank matches values rank
       op =
-          instance.updateState(tf.constant(new float[] {1, 5}), tf.constant(new double[] {1, 0.2}));
+          instance.updateState(
+              tf, tf.constant(new float[] {1, 5}), tf.constant(new double[] {1, 0.2}));
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(52., instance.getTotal());
       session.evaluate(52., result);
 
       // check weights broadcast
-      op = instance.updateState(tf.constant(new float[] {1, 2}), tf.constant(0.5));
+      op = instance.updateState(tf, tf.constant(new float[] {1, 2}), tf.constant(0.5));
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(53.5, instance.getTotal());
       session.evaluate(53.5, result);
 
       // check weights squeeze
       op =
           instance.updateState(
-              tf.constant(new float[] {1, 5}), tf.constant(new double[][] {{1}, {0.2}}));
+              tf, tf.constant(new float[] {1, 5}), tf.constant(new double[][] {{1}, {0.2}}));
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(55.5, instance.getTotal());
       session.evaluate(55.5, result);
 
       // check weights expand
       op =
           instance.updateState(
-              tf.constant(new float[][] {{1}, {5}}), tf.constant(new double[] {1, 0.2}));
+              tf, tf.constant(new float[][] {{1}, {5}}), tf.constant(new double[] {1, 0.2}));
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(57.5, instance.getTotal());
       session.evaluate(57.5, result);
 
       // heck values reduced to the dimensions of weight
       op =
           instance.updateState(
+              tf,
               tf.constant(new float[][][] {{{1.f, 2.f}, {3.f, 2.f}, {0.5f, 4.f}}}),
               tf.constant(new double[] {0.5}));
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf);
       session.evaluate(63.75, instance.getTotal());
       session.evaluate(63.75, result);
     }
@@ -118,35 +120,24 @@ public class SumTest {
       Ops tf = session.getTF();
       Sum<TFloat32> instance = new Sum<>(1001L, TFloat32.class);
       instance.init(tf);
-      session.run(instance.resetStates());
+      session.run(instance.resetStates(tf));
+
       assertEquals(TFloat32.class, instance.getResultType());
       session.evaluate(0f, instance.getTotal());
 
-      Op update = instance.updateState(tf.constant(100f), null);
+      Op update = instance.updateState(tf, tf.constant(100f), null);
       session.run(update);
-      session.evaluate(100f, instance.result());
+      session.evaluate(100f, instance.result(tf));
       session.evaluate(100f, instance.getTotal());
 
-      update = instance.updateState(tf.constant(new float[] {1, 5}), null);
+      update = instance.updateState(tf, tf.constant(new float[] {1, 5}), null);
       session.run(update);
-      session.evaluate(106f, instance.result());
+      session.evaluate(106f, instance.result(tf));
       session.evaluate(106f, instance.getTotal());
 
-      session.run(instance.resetStates());
+      // test reset states
+      session.run(instance.resetStates(tf));
       session.evaluate(0f, instance.getTotal());
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Sum<TFloat32> instance = new Sum<>(1001L, TFloat32.class);
-            instance.result();
-            session.run(instance.resetStates());
-          }
-        });
   }
 }

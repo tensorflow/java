@@ -74,59 +74,37 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
    * @param resultType the type for the variables and result
    */
   protected Reduce(String name, MetricReduction reduction, long seed, Class<T> resultType) {
-    super(name, seed);
+    super(name, seed, resultType);
     this.reduction = reduction;
     this.totalName = this.getVariableName(TOTAL);
     this.countName = this.getVariableName(COUNT);
     this.resultType = resultType;
   }
 
-  /**
-   * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#SUM}
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param resultType the type for the variables and result
-   */
-  protected Reduce(Ops tf, String name, long seed, Class<T> resultType) {
-    this(tf, name, MetricReduction.SUM, seed, resultType);
-  }
-
-  /**
-   * @param tf The TensorFlow Ops
-   * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
-   * @param reduction The type of metric reduction to apply
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param resultType the type for the variables and result
-   */
-  protected Reduce(Ops tf, String name, MetricReduction reduction, long seed, Class<T> resultType) {
-    this(name, reduction, seed, resultType);
-    init(tf);
-  }
   /** {@inheritDoc} */
   @Override
   public Ops init(Ops tf) {
-
-    setTensorFlowOps(tf);
-    if (total == null) {
-      total = getTF().withName(totalName).variable(Shape.scalar(), resultType);
-    }
-    if (reduction == MetricReduction.SUM_OVER_BATCH_SIZE
-        || reduction == MetricReduction.WEIGHTED_MEAN) {
-      if (count == null) {
-        count = getTF().withName(countName).variable(Shape.scalar(), resultType);
+    if (this.tf == null) {
+      setTensorFlowOps(tf);
+      if (total == null) {
+        variablesNeedAssign = true;
+        total = getTF().withName(totalName).variable(Shape.scalar(), resultType);
       }
+      if (reduction == MetricReduction.SUM_OVER_BATCH_SIZE
+          || reduction == MetricReduction.WEIGHTED_MEAN) {
+        if (count == null) {
+          variablesNeedAssign = true;
+          count = getTF().withName(countName).variable(Shape.scalar(), resultType);
+        }
+      }
+      applyOnInit();
     }
-    applyOnInit();
     return getTF();
   }
 
   /** {@inheritDoc} */
-  public Op resetStates() {
-    checkTF();
+  public Op resetStates(Ops tf) {
+    init(tf);
     List<Op> controls = new ArrayList<>();
     if (total != null) {
       controls.add(checkTF().assign(total, cast(getTF(), getTF().constant(0), total.type())));
@@ -148,16 +126,16 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
    */
   @Override
   public List<Op> updateStateList(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-
+      Ops tf, Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
     if (values == null) {
       throw new IllegalArgumentException("values is required.");
     }
-    Ops tf = checkTF();
+    init(tf);
+
     List<Op> updateOperations = new ArrayList<>();
     // cast everything to match the variables
     Operand<T> tSampleWeights = null;
-    Operand<T> tValues = cast(tf, values, getResultType());
+    Operand<T> tValues = cast(getTF(), values, getResultType());
 
     if (sampleWeights != null) {
       tSampleWeights = cast(getTF(), sampleWeights, getResultType());
@@ -194,7 +172,9 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
     Operand<? extends TNumber> weightedValueSum =
         getTF().reduceSum(tValues, LossesHelper.allAxes(getTF(), tValues));
     Operand<T> totalUpdate =
-        getTF().assignAdd(total, cast(getTF(), weightedValueSum, total.type()));
+        variablesNeedAssign
+            ? getTF().assign(total, cast(getTF(), weightedValueSum, total.type()))
+            : getTF().assignAdd(total, cast(getTF(), weightedValueSum, total.type()));
     updateOperations.add(totalUpdate);
     Operand<T> numValues;
     // Exit early if the reduction doesn't have a denominator.
@@ -221,30 +201,41 @@ public abstract class Reduce<T extends TNumber> extends Metric<T> {
               String.format("reduction [%s] not implemented", reduction));
       }
 
-      Operand<T> totalCount = getTF().assignAdd(this.count, numValues);
+      Operand<T> totalCount =
+          variablesNeedAssign
+              ? getTF().assign(count, numValues)
+              : getTF().assignAdd(count, numValues);
 
       updateOperations.add(totalCount);
     }
 
+    // reset so next time we use assignAdd instead of assign.
+    variablesNeedAssign = false;
     return updateOperations;
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
+  public Operand<T> result(Ops tf) {
+    init(tf);
     Operand<T> fResult;
 
-    switch (this.reduction) {
-      case SUM:
-        fResult = checkTF().identity(total);
-        break;
-      case WEIGHTED_MEAN:
-      case SUM_OVER_BATCH_SIZE:
-        fResult = checkTF().math.divNoNan(total, cast(getTF(), count, resultType));
-        break;
-      default:
-        throw new UnsupportedOperationException(
-            String.format("reduction [%s] not implemented", reduction));
+    // return 0 if total is not set or
+    if (total == null || variablesNeedAssign) {
+      fResult = getResultZero();
+    } else {
+      switch (this.reduction) {
+        case SUM:
+          fResult = checkTF().identity(total);
+          break;
+        case WEIGHTED_MEAN:
+        case SUM_OVER_BATCH_SIZE:
+          fResult = checkTF().math.divNoNan(total, cast(getTF(), count, resultType));
+          break;
+        default:
+          throw new UnsupportedOperationException(
+              String.format("reduction [%s] not implemented", reduction));
+      }
     }
     return fResult;
   }

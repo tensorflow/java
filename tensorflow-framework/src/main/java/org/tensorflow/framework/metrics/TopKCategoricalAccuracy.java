@@ -35,6 +35,30 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
 
   /**
    * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
+   * elements to look at for computing accuracy with a name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
+   */
+  public TopKCategoricalAccuracy(long seed, Class<T> type) {
+    this(null, DEFAULT_K, seed, type);
+  }
+
+  /**
+   * Creates a TopKCategoricalAccuracy metric with a name based on {@link Class#getSimpleName()}.
+   *
+   * @param k Number of top elements to look at for computing accuracy.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
+   */
+  public TopKCategoricalAccuracy(int k, long seed, Class<T> type) {
+    this(null, k, seed, type);
+  }
+
+  /**
+   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
    * elements to look at for computing accuracy.
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -62,35 +86,6 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
   }
 
   /**
-   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
-   * elements to look at for computing accuracy.
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type The data type for the metric result
-   */
-  public TopKCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    this(tf, name, DEFAULT_K, seed, type);
-  }
-
-  /**
-   * Creates a TopKCategoricalAccuracy metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param k Number of top elements to look at for computing accuracy.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type The data type for the metric result
-   */
-  public TopKCategoricalAccuracy(Ops tf, String name, int k, long seed, Class<T> type) {
-    this(name, k, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes how often targets are in the top {@code K} predictions.
    *
    * @param labels the truth values or labels
@@ -99,10 +94,10 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Metrics.topKCategoricalAccuracy(tf, tLabels, tPredictions, k);
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Metrics.topKCategoricalAccuracy(getTF(), tLabels, tPredictions, k);
   }
 }

@@ -32,6 +32,17 @@ public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
     implements LossMetric<T> {
 
   /**
+   * Creates a CategoricalHinge metric using an name based on {@link Class#getSimpleName()}.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public CategoricalHinge(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
+
+  /**
    * Creates a CategoricalHinge metric
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -45,20 +56,6 @@ public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
   }
 
   /**
-   * Creates a CategoricalHinge metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public CategoricalHinge(Ops tf, String name, long seed, Class<T> type) {
-    this(name, seed, type);
-    init(tf);
-  }
-
-  /**
    * Computes the categorical hinge metric between {@code labels} and @{code predictions}.
    *
    * @param labels the truth values or labels, labels values are expected to be 0 or 1.
@@ -67,10 +64,10 @@ public class CategoricalHinge<T extends TNumber> extends MeanMetricWrapper<T>
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
     Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.categoricalHinge(tf, tLabels, tPredictions);
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.categoricalHinge(getTF(), tLabels, tPredictions);
   }
 }

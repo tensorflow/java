@@ -39,6 +39,21 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
   private final int axis;
 
   /**
+   * Creates a SparseCategoricalCrossentropy metric using a name based on {@link
+   * Class#getSimpleName()}.
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param axis The dimension along which the entropy is computed.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public SparseCategoricalCrossentropy(boolean fromLogits, int axis, long seed, Class<T> type) {
+    this(null, fromLogits, axis, seed, type);
+  }
+
+  /**
    * Creates a SparseCategoricalCrossentropy metric
    *
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
@@ -58,24 +73,6 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
   }
 
   /**
-   * Creates a SparseCategoricalCrossentropy metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
-   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
-   *     probability distribution.
-   * @param axis The dimension along which the entropy is computed.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the type for the variables and result
-   */
-  public SparseCategoricalCrossentropy(
-      Ops tf, String name, boolean fromLogits, int axis, long seed, Class<T> type) {
-    this(name, fromLogits, axis, seed, type);
-    init(tf);
-  }
-
-  /**
    * Calculates how often predictions matches integer labels.
    *
    * @param labels Integer ground truth values.
@@ -84,10 +81,10 @@ public class SparseCategoricalCrossentropy<T extends TNumber> extends MeanMetric
    */
   @Override
   public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Ops tf = checkTF();
-    Operand<T> tLabels = cast(tf, labels, getResultType());
-    Operand<T> tPredictions = cast(tf, predictions, getResultType());
-    return Losses.sparseCategoricalCrossentropy(tf, tLabels, tPredictions, fromLogits, axis);
+      Ops tf, Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
+    init(tf);
+    Operand<T> tLabels = cast(getTF(), labels, getResultType());
+    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    return Losses.sparseCategoricalCrossentropy(getTF(), tLabels, tPredictions, fromLogits, axis);
   }
 }

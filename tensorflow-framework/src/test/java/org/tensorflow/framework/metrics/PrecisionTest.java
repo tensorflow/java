@@ -14,8 +14,6 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -37,8 +35,8 @@ public class PrecisionTest {
       Ops tf = session.getTF();
 
       Precision<TFloat64> instance =
-          new Precision<>(tf, new float[] {0.3f, 0.72f}, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new Precision<>(new float[] {0.3f, 0.72f}, 1001L, TFloat64.class);
+
       Operand<TFloat32> predictions =
           tf.random.randomUniform(
               tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1001L));
@@ -46,16 +44,16 @@ public class PrecisionTest {
           tf.random.randomUniform(
               tf.constant(Shape.of(10, 3)), TFloat32.class, RandomUniform.seed(1001L));
 
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
 
       for (int i = 0; i < 10; i++) {
         session.run(update);
       }
 
-      Operand<TFloat64> initialPrecision = instance.result();
+      Operand<TFloat64> initialPrecision = instance.result(tf);
 
       for (int i = 0; i < 10; i++) {
-        session.evaluate(initialPrecision, instance.result());
+        session.evaluate(initialPrecision, instance.result(tf));
       }
     }
   }
@@ -64,14 +62,13 @@ public class PrecisionTest {
   public void testUnweighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Precision<TFloat64> instance = new Precision<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Precision<TFloat64> instance = new Precision<>(1001L, TFloat64.class);
 
       Operand<TInt64> predictions = tf.constant(new long[][] {{1, 0, 1, 0}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
       session.evaluate(0.5, precision);
     }
   }
@@ -80,15 +77,14 @@ public class PrecisionTest {
   public void testUnweightedAllIncorrect() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Precision<TFloat32> instance = new Precision<>(tf, 0.5f, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(0.5f, 1001L, TFloat32.class);
 
       Operand<TInt32> predictions =
           tf.random.randomUniformInt(tf.constant(Shape.of(100, 1)), tf.constant(0), tf.constant(2));
       Operand<TInt32> labels = tf.math.sub(tf.constant(1), predictions);
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
       session.evaluate(0.0f, precision);
     }
   }
@@ -97,15 +93,14 @@ public class PrecisionTest {
   public void testWeighted() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Precision<TFloat64> instance = new Precision<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Precision<TFloat64> instance = new Precision<>(1001L, TFloat64.class);
 
       Operand<TInt64> predictions = tf.constant(new long[][] {{1, 0, 1, 0}, {1, 0, 1, 0}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0}, {1, 0, 0, 1}});
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{1, 2, 3, 4}, {4, 3, 2, 1}});
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
 
       double weightedTP = 3.0f + 4.0f;
       double weightedPositives = (1.0f + 3.0f) + (4.0f + 2.0f);
@@ -119,14 +114,13 @@ public class PrecisionTest {
   public void testDivByZero() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Precision<TFloat64> instance = new Precision<>(tf, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+      Precision<TFloat64> instance = new Precision<>(1001L, TFloat64.class);
 
       Operand<TInt32> predictions = tf.constant(new int[] {0, 0, 0, 0});
       Operand<TInt32> labels = tf.constant(new int[] {0, 0, 0, 0});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
       session.evaluate(0, precision);
     }
   }
@@ -136,14 +130,13 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       Precision<TFloat32> instance =
-          new Precision<>(tf, new float[] {0.5f, 0.7f}, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new Precision<>(new float[] {0.5f, 0.7f}, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{1f, 0f, 0.6f, 0f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       float[] expected = new float[] {0.5f, 0.f};
 
@@ -156,15 +149,14 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       Precision<TFloat32> instance =
-          new Precision<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+          new Precision<>(new float[] {0.5f, 1.f}, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{1f, 0f}, {0.6f, 0f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1}, {1, 0}});
       Operand<TFloat32> sampleWeight = tf.constant(new float[][] {{4, 0}, {3, 1}});
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       float weightedTP = 0f + 3.f;
       float weightedPositives = (0f + 3.f) + (4.f + 0.f);
@@ -180,15 +172,14 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       Precision<TFloat64> instance =
-          new Precision<>(tf, new float[] {0.5f, 1.f}, 1001L, TFloat64.class);
-      session.run(instance.resetStates());
+          new Precision<>(new float[] {0.5f, 1.f}, 1001L, TFloat64.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{1f, 0f}, {0.6f, 0f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1}, {1, 0}});
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{4, 0}, {3, 1}});
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       for (int i = 0; i < 2; i++) session.run(update);
-      Operand<TFloat64> precision = instance.result();
+      Operand<TFloat64> precision = instance.result(tf);
 
       double weighted_tp = (0 + 3.) + (0 + 3.);
       double weighted_positives = ((0 + 3.) + (4. + 0.)) + ((0 + 3.) + (4. + 0.));
@@ -204,13 +195,13 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 3
-      Precision<TFloat32> instance = new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(null, 3, null, 1001L, TFloat32.class);
+
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.5f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
       session.evaluate(1.0f / 3.0f, precision);
     }
   }
@@ -220,21 +211,20 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 3
-      Precision<TFloat32> instance = new Precision<>(tf, null, 3, null, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(null, 3, null, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[] {0.2f, 0.1f, 0.4f, 0f, 0.2f});
       Operand<TInt64> labels = tf.constant(new long[] {0, 1, 1, 0, 1});
       Operand<TFloat32> sampleWeight = tf.constant(new float[][] {{1, 4, 2, 3, 5}});
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
 
       predictions = tf.constant(new float[][] {{0.2f, 0.6f, 0.4f, 0.2f, 0.2f}});
       labels = tf.constant(new long[][] {{1, 0, 1, 1, 1}});
-      update = instance.updateState(labels, predictions, tf.constant(3.f));
+      update = instance.updateState(tf, labels, predictions, tf.constant(3.f));
       session.run(update);
 
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       float tp = (2f + 5f) + (3f + 3f);
       float predicted_positives = (1f + 2f + 5f) + (3f + 3f + 3f);
@@ -248,14 +238,13 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set classId to 2
-      Precision<TFloat32> instance = new Precision<>(tf, null, null, 2, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(null, null, 2, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.6f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -263,9 +252,9 @@ public class PrecisionTest {
 
       predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0f, 0f, 0.2f}});
       labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
-      update = instance.updateState(labels, predictions, null);
+      update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      precision = instance.result();
+      precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -273,9 +262,9 @@ public class PrecisionTest {
 
       predictions = tf.constant(new float[][] {{0.2f, 0.1f, 0.6f, 0f, 0.2f}});
       labels = tf.constant(new long[][] {{0, 1, 0, 0, 0}});
-      update = instance.updateState(labels, predictions, null);
+      update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      precision = instance.result();
+      precision = instance.result(tf);
 
       session.evaluate(0.5f, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -288,14 +277,13 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK and classId to 2
-      Precision<TFloat32> instance = new Precision<>(tf, null, 2, 2, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(null, 2, 2, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.6f, 0.3f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -303,9 +291,9 @@ public class PrecisionTest {
 
       predictions = tf.constant(new float[][] {{1f, 1f, 0.9f, 1f, 1f}});
       labels = tf.constant(new long[][] {{0, 1, 1, 0, 0}});
-      update = instance.updateState(labels, predictions, null);
+      update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      precision = instance.result();
+      precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -318,14 +306,13 @@ public class PrecisionTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       // set topK to 2
-      Precision<TFloat32> instance = new Precision<>(tf, 0.7f, 2, null, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Precision<TFloat32> instance = new Precision<>(0.7f, 2, null, 1001L, TFloat32.class);
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 1}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
@@ -339,29 +326,16 @@ public class PrecisionTest {
       Ops tf = session.getTF();
       Precision<TFloat32> instance = new Precision<>(0.7f, 2, null, 1001L, TFloat32.class);
       instance.init(tf);
-      session.run(instance.resetStates());
 
       Operand<TFloat32> predictions = tf.constant(new float[][] {{0.2f, 0.8f, 0.6f, 0f, 0.2f}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 1, 1, 0, 1}});
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> precision = instance.result();
+      Operand<TFloat32> precision = instance.result(tf);
 
       session.evaluate(1, precision);
       session.evaluate(1, instance.getTruePositives());
       session.evaluate(0, instance.getFalsePositives());
     }
-  }
-
-  @Test
-  public void testIllegalState() {
-    assertThrows(
-        IllegalStateException.class,
-        () -> {
-          try (TestSession session = TestSession.createTestSession(tfMode)) {
-            Precision<TFloat32> instance = new Precision<>(0.7f, 2, null, 1001L, TFloat32.class);
-            session.run(instance.resetStates());
-          }
-        });
   }
 }
