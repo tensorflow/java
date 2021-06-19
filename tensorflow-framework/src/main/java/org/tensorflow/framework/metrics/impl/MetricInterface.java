@@ -62,7 +62,6 @@ public interface MetricInterface {
    * @return the result, possibly with control dependencies
    * @throws IllegalStateException if the TensorFlow Ops has nat been initialized with {@link
    *     Initializable#init(Ops)}.
-   *
    */
   Operand<? extends TNumber> result(Ops tf);
 
