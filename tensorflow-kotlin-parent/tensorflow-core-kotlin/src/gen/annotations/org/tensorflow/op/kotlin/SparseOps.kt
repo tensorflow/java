@@ -17,6 +17,10 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
@@ -71,10 +75,6 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Boolean
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `sparse` operations as [Op][org.tensorflow.op.Op]s
@@ -98,19 +98,19 @@ public class SparseOps(
      * Add an `N`-minibatch `SparseTensor` to a `SparseTensorsMap`, return `N` handles.
      *  A `SparseTensor` of rank `R` is represented by three tensors: `sparse_indices`,
      *  `sparse_values`, and `sparse_shape`, where
-     *
+     *  
      * `sparse_indices.shape[1] == sparse_shape.shape[0] == R`
-     *
+     *  
      * An `N`-minibatch of `SparseTensor` objects is represented as a `SparseTensor`
      *  having a first `sparse_indices` column taking values between `[0, N)`, where
      *  the minibatch size `N == sparse_shape[0]`.
-     *
+     *  
      * The input `SparseTensor` must have rank `R` greater than 1, and the first
      *  dimension is treated as the minibatch dimension.  Elements of the `SparseTensor`
      *  must be sorted in increasing order of this first dimension.  The stored
      *  `SparseTensor` objects pointed to by each row of the output `sparse_handles`
      *  will have rank `R-1`.
-     *
+     *  
      * The `SparseTensor` values can then be read out as part of a minibatch by passing
      *  the given keys as vector elements to `TakeManySparseFromTensorsMap`.  To ensure
      *  the correct `SparseTensorsMap` is accessed, ensure that the same
@@ -143,25 +143,25 @@ public class SparseOps(
         sparseShape: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): AddManySparseToTensorsMap = java.addManySparseToTensorsMap(
+    ): AddManySparseToTensorsMap = java.addManySparseToTensorsMap(    
         sparseIndices,
         sparseValues,
         sparseShape,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.sparse.AddManySparseToTensorsMap.container(it) },
-            sharedName?.let { org.tensorflow.op.sparse.AddManySparseToTensorsMap.sharedName(it) }
+            container?.let{ org.tensorflow.op.sparse.AddManySparseToTensorsMap.container(it) },
+            sharedName?.let{ org.tensorflow.op.sparse.AddManySparseToTensorsMap.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Add a `SparseTensor` to a `SparseTensorsMap` return its handle.
      *  A `SparseTensor` is represented by three tensors: `sparse_indices`,
      *  `sparse_values`, and `sparse_shape`.
-     *
+     *  
      * This operator takes the given `SparseTensor` and adds it to a container
      *  object (a `SparseTensorsMap`).  A unique key within this container is generated
      *  in the form of an `int64`, and this is the value that is returned.
-     *
+     *  
      * The `SparseTensor` can then be read out as part of a minibatch by passing
      *  the key as a vector element to `TakeManySparseFromTensorsMap`.  To ensure
      *  the correct `SparseTensorsMap` is accessed, ensure that the same
@@ -192,20 +192,20 @@ public class SparseOps(
         sparseShape: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): AddSparseToTensorsMap = java.addSparseToTensorsMap(
+    ): AddSparseToTensorsMap = java.addSparseToTensorsMap(    
         sparseIndices,
         sparseValues,
         sparseShape,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.sparse.AddSparseToTensorsMap.container(it) },
-            sharedName?.let { org.tensorflow.op.sparse.AddSparseToTensorsMap.sharedName(it) }
+            container?.let{ org.tensorflow.op.sparse.AddSparseToTensorsMap.container(it) },
+            sharedName?.let{ org.tensorflow.op.sparse.AddSparseToTensorsMap.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies set operation along last dimension of 2 `Tensor` inputs.
      *  See SetOperationOp::SetOperationFromContext for values of `set_operation`.
-     *
+     *  
      * Output `result` is a `SparseTensor` represented by `result_indices`,
      *  `result_values`, and `result_shape`. For `set1` and `set2` ranked `n`, this
      *  has rank `n` and the same 1st `n-1` dimensions as `set1` and `set2`. The `nth`
@@ -232,27 +232,27 @@ public class SparseOps(
         set2: Operand<T>,
         setOperation: String,
         validateIndices: Boolean? = null
-    ): DenseToDenseSetOperation<T> = java.denseToDenseSetOperation<T>(
+    ): DenseToDenseSetOperation<T> = java.denseToDenseSetOperation<T>(    
         set1,
         set2,
         setOperation,
         *listOfNotNull(
-            validateIndices?.let { org.tensorflow.op.sparse.DenseToDenseSetOperation.validateIndices(it) }
+            validateIndices?.let{ org.tensorflow.op.sparse.DenseToDenseSetOperation.validateIndices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies set operation along last dimension of `Tensor` and `SparseTensor`.
      *  See SetOperationOp::SetOperationFromContext for values of `set_operation`.
-     *
+     *  
      * Input `set2` is a `SparseTensor` represented by `set2_indices`, `set2_values`,
      *  and `set2_shape`. For `set2` ranked `n`, 1st `n-1` dimensions must be the same
      *  as `set1`. Dimension `n` contains values in a set, duplicates are allowed but
      *  ignored.
-     *
+     *  
      * If `validate_indices` is `True`, this op validates the order and range of `set2`
      *  indices.
-     *
+     *  
      * Output `result` is a `SparseTensor` represented by `result_indices`,
      *  `result_values`, and `result_shape`. For `set1` and `set2` ranked `n`, this
      *  has rank `n` and the same 1st `n-1` dimensions as `set1` and `set2`. The `nth`
@@ -286,16 +286,16 @@ public class SparseOps(
         set2Shape: Operand<TInt64>,
         setOperation: String,
         validateIndices: Boolean? = null
-    ): DenseToSparseSetOperation<T> = java.denseToSparseSetOperation<T>(
+    ): DenseToSparseSetOperation<T> = java.denseToSparseSetOperation<T>(    
         set1,
         set2Indices,
         set2Values,
         set2Shape,
         setOperation,
         *listOfNotNull(
-            validateIndices?.let { org.tensorflow.op.sparse.DenseToSparseSetOperation.validateIndices(it) }
+            validateIndices?.let{ org.tensorflow.op.sparse.DenseToSparseSetOperation.validateIndices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Deserialize `SparseTensor` objects.
@@ -306,15 +306,15 @@ public class SparseOps(
      *  created, its rank is the rank of the incoming `SparseTensor` objects plus N;
      *  the sparse tensors have been concatenated along new dimensions, one for each
      *  batch.
-     *
+     *  
      * The output `SparseTensor` object's shape values for the original dimensions
      *  are the max across the input `SparseTensor` objects' shape values for the
      *  corresponding dimensions. The new dimensions match the size of the batch.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
      *  original `SparseTensor` objects:
      *  ```
@@ -323,18 +323,18 @@ public class SparseOps(
      *          [20]
      *  values = [1, 2, 3]
      *  shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *          [10]
      *  values = [4, 5]
      *  shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final deserialized `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -344,7 +344,7 @@ public class SparseOps(
      *          [1 10]
      *  values = [1, 2, 3, 4, 5]
      *  shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `sparse_values` output
@@ -356,10 +356,10 @@ public class SparseOps(
      * @see org.tensorflow.op.SparseOps.deserializeSparse
      */
     public fun <U : TType> deserializeSparse(serializedSparse: Operand<out TType>, dtype: Class<U>):
-        DeserializeSparse<U> = java.deserializeSparse<U>(
+            DeserializeSparse<U> = java.deserializeSparse<U>(    
         serializedSparse,
         dtype
-    )
+        )
 
     /**
      * Applies a sparse gradient to a given accumulator.
@@ -386,14 +386,14 @@ public class SparseOps(
         gradientValues: Operand<out TType>,
         gradientShape: Operand<TInt64>,
         hasKnownShape: Boolean
-    ): SparseAccumulatorApplyGradient = java.sparseAccumulatorApplyGradient(
+    ): SparseAccumulatorApplyGradient = java.sparseAccumulatorApplyGradient(    
         handle,
         localStep,
         gradientIndices,
         gradientValues,
         gradientShape,
         hasKnownShape
-    )
+        )
 
     /**
      * Extracts the average sparse gradient in a SparseConditionalAccumulator.
@@ -417,18 +417,18 @@ public class SparseOps(
         handle: Operand<TString>,
         numRequired: Operand<TInt32>,
         dtype: Class<T>
-    ): SparseAccumulatorTakeGradient<T> = java.sparseAccumulatorTakeGradient<T>(
+    ): SparseAccumulatorTakeGradient<T> = java.sparseAccumulatorTakeGradient<T>(    
         handle,
         numRequired,
         dtype
-    )
+        )
 
     /**
      * Adds two `SparseTensor` objects to produce another `SparseTensor`.
      *  The input `SparseTensor` objects' indices are assumed ordered in standard
      *  lexicographic order.  If this is not the case, before this step run
      *  `SparseReorder` to restore index ordering.
-     *
+     *  
      * By default, if two values sum to zero at some index, the output `SparseTensor`
      *  would still include that particular location in its index, storing a zero in the
      *  corresponding value slot.  To override this, callers can specify `thresh`,
@@ -436,7 +436,7 @@ public class SparseOps(
      *  corresponding value and index would then not be included.  In particular,
      *  `thresh == 0` (default) means everything is kept and actual thresholding happens
      *  only for a positive value.
-     *
+     *  
      * In the following shapes, `nnz` is the count after taking `thresh` into account.
      *
      * @param <T> data type for `sum_values` output
@@ -462,7 +462,7 @@ public class SparseOps(
         bValues: Operand<T>,
         bShape: Operand<TInt64>,
         thresh: Operand<out TNumber>
-    ): SparseAdd<T> = java.sparseAdd<T>(
+    ): SparseAdd<T> = java.sparseAdd<T>(    
         aIndices,
         aValues,
         aShape,
@@ -470,7 +470,7 @@ public class SparseOps(
         bValues,
         bShape,
         thresh
-    )
+        )
 
     /**
      * The gradient operator for the SparseAdd op.
@@ -495,12 +495,12 @@ public class SparseOps(
         aIndices: Operand<TInt64>,
         bIndices: Operand<TInt64>,
         sumIndices: Operand<TInt64>
-    ): SparseAddGrad<T> = java.sparseAddGrad<T>(
+    ): SparseAddGrad<T> = java.sparseAddGrad<T>(    
         backpropValGrad,
         aIndices,
         bIndices,
         sumIndices
-    )
+        )
 
     /**
      * Counts the number of occurrences of each value in an integer array.
@@ -509,7 +509,7 @@ public class SparseOps(
      *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
      *  the value in `weights` at each index where the corresponding value in `arr` is
      *  `i`.
-     *
+     *  
      * Values in `arr` outside of the range [0, size) are ignored.
      *
      * @param <U> data type for `output` output
@@ -538,36 +538,36 @@ public class SparseOps(
         sizeOutput: Operand<T>,
         weights: Operand<U>,
         binaryOutput: Boolean? = null
-    ): SparseBincount<U> = java.sparseBincount<U, T>(
+    ): SparseBincount<U> = java.sparseBincount<U, T>(    
         indices,
         values,
         denseShape,
         sizeOutput,
         weights,
         *listOfNotNull(
-            binaryOutput?.let { org.tensorflow.op.sparse.SparseBincount.binaryOutput(it) }
+            binaryOutput?.let{ org.tensorflow.op.sparse.SparseBincount.binaryOutput(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Concatenates a list of `SparseTensor` along the specified dimension.
      *  Concatenation is with respect to the dense versions of these sparse tensors.
      *  It is assumed that each input is a `SparseTensor` whose elements are ordered
      *  along increasing dimension number.
-     *
+     *  
      * All inputs' shapes must match, except for the concat dimension.  The
      *  `indices`, `values`, and `shapes` lists must have the same length.
-     *
+     *  
      * The output shape is identical to the inputs', except along the concat
      *  dimension, where it is the sum of the inputs' sizes along that dimension.
-     *
+     *  
      * The output elements will be resorted to preserve the sort order along
      *  increasing dimension number.
-     *
+     *  
      * This op runs in `O(M log M)` time, where `M` is the total number of non-empty
      *  values across all inputs. This is due to the need for an internal sort in
      *  order to concatenate efficiently across an arbitrary dimension.
-     *
+     *  
      * For example, if `concat_dim = 1` and the inputs are
      *  ```
      * sp_inputs[0]: shape = [2, 3]
@@ -578,9 +578,9 @@ public class SparseOps(
      *  sp_inputs[1]: shape = [2, 4]
      *  [0, 1]: &quot;d&quot;
      *  [0, 2]: &quot;e&quot;
-     *
+     *  
      * ```
-     *
+     *  
      * then the output will be
      *  ```
      * shape = [2, 7]
@@ -589,14 +589,14 @@ public class SparseOps(
      *  [0, 5]: &quot;e&quot;
      *  [1, 0]: &quot;b&quot;
      *  [1, 1]: &quot;c&quot;
-     *
+     *  
      * ```
-     *
+     *  
      * Graphically this is equivalent to doing
      *  ```
      * [    a] concat [  d e  ] = [    a   d e  ]
      *  [b c  ]        [       ]   [b c          ]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output_values` output
@@ -614,12 +614,12 @@ public class SparseOps(
         values: Iterable<Operand<T>>,
         shapes: Iterable<Operand<TInt64>>,
         concatDim: Long
-    ): SparseConcat<T> = java.sparseConcat<T>(
+    ): SparseConcat<T> = java.sparseConcat<T>(    
         indices,
         values,
         shapes,
         concatDim
-    )
+        )
 
     /**
      * A conditional accumulator for aggregating sparse gradients.
@@ -657,22 +657,22 @@ public class SparseOps(
         container: String? = null,
         sharedName: String? = null,
         reductionType: String? = null
-    ): SparseConditionalAccumulator = java.sparseConditionalAccumulator<T>(
+    ): SparseConditionalAccumulator = java.sparseConditionalAccumulator<T>(    
         dtype,
         shape,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.sparse.SparseConditionalAccumulator.container(it) },
-            sharedName?.let { org.tensorflow.op.sparse.SparseConditionalAccumulator.sharedName(it) },
-            reductionType?.let { org.tensorflow.op.sparse.SparseConditionalAccumulator.reductionType(it) }
+            container?.let{ org.tensorflow.op.sparse.SparseConditionalAccumulator.container(it) },
+            sharedName?.let{ org.tensorflow.op.sparse.SparseConditionalAccumulator.sharedName(it) },
+            reductionType?.let{ org.tensorflow.op.sparse.SparseConditionalAccumulator.reductionType(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Generates sparse cross from a list of sparse and dense tensors.
      *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
      *  representing features of one feature column. It outputs a 2D `SparseTensor` with
      *  the batchwise crosses of these features.
-     *
+     *  
      * For example, if the inputs are
      *  ```
      * inputs[0]: SparseTensor with shape = [2, 2]
@@ -685,18 +685,18 @@ public class SparseOps(
      *  [1, 0]: &quot;e&quot;
      *
      *  inputs[2]: Tensor [[&quot;f&quot;], [&quot;g&quot;]]
-     *
+     *  
      * ```
-     *
+     *  
      * then the output will be
      *  ```
      * shape = [2, 2]
      *  [0, 0]: &quot;a_X_d_X_f&quot;
      *  [1, 0]: &quot;b_X_e_X_g&quot;
      *  [1, 1]: &quot;c_X_e_X_g&quot;
-     *
+     *  
      * ```
-     *
+     *  
      * if hashed_output=true then the output will be
      *  ```
      * shape = [2, 2]
@@ -709,7 +709,7 @@ public class SparseOps(
      *  [1, 1]: FingerprintCat64(
      *              Fingerprint64(&quot;g&quot;), FingerprintCat64(
      *                  Fingerprint64(&quot;e&quot;), Fingerprint64(&quot;c&quot;)))
-     *
+     *  
      * ```
      *
      * @param indices 2-D.  Indices of each input `SparseTensor`.
@@ -726,20 +726,20 @@ public class SparseOps(
         shapes: Iterable<Operand<TInt64>>,
         denseInputs: Iterable<Operand<*>>,
         sep: Operand<TString>
-    ): SparseCross = java.sparseCross(
+    ): SparseCross = java.sparseCross(    
         indices,
         values,
         shapes,
         denseInputs,
         sep
-    )
+        )
 
     /**
      * Generates sparse cross from a list of sparse and dense tensors.
      *  The op takes two lists, one of 2D `SparseTensor` and one of 2D `Tensor`, each
      *  representing features of one feature column. It outputs a 2D `SparseTensor` with
      *  the batchwise crosses of these features.
-     *
+     *  
      * For example, if the inputs are
      *  ```
      * inputs[0]: SparseTensor with shape = [2, 2]
@@ -752,18 +752,18 @@ public class SparseOps(
      *  [1, 0]: &quot;e&quot;
      *
      *  inputs[2]: Tensor [[&quot;f&quot;], [&quot;g&quot;]]
-     *
+     *  
      * ```
-     *
+     *  
      * then the output will be
      *  ```
      * shape = [2, 2]
      *  [0, 0]: &quot;a_X_d_X_f&quot;
      *  [1, 0]: &quot;b_X_e_X_g&quot;
      *  [1, 1]: &quot;c_X_e_X_g&quot;
-     *
+     *  
      * ```
-     *
+     *  
      * if hashed_output=true then the output will be
      *  ```
      * shape = [2, 2]
@@ -776,7 +776,7 @@ public class SparseOps(
      *  [1, 1]: FingerprintCat64(
      *              Fingerprint64(&quot;g&quot;), FingerprintCat64(
      *                  Fingerprint64(&quot;e&quot;), Fingerprint64(&quot;c&quot;)))
-     *
+     *  
      * ```
      *
      * @param indices 2-D.  Indices of each input `SparseTensor`.
@@ -798,7 +798,7 @@ public class SparseOps(
         numBuckets: Operand<TInt64>,
         strongHash: Operand<TBool>,
         salt: Operand<TInt64>
-    ): SparseCrossHashed = java.sparseCrossHashed(
+    ): SparseCrossHashed = java.sparseCrossHashed(    
         indices,
         values,
         shapes,
@@ -806,7 +806,7 @@ public class SparseOps(
         numBuckets,
         strongHash,
         salt
-    )
+        )
 
     /**
      * Adds up a SparseTensor and a dense Tensor, using these special rules:
@@ -814,7 +814,7 @@ public class SparseOps(
      *  eligible;
      *  (2) Then, only the dense values pointed to by the indices of the SparseTensor
      *  participate in the cwise addition.
-     *
+     *  
      * By these rules, the result is a logical SparseTensor with exactly the same
      *  indices and shape, but possibly with different non-zero values.  The output of
      *  this Op is the resultant non-zero values.
@@ -834,12 +834,12 @@ public class SparseOps(
         spValues: Operand<T>,
         spShape: Operand<TInt64>,
         dense: Operand<T>
-    ): SparseDenseCwiseAdd<T> = java.sparseDenseCwiseAdd<T>(
+    ): SparseDenseCwiseAdd<T> = java.sparseDenseCwiseAdd<T>(    
         spIndices,
         spValues,
         spShape,
         dense
-    )
+        )
 
     /**
      * Component-wise divides a SparseTensor by a dense Tensor.
@@ -861,19 +861,19 @@ public class SparseOps(
         spValues: Operand<T>,
         spShape: Operand<TInt64>,
         dense: Operand<T>
-    ): SparseDenseCwiseDiv<T> = java.sparseDenseCwiseDiv<T>(
+    ): SparseDenseCwiseDiv<T> = java.sparseDenseCwiseDiv<T>(    
         spIndices,
         spValues,
         spShape,
         dense
-    )
+        )
 
     /**
      * Component-wise multiplies a SparseTensor by a dense Tensor.
      *  The output locations corresponding to the implicitly zero elements in the sparse
      *  tensor will be zero (i.e., will not take up storage space), regardless of the
      *  contents of the dense tensor (even if it's +/-INF and that INF*0 == NaN).
-     *
+     *  
      * _Limitation_: this Op only broadcasts the dense side to the sparse side, but not
      *  the other direction.
      *
@@ -892,12 +892,12 @@ public class SparseOps(
         spValues: Operand<T>,
         spShape: Operand<TInt64>,
         dense: Operand<T>
-    ): SparseDenseCwiseMul<T> = java.sparseDenseCwiseMul<T>(
+    ): SparseDenseCwiseMul<T> = java.sparseDenseCwiseMul<T>(    
         spIndices,
         spValues,
         spShape,
         dense
-    )
+        )
 
     /**
      * Fills empty rows in the input 2-D `SparseTensor` with a default value.
@@ -905,20 +905,20 @@ public class SparseOps(
      *  (`indices`, `values`, `dense_shape`).  The output `SparseTensor` has the
      *  same `dense_shape` but with indices `output_indices` and values
      *  `output_values`.
-     *
+     *  
      * This op inserts a single entry for every row that doesn't have any values.
      *  The index is created as `&#91;row, 0, ..., 0&#93;` and the inserted value
      *  is `default_value`.
-     *
+     *  
      * For example, suppose `sp_input` has shape `&#91;5, 6&#93;` and non-empty values:
      *  ```
      * [0, 1]: a
      *  [0, 3]: b
      *  [2, 0]: c
      *  [3, 1]: d
-     *
+     *  
      * ```
-     *
+     *  
      * Rows 1 and 4 are empty, so the output will be of shape `&#91;5, 6&#93;` with values:
      *  ```
      * [0, 1]: a
@@ -927,23 +927,23 @@ public class SparseOps(
      *  [2, 0]: c
      *  [3, 1]: d
      *  [4, 0]: default_value
-     *
+     *  
      * ```
-     *
+     *  
      * The output `SparseTensor` will be in row-major order and will have the
      *  same shape as the input.
-     *
+     *  
      * This op also returns an indicator vector shaped `&#91;dense_shape[0&#93;]` such that
      *  ```
      * empty_row_indicator[i] = True iff row i was an empty row.
-     *
+     *  
      * ```
-     *
+     *  
      * And a reverse index map vector shaped `&#91;indices.shape[0&#93;]` that is used during
      *  backpropagation,
      *  ```
      * reverse_index_map[j] = out_j s.t. indices[j, :] == output_indices[out_j, :]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output_values` output
@@ -962,12 +962,12 @@ public class SparseOps(
         values: Operand<T>,
         denseShape: Operand<TInt64>,
         defaultValue: Operand<T>
-    ): SparseFillEmptyRows<T> = java.sparseFillEmptyRows<T>(
+    ): SparseFillEmptyRows<T> = java.sparseFillEmptyRows<T>(    
         indices,
         values,
         denseShape,
         defaultValue
-    )
+        )
 
     /**
      * The gradient of SparseFillEmptyRows.
@@ -975,7 +975,7 @@ public class SparseOps(
      *  shaped `&#91;N_full&#93;`, where `N_full >= N` and copies data into either
      *  `d_values` or `d_default_value`.  Here `d_values` is shaped `[N]` and
      *  `d_default_value` is a scalar.
-     *
+     *  
      * d_values[j] = grad_values&#91;reverse_index_map[j&#93;]
      *  d_default_value = sum_{k : 0 .. N_full - 1} (
      *  grad_values[k] * 1{k not in reverse_index_map})
@@ -987,13 +987,11 @@ public class SparseOps(
      * @return a new instance of SparseFillEmptyRowsGrad
      * @see org.tensorflow.op.SparseOps.sparseFillEmptyRowsGrad
      */
-    public fun <T : TType> sparseFillEmptyRowsGrad(
-        reverseIndexMap: Operand<TInt64>,
-        gradValues: Operand<T>
-    ): SparseFillEmptyRowsGrad<T> = java.sparseFillEmptyRowsGrad<T>(
+    public fun <T : TType> sparseFillEmptyRowsGrad(reverseIndexMap: Operand<TInt64>,
+            gradValues: Operand<T>): SparseFillEmptyRowsGrad<T> = java.sparseFillEmptyRowsGrad<T>(    
         reverseIndexMap,
         gradValues
-    )
+        )
 
     /**
      * Multiply matrix &quot;a&quot; by matrix &quot;b&quot;.
@@ -1004,7 +1002,7 @@ public class SparseOps(
      *  &quot;b&quot; is sparse, in the sense that they have a large proportion of zero values.
      *  The breakeven for using this versus a dense matrix multiply on one platform was
      *  30% zero values in the sparse matrix.
-     *
+     *  
      * The gradient computation of this operation will only take advantage of sparsity
      *  in the input gradient when that gradient comes from a Relu.
      *
@@ -1037,28 +1035,28 @@ public class SparseOps(
         transposeB: Boolean? = null,
         aIsSparse: Boolean? = null,
         bIsSparse: Boolean? = null
-    ): SparseMatMul = java.sparseMatMul(
+    ): SparseMatMul = java.sparseMatMul(    
         a,
         b,
         *listOfNotNull(
-            transposeA?.let { org.tensorflow.op.sparse.SparseMatMul.transposeA(it) },
-            transposeB?.let { org.tensorflow.op.sparse.SparseMatMul.transposeB(it) },
-            aIsSparse?.let { org.tensorflow.op.sparse.SparseMatMul.aIsSparse(it) },
-            bIsSparse?.let { org.tensorflow.op.sparse.SparseMatMul.bIsSparse(it) }
+            transposeA?.let{ org.tensorflow.op.sparse.SparseMatMul.transposeA(it) },
+            transposeB?.let{ org.tensorflow.op.sparse.SparseMatMul.transposeB(it) },
+            aIsSparse?.let{ org.tensorflow.op.sparse.SparseMatMul.aIsSparse(it) },
+            bIsSparse?.let{ org.tensorflow.op.sparse.SparseMatMul.bIsSparse(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the max of elements across dimensions of a SparseTensor.
      *  This Op takes a SparseTensor and is the sparse counterpart to
      *  `tf.reduce_max()`.  In particular, this Op also returns a dense `Tensor`
      *  instead of a sparse one.
-     *
+     *  
      * Reduces `sp_input` along the dimensions given in `reduction_axes`.  Unless
      *  `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
      *  `reduction_axes`. If `keep_dims` is true, the reduced dimensions are retained
      *  with length 1.
-     *
+     *  
      * If `reduction_axes` has no entries, all dimensions are reduced, and a tensor
      *  with a single element is returned.  Additionally, the axes can be negative,
      *  which are interpreted according to the indexing rules in Python.
@@ -1084,27 +1082,27 @@ public class SparseOps(
         inputShape: Operand<TInt64>,
         reductionAxes: Operand<TInt32>,
         keepDims: Boolean? = null
-    ): SparseReduceMax<T> = java.sparseReduceMax<T>(
+    ): SparseReduceMax<T> = java.sparseReduceMax<T>(    
         inputIndices,
         inputValues,
         inputShape,
         reductionAxes,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.sparse.SparseReduceMax.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.sparse.SparseReduceMax.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the max of elements across dimensions of a SparseTensor.
      *  This Op takes a SparseTensor and is the sparse counterpart to
      *  `tf.reduce_max()`.  In contrast to SparseReduceMax, this Op returns a
      *  SparseTensor.
-     *
+     *  
      * Reduces `sp_input` along the dimensions given in `reduction_axes`.  Unless
      *  `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
      *  `reduction_axes`. If `keep_dims` is true, the reduced dimensions are retained
      *  with length 1.
-     *
+     *  
      * If `reduction_axes` has no entries, all dimensions are reduced, and a tensor
      *  with a single element is returned.  Additionally, the axes can be negative,
      *  which are interpreted according to the indexing rules in Python.
@@ -1130,27 +1128,27 @@ public class SparseOps(
         inputShape: Operand<TInt64>,
         reductionAxes: Operand<TInt32>,
         keepDims: Boolean? = null
-    ): SparseReduceMaxSparse<T> = java.sparseReduceMaxSparse<T>(
+    ): SparseReduceMaxSparse<T> = java.sparseReduceMaxSparse<T>(    
         inputIndices,
         inputValues,
         inputShape,
         reductionAxes,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.sparse.SparseReduceMaxSparse.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.sparse.SparseReduceMaxSparse.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the sum of elements across dimensions of a SparseTensor.
      *  This Op takes a SparseTensor and is the sparse counterpart to
      *  `tf.reduce_sum()`.  In particular, this Op also returns a dense `Tensor`
      *  instead of a sparse one.
-     *
+     *  
      * Reduces `sp_input` along the dimensions given in `reduction_axes`.  Unless
      *  `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
      *  `reduction_axes`. If `keep_dims` is true, the reduced dimensions are retained
      *  with length 1.
-     *
+     *  
      * If `reduction_axes` has no entries, all dimensions are reduced, and a tensor
      *  with a single element is returned.  Additionally, the axes can be negative,
      *  which are interpreted according to the indexing rules in Python.
@@ -1176,27 +1174,27 @@ public class SparseOps(
         inputShape: Operand<TInt64>,
         reductionAxes: Operand<TInt32>,
         keepDims: Boolean? = null
-    ): SparseReduceSum<T> = java.sparseReduceSum<T>(
+    ): SparseReduceSum<T> = java.sparseReduceSum<T>(    
         inputIndices,
         inputValues,
         inputShape,
         reductionAxes,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.sparse.SparseReduceSum.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.sparse.SparseReduceSum.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the sum of elements across dimensions of a SparseTensor.
      *  This Op takes a SparseTensor and is the sparse counterpart to
      *  `tf.reduce_sum()`.  In contrast to SparseReduceSum, this Op returns a
      *  SparseTensor.
-     *
+     *  
      * Reduces `sp_input` along the dimensions given in `reduction_axes`.  Unless
      *  `keep_dims` is true, the rank of the tensor is reduced by 1 for each entry in
      *  `reduction_axes`. If `keep_dims` is true, the reduced dimensions are retained
      *  with length 1.
-     *
+     *  
      * If `reduction_axes` has no entries, all dimensions are reduced, and a tensor
      *  with a single element is returned.  Additionally, the axes can be negative,
      *  which are interpreted according to the indexing rules in Python.
@@ -1222,24 +1220,24 @@ public class SparseOps(
         inputShape: Operand<TInt64>,
         reductionAxes: Operand<TInt32>,
         keepDims: Boolean? = null
-    ): SparseReduceSumSparse<T> = java.sparseReduceSumSparse<T>(
+    ): SparseReduceSumSparse<T> = java.sparseReduceSumSparse<T>(    
         inputIndices,
         inputValues,
         inputShape,
         reductionAxes,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.sparse.SparseReduceSumSparse.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.sparse.SparseReduceSumSparse.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reorders a SparseTensor into the canonical, row-major ordering.
      *  Note that by convention, all sparse ops preserve the canonical ordering along
      *  increasing dimension number. The only time ordering can be violated is during
      *  manual manipulation of the indices and values vectors to add entries.
-     *
+     *  
      * Reordering does not affect the shape of the SparseTensor.
-     *
+     *  
      * If the tensor has rank `R` and `N` non-empty values, `input_indices` has
      *  shape `&#91;N, R&#93;`, input_values has length `N`, and input_shape has length `R`.
      *
@@ -1256,25 +1254,25 @@ public class SparseOps(
         inputIndices: Operand<TInt64>,
         inputValues: Operand<T>,
         inputShape: Operand<TInt64>
-    ): SparseReorder<T> = java.sparseReorder<T>(
+    ): SparseReorder<T> = java.sparseReorder<T>(    
         inputIndices,
         inputValues,
         inputShape
-    )
+        )
 
     /**
      * Reshapes a SparseTensor to represent values in a new dense shape.
      *  This operation has the same semantics as reshape on the represented dense
      *  tensor.  The `input_indices` are recomputed based on the requested `new_shape`.
-     *
+     *  
      * If one component of `new_shape` is the special value -1, the size of that
      *  dimension is computed so that the total dense size remains constant.  At
      *  most one component of `new_shape` can be -1.  The number of dense elements
      *  implied by `new_shape` must be the same as the number of dense elements
      *  originally implied by `input_shape`.
-     *
+     *  
      * Reshaping does not affect the order of values in the SparseTensor.
-     *
+     *  
      * If the input tensor has rank `R_in` and `N` non-empty values, and `new_shape`
      *  has length `R_out`, then `input_indices` has shape `&#91;N, R_in&#93;`,
      *  `input_shape` has length `R_in`, `output_indices` has shape `&#91;N, R_out&#93;`, and
@@ -1291,16 +1289,16 @@ public class SparseOps(
         inputIndices: Operand<TInt64>,
         inputShape: Operand<TInt64>,
         newShape: Operand<TInt64>
-    ): SparseReshape = java.sparseReshape(
+    ): SparseReshape = java.sparseReshape(    
         inputIndices,
         inputShape,
         newShape
-    )
+        )
 
     /**
      * Computes the mean along sparse segments of a tensor.
      *  See `tf.sparse.segment_sum` for usage examples.
-     *
+     *  
      * Like `SegmentMean`, but `segment_ids` can have rank less than `data`'s first
      *  dimension, selecting a subset of dimension 0, specified by `indices`.
      *
@@ -1316,11 +1314,11 @@ public class SparseOps(
         `data`: Operand<T>,
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>
-    ): SparseSegmentMean<T> = java.sparseSegmentMean<T>(
+    ): SparseSegmentMean<T> = java.sparseSegmentMean<T>(    
         data,
         indices,
         segmentIds
-    )
+        )
 
     /**
      * Computes gradients for SparseSegmentMean.
@@ -1341,20 +1339,20 @@ public class SparseOps(
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>,
         outputDim0: Operand<TInt32>
-    ): SparseSegmentMeanGrad<T> = java.sparseSegmentMeanGrad<T>(
+    ): SparseSegmentMeanGrad<T> = java.sparseSegmentMeanGrad<T>(    
         grad,
         indices,
         segmentIds,
         outputDim0
-    )
+        )
 
     /**
      * Computes the mean along sparse segments of a tensor.
      *  Like `SparseSegmentMean`, but allows missing ids in `segment_ids`. If an id is
      *  missing, the `output` tensor at that position will be zeroed.
-     *
+     *  
      * Read[the section on
-     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
+     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation) 
      *  for an explanation of segments.
      *
      * @param <T> data type for `output` output
@@ -1371,17 +1369,17 @@ public class SparseOps(
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>,
         numSegments: Operand<out TNumber>
-    ): SparseSegmentMeanWithNumSegments<T> = java.sparseSegmentMeanWithNumSegments<T>(
+    ): SparseSegmentMeanWithNumSegments<T> = java.sparseSegmentMeanWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
         numSegments
-    )
+        )
 
     /**
      * Computes the sum along sparse segments of a tensor divided by the sqrt of N.
      *  N is the size of the segment being reduced.
-     *
+     *  
      * See `tf.sparse.segment_sum` for usage examples.
      *
      * @param <T> data type for `output` output
@@ -1396,11 +1394,11 @@ public class SparseOps(
         `data`: Operand<T>,
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>
-    ): SparseSegmentSqrtN<T> = java.sparseSegmentSqrtN<T>(
+    ): SparseSegmentSqrtN<T> = java.sparseSegmentSqrtN<T>(    
         data,
         indices,
         segmentIds
-    )
+        )
 
     /**
      * Computes gradients for SparseSegmentSqrtN.
@@ -1421,22 +1419,22 @@ public class SparseOps(
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>,
         outputDim0: Operand<TInt32>
-    ): SparseSegmentSqrtNGrad<T> = java.sparseSegmentSqrtNGrad<T>(
+    ): SparseSegmentSqrtNGrad<T> = java.sparseSegmentSqrtNGrad<T>(    
         grad,
         indices,
         segmentIds,
         outputDim0
-    )
+        )
 
     /**
      * Computes the sum along sparse segments of a tensor divided by the sqrt of N.
      *  N is the size of the segment being reduced.
-     *
+     *  
      * Like `SparseSegmentSqrtN`, but allows missing ids in `segment_ids`. If an id is
      *  missing, the `output` tensor at that position will be zeroed.
-     *
+     *  
      * Read[the section on
-     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
+     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation) 
      *  for an explanation of segments.
      *
      * @param <T> data type for `output` output
@@ -1453,22 +1451,22 @@ public class SparseOps(
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>,
         numSegments: Operand<out TNumber>
-    ): SparseSegmentSqrtNWithNumSegments<T> = java.sparseSegmentSqrtNWithNumSegments<T>(
+    ): SparseSegmentSqrtNWithNumSegments<T> = java.sparseSegmentSqrtNWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
         numSegments
-    )
+        )
 
     /**
      * Computes the sum along sparse segments of a tensor.
      *  Read[the section on
-     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation)
+     * segmentation](https://tensorflow.org/api_docs/python/tf/math#Segmentation) 
      *  for an explanation of segments.
-     *
+     *  
      * Like `SegmentSum`, but `segment_ids` can have rank less than `data`'s first
      *  dimension, selecting a subset of dimension 0, specified by `indices`.
-     *
+     *  
      * For example:
      *  ```
      * c = tf.constant([[1,2,3,4], [-1,-2,-3,-4], [5,6,7,8]])
@@ -1489,7 +1487,7 @@ public class SparseOps(
      *
      *  # Which is equivalent to:
      *  tf.segment_sum(c, tf.constant([0, 0, 1]))
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -1504,21 +1502,21 @@ public class SparseOps(
         `data`: Operand<T>,
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>
-    ): SparseSegmentSum<T> = java.sparseSegmentSum<T>(
+    ): SparseSegmentSum<T> = java.sparseSegmentSum<T>(    
         data,
         indices,
         segmentIds
-    )
+        )
 
     /**
      * Computes the sum along sparse segments of a tensor.
      *  Like `SparseSegmentSum`, but allows missing ids in `segment_ids`. If an id is
      *  missing, the `output` tensor at that position will be zeroed.
-     *
+     *  
      * Read[the section on
-     * segmentation](https://tensorflow.org/api_docs/python/tf/sparse#Segmentation)
+     * segmentation](https://tensorflow.org/api_docs/python/tf/sparse#Segmentation) 
      *  for an explanation of segments.
-     *
+     *  
      * For example:
      *  ```
      * c = tf.constant([[1,2,3,4], [-1,-2,-3,-4], [5,6,7,8]])
@@ -1537,7 +1535,7 @@ public class SparseOps(
      *  #     [ 0  0  0  0]
      *  #     [-1 -2 -3 -4]
      *  #     [ 0  0  0  0]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -1554,12 +1552,12 @@ public class SparseOps(
         indices: Operand<out TNumber>,
         segmentIds: Operand<out TNumber>,
         numSegments: Operand<out TNumber>
-    ): SparseSegmentSumWithNumSegments<T> = java.sparseSegmentSumWithNumSegments<T>(
+    ): SparseSegmentSumWithNumSegments<T> = java.sparseSegmentSumWithNumSegments<T>(    
         data,
         indices,
         segmentIds,
         numSegments
-    )
+        )
 
     /**
      * Slice a `SparseTensor` based on the `start` and `size`.
@@ -1568,9 +1566,9 @@ public class SparseOps(
      * input_tensor = shape = [2, 7]
      *  [    a   d e  ]
      *  [b c          ]
-     *
+     *  
      * ```
-     *
+     *  
      * Graphically the output tensors are:
      *  ```
      * sparse_slice([0, 0], [2, 4]) = shape = [2, 4]
@@ -1580,7 +1578,7 @@ public class SparseOps(
      *  sparse_slice([0, 4], [2, 3]) = shape = [2, 3]
      *  [ d e  ]
      *  [      ]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output_values` output
@@ -1601,13 +1599,13 @@ public class SparseOps(
         shape: Operand<TInt64>,
         start: Operand<TInt64>,
         sizeOutput: Operand<TInt64>
-    ): SparseSlice<T> = java.sparseSlice<T>(
+    ): SparseSlice<T> = java.sparseSlice<T>(    
         indices,
         values,
         shape,
         start,
         sizeOutput
-    )
+        )
 
     /**
      * The gradient operator for the SparseSlice op.
@@ -1630,28 +1628,28 @@ public class SparseOps(
         inputIndices: Operand<TInt64>,
         inputStart: Operand<TInt64>,
         outputIndices: Operand<TInt64>
-    ): SparseSliceGrad<T> = java.sparseSliceGrad<T>(
+    ): SparseSliceGrad<T> = java.sparseSliceGrad<T>(    
         backpropValGrad,
         inputIndices,
         inputStart,
         outputIndices
-    )
+        )
 
     /**
      * Applies softmax to a batched N-D `SparseTensor`.
      *  The inputs represent an N-D SparseTensor  with logical shape `&#91;..., B, C&#93;`
      *  (where `N >= 2`), and with indices sorted in the canonical lexicographic order.
-     *
+     *  
      * This op is equivalent to applying the normal `tf.nn.softmax()` to each innermost
      *  logical submatrix with shape `&#91;B, C&#93;`, but with the catch that _the implicitly
      *  zero elements do not participate_.  Specifically, the algorithm is equivalent
      *  to the following:
-     *
+     *  
      * (1) Applies `tf.nn.softmax()` to a densified view of each innermost submatrix
      *  with shape `&#91;B, C&#93;`, along the size-C dimension;
      *  (2) Masks out the original implicitly-zero locations;
      *  (3) Renormalizes the remaining elements.
-     *
+     *  
      * Hence, the `SparseTensor` result has exactly the same non-zero indices and
      *  shape.
      *
@@ -1668,11 +1666,11 @@ public class SparseOps(
         spIndices: Operand<TInt64>,
         spValues: Operand<T>,
         spShape: Operand<TInt64>
-    ): SparseSoftmax<T> = java.sparseSoftmax<T>(
+    ): SparseSoftmax<T> = java.sparseSoftmax<T>(    
         spIndices,
         spValues,
         spShape
-    )
+        )
 
     /**
      * Returns the element-wise max of two SparseTensors.
@@ -1697,14 +1695,14 @@ public class SparseOps(
         bIndices: Operand<TInt64>,
         bValues: Operand<T>,
         bShape: Operand<TInt64>
-    ): SparseSparseMaximum<T> = java.sparseSparseMaximum<T>(
+    ): SparseSparseMaximum<T> = java.sparseSparseMaximum<T>(    
         aIndices,
         aValues,
         aShape,
         bIndices,
         bValues,
         bShape
-    )
+        )
 
     /**
      * Returns the element-wise min of two SparseTensors.
@@ -1729,14 +1727,14 @@ public class SparseOps(
         bIndices: Operand<TInt64>,
         bValues: Operand<T>,
         bShape: Operand<TInt64>
-    ): SparseSparseMinimum<T> = java.sparseSparseMinimum<T>(
+    ): SparseSparseMinimum<T> = java.sparseSparseMinimum<T>(    
         aIndices,
         aValues,
         aShape,
         bIndices,
         bValues,
         bShape
-    )
+        )
 
     /**
      * Split a `SparseTensor` into `num_split` tensors along one dimension.
@@ -1747,9 +1745,9 @@ public class SparseOps(
      * input_tensor = shape = [2, 7]
      *  [    a   d e  ]
      *  [b c          ]
-     *
+     *  
      * ```
-     *
+     *  
      * Graphically the output tensors are:
      *  ```
      * output_tensor[0] = shape = [2, 4]
@@ -1759,7 +1757,7 @@ public class SparseOps(
      *  output_tensor[1] = shape = [2, 3]
      *  [ d e  ]
      *  [      ]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output_values` output
@@ -1781,13 +1779,13 @@ public class SparseOps(
         values: Operand<T>,
         shape: Operand<TInt64>,
         numSplit: Long
-    ): SparseSplit<T> = java.sparseSplit<T>(
+    ): SparseSplit<T> = java.sparseSplit<T>(    
         splitDim,
         indices,
         values,
         shape,
         numSplit
-    )
+        )
 
     /**
      * Adds up a `SparseTensor` and a dense `Tensor`, producing a dense `Tensor`.
@@ -1808,18 +1806,18 @@ public class SparseOps(
         aValues: Operand<U>,
         aShape: Operand<T>,
         b: Operand<U>
-    ): SparseTensorDenseAdd<U> = java.sparseTensorDenseAdd<U, T>(
+    ): SparseTensorDenseAdd<U> = java.sparseTensorDenseAdd<U, T>(    
         aIndices,
         aValues,
         aShape,
         b
-    )
+        )
 
     /**
      * Multiply SparseTensor (of rank 2) &quot;A&quot; by dense matrix &quot;B&quot;.
      *  No validity checking is performed on the indices of A.  However, the following
      *  input format is recommended for optimal behavior:
-     *
+     *  
      * if adjoint_a == false:
      *  A should be sorted in lexicographically increasing order.  Use SparseReorder
      *  if you're not sure.
@@ -1854,16 +1852,16 @@ public class SparseOps(
         b: Operand<U>,
         adjointA: Boolean? = null,
         adjointB: Boolean? = null
-    ): SparseTensorDenseMatMul<U> = java.sparseTensorDenseMatMul<U>(
+    ): SparseTensorDenseMatMul<U> = java.sparseTensorDenseMatMul<U>(    
         aIndices,
         aValues,
         aShape,
         b,
         *listOfNotNull(
-            adjointA?.let { org.tensorflow.op.sparse.SparseTensorDenseMatMul.adjointA(it) },
-            adjointB?.let { org.tensorflow.op.sparse.SparseTensorDenseMatMul.adjointB(it) }
+            adjointA?.let{ org.tensorflow.op.sparse.SparseTensorDenseMatMul.adjointA(it) },
+            adjointB?.let{ org.tensorflow.op.sparse.SparseTensorDenseMatMul.adjointB(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Converts a sparse representation into a dense tensor.
@@ -1877,12 +1875,12 @@ public class SparseOps(
      *
      *  # If sparse_indices is an n by d matrix, then for each i in [0, n)
      *  dense[sparse_indices[i][0], ..., sparse_indices[i][d-1]] = sparse_values[i]
-     *
+     *  
      * ```
-     *
+     *  
      * All other values in `dense` are set to `default_value`.  If `sparse_values` is a
      *  scalar, all sparse indices are set to this single value.
-     *
+     *  
      * Indices should be sorted in lexicographic order, and indices must not
      *  contain any repeats. If `validate_indices` is true, these properties
      *  are checked during execution.
@@ -1912,36 +1910,36 @@ public class SparseOps(
         sparseValues: Operand<U>,
         defaultValue: Operand<U>,
         validateIndices: Boolean? = null
-    ): SparseToDense<U> = java.sparseToDense<U, T>(
+    ): SparseToDense<U> = java.sparseToDense<U, T>(    
         sparseIndices,
         outputShape,
         sparseValues,
         defaultValue,
         *listOfNotNull(
-            validateIndices?.let { org.tensorflow.op.sparse.SparseToDense.validateIndices(it) }
+            validateIndices?.let{ org.tensorflow.op.sparse.SparseToDense.validateIndices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies set operation along last dimension of 2 `SparseTensor` inputs.
      *  See SetOperationOp::SetOperationFromContext for values of `set_operation`.
-     *
+     *  
      * If `validate_indices` is `True`, `sparse.SparseToSparseSetOperation` validates the
      *  order and range of `set1` and `set2` indices.
-     *
+     *  
      * Input `set1` is a `SparseTensor` represented by `set1_indices`, `set1_values`,
      *  and `set1_shape`. For `set1` ranked `n`, 1st `n-1` dimensions must be the same
      *  as `set2`. Dimension `n` contains values in a set, duplicates are allowed but
      *  ignored.
-     *
+     *  
      * Input `set2` is a `SparseTensor` represented by `set2_indices`, `set2_values`,
      *  and `set2_shape`. For `set2` ranked `n`, 1st `n-1` dimensions must be the same
      *  as `set1`. Dimension `n` contains values in a set, duplicates are allowed but
      *  ignored.
-     *
+     *  
      * If `validate_indices` is `True`, this op validates the order and range of `set1`
      *  and `set2` indices.
-     *
+     *  
      * Output `result` is a `SparseTensor` represented by `result_indices`,
      *  `result_values`, and `result_shape`. For `set1` and `set2` ranked `n`, this
      *  has rank `n` and the same 1st `n-1` dimensions as `set1` and `set2`. The `nth`
@@ -1982,7 +1980,7 @@ public class SparseOps(
         set2Shape: Operand<TInt64>,
         setOperation: String,
         validateIndices: Boolean? = null
-    ): SparseToSparseSetOperation<T> = java.sparseToSparseSetOperation<T>(
+    ): SparseToSparseSetOperation<T> = java.sparseToSparseSetOperation<T>(    
         set1Indices,
         set1Values,
         set1Shape,
@@ -1991,11 +1989,10 @@ public class SparseOps(
         set2Shape,
         setOperation,
         *listOfNotNull(
-            validateIndices?.let {
-                org.tensorflow.op.sparse.SparseToSparseSetOperation.validateIndices(it)
+            validateIndices?.let{ org.tensorflow.op.sparse.SparseToSparseSetOperation.validateIndices(it)
             }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Read `SparseTensors` from a `SparseTensorsMap` and concatenate them.
@@ -2006,16 +2003,16 @@ public class SparseOps(
      *  match.  When the final `SparseTensor` is created, it has rank one
      *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension on the left).
-     *
+     *  
      * The output `SparseTensor` object's shape values for all dimensions but the
      *  first are the max across the input `SparseTensor` objects' shape values
      *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the handles represent an input, which is a `&#91;2, 3&#93;` matrix
      *  representing two original `SparseTensor` objects:
      *  ```
@@ -2024,18 +2021,18 @@ public class SparseOps(
      *              [20]
      *      values = [1, 2, 3]
      *      shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *              [10]
      *      values = [4, 5]
      *      shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -2045,7 +2042,7 @@ public class SparseOps(
      *              [1 10]
      *      values = [1, 2, 3, 4, 5]
      *      shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `sparse_values` output
@@ -2073,14 +2070,14 @@ public class SparseOps(
         dtype: Class<T>,
         container: String? = null,
         sharedName: String? = null
-    ): TakeManySparseFromTensorsMap<T> = java.takeManySparseFromTensorsMap<T>(
+    ): TakeManySparseFromTensorsMap<T> = java.takeManySparseFromTensorsMap<T>(    
         sparseHandles,
         dtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.sparse.TakeManySparseFromTensorsMap.container(it) },
-            sharedName?.let { org.tensorflow.op.sparse.TakeManySparseFromTensorsMap.sharedName(it) }
+            container?.let{ org.tensorflow.op.sparse.TakeManySparseFromTensorsMap.container(it) },
+            sharedName?.let{ org.tensorflow.op.sparse.TakeManySparseFromTensorsMap.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Deserialize `SparseTensor` objects.
@@ -2091,15 +2088,15 @@ public class SparseOps(
      *  created, its rank is the rank of the incoming `SparseTensor` objects plus N;
      *  the sparse tensors have been concatenated along new dimensions, one for each
      *  batch.
-     *
+     *  
      * The output `SparseTensor` object's shape values for the original dimensions
      *  are the max across the input `SparseTensor` objects' shape values for the
      *  corresponding dimensions. The new dimensions match the size of the batch.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
      *  original `SparseTensor` objects:
      *  ```
@@ -2108,18 +2105,18 @@ public class SparseOps(
      *          [20]
      *  values = [1, 2, 3]
      *  shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *          [10]
      *  values = [4, 5]
      *  shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final deserialized `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -2129,7 +2126,7 @@ public class SparseOps(
      *          [1 10]
      *  values = [1, 2, 3, 4, 5]
      *  shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `sparse_values` output
@@ -2142,7 +2139,7 @@ public class SparseOps(
      */
     @JvmName("deserializeSparseReified")
     public inline fun <reified U : TType> deserializeSparse(serializedSparse: Operand<out TType>):
-        DeserializeSparse<U> = deserializeSparse<U>(serializedSparse, U::class.java)
+            DeserializeSparse<U> = deserializeSparse<U>(serializedSparse, U::class.java)
 
     /**
      * Extracts the average sparse gradient in a SparseConditionalAccumulator.
@@ -2163,11 +2160,9 @@ public class SparseOps(
      * @see org.tensorflow.op.SparseOps.sparseAccumulatorTakeGradient
      */
     @JvmName("sparseAccumulatorTakeGradientReified")
-    public inline fun <reified T : TType> sparseAccumulatorTakeGradient(
-        handle: Operand<TString>,
-        numRequired: Operand<TInt32>
-    ): SparseAccumulatorTakeGradient<T> =
-        sparseAccumulatorTakeGradient<T>(handle, numRequired, T::class.java)
+    public inline fun <reified T : TType> sparseAccumulatorTakeGradient(handle: Operand<TString>,
+            numRequired: Operand<TInt32>): SparseAccumulatorTakeGradient<T> =
+            sparseAccumulatorTakeGradient<T>(handle, numRequired, T::class.java)
 
     /**
      * A conditional accumulator for aggregating sparse gradients.
@@ -2205,10 +2200,8 @@ public class SparseOps(
         container: String? = null,
         sharedName: String? = null,
         reductionType: String? = null
-    ): SparseConditionalAccumulator = sparseConditionalAccumulator<T>(
-        T::class.java, shape,
-        container, sharedName, reductionType
-    )
+    ): SparseConditionalAccumulator = sparseConditionalAccumulator<T>(T::class.java, shape,
+            container, sharedName, reductionType)
 
     /**
      * Read `SparseTensors` from a `SparseTensorsMap` and concatenate them.
@@ -2219,16 +2212,16 @@ public class SparseOps(
      *  match.  When the final `SparseTensor` is created, it has rank one
      *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension on the left).
-     *
+     *  
      * The output `SparseTensor` object's shape values for all dimensions but the
      *  first are the max across the input `SparseTensor` objects' shape values
      *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the handles represent an input, which is a `&#91;2, 3&#93;` matrix
      *  representing two original `SparseTensor` objects:
      *  ```
@@ -2237,18 +2230,18 @@ public class SparseOps(
      *              [20]
      *      values = [1, 2, 3]
      *      shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *              [10]
      *      values = [4, 5]
      *      shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -2258,7 +2251,7 @@ public class SparseOps(
      *              [1 10]
      *      values = [1, 2, 3, 4, 5]
      *      shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `sparse_values` output
@@ -2286,8 +2279,6 @@ public class SparseOps(
         sparseHandles: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): TakeManySparseFromTensorsMap<T> = takeManySparseFromTensorsMap<T>(
-        sparseHandles,
-        T::class.java, container, sharedName
-    )
+    ): TakeManySparseFromTensorsMap<T> = takeManySparseFromTensorsMap<T>(sparseHandles,
+            T::class.java, container, sharedName)
 }

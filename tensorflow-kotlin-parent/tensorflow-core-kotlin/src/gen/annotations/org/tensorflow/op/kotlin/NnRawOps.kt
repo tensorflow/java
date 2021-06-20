@@ -54,13 +54,11 @@ public class NnRawOps(
      * @return a new instance of SoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnRawOps.softmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber> softmaxCrossEntropyWithLogits(
-        features: Operand<T>,
-        labels: Operand<T>
-    ): SoftmaxCrossEntropyWithLogits<T> =
-        java.softmaxCrossEntropyWithLogits<T>(
-            features,
-            labels
+    public fun <T : TNumber> softmaxCrossEntropyWithLogits(features: Operand<T>,
+            labels: Operand<T>): SoftmaxCrossEntropyWithLogits<T> =
+            java.softmaxCrossEntropyWithLogits<T>(    
+        features,
+        labels
         )
 
     /**
@@ -69,7 +67,7 @@ public class NnRawOps(
      *  a matrix of label probabilities, but rather a single label per row
      *  of features.  This label is considered to have probability 1.0 for the
      *  given row.
-     *
+     *  
      * Inputs are the logits, not probabilities.
      *
      * @param <T> data type for `loss` output
@@ -80,12 +78,10 @@ public class NnRawOps(
      * @return a new instance of SparseSoftmaxCrossEntropyWithLogits
      * @see org.tensorflow.op.NnRawOps.sparseSoftmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber> sparseSoftmaxCrossEntropyWithLogits(
-        features: Operand<T>,
-        labels: Operand<out TNumber>
-    ): SparseSoftmaxCrossEntropyWithLogits<T> =
-        java.sparseSoftmaxCrossEntropyWithLogits<T>(
-            features,
-            labels
+    public fun <T : TNumber> sparseSoftmaxCrossEntropyWithLogits(features: Operand<T>,
+            labels: Operand<out TNumber>): SparseSoftmaxCrossEntropyWithLogits<T> =
+            java.sparseSoftmaxCrossEntropyWithLogits<T>(    
+        features,
+        labels
         )
 }

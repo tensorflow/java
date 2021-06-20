@@ -17,6 +17,10 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
@@ -72,10 +76,6 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Boolean
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `io` operations as [Op][org.tensorflow.op.Op]s
@@ -104,15 +104,15 @@ public class IoOps(
      * @return a new instance of DecodeBase64
      * @see org.tensorflow.op.IoOps.decodeBase64
      */
-    public fun decodeBase64(input: Operand<TString>): DecodeBase64 = java.decodeBase64(
+    public fun decodeBase64(input: Operand<TString>): DecodeBase64 = java.decodeBase64(    
         input
-    )
+        )
 
     /**
      * Decompress strings.
      *  This op decompresses each element of the `bytes` input `Tensor`, which
      *  is assumed to be compressed using the given `compression_type`.
-     *
+     *  
      * The `output` is a string `Tensor` of the same shape as `bytes`,
      *  each element containing the decompressed data from the corresponding
      *  element in `bytes`.
@@ -128,12 +128,12 @@ public class IoOps(
      * @return this Options instance.
      */
     public fun decodeCompressed(bytes: Operand<TString>, compressionType: String? = null):
-        DecodeCompressed = java.decodeCompressed(
+            DecodeCompressed = java.decodeCompressed(    
         bytes,
         *listOfNotNull(
-            compressionType?.let { org.tensorflow.op.io.DecodeCompressed.compressionType(it) }
+            compressionType?.let{ org.tensorflow.op.io.DecodeCompressed.compressionType(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Convert CSV records to tensors. Each column maps to one tensor.
@@ -175,21 +175,21 @@ public class IoOps(
         useQuoteDelim: Boolean? = null,
         naValue: String? = null,
         selectCols: List<Long>? = null
-    ): DecodeCsv = java.decodeCsv(
+    ): DecodeCsv = java.decodeCsv(    
         records,
         recordDefaults,
         *listOfNotNull(
-            fieldDelim?.let { org.tensorflow.op.io.DecodeCsv.fieldDelim(it) },
-            useQuoteDelim?.let { org.tensorflow.op.io.DecodeCsv.useQuoteDelim(it) },
-            naValue?.let { org.tensorflow.op.io.DecodeCsv.naValue(it) },
-            selectCols?.let { org.tensorflow.op.io.DecodeCsv.selectCols(it) }
+            fieldDelim?.let{ org.tensorflow.op.io.DecodeCsv.fieldDelim(it) },
+            useQuoteDelim?.let{ org.tensorflow.op.io.DecodeCsv.useQuoteDelim(it) },
+            naValue?.let{ org.tensorflow.op.io.DecodeCsv.naValue(it) },
+            selectCols?.let{ org.tensorflow.op.io.DecodeCsv.selectCols(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Convert JSON-encoded Example records to binary protocol buffer strings.
      *  Note: This is **not** a general purpose JSON parsing op.
-     *
+     *  
      * This op converts JSON-serialized
      *  `tf.train.Example` (created with `json_format.MessageToJson`, following the[standard JSON
      * mapping](https://developers.google.com/protocol-buffers/docs/proto3#json) )
@@ -203,8 +203,8 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.decodeJsonExample
      */
     public fun decodeJsonExample(jsonExamples: Operand<TString>): DecodeJsonExample =
-        java.decodeJsonExample(
-            jsonExamples
+            java.decodeJsonExample(    
+        jsonExamples
         )
 
     /**
@@ -230,14 +230,14 @@ public class IoOps(
         fixedLength: Operand<TInt32>,
         outType: Class<T>,
         littleEndian: Boolean? = null
-    ): DecodePaddedRaw<T> = java.decodePaddedRaw<T>(
+    ): DecodePaddedRaw<T> = java.decodePaddedRaw<T>(    
         inputBytes,
         fixedLength,
         outType,
         *listOfNotNull(
-            littleEndian?.let { org.tensorflow.op.io.DecodePaddedRaw.littleEndian(it) }
+            littleEndian?.let{ org.tensorflow.op.io.DecodePaddedRaw.littleEndian(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reinterpret the bytes of a string as a vector of numbers.
@@ -260,13 +260,13 @@ public class IoOps(
         bytes: Operand<TString>,
         outType: Class<T>,
         littleEndian: Boolean? = null
-    ): DecodeRaw<T> = java.decodeRaw<T>(
+    ): DecodeRaw<T> = java.decodeRaw<T>(    
         bytes,
         outType,
         *listOfNotNull(
-            littleEndian?.let { org.tensorflow.op.io.DecodeRaw.littleEndian(it) }
+            littleEndian?.let{ org.tensorflow.op.io.DecodeRaw.littleEndian(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
@@ -276,16 +276,16 @@ public class IoOps(
      *  must all match.  When the final `SparseTensor` is created, it has rank one
      *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension).
-     *
+     *  
      * The output `SparseTensor` object's shape values for all dimensions but the
      *  first are the max across the input `SparseTensor` objects' shape values
      *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
      *  original `SparseTensor` objects:
      *  ```
@@ -294,18 +294,18 @@ public class IoOps(
      *          [20]
      *  values = [1, 2, 3]
      *  shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *          [10]
      *  values = [4, 5]
      *  shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final deserialized `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -315,7 +315,7 @@ public class IoOps(
      *          [1 10]
      *  values = [1, 2, 3, 4, 5]
      *  shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `sparse_values` output
@@ -326,13 +326,11 @@ public class IoOps(
      * @return a new instance of DeserializeManySparse
      * @see org.tensorflow.op.IoOps.deserializeManySparse
      */
-    public fun <T : TType> deserializeManySparse(
-        serializedSparse: Operand<TString>,
-        dtype: Class<T>
-    ): DeserializeManySparse<T> = java.deserializeManySparse<T>(
+    public fun <T : TType> deserializeManySparse(serializedSparse: Operand<TString>,
+            dtype: Class<T>): DeserializeManySparse<T> = java.deserializeManySparse<T>(    
         serializedSparse,
         dtype
-    )
+        )
 
     /**
      * Encode strings into web-safe base64 format.
@@ -340,7 +338,7 @@ public class IoOps(
      *  en.wikipedia.org/wiki/Base64. Base64 strings may have padding with '=' at the
      *  end so that the encoded has length multiple of 4. See Padding section of the
      *  link above.
-     *
+     *  
      * Web-safe means that the encoder uses - and _ instead of + and /.
      *
      * @param input Strings to be encoded.
@@ -353,11 +351,11 @@ public class IoOps(
      * @return this Options instance.
      */
     public fun encodeBase64(input: Operand<TString>, pad: Boolean? = null): EncodeBase64 =
-        java.encodeBase64(
-            input,
-            *listOfNotNull(
-                pad?.let { org.tensorflow.op.io.EncodeBase64.pad(it) }
-            ).toTypedArray()
+            java.encodeBase64(    
+        input,
+        *listOfNotNull(
+            pad?.let{ org.tensorflow.op.io.EncodeBase64.pad(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -396,15 +394,15 @@ public class IoOps(
         capacity: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): FifoQueue = java.fifoQueue(
+    ): FifoQueue = java.fifoQueue(    
         componentTypes,
         *listOfNotNull(
-            shapes?.let { org.tensorflow.op.io.FifoQueue.shapes(it) },
-            capacity?.let { org.tensorflow.op.io.FifoQueue.capacity(it) },
-            container?.let { org.tensorflow.op.io.FifoQueue.container(it) },
-            sharedName?.let { org.tensorflow.op.io.FifoQueue.sharedName(it) }
+            shapes?.let{ org.tensorflow.op.io.FifoQueue.shapes(it) },
+            capacity?.let{ org.tensorflow.op.io.FifoQueue.capacity(it) },
+            container?.let{ org.tensorflow.op.io.FifoQueue.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.FifoQueue.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * A Reader that outputs fixed-length records from a file.
@@ -450,17 +448,17 @@ public class IoOps(
         container: String? = null,
         sharedName: String? = null,
         encoding: String? = null
-    ): FixedLengthRecordReader = java.fixedLengthRecordReader(
+    ): FixedLengthRecordReader = java.fixedLengthRecordReader(    
         recordBytes,
         *listOfNotNull(
-            headerBytes?.let { org.tensorflow.op.io.FixedLengthRecordReader.headerBytes(it) },
-            footerBytes?.let { org.tensorflow.op.io.FixedLengthRecordReader.footerBytes(it) },
-            hopBytes?.let { org.tensorflow.op.io.FixedLengthRecordReader.hopBytes(it) },
-            container?.let { org.tensorflow.op.io.FixedLengthRecordReader.container(it) },
-            sharedName?.let { org.tensorflow.op.io.FixedLengthRecordReader.sharedName(it) },
-            encoding?.let { org.tensorflow.op.io.FixedLengthRecordReader.encoding(it) }
+            headerBytes?.let{ org.tensorflow.op.io.FixedLengthRecordReader.headerBytes(it) },
+            footerBytes?.let{ org.tensorflow.op.io.FixedLengthRecordReader.footerBytes(it) },
+            hopBytes?.let{ org.tensorflow.op.io.FixedLengthRecordReader.hopBytes(it) },
+            container?.let{ org.tensorflow.op.io.FixedLengthRecordReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.FixedLengthRecordReader.sharedName(it) },
+            encoding?.let{ org.tensorflow.op.io.FixedLengthRecordReader.encoding(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * A Reader that outputs the queued work as both the key and value.
@@ -482,12 +480,12 @@ public class IoOps(
      *  with this shared_name. Otherwise, the node name is used instead.
      * @return this Options instance.
      */
-    public fun identityReader(container: String? = null, sharedName: String? = null): IdentityReader =
-        java.identityReader(
-            *listOfNotNull(
-                container?.let { org.tensorflow.op.io.IdentityReader.container(it) },
-                sharedName?.let { org.tensorflow.op.io.IdentityReader.sharedName(it) }
-            ).toTypedArray()
+    public fun identityReader(container: String? = null, sharedName: String? = null): IdentityReader
+            = java.identityReader(    
+        *listOfNotNull(
+            container?.let{ org.tensorflow.op.io.IdentityReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.IdentityReader.sharedName(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -509,11 +507,11 @@ public class IoOps(
      * @return this Options instance.
      */
     public fun lmdbReader(container: String? = null, sharedName: String? = null): LmdbReader =
-        java.lmdbReader(
-            *listOfNotNull(
-                container?.let { org.tensorflow.op.io.LmdbReader.container(it) },
-                sharedName?.let { org.tensorflow.op.io.LmdbReader.sharedName(it) }
-            ).toTypedArray()
+            java.lmdbReader(    
+        *listOfNotNull(
+            container?.let{ org.tensorflow.op.io.LmdbReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.LmdbReader.sharedName(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -526,9 +524,9 @@ public class IoOps(
      * @return a new instance of MatchingFiles
      * @see org.tensorflow.op.IoOps.matchingFiles
      */
-    public fun matchingFiles(pattern: Operand<TString>): MatchingFiles = java.matchingFiles(
+    public fun matchingFiles(pattern: Operand<TString>): MatchingFiles = java.matchingFiles(    
         pattern
-    )
+        )
 
     /**
      * A queue that produces elements in first-in first-out order.
@@ -573,15 +571,15 @@ public class IoOps(
         capacity: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): PaddingFifoQueue = java.paddingFifoQueue(
+    ): PaddingFifoQueue = java.paddingFifoQueue(    
         componentTypes,
         *listOfNotNull(
-            shapes?.let { org.tensorflow.op.io.PaddingFifoQueue.shapes(it) },
-            capacity?.let { org.tensorflow.op.io.PaddingFifoQueue.capacity(it) },
-            container?.let { org.tensorflow.op.io.PaddingFifoQueue.container(it) },
-            sharedName?.let { org.tensorflow.op.io.PaddingFifoQueue.sharedName(it) }
+            shapes?.let{ org.tensorflow.op.io.PaddingFifoQueue.shapes(it) },
+            capacity?.let{ org.tensorflow.op.io.PaddingFifoQueue.capacity(it) },
+            container?.let{ org.tensorflow.op.io.PaddingFifoQueue.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.PaddingFifoQueue.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Transforms a vector of tf.Example protos (as strings) into typed tensors.
@@ -653,7 +651,7 @@ public class IoOps(
         raggedValueTypes: List<Class<out TType>>,
         raggedSplitTypes: List<Class<out TNumber>>,
         denseShapes: List<Shape>
-    ): ParseExample = java.parseExample(
+    ): ParseExample = java.parseExample(    
         serialized,
         names,
         sparseKeys,
@@ -665,7 +663,7 @@ public class IoOps(
         raggedValueTypes,
         raggedSplitTypes,
         denseShapes
-    )
+        )
 
     /**
      * Transforms a vector of tf.io.SequenceExample protos (as strings) into
@@ -775,7 +773,7 @@ public class IoOps(
         NfeatureListSparse: Long? = null,
         NfeatureListDense: Long? = null,
         featureListDenseShapes: List<Shape>? = null
-    ): ParseSequenceExample = java.parseSequenceExample(
+    ): ParseSequenceExample = java.parseSequenceExample(    
         serialized,
         debugName,
         contextSparseKeys,
@@ -794,15 +792,14 @@ public class IoOps(
         featureListRaggedValueTypes,
         featureListRaggedSplitTypes,
         *listOfNotNull(
-            NcontextSparse?.let { org.tensorflow.op.io.ParseSequenceExample.NcontextSparse(it) },
-            contextDenseShapes?.let { org.tensorflow.op.io.ParseSequenceExample.contextDenseShapes(it) },
-            NfeatureListSparse?.let { org.tensorflow.op.io.ParseSequenceExample.NfeatureListSparse(it) },
-            NfeatureListDense?.let { org.tensorflow.op.io.ParseSequenceExample.NfeatureListDense(it) },
-            featureListDenseShapes?.let {
-                org.tensorflow.op.io.ParseSequenceExample.featureListDenseShapes(it)
-            }
+            NcontextSparse?.let{ org.tensorflow.op.io.ParseSequenceExample.NcontextSparse(it) },
+            contextDenseShapes?.let{ org.tensorflow.op.io.ParseSequenceExample.contextDenseShapes(it) },
+            NfeatureListSparse?.let{ org.tensorflow.op.io.ParseSequenceExample.NfeatureListSparse(it) },
+            NfeatureListDense?.let{ org.tensorflow.op.io.ParseSequenceExample.NfeatureListDense(it) },
+            featureListDenseShapes?.let{
+            org.tensorflow.op.io.ParseSequenceExample.featureListDenseShapes(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Transforms a tf.Example proto (as a string) into typed tensors.
@@ -848,7 +845,7 @@ public class IoOps(
         denseKeys: List<String>,
         sparseTypes: List<Class<out TType>>,
         denseShapes: List<Shape>
-    ): ParseSingleExample = java.parseSingleExample(
+    ): ParseSingleExample = java.parseSingleExample(    
         serialized,
         denseDefaults,
         numSparse,
@@ -856,7 +853,7 @@ public class IoOps(
         denseKeys,
         sparseTypes,
         denseShapes
-    )
+        )
 
     /**
      * Transforms a scalar brain.SequenceExample proto (as strings) into typed tensors.
@@ -954,7 +951,7 @@ public class IoOps(
         NfeatureListDense: Long? = null,
         contextDenseShapes: List<Shape>? = null,
         featureListDenseShapes: List<Shape>? = null
-    ): ParseSingleSequenceExample = java.parseSingleSequenceExample(
+    ): ParseSingleSequenceExample = java.parseSingleSequenceExample(    
         serialized,
         featureListDenseMissingAssumedEmpty,
         contextSparseKeys,
@@ -967,22 +964,18 @@ public class IoOps(
         featureListDenseTypes,
         featureListSparseTypes,
         *listOfNotNull(
-            NcontextSparse?.let { org.tensorflow.op.io.ParseSingleSequenceExample.NcontextSparse(it) },
-            NcontextDense?.let { org.tensorflow.op.io.ParseSingleSequenceExample.NcontextDense(it) },
-            NfeatureListSparse?.let {
-                org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListSparse(it)
+            NcontextSparse?.let{ org.tensorflow.op.io.ParseSingleSequenceExample.NcontextSparse(it) },
+            NcontextDense?.let{ org.tensorflow.op.io.ParseSingleSequenceExample.NcontextDense(it) },
+            NfeatureListSparse?.let{
+            org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListSparse(it) },
+            NfeatureListDense?.let{ org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListDense(it)
             },
-            NfeatureListDense?.let {
-                org.tensorflow.op.io.ParseSingleSequenceExample.NfeatureListDense(it)
-            },
-            contextDenseShapes?.let {
-                org.tensorflow.op.io.ParseSingleSequenceExample.contextDenseShapes(it)
-            },
-            featureListDenseShapes?.let {
-                org.tensorflow.op.io.ParseSingleSequenceExample.featureListDenseShapes(it)
-            }
+            contextDenseShapes?.let{
+            org.tensorflow.op.io.ParseSingleSequenceExample.contextDenseShapes(it) },
+            featureListDenseShapes?.let{
+            org.tensorflow.op.io.ParseSingleSequenceExample.featureListDenseShapes(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
@@ -996,10 +989,10 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.parseTensor
      */
     public fun <T : TType> parseTensor(serialized: Operand<TString>, outType: Class<T>):
-        ParseTensor<T> = java.parseTensor<T>(
+            ParseTensor<T> = java.parseTensor<T>(    
         serialized,
         outType
-    )
+        )
 
     /**
      * A queue that produces elements sorted by the first component value.
@@ -1039,15 +1032,15 @@ public class IoOps(
         capacity: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): PriorityQueue = java.priorityQueue(
+    ): PriorityQueue = java.priorityQueue(    
         componentTypes,
         shapes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.io.PriorityQueue.capacity(it) },
-            container?.let { org.tensorflow.op.io.PriorityQueue.container(it) },
-            sharedName?.let { org.tensorflow.op.io.PriorityQueue.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.io.PriorityQueue.capacity(it) },
+            container?.let{ org.tensorflow.op.io.PriorityQueue.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.PriorityQueue.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Closes the given queue.
@@ -1068,19 +1061,19 @@ public class IoOps(
      * @return this Options instance.
      */
     public fun queueClose(handle: Operand<out TType>, cancelPendingEnqueues: Boolean? = null):
-        QueueClose = java.queueClose(
+            QueueClose = java.queueClose(    
         handle,
         *listOfNotNull(
-            cancelPendingEnqueues?.let { org.tensorflow.op.io.QueueClose.cancelPendingEnqueues(it) }
+            cancelPendingEnqueues?.let{ org.tensorflow.op.io.QueueClose.cancelPendingEnqueues(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Dequeues a tuple of one or more tensors from the given queue.
      *  This operation has k outputs, where k is the number of components
      *  in the tuples stored in the given queue, and output i is the ith
      *  component of the dequeued tuple.
-     *
+     *  
      * N.B. If the queue is empty, this operation will block until an element
      *  has been dequeued (or 'timeout_ms' elapses, if specified).
      *
@@ -1100,27 +1093,27 @@ public class IoOps(
         handle: Operand<out TType>,
         componentTypes: List<Class<out TType>>,
         timeoutMs: Long? = null
-    ): QueueDequeue = java.queueDequeue(
+    ): QueueDequeue = java.queueDequeue(    
         handle,
         componentTypes,
         *listOfNotNull(
-            timeoutMs?.let { org.tensorflow.op.io.QueueDequeue.timeoutMs(it) }
+            timeoutMs?.let{ org.tensorflow.op.io.QueueDequeue.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Dequeues `n` tuples of one or more tensors from the given queue.
      *  If the queue is closed and there are fewer than `n` elements, then an
      *  OutOfRange error is returned.
-     *
+     *  
      * This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
      *  in the dequeued tuple will have size `n` in the 0th dimension.
-     *
+     *  
      * This operation has `k` outputs, where `k` is the number of components in
      *  the tuples stored in the given queue, and output `i` is the ith
      *  component of the dequeued tuple.
-     *
+     *  
      * N.B. If the queue is empty, this operation will block until `n` elements
      *  have been dequeued (or 'timeout_ms' elapses, if specified).
      *
@@ -1142,31 +1135,31 @@ public class IoOps(
         n: Operand<TInt32>,
         componentTypes: List<Class<out TType>>,
         timeoutMs: Long? = null
-    ): QueueDequeueMany = java.queueDequeueMany(
+    ): QueueDequeueMany = java.queueDequeueMany(    
         handle,
         n,
         componentTypes,
         *listOfNotNull(
-            timeoutMs?.let { org.tensorflow.op.io.QueueDequeueMany.timeoutMs(it) }
+            timeoutMs?.let{ org.tensorflow.op.io.QueueDequeueMany.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Dequeues `n` tuples of one or more tensors from the given queue.
      *  This operation is not supported by all queues.  If a queue does not support
      *  DequeueUpTo, then an Unimplemented error is returned.
-     *
+     *  
      * If the queue is closed and there are more than 0 but less than `n`
      *  elements remaining, then instead of returning an OutOfRange error like
      *  QueueDequeueMany, less than `n` elements are returned immediately.  If
      *  the queue is closed and there are 0 elements left in the queue, then
      *  an OutOfRange error is returned just like in QueueDequeueMany.
      *  Otherwise the behavior is identical to QueueDequeueMany:
-     *
+     *  
      * This operation concatenates queue-element component tensors along the
      *  0th dimension to make a single component tensor.  All of the components
      *  in the dequeued tuple will have size n in the 0th dimension.
-     *
+     *  
      * This operation has `k` outputs, where `k` is the number of components in
      *  the tuples stored in the given queue, and output `i` is the ith
      *  component of the dequeued tuple.
@@ -1189,20 +1182,20 @@ public class IoOps(
         n: Operand<TInt32>,
         componentTypes: List<Class<out TType>>,
         timeoutMs: Long? = null
-    ): QueueDequeueUpTo = java.queueDequeueUpTo(
+    ): QueueDequeueUpTo = java.queueDequeueUpTo(    
         handle,
         n,
         componentTypes,
         *listOfNotNull(
-            timeoutMs?.let { org.tensorflow.op.io.QueueDequeueUpTo.timeoutMs(it) }
+            timeoutMs?.let{ org.tensorflow.op.io.QueueDequeueUpTo.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Enqueues a tuple of one or more tensors in the given queue.
      *  The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *
+     *  
      * N.B. If the queue is full, this operation will block until the given
      *  element has been enqueued (or 'timeout_ms' elapses, if specified).
      *
@@ -1222,23 +1215,23 @@ public class IoOps(
         handle: Operand<out TType>,
         components: Iterable<Operand<*>>,
         timeoutMs: Long? = null
-    ): QueueEnqueue = java.queueEnqueue(
+    ): QueueEnqueue = java.queueEnqueue(    
         handle,
         components,
         *listOfNotNull(
-            timeoutMs?.let { org.tensorflow.op.io.QueueEnqueue.timeoutMs(it) }
+            timeoutMs?.let{ org.tensorflow.op.io.QueueEnqueue.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Enqueues zero or more tuples of one or more tensors in the given queue.
      *  This operation slices each component tensor along the 0th dimension to
      *  make multiple queue elements. All of the tuple components must have the
      *  same size in the 0th dimension.
-     *
+     *  
      * The components input has k elements, which correspond to the components of
      *  tuples stored in the given queue.
-     *
+     *  
      * N.B. If the queue is full, this operation will block until the given
      *  elements have been enqueued (or 'timeout_ms' elapses, if specified).
      *
@@ -1259,13 +1252,13 @@ public class IoOps(
         handle: Operand<out TType>,
         components: Iterable<Operand<*>>,
         timeoutMs: Long? = null
-    ): QueueEnqueueMany = java.queueEnqueueMany(
+    ): QueueEnqueueMany = java.queueEnqueueMany(    
         handle,
         components,
         *listOfNotNull(
-            timeoutMs?.let { org.tensorflow.op.io.QueueEnqueueMany.timeoutMs(it) }
+            timeoutMs?.let{ org.tensorflow.op.io.QueueEnqueueMany.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns true if queue is closed.
@@ -1276,9 +1269,9 @@ public class IoOps(
      * @return a new instance of QueueIsClosed
      * @see org.tensorflow.op.IoOps.queueIsClosed
      */
-    public fun queueIsClosed(handle: Operand<out TType>): QueueIsClosed = java.queueIsClosed(
+    public fun queueIsClosed(handle: Operand<out TType>): QueueIsClosed = java.queueIsClosed(    
         handle
-    )
+        )
 
     /**
      * Computes the number of elements in the given queue.
@@ -1287,9 +1280,9 @@ public class IoOps(
      * @return a new instance of QueueSize
      * @see org.tensorflow.op.IoOps.queueSize
      */
-    public fun queueSize(handle: Operand<out TType>): QueueSize = java.queueSize(
+    public fun queueSize(handle: Operand<out TType>): QueueSize = java.queueSize(    
         handle
-    )
+        )
 
     /**
      * A queue that randomizes the order of elements.
@@ -1345,18 +1338,18 @@ public class IoOps(
         seed2: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): RandomShuffleQueue = java.randomShuffleQueue(
+    ): RandomShuffleQueue = java.randomShuffleQueue(    
         componentTypes,
         *listOfNotNull(
-            shapes?.let { org.tensorflow.op.io.RandomShuffleQueue.shapes(it) },
-            capacity?.let { org.tensorflow.op.io.RandomShuffleQueue.capacity(it) },
-            minAfterDequeue?.let { org.tensorflow.op.io.RandomShuffleQueue.minAfterDequeue(it) },
-            seed?.let { org.tensorflow.op.io.RandomShuffleQueue.seed(it) },
-            seed2?.let { org.tensorflow.op.io.RandomShuffleQueue.seed2(it) },
-            container?.let { org.tensorflow.op.io.RandomShuffleQueue.container(it) },
-            sharedName?.let { org.tensorflow.op.io.RandomShuffleQueue.sharedName(it) }
+            shapes?.let{ org.tensorflow.op.io.RandomShuffleQueue.shapes(it) },
+            capacity?.let{ org.tensorflow.op.io.RandomShuffleQueue.capacity(it) },
+            minAfterDequeue?.let{ org.tensorflow.op.io.RandomShuffleQueue.minAfterDequeue(it) },
+            seed?.let{ org.tensorflow.op.io.RandomShuffleQueue.seed(it) },
+            seed2?.let{ org.tensorflow.op.io.RandomShuffleQueue.seed2(it) },
+            container?.let{ org.tensorflow.op.io.RandomShuffleQueue.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.RandomShuffleQueue.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reads and outputs the entire contents of the input filename.
@@ -1365,9 +1358,9 @@ public class IoOps(
      * @return a new instance of ReadFile
      * @see org.tensorflow.op.IoOps.readFile
      */
-    public fun readFile(filename: Operand<TString>): ReadFile = java.readFile(
+    public fun readFile(filename: Operand<TString>): ReadFile = java.readFile(    
         filename
-    )
+        )
 
     /**
      * Returns the number of records this Reader has produced.
@@ -1378,9 +1371,9 @@ public class IoOps(
      * @return a new instance of ReaderNumRecordsProduced
      * @see org.tensorflow.op.IoOps.readerNumRecordsProduced
      */
-    public fun readerNumRecordsProduced(readerHandle: Operand<out TType>): ReaderNumRecordsProduced =
-        java.readerNumRecordsProduced(
-            readerHandle
+    public fun readerNumRecordsProduced(readerHandle: Operand<out TType>): ReaderNumRecordsProduced
+            = java.readerNumRecordsProduced(    
+        readerHandle
         )
 
     /**
@@ -1391,9 +1384,9 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.readerNumWorkUnitsCompleted
      */
     public fun readerNumWorkUnitsCompleted(readerHandle: Operand<out TType>):
-        ReaderNumWorkUnitsCompleted = java.readerNumWorkUnitsCompleted(
+            ReaderNumWorkUnitsCompleted = java.readerNumWorkUnitsCompleted(    
         readerHandle
-    )
+        )
 
     /**
      * Returns the next record (key, value pair) produced by a Reader.
@@ -1407,10 +1400,10 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.readerRead
      */
     public fun readerRead(readerHandle: Operand<out TType>, queueHandle: Operand<out TType>):
-        ReaderRead = java.readerRead(
+            ReaderRead = java.readerRead(    
         readerHandle,
         queueHandle
-    )
+        )
 
     /**
      * Returns up to `num_records` (key, value) pairs produced by a Reader.
@@ -1429,11 +1422,11 @@ public class IoOps(
         readerHandle: Operand<out TType>,
         queueHandle: Operand<out TType>,
         numRecords: Operand<TInt64>
-    ): ReaderReadUpTo = java.readerReadUpTo(
+    ): ReaderReadUpTo = java.readerReadUpTo(    
         readerHandle,
         queueHandle,
         numRecords
-    )
+        )
 
     /**
      * Restore a Reader to its initial clean state.
@@ -1442,9 +1435,9 @@ public class IoOps(
      * @return a new instance of ReaderReset
      * @see org.tensorflow.op.IoOps.readerReset
      */
-    public fun readerReset(readerHandle: Operand<out TType>): ReaderReset = java.readerReset(
+    public fun readerReset(readerHandle: Operand<out TType>): ReaderReset = java.readerReset(    
         readerHandle
-    )
+        )
 
     /**
      * Restore a reader to a previously saved state.
@@ -1458,10 +1451,10 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.readerRestoreState
      */
     public fun readerRestoreState(readerHandle: Operand<out TType>, state: Operand<TString>):
-        ReaderRestoreState = java.readerRestoreState(
+            ReaderRestoreState = java.readerRestoreState(    
         readerHandle,
         state
-    )
+        )
 
     /**
      * Produce a string tensor that encodes the state of a Reader.
@@ -1473,8 +1466,8 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.readerSerializeState
      */
     public fun readerSerializeState(readerHandle: Operand<out TType>): ReaderSerializeState =
-        java.readerSerializeState(
-            readerHandle
+            java.readerSerializeState(    
+        readerHandle
         )
 
     /**
@@ -1484,7 +1477,7 @@ public class IoOps(
      *  must be sorted in increasing order of this first dimension.  The serialized
      *  `SparseTensor` objects going into each row of `serialized_sparse` will have
      *  rank `R-1`.
-     *
+     *  
      * The minibatch size `N` is extracted from `sparse_shape[0]`.
      *
      * @param <U> data type for `serialized_sparse` output
@@ -1498,11 +1491,11 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeManySparse<TString> = java.serializeManySparse(
+    ): SerializeManySparse<TString> = java.serializeManySparse(    
         sparseIndices,
         sparseValues,
         sparseShape
-    )
+        )
 
     /**
      * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3&#93;` `Tensor` object.
@@ -1511,7 +1504,7 @@ public class IoOps(
      *  must be sorted in increasing order of this first dimension.  The serialized
      *  `SparseTensor` objects going into each row of `serialized_sparse` will have
      *  rank `R-1`.
-     *
+     *  
      * The minibatch size `N` is extracted from `sparse_shape[0]`.
      *
      * @param <U> data type for `serialized_sparse` output
@@ -1529,12 +1522,12 @@ public class IoOps(
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         outType: Class<U>
-    ): SerializeManySparse<U> = java.serializeManySparse<U>(
+    ): SerializeManySparse<U> = java.serializeManySparse<U>(    
         sparseIndices,
         sparseValues,
         sparseShape,
         outType
-    )
+        )
 
     /**
      * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
@@ -1550,11 +1543,11 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeSparse<TString> = java.serializeSparse(
+    ): SerializeSparse<TString> = java.serializeSparse(    
         sparseIndices,
         sparseValues,
         sparseShape
-    )
+        )
 
     /**
      * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
@@ -1574,12 +1567,12 @@ public class IoOps(
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>,
         outType: Class<U>
-    ): SerializeSparse<U> = java.serializeSparse<U>(
+    ): SerializeSparse<U> = java.serializeSparse<U>(    
         sparseIndices,
         sparseValues,
         sparseShape,
         outType
-    )
+        )
 
     /**
      * Transforms a Tensor into a serialized TensorProto proto.
@@ -1588,9 +1581,9 @@ public class IoOps(
      * @return a new instance of SerializeTensor
      * @see org.tensorflow.op.IoOps.serializeTensor
      */
-    public fun serializeTensor(tensor: Operand<out TType>): SerializeTensor = java.serializeTensor(
+    public fun serializeTensor(tensor: Operand<out TType>): SerializeTensor = java.serializeTensor(    
         tensor
-    )
+        )
 
     /**
      * Generate a sharded filename. The filename is printf formatted as
@@ -1606,11 +1599,11 @@ public class IoOps(
         basename: Operand<TString>,
         shard: Operand<TInt32>,
         numShards: Operand<TInt32>
-    ): ShardedFilename = java.shardedFilename(
+    ): ShardedFilename = java.shardedFilename(    
         basename,
         shard,
         numShards
-    )
+        )
 
     /**
      * Generate a glob pattern matching all sharded file names.
@@ -1621,10 +1614,10 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.shardedFilespec
      */
     public fun shardedFilespec(basename: Operand<TString>, numShards: Operand<TInt32>):
-        ShardedFilespec = java.shardedFilespec(
+            ShardedFilespec = java.shardedFilespec(    
         basename,
         numShards
-    )
+        )
 
     /**
      * A Reader that outputs the lines of a file delimited by '\n'.
@@ -1652,13 +1645,13 @@ public class IoOps(
         skipHeaderLines: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): TextLineReader = java.textLineReader(
+    ): TextLineReader = java.textLineReader(    
         *listOfNotNull(
-            skipHeaderLines?.let { org.tensorflow.op.io.TextLineReader.skipHeaderLines(it) },
-            container?.let { org.tensorflow.op.io.TextLineReader.container(it) },
-            sharedName?.let { org.tensorflow.op.io.TextLineReader.sharedName(it) }
+            skipHeaderLines?.let{ org.tensorflow.op.io.TextLineReader.skipHeaderLines(it) },
+            container?.let{ org.tensorflow.op.io.TextLineReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.TextLineReader.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * A Reader that outputs the records from a TensorFlow Records file.
@@ -1686,13 +1679,13 @@ public class IoOps(
         container: String? = null,
         sharedName: String? = null,
         compressionType: String? = null
-    ): TfRecordReader = java.tfRecordReader(
+    ): TfRecordReader = java.tfRecordReader(    
         *listOfNotNull(
-            container?.let { org.tensorflow.op.io.TfRecordReader.container(it) },
-            sharedName?.let { org.tensorflow.op.io.TfRecordReader.sharedName(it) },
-            compressionType?.let { org.tensorflow.op.io.TfRecordReader.compressionType(it) }
+            container?.let{ org.tensorflow.op.io.TfRecordReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.TfRecordReader.sharedName(it) },
+            compressionType?.let{ org.tensorflow.op.io.TfRecordReader.compressionType(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * A Reader that outputs the entire contents of a file as a value.
@@ -1715,12 +1708,12 @@ public class IoOps(
      * @return this Options instance.
      */
     public fun wholeFileReader(container: String? = null, sharedName: String? = null):
-        WholeFileReader = java.wholeFileReader(
+            WholeFileReader = java.wholeFileReader(    
         *listOfNotNull(
-            container?.let { org.tensorflow.op.io.WholeFileReader.container(it) },
-            sharedName?.let { org.tensorflow.op.io.WholeFileReader.sharedName(it) }
+            container?.let{ org.tensorflow.op.io.WholeFileReader.container(it) },
+            sharedName?.let{ org.tensorflow.op.io.WholeFileReader.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Writes contents to the file at input filename. Creates file and recursively
@@ -1732,9 +1725,9 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.writeFile
      */
     public fun writeFile(filename: Operand<TString>, contents: Operand<TString>): WriteFile =
-        java.writeFile(
-            filename,
-            contents
+            java.writeFile(    
+        filename,
+        contents
         )
 
     /**
@@ -1780,11 +1773,8 @@ public class IoOps(
      * @return this Options instance.
      */
     @JvmName("decodeRawReified")
-    public inline fun <reified T : TType> decodeRaw(
-        bytes: Operand<TString>,
-        littleEndian: Boolean? =
-            null
-    ): DecodeRaw<T> = decodeRaw<T>(bytes, T::class.java, littleEndian)
+    public inline fun <reified T : TType> decodeRaw(bytes: Operand<TString>, littleEndian: Boolean?
+            = null): DecodeRaw<T> = decodeRaw<T>(bytes, T::class.java, littleEndian)
 
     /**
      * Deserialize and concatenate `SparseTensors` from a serialized minibatch.
@@ -1794,16 +1784,16 @@ public class IoOps(
      *  must all match.  When the final `SparseTensor` is created, it has rank one
      *  higher than the ranks of the incoming `SparseTensor` objects
      *  (they have been concatenated along a new row dimension).
-     *
+     *  
      * The output `SparseTensor` object's shape values for all dimensions but the
      *  first are the max across the input `SparseTensor` objects' shape values
      *  for the corresponding dimensions.  Its first shape value is `N`, the minibatch
      *  size.
-     *
+     *  
      * The input `SparseTensor` objects' indices are assumed ordered in
      *  standard lexicographic order.  If this is not the case, after this
      *  step run `SparseReorder` to restore index ordering.
-     *
+     *  
      * For example, if the serialized input is a `&#91;2 x 3&#93;` matrix representing two
      *  original `SparseTensor` objects:
      *  ```
@@ -1812,18 +1802,18 @@ public class IoOps(
      *          [20]
      *  values = [1, 2, 3]
      *  shape = [50]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * index = [ 2]
      *          [10]
      *  values = [4, 5]
      *  shape = [30]
-     *
+     *  
      * ```
-     *
+     *  
      * then the final deserialized `SparseTensor` will be:
      *  ```
      * index = [0  0]
@@ -1833,7 +1823,7 @@ public class IoOps(
      *          [1 10]
      *  values = [1, 2, 3, 4, 5]
      *  shape = [2 50]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `sparse_values` output
@@ -1846,7 +1836,7 @@ public class IoOps(
      */
     @JvmName("deserializeManySparseReified")
     public inline fun <reified T : TType> deserializeManySparse(serializedSparse: Operand<TString>):
-        DeserializeManySparse<T> = deserializeManySparse<T>(serializedSparse, T::class.java)
+            DeserializeManySparse<T> = deserializeManySparse<T>(serializedSparse, T::class.java)
 
     /**
      * Transforms a serialized tensorflow.TensorProto proto into a Tensor.
@@ -1860,8 +1850,8 @@ public class IoOps(
      * @see org.tensorflow.op.IoOps.parseTensor
      */
     @JvmName("parseTensorReified")
-    public inline fun <reified T : TType> parseTensor(serialized: Operand<TString>): ParseTensor<T> =
-        parseTensor<T>(serialized, T::class.java)
+    public inline fun <reified T : TType> parseTensor(serialized: Operand<TString>): ParseTensor<T>
+            = parseTensor<T>(serialized, T::class.java)
 
     /**
      * Serialize an `N`-minibatch `SparseTensor` into an `&#91;N, 3&#93;` `Tensor` object.
@@ -1870,7 +1860,7 @@ public class IoOps(
      *  must be sorted in increasing order of this first dimension.  The serialized
      *  `SparseTensor` objects going into each row of `serialized_sparse` will have
      *  rank `R-1`.
-     *
+     *  
      * The minibatch size `N` is extracted from `sparse_shape[0]`.
      *
      * @param <U> data type for `serialized_sparse` output
@@ -1888,10 +1878,8 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeManySparse<U> = serializeManySparse<U>(
-        sparseIndices, sparseValues, sparseShape,
-        U::class.java
-    )
+    ): SerializeManySparse<U> = serializeManySparse<U>(sparseIndices, sparseValues, sparseShape,
+            U::class.java)
 
     /**
      * Serialize a `SparseTensor` into a `[3]` `Tensor` object.
@@ -1911,8 +1899,6 @@ public class IoOps(
         sparseIndices: Operand<TInt64>,
         sparseValues: Operand<out TType>,
         sparseShape: Operand<TInt64>
-    ): SerializeSparse<U> = serializeSparse<U>(
-        sparseIndices, sparseValues, sparseShape,
-        U::class.java
-    )
+    ): SerializeSparse<U> = serializeSparse<U>(sparseIndices, sparseValues, sparseShape,
+            U::class.java)
 }

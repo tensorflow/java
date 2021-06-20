@@ -17,6 +17,23 @@
 //
 package org.tensorflow.op.kotlin
 
+import java.nio.charset.Charset
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.BooleanArray
+import kotlin.Byte
+import kotlin.ByteArray
+import kotlin.Double
+import kotlin.DoubleArray
+import kotlin.Float
+import kotlin.FloatArray
+import kotlin.Int
+import kotlin.IntArray
+import kotlin.Long
+import kotlin.LongArray
+import kotlin.String
+import kotlin.Unit
+import kotlin.jvm.JvmName
 import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.BooleanNdArray
@@ -289,23 +306,6 @@ import org.tensorflow.types.TString
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import java.nio.charset.Charset
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.BooleanArray
-import kotlin.Byte
-import kotlin.ByteArray
-import kotlin.Double
-import kotlin.DoubleArray
-import kotlin.Float
-import kotlin.FloatArray
-import kotlin.Int
-import kotlin.IntArray
-import kotlin.Long
-import kotlin.LongArray
-import kotlin.String
-import kotlin.Unit
-import kotlin.jvm.JvmName
 
 /**
  * An API for building operations as [Op][Op]s
@@ -333,51 +333,51 @@ public class KotlinOps(
      */
     public override val tf: KotlinOps = this
 
-    public val nn: NnOps = NnOps(this)
-
-    public val summary: SummaryOps = SummaryOps(this)
-
-    public val image: ImageOps = ImageOps(this)
-
-    public val ragged: RaggedOps = RaggedOps(this)
-
-    public val `data`: DataOps = DataOps(this)
-
-    public val shape: ShapeOps = ShapeOps(this)
-
-    public val io: IoOps = IoOps(this)
-
-    public val dtypes: DtypesOps = DtypesOps(this)
-
-    public val xla: XlaOps = XlaOps(this)
-
-    public val linalg: LinalgOps = LinalgOps(this)
-
-    public val random: RandomOps = RandomOps(this)
-
-    public val strings: StringsOps = StringsOps(this)
-
-    public val sparse: SparseOps = SparseOps(this)
+    public val audio: AudioOps = AudioOps(this)
 
     public val bitwise: BitwiseOps = BitwiseOps(this)
 
-    public val tpu: TpuOps = TpuOps(this)
+    public val shape: ShapeOps = ShapeOps(this)
 
-    public val audio: AudioOps = AudioOps(this)
+    public val `data`: DataOps = DataOps(this)
+
+    public val dtypes: DtypesOps = DtypesOps(this)
+
+    public val image: ImageOps = ImageOps(this)
+
+    public val io: IoOps = IoOps(this)
+
+    public val linalg: LinalgOps = LinalgOps(this)
 
     public val math: MathOps = MathOps(this)
 
-    public val signal: SignalOps = SignalOps(this)
+    public val nn: NnOps = NnOps(this)
 
     public val quantization: QuantizationOps = QuantizationOps(this)
 
+    public val ragged: RaggedOps = RaggedOps(this)
+
+    public val random: RandomOps = RandomOps(this)
+
+    public val signal: SignalOps = SignalOps(this)
+
+    public val sparse: SparseOps = SparseOps(this)
+
+    public val strings: StringsOps = StringsOps(this)
+
+    public val summary: SummaryOps = SummaryOps(this)
+
+    public val tpu: TpuOps = TpuOps(this)
+
     public val train: TrainOps = TrainOps(this)
+
+    public val xla: XlaOps = XlaOps(this)
 
     /**
      * Raise a exception to abort the process when called.
      *  If exit_without_error is true, the process will exit normally,
      *  otherwise it will exit with a SIGABORT signal.
-     *
+     *  
      * Returns nothing but an exception.
      *
      * @param options carries optional attribute values
@@ -394,11 +394,11 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun abort(errorMsg: String? = null, exitWithoutError: Boolean? = null): Abort =
-        java.abort(
-            *listOfNotNull(
-                errorMsg?.let { org.tensorflow.op.core.Abort.errorMsg(it) },
-                exitWithoutError?.let { org.tensorflow.op.core.Abort.exitWithoutError(it) }
-            ).toTypedArray()
+            java.abort(    
+        *listOfNotNull(
+            errorMsg?.let{ org.tensorflow.op.core.Abort.errorMsg(it) },
+            exitWithoutError?.let{ org.tensorflow.op.core.Abort.exitWithoutError(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -423,13 +423,13 @@ public class KotlinOps(
         input: Operand<TBool>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): All = java.all(
+    ): All = java.all(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.All.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.All.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the &quot;logical or&quot; of elements across dimensions of a tensor.
@@ -453,13 +453,13 @@ public class KotlinOps(
         input: Operand<TBool>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Any = java.any(
+    ): Any = java.any(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.Any.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.Any.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a constant of `int` elements.
@@ -469,45 +469,9 @@ public class KotlinOps(
      * @return a float constant
      * @see org.tensorflow.op.Ops.array
      */
-    public fun array(vararg `data`: Int): Constant<TInt32> = java.array(
+    public fun array(vararg `data`: Int): Constant<TInt32> = java.array(    
         *data
-    )
-
-    /**
-     * Creates a constant of `String` elements, using the default UTF-8 charset.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return the `String` constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: String): Constant<TString> = java.array(
-        *data
-    )
-
-    /**
-     * Creates a constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: Boolean): Constant<TBool> = java.array(
-        *data
-    )
-
-    /**
-     * Creates a constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: Long): Constant<TInt64> = java.array(
-        *data
-    )
+        )
 
     /**
      * Creates a constant of `float` elements.
@@ -517,9 +481,9 @@ public class KotlinOps(
      * @return a float constant
      * @see org.tensorflow.op.Ops.array
      */
-    public fun array(vararg `data`: Float): Constant<TFloat32> = java.array(
+    public fun array(vararg `data`: Float): Constant<TFloat32> = java.array(    
         *data
-    )
+        )
 
     /**
      * Creates a constant of `double` elements.
@@ -529,9 +493,33 @@ public class KotlinOps(
      * @return a double constant
      * @see org.tensorflow.op.Ops.array
      */
-    public fun array(vararg `data`: Double): Constant<TFloat64> = java.array(
+    public fun array(vararg `data`: Double): Constant<TFloat64> = java.array(    
         *data
-    )
+        )
+
+    /**
+     * Creates a constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: Long): Constant<TInt64> = java.array(    
+        *data
+        )
+
+    /**
+     * Creates a constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: Boolean): Constant<TBool> = java.array(    
+        *data
+        )
 
     /**
      * Creates a constant of `byte` elements.
@@ -541,9 +529,21 @@ public class KotlinOps(
      * @return a byte constant
      * @see org.tensorflow.op.Ops.array
      */
-    public fun array(vararg `data`: Byte): Constant<TUint8> = java.array(
+    public fun array(vararg `data`: Byte): Constant<TUint8> = java.array(    
         *data
-    )
+        )
+
+    /**
+     * Creates a constant of `String` elements, using the default UTF-8 charset.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return the `String` constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: String): Constant<TString> = java.array(    
+        *data
+        )
 
     /**
      * Creates a constant of `String` elements, using the given charset.
@@ -555,10 +555,10 @@ public class KotlinOps(
      * @return the `String` constant
      * @see org.tensorflow.op.Ops.array
      */
-    public fun array(charset: Charset, vararg `data`: String): Constant<TString> = java.array(
+    public fun array(charset: Charset, vararg `data`: String): Constant<TString> = java.array(    
         charset,
         *data
-    )
+        )
 
     /**
      * Asserts that the given condition is true.
@@ -579,13 +579,13 @@ public class KotlinOps(
         condition: Operand<TBool>,
         `data`: Iterable<Operand<*>>,
         summarize: Long? = null
-    ): AssertThat = java.assertThat(
+    ): AssertThat = java.assertThat(    
         condition,
         data,
         *listOfNotNull(
-            summarize?.let { org.tensorflow.op.core.AssertThat.summarize(it) }
+            summarize?.let{ org.tensorflow.op.core.AssertThat.summarize(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update 'ref' by assigning 'value' to it.
@@ -616,14 +616,14 @@ public class KotlinOps(
         value: Operand<T>,
         validateShape: Boolean? = null,
         useLocking: Boolean? = null
-    ): Assign<T> = java.assign<T>(
+    ): Assign<T> = java.assign<T>(    
         ref,
         value,
         *listOfNotNull(
-            validateShape?.let { org.tensorflow.op.core.Assign.validateShape(it) },
-            useLocking?.let { org.tensorflow.op.core.Assign.useLocking(it) }
+            validateShape?.let{ org.tensorflow.op.core.Assign.validateShape(it) },
+            useLocking?.let{ org.tensorflow.op.core.Assign.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update 'ref' by adding 'value' to it.
@@ -647,13 +647,13 @@ public class KotlinOps(
         ref: Operand<T>,
         value: Operand<T>,
         useLocking: Boolean? = null
-    ): AssignAdd<T> = java.assignAdd<T>(
+    ): AssignAdd<T> = java.assignAdd<T>(    
         ref,
         value,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.AssignAdd.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.AssignAdd.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Adds a value to the current value of a variable.
@@ -666,10 +666,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.assignAddVariableOp
      */
     public fun assignAddVariableOp(resource: Operand<out TType>, value: Operand<out TType>):
-        AssignAddVariableOp = java.assignAddVariableOp(
+            AssignAddVariableOp = java.assignAddVariableOp(    
         resource,
         value
-    )
+        )
 
     /**
      * Update 'ref' by subtracting 'value' from it.
@@ -693,13 +693,13 @@ public class KotlinOps(
         ref: Operand<T>,
         value: Operand<T>,
         useLocking: Boolean? = null
-    ): AssignSub<T> = java.assignSub<T>(
+    ): AssignSub<T> = java.assignSub<T>(    
         ref,
         value,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.AssignSub.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.AssignSub.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Subtracts a value from the current value of a variable.
@@ -712,10 +712,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.assignSubVariableOp
      */
     public fun assignSubVariableOp(resource: Operand<out TType>, value: Operand<out TType>):
-        AssignSubVariableOp = java.assignSubVariableOp(
+            AssignSubVariableOp = java.assignSubVariableOp(    
         resource,
         value
-    )
+        )
 
     /**
      * Assigns a new value to a variable.
@@ -728,16 +728,16 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.assignVariableOp
      */
     public fun assignVariableOp(resource: Operand<out TType>, value: Operand<out TType>):
-        AssignVariableOp = java.assignVariableOp(
+            AssignVariableOp = java.assignVariableOp(    
         resource,
         value
-    )
+        )
 
     /**
      * Defines a barrier that persists across different graph executions.
      *  A barrier represents a key-value map, where each key is a string, and
      *  each value is a tuple of tensors.
-     *
+     *  
      * At runtime, the barrier contains 'complete' and 'incomplete'
      *  elements. A complete element has defined tensors for all components of
      *  its value tuple, and may be accessed using BarrierTakeMany. An
@@ -776,15 +776,15 @@ public class KotlinOps(
         capacity: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): Barrier = java.barrier(
+    ): Barrier = java.barrier(    
         componentTypes,
         *listOfNotNull(
-            shapes?.let { org.tensorflow.op.core.Barrier.shapes(it) },
-            capacity?.let { org.tensorflow.op.core.Barrier.capacity(it) },
-            container?.let { org.tensorflow.op.core.Barrier.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Barrier.sharedName(it) }
+            shapes?.let{ org.tensorflow.op.core.Barrier.shapes(it) },
+            capacity?.let{ org.tensorflow.op.core.Barrier.capacity(it) },
+            container?.let{ org.tensorflow.op.core.Barrier.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Barrier.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Closes the given barrier.
@@ -807,12 +807,12 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun barrierClose(handle: Operand<TString>, cancelPendingEnqueues: Boolean? = null):
-        BarrierClose = java.barrierClose(
+            BarrierClose = java.barrierClose(    
         handle,
         *listOfNotNull(
-            cancelPendingEnqueues?.let { org.tensorflow.op.core.BarrierClose.cancelPendingEnqueues(it) }
+            cancelPendingEnqueues?.let{ org.tensorflow.op.core.BarrierClose.cancelPendingEnqueues(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the number of incomplete elements in the given barrier.
@@ -822,8 +822,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.barrierIncompleteSize
      */
     public fun barrierIncompleteSize(handle: Operand<TString>): BarrierIncompleteSize =
-        java.barrierIncompleteSize(
-            handle
+            java.barrierIncompleteSize(    
+        handle
         )
 
     /**
@@ -846,12 +846,12 @@ public class KotlinOps(
         keys: Operand<TString>,
         values: Operand<out TType>,
         componentIndex: Long
-    ): BarrierInsertMany = java.barrierInsertMany(
+    ): BarrierInsertMany = java.barrierInsertMany(    
         handle,
         keys,
         values,
         componentIndex
-    )
+        )
 
     /**
      * Computes the number of complete elements in the given barrier.
@@ -861,15 +861,15 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.barrierReadySize
      */
     public fun barrierReadySize(handle: Operand<TString>): BarrierReadySize =
-        java.barrierReadySize(
-            handle
+            java.barrierReadySize(    
+        handle
         )
 
     /**
      * Takes the given number of completed elements from a barrier.
      *  This operation concatenates completed-element component tensors along
      *  the 0th dimension to make a single component tensor.
-     *
+     *  
      * Elements come out of the barrier when they are complete, and in the order
      *  in which they were placed into the barrier.  The indices output provides
      *  information about the batch in which each element was originally inserted
@@ -905,36 +905,36 @@ public class KotlinOps(
         allowSmallBatch: Boolean? = null,
         waitForIncomplete: Boolean? = null,
         timeoutMs: Long? = null
-    ): BarrierTakeMany = java.barrierTakeMany(
+    ): BarrierTakeMany = java.barrierTakeMany(    
         handle,
         numElements,
         componentTypes,
         *listOfNotNull(
-            allowSmallBatch?.let { org.tensorflow.op.core.BarrierTakeMany.allowSmallBatch(it) },
-            waitForIncomplete?.let { org.tensorflow.op.core.BarrierTakeMany.waitForIncomplete(it) },
-            timeoutMs?.let { org.tensorflow.op.core.BarrierTakeMany.timeoutMs(it) }
+            allowSmallBatch?.let{ org.tensorflow.op.core.BarrierTakeMany.allowSmallBatch(it) },
+            waitForIncomplete?.let{ org.tensorflow.op.core.BarrierTakeMany.waitForIncomplete(it) },
+            timeoutMs?.let{ org.tensorflow.op.core.BarrierTakeMany.timeoutMs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Batches all input tensors nondeterministically.
      *  When many instances of this Op are being run concurrently with the same
      *  container/shared_name in the same device, some will output zero-shaped Tensors
      *  and others will output Tensors of size up to max_batch_size.
-     *
+     *  
      * All Tensors in in_tensors are batched together (so, for example, labels and
      *  features should be batched with a single instance of this operation.
-     *
+     *  
      * Each invocation of batch emits an `id` scalar which will be used to identify
      *  this particular invocation when doing unbatch or its gradient.
-     *
+     *  
      * Each op which emits a non-empty batch will also emit a non-empty batch_index
      *  Tensor, which, is a &#91;K, 3&#93; matrix where each row contains the invocation's id,
      *  start, and length of elements of each set of Tensors present in batched_tensors.
-     *
+     *  
      * Batched tensors are concatenated along the first dimension, and all tensors in
      *  in_tensors must have the first dimension of the same size.
-     *
+     *  
      * in_tensors: The tensors to be batched.
      *  num_batch_threads: Number of scheduling threads for processing batches of work.
      *  Determines the number of batches processed in parallel.
@@ -995,25 +995,25 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         batchingQueue: String? = null
-    ): Batch = java.batch(
+    ): Batch = java.batch(    
         inTensors,
         numBatchThreads,
         maxBatchSize,
         batchTimeoutMicros,
         gradTimeoutMicros,
         *listOfNotNull(
-            maxEnqueuedBatches?.let { org.tensorflow.op.core.Batch.maxEnqueuedBatches(it) },
-            allowedBatchSizes?.let { org.tensorflow.op.core.Batch.allowedBatchSizes(it) },
-            container?.let { org.tensorflow.op.core.Batch.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Batch.sharedName(it) },
-            batchingQueue?.let { org.tensorflow.op.core.Batch.batchingQueue(it) }
+            maxEnqueuedBatches?.let{ org.tensorflow.op.core.Batch.maxEnqueuedBatches(it) },
+            allowedBatchSizes?.let{ org.tensorflow.op.core.Batch.allowedBatchSizes(it) },
+            container?.let{ org.tensorflow.op.core.Batch.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Batch.sharedName(it) },
+            batchingQueue?.let{ org.tensorflow.op.core.Batch.batchingQueue(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * BatchToSpace for 4-D tensors of type T.
      *  This is a legacy version of the more general BatchToSpaceND.
-     *
+     *  
      * Rearranges (permutes) data from batch into blocks of spatial data, followed by
      *  cropping. This is the reverse transformation of SpaceToBatch. More specifically,
      *  this op outputs a copy of the input tensor where values from the `batch`
@@ -1030,7 +1030,7 @@ public class KotlinOps(
      *  dimensions as follows:
      *  `
      * crops = [[crop_top, crop_bottom], [crop_left, crop_right]]
-     *
+     *  
      * `
      * @param blockSize the value of the blockSize property
      * @param <T> data type for `BatchToSpace` output and operands
@@ -1041,11 +1041,11 @@ public class KotlinOps(
         input: Operand<T>,
         crops: Operand<out TNumber>,
         blockSize: Long
-    ): BatchToSpace<T> = java.batchToSpace<T>(
+    ): BatchToSpace<T> = java.batchToSpace<T>(    
         input,
         crops,
         blockSize
-    )
+        )
 
     /**
      * BatchToSpace for N-D tensors of type T.
@@ -1066,85 +1066,85 @@ public class KotlinOps(
      *  dimension `i + 1`, which corresponds to spatial dimension `i`.  It is
      *  required that
      *  `crop_start[i] + crop_end[i] <= block_shape[i] * input_shape&#91;i + 1&#93;`.
-     *
+     *  
      * This operation is equivalent to the following steps:
      *  <ol>
      *  <li>
-     *
+     *  
      * Reshape `input` to `reshaped` of shape:
      *  &#91;block_shape[0&#93;, ..., block_shape&#91;M-1&#93;,
      *  batch / prod(block_shape),
      *  input_shape[1], ..., input_shape&#91;N-1&#93;]
      *  </li>
      *  <li>
-     *
+     *  
      * Permute dimensions of `reshaped` to produce `permuted` of shape
      *  &#91;batch / prod(block_shape),
-     *
+     *  
      * input_shape[1&#93;, block_shape[0],
      *  ...,
      *  input_shape[M], block_shape&#91;M-1&#93;,
-     *
+     *  
      * input_shape&#91;M+1&#93;, ..., input_shape&#91;N-1&#93;]
      *  </li>
      *  <li>
-     *
+     *  
      * Reshape `permuted` to produce `reshaped_permuted` of shape
      *  &#91;batch / prod(block_shape),
-     *
+     *  
      * input_shape[1&#93; * block_shape[0],
      *  ...,
      *  input_shape[M] * block_shape&#91;M-1&#93;,
-     *
+     *  
      * input_shape&#91;M+1&#93;,
      *  ...,
      *  input_shape&#91;N-1&#93;]
      *  </li>
      *  <li>
-     *
+     *  
      * Crop the start and end of dimensions `&#91;1, ..., M&#93;` of
      *  `reshaped_permuted` according to `crops` to produce the output of shape:
      *  &#91;batch / prod(block_shape),
-     *
+     *  
      * input_shape[1&#93; * block_shape[0] - crops&#91;0,0&#93; - crops&#91;0,1&#93;,
      *  ...,
      *  input_shape[M] * block_shape&#91;M-1&#93; - crops&#91;M-1,0&#93; - crops&#91;M-1,1&#93;,
-     *
+     *  
      * input_shape&#91;M+1&#93;, ..., input_shape&#91;N-1&#93;]
      *  </li>
      *  </ol>
-     *
+     *  
      * Some examples:
-     *
+     *  
      * (1) For the following input of shape `&#91;4, 1, 1, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `crops = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
      *  `
      * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;1, 2, 2, 1&#93;` and value:
      *  `
      * x = [[[[1], [2]], [[3], [4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (2) For the following input of shape `&#91;4, 1, 1, 3&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `crops = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
      *  `
      * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;1, 2, 2, 3&#93;` and value:
      *  `
      * x = [[[[1, 2, 3], [4, 5, 6]],
      *        [[7, 8, 9], [10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (3) For the following input of shape `&#91;4, 2, 2, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `crops = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
@@ -1153,18 +1153,18 @@ public class KotlinOps(
      *       [[[2], [4]], [[10], [12]]],
      *       [[[5], [7]], [[13], [15]]],
      *       [[[6], [8]], [[14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;1, 4, 4, 1&#93;` and value:
      *  `
      * x = [[[[1],   [2],  [3],  [4]],
      *       [[5],   [6],  [7],  [8]],
      *       [[9],  [10], [11],  [12]],
      *       [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (4) For the following input of shape `&#91;8, 1, 3, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `crops = &#91;[0, 0&#93;, &#91;2, 0&#93;]`:
@@ -1173,16 +1173,16 @@ public class KotlinOps(
      *       [[[0], [2], [4]]], [[[0], [10], [12]]],
      *       [[[0], [5], [7]]], [[[0], [13], [15]]],
      *       [[[0], [6], [8]]], [[[0], [14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;2, 2, 4, 1&#93;` and value:
      *  `
      * x = [[[[1],   [2],  [3],  [4]],
      *        [[5],   [6],  [7],  [8]]],
      *       [[[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
      * @param <T> data type for `BatchToSpaceND` output and operands
      * @return a new instance of BatchToSpaceNd
@@ -1192,29 +1192,29 @@ public class KotlinOps(
         input: Operand<T>,
         blockShape: Operand<out TNumber>,
         crops: Operand<out TNumber>
-    ): BatchToSpaceNd<T> = java.batchToSpaceNd<T>(
+    ): BatchToSpaceNd<T> = java.batchToSpaceNd<T>(    
         input,
         blockShape,
         crops
-    )
+        )
 
     /**
      * Bitcasts a tensor from one type to another without copying data.
      *  Given a tensor `input`, this operation returns a tensor that has the same buffer
      *  data as `input` with datatype `type`.
-     *
+     *  
      * If the input datatype `T` is larger than the output datatype `type` then the
      *  shape changes from &#91;...&#93; to [..., sizeof(`T`)/sizeof(`type`)].
-     *
+     *  
      * If `T` is smaller than `type`, the operator requires that the rightmost
      *  dimension be equal to sizeof(`type`)/sizeof(`T`). The shape then goes from
      *  [..., sizeof(`type`)/sizeof(`T`)] to &#91;...&#93;.
-     *
+     *  
      * tf.bitcast() and tf.cast() work differently when real dtype is casted as a complex dtype
      *  (e.g. tf.complex64 or tf.complex128) as tf.cast() make imaginary part 0 while tf.bitcast()
      *  gives module error.
      *  For example,
-     *
+     *  
      * Example 1:
      *  ```
      *
@@ -1227,14 +1227,14 @@ public class KotlinOps(
      *  print(equality_cast)
      *  tf.Tensor([1.+0.j 2.+0.j 3.+0.j], shape=(3,), dtype=complex128)
      * ```
-     *
+     *  
      * Example 2:
      *  ```
      *
      * tf.bitcast(tf.constant(0xffffffff, dtype=tf.uint32), tf.uint8)
      *  <tf.Tensor: shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)>
      * ```
-     *
+     *  
      * Example 3:
      *  ```
      *
@@ -1253,7 +1253,7 @@ public class KotlinOps(
      *  [  0   0 128  63]
      *  [  0   0 128  63]], shape=(3, 4), dtype=uint8)
      * ```
-     *
+     *  
      * _NOTE_: Bitcast is implemented as a low-level cast, so machines with different
      *  endian orderings will give different results.
      *
@@ -1265,36 +1265,36 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.bitcast
      */
     public fun <U : TType> bitcast(input: Operand<out TType>, type: Class<U>): Bitcast<U> =
-        java.bitcast<U>(
-            input,
-            type
+            java.bitcast<U>(    
+        input,
+        type
         )
 
     /**
      * Apply boolean mask to tensor.  Returns the flat array of each element corresponding to a
      * `true` in the mask.
-     *
+     *  
      *
      *  Numpy equivalent is `tensor&#91;mask&#93;`.
-     *
+     *  
      *
      *  In general, `0 < dim(mask) = K <= dim(tensor)`, and `mask`'s shape must match
      *  the first K dimensions of `tensor`'s shape.  We then have:
      *    `booleanMask(tensor, mask)&#91;i, j1,...,jd&#93; = tensor&#91;i1,...,iK,j1,...,jd&#93;`
      *  where `(i1,...,iK)` is the ith `true` entry of `mask` (row-major order).
-     *
+     *  
      *
      *  The `axis` could be used with `mask` to indicate the axis to mask from (it's 0 by default).
      *  In that case, `axis + dim(mask) <= dim(tensor)` and `mask`'s shape must match
      *  the first `axis + dim(mask)` dimensions of `tensor`'s shape.
      *
-     * @param scope
+     * @param scope 
      * @param tensor The tensor to mask.
      * @param mask The mask to apply.
      * @param options carries optional attributes values
      * @return The masked tensor.
      * @see org.tensorflow.op.Ops.booleanMask
-     * @param axis
+     * @param axis 
      *
      * @param axis (Optional) The axis to mask from, or 0 if not set.
      */
@@ -1302,21 +1302,21 @@ public class KotlinOps(
         tensor: Operand<T>,
         mask: Operand<TBool>,
         axis: Int? = null
-    ): Operand<T> = java.booleanMask<T>(
+    ): Operand<T> = java.booleanMask<T>(    
         tensor,
         mask,
         *listOfNotNull(
-            axis?.let { org.tensorflow.op.core.BooleanMask.axis(it) }
+            axis?.let{ org.tensorflow.op.core.BooleanMask.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Updates a tensor at the masked values, and returns the updated tensor.  Does not mutate the
      * input tensors.  `updates` will be broadcasted by default
-     *
+     *  
      *
      *  Numpy equivalent is `tensor&#91;mask&#93; = updates`.
-     *
+     *  
      *
      *  In general, `0 < dim(mask) = K <= dim(tensor)`, and `mask`'s shape must match the first K
      * dimensions of
@@ -1325,7 +1325,7 @@ public class KotlinOps(
      *  tensor[i1,...,iK,j1,...,jd]
      * ``` where `(i1,...,iK)` is the ith `true` entry of `mask` (row-major
      *  order).
-     *
+     *  
      *
      *  The `axis` could be used with `mask` to indicate the axis to mask from (it's 0 by default).
      * In that
@@ -1333,7 +1333,7 @@ public class KotlinOps(
      * axis +
      *  dim(mask)
      * ``` dimensions of `tensor`'s shape.
-     *
+     *  
      *
      *  The shape of `updates` should be `&#91;n, t_1, t_2, ...&#93;` where `n` is the number of
      * true values in
@@ -1347,10 +1347,10 @@ public class KotlinOps(
      * @param options carries optional attributes values
      * @return The masked tensor.
      * @see org.tensorflow.op.Ops.booleanMaskUpdate
-     * @param axis
+     * @param axis 
      *
      * @param axis (Optional) The axis to mask from, or 0 if not set.
-     * @param broadcast
+     * @param broadcast 
      *
      * @param broadcast (Optional) Whether to try broadcasting update.  True by default.
      */
@@ -1360,15 +1360,15 @@ public class KotlinOps(
         updates: Operand<T>,
         axis: Int? = null,
         broadcast: Boolean? = null
-    ): Operand<T> = java.booleanMaskUpdate<T>(
+    ): Operand<T> = java.booleanMaskUpdate<T>(    
         tensor,
         mask,
         updates,
         *listOfNotNull(
-            axis?.let { org.tensorflow.op.core.BooleanMaskUpdate.axis(it) },
-            broadcast?.let { org.tensorflow.op.core.BooleanMaskUpdate.broadcast(it) }
+            axis?.let{ org.tensorflow.op.core.BooleanMaskUpdate.axis(it) },
+            broadcast?.let{ org.tensorflow.op.core.BooleanMaskUpdate.broadcast(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Return the shape of s0 op s1 with broadcast.
@@ -1383,10 +1383,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.broadcastDynamicShape
      */
     public fun <T : TNumber> broadcastDynamicShape(s0: Operand<T>, s1: Operand<T>):
-        BroadcastDynamicShape<T> = java.broadcastDynamicShape<T>(
+            BroadcastDynamicShape<T> = java.broadcastDynamicShape<T>(    
         s0,
         s1
-    )
+        )
 
     /**
      * Broadcast an array for a compatible shape.
@@ -1395,7 +1395,7 @@ public class KotlinOps(
      *  dimension pair they are either equal or one of them is one. When trying
      *  to broadcast a Tensor to a shape, it starts with the trailing dimensions,
      *  and works its way forward.
-     *
+     *  
      * For example,
      *  ```
      *
@@ -1407,14 +1407,14 @@ public class KotlinOps(
      *  [1 2 3]
      *  [1 2 3]], shape=(3, 3), dtype=int32)
      * ```
-     *
+     *  
      * In the above example, the input Tensor with the shape of `&#91;1, 3&#93;`
      *  is broadcasted to output Tensor with shape of `&#91;3, 3&#93;`.
-     *
+     *  
      * When doing broadcasted operations such as multiplying a tensor
      *  by a scalar, broadcasting (usually) confers some time or space
      *  benefit, as the broadcasted tensor is never materialized.
-     *
+     *  
      * However, `broadcast_to` does not carry with it any such benefits.
      *  The newly-created tensor takes the full memory of the broadcasted
      *  shape. (In a graph context, `broadcast_to` might be fused to
@@ -1428,10 +1428,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.broadcastTo
      */
     public fun <T : TType> broadcastTo(input: Operand<T>, shape: Operand<out TNumber>):
-        BroadcastTo<T> = java.broadcastTo<T>(
+            BroadcastTo<T> = java.broadcastTo<T>(    
         input,
         shape
-    )
+        )
 
     /**
      * Bucketizes 'input' based on 'boundaries'.
@@ -1440,7 +1440,7 @@ public class KotlinOps(
      *  input = &#91;[-5, 10000&#93;
      *  &#91;150,   10&#93;
      *  &#91;5,    100&#93;]
-     *
+     *  
      * then the output will be
      *  output = &#91;[0, 3&#93;
      *  &#91;3, 2&#93;
@@ -1452,9 +1452,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.bucketize
      */
     public fun bucketize(input: Operand<out TNumber>, boundaries: List<Float>): Bucketize =
-        java.bucketize(
-            input,
-            boundaries
+            java.bucketize(    
+        input,
+        boundaries
         )
 
     /**
@@ -1467,10 +1467,10 @@ public class KotlinOps(
      * @see ConcreteFunction.call
      * @see org.tensorflow.op.Ops.call
      */
-    public fun call(function: ConcreteFunction, argument: Operand<*>): Operand<*> = java.call(
+    public fun call(function: ConcreteFunction, argument: Operand<*>): Operand<*> = java.call(    
         function,
         argument
-    )
+        )
 
     /**
      * Calls the function in an execution environment, adding its graph as a function if it isn't
@@ -1483,10 +1483,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.call
      */
     public fun call(function: ConcreteFunction, arguments: Map<String, Operand<*>>): Map<String,
-        Operand<*>> = java.call(
+            Operand<*>> = java.call(    
         function,
         arguments
-    )
+        )
 
     /**
      * Clips tensor values to a specified min and max.
@@ -1509,11 +1509,11 @@ public class KotlinOps(
         t: Operand<T>,
         clipValueMin: Operand<T>,
         clipValueMax: Operand<T>
-    ): ClipByValue<T> = java.clipByValue<T>(
+    ): ClipByValue<T> = java.clipByValue<T>(    
         t,
         clipValueMin,
         clipValueMax
-    )
+        )
 
     /**
      * Concatenates tensors along one dimension.
@@ -1528,22 +1528,22 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.concat
      */
     public fun <T : TType> concat(values: Iterable<Operand<T>>, axis: Operand<out TNumber>):
-        Concat<T> = java.concat<T>(
+            Concat<T> = java.concat<T>(    
         values,
         axis
-    )
+        )
 
     /**
-     * Creates a constant of `long` elements that is a copy of a given n-dimensional array.
+     * Creates a constant containing a single `int` element.
      *
      * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `long` elements.
-     * @return a long constant
+     * @param data The value to put into the new constant.
+     * @return an integer constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: LongNdArray): Constant<TInt64> = java.constant(
+    public fun constant(`data`: Int): Constant<TInt32> = java.constant(    
         data
-    )
+        )
 
     /**
      * Creates a rank-1 constant of `int` elements.
@@ -1555,9 +1555,23 @@ public class KotlinOps(
      * @return an integer constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: IntArray): Constant<TInt32> = java.constant(
+    public fun constant(`data`: IntArray): Constant<TInt32> = java.constant(    
         data
-    )
+        )
+
+    /**
+     * Creates a rank-2 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<IntArray>): Constant<TInt32> = java.constant(    
+        data
+        )
 
     /**
      * Creates a rank-3 constant of `int` elements.
@@ -1569,9 +1583,176 @@ public class KotlinOps(
      * @return an integer constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<IntArray>>): Constant<TInt32> = java.constant(
+    public fun constant(`data`: Array<Array<IntArray>>): Constant<TInt32> = java.constant(    
         data
-    )
+        )
+
+    /**
+     * Creates a rank-4 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<IntArray>>>): Constant<TInt32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<IntArray>>>>): Constant<TInt32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<IntArray>>>>>): Constant<TInt32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `int` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `int` elements.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: IntNdArray): Constant<TInt32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `float` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Float): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: FloatArray): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<FloatArray>): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<FloatArray>>): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<FloatArray>>>): Constant<TFloat32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<FloatArray>>>>): Constant<TFloat32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<FloatArray>>>>>): Constant<TFloat32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `float` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `float` elements.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: FloatNdArray): Constant<TFloat32> = java.constant(    
+        data
+        )
 
     /**
      * Creates a constant containing a single `double` element.
@@ -1581,9 +1762,176 @@ public class KotlinOps(
      * @return a double constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Double): Constant<TFloat64> = java.constant(
+    public fun constant(`data`: Double): Constant<TFloat64> = java.constant(    
         data
-    )
+        )
+
+    /**
+     * Creates a rank-1 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: DoubleArray): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<DoubleArray>): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<DoubleArray>>): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<DoubleArray>>>): Constant<TFloat64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<DoubleArray>>>>): Constant<TFloat64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<DoubleArray>>>>>): Constant<TFloat64>
+            = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `double` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `double` elements.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: DoubleNdArray): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `long` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Long): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: LongArray): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<LongArray>): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<LongArray>>): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<LongArray>>>): Constant<TInt64> = java.constant(    
+        data
+        )
 
     /**
      * Creates a rank-5 constant of `long` elements.
@@ -1596,8 +1944,104 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(`data`: Array<Array<Array<Array<LongArray>>>>): Constant<TInt64> =
-        java.constant(
-            data
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<LongArray>>>>>): Constant<TInt64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `long` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `long` elements.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: LongNdArray): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `boolean` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Boolean): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: BooleanArray): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<BooleanArray>): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<BooleanArray>>): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<BooleanArray>>>): Constant<TBool> =
+            java.constant(    
+        data
         )
 
     /**
@@ -1611,544 +2055,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(`data`: Array<Array<Array<Array<BooleanArray>>>>): Constant<TBool> =
-        java.constant(
-            data
+            java.constant(    
+        data
         )
-
-    /**
-     * Creates a constant of `int` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `int` elements.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: IntNdArray): Constant<TInt32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant of `double` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `double` elements.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: DoubleNdArray): Constant<TFloat64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-4 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<IntArray>>>): Constant<TInt32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-6 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<FloatArray>>>>>): Constant<TFloat32> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a constant containing a single `byte` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Byte): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-3 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<BooleanArray>>): Constant<TBool> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-4 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<FloatArray>>>): Constant<TFloat32> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-2 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<LongArray>): Constant<TInt64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-5 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<ByteArray>>>>): Constant<TUint8> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a constant of `boolean` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `boolean` elements.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: BooleanNdArray): Constant<TBool> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-2 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<FloatArray>): Constant<TFloat32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant of `byte` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `byte` elements.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: ByteNdArray): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-2 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<ByteArray>): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-5 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<DoubleArray>>>>): Constant<TFloat64> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-3 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<FloatArray>>): Constant<TFloat32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-1 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: ByteArray): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-1 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: FloatArray): Constant<TFloat32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-2 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<BooleanArray>): Constant<TBool> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant of `String` elements that is a copy of a given n-dimensional array,
-     *  using the default UTF-8 encoding.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `String` elements.
-     * @return a string constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: NdArray<String>): Constant<TString> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a `String` constant using the default, UTF-8 encoding.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The string to put into the new constant.
-     * @return a string constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: String): Constant<TString> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-4 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<DoubleArray>>>): Constant<TFloat64> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-2 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<DoubleArray>): Constant<TFloat64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant containing a single `int` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Int): Constant<TInt32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-4 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<ByteArray>>>): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-6 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<IntArray>>>>>): Constant<TInt32> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a constant containing a single `long` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Long): Constant<TInt64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant containing a single `float` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Float): Constant<TFloat32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-5 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<FloatArray>>>>): Constant<TFloat32> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-3 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<DoubleArray>>): Constant<TFloat64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-6 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<LongArray>>>>>): Constant<TInt64> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-4 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<LongArray>>>): Constant<TInt64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-1 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: LongArray): Constant<TInt64> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-1 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: BooleanArray): Constant<TBool> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-3 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<ByteArray>>): Constant<TUint8> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-6 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<ByteArray>>>>>): Constant<TUint8> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-2 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<IntArray>): Constant<TInt32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a constant of `float` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `float` elements.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: FloatNdArray): Constant<TFloat32> = java.constant(
-        data
-    )
-
-    /**
-     * Creates a rank-5 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<IntArray>>>>): Constant<TInt32> =
-        java.constant(
-            data
-        )
-
-    /**
-     * Creates a rank-1 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: DoubleArray): Constant<TFloat64> = java.constant(
-        data
-    )
 
     /**
      * Creates a rank-6 constant of `boolean` elements.
@@ -2161,65 +2070,156 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(`data`: Array<Array<Array<Array<Array<BooleanArray>>>>>): Constant<TBool> =
-        java.constant(
-            data
+            java.constant(    
+        data
         )
 
     /**
-     * Creates a rank-6 constant of `double` elements.
+     * Creates a constant of `boolean` elements that is a copy of a given n-dimensional array.
      *
      * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
+     * @param data an n-dimensional array of `boolean` elements.
+     * @return a boolean constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<Array<Array<Array<DoubleArray>>>>>): Constant<TFloat64> =
-        java.constant(
-            data
+    public fun constant(`data`: BooleanNdArray): Constant<TBool> = java.constant(    
+        data
         )
 
     /**
-     * Creates a constant containing a single `boolean` element.
+     * Creates a constant containing a single `byte` element.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data The value to put into the new constant.
-     * @return a boolean constant
+     * @return a byte constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Boolean): Constant<TBool> = java.constant(
+    public fun constant(`data`: Byte): Constant<TUint8> = java.constant(    
         data
-    )
-
-    /**
-     * Creates a rank-4 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<BooleanArray>>>): Constant<TBool> =
-        java.constant(
-            data
         )
 
     /**
-     * Creates a rank-3 constant of `long` elements.
+     * Creates a rank-1 constant of `byte` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a long constant
+     * @return a byte constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<LongArray>>): Constant<TInt64> = java.constant(
+    public fun constant(`data`: ByteArray): Constant<TUint8> = java.constant(    
         data
-    )
+        )
+
+    /**
+     * Creates a rank-2 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<ByteArray>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<ByteArray>>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<ByteArray>>>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<ByteArray>>>>): Constant<TUint8> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<ByteArray>>>>>): Constant<TUint8> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `byte` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `byte` elements.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: ByteNdArray): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a `String` constant using the default, UTF-8 encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The string to put into the new constant.
+     * @return a string constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: String): Constant<TString> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `String` elements that is a copy of a given n-dimensional array,
+     *  using the default UTF-8 encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `String` elements.
+     * @return a string constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: NdArray<String>): Constant<TString> = java.constant(    
+        data
+        )
 
     /**
      * Creates a rank-1 constant of `long` elements representing the size of each dimensions of
@@ -2230,9 +2230,23 @@ public class KotlinOps(
      * @return a long constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(shape: Shape): Constant<TInt64> = java.constant(
+    public fun constant(shape: Shape): Constant<TInt64> = java.constant(    
         shape
-    )
+        )
+
+    /**
+     * Creates a `String` constant using a specified encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param charset The encoding from String to bytes.
+     * @param data The string to put into the new constant.
+     * @return a string constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(charset: Charset, `data`: String): Constant<TString> = java.constant(    
+        charset,
+        data
+        )
 
     /**
      * Creates a constant of `String` elements, using the given charset.
@@ -2245,24 +2259,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(charset: Charset, `data`: Array<String>): Constant<TString> =
-        java.constant(
-            charset,
-            data
-        )
-
-    /**
-     * Creates a `String` constant using a specified encoding.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param charset The encoding from String to bytes.
-     * @param data The string to put into the new constant.
-     * @return a string constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(charset: Charset, `data`: String): Constant<TString> = java.constant(
+            java.constant(    
         charset,
         data
-    )
+        )
 
     /**
      * Creates a constant of `String` elements that is a copy of a given n-dimensional array,
@@ -2275,9 +2275,24 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(charset: Charset, `data`: NdArray<String>): Constant<TString> =
-        java.constant(
-            charset,
-            data
+            java.constant(    
+        charset,
+        data
+        )
+
+    /**
+     * Create a [TInt32] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return an integer constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(    
+        shape,
+        data
         )
 
     /**
@@ -2290,71 +2305,9 @@ public class KotlinOps(
      * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(shape: Shape, `data`: FloatDataBuffer): Constant<TFloat32> = java.constant(
+    public fun constant(shape: Shape, `data`: FloatDataBuffer): Constant<TFloat32> = java.constant(    
         shape,
         data
-    )
-
-    /**
-     * Create a [TBool] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return an boolean constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: BooleanDataBuffer): Constant<TBool> = java.constant(
-        shape,
-        data
-    )
-
-    /**
-     * Create a [TUint8] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return a byte constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: ByteDataBuffer): Constant<TUint8> = java.constant(
-        shape,
-        data
-    )
-
-    /**
-     * Create a [TInt64] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return a long constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: LongDataBuffer): Constant<TInt64> = java.constant(
-        shape,
-        data
-    )
-
-    /**
-     * Create a [TString] constant with data from the given buffer, using the default UTF-8
-     *  encoding.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return a string constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: DataBuffer<String>): Constant<TString> =
-        java.constant(
-            shape,
-            data
         )
 
     /**
@@ -2368,25 +2321,72 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(shape: Shape, `data`: DoubleDataBuffer): Constant<TFloat64> =
-        java.constant(
-            shape,
-            data
+            java.constant(    
+        shape,
+        data
         )
 
     /**
-     * Create a [TInt32] constant with data from the given buffer.
+     * Create a [TInt64] constant with data from the given buffer.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param shape the tensor shape.
      * @param data a buffer containing the tensor data.
-     * @return an integer constant
+     * @return a long constant
      * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(
+    public fun constant(shape: Shape, `data`: LongDataBuffer): Constant<TInt64> = java.constant(    
         shape,
         data
-    )
+        )
+
+    /**
+     * Create a [TBool] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return an boolean constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: BooleanDataBuffer): Constant<TBool> = java.constant(    
+        shape,
+        data
+        )
+
+    /**
+     * Create a [TUint8] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return a byte constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: ByteDataBuffer): Constant<TUint8> = java.constant(    
+        shape,
+        data
+        )
+
+    /**
+     * Create a [TString] constant with data from the given buffer, using the default UTF-8
+     *  encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return a string constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: DataBuffer<String>): Constant<TString> =
+            java.constant(    
+        shape,
+        data
+        )
 
     /**
      * Creates a scalar of `type`, with the value of `number`. `number` may be truncated if it does
@@ -2403,9 +2403,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun <T : TNumber> constant(type: Class<T>, number: Number): Constant<T> =
-        java.constant<T>(
-            type,
-            number
+            java.constant<T>(    
+        type,
+        number
         )
 
     /**
@@ -2423,11 +2423,11 @@ public class KotlinOps(
         charset: Charset,
         shape: Shape,
         `data`: DataBuffer<String>
-    ): Constant<TString> = java.constant(
+    ): Constant<TString> = java.constant(    
         charset,
         shape,
         data
-    )
+        )
 
     /**
      * Create a constant with data from the given buffer.
@@ -2446,18 +2446,18 @@ public class KotlinOps(
         type: Class<T>,
         shape: Shape,
         `data`: ByteDataBuffer
-    ): Constant<T> = java.constant<T>(
+    ): Constant<T> = java.constant<T>(    
         type,
         shape,
         data
-    )
+        )
 
     /**
      * Create a constant by making an immutable copy of `tensor`. `tensor` may be closed afterwards
      * without
      *  issue.
      *
-     *
+     *  
      * Note: this endpoint cannot be simply called `constant` since it will conflict with
      *  other endpoints accepting an NdArray in parameter {e.g. [FloatNdArray)][.tensorOf]}.
      *
@@ -2466,9 +2466,9 @@ public class KotlinOps(
      * @return a constant of the same data type as `tensor`
      * @see org.tensorflow.op.Ops.constantOf
      */
-    public fun <T : TType> constantOf(tensor: T): Constant<T> = java.constantOf<T>(
+    public fun <T : TType> constantOf(tensor: T): Constant<T> = java.constantOf<T>(    
         tensor
-    )
+        )
 
     /**
      * Creates a scalar of the same type as `toMatch`, with the value of `number`. `number` may be
@@ -2482,9 +2482,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constantOfSameType
      */
     public fun <T : TNumber> constantOfSameType(toMatch: Operand<T>, number: Number): Constant<T> =
-        java.constantOfSameType<T>(
-            toMatch,
-            number
+            java.constantOfSameType<T>(    
+        toMatch,
+        number
         )
 
     /**
@@ -2493,7 +2493,7 @@ public class KotlinOps(
      *  direct control dependencies).  It should be the only that consumes the tensor,
      *  and will raise an error if it is not.  Its only purpose is to keep the
      *  mutex lock tensor alive until it is consumed by this op.
-     *
+     *  
      * **NOTE**: This operation must run on the same device as its input.  This may
      *  be enforced via the `colocate_with` mechanism.
      *
@@ -2502,8 +2502,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.consumeMutexLock
      */
     public fun consumeMutexLock(mutexLock: Operand<out TType>): ConsumeMutexLock =
-        java.consumeMutexLock(
-            mutexLock
+            java.consumeMutexLock(    
+        mutexLock
         )
 
     /**
@@ -2513,7 +2513,9 @@ public class KotlinOps(
      * @return a new instance of ControlTrigger
      * @see org.tensorflow.op.Ops.controlTrigger
      */
-    public fun controlTrigger(): ControlTrigger = java.controlTrigger()
+    public fun controlTrigger(): ControlTrigger = java.controlTrigger(    
+        
+        )
 
     /**
      * Increments 'ref' until it reaches 'limit'.
@@ -2527,9 +2529,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.countUpTo
      */
     public fun <T : TNumber> countUpTo(ref: Operand<T>, limit: Long): CountUpTo<T> =
-        java.countUpTo<T>(
-            ref,
-            limit
+            java.countUpTo<T>(    
+        ref,
+        limit
         )
 
     /**
@@ -2537,12 +2539,12 @@ public class KotlinOps(
      *  The `decode_proto` op extracts fields from a serialized protocol buffers
      *  message into tensors.  The fields in `field_names` are decoded and converted
      *  to the corresponding `output_types` if possible.
-     *
+     *  
      * A `message_type` name must be provided to give context for the field names.
      *  The actual message descriptor can be looked up either in the linked-in
      *  descriptor pool or a filename provided by the caller using the
      *  `descriptor_source` attribute.
-     *
+     *  
      * Each output tensor is a dense tensor. This means that it is padded to hold
      *  the largest number of repeated elements seen in the input minibatch. (The
      *  shape is also padded by one to prevent zero-sized dimensions). The actual
@@ -2550,19 +2552,19 @@ public class KotlinOps(
      *  output. In many cases the output of `decode_proto` is fed immediately into
      *  tf.squeeze if missing values are not a concern. When using tf.squeeze, always
      *  pass the squeeze dimension explicitly to avoid surprises.
-     *
+     *  
      * For the most part, the mapping between Proto field types and TensorFlow dtypes
      *  is straightforward. However, there are a few special cases:
      *  <ul>
      *  <li>
-     *
+     *  
      * A proto field that contains a submessage or group can only be converted
      *  to `DT_STRING` (the serialized submessage). This is to reduce the complexity
      *  of the API. The resulting string can be used as input to another instance of
      *  the decode_proto op.
      *  </li>
      *  <li>
-     *
+     *  
      * TensorFlow lacks support for unsigned integers. The ops represent uint64
      *  types as a `DT_INT64` with the same twos-complement bit pattern (the obvious
      *  way). Unsigned int32 values can be represented exactly by specifying type
@@ -2570,27 +2572,27 @@ public class KotlinOps(
      *  the `output_types` attribute.
      *  </li>
      *  </ul>
-     *
+     *  
      * Both binary and text proto serializations are supported, and can be
      *  chosen using the `format` attribute.
-     *
+     *  
      * The `descriptor_source` attribute selects the source of protocol
      *  descriptors to consult when looking up `message_type`. This may be:
      *  <ul>
      *  <li>
-     *
+     *  
      * An empty string  or &quot;local://&quot;, in which case protocol descriptors are
      *  created for C++ (not Python) proto definitions linked to the binary.
      *  </li>
      *  <li>
-     *
+     *  
      * A file, in which case protocol descriptors are created from the file,
      *  which is expected to contain a `FileDescriptorSet` serialized as a string.
      *  NOTE: You can build a `descriptor_source` file using the `--descriptor_set_out`
      *  and `--include_imports` options to the protocol compiler `protoc`.
      *  </li>
      *  <li>
-     *
+     *  
      * A &quot;bytes://<bytes>&quot;, in which protocol descriptors are created from `<bytes>`,
      *  which is expected to be a `FileDescriptorSet` serialized as a string.
      *  </li>
@@ -2627,17 +2629,17 @@ public class KotlinOps(
         descriptorSource: String? = null,
         messageFormat: String? = null,
         sanitize: Boolean? = null
-    ): DecodeProto = java.decodeProto(
+    ): DecodeProto = java.decodeProto(    
         bytes,
         messageType,
         fieldNames,
         outputTypes,
         *listOfNotNull(
-            descriptorSource?.let { org.tensorflow.op.core.DecodeProto.descriptorSource(it) },
-            messageFormat?.let { org.tensorflow.op.core.DecodeProto.messageFormat(it) },
-            sanitize?.let { org.tensorflow.op.core.DecodeProto.sanitize(it) }
+            descriptorSource?.let{ org.tensorflow.op.core.DecodeProto.descriptorSource(it) },
+            messageFormat?.let{ org.tensorflow.op.core.DecodeProto.messageFormat(it) },
+            sanitize?.let{ org.tensorflow.op.core.DecodeProto.sanitize(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Makes a copy of `x`.
@@ -2648,9 +2650,9 @@ public class KotlinOps(
      * @return a new instance of DeepCopy
      * @see org.tensorflow.op.Ops.deepCopy
      */
-    public fun <T : TType> deepCopy(x: Operand<T>): DeepCopy<T> = java.deepCopy<T>(
+    public fun <T : TType> deepCopy(x: Operand<T>): DeepCopy<T> = java.deepCopy<T>(    
         x
-    )
+        )
 
     /**
      * Delete the tensor specified by its handle in the session.
@@ -2660,8 +2662,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.deleteSessionTensor
      */
     public fun deleteSessionTensor(handle: Operand<TString>): DeleteSessionTensor =
-        java.deleteSessionTensor(
-            handle
+            java.deleteSessionTensor(    
+        handle
         )
 
     /**
@@ -2680,12 +2682,12 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun destroyResourceOp(resource: Operand<out TType>, ignoreLookupError: Boolean? = null):
-        DestroyResourceOp = java.destroyResourceOp(
+            DestroyResourceOp = java.destroyResourceOp(    
         resource,
         *listOfNotNull(
-            ignoreLookupError?.let { org.tensorflow.op.core.DestroyResourceOp.ignoreLookupError(it) }
+            ignoreLookupError?.let{ org.tensorflow.op.core.DestroyResourceOp.ignoreLookupError(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Destroys the temporary variable and returns its final value.
@@ -2694,7 +2696,7 @@ public class KotlinOps(
      *  All other uses of 'ref' _must_ have executed before this op.
      *  This is typically achieved by chaining the ref through each assign op, or by
      *  using control dependencies.
-     *
+     *  
      * Outputs the final value of the tensor pointed to by 'ref'.
      *
      * @param <T> data type for `value` output
@@ -2706,10 +2708,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.destroyTemporaryVariable
      */
     public fun <T : TType> destroyTemporaryVariable(ref: Operand<T>, varName: String):
-        DestroyTemporaryVariable<T> = java.destroyTemporaryVariable<T>(
+            DestroyTemporaryVariable<T> = java.destroyTemporaryVariable<T>(    
         ref,
         varName
-    )
+        )
 
     /**
      * Partitions `data` into `num_partitions` tensors using indices from `partitions`.
@@ -2723,11 +2725,11 @@ public class KotlinOps(
      * outputs[i].shape = [sum(partitions == i)] + data.shape[partitions.ndim:]
      *
      *      outputs[i] = pack([data[js, ...] for js if partitions[js] == i])
-     *
+     *  
      * ```
-     *
+     *  
      * `data.shape` must start with `partitions.shape`.
-     *
+     *  
      * For example:
      *  ```
      * # Scalar partitions.
@@ -2743,9 +2745,9 @@ public class KotlinOps(
      *      data = [10, 20, 30, 40, 50]
      *      outputs[0] = [10, 20, 50]
      *      outputs[1] = [30, 40]
-     *
+     *  
      * ```
-     *
+     *  
      * See `dynamic_stitch` for an example on how to merge partitions back.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/DynamicPartition.png" alt>
@@ -2763,20 +2765,20 @@ public class KotlinOps(
         `data`: Operand<T>,
         partitions: Operand<TInt32>,
         numPartitions: Long
-    ): DynamicPartition<T> = java.dynamicPartition<T>(
+    ): DynamicPartition<T> = java.dynamicPartition<T>(    
         data,
         partitions,
         numPartitions
-    )
+        )
 
     /**
      * Interleave the values from the `data` tensors into a single tensor.
      *  Builds a merged tensor such that
      *  ```
      * merged[indices[m][i, ..., j], ...] = data[m][i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * For example, if each `indices[m]` is scalar or vector, we have
      *  ```
      * # Scalar indices:
@@ -2784,23 +2786,23 @@ public class KotlinOps(
      *
      *      # Vector indices:
      *      merged[indices[m][i], ...] = data[m][i, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Each `data[i].shape` must start with the corresponding `indices[i].shape`,
      *  and the rest of `data[i].shape` must be constant w.r.t. `i`.  That is, we
      *  must have `data[i].shape = indices[i].shape + constant`.  In terms of this
      *  `constant`, the output shape is
      *  ```
      * merged.shape = [max(indices)] + constant
-     *
+     *  
      * ```
-     *
+     *  
      * Values are merged in order, so if an index appears in both `indices[m][i]` and
      *  `indices[n][j]` for `(m,i) < (n,j)` the slice `data[n][j]` will appear in the
      *  merged result. If you do not need this guarantee, ParallelDynamicStitch might
      *  perform better on some devices.
-     *
+     *  
      * For example:
      *  ```
      * indices[0] = 6
@@ -2811,9 +2813,9 @@ public class KotlinOps(
      *      data[2] = [[[51, 52], [21, 22]], [[1, 2], [31, 32]]]
      *      merged = [[1, 2], [11, 12], [21, 22], [31, 32], [41, 42],
      *                [51, 52], [61, 62]]
-     *
+     *  
      * ```
-     *
+     *  
      * This method can be used to merge partitions created by `dynamic_partition`
      *  as illustrated on the following example:
      *  ```
@@ -2829,7 +2831,7 @@ public class KotlinOps(
      *      x = tf.dynamic_stitch(condition_indices, partitioned_data)
      *      # Here x=[1.1, -1., 6.2, 5.3, -1, 8.4], the -1. values remain
      *      # unchanged.
-     *
+     *  
      * ```
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/DynamicStitch.png" alt>
@@ -2842,13 +2844,11 @@ public class KotlinOps(
      * @return a new instance of DynamicStitch
      * @see org.tensorflow.op.Ops.dynamicStitch
      */
-    public fun <T : TType> dynamicStitch(
-        indices: Iterable<Operand<TInt32>>,
-        `data`: Iterable<Operand<T>>
-    ): DynamicStitch<T> = java.dynamicStitch<T>(
+    public fun <T : TType> dynamicStitch(indices: Iterable<Operand<TInt32>>,
+            `data`: Iterable<Operand<T>>): DynamicStitch<T> = java.dynamicStitch<T>(    
         indices,
         data
-    )
+        )
 
     /**
      * Computes the (possibly normalized) Levenshtein Edit Distance.
@@ -2856,7 +2856,7 @@ public class KotlinOps(
      *  (hypothesis_indices, hypothesis_values, hypothesis_shape)
      *  and
      *  (truth_indices, truth_values, truth_shape).
-     *
+     *  
      * The inputs are:
      *
      * @param hypothesisIndices The indices of the hypothesis list SparseTensor.
@@ -2877,7 +2877,7 @@ public class KotlinOps(
      * @param normalize Sets the normalize option.
      *
      * @param normalize boolean (if true, edit distances are normalized by length of truth).
-     *
+     *  
      * The output is:
      * @return this Options instance.
      */
@@ -2889,7 +2889,7 @@ public class KotlinOps(
         truthValues: Operand<T>,
         truthShape: Operand<TInt64>,
         normalize: Boolean? = null
-    ): EditDistance = java.editDistance<T>(
+    ): EditDistance = java.editDistance<T>(    
         hypothesisIndices,
         hypothesisValues,
         hypothesisShape,
@@ -2897,13 +2897,13 @@ public class KotlinOps(
         truthValues,
         truthShape,
         *listOfNotNull(
-            normalize?.let { org.tensorflow.op.core.EditDistance.normalize(it) }
+            normalize?.let{ org.tensorflow.op.core.EditDistance.normalize(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a tensor with the given shape.
-     *
+     *  
      * This operation creates a tensor of `shape` and `dtype`.
      *
      * @param <T> data type for `output` output
@@ -2915,7 +2915,7 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.empty
      * @param init Sets the init option.
      *
-     * @param init If True, initialize the returned tensor with the default value of dtype.
+     * @param init If True, initialize the returned tensor with the default value of dtype. 
      * Otherwise, the implementation is free not to initializethe tensor's content.
      * @return this Options instance.
      */
@@ -2923,19 +2923,19 @@ public class KotlinOps(
         shape: Operand<TInt32>,
         dtype: Class<T>,
         `init`: Boolean? = null
-    ): Empty<T> = java.empty<T>(
+    ): Empty<T> = java.empty<T>(    
         shape,
         dtype,
         *listOfNotNull(
-            init?.let { org.tensorflow.op.core.Empty.init(it) }
+            init?.let{ org.tensorflow.op.core.Empty.init(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates and returns an empty tensor list.
      *  All list elements must be tensors of dtype element_dtype and shape compatible
      *  with element_shape.
-     *
+     *  
      * handle: an empty tensor list.
      *  element_dtype: the type of elements in the list.
      *  element_shape: a shape compatible with that of elements in the list.
@@ -2951,11 +2951,11 @@ public class KotlinOps(
         elementShape: Operand<out TNumber>,
         maxNumElements: Operand<TInt32>,
         elementDtype: Class<U>
-    ): EmptyTensorList = java.emptyTensorList<U>(
+    ): EmptyTensorList = java.emptyTensorList<U>(    
         elementShape,
         maxNumElements,
         elementDtype
-    )
+        )
 
     /**
      * Creates and returns an empty tensor map.
@@ -2964,35 +2964,37 @@ public class KotlinOps(
      * @return a new instance of EmptyTensorMap
      * @see org.tensorflow.op.Ops.emptyTensorMap
      */
-    public fun emptyTensorMap(): EmptyTensorMap = java.emptyTensorMap()
+    public fun emptyTensorMap(): EmptyTensorMap = java.emptyTensorMap(    
+        
+        )
 
     /**
      * The op serializes protobuf messages provided in the input tensors.
      *  The types of the tensors in `values` must match the schema for the fields
      *  specified in `field_names`. All the tensors in `values` must have a common
      *  shape prefix, _batch_shape_.
-     *
+     *  
      * The `sizes` tensor specifies repeat counts for each field.  The repeat count
      *  (last dimension) of a each tensor in `values` must be greater than or equal
      *  to corresponding repeat count in `sizes`.
-     *
+     *  
      * A `message_type` name must be provided to give context for the field names.
      *  The actual message descriptor can be looked up either in the linked-in
      *  descriptor pool or a filename provided by the caller using the
      *  `descriptor_source` attribute.
-     *
+     *  
      * For the most part, the mapping between Proto field types and TensorFlow dtypes
      *  is straightforward. However, there are a few special cases:
      *  <ul>
      *  <li>
-     *
+     *  
      * A proto field that contains a submessage or group can only be converted
      *  to `DT_STRING` (the serialized submessage). This is to reduce the complexity
      *  of the API. The resulting string can be used as input to another instance of
      *  the decode_proto op.
      *  </li>
      *  <li>
-     *
+     *  
      * TensorFlow lacks support for unsigned integers. The ops represent uint64
      *  types as a `DT_INT64` with the same twos-complement bit pattern (the obvious
      *  way). Unsigned int32 values can be represented exactly by specifying type
@@ -3000,24 +3002,24 @@ public class KotlinOps(
      *  the `output_types` attribute.
      *  </li>
      *  </ul>
-     *
+     *  
      * The `descriptor_source` attribute selects the source of protocol
      *  descriptors to consult when looking up `message_type`. This may be:
      *  <ul>
      *  <li>
-     *
+     *  
      * An empty string  or &quot;local://&quot;, in which case protocol descriptors are
      *  created for C++ (not Python) proto definitions linked to the binary.
      *  </li>
      *  <li>
-     *
+     *  
      * A file, in which case protocol descriptors are created from the file,
      *  which is expected to contain a `FileDescriptorSet` serialized as a string.
      *  NOTE: You can build a `descriptor_source` file using the `--descriptor_set_out`
      *  and `--include_imports` options to the protocol compiler `protoc`.
      *  </li>
      *  <li>
-     *
+     *  
      * A &quot;bytes://<bytes>&quot;, in which protocol descriptors are created from `<bytes>`,
      *  which is expected to be a `FileDescriptorSet` serialized as a string.
      *  </li>
@@ -3041,15 +3043,15 @@ public class KotlinOps(
         fieldNames: List<String>,
         messageType: String,
         descriptorSource: String? = null
-    ): EncodeProto = java.encodeProto(
+    ): EncodeProto = java.encodeProto(    
         sizes,
         values,
         fieldNames,
         messageType,
         *listOfNotNull(
-            descriptorSource?.let { org.tensorflow.op.core.EncodeProto.descriptorSource(it) }
+            descriptorSource?.let{ org.tensorflow.op.core.EncodeProto.descriptorSource(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Ensures that the tensor's shape matches the expected shape.
@@ -3064,9 +3066,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.ensureShape
      */
     public fun <T : TType> ensureShape(input: Operand<T>, shape: Shape): EnsureShape<T> =
-        java.ensureShape<T>(
-            input,
-            shape
+            java.ensureShape<T>(    
+        input,
+        shape
         )
 
     /**
@@ -3075,12 +3077,12 @@ public class KotlinOps(
      *  dimension index `axis` of `input`'s shape. The dimension index `axis` starts at
      *  zero; if you specify a negative number for `axis` it is counted backward from
      *  the end.
-     *
+     *  
      * This operation is useful if you want to add a batch dimension to a single
      *  element. For example, if you have a single image of shape `&#91;height, width,
      * channels&#93;`, you can make it a batch of 1 image with `expand_dims(image, 0)`,
      *  which will make the shape `&#91;1, height, width, channels&#93;`.
-     *
+     *  
      * Other examples:
      *  ```
      * # 't' is a tensor of shape [2]
@@ -3092,13 +3094,13 @@ public class KotlinOps(
      *  shape(expand_dims(t2, 0)) ==> [1, 2, 3, 5]
      *  shape(expand_dims(t2, 2)) ==> [2, 3, 1, 5]
      *  shape(expand_dims(t2, 3)) ==> [2, 3, 5, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation requires that:
-     *
+     *  
      * `-1-input.dims() <= dim <= input.dims()`
-     *
+     *  
      * This operation is related to `squeeze()`, which removes dimensions of
      *  size 1.
      *
@@ -3111,10 +3113,10 @@ public class KotlinOps(
      * @return a new instance of ExpandDims
      * @see org.tensorflow.op.Ops.expandDims
      */
-    public fun <T : TType> expandDims(input: Operand<T>, axis: Operand<out TNumber>): ExpandDims<T> =
-        java.expandDims<T>(
-            input,
-            axis
+    public fun <T : TType> expandDims(input: Operand<T>, axis: Operand<out TNumber>): ExpandDims<T>
+            = java.expandDims<T>(    
+        input,
+        axis
         )
 
     /**
@@ -3127,12 +3129,12 @@ public class KotlinOps(
      * @param strides 1-D of length 5. How far the centers of two consecutive patches are in
      *  `input`. Must be: `&#91;1, stride_planes, stride_rows, stride_cols, 1&#93;`.
      * @param padding The type of padding algorithm to use.
-     *
+     *  
      * The size-related attributes are specified as follows:
      *  `
      * ksizes = [1, ksize_planes, ksize_rows, ksize_cols, 1]
      *  strides = [1, stride_planes, strides_rows, strides_cols, 1]
-     *
+     *  
      * `
      * @param <T> data type for `ExtractVolumePatches` output and operands
      * @return a new instance of ExtractVolumePatches
@@ -3143,25 +3145,25 @@ public class KotlinOps(
         ksizes: List<Long>,
         strides: List<Long>,
         padding: String
-    ): ExtractVolumePatches<T> = java.extractVolumePatches<T>(
+    ): ExtractVolumePatches<T> = java.extractVolumePatches<T>(    
         input,
         ksizes,
         strides,
         padding
-    )
+        )
 
     /**
      * Creates a tensor filled with a scalar value.
      *  This operation creates a tensor of shape `dims` and fills it with `value`.
-     *
+     *  
      * For example:
      *  ```
      * # Output tensor has shape [2, 3].
      *  fill([2, 3], 9) ==> [[9, 9, 9]
      *                       [9, 9, 9]]
-     *
+     *  
      * ```
-     *
+     *  
      * `tf.fill` differs from `tf.constant` in a few ways:
      *  <ul>
      *  <li>`tf.fill` only supports scalar contents, whereas `tf.constant` supports
@@ -3176,35 +3178,35 @@ public class KotlinOps(
      * @param <U> data type for `output` output
      * @param dims 1-D. Represents the shape of the output tensor.
      * @param value 0-D (scalar). Value to fill the returned tensor.
-     *
+     *  
      * `@`compatibility(numpy)
      *
      *  Equivalent to np.full
-     *
+     *  
      * `@`end_compatibility
      * @param <U> data type for `Fill` output and operands
      * @return a new instance of Fill
      * @see org.tensorflow.op.Ops.fill
      */
     public fun <U : TType> fill(dims: Operand<out TNumber>, value: Operand<U>): Fill<U> =
-        java.fill<U>(
-            dims,
-            value
+            java.fill<U>(    
+        dims,
+        value
         )
 
     /**
      * Generates fingerprint values.
      *  Generates fingerprint values of `data`.
-     *
+     *  
      * Fingerprint op considers the first dimension of `data` as the batch dimension,
      *  and `output[i]` contains the fingerprint value generated from contents in
      *  `data&#91;i, ...&#93;` for all `i`.
-     *
+     *  
      * Fingerprint op writes fingerprint values as byte arrays. For example, the
      *  default method `farmhash64` generates a 64-bit fingerprint value at a time.
      *  This 8-byte value is written out as an `uint8` array of size 8, in little-endian
      *  order.
-     *
+     *  
      * For example, suppose that `data` has data type `DT_INT32` and shape (2, 3, 4),
      *  and that the fingerprint method is `farmhash64`. In this case, the output shape
      *  is (2, 8), where 2 is the batch dimension size of `data`, and 8 is the size of
@@ -3212,7 +3214,7 @@ public class KotlinOps(
      *  `data&#91;0, :, :&#93;` and similarly `output&#91;1, :&#93;` is generated from other 12
      * integers
      *  in `data&#91;1, :, :&#93;`.
-     *
+     *  
      * Note that this op fingerprints the raw underlying buffer, and it does not
      *  fingerprint Tensor's metadata such as data type and/or shape. For example, the
      *  fingerprint values are invariant under reshapes and bitcasts as long as the
@@ -3220,9 +3222,9 @@ public class KotlinOps(
      *  ```
      * Fingerprint(data) == Fingerprint(Reshape(data, ...))
      *  Fingerprint(data) == Fingerprint(Bitcast(data, ...))
-     *
+     *  
      * ```
-     *
+     *  
      * For string data, one should expect `Fingerprint(data) != Fingerprint(ReduceJoin(data))` in
      * general.
      *
@@ -3233,9 +3235,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.fingerprint
      */
     public fun fingerprint(`data`: Operand<out TType>, method: Operand<TString>): Fingerprint =
-        java.fingerprint(
-            data,
-            method
+            java.fingerprint(    
+        data,
+        method
         )
 
     /**
@@ -3255,16 +3257,16 @@ public class KotlinOps(
      *      # Higher rank indices (output is rank(params) + rank(indices) - 1).
      *      output[a_0, ..., a_n, i, ..., j, b_0, ... b_n] =
      *        params[a_0, ..., a_n, indices[i, ..., j], b_0, ..., b_n]
-     *
+     *  
      * ```
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/Gather.png" alt>
      *  </div>
-     *
+     *  
      * Note that on CPU, if an out of bound index is found, an error is returned.
      *  On GPU, if an out of bound index is found, a 0 is stored in the
      *  corresponding output value.
-     *
+     *  
      * See also `tf.batch_gather` and `tf.gather_nd`.
      *
      * @param <T> data type for `output` output
@@ -3287,14 +3289,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         axis: Operand<out TNumber>,
         batchDims: Long? = null
-    ): Gather<T> = java.gather<T>(
+    ): Gather<T> = java.gather<T>(    
         params,
         indices,
         axis,
         *listOfNotNull(
-            batchDims?.let { org.tensorflow.op.core.Gather.batchDims(it) }
+            batchDims?.let{ org.tensorflow.op.core.Gather.batchDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Gather slices from `params` into a Tensor with shape specified by `indices`.
@@ -3303,49 +3305,49 @@ public class KotlinOps(
      *  slice of `params`:
      *  `output[\`\(i_0, ..., i_{K-2`\\)`] = params&#91;indices[\`\(i_0, ..., i_{K-2}\\)`&#93;]
      *  }
-     *
+     *  
      * Whereas in `tf.gather` `indices` defines slices into the `axis`
      *  dimension of `params`, in `tf.gather_nd`, `indices` defines slices into the
      *  first `N` dimensions of `params`, where `N = indices.shape&#91;-1&#93;`.
-     *
+     *  
      * The last dimension of `indices` can be at most the rank of
      *  `params`:
      *  ```
      * indices.shape[-1] <= params.rank
-     *
+     *  
      * ```
-     *
+     *  
      * The last dimension of `indices` corresponds to elements
      *  (if `indices.shape&#91;-1&#93; == params.rank`) or slices
      *  (if `indices.shape&#91;-1&#93; < params.rank`) along dimension `indices.shape&#91;-1&#93;`
      *  of `params`.  The output tensor has shape
      *  ```
      * indices.shape[:-1] + params.shape[indices.shape[-1]:]
-     *
+     *  
      * ```
-     *
+     *  
      * Note that on CPU, if an out of bound index is found, an error is returned.
      *  On GPU, if an out of bound index is found, a 0 is stored in the
      *  corresponding output value.
-     *
+     *  
      * Some examples below.
-     *
+     *  
      * Simple indexing into a matrix:
      *  ```
      * indices = [[0, 0], [1, 1]]
      *      params = [['a', 'b'], ['c', 'd']]
      *      output = ['a', 'd']
-     *
+     *  
      * ```
-     *
+     *  
      * Slice indexing into a matrix:
      *  ```
      * indices = [[1], [0]]
      *      params = [['a', 'b'], ['c', 'd']]
      *      output = [['c', 'd'], ['a', 'b']]
-     *
+     *  
      * ```
-     *
+     *  
      * Indexing into a 3-tensor:
      *  ```
      * indices = [[1]]
@@ -3364,25 +3366,25 @@ public class KotlinOps(
      *      params = [[['a0', 'b0'], ['c0', 'd0']],
      *                [['a1', 'b1'], ['c1', 'd1']]]
      *      output = ['b0', 'b1']
-     *
+     *  
      * ```
-     *
+     *  
      * Batched indexing into a matrix:
      *  ```
      * indices = [[[0, 0]], [[0, 1]]]
      *      params = [['a', 'b'], ['c', 'd']]
      *      output = [['a'], ['b']]
-     *
+     *  
      * ```
-     *
+     *  
      * Batched slice indexing into a matrix:
      *  ```
      * indices = [[[1]], [[0]]]
      *      params = [['a', 'b'], ['c', 'd']]
      *      output = [[['c', 'd']], [['a', 'b']]]
-     *
+     *  
      * ```
-     *
+     *  
      * Batched indexing into a 3-tensor:
      *  ```
      * indices = [[[1]], [[0]]]
@@ -3402,9 +3404,9 @@ public class KotlinOps(
      *      params = [[['a0', 'b0'], ['c0', 'd0']],
      *                [['a1', 'b1'], ['c1', 'd1']]]
      *      output = [['b0', 'b1'], ['d0', 'c1']]
-     *
+     *  
      * ```
-     *
+     *  
      * See also `tf.gather` and `tf.batch_gather`.
      *
      * @param <T> data type for `output` output
@@ -3414,10 +3416,10 @@ public class KotlinOps(
      * @return a new instance of GatherNd
      * @see org.tensorflow.op.Ops.gatherNd
      */
-    public fun <T : TType> gatherNd(params: Operand<T>, indices: Operand<out TNumber>): GatherNd<T> =
-        java.gatherNd<T>(
-            params,
-            indices
+    public fun <T : TType> gatherNd(params: Operand<T>, indices: Operand<out TNumber>): GatherNd<T>
+            = java.gatherNd<T>(    
+        params,
+        indices
         )
 
     /**
@@ -3428,8 +3430,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.getSessionHandle
      */
     public fun getSessionHandle(value: Operand<out TType>): GetSessionHandle =
-        java.getSessionHandle(
-            value
+            java.getSessionHandle(    
+        value
         )
 
     /**
@@ -3443,10 +3445,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.getSessionTensor
      */
     public fun <T : TType> getSessionTensor(handle: Operand<TString>, dtype: Class<T>):
-        GetSessionTensor<T> = java.getSessionTensor<T>(
+            GetSessionTensor<T> = java.getSessionTensor<T>(    
         handle,
         dtype
-    )
+        )
 
     /**
      * Adds gradients computation ops to the graph according to scope.
@@ -3458,7 +3460,7 @@ public class KotlinOps(
      * @return a new instance of `Gradients`
      * @throws IllegalArgumentException if execution environment is not a graph
      * @see org.tensorflow.op.Ops.gradients
-     * @param dx
+     * @param dx 
      *
      * @param dx partial derivatives of some loss function `L` w.r.t. `y`
      * @return this option builder
@@ -3467,30 +3469,30 @@ public class KotlinOps(
         y: Iterable<out Operand<*>>,
         x: Iterable<out Operand<*>>,
         dx: Iterable<out Operand<*>>? = null
-    ): Gradients = java.gradients(
+    ): Gradients = java.gradients(    
         y,
         x,
         *listOfNotNull(
-            dx?.let { org.tensorflow.op.core.Gradients.dx(it) }
+            dx?.let{ org.tensorflow.op.core.Gradients.dx(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Adds operations to compute the partial derivatives of sum of `y`s w.r.t `x`s,
      *  i.e., `d(y_1 + y_2 + ...)/dx_1, d(y_1 + y_2 + ...)/dx_2...`
-     *
-     *
+     *  
+     *  
      *  If `Options.dx()` values are set, they are as the initial symbolic partial derivatives of
-     * some loss
+     * some loss 
      *  function `L` w.r.t. `y`. `Options.dx()` must have the size of `y`.
-     *
+     *  
      *
      *  If `Options.dx()` is not set, the implementation will use dx of `OnesLike` for all
      *  shapes in `y`.
-     *
+     *  
      *
      *  The partial derivatives are returned in output `dy`, with the size of `x`.
-     *
+     *  
      *
      *  Example of usage:
      *  ```
@@ -3499,7 +3501,7 @@ public class KotlinOps(
      *  Constant<TFloat32> alpha = tf.constant(1.0f);
      *  tf.train.applyGradientDescent(w, alpha, gradients.<Float>dy(0));
      *  tf.train.applyGradientDescent(b, alpha, gradients.<Float>dy(1));
-     *
+     *  
      * ```}
      *
      * @param y output of the function to derive
@@ -3508,7 +3510,7 @@ public class KotlinOps(
      * @return a new instance of `Gradients`
      * @throws IllegalArgumentException if execution environment is not a graph
      * @see org.tensorflow.op.Ops.gradients
-     * @param dx
+     * @param dx 
      *
      * @param dx partial derivatives of some loss function `L` w.r.t. `y`
      * @return this option builder
@@ -3517,21 +3519,21 @@ public class KotlinOps(
         y: Operand<*>,
         x: Iterable<out Operand<*>>,
         dx: Iterable<out Operand<*>>? = null
-    ): Gradients = java.gradients(
+    ): Gradients = java.gradients(    
         y,
         x,
         *listOfNotNull(
-            dx?.let { org.tensorflow.op.core.Gradients.dx(it) }
+            dx?.let{ org.tensorflow.op.core.Gradients.dx(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Gives a guarantee to the TF runtime that the input tensor is a constant.
      *  The runtime is then free to make optimizations based on this.
-     *
+     *  
      * Only accepts value typed tensors as inputs and rejects resource variable handles
      *  as input.
-     *
+     *  
      * Returns the input tensor without modification.
      *
      * @param <T> data type for `output` output
@@ -3541,8 +3543,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.guaranteeConst
      */
     public fun <T : TType> guaranteeConst(input: Operand<T>): GuaranteeConst<T> =
-        java.guaranteeConst<T>(
-            input
+            java.guaranteeConst<T>(    
+        input
         )
 
     /**
@@ -3580,15 +3582,15 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null
-    ): HashTable = java.hashTable<T, U>(
+    ): HashTable = java.hashTable<T, U>(    
         keyDtype,
         valueDtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.HashTable.container(it) },
-            sharedName?.let { org.tensorflow.op.core.HashTable.sharedName(it) },
-            useNodeNameSharing?.let { org.tensorflow.op.core.HashTable.useNodeNameSharing(it) }
+            container?.let{ org.tensorflow.op.core.HashTable.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.HashTable.sharedName(it) },
+            useNodeNameSharing?.let{ org.tensorflow.op.core.HashTable.useNodeNameSharing(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Return histogram of values.
@@ -3605,7 +3607,7 @@ public class KotlinOps(
      *    hist = tf.histogram_fixed_width(new_values, value_range, nbins=5)
      *    variables.global_variables_initializer().run()
      *    sess.run(hist) => [2, 1, 1, 0, 2]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `out` output
@@ -3622,11 +3624,11 @@ public class KotlinOps(
         values: Operand<T>,
         valueRange: Operand<T>,
         nbins: Operand<TInt32>
-    ): HistogramFixedWidth<TInt32> = java.histogramFixedWidth<T>(
+    ): HistogramFixedWidth<TInt32> = java.histogramFixedWidth<T>(    
         values,
         valueRange,
         nbins
-    )
+        )
 
     /**
      * Return histogram of values.
@@ -3643,7 +3645,7 @@ public class KotlinOps(
      *    hist = tf.histogram_fixed_width(new_values, value_range, nbins=5)
      *    variables.global_variables_initializer().run()
      *    sess.run(hist) => [2, 1, 1, 0, 2]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `out` output
@@ -3663,12 +3665,12 @@ public class KotlinOps(
         valueRange: Operand<T>,
         nbins: Operand<TInt32>,
         dtype: Class<U>
-    ): HistogramFixedWidth<U> = java.histogramFixedWidth<U, T>(
+    ): HistogramFixedWidth<U> = java.histogramFixedWidth<U, T>(    
         values,
         valueRange,
         nbins,
         dtype
-    )
+        )
 
     /**
      * Return a tensor with the same shape and contents as the input tensor or value.
@@ -3679,14 +3681,14 @@ public class KotlinOps(
      * @return a new instance of Identity
      * @see org.tensorflow.op.Ops.identity
      */
-    public fun <T : TType> identity(input: Operand<T>): Identity<T> = java.identity<T>(
+    public fun <T : TType> identity(input: Operand<T>): Identity<T> = java.identity<T>(    
         input
-    )
+        )
 
     /**
      * Returns a list of tensors with the same shapes and contents as the input
      *  tensors.
-     *
+     *  
      * This op can be used to override the gradient for complicated functions. For
      *  example, suppose y = f(x) and we wish to apply a custom function g for backprop
      *  such that dx = g(dy). In Python,
@@ -3705,9 +3707,9 @@ public class KotlinOps(
      * @return a new instance of IdentityN
      * @see org.tensorflow.op.Ops.identityN
      */
-    public fun identityN(input: Iterable<Operand<*>>): IdentityN = java.identityN(
+    public fun identityN(input: Iterable<Operand<*>>): IdentityN = java.identityN(    
         input
-    )
+        )
 
     /**
      * Returns immutable tensor from memory region.
@@ -3726,16 +3728,16 @@ public class KotlinOps(
         dtype: Class<T>,
         shape: Shape,
         memoryRegionName: String
-    ): ImmutableConst<T> = java.immutableConst<T>(
+    ): ImmutableConst<T> = java.immutableConst<T>(    
         dtype,
         shape,
         memoryRegionName
-    )
+        )
 
     /**
      * Factory method to create an operation executing all initializers of a graph.
      *
-     *
+     *  
      * All initializers added to a graph via
      *  [Op)][org.tensorflow.op.core.Init.add] are grouped together as a single
      *  unit of computation in the graph. This operation must then be added to any graph using one
@@ -3744,7 +3746,7 @@ public class KotlinOps(
      *  states are initialized properly.
      *
      *
-     *
+     *  
      * When the graph is built by the same process that is running the session, the initializers
      *  can be invoked by executing this single endpoint. For example:
      *
@@ -3760,13 +3762,13 @@ public class KotlinOps(
      *
      *      try (TInt32 t = (TInt32)s.runner().fetch(z).run().get(0)) {
      *        assertEquals(30, t.data().getInt());
-     *
+     *      
      * ```
      *    }
      *  }
      *  }}
      *
-     *
+     *  
      * When the graph is built by a separate process, the initializers can be invoked by running
      *  the init op by its name, which defaults to [org.tensorflow.op.core.Init.DEFAULT_NAME].
      *  For example:
@@ -3781,7 +3783,7 @@ public class KotlinOps(
      *
      *    tf.init();  // add variables initializers to the graph, as Init.DEFAULT_NAME
      *    // ...exporting graph as a saved model...
-     *
+     *  
      * ```
      *
      *  ...
@@ -3801,24 +3803,26 @@ public class KotlinOps(
      * @throws IllegalArgumentException if the execution environment in scope is not a graph
      * @see org.tensorflow.op.Ops.init
      */
-    public fun `init`(): Init = java.init()
+    public fun `init`(): Init = java.init(    
+        
+        )
 
     /**
      * Register an op as an initializer of the graph.
      *
-     *
+     *  
      * Registered initializers are then grouped as a single unit of computation by adding
      *  and executing an [init][org.tensorflow.op.core.Init.create] operation from a graph
      *  session.  This is a no-op if executed in an eager session.
      *
-     * @param scope
-     * @param initializer
+     * @param scope 
+     * @param initializer 
      * @see org.tensorflow.op.core.Init.create
      * @see org.tensorflow.op.Ops.initAdd
      */
-    public fun initAdd(initializer: Op): Unit = java.initAdd(
+    public fun initAdd(initializer: Op): Unit = java.initAdd(    
         initializer
-    )
+        )
 
     /**
      * Table initializer that takes two tensors for keys and values respectively.
@@ -3833,11 +3837,11 @@ public class KotlinOps(
         tableHandle: Operand<out TType>,
         keys: Operand<out TType>,
         values: Operand<out TType>
-    ): InitializeTable = java.initializeTable(
+    ): InitializeTable = java.initializeTable(    
         tableHandle,
         keys,
         values
-    )
+        )
 
     /**
      * Initializes a table from a text file.
@@ -3882,23 +3886,23 @@ public class KotlinOps(
         vocabSize: Long? = null,
         delimiter: String? = null,
         offset: Long? = null
-    ): InitializeTableFromTextFile = java.initializeTableFromTextFile(
+    ): InitializeTableFromTextFile = java.initializeTableFromTextFile(    
         tableHandle,
         filename,
         keyIndex,
         valueIndex,
         *listOfNotNull(
-            vocabSize?.let { org.tensorflow.op.core.InitializeTableFromTextFile.vocabSize(it) },
-            delimiter?.let { org.tensorflow.op.core.InitializeTableFromTextFile.delimiter(it) },
-            offset?.let { org.tensorflow.op.core.InitializeTableFromTextFile.offset(it) }
+            vocabSize?.let{ org.tensorflow.op.core.InitializeTableFromTextFile.vocabSize(it) },
+            delimiter?.let{ org.tensorflow.op.core.InitializeTableFromTextFile.delimiter(it) },
+            offset?.let{ org.tensorflow.op.core.InitializeTableFromTextFile.offset(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Adds v into specified rows of x.
      *  ```
      * Computes y = x; y[i, :] += v; return y.
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -3914,18 +3918,18 @@ public class KotlinOps(
         x: Operand<T>,
         i: Operand<TInt32>,
         v: Operand<T>
-    ): InplaceAdd<T> = java.inplaceAdd<T>(
+    ): InplaceAdd<T> = java.inplaceAdd<T>(    
         x,
         i,
         v
-    )
+        )
 
     /**
      * ```
      * Subtracts `v` into specified rows of `x`.
      *
      *  Computes y = x; y[i, :] -= v; return y.
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -3941,16 +3945,16 @@ public class KotlinOps(
         x: Operand<T>,
         i: Operand<TInt32>,
         v: Operand<T>
-    ): InplaceSub<T> = java.inplaceSub<T>(
+    ): InplaceSub<T> = java.inplaceSub<T>(    
         x,
         i,
         v
-    )
+        )
 
     /**
      * Updates specified rows 'i' with values 'v'.
      *  Computes `x&#91;i, :&#93; = v; return x`.
-     *
+     *  
      * Originally this function is mutative however for compilation we make this
      *  operation create / operate on a copy of `x`.
      *
@@ -3967,11 +3971,11 @@ public class KotlinOps(
         x: Operand<T>,
         i: Operand<TInt32>,
         v: Operand<T>
-    ): InplaceUpdate<T> = java.inplaceUpdate<T>(
+    ): InplaceUpdate<T> = java.inplaceUpdate<T>(    
         x,
         i,
         v
-    )
+        )
 
     /**
      * Checks whether a tensor has been initialized.
@@ -3982,8 +3986,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.isVariableInitialized
      */
     public fun isVariableInitialized(ref: Operand<out TType>): IsVariableInitialized =
-        java.isVariableInitialized(
-            ref
+            java.isVariableInitialized(    
+        ref
         )
 
     /**
@@ -4009,9 +4013,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.kthOrderStatistic
      */
     public fun kthOrderStatistic(input: Operand<TFloat32>, k: Long): KthOrderStatistic =
-        java.kthOrderStatistic(
-            input,
-            k
+            java.kthOrderStatistic(    
+        input,
+        k
         )
 
     /**
@@ -4031,17 +4035,17 @@ public class KotlinOps(
         tableHandle: Operand<out TType>,
         Tkeys: Class<T>,
         Tvalues: Class<U>
-    ): LookupTableExport<T, U> = java.lookupTableExport<T, U>(
+    ): LookupTableExport<T, U> = java.lookupTableExport<T, U>(    
         tableHandle,
         Tkeys,
         Tvalues
-    )
+        )
 
     /**
      * Looks up keys in a table, outputs the corresponding values.
      *  The tensor `keys` must of the same type as the keys of the table.
      *  The output `values` is of the type of the table values.
-     *
+     *  
      * The scalar `default_value` is the value output for keys not present in the
      *  table. It must also be of the same type as the table values.
      *
@@ -4057,11 +4061,11 @@ public class KotlinOps(
         tableHandle: Operand<out TType>,
         keys: Operand<out TType>,
         defaultValue: Operand<U>
-    ): LookupTableFind<U> = java.lookupTableFind<U>(
+    ): LookupTableFind<U> = java.lookupTableFind<U>(    
         tableHandle,
         keys,
         defaultValue
-    )
+        )
 
     /**
      * Replaces the contents of the table with the specified keys and values.
@@ -4078,11 +4082,11 @@ public class KotlinOps(
         tableHandle: Operand<out TType>,
         keys: Operand<out TType>,
         values: Operand<out TType>
-    ): LookupTableImport = java.lookupTableImport(
+    ): LookupTableImport = java.lookupTableImport(    
         tableHandle,
         keys,
         values
-    )
+        )
 
     /**
      * Updates the table to associates keys with values.
@@ -4099,11 +4103,11 @@ public class KotlinOps(
         tableHandle: Operand<out TType>,
         keys: Operand<out TType>,
         values: Operand<out TType>
-    ): LookupTableInsert = java.lookupTableInsert(
+    ): LookupTableInsert = java.lookupTableInsert(    
         tableHandle,
         keys,
         values
-    )
+        )
 
     /**
      * Computes the number of elements in the given table.
@@ -4113,8 +4117,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.lookupTableSize
      */
     public fun lookupTableSize(tableHandle: Operand<out TType>): LookupTableSize =
-        java.lookupTableSize(
-            tableHandle
+            java.lookupTableSize(    
+        tableHandle
         )
 
     /**
@@ -4126,9 +4130,9 @@ public class KotlinOps(
      * @return a new instance of LoopCond
      * @see org.tensorflow.op.Ops.loopCond
      */
-    public fun loopCond(input: Operand<TBool>): LoopCond = java.loopCond(
+    public fun loopCond(input: Operand<TBool>): LoopCond = java.loopCond(    
         input
-    )
+        )
 
     /**
      * Make all elements in the non-Batch dimension unique, but &quot;close&quot; to
@@ -4141,9 +4145,9 @@ public class KotlinOps(
      * @return a new instance of MakeUnique
      * @see org.tensorflow.op.Ops.makeUnique
      */
-    public fun makeUnique(input: Operand<TFloat32>): MakeUnique = java.makeUnique(
+    public fun makeUnique(input: Operand<TFloat32>): MakeUnique = java.makeUnique(    
         input
-    )
+        )
 
     /**
      * Op removes all elements in the underlying container.
@@ -4175,15 +4179,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapClear = java.mapClear(
+    ): MapClear = java.mapClear(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapClear.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapClear.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapClear.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapClear.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapClear.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapClear.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapClear.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapClear.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op returns the number of incomplete elements in the underlying container.
@@ -4215,15 +4219,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapIncompleteSize = java.mapIncompleteSize(
+    ): MapIncompleteSize = java.mapIncompleteSize(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapIncompleteSize.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapIncompleteSize.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapIncompleteSize.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapIncompleteSize.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapIncompleteSize.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapIncompleteSize.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapIncompleteSize.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapIncompleteSize.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op peeks at the values at the specified key.  If the
@@ -4261,17 +4265,17 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapPeek = java.mapPeek(
+    ): MapPeek = java.mapPeek(    
         key,
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapPeek.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapPeek.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapPeek.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapPeek.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapPeek.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapPeek.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapPeek.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapPeek.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op returns the number of elements in the underlying container.
@@ -4303,15 +4307,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapSize = java.mapSize(
+    ): MapSize = java.mapSize(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapSize.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapSize.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapSize.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapSize.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapSize.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapSize.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapSize.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapSize.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Stage (key, values) in the underlying container which behaves like a hashtable.
@@ -4352,18 +4356,18 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapStage = java.mapStage(
+    ): MapStage = java.mapStage(    
         key,
         indices,
         values,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapStage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapStage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapStage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapStage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapStage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapStage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapStage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapStage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op removes and returns the values associated with the key
@@ -4401,17 +4405,17 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapUnstage = java.mapUnstage(
+    ): MapUnstage = java.mapUnstage(    
         key,
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapUnstage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapUnstage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapUnstage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapUnstage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapUnstage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapUnstage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapUnstage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapUnstage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op removes and returns a random (key, value)
@@ -4447,16 +4451,16 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): MapUnstageNoKey = java.mapUnstageNoKey(
+    ): MapUnstageNoKey = java.mapUnstageNoKey(    
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.MapUnstageNoKey.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.MapUnstageNoKey.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.MapUnstageNoKey.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MapUnstageNoKey.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.MapUnstageNoKey.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.MapUnstageNoKey.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.MapUnstageNoKey.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MapUnstageNoKey.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the maximum of elements across dimensions of a tensor.
@@ -4482,19 +4486,19 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Max<T> = java.max<T>(
+    ): Max<T> = java.max<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.Max.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.Max.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Forwards the value of an available tensor from `inputs` to `output`.
      *  `Merge` waits for at least one of the tensors in `inputs` to become available.
      *  It is usually combined with `Switch` to implement branching.
-     *
+     *  
      * `Merge` forwards the first tensor to become available to `output`, and sets
      *  `value_index` to its index in `inputs`.
      *
@@ -4504,9 +4508,9 @@ public class KotlinOps(
      * @return a new instance of Merge
      * @see org.tensorflow.op.Ops.merge
      */
-    public fun <T : TType> merge(inputs: Iterable<Operand<T>>): Merge<T> = java.merge<T>(
+    public fun <T : TType> merge(inputs: Iterable<Operand<T>>): Merge<T> = java.merge<T>(    
         inputs
-    )
+        )
 
     /**
      * Computes the minimum of elements across dimensions of a tensor.
@@ -4532,13 +4536,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Min<T> = java.min<T>(
+    ): Min<T> = java.min<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.Min.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.Min.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Pads a tensor with mirrored values.
@@ -4551,11 +4555,11 @@ public class KotlinOps(
      * greater
      *  than `input.dim_size(D)` (or `input.dim_size(D) - 1`) if `copy_border` is true
      *  (if false, respectively).
-     *
+     *  
      * The padded size of each dimension D of the output is:
-     *
+     *  
      * `paddings(D, 0) + input.dim_size(D) + paddings(D, 1)`
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[1, 2, 3], [4, 5, 6]].
@@ -4566,7 +4570,7 @@ public class KotlinOps(
      *                        [2, 1, 1, 2, 3, 3, 2]
      *                        [5, 4, 4, 5, 6, 6, 5]
      *                        [5, 4, 4, 5, 6, 6, 5]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -4586,11 +4590,11 @@ public class KotlinOps(
         input: Operand<T>,
         paddings: Operand<out TNumber>,
         mode: String
-    ): MirrorPad<T> = java.mirrorPad<T>(
+    ): MirrorPad<T> = java.mirrorPad<T>(    
         input,
         paddings,
         mode
-    )
+        )
 
     /**
      * Wraps an arbitrary MLIR computation expressed as a module with a main() function.
@@ -4636,17 +4640,17 @@ public class KotlinOps(
         inputs: Iterable<Operand<*>>,
         mlirModule: String,
         Toutputs: List<Class<out TType>>
-    ): MlirPassthroughOp = java.mlirPassthroughOp(
+    ): MlirPassthroughOp = java.mlirPassthroughOp(    
         inputs,
         mlirModule,
         Toutputs
-    )
+        )
 
     /**
      * Creates an empty hash table that uses tensors as the backing store.
      *  It uses &quot;open addressing&quot; with quadratic reprobing to resolve
      *  collisions.
-     *
+     *  
      * This op creates a mutable hash table, specifying the type of its keys and
      *  values. Each value must be a scalar. Data can be inserted into the table using
      *  the insert operations. It does not support the initialization operation.
@@ -4699,21 +4703,20 @@ public class KotlinOps(
         valueShape: Shape? = null,
         initialNumBuckets: Long? = null,
         maxLoadFactor: Float? = null
-    ): MutableDenseHashTable = java.mutableDenseHashTable<T, U>(
+    ): MutableDenseHashTable = java.mutableDenseHashTable<T, U>(    
         emptyKey,
         deletedKey,
         valueDtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.MutableDenseHashTable.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MutableDenseHashTable.sharedName(it) },
-            useNodeNameSharing?.let {
-                org.tensorflow.op.core.MutableDenseHashTable.useNodeNameSharing(it)
+            container?.let{ org.tensorflow.op.core.MutableDenseHashTable.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MutableDenseHashTable.sharedName(it) },
+            useNodeNameSharing?.let{ org.tensorflow.op.core.MutableDenseHashTable.useNodeNameSharing(it)
             },
-            valueShape?.let { org.tensorflow.op.core.MutableDenseHashTable.valueShape(it) },
-            initialNumBuckets?.let { org.tensorflow.op.core.MutableDenseHashTable.initialNumBuckets(it) },
-            maxLoadFactor?.let { org.tensorflow.op.core.MutableDenseHashTable.maxLoadFactor(it) }
+            valueShape?.let{ org.tensorflow.op.core.MutableDenseHashTable.valueShape(it) },
+            initialNumBuckets?.let{ org.tensorflow.op.core.MutableDenseHashTable.initialNumBuckets(it) },
+            maxLoadFactor?.let{ org.tensorflow.op.core.MutableDenseHashTable.maxLoadFactor(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates an empty hash table.
@@ -4750,15 +4753,15 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null
-    ): MutableHashTable = java.mutableHashTable<T, U>(
+    ): MutableHashTable = java.mutableHashTable<T, U>(    
         keyDtype,
         valueDtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.MutableHashTable.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MutableHashTable.sharedName(it) },
-            useNodeNameSharing?.let { org.tensorflow.op.core.MutableHashTable.useNodeNameSharing(it) }
+            container?.let{ org.tensorflow.op.core.MutableHashTable.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MutableHashTable.sharedName(it) },
+            useNodeNameSharing?.let{ org.tensorflow.op.core.MutableHashTable.useNodeNameSharing(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates an empty hash table.
@@ -4799,18 +4802,17 @@ public class KotlinOps(
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null,
         valueShape: Shape? = null
-    ): MutableHashTableOfTensors = java.mutableHashTableOfTensors<T, U>(
+    ): MutableHashTableOfTensors = java.mutableHashTableOfTensors<T, U>(    
         keyDtype,
         valueDtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.MutableHashTableOfTensors.container(it) },
-            sharedName?.let { org.tensorflow.op.core.MutableHashTableOfTensors.sharedName(it) },
-            useNodeNameSharing?.let {
-                org.tensorflow.op.core.MutableHashTableOfTensors.useNodeNameSharing(it)
-            },
-            valueShape?.let { org.tensorflow.op.core.MutableHashTableOfTensors.valueShape(it) }
+            container?.let{ org.tensorflow.op.core.MutableHashTableOfTensors.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.MutableHashTableOfTensors.sharedName(it) },
+            useNodeNameSharing?.let{
+            org.tensorflow.op.core.MutableHashTableOfTensors.useNodeNameSharing(it) },
+            valueShape?.let{ org.tensorflow.op.core.MutableHashTableOfTensors.valueShape(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a Mutex resource that can be locked by `MutexLock`.
@@ -4830,17 +4832,17 @@ public class KotlinOps(
      *  with this shared_name. Otherwise, the node name is used instead.
      * @return this Options instance.
      */
-    public fun mutex(container: String? = null, sharedName: String? = null): Mutex = java.mutex(
+    public fun mutex(container: String? = null, sharedName: String? = null): Mutex = java.mutex(    
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.Mutex.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Mutex.sharedName(it) }
+            container?.let{ org.tensorflow.op.core.Mutex.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Mutex.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Locks a mutex resource.  The output is the lock.  So long as the lock tensor
      *  is alive, any other request to use `MutexLock` with this mutex will wait.
-     *
+     *  
      * This is particularly useful for creating a critical section when used in
      *  conjunction with `MutexLockIdentity`:
      *  ```
@@ -4863,17 +4865,17 @@ public class KotlinOps(
      *
      *    with ops.control_dependencies([ensure_lock_exists]):
      *      return nest.map_structure(tf.identity, r)
-     *
+     *  
      * ```
-     *
+     *  
      * While `fn` is running in the critical section, no other functions which wish to
      *  use this critical section may run.
-     *
+     *  
      * Often the use case is that two executions of the same graph, in parallel,
      *  wish to run `fn`; and we wish to ensure that only one of them executes
      *  at a time.  This is especially important if `fn` modifies one or more
      *  variables at a time.
-     *
+     *  
      * It is also useful if two separate functions must share a resource, but we
      *  wish to ensure the usage is exclusive.
      *
@@ -4881,9 +4883,9 @@ public class KotlinOps(
      * @return a new instance of MutexLock
      * @see org.tensorflow.op.Ops.mutexLock
      */
-    public fun mutexLock(mutex: Operand<out TType>): MutexLock = java.mutexLock(
+    public fun mutexLock(mutex: Operand<out TType>): MutexLock = java.mutexLock(    
         mutex
-    )
+        )
 
     /**
      * Makes its input available to the next iteration.
@@ -4895,8 +4897,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.nextIteration
      */
     public fun <T : TType> nextIteration(`data`: Operand<T>): NextIteration<T> =
-        java.nextIteration<T>(
-            data
+            java.nextIteration<T>(    
+        data
         )
 
     /**
@@ -4905,37 +4907,39 @@ public class KotlinOps(
      * @return a new instance of NoOp
      * @see org.tensorflow.op.Ops.noOp
      */
-    public fun noOp(): NoOp = java.noOp()
+    public fun noOp(): NoOp = java.noOp(    
+        
+        )
 
     /**
      * Returns a one-hot tensor.
      *  The locations represented by indices in `indices` take value `on_value`,
      *  while all other locations take value `off_value`.
-     *
+     *  
      * If the input `indices` is rank `N`, the output will have rank `N+1`,
      *  The new axis is created at dimension `axis` (default: the new axis is
      *  appended at the end).
-     *
+     *  
      * If `indices` is a scalar the output shape will be a vector of length `depth`.
-     *
+     *  
      * If `indices` is a vector of length `features`, the output shape will be:
      *  ```
      * features x depth if axis == -1
      *    depth x features if axis == 0
-     *
+     *  
      * ```
-     *
+     *  
      * If `indices` is a matrix (batch) with shape `&#91;batch, features&#93;`,
      *  the output shape will be:
      *  ```
      * batch x features x depth if axis == -1
      *    batch x depth x features if axis == 1
      *    depth x batch x features if axis == 0
-     *
+     *  
      * ```
      *  **Examples**
      *
-     *
+     *  
      * Suppose that
      *  ```
      * indices = [0, 2, -1, 1]
@@ -4943,9 +4947,9 @@ public class KotlinOps(
      *    on_value = 5.0
      *    off_value = 0.0
      *    axis = -1
-     *
+     *  
      * ```
-     *
+     *  
      * Then output is `&#91;4 x 3&#93;`:
      *  ```
      * output =
@@ -4953,9 +4957,9 @@ public class KotlinOps(
      *    [0.0 0.0 5.0]  // one_hot(2)
      *    [0.0 0.0 0.0]  // one_hot(-1)
      *    [0.0 5.0 0.0]  // one_hot(1)
-     *
+     *  
      * ```
-     *
+     *  
      * Suppose that
      *  ```
      * indices = [0, 2, -1, 1]
@@ -4963,9 +4967,9 @@ public class KotlinOps(
      *    on_value = 0.0
      *    off_value = 3.0
      *    axis = 0
-     *
+     *  
      * ```
-     *
+     *  
      * Then output is `&#91;3 x 4&#93;`:
      *  ```
      * output =
@@ -4977,9 +4981,9 @@ public class KotlinOps(
      *  //      ^            one_hot(2)
      *  //          ^        one_hot(-1)
      *  //              ^    one_hot(1)
-     *
+     *  
      * ```
-     *
+     *  
      * Suppose that
      *  ```
      * indices = [[0, 2], [1, -1]]
@@ -4987,9 +4991,9 @@ public class KotlinOps(
      *    on_value = 1.0
      *    off_value = 0.0
      *    axis = -1
-     *
+     *  
      * ```
-     *
+     *  
      * Then output is `&#91;2 x 2 x 3&#93;`:
      *  ```
      * output =
@@ -5000,7 +5004,7 @@ public class KotlinOps(
      *      [0.0, 1.0, 0.0]  // one_hot(1)
      *      [0.0, 0.0, 0.0]  // one_hot(-1)
      *    ]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -5023,15 +5027,15 @@ public class KotlinOps(
         onValue: Operand<U>,
         offValue: Operand<U>,
         axis: Long? = null
-    ): OneHot<U> = java.oneHot<U>(
+    ): OneHot<U> = java.oneHot<U>(    
         indices,
         depth,
         onValue,
         offValue,
         *listOfNotNull(
-            axis?.let { org.tensorflow.op.core.OneHot.axis(it) }
+            axis?.let{ org.tensorflow.op.core.OneHot.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a one valued tensor given its type and shape.
@@ -5044,9 +5048,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.ones
      */
     public fun <T : TType> ones(dims: Operand<out TNumber>, type: Class<T>): Ones<T> =
-        java.ones<T>(
-            dims,
-            type
+            java.ones<T>(    
+        dims,
+        type
         )
 
     /**
@@ -5058,9 +5062,9 @@ public class KotlinOps(
      * @return a new instance of OnesLike
      * @see org.tensorflow.op.Ops.onesLike
      */
-    public fun <T : TType> onesLike(x: Operand<T>): OnesLike<T> = java.onesLike<T>(
+    public fun <T : TType> onesLike(x: Operand<T>): OnesLike<T> = java.onesLike<T>(    
         x
-    )
+        )
 
     /**
      * Op removes all elements in the underlying container.
@@ -5092,15 +5096,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapClear = java.orderedMapClear(
+    ): OrderedMapClear = java.orderedMapClear(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapClear.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapClear.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapClear.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapClear.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapClear.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapClear.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapClear.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapClear.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op returns the number of incomplete elements in the underlying container.
@@ -5132,15 +5136,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapIncompleteSize = java.orderedMapIncompleteSize(
+    ): OrderedMapIncompleteSize = java.orderedMapIncompleteSize(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapIncompleteSize.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapIncompleteSize.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapIncompleteSize.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapIncompleteSize.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapIncompleteSize.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapIncompleteSize.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapIncompleteSize.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapIncompleteSize.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op peeks at the values at the specified key.  If the
@@ -5179,17 +5183,17 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapPeek = java.orderedMapPeek(
+    ): OrderedMapPeek = java.orderedMapPeek(    
         key,
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapPeek.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapPeek.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapPeek.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapPeek.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapPeek.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapPeek.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapPeek.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapPeek.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op returns the number of elements in the underlying container.
@@ -5221,15 +5225,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapSize = java.orderedMapSize(
+    ): OrderedMapSize = java.orderedMapSize(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapSize.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapSize.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapSize.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapSize.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapSize.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapSize.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapSize.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapSize.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Stage (key, values) in the underlying container which behaves like a ordered
@@ -5271,18 +5275,18 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapStage = java.orderedMapStage(
+    ): OrderedMapStage = java.orderedMapStage(    
         key,
         indices,
         values,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapStage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapStage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapStage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapStage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapStage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapStage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapStage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapStage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op removes and returns the values associated with the key
@@ -5320,17 +5324,17 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapUnstage = java.orderedMapUnstage(
+    ): OrderedMapUnstage = java.orderedMapUnstage(    
         key,
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapUnstage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapUnstage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapUnstage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapUnstage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapUnstage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapUnstage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapUnstage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapUnstage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op removes and returns the (key, value) element with the smallest
@@ -5366,16 +5370,16 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): OrderedMapUnstageNoKey = java.orderedMapUnstageNoKey(
+    ): OrderedMapUnstageNoKey = java.orderedMapUnstageNoKey(    
         indices,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.OrderedMapUnstageNoKey.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.OrderedMapUnstageNoKey.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.OrderedMapUnstageNoKey.container(it) },
-            sharedName?.let { org.tensorflow.op.core.OrderedMapUnstageNoKey.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.OrderedMapUnstageNoKey.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.OrderedMapUnstageNoKey.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.OrderedMapUnstageNoKey.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.OrderedMapUnstageNoKey.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Pads a tensor.
@@ -5386,11 +5390,11 @@ public class KotlinOps(
      *  and `paddings&#91;D, 1&#93;` indicates how many padding values to add after the contents
      *  of `input` in that dimension. `constant_values` is a scalar tensor of the same
      *  type as `input` that indicates the value to use for padding `input`.
-     *
+     *  
      * The padded size of each dimension D of the output is:
-     *
+     *  
      * `paddings(D, 0) + input.dim_size(D) + paddings(D, 1)`
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[1, 1], [2, 2]]
@@ -5401,7 +5405,7 @@ public class KotlinOps(
      *                        [0, 0, 1, 1, 0, 0]
      *                        [0, 0, 2, 2, 0, 0]
      *                        [0, 0, 0, 0, 0, 0]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -5416,25 +5420,25 @@ public class KotlinOps(
         input: Operand<T>,
         paddings: Operand<out TNumber>,
         constantValues: Operand<T>
-    ): Pad<T> = java.pad<T>(
+    ): Pad<T> = java.pad<T>(    
         input,
         paddings,
         constantValues
-    )
+        )
 
     /**
      * Concatenates a list of `N` tensors along the first dimension.
      *  The input tensors are all required to have size 1 in the first dimension.
-     *
+     *  
      * For example:
      *  ```
      * # 'x' is [[1, 4]]
      *  # 'y' is [[2, 5]]
      *  # 'z' is [[3, 6]]
      *  parallel_concat([x, y, z]) => [[1, 4], [2, 5], [3, 6]]  # Pack along first dim.
-     *
+     *  
      * ```
-     *
+     *  
      * The difference between concat and parallel_concat is that concat requires all
      *  of the inputs be computed before the operation will begin but doesn't require
      *  that the input shapes be known during graph construction.  Parallel concat
@@ -5451,19 +5455,19 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.parallelConcat
      */
     public fun <T : TType> parallelConcat(values: Iterable<Operand<T>>, shape: Shape):
-        ParallelConcat<T> = java.parallelConcat<T>(
+            ParallelConcat<T> = java.parallelConcat<T>(    
         values,
         shape
-    )
+        )
 
     /**
      * Interleave the values from the `data` tensors into a single tensor.
      *  Builds a merged tensor such that
      *  ```
      * merged[indices[m][i, ..., j], ...] = data[m][i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * For example, if each `indices[m]` is scalar or vector, we have
      *  ```
      * # Scalar indices:
@@ -5471,22 +5475,22 @@ public class KotlinOps(
      *
      *      # Vector indices:
      *      merged[indices[m][i], ...] = data[m][i, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Each `data[i].shape` must start with the corresponding `indices[i].shape`,
      *  and the rest of `data[i].shape` must be constant w.r.t. `i`.  That is, we
      *  must have `data[i].shape = indices[i].shape + constant`.  In terms of this
      *  `constant`, the output shape is
      *  ```
      * merged.shape = [max(indices)] + constant
-     *
+     *  
      * ```
-     *
+     *  
      * Values may be merged in parallel, so if an index appears in both `indices[m][i]`
      *  and `indices[n][j]`, the result may be invalid. This differs from the normal
      *  DynamicStitch operator that defines the behavior in that case.
-     *
+     *  
      * For example:
      *  ```
      * indices[0] = 6
@@ -5497,9 +5501,9 @@ public class KotlinOps(
      *      data[2] = [[[51, 52], [21, 22]], [[1, 2], [31, 32]]]
      *      merged = [[1, 2], [11, 12], [21, 22], [31, 32], [41, 42],
      *                [51, 52], [61, 62]]
-     *
+     *  
      * ```
-     *
+     *  
      * This method can be used to merge partitions created by `dynamic_partition`
      *  as illustrated on the following example:
      *  ```
@@ -5515,7 +5519,7 @@ public class KotlinOps(
      *      x = tf.dynamic_stitch(condition_indices, partitioned_data)
      *      # Here x=[1.1, -1., 6.2, 5.3, -1, 8.4], the -1. values remain
      *      # unchanged.
-     *
+     *  
      * ```
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/DynamicStitch.png" alt>
@@ -5528,13 +5532,11 @@ public class KotlinOps(
      * @return a new instance of ParallelDynamicStitch
      * @see org.tensorflow.op.Ops.parallelDynamicStitch
      */
-    public fun <T : TType> parallelDynamicStitch(
-        indices: Iterable<Operand<TInt32>>,
-        `data`: Iterable<Operand<T>>
-    ): ParallelDynamicStitch<T> =
-        java.parallelDynamicStitch<T>(
-            indices,
-            data
+    public fun <T : TType> parallelDynamicStitch(indices: Iterable<Operand<TInt32>>,
+            `data`: Iterable<Operand<T>>): ParallelDynamicStitch<T> =
+            java.parallelDynamicStitch<T>(    
+        indices,
+        data
         )
 
     /**
@@ -5556,11 +5558,11 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun <T : TType> placeholder(dtype: Class<T>, shape: Shape? = null): Placeholder<T> =
-        java.placeholder<T>(
-            dtype,
-            *listOfNotNull(
-                shape?.let { org.tensorflow.op.core.Placeholder.shape(it) }
-            ).toTypedArray()
+            java.placeholder<T>(    
+        dtype,
+        *listOfNotNull(
+            shape?.let{ org.tensorflow.op.core.Placeholder.shape(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -5574,10 +5576,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.placeholderWithDefault
      */
     public fun <T : TType> placeholderWithDefault(input: Operand<T>, shape: Shape):
-        PlaceholderWithDefault<T> = java.placeholderWithDefault<T>(
+            PlaceholderWithDefault<T> = java.placeholderWithDefault<T>(    
         input,
         shape
-    )
+        )
 
     /**
      * Prints a string scalar.
@@ -5600,13 +5602,13 @@ public class KotlinOps(
         input: Operand<TString>,
         outputStream: String? = null,
         end: String? = null
-    ): Print = java.print(
+    ): Print = java.print(    
         input,
         *listOfNotNull(
-            outputStream?.let { org.tensorflow.op.core.Print.outputStream(it) },
-            end?.let { org.tensorflow.op.core.Print.end(it) }
+            outputStream?.let{ org.tensorflow.op.core.Print.outputStream(it) },
+            end?.let{ org.tensorflow.op.core.Print.end(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the product of elements across dimensions of a tensor.
@@ -5632,13 +5634,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Prod<T> = java.prod<T>(
+    ): Prod<T> = java.prod<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.Prod.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.Prod.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reshapes a quantized tensor as per the Reshape op.
@@ -5657,25 +5659,25 @@ public class KotlinOps(
         shape: Operand<out TNumber>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): QuantizedReshape<T> = java.quantizedReshape<T>(
+    ): QuantizedReshape<T> = java.quantizedReshape<T>(    
         tensor,
         shape,
         inputMin,
         inputMax
-    )
+        )
 
     /**
      * Creates a sequence of numbers.
      *  This operation creates a sequence of numbers that begins at `start` and
      *  extends by increments of `delta` up to but not including `limit`.
-     *
+     *  
      * For example:
      *  ```
      * # 'start' is 3
      *  # 'limit' is 18
      *  # 'delta' is 3
      *  tf.range(start, limit, delta) ==> [3, 6, 9, 12, 15]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -5690,24 +5692,24 @@ public class KotlinOps(
         start: Operand<T>,
         limit: Operand<T>,
         delta: Operand<T>
-    ): Range<T> = java.range<T>(
+    ): Range<T> = java.range<T>(    
         start,
         limit,
         delta
-    )
+        )
 
     /**
      * Returns the rank of a tensor.
      *  This operation returns an integer representing the rank of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  # shape of tensor 't' is [2, 2, 3]
      *  rank(t) ==> 3
-     *
+     *  
      * ```
-     *
+     *  
      * **Note**: The rank of a tensor is not the same as the rank of a matrix. The rank
      *  of a tensor is the number of indices required to uniquely select each element
      *  of the tensor. Rank is also known as &quot;order&quot;, &quot;degree&quot;, or
@@ -5717,14 +5719,14 @@ public class KotlinOps(
      * @return a new instance of Rank
      * @see org.tensorflow.op.Ops.rank
      */
-    public fun rank(input: Operand<out TType>): Rank = java.rank(
+    public fun rank(input: Operand<out TType>): Rank = java.rank(    
         input
-    )
+        )
 
     /**
      * Reads the value of a variable.
      *  The tensor returned by this operation is immutable.
-     *
+     *  
      * The value returned by this operation is guaranteed to be influenced by all the
      *  writes on which this operation depends directly or indirectly, and to not be
      *  influenced by any of the writes which depend directly or indirectly on this
@@ -5738,10 +5740,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.readVariableOp
      */
     public fun <T : TType> readVariableOp(resource: Operand<out TType>, dtype: Class<T>):
-        ReadVariableOp<T> = java.readVariableOp<T>(
+            ReadVariableOp<T> = java.readVariableOp<T>(    
         resource,
         dtype
-    )
+        )
 
     /**
      * Computes the &quot;logical and&quot; of elements across dimensions of a tensor.
@@ -5765,13 +5767,13 @@ public class KotlinOps(
         input: Operand<TBool>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceAll = java.reduceAll(
+    ): ReduceAll = java.reduceAll(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceAll.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceAll.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the &quot;logical or&quot; of elements across dimensions of a tensor.
@@ -5795,13 +5797,13 @@ public class KotlinOps(
         input: Operand<TBool>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceAny = java.reduceAny(
+    ): ReduceAny = java.reduceAny(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceAny.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceAny.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the maximum of elements across dimensions of a tensor.
@@ -5827,13 +5829,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceMax<T> = java.reduceMax<T>(
+    ): ReduceMax<T> = java.reduceMax<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceMax.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceMax.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the minimum of elements across dimensions of a tensor.
@@ -5859,13 +5861,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceMin<T> = java.reduceMin<T>(
+    ): ReduceMin<T> = java.reduceMin<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceMin.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceMin.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the product of elements across dimensions of a tensor.
@@ -5891,13 +5893,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceProd<T> = java.reduceProd<T>(
+    ): ReduceProd<T> = java.reduceProd<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceProd.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceProd.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the sum of elements across dimensions of a tensor.
@@ -5923,13 +5925,13 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): ReduceSum<T> = java.reduceSum<T>(
+    ): ReduceSum<T> = java.reduceSum<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.ReduceSum.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.ReduceSum.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Makes its input available to the next iteration.
@@ -5941,8 +5943,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.refNextIteration
      */
     public fun <T : TType> refNextIteration(`data`: Operand<T>): RefNextIteration<T> =
-        java.refNextIteration<T>(
-            data
+            java.refNextIteration<T>(    
+        data
         )
 
     /**
@@ -5956,16 +5958,16 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.refSelect
      */
     public fun <T : TType> refSelect(index: Operand<TInt32>, inputs: Iterable<Operand<T>>):
-        RefSelect<T> = java.refSelect<T>(
+            RefSelect<T> = java.refSelect<T>(    
         index,
         inputs
-    )
+        )
 
     /**
      * Forwards the ref tensor `data` to the output port determined by `pred`.
      *  If `pred` is true, the `data` input is forwarded to `output_true`. Otherwise,
      *  the data goes to `output_false`.
-     *
+     *  
      * See also `Switch` and `Merge`.
      *
      * @param <T> data type for `output_false` output
@@ -5976,27 +5978,27 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.refSwitch
      */
     public fun <T : TType> refSwitch(`data`: Operand<T>, pred: Operand<TBool>): RefSwitch<T> =
-        java.refSwitch<T>(
-            data,
-            pred
+            java.refSwitch<T>(    
+        data,
+        pred
         )
 
     /**
      * Reshapes a tensor.
      *  Given `tensor`, this operation returns a tensor that has the same values
      *  as `tensor` with shape `shape`.
-     *
+     *  
      * If one component of 1-D tensor `shape` is the special value -1, the size of that
      *  dimension is computed so that the total size remains constant.  In particular, a
      *  `shape` of `&#91;-1&#93;` flattens into 1-D.  At most one component of `shape` may be
      *  unknown.
-     *
+     *  
      * The `shape` must be 1-D and the operation returns a tensor with shape
      *  `shape` filled with the values of `tensor`. In this case, the number of elements
      *  implied by `shape` must be the same as the number of elements in `tensor`.
-     *
+     *  
      * It is an error if `shape` is not 1-D.
-     *
+     *  
      * For example:
      *  ```
      * # tensor 't' is [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -6040,7 +6042,7 @@ public class KotlinOps(
      *  # tensor 't' is [7]
      *  # shape `[]` reshapes to a scalar
      *  reshape(t, []) ==> 7
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -6051,9 +6053,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reshape
      */
     public fun <T : TType> reshape(tensor: Operand<T>, shape: Operand<out TNumber>): Reshape<T> =
-        java.reshape<T>(
-            tensor,
-            shape
+            java.reshape<T>(    
+        tensor,
+        shape
         )
 
     /**
@@ -6072,11 +6074,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         limit: Long,
         T_: Class<T>
-    ): ResourceCountUpTo<T> = java.resourceCountUpTo<T>(
+    ): ResourceCountUpTo<T> = java.resourceCountUpTo<T>(    
         resource,
         limit,
         T_
-    )
+        )
 
     /**
      * Gather slices from the variable pointed to by `resource` according to `indices`.
@@ -6091,7 +6093,7 @@ public class KotlinOps(
      *
      *      # Higher rank indices
      *      output[i, ..., j, :, ... :] = params[indices[i, ..., j], :, ..., :]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -6117,15 +6119,15 @@ public class KotlinOps(
         dtype: Class<U>,
         batchDims: Long? = null,
         validateIndices: Boolean? = null
-    ): ResourceGather<U> = java.resourceGather<U>(
+    ): ResourceGather<U> = java.resourceGather<U>(    
         resource,
         indices,
         dtype,
         *listOfNotNull(
-            batchDims?.let { org.tensorflow.op.core.ResourceGather.batchDims(it) },
-            validateIndices?.let { org.tensorflow.op.core.ResourceGather.validateIndices(it) }
+            batchDims?.let{ org.tensorflow.op.core.ResourceGather.batchDims(it) },
+            validateIndices?.let{ org.tensorflow.op.core.ResourceGather.validateIndices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The ResourceGatherNd operation
@@ -6142,11 +6144,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         dtype: Class<U>
-    ): ResourceGatherNd<U> = java.resourceGatherNd<U>(
+    ): ResourceGatherNd<U> = java.resourceGatherNd<U>(    
         resource,
         indices,
         dtype
-    )
+        )
 
     /**
      * Adds sparse updates to the variable referenced by `resource`.
@@ -6160,12 +6162,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions add.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6181,11 +6183,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterAdd = java.resourceScatterAdd(
+    ): ResourceScatterAdd = java.resourceScatterAdd(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Divides sparse updates into the variable referenced by `resource`.
@@ -6199,12 +6201,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] /= updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions multiply.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6220,11 +6222,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterDiv = java.resourceScatterDiv(
+    ): ResourceScatterDiv = java.resourceScatterDiv(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Reduces sparse updates into the variable referenced by `resource` using the `max` operation.
@@ -6238,12 +6240,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] = max(ref[indices[i, ..., j], ...], updates[i, ..., j, ...])
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions are combined.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6259,11 +6261,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterMax = java.resourceScatterMax(
+    ): ResourceScatterMax = java.resourceScatterMax(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Reduces sparse updates into the variable referenced by `resource` using the `min` operation.
@@ -6277,12 +6279,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] = min(ref[indices[i, ..., j], ...], updates[i, ..., j, ...])
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions are combined.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6298,11 +6300,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterMin = java.resourceScatterMin(
+    ): ResourceScatterMin = java.resourceScatterMin(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Multiplies sparse updates into the variable referenced by `resource`.
@@ -6316,12 +6318,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] *= updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions multiply.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6337,27 +6339,27 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterMul = java.resourceScatterMul(
+    ): ResourceScatterMul = java.resourceScatterMul(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Applies sparse addition to individual values or slices in a Variable.
      *  `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `[d_0, ..., d_{Q-2`, K]} where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
      *  `[d_0, ..., d_{Q-2`, ref.shape[K], ..., ref.shape&#91;P-1&#93;]
      *  }
-     *
+     *  
      * For example, say we want to add 4 scattered elements to a rank-1 tensor to
      *  8 elements. In Python, that addition would look like this:
      *  ```
@@ -6367,15 +6369,15 @@ public class KotlinOps(
      *  add = tf.scatter_nd_add(ref, indices, updates)
      *  with tf.Session() as sess:
      *    print sess.run(add)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, 13, 3, 14, 14, 6, 7, 20]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
      *
@@ -6399,14 +6401,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdAdd = java.resourceScatterNdAdd(
+    ): ResourceScatterNdAdd = java.resourceScatterNdAdd(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ResourceScatterNdAdd.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ResourceScatterNdAdd.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The ResourceScatterNdMax operation
@@ -6431,14 +6433,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdMax = java.resourceScatterNdMax(
+    ): ResourceScatterNdMax = java.resourceScatterNdMax(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ResourceScatterNdMax.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ResourceScatterNdMax.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The ResourceScatterNdMin operation
@@ -6463,30 +6465,30 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdMin = java.resourceScatterNdMin(
+    ): ResourceScatterNdMin = java.resourceScatterNdMin(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ResourceScatterNdMin.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ResourceScatterNdMin.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies sparse subtraction to individual values or slices in a Variable.
      *  `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `[d_0, ..., d_{Q-2`, K]} where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
      *  `[d_0, ..., d_{Q-2`, ref.shape[K], ..., ref.shape&#91;P-1&#93;]
      *  }
-     *
+     *  
      * For example, say we want to subtract 4 scattered elements from a rank-1 tensor
      *  with 8 elements. In Python, that subtraction would look like this:
      *  ```
@@ -6496,15 +6498,15 @@ public class KotlinOps(
      *  sub = tf.scatter_nd_sub(ref, indices, updates)
      *  with tf.Session() as sess:
      *    print sess.run(sub)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, -9, 3, -6, -4, 6, 7, -4]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
      *
@@ -6528,32 +6530,32 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdSub = java.resourceScatterNdSub(
+    ): ResourceScatterNdSub = java.resourceScatterNdSub(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ResourceScatterNdSub.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ResourceScatterNdSub.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies sparse `updates` to individual values or slices within a given
      *  variable according to `indices`.
-     *
+     *  
      * `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `[d_0, ..., d_{Q-2`, K]} where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
      *  `[d_0, ..., d_{Q-2`, ref.shape[K], ..., ref.shape&#91;P-1&#93;].
      *  }
-     *
+     *  
      * For example, say we want to update 4 scattered elements to a rank-1 tensor to
      *  8 elements. In Python, that update would look like this:
      *  ```
@@ -6563,15 +6565,15 @@ public class KotlinOps(
      *      update = tf.scatter_nd_update(ref, indices, updates)
      *      with tf.Session() as sess:
      *        print sess.run(update)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, 11, 3, 10, 9, 6, 7, 12]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
      *
@@ -6595,14 +6597,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<out TType>,
         useLocking: Boolean? = null
-    ): ResourceScatterNdUpdate = java.resourceScatterNdUpdate(
+    ): ResourceScatterNdUpdate = java.resourceScatterNdUpdate(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ResourceScatterNdUpdate.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ResourceScatterNdUpdate.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Subtracts sparse updates from the variable referenced by `resource`.
@@ -6616,12 +6618,12 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] -= updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions add.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src='https://www.tensorflow.org/images/ScatterAdd.png' alt>
@@ -6637,11 +6639,11 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterSub = java.resourceScatterSub(
+    ): ResourceScatterSub = java.resourceScatterSub(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Assigns sparse updates to the variable referenced by `resource`.
@@ -6655,7 +6657,7 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] = updates[i, ..., j, ...]
-     *
+     *  
      * ```
      *
      * @param resource Should be from a `Variable` node.
@@ -6668,18 +6670,18 @@ public class KotlinOps(
         resource: Operand<out TType>,
         indices: Operand<out TNumber>,
         updates: Operand<out TType>
-    ): ResourceScatterUpdate = java.resourceScatterUpdate(
+    ): ResourceScatterUpdate = java.resourceScatterUpdate(    
         resource,
         indices,
         updates
-    )
+        )
 
     /**
      * Assign `value` to the sliced l-value reference of `ref`.
      *  The values of `value` are assigned to the positions in the variable
      *  `ref` that are selected by the slice parameters. The slice parameters
      *  `begin, `end`, `strides`, etc. work exactly as in `StridedSlice`.
-     *
+     *  
      * NOTE this op currently does not support broadcasting and so `value`'s
      *  shape must be exactly the shape produced by the slice of `ref`.
      *
@@ -6724,34 +6726,34 @@ public class KotlinOps(
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): ResourceStridedSliceAssign = java.resourceStridedSliceAssign<T>(
+    ): ResourceStridedSliceAssign = java.resourceStridedSliceAssign<T>(    
         ref,
         begin,
         end,
         strides,
         value,
         *listOfNotNull(
-            beginMask?.let { org.tensorflow.op.core.ResourceStridedSliceAssign.beginMask(it) },
-            endMask?.let { org.tensorflow.op.core.ResourceStridedSliceAssign.endMask(it) },
-            ellipsisMask?.let { org.tensorflow.op.core.ResourceStridedSliceAssign.ellipsisMask(it) },
-            newAxisMask?.let { org.tensorflow.op.core.ResourceStridedSliceAssign.newAxisMask(it) },
-            shrinkAxisMask?.let { org.tensorflow.op.core.ResourceStridedSliceAssign.shrinkAxisMask(it) }
+            beginMask?.let{ org.tensorflow.op.core.ResourceStridedSliceAssign.beginMask(it) },
+            endMask?.let{ org.tensorflow.op.core.ResourceStridedSliceAssign.endMask(it) },
+            ellipsisMask?.let{ org.tensorflow.op.core.ResourceStridedSliceAssign.ellipsisMask(it) },
+            newAxisMask?.let{ org.tensorflow.op.core.ResourceStridedSliceAssign.newAxisMask(it) },
+            shrinkAxisMask?.let{ org.tensorflow.op.core.ResourceStridedSliceAssign.shrinkAxisMask(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reverses specific dimensions of a tensor.
      *  NOTE `tf.reverse` has now changed behavior in preparation for 1.0.
      *  `tf.reverse_v2` is currently an alias that will be deprecated before TF 1.0.
-     *
+     *  
      * Given a `tensor`, and a `int32` tensor `axis` representing the set of
      *  dimensions of `tensor` to reverse. This operation reverses each dimension
      *  `i` for which there exists `j` s.t. `axis[j] == i`.
-     *
+     *  
      * `tensor` can have up to 8 dimensions. The number of dimensions specified
      *  in `axis` may be 0 or more entries. If an index is specified more than
      *  once, a InvalidArgument error is raised.
-     *
+     *  
      * For example:
      *  ```
      * # tensor 't' is [[[[ 0,  1,  2,  3],
@@ -6785,7 +6787,7 @@ public class KotlinOps(
      *                         [[20, 21, 22, 23],
      *                          [16, 17, 18, 19],
      *                          [12, 13, 14, 15]]]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -6797,9 +6799,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.reverse
      */
     public fun <T : TType> reverse(tensor: Operand<T>, axis: Operand<out TNumber>): Reverse<T> =
-        java.reverse<T>(
-            tensor,
-            axis
+            java.reverse<T>(    
+        tensor,
+        axis
         )
 
     /**
@@ -6807,14 +6809,14 @@ public class KotlinOps(
      *  This op first slices `input` along the dimension `batch_dim`, and for each
      *  slice `i`, reverses the first `seq_lengths[i]` elements along
      *  the dimension `seq_dim`.
-     *
+     *  
      * The elements of `seq_lengths` must obey `seq_lengths[i] <= input.dims&#91;seq_dim&#93;`,
      *  and `seq_lengths` must be a vector of length `input.dims&#91;batch_dim&#93;`.
-     *
+     *  
      * The output slice `i` along dimension `batch_dim` is then given by input
      *  slice `i`, with the first `seq_lengths[i]` slices along dimension
      *  `seq_dim` reversed.
-     *
+     *  
      * For example:
      *  ```
      * # Given this:
@@ -6834,9 +6836,9 @@ public class KotlinOps(
      *  output[1, 2:, :, ...] = input[1, 2:, :, ...]
      *  output[2, 3:, :, ...] = input[2, 3:, :, ...]
      *  output[3, 2:, :, ...] = input[3, 2:, :, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * In contrast, if:
      *  ```
      * # Given this:
@@ -6856,7 +6858,7 @@ public class KotlinOps(
      *  output[2:, :, 1, :, ...] = input[2:, :, 1, :, ...]
      *  output[3:, :, 2, :, ...] = input[3:, :, 2, :, ...]
      *  output[2:, :, 3, :, ...] = input[2:, :, 3, :, ...]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -6878,14 +6880,14 @@ public class KotlinOps(
         seqLengths: Operand<out TNumber>,
         seqDim: Long,
         batchDim: Long? = null
-    ): ReverseSequence<T> = java.reverseSequence<T>(
+    ): ReverseSequence<T> = java.reverseSequence<T>(    
         input,
         seqLengths,
         seqDim,
         *listOfNotNull(
-            batchDim?.let { org.tensorflow.op.core.ReverseSequence.batchDim(it) }
+            batchDim?.let{ org.tensorflow.op.core.ReverseSequence.batchDim(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Rolls the elements of a tensor along an axis.
@@ -6894,7 +6896,7 @@ public class KotlinOps(
      *  elements in the opposite direction. Elements that roll passed the last position
      *  will wrap around to the first and vice versa. Multiple shifts along multiple
      *  axes may be specified.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [0, 1, 2, 3, 4]
@@ -6907,7 +6909,7 @@ public class KotlinOps(
      *  # shifting along the same axis multiple times
      *  # 't' is [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
      *  roll(t, shift=[2, -3], axis=[1, 1]) ==> [[1, 2, 3, 4, 0], [6, 7, 8, 9, 5]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -6928,11 +6930,11 @@ public class KotlinOps(
         input: Operand<T>,
         shift: Operand<out TNumber>,
         axis: Operand<out TNumber>
-    ): Roll<T> = java.roll<T>(
+    ): Roll<T> = java.roll<T>(    
         input,
         shift,
         axis
-    )
+        )
 
     /**
      * Adds sparse updates to a variable reference.
@@ -6946,15 +6948,15 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] += updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions add.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
@@ -6979,14 +6981,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterAdd<T> = java.scatterAdd<T>(
+    ): ScatterAdd<T> = java.scatterAdd<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterAdd.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterAdd.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Divides a variable reference by sparse updates.
@@ -7000,15 +7002,15 @@ public class KotlinOps(
      *
      *      # High rank indices (for each i, ..., j)
      *      ref[indices[i, ..., j], ...] /= updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions divide.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *
      * @param <T> data type for `output_ref` output
@@ -7030,14 +7032,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterDiv<T> = java.scatterDiv<T>(
+    ): ScatterDiv<T> = java.scatterDiv<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterDiv.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterDiv.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reduces sparse updates into a variable reference using the `max` operation.
@@ -7051,15 +7053,15 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] = max(ref[indices[i, ..., j], ...], updates[i, ..., j, ...])
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions combine.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
@@ -7084,14 +7086,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMax<T> = java.scatterMax<T>(
+    ): ScatterMax<T> = java.scatterMax<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterMax.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterMax.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Reduces sparse updates into a variable reference using the `min` operation.
@@ -7105,15 +7107,15 @@ public class KotlinOps(
      *
      *  # High rank indices (for each i, ..., j)
      *  ref[indices[i, ..., j], ...] = min(ref[indices[i, ..., j], ...], updates[i, ..., j, ...])
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions combine.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterAdd.png" alt>
@@ -7138,14 +7140,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMin<T> = java.scatterMin<T>(
+    ): ScatterMin<T> = java.scatterMin<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterMin.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterMin.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Multiplies sparse updates into a variable reference.
@@ -7159,15 +7161,15 @@ public class KotlinOps(
      *
      *      # High rank indices (for each i, ..., j)
      *      ref[indices[i, ..., j], ...] *= updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their contributions multiply.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *
      * @param <T> data type for `output_ref` output
@@ -7189,14 +7191,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterMul<T> = java.scatterMul<T>(
+    ): ScatterMul<T> = java.scatterMul<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterMul.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterMul.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Scatter `updates` into a new tensor according to `indices`.
@@ -7204,41 +7206,41 @@ public class KotlinOps(
      *  slices within a tensor (initially zero for numeric, empty for string) of
      *  the given `shape` according to indices.  This operator is the inverse of the
      *  `tf.gather_nd` operator which extracts values or slices from a given tensor.
-     *
+     *  
      * This operation is similar to tensor_scatter_add, except that the tensor is
      *  zero-initialized. Calling `tf.scatter_nd(indices, values, shape)` is identical
      *  to `tensor_scatter_add(tf.zeros(shape, values.dtype), indices, values)`
-     *
+     *  
      * If `indices` contains duplicates, then their updates are accumulated (summed).
-     *
+     *  
      * **WARNING**: The order in which updates are applied is nondeterministic, so the
      *  output will be nondeterministic if `indices` contains duplicates -- because
      *  of some numerical approximation issues, numbers summed in different order
      *  may yield different results.
-     *
+     *  
      * `indices` is an integer tensor containing indices into a new tensor of shape
      *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
      *  ```
      * indices.shape[-1] <= shape.rank
-     *
+     *  
      * ```
-     *
+     *  
      * The last dimension of `indices` corresponds to indices into elements
      *  (if `indices.shape&#91;-1&#93; = shape.rank`) or slices
      *  (if `indices.shape&#91;-1&#93; < shape.rank`) along dimension `indices.shape&#91;-1&#93;` of
      *  `shape`.  `updates` is a tensor with shape
      *  ```
      * indices.shape[:-1] + shape[indices.shape[-1]:]
-     *
+     *  
      * ```
-     *
+     *  
      * The simplest form of scatter is to insert individual elements in a tensor by
      *  index. For example, say we want to insert 4 scattered elements in a rank-1
      *  tensor with 8 elements.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd1.png" alt>
      *  </div>
-     *
+     *  
      * In Python, this scatter operation would look like this:
      *  ```
      * indices = tf.constant([[4], [3], [1], [7]])
@@ -7246,22 +7248,22 @@ public class KotlinOps(
      *      shape = tf.constant([8])
      *      scatter = tf.scatter_nd(indices, updates, shape)
      *      print(scatter)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [0, 11, 0, 10, 9, 0, 0, 12]
-     *
+     *  
      * ```
-     *
+     *  
      * We can also, insert entire slices of a higher rank tensor all at once. For
      *  example, if we wanted to insert two slices in the first dimension of a
      *  rank-3 tensor with two matrices of new values.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterNd2.png" alt>
      *  </div>
-     *
+     *  
      * In Python, this scatter operation would look like this:
      *  ```
      * indices = tf.constant([[0], [2]])
@@ -7272,18 +7274,18 @@ public class KotlinOps(
      *      shape = tf.constant([4, 4, 4])
      *      scatter = tf.scatter_nd(indices, updates, shape)
      *      print(scatter)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [[[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
      *   [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]],
      *   [[5, 5, 5, 5], [6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8]],
      *   [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Note that on CPU, if an out of bound index is found, an error is returned.
      *  On GPU, if an out of bound index is found, the index is ignored.
      *
@@ -7300,27 +7302,27 @@ public class KotlinOps(
         indices: Operand<T>,
         updates: Operand<U>,
         shape: Operand<T>
-    ): ScatterNd<U> = java.scatterNd<U, T>(
+    ): ScatterNd<U> = java.scatterNd<U, T>(    
         indices,
         updates,
         shape
-    )
+        )
 
     /**
      * Applies sparse addition to individual values or slices in a Variable.
      *  `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `[d_0, ..., d_{Q-2`, K]} where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
      *  `[d_0, ..., d_{Q-2`, ref.shape[K], ..., ref.shape&#91;P-1&#93;]
      *  }
-     *
+     *  
      * For example, say we want to add 4 scattered elements to a rank-1 tensor to
      *  8 elements. In Python, that addition would look like this:
      *  ```
@@ -7330,15 +7332,15 @@ public class KotlinOps(
      *  add = tf.scatter_nd_add(ref, indices, updates)
      *  with tf.Session() as sess:
      *    print sess.run(add)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, 13, 3, 14, 14, 6, 7, 20]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
      *
@@ -7364,14 +7366,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdAdd<T> = java.scatterNdAdd<T>(
+    ): ScatterNdAdd<T> = java.scatterNdAdd<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterNdAdd.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterNdAdd.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies sparse addition to `input` using individual values or slices
@@ -7379,20 +7381,20 @@ public class KotlinOps(
      *  `input` is only modified in-place if no other operations will use it.
      *  Otherwise, a copy of `input` is made.  This operation has a gradient with
      *  respect to both `input` and `updates`.
-     *
+     *  
      * `input` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `input`.
      *  It must be shape `\(&#91;d_0, ..., d_{Q-2}, K&#93;\)` where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or `(P-K)`-dimensional slices
      *  (if `K < P`) along the `K`th dimension of `input`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
-     *
+     *  
      * $$&#91;d_0, ..., d_{Q-2}, input.shape[K&#93;, ..., input.shape&#91;P-1&#93;].$$
-     *
+     *  
      * For example, say we want to add 4 scattered elements to a rank-1 tensor to 8
      *  elements. In Python, that addition would look like this:
      *  ```
@@ -7402,15 +7404,15 @@ public class KotlinOps(
      *  output = tf.scatter_nd_non_aliasing_add(input, indices, updates)
      *  with tf.Session() as sess:
      *    print(sess.run(output))
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting value `output` would look like this:
      *  ```
      * [1, 13, 3, 14, 14, 6, 7, 20]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to slices.
      *
      * @param <T> data type for `output` output
@@ -7427,29 +7429,29 @@ public class KotlinOps(
         input: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): ScatterNdNonAliasingAdd<T> = java.scatterNdNonAliasingAdd<T>(
+    ): ScatterNdNonAliasingAdd<T> = java.scatterNdNonAliasingAdd<T>(    
         input,
         indices,
         updates
-    )
+        )
 
     /**
      * Applies sparse subtraction to individual values or slices in a Variable.
      *  within a given variable according to `indices`.
-     *
+     *  
      * `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `[d_0, ..., d_{Q-2`, K]} where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
      *  `[d_0, ..., d_{Q-2`, ref.shape[K], ..., ref.shape&#91;P-1&#93;]
      *  }
-     *
+     *  
      * For example, say we want to subtract 4 scattered elements from a rank-1 tensor
      *  with 8 elements. In Python, that subtraction would look like this:
      *  ```
@@ -7459,15 +7461,15 @@ public class KotlinOps(
      *  sub = tf.scatter_nd_sub(ref, indices, updates)
      *  with tf.Session() as sess:
      *    print sess.run(sub)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, -9, 3, -6, -4, 6, 7, -4]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
      *
@@ -7493,32 +7495,32 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdSub<T> = java.scatterNdSub<T>(
+    ): ScatterNdSub<T> = java.scatterNdSub<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterNdSub.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterNdSub.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies sparse `updates` to individual values or slices within a given
      *  variable according to `indices`.
-     *
+     *  
      * `ref` is a `Tensor` with rank `P` and `indices` is a `Tensor` of rank `Q`.
-     *
+     *  
      * `indices` must be integer tensor, containing indices into `ref`.
      *  It must be shape `\(&#91;d_0, ..., d_{Q-2}, K&#93;\)` where `0 < K <= P`.
-     *
+     *  
      * The innermost dimension of `indices` (with length `K`) corresponds to
      *  indices into elements (if `K = P`) or slices (if `K < P`) along the `K`th
      *  dimension of `ref`.
-     *
+     *  
      * `updates` is `Tensor` of rank `Q-1+P-K` with shape:
-     *
+     *  
      * $$&#91;d_0, ..., d_{Q-2}, ref.shape[K&#93;, ..., ref.shape&#91;P-1&#93;].$$
-     *
+     *  
      * For example, say we want to update 4 scattered elements to a rank-1 tensor to
      *  8 elements. In Python, that update would look like this:
      *  ```
@@ -7528,18 +7530,18 @@ public class KotlinOps(
      *      update = tf.scatter_nd_update(ref, indices, updates)
      *      with tf.Session() as sess:
      *        print sess.run(update)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting update to ref would look like this:
      *  ```
      * [1, 11, 3, 10, 9, 6, 7, 12]
-     *
+     *  
      * ```
-     *
+     *  
      * See `tf.scatter_nd` for more details about how to make updates to
      *  slices.
-     *
+     *  
      * See also `tf.scatter_update` and `tf.batch_scatter_update`.
      *
      * @param <T> data type for `output_ref` output
@@ -7564,14 +7566,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterNdUpdate<T> = java.scatterNdUpdate<T>(
+    ): ScatterNdUpdate<T> = java.scatterNdUpdate<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterNdUpdate.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterNdUpdate.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Subtracts sparse updates to a variable reference.
@@ -7584,14 +7586,14 @@ public class KotlinOps(
      *
      *      # High rank indices (for each i, ..., j)
      *      ref[indices[i, ..., j], ...] -= updates[i, ..., j, ...]
-     *
+     *  
      * ```
      *  This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * Duplicate entries are handled correctly: if multiple `indices` reference
      *  the same location, their (negated) contributions add.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterSub.png" alt>
@@ -7616,14 +7618,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterSub<T> = java.scatterSub<T>(
+    ): ScatterSub<T> = java.scatterSub<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterSub.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterSub.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Applies sparse updates to a variable reference.
@@ -7637,21 +7639,21 @@ public class KotlinOps(
      *
      *      # High rank indices (for each i, ..., j)
      *      ref[indices[i, ..., j], ...] = updates[i, ..., j, ...]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation outputs `ref` after the update is done.
      *  This makes it easier to chain operations that need to use the reset value.
-     *
+     *  
      * If values in `ref` is to be updated more than once, because there are
      *  duplicate entries in `indices`, the order at which the updates happen
      *  for each value is undefined.
-     *
+     *  
      * Requires `updates.shape = indices.shape + ref.shape&#91;1:&#93;` or `updates.shape = []`.
      *  <div style="width:70%; margin:auto; margin-bottom:10px; margin-top:20px;">
      *  <img style="width:100%" src="https://www.tensorflow.org/images/ScatterUpdate.png" alt>
      *  </div>
-     *
+     *  
      * See also `tf.batch_scatter_update` and `tf.scatter_nd_update`.
      *
      * @param <T> data type for `output_ref` output
@@ -7673,14 +7675,14 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         updates: Operand<T>,
         useLocking: Boolean? = null
-    ): ScatterUpdate<T> = java.scatterUpdate<T>(
+    ): ScatterUpdate<T> = java.scatterUpdate<T>(    
         ref,
         indices,
         updates,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.core.ScatterUpdate.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.core.ScatterUpdate.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The SelectV2 operation
@@ -7697,11 +7699,11 @@ public class KotlinOps(
         condition: Operand<TBool>,
         t: Operand<T>,
         e: Operand<T>
-    ): Select<T> = java.select<T>(
+    ): Select<T> = java.select<T>(    
         condition,
         t,
         e
-    )
+        )
 
     /**
      * Computes the difference between two lists of numbers or strings.
@@ -7710,21 +7712,21 @@ public class KotlinOps(
      *  is sorted in the same order that the numbers appear in `x` (duplicates are
      *  preserved). This operation also returns a list `idx` that represents the
      *  position of each `out` element in `x`. In other words:
-     *
+     *  
      * `out[i] = x&#91;idx[i&#93;] for i in &#91;0, 1, ..., len(out) - 1&#93;`
-     *
+     *  
      * For example, given this input:
      *  ```
      * x = [1, 2, 3, 4, 5, 6]
      *  y = [1, 3, 5]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation would return:
      *  ```
      * out ==> [2, 4, 6]
      *  idx ==> [1, 3, 5]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `out` output
@@ -7736,9 +7738,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.setDiff1d
      */
     public fun <T : TType> setDiff1d(x: Operand<T>, y: Operand<T>): SetDiff1d<T, TInt32> =
-        java.setDiff1d<T>(
-            x,
-            y
+            java.setDiff1d<T>(    
+        x,
+        y
         )
 
     /**
@@ -7748,21 +7750,21 @@ public class KotlinOps(
      *  is sorted in the same order that the numbers appear in `x` (duplicates are
      *  preserved). This operation also returns a list `idx` that represents the
      *  position of each `out` element in `x`. In other words:
-     *
+     *  
      * `out[i] = x&#91;idx[i&#93;] for i in &#91;0, 1, ..., len(out) - 1&#93;`
-     *
+     *  
      * For example, given this input:
      *  ```
      * x = [1, 2, 3, 4, 5, 6]
      *  y = [1, 3, 5]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation would return:
      *  ```
      * out ==> [2, 4, 6]
      *  idx ==> [1, 3, 5]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `out` output
@@ -7779,18 +7781,18 @@ public class KotlinOps(
         x: Operand<T>,
         y: Operand<T>,
         outIdx: Class<U>
-    ): SetDiff1d<T, U> = java.setDiff1d<T, U>(
+    ): SetDiff1d<T, U> = java.setDiff1d<T, U>(    
         x,
         y,
         outIdx
-    )
+        )
 
     /**
      * Number of unique elements along last dimension of input `set`.
      *  Input `set` is a `SparseTensor` represented by `set_indices`, `set_values`,
      *  and `set_shape`. The last dimension contains values in a set, duplicates are
      *  allowed but ignored.
-     *
+     *  
      * If `validate_indices` is `True`, this op validates the order and range of `set`
      *  indices.
      *
@@ -7810,24 +7812,24 @@ public class KotlinOps(
         setValues: Operand<out TType>,
         setShape: Operand<TInt64>,
         validateIndices: Boolean? = null
-    ): SetSize = java.setSize(
+    ): SetSize = java.setSize(    
         setIndices,
         setValues,
         setShape,
         *listOfNotNull(
-            validateIndices?.let { org.tensorflow.op.core.SetSize.validateIndices(it) }
+            validateIndices?.let{ org.tensorflow.op.core.SetSize.validateIndices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the shape of a tensor.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -7835,19 +7837,19 @@ public class KotlinOps(
      * @return a new instance of Shape, with default output types
      * @see org.tensorflow.op.Ops.shape
      */
-    public fun shape(input: Operand<out TType>): org.tensorflow.op.core.Shape<TInt32> = java.shape(
+    public fun shape(input: Operand<out TType>): org.tensorflow.op.core.Shape<TInt32> = java.shape(    
         input
-    )
+        )
 
     /**
      * Returns the shape of a tensor.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -7858,10 +7860,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.shape
      */
     public fun <U : TNumber> shape(input: Operand<out TType>, outType: Class<U>):
-        org.tensorflow.op.core.Shape<U> = java.shape<U>(
+            org.tensorflow.op.core.Shape<U> = java.shape<U>(    
         input,
         outType
-    )
+        )
 
     /**
      * Returns shape of tensors.
@@ -7872,9 +7874,9 @@ public class KotlinOps(
      * @return a new instance of ShapeN, with default output types
      * @see org.tensorflow.op.Ops.shapeN
      */
-    public fun shapeN(input: Iterable<Operand<out TType>>): ShapeN<TInt32> = java.shapeN(
+    public fun shapeN(input: Iterable<Operand<out TType>>): ShapeN<TInt32> = java.shapeN(    
         input
-    )
+        )
 
     /**
      * Returns shape of tensors.
@@ -7888,21 +7890,21 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.shapeN
      */
     public fun <U : TNumber> shapeN(input: Iterable<Operand<out TType>>, outType: Class<U>):
-        ShapeN<U> = java.shapeN<U>(
+            ShapeN<U> = java.shapeN<U>(    
         input,
         outType
-    )
+        )
 
     /**
      * Returns the size of a tensor.
      *  This operation returns an integer representing the number of elements in
      *  `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1,, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
      *  size(t) ==> 12
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -7910,20 +7912,20 @@ public class KotlinOps(
      * @return a new instance of Size, with default output types
      * @see org.tensorflow.op.Ops.size
      */
-    public fun size(input: Operand<out TType>): Size<TInt32> = java.size(
+    public fun size(input: Operand<out TType>): Size<TInt32> = java.size(    
         input
-    )
+        )
 
     /**
      * Returns the size of a tensor.
      *  This operation returns an integer representing the number of elements in
      *  `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1,, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
      *  size(t) ==> 12
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -7934,9 +7936,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.size
      */
     public fun <U : TNumber> size(input: Operand<out TType>, outType: Class<U>): Size<U> =
-        java.size<U>(
-            input,
-            outType
+            java.size<U>(    
+        input,
+        outType
         )
 
     /**
@@ -7968,22 +7970,22 @@ public class KotlinOps(
         windowSize: Long? = null,
         minCount: Long? = null,
         subsample: Float? = null
-    ): Skipgram = java.skipgram(
+    ): Skipgram = java.skipgram(    
         filename,
         batchSize,
         *listOfNotNull(
-            windowSize?.let { org.tensorflow.op.core.Skipgram.windowSize(it) },
-            minCount?.let { org.tensorflow.op.core.Skipgram.minCount(it) },
-            subsample?.let { org.tensorflow.op.core.Skipgram.subsample(it) }
+            windowSize?.let{ org.tensorflow.op.core.Skipgram.windowSize(it) },
+            minCount?.let{ org.tensorflow.op.core.Skipgram.minCount(it) },
+            subsample?.let{ org.tensorflow.op.core.Skipgram.subsample(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Return a slice from 'input'.
      *  The output tensor is a tensor with dimensions described by 'size'
      *  whose values are extracted from 'input' starting at the offsets in
      *  'begin'.
-     *
+     *  
      * _Requirements_:
      *  0 <= begin[i] <= begin[i] + size[i] <= Di  for i in [0, n)
      *
@@ -8004,11 +8006,11 @@ public class KotlinOps(
         input: Operand<T>,
         begin: Operand<U>,
         sizeOutput: Operand<U>
-    ): Slice<T> = java.slice<T, U>(
+    ): Slice<T> = java.slice<T, U>(    
         input,
         begin,
         sizeOutput
-    )
+        )
 
     /**
      * Returns a copy of the input tensor.
@@ -8019,9 +8021,9 @@ public class KotlinOps(
      * @return a new instance of Snapshot
      * @see org.tensorflow.op.Ops.snapshot
      */
-    public fun <T : TType> snapshot(input: Operand<T>): Snapshot<T> = java.snapshot<T>(
+    public fun <T : TType> snapshot(input: Operand<T>): Snapshot<T> = java.snapshot<T>(    
         input
-    )
+        )
 
     /**
      * SpaceToBatch for N-D tensors of type T.
@@ -8044,18 +8046,18 @@ public class KotlinOps(
      *  `paddings[i] = &#91;pad_start, pad_end&#93;` specifies the padding for input dimension
      *  `i + 1`, which corresponds to spatial dimension `i`.  It is required that
      *  `block_shape[i]` divides `input_shape&#91;i + 1&#93; + pad_start + pad_end`.
-     *
+     *  
      * This operation is equivalent to the following steps:
      *  <ol>
      *  <li>
-     *
+     *  
      * Zero-pad the start and end of dimensions `&#91;1, ..., M&#93;` of the
      *  input according to `paddings` to produce `padded` of shape `padded_shape`.
      *  </li>
      *  <li>
-     *
+     *  
      * Reshape `padded` to `reshaped_padded` of shape:
-     *
+     *  
      * &#91;batch&#93; +
      *  &#91;padded_shape[1&#93; / block_shape[0],
      *  block_shape[0],
@@ -8065,10 +8067,10 @@ public class KotlinOps(
      *  remaining_shape
      *  </li>
      *  <li>
-     *
+     *  
      * Permute dimensions of `reshaped_padded` to produce
      *  `permuted_reshaped_padded` of shape:
-     *
+     *  
      * block_shape +
      *  &#91;batch&#93; +
      *  &#91;padded_shape[1&#93; / block_shape[0],
@@ -8077,10 +8079,10 @@ public class KotlinOps(
      *  remaining_shape
      *  </li>
      *  <li>
-     *
+     *  
      * Reshape `permuted_reshaped_padded` to flatten `block_shape` into the batch
      *  dimension, producing an output tensor of shape:
-     *
+     *  
      * &#91;batch * prod(block_shape)&#93; +
      *  &#91;padded_shape[1&#93; / block_shape[0],
      *  ...,
@@ -8088,38 +8090,38 @@ public class KotlinOps(
      *  remaining_shape
      *  </li>
      *  </ol>
-     *
+     *  
      * Some examples:
-     *
+     *  
      * (1) For the following input of shape `&#91;1, 2, 2, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
      *  `
      * x = [[[[1], [2]], [[3], [4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 1, 1, 1&#93;` and value:
      *  `
      * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (2) For the following input of shape `&#91;1, 2, 2, 3&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
      *  `
      * x = [[[[1, 2, 3], [4, 5, 6]],
      *        [[7, 8, 9], [10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 1, 1, 3&#93;` and value:
      *  `
      * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (3) For the following input of shape `&#91;1, 4, 4, 1&#93;`, `block_shape = &#91;2, 2&#93;`,
      * and
      *  `paddings = &#91;[0, 0&#93;, &#91;0, 0&#93;]`:
@@ -8128,18 +8130,18 @@ public class KotlinOps(
      *        [[5],   [6],  [7],  [8]],
      *        [[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 2, 2, 1&#93;` and value:
      *  `
      * x = [[[[1], [3]], [[9], [11]]],
      *       [[[2], [4]], [[10], [12]]],
      *       [[[5], [7]], [[13], [15]]],
      *       [[[6], [8]], [[14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (4) For the following input of shape `&#91;2, 2, 4, 1&#93;`, block_shape = `&#91;2, 2&#93;`,
      * and
      *  paddings = `&#91;[0, 0&#93;, &#91;2, 0&#93;]`:
@@ -8148,18 +8150,18 @@ public class KotlinOps(
      *        [[5],   [6],  [7],  [8]]],
      *       [[[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;8, 1, 3, 1&#93;` and value:
      *  `
      * x = [[[[0], [1], [3]]], [[[0], [9], [11]]],
      *       [[[0], [2], [4]]], [[[0], [10], [12]]],
      *       [[[0], [5], [7]]], [[[0], [13], [15]]],
      *       [[[0], [6], [8]]], [[[0], [14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * Among others, this operation is useful for reducing atrous convolution into
      *  regular convolution.
      * @param <T> data type for `SpaceToBatchND` output and operands
@@ -8170,11 +8172,11 @@ public class KotlinOps(
         input: Operand<T>,
         blockShape: Operand<out TNumber>,
         paddings: Operand<out TNumber>
-    ): SpaceToBatchNd<T> = java.spaceToBatchNd<T>(
+    ): SpaceToBatchNd<T> = java.spaceToBatchNd<T>(    
         input,
         blockShape,
         paddings
-    )
+        )
 
     /**
      * Splits a tensor into `num_split` tensors along one dimension.
@@ -8193,11 +8195,11 @@ public class KotlinOps(
         axis: Operand<TInt32>,
         value: Operand<T>,
         numSplit: Long
-    ): Split<T> = java.split<T>(
+    ): Split<T> = java.split<T>(    
         axis,
         value,
         numSplit
-    )
+        )
 
     /**
      * Splits a tensor into `num_split` tensors along one dimension.
@@ -8219,12 +8221,12 @@ public class KotlinOps(
         sizeSplits: Operand<out TNumber>,
         axis: Operand<TInt32>,
         numSplit: Long
-    ): SplitV<T> = java.splitV<T>(
+    ): SplitV<T> = java.splitV<T>(    
         value,
         sizeSplits,
         axis,
         numSplit
-    )
+        )
 
     /**
      * Removes dimensions of size 1 from the shape of a tensor.
@@ -8232,19 +8234,19 @@ public class KotlinOps(
      *  all dimensions of size 1 removed. If you don't want to remove all size 1
      *  dimensions, you can remove specific size 1 dimensions by specifying
      *  `axis`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
      *  shape(squeeze(t)) ==> [2, 3]
-     *
+     *  
      * ```
-     *
+     *  
      * Or, to remove specific size 1 dimensions:
      *  ```
      * # 't' is a tensor of shape [1, 2, 1, 3, 1, 1]
      *  shape(squeeze(t, [2, 4])) ==> [1, 2, 3, 1]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -8261,11 +8263,11 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun <T : TType> squeeze(input: Operand<T>, axis: List<Long>? = null): Squeeze<T> =
-        java.squeeze<T>(
-            input,
-            *listOfNotNull(
-                axis?.let { org.tensorflow.op.core.Squeeze.axis(it) }
-            ).toTypedArray()
+            java.squeeze<T>(    
+        input,
+        *listOfNotNull(
+            axis?.let{ org.tensorflow.op.core.Squeeze.axis(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -8273,11 +8275,11 @@ public class KotlinOps(
      *  Packs the `N` tensors in `values` into a tensor with rank one higher than each
      *  tensor in `values`, by packing them along the `axis` dimension.
      *  Given a list of tensors of shape `(A, B, C)`;
-     *
+     *  
      * if `axis == 0` then the `output` tensor will have the shape `(N, A, B, C)`.
      *  if `axis == 1` then the `output` tensor will have the shape `(A, N, B, C)`.
      *  Etc.
-     *
+     *  
      * For example:
      *  ```
      * # 'x' is [1, 4]
@@ -8285,9 +8287,9 @@ public class KotlinOps(
      *  # 'z' is [3, 6]
      *  pack([x, y, z]) => [[1, 4], [2, 5], [3, 6]]  # Pack along first dim.
      *  pack([x, y, z], axis=1) => [[1, 2, 3], [4, 5, 6]]
-     *
+     *  
      * ```
-     *
+     *  
      * This is the opposite of `unpack`.
      *
      * @param <T> data type for `output` output
@@ -8303,11 +8305,11 @@ public class KotlinOps(
      * @return this Options instance.
      */
     public fun <T : TType> stack(values: Iterable<Operand<T>>, axis: Long? = null): Stack<T> =
-        java.stack<T>(
-            values,
-            *listOfNotNull(
-                axis?.let { org.tensorflow.op.core.Stack.axis(it) }
-            ).toTypedArray()
+            java.stack<T>(    
+        values,
+        *listOfNotNull(
+            axis?.let{ org.tensorflow.op.core.Stack.axis(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -8346,15 +8348,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): Stage = java.stage(
+    ): Stage = java.stage(    
         values,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.Stage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.Stage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.Stage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Stage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.Stage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.Stage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.Stage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Stage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op removes all elements in the underlying container.
@@ -8386,15 +8388,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): StageClear = java.stageClear(
+    ): StageClear = java.stageClear(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.StageClear.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.StageClear.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.StageClear.container(it) },
-            sharedName?.let { org.tensorflow.op.core.StageClear.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.StageClear.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.StageClear.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.StageClear.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.StageClear.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op peeks at the values at the specified index.  If the
@@ -8431,16 +8433,16 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): StagePeek = java.stagePeek(
+    ): StagePeek = java.stagePeek(    
         index,
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.StagePeek.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.StagePeek.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.StagePeek.container(it) },
-            sharedName?.let { org.tensorflow.op.core.StagePeek.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.StagePeek.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.StagePeek.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.StagePeek.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.StagePeek.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op returns the number of elements in the underlying container.
@@ -8472,27 +8474,27 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): StageSize = java.stageSize(
+    ): StageSize = java.stageSize(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.StageSize.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.StageSize.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.StageSize.container(it) },
-            sharedName?.let { org.tensorflow.op.core.StageSize.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.StageSize.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.StageSize.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.StageSize.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.StageSize.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Stops gradient computation.
      *  When executed in a graph, this op outputs its input tensor as-is.
-     *
+     *  
      * When building ops to compute gradients, this op prevents the contribution of
      *  its inputs to be taken into account.  Normally, the gradient generator adds ops
      *  to a graph to compute the derivatives of a specified 'loss' by recursively
      *  finding out inputs that contributed to its computation.  If you insert this op
      *  in the graph it inputs are masked from the gradient generator.  They are not
      *  taken into account for computing gradients.
-     *
+     *  
      * This is useful any time you want to compute a value with TensorFlow but need
      *  to pretend that the value was a constant. For example, the softmax function
      *  for a vector x can be written as
@@ -8501,9 +8503,9 @@ public class KotlinOps(
      *      numerator = tf.exp(x)
      *      denominator = tf.reduce_sum(numerator)
      *      return numerator / denominator
-     *
+     *  
      * ```
-     *
+     *  
      * This however is susceptible to overflow if the values in x are large. An
      *  alternative more stable way is to subtract the maximum of x from each of the
      *  values.
@@ -8513,9 +8515,9 @@ public class KotlinOps(
      *      numerator = tf.exp(z)
      *      denominator = tf.reduce_sum(numerator)
      *      return numerator / denominator
-     *
+     *  
      * ```
-     *
+     *  
      * However, when we backprop through the softmax to x, we dont want to backprop
      *  through the `tf.reduce_max(x)` (if the max values are not unique then the
      *  gradient could flow to the wrong input) calculation and treat that as a
@@ -8526,9 +8528,9 @@ public class KotlinOps(
      *      numerator = tf.exp(z)
      *      denominator = tf.reduce_sum(numerator)
      *      return numerator / denominator
-     *
+     *  
      * ```
-     *
+     *  
      * Some other examples include:
      *  <ul>
      *  <li>The _EM_ algorithm where the _M-step_ should not involve backpropagation
@@ -8546,13 +8548,13 @@ public class KotlinOps(
      * @return a new instance of StopGradient
      * @see org.tensorflow.op.Ops.stopGradient
      */
-    public fun <T : TType> stopGradient(input: Operand<T>): StopGradient<T> = java.stopGradient<T>(
+    public fun <T : TType> stopGradient(input: Operand<T>): StopGradient<T> = java.stopGradient<T>(    
         input
-    )
+        )
 
     /**
      * Return a strided slice from `input`.
-     *
+     *  
      *
      *  The goal of this op is to produce a new tensor with a subset of the elements from the `n`
      * dimensional `input`
@@ -8561,25 +8563,25 @@ public class KotlinOps(
      *  function. Note, in some cases `m` could be equal to `n`, but this need not be the case. Each
      * range specification
      *  entry can be one of the following:
-     *
+     *  
      *
      *  - An ellipsis (...) using [Indices.ellipsis]. Ellipses are used to imply zero or more
      * dimensions of
      *  full-dimension selection. For example, `stridedSlice(foo, Indices.ellipsis()` is the
      * identity slice.
-     *
+     *  
      *
      *  - A new axis using [Indices.newAxis]. This is used to insert a new shape=1 dimension.
-     *  For example, ``stridedSlice(foo, Indices.newAxis())` where `foo` is shape `(3, 4)`
+     *  For example, ``stridedSlice(foo, Indices.newAxis())` where `foo` is shape `(3, 4)` 
      *  produces a `(1, 3, 4)` tensor.
-     *
+     *  
      *
      *  - A range `begin:end:stride` using [Long,][Indices.slice]  Index.slice()} or [Indices.all].
      * This is used to specify
      *  how much to choose from a given dimension. `stride` can be any integer but 0.  `begin` is an
      * integer which
      *  represents the index of the first value to select while `end` represents the index of the
-     * last value to select
+     * last value to select 
      *  (exclusive). Begin and end can be null, in which case the index begins or ends at the
      * beginning or end of the dimension,
      *  respectively (reversed if stride is negative).  When both are null, `slice()` is the same as
@@ -8598,18 +8600,18 @@ public class KotlinOps(
      * foo = [1,2,3,4];
      *  stridedSlice(foo, Indices.slice(-2, null, -1)
      * ``` is `&#91;4,3&#93;`.
-     *
+     *  
      *
      *  - A single index using [Indices.at]. This is used to keep only elements that have a given
      * index. For
      *  example (`stridedSlice(foo, Indices.at(2))` on a shape `(5,6)` tensor produces a shape
      * `(6,)` tensor.
      *  The dimension can be kept with size one using [boolean)][Indices.at].
-     *
+     *  
      *
      *  These semantics generally follow NumPy's indexing semantics, which can be found
      * here:[https://numpy.org/doc/stable/reference/arrays.indexing.html](https://numpy.org/doc/stable/reference/arrays.indexing.html)
-     *
+     * 
      *
      *
      *  _Requirements_:
@@ -8623,16 +8625,16 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.stridedSlice
      */
     public fun <T : TType> stridedSlice(input: Operand<T>, vararg indices: Index): StridedSlice<T> =
-        java.stridedSlice<T>(
-            input,
-            *indices
+            java.stridedSlice<T>(    
+        input,
+        *indices
         )
 
     /**
      * Return a strided slice from `input`.
      *  Note, most python users will want to use the Python `Tensor.__getitem__`
      *  or `Variable.__getitem__` rather than this op directly.
-     *
+     *  
      * The goal of this op is to produce a new tensor with a subset of
      *  the elements from the `n` dimensional `input` tensor. The subset is chosen using
      *  a sequence of `m` sparse range specifications encoded into the arguments
@@ -8641,19 +8643,19 @@ public class KotlinOps(
      *  range specification entry can be one of the following:
      *  <ul>
      *  <li>
-     *
+     *  
      * An ellipsis (...). Ellipses are used to imply zero or more
      *  dimensions of full-dimension selection and are produced using
      *  `ellipsis_mask`. For example, `foo&#91;...&#93;` is the identity slice.
      *  </li>
      *  <li>
-     *
+     *  
      * A new axis. This is used to insert a new shape=1 dimension and is
      *  produced using `new_axis_mask`. For example, `foo&#91;:, ...&#93;` where
      *  `foo` is shape `(3, 4)` produces a `(1, 3, 4)` tensor.
      *  </li>
      *  <li>
-     *
+     *  
      * A range `begin:end:stride`. This is used to specify how much to choose from
      *  a given dimension. `stride` can be any integer but 0.  `begin` is an integer
      *  which represents the index of the first value to select while `end` represents
@@ -8672,14 +8674,14 @@ public class KotlinOps(
      * `&#91;4,3&#93;`.
      *  </li>
      *  <li>
-     *
+     *  
      * A single index. This is used to keep only elements that have a given
      *  index. For example (`foo&#91;2, :&#93;` on a shape `(5,6)` tensor produces a
      *  shape `(6,)` tensor. This is encoded in `begin` and `end` and
      *  `shrink_axis_mask`.
      *  </li>
      *  </ul>
-     *
+     *  
      * Each conceptual range specification is encoded in the op's argument. This
      *  encoding is best understand by considering a non-trivial example. In
      *  particular,
@@ -8693,37 +8695,37 @@ public class KotlinOps(
      *  ellipsis_mask = 1<<3 = 8
      *  new_axis_mask = 1<<2 = 4
      *  shrink_axis_mask = 1<<0 = 1
-     *
+     *  
      * ```
-     *
+     *  
      * In this case if `foo.shape` is (5, 5, 5, 5, 5, 5) the final shape of
      *  the slice becomes (2, 1, 5, 5, 2, 5).
      *  Let us walk step by step through each argument specification.
      *  <ol>
      *  <li>
-     *
+     *  
      * The first argument in the example slice is turned into `begin = 1` and
      *  `end = begin + 1 = 2`. To disambiguate from the original spec `2:4` we
      *  also set the appropriate bit in `shrink_axis_mask`.
      *  </li>
      *  <li>
-     *
+     *  
      * `2:4` is contributes 2, 4, 1 to begin, end, and stride. All masks have
      *  zero bits contributed.
      *  </li>
      *  <li>
-     *
+     *  
      * None is a synonym for `tf.newaxis`. This means insert a dimension of size 1
      *  dimension in the final shape. Dummy values are contributed to begin,
      *  end and stride, while the new_axis_mask bit is set.
      *  </li>
      *  <li>
-     *
+     *  
      * `...` grab the full ranges from as many dimensions as needed to
      *  fully specify a slice for every dimension of the input shape.
      *  </li>
      *  <li>
-     *
+     *  
      * `:-3:-1` shows the use of negative indices. A negative index `i` associated
      *  with a dimension that has shape `s` is converted to a positive index
      *  `s + i`. So `-1` becomes `s-1` (i.e. the last element). This conversion
@@ -8732,14 +8734,14 @@ public class KotlinOps(
      *  full range (ignoring the x).
      *  </li>
      *  <li>
-     *
+     *  
      * `:` indicates that the entire contents of the corresponding dimension
      *  is selected. This is equivalent to `::` or `0::1`. begin, end, and strides
      *  receive 0, 0, and 1, respectively. The appropriate bits in `begin_mask` and
      *  `end_mask` are also set.
      *  </li>
      *  </ol>
-     *
+     *  
      * _Requirements_:
      *  `0 != strides[i] for i in [0, m)`
      *  `ellipsis_mask must be a power of two (only one ellipsis)`
@@ -8809,29 +8811,29 @@ public class KotlinOps(
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): StridedSlice<T> = java.stridedSlice<T, U>(
+    ): StridedSlice<T> = java.stridedSlice<T, U>(    
         input,
         begin,
         end,
         strides,
         *listOfNotNull(
-            beginMask?.let { org.tensorflow.op.core.StridedSlice.beginMask(it) },
-            endMask?.let { org.tensorflow.op.core.StridedSlice.endMask(it) },
-            ellipsisMask?.let { org.tensorflow.op.core.StridedSlice.ellipsisMask(it) },
-            newAxisMask?.let { org.tensorflow.op.core.StridedSlice.newAxisMask(it) },
-            shrinkAxisMask?.let { org.tensorflow.op.core.StridedSlice.shrinkAxisMask(it) }
+            beginMask?.let{ org.tensorflow.op.core.StridedSlice.beginMask(it) },
+            endMask?.let{ org.tensorflow.op.core.StridedSlice.endMask(it) },
+            ellipsisMask?.let{ org.tensorflow.op.core.StridedSlice.ellipsisMask(it) },
+            newAxisMask?.let{ org.tensorflow.op.core.StridedSlice.newAxisMask(it) },
+            shrinkAxisMask?.let{ org.tensorflow.op.core.StridedSlice.shrinkAxisMask(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Assign `value` to the sliced l-value reference of `ref`.
-     *
+     *  
      *
      *  The values of `value` are assigned to the positions in the variable `ref` that are selected
      * by the slice
      *  parameters. The slice parameters `begin`, `end`, `strides`, etc. work exactly as in
      * `StridedSlice`.
-     *
+     *  
      *
      *  NOTE this op currently does not support broadcasting and so `value`'s shape must be exactly
      * the shape produced by
@@ -8850,18 +8852,18 @@ public class KotlinOps(
         ref: Operand<T>,
         value: Operand<T>,
         vararg indices: Index
-    ): StridedSliceAssign<T> = java.stridedSliceAssign<T>(
+    ): StridedSliceAssign<T> = java.stridedSliceAssign<T>(    
         ref,
         value,
         *indices
-    )
+        )
 
     /**
      * Assign `value` to the sliced l-value reference of `ref`.
      *  The values of `value` are assigned to the positions in the variable
      *  `ref` that are selected by the slice parameters. The slice parameters
      *  `begin`, `end`, `strides`, etc. work exactly as in `StridedSlice`.
-     *
+     *  
      * NOTE this op currently does not support broadcasting and so `value`'s
      *  shape must be exactly the shape produced by the slice of `ref`.
      *
@@ -8908,20 +8910,20 @@ public class KotlinOps(
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): StridedSliceAssign<T> = java.stridedSliceAssign<T, U>(
+    ): StridedSliceAssign<T> = java.stridedSliceAssign<T, U>(    
         ref,
         begin,
         end,
         strides,
         value,
         *listOfNotNull(
-            beginMask?.let { org.tensorflow.op.core.StridedSliceAssign.beginMask(it) },
-            endMask?.let { org.tensorflow.op.core.StridedSliceAssign.endMask(it) },
-            ellipsisMask?.let { org.tensorflow.op.core.StridedSliceAssign.ellipsisMask(it) },
-            newAxisMask?.let { org.tensorflow.op.core.StridedSliceAssign.newAxisMask(it) },
-            shrinkAxisMask?.let { org.tensorflow.op.core.StridedSliceAssign.shrinkAxisMask(it) }
+            beginMask?.let{ org.tensorflow.op.core.StridedSliceAssign.beginMask(it) },
+            endMask?.let{ org.tensorflow.op.core.StridedSliceAssign.endMask(it) },
+            ellipsisMask?.let{ org.tensorflow.op.core.StridedSliceAssign.ellipsisMask(it) },
+            newAxisMask?.let{ org.tensorflow.op.core.StridedSliceAssign.newAxisMask(it) },
+            shrinkAxisMask?.let{ org.tensorflow.op.core.StridedSliceAssign.shrinkAxisMask(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the gradient of `StridedSlice`.
@@ -8929,7 +8931,7 @@ public class KotlinOps(
      *  `shape`, its gradient will have the same shape (which is passed here
      *  as `shape`). The gradient will be zero in any element that the slice
      *  does not select.
-     *
+     *  
      * Arguments are the same as StridedSliceGrad with the exception that
      *  `dy` is the input gradient to be propagated and `shape` is the
      *  shape of `StridedSlice`'s `input`.
@@ -8977,20 +8979,20 @@ public class KotlinOps(
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): StridedSliceGrad<U> = java.stridedSliceGrad<U, T>(
+    ): StridedSliceGrad<U> = java.stridedSliceGrad<U, T>(    
         shape,
         begin,
         end,
         strides,
         dy,
         *listOfNotNull(
-            beginMask?.let { org.tensorflow.op.core.StridedSliceGrad.beginMask(it) },
-            endMask?.let { org.tensorflow.op.core.StridedSliceGrad.endMask(it) },
-            ellipsisMask?.let { org.tensorflow.op.core.StridedSliceGrad.ellipsisMask(it) },
-            newAxisMask?.let { org.tensorflow.op.core.StridedSliceGrad.newAxisMask(it) },
-            shrinkAxisMask?.let { org.tensorflow.op.core.StridedSliceGrad.shrinkAxisMask(it) }
+            beginMask?.let{ org.tensorflow.op.core.StridedSliceGrad.beginMask(it) },
+            endMask?.let{ org.tensorflow.op.core.StridedSliceGrad.endMask(it) },
+            ellipsisMask?.let{ org.tensorflow.op.core.StridedSliceGrad.ellipsisMask(it) },
+            newAxisMask?.let{ org.tensorflow.op.core.StridedSliceGrad.newAxisMask(it) },
+            shrinkAxisMask?.let{ org.tensorflow.op.core.StridedSliceGrad.shrinkAxisMask(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the sum of elements across dimensions of a tensor.
@@ -9016,19 +9018,19 @@ public class KotlinOps(
         input: Operand<T>,
         axis: Operand<out TNumber>,
         keepDims: Boolean? = null
-    ): Sum<T> = java.sum<T>(
+    ): Sum<T> = java.sum<T>(    
         input,
         axis,
         *listOfNotNull(
-            keepDims?.let { org.tensorflow.op.core.Sum.keepDims(it) }
+            keepDims?.let{ org.tensorflow.op.core.Sum.keepDims(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Forwards `data` to the output port determined by `pred`.
      *  If `pred` is true, the `data` input is forwarded to `output_true`. Otherwise,
      *  the data goes to `output_false`.
-     *
+     *  
      * See also `RefSwitch` and `Merge`.
      *
      * @param <T> data type for `output_false` output
@@ -9039,21 +9041,21 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.switchCond
      */
     public fun <T : TType> switchCond(`data`: Operand<T>, pred: Operand<TBool>): SwitchCond<T> =
-        java.switchCond<T>(
-            data,
-            pred
+            java.switchCond<T>(    
+        data,
+        pred
         )
 
     /**
      * Returns a tensor that may be mutated, but only persists within a single step.
      *  This is an experimental op for internal use only and it is possible to use this
      *  op in unsafe ways.  DO NOT USE unless you fully understand the risks.
-     *
+     *  
      * It is the caller's responsibility to ensure that 'ref' is eventually passed to a
      *  matching 'DestroyTemporaryVariable' op after all other uses have completed.
-     *
+     *  
      * Outputs a ref to the tensor state so it may be read or modified.
-     *
+     *  
      * E.g.
      *  var = state_ops._temporary_variable(&#91;1, 2&#93;, types.float_)
      *  var_name = var.op.name
@@ -9078,13 +9080,13 @@ public class KotlinOps(
         shape: Shape,
         dtype: Class<T>,
         varName: String? = null
-    ): TemporaryVariable<T> = java.temporaryVariable<T>(
+    ): TemporaryVariable<T> = java.temporaryVariable<T>(    
         shape,
         dtype,
         *listOfNotNull(
-            varName?.let { org.tensorflow.op.core.TemporaryVariable.varName(it) }
+            varName?.let{ org.tensorflow.op.core.TemporaryVariable.varName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * An array of Tensors of given size.
@@ -9137,17 +9139,17 @@ public class KotlinOps(
         clearAfterRead: Boolean? = null,
         identicalElementShapes: Boolean? = null,
         tensorArrayName: String? = null
-    ): TensorArray = java.tensorArray<T>(
+    ): TensorArray = java.tensorArray<T>(    
         sizeOutput,
         dtype,
         *listOfNotNull(
-            elementShape?.let { org.tensorflow.op.core.TensorArray.elementShape(it) },
-            dynamicSize?.let { org.tensorflow.op.core.TensorArray.dynamicSize(it) },
-            clearAfterRead?.let { org.tensorflow.op.core.TensorArray.clearAfterRead(it) },
-            identicalElementShapes?.let { org.tensorflow.op.core.TensorArray.identicalElementShapes(it) },
-            tensorArrayName?.let { org.tensorflow.op.core.TensorArray.tensorArrayName(it) }
+            elementShape?.let{ org.tensorflow.op.core.TensorArray.elementShape(it) },
+            dynamicSize?.let{ org.tensorflow.op.core.TensorArray.dynamicSize(it) },
+            clearAfterRead?.let{ org.tensorflow.op.core.TensorArray.clearAfterRead(it) },
+            identicalElementShapes?.let{ org.tensorflow.op.core.TensorArray.identicalElementShapes(it) },
+            tensorArrayName?.let{ org.tensorflow.op.core.TensorArray.tensorArrayName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Delete the TensorArray from its resource container.
@@ -9159,8 +9161,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorArrayClose
      */
     public fun tensorArrayClose(handle: Operand<out TType>): TensorArrayClose =
-        java.tensorArrayClose(
-            handle
+            java.tensorArrayClose(    
+        handle
         )
 
     /**
@@ -9168,13 +9170,13 @@ public class KotlinOps(
      *  Takes `T` elements of shapes
      *  ```
      * (n0 x d0 x d1 x ...), (n1 x d0 x d1 x ...), ..., (n(T-1) x d0 x d1 x ...)
-     *
+     *  
      * ```
-     *
+     *  
      * and concatenates them into a Tensor of shape:
-     *
+     *  
      * `(n0 + n1 + ... + n(T-1) x d0 x d1 x ...)`
-     *
+     *  
      * All elements must have the same shape (excepting the first dimension).
      *
      * @param <T> data type for `value` output
@@ -9198,14 +9200,14 @@ public class KotlinOps(
         flowIn: Operand<TFloat32>,
         dtype: Class<T>,
         elementShapeExcept0: Shape? = null
-    ): TensorArrayConcat<T> = java.tensorArrayConcat<T>(
+    ): TensorArrayConcat<T> = java.tensorArrayConcat<T>(    
         handle,
         flowIn,
         dtype,
         *listOfNotNull(
-            elementShapeExcept0?.let { org.tensorflow.op.core.TensorArrayConcat.elementShapeExcept0(it) }
+            elementShapeExcept0?.let{ org.tensorflow.op.core.TensorArrayConcat.elementShapeExcept0(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Gather specific elements from the TensorArray into output `value`.
@@ -9233,24 +9235,24 @@ public class KotlinOps(
         flowIn: Operand<TFloat32>,
         dtype: Class<T>,
         elementShape: Shape? = null
-    ): TensorArrayGather<T> = java.tensorArrayGather<T>(
+    ): TensorArrayGather<T> = java.tensorArrayGather<T>(    
         handle,
         indices,
         flowIn,
         dtype,
         *listOfNotNull(
-            elementShape?.let { org.tensorflow.op.core.TensorArrayGather.elementShape(it) }
+            elementShape?.let{ org.tensorflow.op.core.TensorArrayGather.elementShape(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a TensorArray for storing the gradients of values in the given handle.
      *  If the given TensorArray gradient already exists, returns a reference to it.
-     *
+     *  
      * Locks the size of the original TensorArray by disabling its dynamic size flag.
-     *
+     *  
      * **A note about the input flow_in:**
-     *
+     *  
      * The handle flow_in forces the execution of the gradient lookup to occur
      *  only after certain other operations have occurred.  For example, when
      *  the forward TensorArray is dynamically sized, writes to this TensorArray
@@ -9259,25 +9261,25 @@ public class KotlinOps(
      *  Furthermore, the size of the forward TensorArray is frozen by this call.
      *  As a result, the flow is used to ensure that the call to generate the gradient
      *  TensorArray only happens after all writes are executed.
-     *
+     *  
      * In the case of dynamically sized TensorArrays, gradient computation should
      *  only be performed on read operations that have themselves been chained via
      *  flow to occur only after all writes have executed. That way the final size
      *  of the forward TensorArray is known when this operation is called.
-     *
+     *  
      * **A note about the source attribute:**
-     *
+     *  
      * TensorArray gradient calls use an accumulator TensorArray object.  If
      *  multiple gradients are calculated and run in the same session, the multiple
      *  gradient nodes may accidentally flow through the same accumulator TensorArray.
      *  This double counts and generally breaks the TensorArray gradient flow.
-     *
+     *  
      * The solution is to identify which gradient call this particular
      *  TensorArray gradient is being called in.  This is performed by identifying
      *  a unique string (e.g. &quot;gradients&quot;, &quot;gradients_1&quot;, ...) from the input
      *  gradient Tensor's name.  This string is used as a suffix when creating
      *  the TensorArray gradient object here (the attribute `source`).
-     *
+     *  
      * The attribute `source` is added as a suffix to the forward TensorArray's
      *  name when performing the creation / lookup, so that each separate gradient
      *  calculation gets its own TensorArray accumulator.
@@ -9293,11 +9295,11 @@ public class KotlinOps(
         handle: Operand<out TType>,
         flowIn: Operand<TFloat32>,
         source: String
-    ): TensorArrayGrad = java.tensorArrayGrad(
+    ): TensorArrayGrad = java.tensorArrayGrad(    
         handle,
         flowIn,
         source
-    )
+        )
 
     /**
      * Creates a TensorArray for storing multiple gradients of values in the given handle.
@@ -9322,12 +9324,12 @@ public class KotlinOps(
         flowIn: Operand<TFloat32>,
         shapeToPrepend: Operand<TInt32>,
         source: String
-    ): TensorArrayGradWithShape = java.tensorArrayGradWithShape(
+    ): TensorArrayGradWithShape = java.tensorArrayGradWithShape(    
         handle,
         flowIn,
         shapeToPrepend,
         source
-    )
+        )
 
     /**
      * The TensorArrayPack operation
@@ -9350,14 +9352,14 @@ public class KotlinOps(
         flowIn: Operand<TFloat32>,
         dtype: Class<T>,
         elementShape: Shape? = null
-    ): TensorArrayPack<T> = java.tensorArrayPack<T>(
+    ): TensorArrayPack<T> = java.tensorArrayPack<T>(    
         handle,
         flowIn,
         dtype,
         *listOfNotNull(
-            elementShape?.let { org.tensorflow.op.core.TensorArrayPack.elementShape(it) }
+            elementShape?.let{ org.tensorflow.op.core.TensorArrayPack.elementShape(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Read an element from the TensorArray into output `value`.
@@ -9376,12 +9378,12 @@ public class KotlinOps(
         index: Operand<TInt32>,
         flowIn: Operand<TFloat32>,
         dtype: Class<T>
-    ): TensorArrayRead<T> = java.tensorArrayRead<T>(
+    ): TensorArrayRead<T> = java.tensorArrayRead<T>(    
         handle,
         index,
         flowIn,
         dtype
-    )
+        )
 
     /**
      * Scatter the data from the input value into specific TensorArray elements.
@@ -9399,12 +9401,12 @@ public class KotlinOps(
         indices: Operand<TInt32>,
         value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayScatter = java.tensorArrayScatter(
+    ): TensorArrayScatter = java.tensorArrayScatter(    
         handle,
         indices,
         value,
         flowIn
-    )
+        )
 
     /**
      * Get the current size of the TensorArray.
@@ -9415,29 +9417,29 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorArraySize
      */
     public fun tensorArraySize(handle: Operand<out TType>, flowIn: Operand<TFloat32>):
-        TensorArraySize = java.tensorArraySize(
+            TensorArraySize = java.tensorArraySize(    
         handle,
         flowIn
-    )
+        )
 
     /**
      * Split the data from the input value into TensorArray elements.
      *  Assuming that `lengths` takes on values
-     *
+     *  
      * `(n0, n1, ..., n(T-1))`
-     *
+     *  
      * and that `value` has shape
-     *
+     *  
      * `(n0 + n1 + ... + n(T-1) x d0 x d1 x ...)`,
-     *
+     *  
      * this splits values into a TensorArray with T tensors.
-     *
+     *  
      * TensorArray index t will be the subtensor of values with starting position
-     *
+     *  
      * `(n0 + n1 + ... + n(t-1), 0, 0, ...)`
-     *
+     *  
      * and having size
-     *
+     *  
      * `nt x d0 x d1 x ...`
      *
      * @param handle The handle to a TensorArray.
@@ -9453,12 +9455,12 @@ public class KotlinOps(
         value: Operand<out TType>,
         lengths: Operand<TInt64>,
         flowIn: Operand<TFloat32>
-    ): TensorArraySplit = java.tensorArraySplit(
+    ): TensorArraySplit = java.tensorArraySplit(    
         handle,
         value,
         lengths,
         flowIn
-    )
+        )
 
     /**
      * The TensorArrayUnpack operation
@@ -9473,11 +9475,11 @@ public class KotlinOps(
         handle: Operand<TString>,
         value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayUnpack = java.tensorArrayUnpack(
+    ): TensorArrayUnpack = java.tensorArrayUnpack(    
         handle,
         value,
         flowIn
-    )
+        )
 
     /**
      * Push an element onto the tensor_array.
@@ -9494,17 +9496,17 @@ public class KotlinOps(
         index: Operand<TInt32>,
         value: Operand<out TType>,
         flowIn: Operand<TFloat32>
-    ): TensorArrayWrite = java.tensorArrayWrite(
+    ): TensorArrayWrite = java.tensorArrayWrite(    
         handle,
         index,
         value,
         flowIn
-    )
+        )
 
     /**
      * Concats all tensors in the list along the 0th dimension.
      *  Requires that all tensors have the same shape except the first dimension.
-     *
+     *  
      * input_handle: The input list.
      *  element_shape: The shape of the uninitialized elements in the list. If the first
      *  dimension is not -1, it is assumed that all list elements have the same
@@ -9530,12 +9532,12 @@ public class KotlinOps(
         elementShape: Operand<out TNumber>,
         leadingDims: Operand<TInt64>,
         elementDtype: Class<U>
-    ): TensorListConcat<U> = java.tensorListConcat<U>(
+    ): TensorListConcat<U> = java.tensorListConcat<U>(    
         inputHandle,
         elementShape,
         leadingDims,
         elementDtype
-    )
+        )
 
     /**
      * The TensorListConcatLists operation
@@ -9551,11 +9553,11 @@ public class KotlinOps(
         inputA: Operand<out TType>,
         inputB: Operand<out TType>,
         elementDtype: Class<T>
-    ): TensorListConcatLists = java.tensorListConcatLists<T>(
+    ): TensorListConcatLists = java.tensorListConcatLists<T>(    
         inputA,
         inputB,
         elementDtype
-    )
+        )
 
     /**
      * The shape of the elements of the given list, as a tensor.
@@ -9569,18 +9571,16 @@ public class KotlinOps(
      * @return a new instance of TensorListElementShape
      * @see org.tensorflow.op.Ops.tensorListElementShape
      */
-    public fun <T : TNumber> tensorListElementShape(
-        inputHandle: Operand<out TType>,
-        shapeType: Class<T>
-    ): TensorListElementShape<T> = java.tensorListElementShape<T>(
+    public fun <T : TNumber> tensorListElementShape(inputHandle: Operand<out TType>,
+            shapeType: Class<T>): TensorListElementShape<T> = java.tensorListElementShape<T>(    
         inputHandle,
         shapeType
-    )
+        )
 
     /**
      * Creates a TensorList which, when stacked, has the value of `tensor`.
      *  Each tensor in the result list corresponds to one row of the input tensor.
-     *
+     *  
      * tensor: The input tensor.
      *  output_handle: The list.
      *
@@ -9590,16 +9590,16 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListFromTensor
      */
     public fun tensorListFromTensor(tensor: Operand<out TType>, elementShape: Operand<out TNumber>):
-        TensorListFromTensor = java.tensorListFromTensor(
+            TensorListFromTensor = java.tensorListFromTensor(    
         tensor,
         elementShape
-    )
+        )
 
     /**
      * Creates a Tensor by indexing into the TensorList.
      *  Each row in the produced Tensor corresponds to the element in the TensorList
      *  specified by the given index (see `tf.gather`).
-     *
+     *  
      * input_handle: The input tensor list.
      *  indices: The indices used to index into the list.
      *  values: The tensor.
@@ -9618,12 +9618,12 @@ public class KotlinOps(
         indices: Operand<TInt32>,
         elementShape: Operand<TInt32>,
         elementDtype: Class<T>
-    ): TensorListGather<T> = java.tensorListGather<T>(
+    ): TensorListGather<T> = java.tensorListGather<T>(    
         inputHandle,
         indices,
         elementShape,
         elementDtype
-    )
+        )
 
     /**
      * The TensorListGetItem operation
@@ -9642,12 +9642,12 @@ public class KotlinOps(
         index: Operand<TInt32>,
         elementShape: Operand<TInt32>,
         elementDtype: Class<T>
-    ): TensorListGetItem<T> = java.tensorListGetItem<T>(
+    ): TensorListGetItem<T> = java.tensorListGetItem<T>(    
         inputHandle,
         index,
         elementShape,
         elementDtype
-    )
+        )
 
     /**
      * Returns the number of tensors in the input tensor list.
@@ -9659,14 +9659,14 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListLength
      */
     public fun tensorListLength(inputHandle: Operand<out TType>): TensorListLength =
-        java.tensorListLength(
-            inputHandle
+            java.tensorListLength(    
+        inputHandle
         )
 
     /**
      * Returns the last element of the input list as well as a list with all but that element.
      *  Fails if the list is empty.
-     *
+     *  
      * input_handle: the input list
      *  tensor: the withdrawn last element of the list
      *  element_dtype: the type of elements in the list
@@ -9684,11 +9684,11 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         elementShape: Operand<TInt32>,
         elementDtype: Class<T>
-    ): TensorListPopBack<T> = java.tensorListPopBack<T>(
+    ): TensorListPopBack<T> = java.tensorListPopBack<T>(    
         inputHandle,
         elementShape,
         elementDtype
-    )
+        )
 
     /**
      * Returns a list which has the passed-in `Tensor` as last element and the other elements of the
@@ -9705,10 +9705,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListPushBack
      */
     public fun tensorListPushBack(inputHandle: Operand<out TType>, tensor: Operand<out TType>):
-        TensorListPushBack = java.tensorListPushBack(
+            TensorListPushBack = java.tensorListPushBack(    
         inputHandle,
         tensor
-    )
+        )
 
     /**
      * The TensorListPushBackBatch operation
@@ -9718,14 +9718,11 @@ public class KotlinOps(
      * @return a new instance of TensorListPushBackBatch
      * @see org.tensorflow.op.Ops.tensorListPushBackBatch
      */
-    public fun tensorListPushBackBatch(
-        inputHandles: Operand<out TType>,
-        tensor: Operand<out
-            TType>
-    ): TensorListPushBackBatch = java.tensorListPushBackBatch(
+    public fun tensorListPushBackBatch(inputHandles: Operand<out TType>, tensor: Operand<out
+            TType>): TensorListPushBackBatch = java.tensorListPushBackBatch(    
         inputHandles,
         tensor
-    )
+        )
 
     /**
      * List of the given size with empty elements.
@@ -9745,11 +9742,11 @@ public class KotlinOps(
         elementShape: Operand<out TNumber>,
         numElements: Operand<TInt32>,
         elementDtype: Class<U>
-    ): TensorListReserve = java.tensorListReserve<U>(
+    ): TensorListReserve = java.tensorListReserve<U>(    
         elementShape,
         numElements,
         elementDtype
-    )
+        )
 
     /**
      * Resizes the list.
@@ -9762,16 +9759,16 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListResize
      */
     public fun tensorListResize(inputHandle: Operand<out TType>, sizeOutput: Operand<TInt32>):
-        TensorListResize = java.tensorListResize(
+            TensorListResize = java.tensorListResize(    
         inputHandle,
         sizeOutput
-    )
+        )
 
     /**
      * Creates a TensorList by indexing into a Tensor.
      *  Each member of the TensorList corresponds to one row of the input tensor,
      *  specified by the given index (see `tf.gather`).
-     *
+     *  
      * tensor: The input tensor.
      *  indices: The indices used to index into the list.
      *  element_shape: The shape of the elements in the list (can be less specified than
@@ -9793,18 +9790,18 @@ public class KotlinOps(
         indices: Operand<TInt32>,
         elementShape: Operand<out TNumber>,
         numElements: Operand<TInt32>
-    ): TensorListScatter = java.tensorListScatter(
+    ): TensorListScatter = java.tensorListScatter(    
         tensor,
         indices,
         elementShape,
         numElements
-    )
+        )
 
     /**
      * Scatters tensor at indices in an input list.
      *  Each member of the TensorList corresponds to one row of the input tensor,
      *  specified by the given index (see `tf.gather`).
-     *
+     *  
      * input_handle: The list to scatter into.
      *  tensor: The input tensor.
      *  indices: The indices used to index into the list.
@@ -9820,11 +9817,11 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         tensor: Operand<out TType>,
         indices: Operand<TInt32>
-    ): TensorListScatterIntoExistingList = java.tensorListScatterIntoExistingList(
+    ): TensorListScatterIntoExistingList = java.tensorListScatterIntoExistingList(    
         inputHandle,
         tensor,
         indices
-    )
+        )
 
     /**
      * The TensorListSetItem operation
@@ -9839,17 +9836,17 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         index: Operand<TInt32>,
         item: Operand<out TType>
-    ): TensorListSetItem = java.tensorListSetItem(
+    ): TensorListSetItem = java.tensorListSetItem(    
         inputHandle,
         index,
         item
-    )
+        )
 
     /**
      * Splits a tensor into a list.
      *  list[i] corresponds to lengths[i] tensors from the input tensor.
      *  The tensor must have rank at least 1 and contain exactly sum(lengths) elements.
-     *
+     *  
      * tensor: The input tensor.
      *  element_shape: A shape compatible with that of elements in the tensor.
      *  lengths: Vector of sizes of the 0th dimension of tensors in the list.
@@ -9865,16 +9862,16 @@ public class KotlinOps(
         tensor: Operand<out TType>,
         elementShape: Operand<out TNumber>,
         lengths: Operand<TInt64>
-    ): TensorListSplit = java.tensorListSplit(
+    ): TensorListSplit = java.tensorListSplit(    
         tensor,
         elementShape,
         lengths
-    )
+        )
 
     /**
      * Stacks all tensors in the list.
      *  Requires that all tensors have the same shape.
-     *
+     *  
      * input_handle: the input list
      *  tensor: the gathered result
      *  num_elements: optional. If not -1, the number of elements in the list.
@@ -9897,14 +9894,14 @@ public class KotlinOps(
         elementShape: Operand<TInt32>,
         elementDtype: Class<T>,
         numElements: Long? = null
-    ): TensorListStack<T> = java.tensorListStack<T>(
+    ): TensorListStack<T> = java.tensorListStack<T>(    
         inputHandle,
         elementShape,
         elementDtype,
         *listOfNotNull(
-            numElements?.let { org.tensorflow.op.core.TensorListStack.numElements(it) }
+            numElements?.let{ org.tensorflow.op.core.TensorListStack.numElements(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns a tensor map with item from given key erased.
@@ -9923,11 +9920,11 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         key: Operand<out TType>,
         valueDtype: Class<U>
-    ): TensorMapErase = java.tensorMapErase<U>(
+    ): TensorMapErase = java.tensorMapErase<U>(    
         inputHandle,
         key,
         valueDtype
-    )
+        )
 
     /**
      * Returns whether the given key exists in the map.
@@ -9941,10 +9938,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorMapHasKey
      */
     public fun tensorMapHasKey(inputHandle: Operand<out TType>, key: Operand<out TType>):
-        TensorMapHasKey = java.tensorMapHasKey(
+            TensorMapHasKey = java.tensorMapHasKey(    
         inputHandle,
         key
-    )
+        )
 
     /**
      * Returns a map that is the 'input_handle' with the given key-value pair inserted.
@@ -9963,11 +9960,11 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         key: Operand<out TType>,
         value: Operand<out TType>
-    ): TensorMapInsert = java.tensorMapInsert(
+    ): TensorMapInsert = java.tensorMapInsert(    
         inputHandle,
         key,
         value
-    )
+        )
 
     /**
      * Returns the value from a given key in a tensor map.
@@ -9987,11 +9984,11 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         key: Operand<out TType>,
         valueDtype: Class<U>
-    ): TensorMapLookup<U> = java.tensorMapLookup<U>(
+    ): TensorMapLookup<U> = java.tensorMapLookup<U>(    
         inputHandle,
         key,
         valueDtype
-    )
+        )
 
     /**
      * Returns the number of tensors in the input tensor map.
@@ -10002,9 +9999,9 @@ public class KotlinOps(
      * @return a new instance of TensorMapSize
      * @see org.tensorflow.op.Ops.tensorMapSize
      */
-    public fun tensorMapSize(inputHandle: Operand<out TType>): TensorMapSize = java.tensorMapSize(
+    public fun tensorMapSize(inputHandle: Operand<out TType>): TensorMapSize = java.tensorMapSize(    
         inputHandle
-    )
+        )
 
     /**
      * Returns a Tensor stack of all keys in a tensor map.
@@ -10019,10 +10016,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorMapStackKeys
      */
     public fun <T : TType> tensorMapStackKeys(inputHandle: Operand<out TType>, keyDtype: Class<T>):
-        TensorMapStackKeys<T> = java.tensorMapStackKeys<T>(
+            TensorMapStackKeys<T> = java.tensorMapStackKeys<T>(    
         inputHandle,
         keyDtype
-    )
+        )
 
     /**
      * Adds sparse `updates` to an existing tensor according to `indices`.
@@ -10031,28 +10028,28 @@ public class KotlinOps(
      *  This operation is very similar to `tf.scatter_nd_add`, except that the updates
      *  are added onto an existing tensor (as opposed to a variable). If the memory
      *  for the existing tensor cannot be re-used, a copy is made and updated.
-     *
+     *  
      * `indices` is an integer tensor containing indices into a new tensor of shape
      *  `tensor.shape`.  The last dimension of `indices` can be at most the rank of
      *  `tensor.shape`:
      *  ```
      * indices.shape[-1] <= tensor.shape.rank
-     *
+     *  
      * ```
-     *
+     *  
      * The last dimension of `indices` corresponds to indices into elements
      *  (if `indices.shape&#91;-1&#93; = tensor.shape.rank`) or slices
      *  (if `indices.shape&#91;-1&#93; < tensor.shape.rank`) along dimension
      *  `indices.shape&#91;-1&#93;` of `tensor.shape`.  `updates` is a tensor with shape
      *  ```
      * indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
-     *
+     *  
      * ```
-     *
+     *  
      * The simplest form of tensor_scatter_add is to add individual elements to a
      *  tensor by index. For example, say we want to add 4 elements in a rank-1
      *  tensor with 8 elements.
-     *
+     *  
      * In Python, this scatter add operation would look like this:
      *  ```
      * indices = tf.constant([[4], [3], [1], [7]])
@@ -10060,19 +10057,19 @@ public class KotlinOps(
      *      tensor = tf.ones([8], dtype=tf.int32)
      *      updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
      *      print(updated)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [1, 12, 1, 11, 10, 1, 1, 13]
-     *
+     *  
      * ```
-     *
+     *  
      * We can also, insert entire slices of a higher rank tensor all at once. For
      *  example, if we wanted to insert two slices in the first dimension of a
      *  rank-3 tensor with two matrices of new values.
-     *
+     *  
      * In Python, this scatter add operation would look like this:
      *  ```
      * indices = tf.constant([[0], [2]])
@@ -10083,18 +10080,18 @@ public class KotlinOps(
      *      tensor = tf.ones([4, 4, 4],dtype=tf.int32)
      *      updated = tf.tensor_scatter_nd_add(tensor, indices, updates)
      *      print(updated)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [[[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
      *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
      *   [[6, 6, 6, 6], [7, 7, 7, 7], [8, 8, 8, 8], [9, 9, 9, 9]],
      *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Note that on CPU, if an out of bound index is found, an error is returned.
      *  On GPU, if an out of bound index is found, the index is ignored.
      *
@@ -10110,11 +10107,11 @@ public class KotlinOps(
         tensor: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdAdd<T> = java.tensorScatterNdAdd<T>(
+    ): TensorScatterNdAdd<T> = java.tensorScatterNdAdd<T>(    
         tensor,
         indices,
         updates
-    )
+        )
 
     /**
      * The TensorScatterMax operation
@@ -10131,11 +10128,11 @@ public class KotlinOps(
         tensor: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdMax<T> = java.tensorScatterNdMax<T>(
+    ): TensorScatterNdMax<T> = java.tensorScatterNdMax<T>(    
         tensor,
         indices,
         updates
-    )
+        )
 
     /**
      * The TensorScatterMin operation
@@ -10152,11 +10149,11 @@ public class KotlinOps(
         tensor: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdMin<T> = java.tensorScatterNdMin<T>(
+    ): TensorScatterNdMin<T> = java.tensorScatterNdMin<T>(    
         tensor,
         indices,
         updates
-    )
+        )
 
     /**
      * Subtracts sparse `updates` from an existing tensor according to `indices`.
@@ -10165,27 +10162,27 @@ public class KotlinOps(
      *  This operation is very similar to `tf.scatter_nd_sub`, except that the updates
      *  are subtracted from an existing tensor (as opposed to a variable). If the memory
      *  for the existing tensor cannot be re-used, a copy is made and updated.
-     *
+     *  
      * `indices` is an integer tensor containing indices into a new tensor of shape
      *  `shape`.  The last dimension of `indices` can be at most the rank of `shape`:
      *  ```
      * indices.shape[-1] <= shape.rank
-     *
+     *  
      * ```
-     *
+     *  
      * The last dimension of `indices` corresponds to indices into elements
      *  (if `indices.shape&#91;-1&#93; = shape.rank`) or slices
      *  (if `indices.shape&#91;-1&#93; < shape.rank`) along dimension `indices.shape&#91;-1&#93;` of
      *  `shape`.  `updates` is a tensor with shape
      *  ```
      * indices.shape[:-1] + shape[indices.shape[-1]:]
-     *
+     *  
      * ```
-     *
+     *  
      * The simplest form of tensor_scatter_sub is to subtract individual elements
      *  from a tensor by index. For example, say we want to insert 4 scattered elements
      *  in a rank-1 tensor with 8 elements.
-     *
+     *  
      * In Python, this scatter subtract operation would look like this:
      *  ```
      * indices = tf.constant([[4], [3], [1], [7]])
@@ -10193,19 +10190,19 @@ public class KotlinOps(
      *      tensor = tf.ones([8], dtype=tf.int32)
      *      updated = tf.tensor_scatter_nd_sub(tensor, indices, updates)
      *      print(updated)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [1, -10, 1, -9, -8, 1, 1, -11]
-     *
+     *  
      * ```
-     *
+     *  
      * We can also, insert entire slices of a higher rank tensor all at once. For
      *  example, if we wanted to insert two slices in the first dimension of a
      *  rank-3 tensor with two matrices of new values.
-     *
+     *  
      * In Python, this scatter add operation would look like this:
      *  ```
      * indices = tf.constant([[0], [2]])
@@ -10216,18 +10213,18 @@ public class KotlinOps(
      *      tensor = tf.ones([4, 4, 4],dtype=tf.int32)
      *      updated = tf.tensor_scatter_nd_sub(tensor, indices, updates)
      *      print(updated)
-     *
+     *  
      * ```
-     *
+     *  
      * The resulting tensor would look like this:
      *  ```
      * [[[-4, -4, -4, -4], [-5, -5, -5, -5], [-6, -6, -6, -6], [-7, -7, -7, -7]],
      *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]],
      *   [[-4, -4, -4, -4], [-5, -5, -5, -5], [-6, -6, -6, -6], [-7, -7, -7, -7]],
      *   [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Note that on CPU, if an out of bound index is found, an error is returned.
      *  On GPU, if an out of bound index is found, the index is ignored.
      *
@@ -10243,11 +10240,11 @@ public class KotlinOps(
         tensor: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdSub<T> = java.tensorScatterNdSub<T>(
+    ): TensorScatterNdSub<T> = java.tensorScatterNdSub<T>(    
         tensor,
         indices,
         updates
-    )
+        )
 
     /**
      * Scatter `updates` into an existing tensor according to `indices`.
@@ -10256,18 +10253,18 @@ public class KotlinOps(
      *  This operation is very similar to `tf.scatter_nd`, except that the updates are
      *  scattered onto an existing tensor (as opposed to a zero-tensor). If the memory
      *  for the existing tensor cannot be re-used, a copy is made and updated.
-     *
+     *  
      * If `indices` contains duplicates, then we pick the last update for the index.
-     *
+     *  
      * If an out of bound index is found on CPU, an error is returned.
-     *
+     *  
      * **WARNING**: There are some GPU specific semantics for this operation.
      *  <ul>
      *  <li>If an out of bound index is found, the index is ignored.</li>
      *  <li>The order in which updates are applied is nondeterministic, so the output
      *  will be nondeterministic if `indices` contains duplicates.</li>
      *  </ul>
-     *
+     *  
      * `indices` is an integer tensor containing indices into a new tensor of shape
      *  `shape`.
      *  <ul>
@@ -10276,18 +10273,18 @@ public class KotlinOps(
      *  depth must be less than the rank of `tensor`: `indices.shape&#91;-1&#93; <=
      * tensor.ndim`</li>
      *  </ul>
-     *
+     *  
      * if `indices.shape&#91;-1&#93; = tensor.rank` this Op indexes and updates scalar elements.
      *  if `indices.shape&#91;-1&#93; < tensor.rank` it indexes and updates slices of the input
      *  `tensor`.
-     *
+     *  
      * Each `update` has a rank of `tensor.rank - indices.shape&#91;-1&#93;`.
      *  The overall shape of `updates` is:
      *  ```
      * indices.shape[:-1] + tensor.shape[indices.shape[-1]:]
-     *
+     *  
      * ```
-     *
+     *  
      * For usage examples see the python  tf.tensor_scatter_nd_update
      * [org.tensorflow.op.Ops.tensorScatterNdUpdate]  function
      *
@@ -10303,18 +10300,18 @@ public class KotlinOps(
         tensor: Operand<T>,
         indices: Operand<out TNumber>,
         updates: Operand<T>
-    ): TensorScatterNdUpdate<T> = java.tensorScatterNdUpdate<T>(
+    ): TensorScatterNdUpdate<T> = java.tensorScatterNdUpdate<T>(    
         tensor,
         indices,
         updates
-    )
+        )
 
     /**
      * Assign `value` to the sliced l-value reference of `input`.
      *  The values of `value` are assigned to the positions in the tensor `input` that
      *  are selected by the slice parameters. The slice parameters `begin` `end`
      *  `strides` etc. work exactly as in `StridedSlice`.
-     *
+     *  
      * NOTE this op currently does not support broadcasting and so `value`'s shape
      *  must be exactly the shape produced by the slice of `input`.
      *
@@ -10361,20 +10358,20 @@ public class KotlinOps(
         ellipsisMask: Long? = null,
         newAxisMask: Long? = null,
         shrinkAxisMask: Long? = null
-    ): TensorStridedSliceUpdate<T> = java.tensorStridedSliceUpdate<T, U>(
+    ): TensorStridedSliceUpdate<T> = java.tensorStridedSliceUpdate<T, U>(    
         input,
         begin,
         end,
         strides,
         value,
         *listOfNotNull(
-            beginMask?.let { org.tensorflow.op.core.TensorStridedSliceUpdate.beginMask(it) },
-            endMask?.let { org.tensorflow.op.core.TensorStridedSliceUpdate.endMask(it) },
-            ellipsisMask?.let { org.tensorflow.op.core.TensorStridedSliceUpdate.ellipsisMask(it) },
-            newAxisMask?.let { org.tensorflow.op.core.TensorStridedSliceUpdate.newAxisMask(it) },
-            shrinkAxisMask?.let { org.tensorflow.op.core.TensorStridedSliceUpdate.shrinkAxisMask(it) }
+            beginMask?.let{ org.tensorflow.op.core.TensorStridedSliceUpdate.beginMask(it) },
+            endMask?.let{ org.tensorflow.op.core.TensorStridedSliceUpdate.endMask(it) },
+            ellipsisMask?.let{ org.tensorflow.op.core.TensorStridedSliceUpdate.ellipsisMask(it) },
+            newAxisMask?.let{ org.tensorflow.op.core.TensorStridedSliceUpdate.newAxisMask(it) },
+            shrinkAxisMask?.let{ org.tensorflow.op.core.TensorStridedSliceUpdate.shrinkAxisMask(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Constructs a tensor by tiling a given tensor.
@@ -10415,22 +10412,24 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tile
      */
     public fun <T : TType> tile(input: Operand<T>, multiples: Operand<out TNumber>): Tile<T> =
-        java.tile<T>(
-            input,
-            multiples
+            java.tile<T>(    
+        input,
+        multiples
         )
 
     /**
      * Provides the time since epoch in seconds.
      *  Returns the timestamp as a `float64` for seconds since the Unix epoch.
-     *
+     *  
      * Note: the timestamp is computed when the op is executed, not when it is added
      *  to the graph.
      *
      * @return a new instance of Timestamp
      * @see org.tensorflow.op.Ops.timestamp
      */
-    public fun timestamp(): Timestamp = java.timestamp()
+    public fun timestamp(): Timestamp = java.timestamp(    
+        
+        )
 
     /**
      * Returns the TopK unique values in the array in sorted order.
@@ -10452,10 +10451,10 @@ public class KotlinOps(
      * @return a new instance of TopKUnique
      * @see org.tensorflow.op.Ops.topKUnique
      */
-    public fun topKUnique(input: Operand<TFloat32>, k: Long): TopKUnique = java.topKUnique(
+    public fun topKUnique(input: Operand<TFloat32>, k: Long): TopKUnique = java.topKUnique(    
         input,
         k
-    )
+        )
 
     /**
      * Returns the TopK values in the array in sorted order.
@@ -10471,9 +10470,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.topKWithUnique
      */
     public fun topKWithUnique(input: Operand<TFloat32>, k: Long): TopKWithUnique =
-        java.topKWithUnique(
-            input,
-            k
+            java.topKWithUnique(    
+        input,
+        k
         )
 
     /**
@@ -10483,7 +10482,7 @@ public class KotlinOps(
      *  running instance of Unbatch with the same container and shared_name, or receives
      *  a non-empty batched_tensor in which case it finalizes all other concurrently
      *  running instances and outputs its own element from the batch.
-     *
+     *  
      * batched_tensor: The possibly transformed output of Batch. The size of the first
      *  dimension should remain unchanged by the transformations for the operation to
      *  work.
@@ -10522,23 +10521,23 @@ public class KotlinOps(
         timeoutMicros: Long,
         container: String? = null,
         sharedName: String? = null
-    ): Unbatch<T> = java.unbatch<T>(
+    ): Unbatch<T> = java.unbatch<T>(    
         batchedTensor,
         batchIndex,
         id,
         timeoutMicros,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.Unbatch.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Unbatch.sharedName(it) }
+            container?.let{ org.tensorflow.op.core.Unbatch.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Unbatch.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Gradient of Unbatch.
      *  Acts like Batch but using the given batch_index index of batching things as they
      *  become available. This ensures that the gradients are propagated back in the
      *  same session which did the forward pass.
-     *
+     *  
      * original_input: The input to the Unbatch operation this is the gradient of.
      *  batch_index: The batch_index given to the Unbatch operation this is the gradient
      *  of.
@@ -10575,16 +10574,16 @@ public class KotlinOps(
         id: Operand<TInt64>,
         container: String? = null,
         sharedName: String? = null
-    ): UnbatchGrad<T> = java.unbatchGrad<T>(
+    ): UnbatchGrad<T> = java.unbatchGrad<T>(    
         originalInput,
         batchIndex,
         grad,
         id,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.UnbatchGrad.container(it) },
-            sharedName?.let { org.tensorflow.op.core.UnbatchGrad.sharedName(it) }
+            container?.let{ org.tensorflow.op.core.UnbatchGrad.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.UnbatchGrad.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -10595,18 +10594,18 @@ public class KotlinOps(
      *  the number of the elements in `x` along the `axis` dimension. It
      *  contains the index in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
      *  y, idx = unique(x)
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 0`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -10616,9 +10615,9 @@ public class KotlinOps(
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 1`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -10629,7 +10628,7 @@ public class KotlinOps(
      *         [1, 0],
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -10642,9 +10641,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.unique
      */
     public fun <T : TType> unique(x: Operand<T>, axis: Operand<out TNumber>): Unique<T, TInt32> =
-        java.unique<T>(
-            x,
-            axis
+            java.unique<T>(    
+        x,
+        axis
         )
 
     /**
@@ -10656,18 +10655,18 @@ public class KotlinOps(
      *  the number of the elements in `x` along the `axis` dimension. It
      *  contains the index in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
      *  y, idx = unique(x)
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 0`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -10677,9 +10676,9 @@ public class KotlinOps(
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 1`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -10690,7 +10689,7 @@ public class KotlinOps(
      *         [1, 0],
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -10708,11 +10707,11 @@ public class KotlinOps(
         x: Operand<T>,
         axis: Operand<out TNumber>,
         outIdx: Class<V>
-    ): Unique<T, V> = java.unique<T, V>(
+    ): Unique<T, V> = java.unique<T, V>(    
         x,
         axis,
         outIdx
-    )
+        )
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -10724,9 +10723,9 @@ public class KotlinOps(
      *  `axis` dimension. The `idx` contains the index in the unique output `y`
      *  and the `count` contains the count in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
@@ -10734,9 +10733,9 @@ public class KotlinOps(
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -10747,9 +10746,9 @@ public class KotlinOps(
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
      *  count ==> [2, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -10761,7 +10760,7 @@ public class KotlinOps(
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
      *  count ==> [1, 2]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -10774,10 +10773,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.uniqueWithCounts
      */
     public fun <T : TType> uniqueWithCounts(x: Operand<T>, axis: Operand<out TNumber>):
-        UniqueWithCounts<T, TInt32> = java.uniqueWithCounts<T>(
+            UniqueWithCounts<T, TInt32> = java.uniqueWithCounts<T>(    
         x,
         axis
-    )
+        )
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -10789,9 +10788,9 @@ public class KotlinOps(
      *  `axis` dimension. The `idx` contains the index in the unique output `y`
      *  and the `count` contains the count in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
@@ -10799,9 +10798,9 @@ public class KotlinOps(
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -10812,9 +10811,9 @@ public class KotlinOps(
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
      *  count ==> [2, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -10826,7 +10825,7 @@ public class KotlinOps(
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
      *  count ==> [1, 2]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -10844,11 +10843,11 @@ public class KotlinOps(
         x: Operand<T>,
         axis: Operand<out TNumber>,
         outIdx: Class<V>
-    ): UniqueWithCounts<T, V> = java.uniqueWithCounts<T, V>(
+    ): UniqueWithCounts<T, V> = java.uniqueWithCounts<T, V>(    
         x,
         axis,
         outIdx
-    )
+        )
 
     /**
      * Converts an array of flat indices into a tuple of coordinate arrays.
@@ -10865,13 +10864,13 @@ public class KotlinOps(
      *  # 5 ==> (1, 2)
      *  # 7 ==> (2, 1)
      *  y ==> [[0, 1, 2], [2, 2, 1]]
-     *
+     *  
      * ```
-     *
+     *  
      * `@`compatibility(numpy)
      *
      *  Equivalent to np.unravel_index
-     *
+     *  
      * `@`end_compatibility
      *
      * @param <T> data type for `output` output
@@ -10884,24 +10883,24 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.unravelIndex
      */
     public fun <T : TNumber> unravelIndex(indices: Operand<T>, dims: Operand<T>): UnravelIndex<T> =
-        java.unravelIndex<T>(
-            indices,
-            dims
+            java.unravelIndex<T>(    
+        indices,
+        dims
         )
 
     /**
      * Unpacks a given dimension of a rank-`R` tensor into `num` rank-`(R-1)` tensors.
      *  Unpacks `num` tensors from `value` by chipping it along the `axis` dimension.
      *  For example, given a tensor of shape `(A, B, C, D)`;
-     *
+     *  
      * If `axis == 0` then the i'th tensor in `output` is the slice `value&#91;i, :, :, :&#93;`
      *  and each tensor in `output` will have shape `(B, C, D)`. (Note that the
      *  dimension unpacked along is gone, unlike `split`).
-     *
+     *  
      * If `axis == 1` then the i'th tensor in `output` is the slice `value&#91;:, i, :, :&#93;`
      *  and each tensor in `output` will have shape `(A, C, D)`.
      *  Etc.
-     *
+     *  
      * This is the opposite of `pack`.
      *
      * @param <T> data type for `output` output
@@ -10921,13 +10920,13 @@ public class KotlinOps(
         value: Operand<T>,
         num: Long,
         axis: Long? = null
-    ): Unstack<T> = java.unstack<T>(
+    ): Unstack<T> = java.unstack<T>(    
         value,
         num,
         *listOfNotNull(
-            axis?.let { org.tensorflow.op.core.Unstack.axis(it) }
+            axis?.let{ org.tensorflow.op.core.Unstack.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Op is similar to a lightweight Dequeue.
@@ -10961,15 +10960,15 @@ public class KotlinOps(
         memoryLimit: Long? = null,
         container: String? = null,
         sharedName: String? = null
-    ): Unstage = java.unstage(
+    ): Unstage = java.unstage(    
         dtypes,
         *listOfNotNull(
-            capacity?.let { org.tensorflow.op.core.Unstage.capacity(it) },
-            memoryLimit?.let { org.tensorflow.op.core.Unstage.memoryLimit(it) },
-            container?.let { org.tensorflow.op.core.Unstage.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Unstage.sharedName(it) }
+            capacity?.let{ org.tensorflow.op.core.Unstage.capacity(it) },
+            memoryLimit?.let{ org.tensorflow.op.core.Unstage.memoryLimit(it) },
+            container?.let{ org.tensorflow.op.core.Unstage.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Unstage.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Creates a handle to a Variable resource.
@@ -11002,15 +11001,15 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         allowedDevices: List<String>? = null
-    ): VarHandleOp = java.varHandleOp<T>(
+    ): VarHandleOp = java.varHandleOp<T>(    
         dtype,
         shape,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.VarHandleOp.container(it) },
-            sharedName?.let { org.tensorflow.op.core.VarHandleOp.sharedName(it) },
-            allowedDevices?.let { org.tensorflow.op.core.VarHandleOp.allowedDevices(it) }
+            container?.let{ org.tensorflow.op.core.VarHandleOp.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.VarHandleOp.sharedName(it) },
+            allowedDevices?.let{ org.tensorflow.op.core.VarHandleOp.allowedDevices(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Checks whether a resource handle-based variable has been initialized.
@@ -11020,13 +11019,13 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.varIsInitializedOp
      */
     public fun varIsInitializedOp(resource: Operand<out TType>): VarIsInitializedOp =
-        java.varIsInitializedOp(
-            resource
+            java.varIsInitializedOp(    
+        resource
         )
 
     /**
      * Factory method to create a new Variable with it's initializer.
-     *
+     *  
      *
      *  Only supported on Graph sessions as the [org.tensorflow.op.core.Assign] op
      *  does not work in an EagerSession.
@@ -11051,13 +11050,13 @@ public class KotlinOps(
         `init`: Operand<T>,
         container: String? = null,
         sharedName: String? = null
-    ): Variable<T> = java.variable<T>(
+    ): Variable<T> = java.variable<T>(    
         init,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.Variable.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Variable.sharedName(it) }
+            container?.let{ org.tensorflow.op.core.Variable.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Variable.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Holds state in the form of a tensor that persists across steps.
@@ -11088,24 +11087,24 @@ public class KotlinOps(
         dtype: Class<T>,
         container: String? = null,
         sharedName: String? = null
-    ): Variable<T> = java.variable<T>(
+    ): Variable<T> = java.variable<T>(    
         shape,
         dtype,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.core.Variable.container(it) },
-            sharedName?.let { org.tensorflow.op.core.Variable.sharedName(it) }
+            container?.let{ org.tensorflow.op.core.Variable.container(it) },
+            sharedName?.let{ org.tensorflow.op.core.Variable.sharedName(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the shape of the variable pointed to by `resource`.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -11114,19 +11113,19 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.variableShape
      */
     public fun variableShape(input: Operand<out TType>): VariableShape<TInt32> =
-        java.variableShape(
-            input
+            java.variableShape(    
+        input
         )
 
     /**
      * Returns the shape of the variable pointed to by `resource`.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -11137,10 +11136,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.variableShape
      */
     public fun <T : TNumber> variableShape(input: Operand<out TType>, outType: Class<T>):
-        VariableShape<T> = java.variableShape<T>(
+            VariableShape<T> = java.variableShape<T>(    
         input,
         outType
-    )
+        )
 
     /**
      * Returns locations of nonzero / true values in a tensor.
@@ -11150,7 +11149,7 @@ public class KotlinOps(
      *  represents the coordinates of the true elements. Keep in mind, the shape of
      *  the output tensor can vary depending on how many true values there are in
      *  `condition`. Indices are output in row-major order.
-     *
+     *  
      * For example:
      *  ```
      * # 'input' tensor is [[True, False]
@@ -11201,16 +11200,16 @@ public class KotlinOps(
      *                    [1, 0, 1],
      *                    [1, 1, 1],
      *                    [2, 1, 1]]
-     *
+     *  
      * ```
      *
      * @param condition the condition value
      * @return a new instance of Where
      * @see org.tensorflow.op.Ops.where
      */
-    public fun `where`(condition: Operand<out TType>): Where = java.where(
+    public fun `where`(condition: Operand<out TType>): Where = java.where(    
         condition
-    )
+        )
 
     /**
      * Wraps the XLA ConvGeneralDilated operator, documented at
@@ -11244,7 +11243,7 @@ public class KotlinOps(
         dimensionNumbers: String,
         precisionConfig: String,
         preferredElementType: Class<W>
-    ): XlaConvV2<W> = java.xlaConvV2<W, V>(
+    ): XlaConvV2<W> = java.xlaConvV2<W, V>(    
         lhs,
         rhs,
         windowStrides,
@@ -11255,7 +11254,7 @@ public class KotlinOps(
         dimensionNumbers,
         precisionConfig,
         preferredElementType
-    )
+        )
 
     /**
      * Wraps the XLA DotGeneral operator, documented at
@@ -11278,20 +11277,20 @@ public class KotlinOps(
         dimensionNumbers: String,
         precisionConfig: String,
         preferredElementType: Class<V>
-    ): XlaDotV2<V> = java.xlaDotV2<V>(
+    ): XlaDotV2<V> = java.xlaDotV2<V>(    
         lhs,
         rhs,
         dimensionNumbers,
         precisionConfig,
         preferredElementType
-    )
+        )
 
     /**
      * Make a static dimension into a xla bounded dynamic dimension.
      *  ```
      * The current static dimension size will become the bound and the second
      *      operand becomes the dynamic size of the dimension.
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -11306,11 +11305,11 @@ public class KotlinOps(
         input: Operand<T>,
         dimIndex: Operand<TInt32>,
         sizeOutput: Operand<TInt32>
-    ): XlaSetDynamicDimensionSize<T> = java.xlaSetDynamicDimensionSize<T>(
+    ): XlaSetDynamicDimensionSize<T> = java.xlaSetDynamicDimensionSize<T>(    
         input,
         dimIndex,
         sizeOutput
-    )
+        )
 
     /**
      * An op used by XLA SPMD partitioner to switch from automatic partitioning to
@@ -11327,10 +11326,10 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.xlaSpmdFullToShardShape
      */
     public fun <T : TType> xlaSpmdFullToShardShape(input: Operand<T>, manualSharding: String):
-        XlaSpmdFullToShardShape<T> = java.xlaSpmdFullToShardShape<T>(
+            XlaSpmdFullToShardShape<T> = java.xlaSpmdFullToShardShape<T>(    
         input,
         manualSharding
-    )
+        )
 
     /**
      * An op used by XLA SPMD partitioner to switch from manual partitioning to
@@ -11350,11 +11349,11 @@ public class KotlinOps(
         input: Operand<T>,
         manualSharding: String,
         fullShape: Shape
-    ): XlaSpmdShardToFullShape<T> = java.xlaSpmdShardToFullShape<T>(
+    ): XlaSpmdShardToFullShape<T> = java.xlaSpmdShardToFullShape<T>(    
         input,
         manualSharding,
         fullShape
-    )
+        )
 
     /**
      * Creates a zeroed tensor given its type and shape.
@@ -11368,9 +11367,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.zeros
      */
     public fun <T : TType> zeros(dims: Operand<out TNumber>, type: Class<T>): Zeros<T> =
-        java.zeros<T>(
-            dims,
-            type
+            java.zeros<T>(    
+        dims,
+        type
         )
 
     /**
@@ -11382,27 +11381,27 @@ public class KotlinOps(
      * @return a new instance of ZerosLike
      * @see org.tensorflow.op.Ops.zerosLike
      */
-    public fun <T : TType> zerosLike(x: Operand<T>): ZerosLike<T> = java.zerosLike<T>(
+    public fun <T : TType> zerosLike(x: Operand<T>): ZerosLike<T> = java.zerosLike<T>(    
         x
-    )
+        )
 
     /**
      * Bitcasts a tensor from one type to another without copying data.
      *  Given a tensor `input`, this operation returns a tensor that has the same buffer
      *  data as `input` with datatype `type`.
-     *
+     *  
      * If the input datatype `T` is larger than the output datatype `type` then the
      *  shape changes from &#91;...&#93; to [..., sizeof(`T`)/sizeof(`type`)].
-     *
+     *  
      * If `T` is smaller than `type`, the operator requires that the rightmost
      *  dimension be equal to sizeof(`type`)/sizeof(`T`). The shape then goes from
      *  [..., sizeof(`type`)/sizeof(`T`)] to &#91;...&#93;.
-     *
+     *  
      * tf.bitcast() and tf.cast() work differently when real dtype is casted as a complex dtype
      *  (e.g. tf.complex64 or tf.complex128) as tf.cast() make imaginary part 0 while tf.bitcast()
      *  gives module error.
      *  For example,
-     *
+     *  
      * Example 1:
      *  ```
      *
@@ -11415,14 +11414,14 @@ public class KotlinOps(
      *  print(equality_cast)
      *  tf.Tensor([1.+0.j 2.+0.j 3.+0.j], shape=(3,), dtype=complex128)
      * ```
-     *
+     *  
      * Example 2:
      *  ```
      *
      * tf.bitcast(tf.constant(0xffffffff, dtype=tf.uint32), tf.uint8)
      *  <tf.Tensor: shape=(4,), dtype=uint8, numpy=array([255, 255, 255, 255], dtype=uint8)>
      * ```
-     *
+     *  
      * Example 3:
      *  ```
      *
@@ -11441,7 +11440,7 @@ public class KotlinOps(
      *  [  0   0 128  63]
      *  [  0   0 128  63]], shape=(3, 4), dtype=uint8)
      * ```
-     *
+     *  
      * _NOTE_: Bitcast is implemented as a low-level cast, so machines with different
      *  endian orderings will give different results.
      *
@@ -11454,7 +11453,7 @@ public class KotlinOps(
      */
     @JvmName("bitcastReified")
     public inline fun <reified U : TType> bitcast(input: Operand<out TType>): Bitcast<U> =
-        bitcast<U>(input, U::class.java)
+            bitcast<U>(input, U::class.java)
 
     /**
      * Creates a scalar of `type`, with the value of `number`. `number` may be truncated if it does
@@ -11472,7 +11471,7 @@ public class KotlinOps(
      */
     @JvmName("constantReified")
     public inline fun <reified T : TNumber> constant(number: Number): Constant<T> =
-        constant<T>(T::class.java, number)
+            constant<T>(T::class.java, number)
 
     /**
      * Create a constant with data from the given buffer.
@@ -11489,11 +11488,11 @@ public class KotlinOps(
      */
     @JvmName("constantReified")
     public inline fun <reified T : TType> constantTyped(shape: Shape, `data`: ByteDataBuffer):
-        Constant<T> = constant<T>(T::class.java, shape, data)
+            Constant<T> = constant<T>(T::class.java, shape, data)
 
     /**
      * Creates a tensor with the given shape.
-     *
+     *  
      * This operation creates a tensor of `shape` and `dtype`.
      *
      * @param <T> data type for `output` output
@@ -11505,19 +11504,19 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.empty
      * @param init Sets the init option.
      *
-     * @param init If True, initialize the returned tensor with the default value of dtype.
+     * @param init If True, initialize the returned tensor with the default value of dtype. 
      * Otherwise, the implementation is free not to initializethe tensor's content.
      * @return this Options instance.
      */
     @JvmName("emptyReified")
     public inline fun <reified T : TType> empty(shape: Operand<TInt32>, `init`: Boolean? = null):
-        Empty<T> = empty<T>(shape, T::class.java, init)
+            Empty<T> = empty<T>(shape, T::class.java, init)
 
     /**
      * Creates and returns an empty tensor list.
      *  All list elements must be tensors of dtype element_dtype and shape compatible
      *  with element_shape.
-     *
+     *  
      * handle: an empty tensor list.
      *  element_dtype: the type of elements in the list.
      *  element_shape: a shape compatible with that of elements in the list.
@@ -11530,13 +11529,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.emptyTensorList
      */
     @JvmName("emptyTensorListReified")
-    public inline fun <reified U : TType> emptyTensorList(
-        elementShape: Operand<out TNumber>,
-        maxNumElements: Operand<TInt32>
-    ): EmptyTensorList = emptyTensorList<U>(
-        elementShape,
-        maxNumElements, U::class.java
-    )
+    public inline fun <reified U : TType> emptyTensorList(elementShape: Operand<out TNumber>,
+            maxNumElements: Operand<TInt32>): EmptyTensorList = emptyTensorList<U>(elementShape,
+            maxNumElements, U::class.java)
 
     /**
      * Get the value of the tensor specified by its handle.
@@ -11550,7 +11545,7 @@ public class KotlinOps(
      */
     @JvmName("getSessionTensorReified")
     public inline fun <reified T : TType> getSessionTensor(handle: Operand<TString>):
-        GetSessionTensor<T> = getSessionTensor<T>(handle, T::class.java)
+            GetSessionTensor<T> = getSessionTensor<T>(handle, T::class.java)
 
     /**
      * Creates a non-initialized hash table.
@@ -11587,10 +11582,8 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null
-    ): HashTable = hashTable<T, U>(
-        T::class.java, U::class.java, container, sharedName,
-        useNodeNameSharing
-    )
+    ): HashTable = hashTable<T, U>(T::class.java, U::class.java, container, sharedName,
+            useNodeNameSharing)
 
     /**
      * Return histogram of values.
@@ -11607,7 +11600,7 @@ public class KotlinOps(
      *    hist = tf.histogram_fixed_width(new_values, value_range, nbins=5)
      *    variables.global_variables_initializer().run()
      *    sess.run(hist) => [2, 1, 1, 0, 2]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `out` output
@@ -11644,7 +11637,7 @@ public class KotlinOps(
      */
     @JvmName("immutableConstReified")
     public inline fun <reified T : TType> immutableConst(shape: Shape, memoryRegionName: String):
-        ImmutableConst<T> = immutableConst<T>(T::class.java, shape, memoryRegionName)
+            ImmutableConst<T> = immutableConst<T>(T::class.java, shape, memoryRegionName)
 
     /**
      * Outputs all keys and values in the table.
@@ -11661,14 +11654,14 @@ public class KotlinOps(
      */
     @JvmName("lookupTableExportReified")
     public inline fun <reified T : TType, reified U : TType>
-    lookupTableExport(tableHandle: Operand<out TType>): LookupTableExport<T, U> =
-        lookupTableExport<T, U>(tableHandle, T::class.java, U::class.java)
+            lookupTableExport(tableHandle: Operand<out TType>): LookupTableExport<T, U> =
+            lookupTableExport<T, U>(tableHandle, T::class.java, U::class.java)
 
     /**
      * Creates an empty hash table that uses tensors as the backing store.
      *  It uses &quot;open addressing&quot; with quadratic reprobing to resolve
      *  collisions.
-     *
+     *  
      * This op creates a mutable hash table, specifying the type of its keys and
      *  values. Each value must be a scalar. Data can be inserted into the table using
      *  the insert operations. It does not support the initialization operation.
@@ -11721,10 +11714,8 @@ public class KotlinOps(
         valueShape: Shape? = null,
         initialNumBuckets: Long? = null,
         maxLoadFactor: Float? = null
-    ): MutableDenseHashTable = mutableDenseHashTable<T, U>(
-        emptyKey, deletedKey, U::class.java,
-        container, sharedName, useNodeNameSharing, valueShape, initialNumBuckets, maxLoadFactor
-    )
+    ): MutableDenseHashTable = mutableDenseHashTable<T, U>(emptyKey, deletedKey, U::class.java,
+            container, sharedName, useNodeNameSharing, valueShape, initialNumBuckets, maxLoadFactor)
 
     /**
      * Creates an empty hash table.
@@ -11761,10 +11752,8 @@ public class KotlinOps(
         container: String? = null,
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null
-    ): MutableHashTable = mutableHashTable<T, U>(
-        T::class.java, U::class.java, container,
-        sharedName, useNodeNameSharing
-    )
+    ): MutableHashTable = mutableHashTable<T, U>(T::class.java, U::class.java, container,
+            sharedName, useNodeNameSharing)
 
     /**
      * Creates an empty hash table.
@@ -11805,10 +11794,8 @@ public class KotlinOps(
         sharedName: String? = null,
         useNodeNameSharing: Boolean? = null,
         valueShape: Shape? = null
-    ): MutableHashTableOfTensors = mutableHashTableOfTensors<T, U>(
-        T::class.java, U::class.java,
-        container, sharedName, useNodeNameSharing, valueShape
-    )
+    ): MutableHashTableOfTensors = mutableHashTableOfTensors<T, U>(T::class.java, U::class.java,
+            container, sharedName, useNodeNameSharing, valueShape)
 
     /**
      * Creates a one valued tensor given its type and shape.
@@ -11821,10 +11808,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.ones
      */
     @JvmName("onesReified")
-    public inline fun <reified T : TType> ones(dims: Operand<out TNumber>): Ones<T> = ones<T>(
-        dims,
-        T::class.java
-    )
+    public inline fun <reified T : TType> ones(dims: Operand<out TNumber>): Ones<T> = ones<T>(dims,
+            T::class.java)
 
     /**
      * A placeholder op for a value that will be fed into the computation.
@@ -11847,12 +11832,12 @@ public class KotlinOps(
      */
     @JvmName("placeholderReified")
     public inline fun <reified T : TType> placeholder(shape: Shape? = null): Placeholder<T> =
-        placeholder<T>(T::class.java, shape)
+            placeholder<T>(T::class.java, shape)
 
     /**
      * Reads the value of a variable.
      *  The tensor returned by this operation is immutable.
-     *
+     *  
      * The value returned by this operation is guaranteed to be influenced by all the
      *  writes on which this operation depends directly or indirectly, and to not be
      *  influenced by any of the writes which depend directly or indirectly on this
@@ -11867,7 +11852,7 @@ public class KotlinOps(
      */
     @JvmName("readVariableOpReified")
     public inline fun <reified T : TType> readVariableOp(resource: Operand<out TType>):
-        ReadVariableOp<T> = readVariableOp<T>(resource, T::class.java)
+            ReadVariableOp<T> = readVariableOp<T>(resource, T::class.java)
 
     /**
      * Increments variable pointed to by 'resource' until it reaches 'limit'.
@@ -11882,13 +11867,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.resourceCountUpTo
      */
     @JvmName("resourceCountUpToReified")
-    public inline fun <reified T : TNumber> resourceCountUpTo(
-        resource: Operand<out TType>,
-        limit: Long
-    ): ResourceCountUpTo<T> = resourceCountUpTo<T>(
-        resource, limit,
-        T::class.java
-    )
+    public inline fun <reified T : TNumber> resourceCountUpTo(resource: Operand<out TType>,
+            limit: Long): ResourceCountUpTo<T> = resourceCountUpTo<T>(resource, limit,
+            T::class.java)
 
     /**
      * Gather slices from the variable pointed to by `resource` according to `indices`.
@@ -11903,7 +11884,7 @@ public class KotlinOps(
      *
      *      # Higher rank indices
      *      output[i, ..., j, :, ... :] = params[indices[i, ..., j], :, ..., :]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -11929,10 +11910,8 @@ public class KotlinOps(
         indices: Operand<out TNumber>,
         batchDims: Long? = null,
         validateIndices: Boolean? = null
-    ): ResourceGather<U> = resourceGather<U>(
-        resource, indices, U::class.java, batchDims,
-        validateIndices
-    )
+    ): ResourceGather<U> = resourceGather<U>(resource, indices, U::class.java, batchDims,
+            validateIndices)
 
     /**
      * The ResourceGatherNd operation
@@ -11946,13 +11925,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.resourceGatherNd
      */
     @JvmName("resourceGatherNdReified")
-    public inline fun <reified U : TType> resourceGatherNd(
-        resource: Operand<out TType>,
-        indices: Operand<out TNumber>
-    ): ResourceGatherNd<U> = resourceGatherNd<U>(
-        resource,
-        indices, U::class.java
-    )
+    public inline fun <reified U : TType> resourceGatherNd(resource: Operand<out TType>,
+            indices: Operand<out TNumber>): ResourceGatherNd<U> = resourceGatherNd<U>(resource,
+            indices, U::class.java)
 
     /**
      * Computes the difference between two lists of numbers or strings.
@@ -11961,21 +11936,21 @@ public class KotlinOps(
      *  is sorted in the same order that the numbers appear in `x` (duplicates are
      *  preserved). This operation also returns a list `idx` that represents the
      *  position of each `out` element in `x`. In other words:
-     *
+     *  
      * `out[i] = x&#91;idx[i&#93;] for i in &#91;0, 1, ..., len(out) - 1&#93;`
-     *
+     *  
      * For example, given this input:
      *  ```
      * x = [1, 2, 3, 4, 5, 6]
      *  y = [1, 3, 5]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation would return:
      *  ```
      * out ==> [2, 4, 6]
      *  idx ==> [1, 3, 5]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `out` output
@@ -11990,17 +11965,17 @@ public class KotlinOps(
      */
     @JvmName("setDiff1dReified")
     public inline fun <T : TType, reified U : TNumber> setDiff1dTyped(x: Operand<T>, y: Operand<T>):
-        SetDiff1d<T, U> = setDiff1d<T, U>(x, y, U::class.java)
+            SetDiff1d<T, U> = setDiff1d<T, U>(x, y, U::class.java)
 
     /**
      * Returns the shape of a tensor.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -12012,7 +11987,7 @@ public class KotlinOps(
      */
     @JvmName("shapeReified")
     public inline fun <reified U : TNumber> shapeTyped(input: Operand<out TType>):
-        org.tensorflow.op.core.Shape<U> = shape<U>(input, U::class.java)
+            org.tensorflow.op.core.Shape<U> = shape<U>(input, U::class.java)
 
     /**
      * Returns shape of tensors.
@@ -12027,18 +12002,18 @@ public class KotlinOps(
      */
     @JvmName("shapeNReified")
     public inline fun <reified U : TNumber> shapeNTyped(input: Iterable<Operand<out TType>>):
-        ShapeN<U> = shapeN<U>(input, U::class.java)
+            ShapeN<U> = shapeN<U>(input, U::class.java)
 
     /**
      * Returns the size of a tensor.
      *  This operation returns an integer representing the number of elements in
      *  `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1,, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]]
      *  size(t) ==> 12
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -12050,18 +12025,18 @@ public class KotlinOps(
      */
     @JvmName("sizeReified")
     public inline fun <reified U : TNumber> sizeTyped(input: Operand<out TType>): Size<U> =
-        size<U>(input, U::class.java)
+            size<U>(input, U::class.java)
 
     /**
      * Returns a tensor that may be mutated, but only persists within a single step.
      *  This is an experimental op for internal use only and it is possible to use this
      *  op in unsafe ways.  DO NOT USE unless you fully understand the risks.
-     *
+     *  
      * It is the caller's responsibility to ensure that 'ref' is eventually passed to a
      *  matching 'DestroyTemporaryVariable' op after all other uses have completed.
-     *
+     *  
      * Outputs a ref to the tensor state so it may be read or modified.
-     *
+     *  
      * E.g.
      *  var = state_ops._temporary_variable(&#91;1, 2&#93;, types.float_)
      *  var_name = var.op.name
@@ -12084,7 +12059,7 @@ public class KotlinOps(
      */
     @JvmName("temporaryVariableReified")
     public inline fun <reified T : TType> temporaryVariable(shape: Shape, varName: String? = null):
-        TemporaryVariable<T> = temporaryVariable<T>(shape, T::class.java, varName)
+            TemporaryVariable<T> = temporaryVariable<T>(shape, T::class.java, varName)
 
     /**
      * An array of Tensors of given size.
@@ -12137,23 +12112,21 @@ public class KotlinOps(
         clearAfterRead: Boolean? = null,
         identicalElementShapes: Boolean? = null,
         tensorArrayName: String? = null
-    ): TensorArray = tensorArray<T>(
-        sizeOutput, T::class.java, elementShape, dynamicSize,
-        clearAfterRead, identicalElementShapes, tensorArrayName
-    )
+    ): TensorArray = tensorArray<T>(sizeOutput, T::class.java, elementShape, dynamicSize,
+            clearAfterRead, identicalElementShapes, tensorArrayName)
 
     /**
      * Concat the elements from the TensorArray into value `value`.
      *  Takes `T` elements of shapes
      *  ```
      * (n0 x d0 x d1 x ...), (n1 x d0 x d1 x ...), ..., (n(T-1) x d0 x d1 x ...)
-     *
+     *  
      * ```
-     *
+     *  
      * and concatenates them into a Tensor of shape:
-     *
+     *  
      * `(n0 + n1 + ... + n(T-1) x d0 x d1 x ...)`
-     *
+     *  
      * All elements must have the same shape (excepting the first dimension).
      *
      * @param <T> data type for `value` output
@@ -12177,10 +12150,8 @@ public class KotlinOps(
         handle: Operand<out TType>,
         flowIn: Operand<TFloat32>,
         elementShapeExcept0: Shape? = null
-    ): TensorArrayConcat<T> = tensorArrayConcat<T>(
-        handle, flowIn, T::class.java,
-        elementShapeExcept0
-    )
+    ): TensorArrayConcat<T> = tensorArrayConcat<T>(handle, flowIn, T::class.java,
+            elementShapeExcept0)
 
     /**
      * Gather specific elements from the TensorArray into output `value`.
@@ -12208,10 +12179,8 @@ public class KotlinOps(
         indices: Operand<TInt32>,
         flowIn: Operand<TFloat32>,
         elementShape: Shape? = null
-    ): TensorArrayGather<T> = tensorArrayGather<T>(
-        handle, indices, flowIn, T::class.java,
-        elementShape
-    )
+    ): TensorArrayGather<T> = tensorArrayGather<T>(handle, indices, flowIn, T::class.java,
+            elementShape)
 
     /**
      * The TensorArrayPack operation
@@ -12258,7 +12227,7 @@ public class KotlinOps(
     /**
      * Concats all tensors in the list along the 0th dimension.
      *  Requires that all tensors have the same shape except the first dimension.
-     *
+     *  
      * input_handle: The input list.
      *  element_shape: The shape of the uninitialized elements in the list. If the first
      *  dimension is not -1, it is assumed that all list elements have the same
@@ -12284,10 +12253,8 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         elementShape: Operand<out TNumber>,
         leadingDims: Operand<TInt64>
-    ): TensorListConcat<U> = tensorListConcat<U>(
-        inputHandle, elementShape, leadingDims,
-        U::class.java
-    )
+    ): TensorListConcat<U> = tensorListConcat<U>(inputHandle, elementShape, leadingDims,
+            U::class.java)
 
     /**
      * The TensorListConcatLists operation
@@ -12300,13 +12267,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListConcatLists
      */
     @JvmName("tensorListConcatListsReified")
-    public inline fun <reified T : TType> tensorListConcatLists(
-        inputA: Operand<out TType>,
-        inputB: Operand<out TType>
-    ): TensorListConcatLists = tensorListConcatLists<T>(
-        inputA,
-        inputB, T::class.java
-    )
+    public inline fun <reified T : TType> tensorListConcatLists(inputA: Operand<out TType>,
+            inputB: Operand<out TType>): TensorListConcatLists = tensorListConcatLists<T>(inputA,
+            inputB, T::class.java)
 
     /**
      * The shape of the elements of the given list, as a tensor.
@@ -12322,13 +12285,13 @@ public class KotlinOps(
      */
     @JvmName("tensorListElementShapeReified")
     public inline fun <reified T : TNumber> tensorListElementShape(inputHandle: Operand<out TType>):
-        TensorListElementShape<T> = tensorListElementShape<T>(inputHandle, T::class.java)
+            TensorListElementShape<T> = tensorListElementShape<T>(inputHandle, T::class.java)
 
     /**
      * Creates a Tensor by indexing into the TensorList.
      *  Each row in the produced Tensor corresponds to the element in the TensorList
      *  specified by the given index (see `tf.gather`).
-     *
+     *  
      * input_handle: The input tensor list.
      *  indices: The indices used to index into the list.
      *  values: The tensor.
@@ -12371,7 +12334,7 @@ public class KotlinOps(
     /**
      * Returns the last element of the input list as well as a list with all but that element.
      *  Fails if the list is empty.
-     *
+     *  
      * input_handle: the input list
      *  tensor: the withdrawn last element of the list
      *  element_dtype: the type of elements in the list
@@ -12386,13 +12349,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListPopBack
      */
     @JvmName("tensorListPopBackReified")
-    public inline fun <reified T : TType> tensorListPopBack(
-        inputHandle: Operand<out TType>,
-        elementShape: Operand<TInt32>
-    ): TensorListPopBack<T> = tensorListPopBack<T>(
-        inputHandle,
-        elementShape, T::class.java
-    )
+    public inline fun <reified T : TType> tensorListPopBack(inputHandle: Operand<out TType>,
+            elementShape: Operand<TInt32>): TensorListPopBack<T> = tensorListPopBack<T>(inputHandle,
+            elementShape, T::class.java)
 
     /**
      * List of the given size with empty elements.
@@ -12409,18 +12368,14 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorListReserve
      */
     @JvmName("tensorListReserveReified")
-    public inline fun <reified U : TType> tensorListReserve(
-        elementShape: Operand<out TNumber>,
-        numElements: Operand<TInt32>
-    ): TensorListReserve = tensorListReserve<U>(
-        elementShape,
-        numElements, U::class.java
-    )
+    public inline fun <reified U : TType> tensorListReserve(elementShape: Operand<out TNumber>,
+            numElements: Operand<TInt32>): TensorListReserve = tensorListReserve<U>(elementShape,
+            numElements, U::class.java)
 
     /**
      * Stacks all tensors in the list.
      *  Requires that all tensors have the same shape.
-     *
+     *  
      * input_handle: the input list
      *  tensor: the gathered result
      *  num_elements: optional. If not -1, the number of elements in the list.
@@ -12443,10 +12398,8 @@ public class KotlinOps(
         inputHandle: Operand<out TType>,
         elementShape: Operand<TInt32>,
         numElements: Long? = null
-    ): TensorListStack<T> = tensorListStack<T>(
-        inputHandle, elementShape, T::class.java,
-        numElements
-    )
+    ): TensorListStack<T> = tensorListStack<T>(inputHandle, elementShape, T::class.java,
+            numElements)
 
     /**
      * Returns a tensor map with item from given key erased.
@@ -12462,13 +12415,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorMapErase
      */
     @JvmName("tensorMapEraseReified")
-    public inline fun <reified U : TType> tensorMapErase(
-        inputHandle: Operand<out TType>,
-        key: Operand<out TType>
-    ): TensorMapErase = tensorMapErase<U>(
-        inputHandle, key,
-        U::class.java
-    )
+    public inline fun <reified U : TType> tensorMapErase(inputHandle: Operand<out TType>,
+            key: Operand<out TType>): TensorMapErase = tensorMapErase<U>(inputHandle, key,
+            U::class.java)
 
     /**
      * Returns the value from a given key in a tensor map.
@@ -12485,13 +12434,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.tensorMapLookup
      */
     @JvmName("tensorMapLookupReified")
-    public inline fun <reified U : TType> tensorMapLookup(
-        inputHandle: Operand<out TType>,
-        key: Operand<out TType>
-    ): TensorMapLookup<U> = tensorMapLookup<U>(
-        inputHandle, key,
-        U::class.java
-    )
+    public inline fun <reified U : TType> tensorMapLookup(inputHandle: Operand<out TType>,
+            key: Operand<out TType>): TensorMapLookup<U> = tensorMapLookup<U>(inputHandle, key,
+            U::class.java)
 
     /**
      * Returns a Tensor stack of all keys in a tensor map.
@@ -12507,7 +12452,7 @@ public class KotlinOps(
      */
     @JvmName("tensorMapStackKeysReified")
     public inline fun <reified T : TType> tensorMapStackKeys(inputHandle: Operand<out TType>):
-        TensorMapStackKeys<T> = tensorMapStackKeys<T>(inputHandle, T::class.java)
+            TensorMapStackKeys<T> = tensorMapStackKeys<T>(inputHandle, T::class.java)
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -12518,18 +12463,18 @@ public class KotlinOps(
      *  the number of the elements in `x` along the `axis` dimension. It
      *  contains the index in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
      *  y, idx = unique(x)
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 0`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -12539,9 +12484,9 @@ public class KotlinOps(
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For an `2-D` tensor `x` with `axis = 1`:
      *  ```
      * # tensor 'x' is [[1, 0, 0],
@@ -12552,7 +12497,7 @@ public class KotlinOps(
      *         [1, 0],
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -12567,11 +12512,8 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.unique
      */
     @JvmName("uniqueReified")
-    public inline fun <T : TType, reified V : TNumber> uniqueTyped(
-        x: Operand<T>,
-        axis: Operand<out
-            TNumber>
-    ): Unique<T, V> = unique<T, V>(x, axis, V::class.java)
+    public inline fun <T : TType, reified V : TNumber> uniqueTyped(x: Operand<T>, axis: Operand<out
+            TNumber>): Unique<T, V> = unique<T, V>(x, axis, V::class.java)
 
     /**
      * Finds unique elements along an axis of a tensor.
@@ -12583,9 +12525,9 @@ public class KotlinOps(
      *  `axis` dimension. The `idx` contains the index in the unique output `y`
      *  and the `count` contains the count in the unique output `y`.
      *  In other words, for an `1-D` tensor `x` with `axis = None:
-     *
+     *  
      * `y&#91;idx[i&#93;] = x[i] for i in &#91;0, 1,...,rank(x) - 1&#93;`
-     *
+     *  
      * For example:
      *  ```
      * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
@@ -12593,9 +12535,9 @@ public class KotlinOps(
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -12606,9 +12548,9 @@ public class KotlinOps(
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
      *  count ==> [2, 1]
-     *
+     *  
      * ```
-     *
+     *  
      * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
      * x = tf.constant([[1, 0, 0],
@@ -12620,7 +12562,7 @@ public class KotlinOps(
      *         [2, 0]]
      *  idx ==> [0, 1, 1]
      *  count ==> [1, 2]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -12635,13 +12577,9 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.uniqueWithCounts
      */
     @JvmName("uniqueWithCountsReified")
-    public inline fun <T : TType, reified V : TNumber> uniqueWithCountsTyped(
-        x: Operand<T>,
-        axis: Operand<out TNumber>
-    ): UniqueWithCounts<T, V> = uniqueWithCounts<T, V>(
-        x, axis,
-        V::class.java
-    )
+    public inline fun <T : TType, reified V : TNumber> uniqueWithCountsTyped(x: Operand<T>,
+            axis: Operand<out TNumber>): UniqueWithCounts<T, V> = uniqueWithCounts<T, V>(x, axis,
+            V::class.java)
 
     /**
      * Creates a handle to a Variable resource.
@@ -12710,12 +12648,12 @@ public class KotlinOps(
     /**
      * Returns the shape of the variable pointed to by `resource`.
      *  This operation returns a 1-D integer tensor representing the shape of `input`.
-     *
+     *  
      * For example:
      *  ```
      * # 't' is [[[1, 1, 1], [2, 2, 2]], [[3, 3, 3], [4, 4, 4]]]
      *  shape(t) ==> [2, 2, 3]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -12727,7 +12665,7 @@ public class KotlinOps(
      */
     @JvmName("variableShapeReified")
     public inline fun <reified T : TNumber> variableShapeTyped(input: Operand<out TType>):
-        VariableShape<T> = variableShape<T>(input, T::class.java)
+            VariableShape<T> = variableShape<T>(input, T::class.java)
 
     /**
      * Wraps the XLA ConvGeneralDilated operator, documented at
@@ -12761,10 +12699,8 @@ public class KotlinOps(
         featureGroupCount: Operand<V>,
         dimensionNumbers: String,
         precisionConfig: String
-    ): XlaConvV2<W> = xlaConvV2<W, V>(
-        lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation,
-        featureGroupCount, dimensionNumbers, precisionConfig, W::class.java
-    )
+    ): XlaConvV2<W> = xlaConvV2<W, V>(lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation,
+            featureGroupCount, dimensionNumbers, precisionConfig, W::class.java)
 
     /**
      * Wraps the XLA DotGeneral operator, documented at
@@ -12802,5 +12738,5 @@ public class KotlinOps(
      */
     @JvmName("zerosReified")
     public inline fun <reified T : TType> zeros(dims: Operand<out TNumber>): Zeros<T> =
-        zeros<T>(dims, T::class.java)
+            zeros<T>(dims, T::class.java)
 }

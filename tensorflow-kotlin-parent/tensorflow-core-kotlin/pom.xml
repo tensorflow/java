@@ -107,12 +107,21 @@
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
         <configuration>
-          <args>
-            <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
-            <arg>-Xexplicit-api=strict</arg>
-          </args>
         </configuration>
         <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
+                <arg>-Xexplicit-api=strict</arg>
+              </args>
+            </configuration>
+          </execution>
+
           <execution>
             <id>kapt</id>
             <goals>

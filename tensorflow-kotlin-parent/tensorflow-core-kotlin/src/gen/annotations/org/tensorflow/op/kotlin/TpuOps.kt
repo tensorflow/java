@@ -17,6 +17,7 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Long
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.tpu.CompileSucceededAssert
@@ -26,7 +27,6 @@ import org.tensorflow.op.tpu.PartitionedInput
 import org.tensorflow.op.tpu.PartitionedOutput
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TType
-import kotlin.Long
 
 /**
  * An API for building `tpu` operations as [Op][org.tensorflow.op.Op]s
@@ -49,7 +49,7 @@ public class TpuOps(
     /**
      * Asserts that compilation succeeded. This op produces no output and closes the
      *  device during failure to ensure all pending device interactions fail.
-     *
+     *  
      * 'compilation_status' is a serialized CompilationResultProto.
      *
      * @param compilationStatus the compilationStatus value
@@ -57,8 +57,8 @@ public class TpuOps(
      * @see org.tensorflow.op.TpuOps.compileSucceededAssert
      */
     public fun compileSucceededAssert(compilationStatus: Operand<TString>): CompileSucceededAssert =
-        java.compileSucceededAssert(
-            compilationStatus
+            java.compileSucceededAssert(    
+        compilationStatus
         )
 
     /**
@@ -75,11 +75,11 @@ public class TpuOps(
         args: Iterable<Operand<*>>,
         key: Operand<TString>,
         Tresults: List<Class<out TType>>
-    ): Execute = java.execute(
+    ): Execute = java.execute(    
         args,
         key,
         Tresults
-    )
+        )
 
     /**
      * Op that executes a program with optional in-place variable updates.
@@ -105,13 +105,13 @@ public class TpuOps(
         Tresults: List<Class<out TType>>,
         deviceVarReadsIndices: List<Long>,
         deviceVarUpdatesIndices: List<Long>
-    ): ExecuteAndUpdateVariables = java.executeAndUpdateVariables(
+    ): ExecuteAndUpdateVariables = java.executeAndUpdateVariables(    
         args,
         key,
         Tresults,
         deviceVarReadsIndices,
         deviceVarUpdatesIndices
-    )
+        )
 
     /**
      * An op that groups a list of partitioned inputs together. This op
@@ -128,16 +128,13 @@ public class TpuOps(
      *  those inputs are replicated.
      * @return this Options instance.
      */
-    public fun <T : TType> partitionedInput(
-        inputs: Iterable<Operand<T>>,
-        partitionDim: Long? =
-            null
-    ): PartitionedInput<T> = java.partitionedInput<T>(
+    public fun <T : TType> partitionedInput(inputs: Iterable<Operand<T>>, partitionDim: Long? =
+            null): PartitionedInput<T> = java.partitionedInput<T>(    
         inputs,
         *listOfNotNull(
-            partitionDim?.let { org.tensorflow.op.tpu.PartitionedInput.partitionDim(it) }
+            partitionDim?.let{ org.tensorflow.op.tpu.PartitionedInput.partitionDim(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * An op that demultiplexes a tensor to be sharded by XLA to a list of partitioned
@@ -159,11 +156,11 @@ public class TpuOps(
         inputs: Operand<T>,
         numSplits: Long,
         partitionDim: Long? = null
-    ): PartitionedOutput<T> = java.partitionedOutput<T>(
+    ): PartitionedOutput<T> = java.partitionedOutput<T>(    
         inputs,
         numSplits,
         *listOfNotNull(
-            partitionDim?.let { org.tensorflow.op.tpu.PartitionedOutput.partitionDim(it) }
+            partitionDim?.let{ org.tensorflow.op.tpu.PartitionedOutput.partitionDim(it) }
         ).toTypedArray()
-    )
+        )
 }

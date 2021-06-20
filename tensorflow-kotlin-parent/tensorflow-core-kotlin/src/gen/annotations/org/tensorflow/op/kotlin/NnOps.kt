@@ -17,6 +17,13 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.nn.AvgPool
@@ -93,13 +100,6 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Float
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `nn` operations as [Op][org.tensorflow.op.Op]s
@@ -150,15 +150,15 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): AvgPool<T> = java.avgPool<T>(
+    ): AvgPool<T> = java.avgPool<T>(    
         value,
         ksize,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.AvgPool.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.AvgPool.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs 3D average pooling on the input.
@@ -191,15 +191,15 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): AvgPool3d<T> = java.avgPool3d<T>(
+    ): AvgPool3d<T> = java.avgPool3d<T>(    
         input,
         ksize,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.AvgPool3d.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.AvgPool3d.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes gradients of average pooling function.
@@ -232,16 +232,16 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): AvgPool3dGrad<T> = java.avgPool3dGrad<T>(
+    ): AvgPool3dGrad<T> = java.avgPool3dGrad<T>(    
         origInputShape,
         grad,
         ksize,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.AvgPool3dGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.AvgPool3dGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Batch normalization.
@@ -275,7 +275,7 @@ public class NnOps(
         gamma: Operand<T>,
         varianceEpsilon: Float,
         scaleAfterNormalization: Boolean
-    ): BatchNormWithGlobalNormalization<T> = java.batchNormWithGlobalNormalization<T>(
+    ): BatchNormWithGlobalNormalization<T> = java.batchNormWithGlobalNormalization<T>(    
         t,
         m,
         v,
@@ -283,7 +283,7 @@ public class NnOps(
         gamma,
         varianceEpsilon,
         scaleAfterNormalization
-    )
+        )
 
     /**
      * Gradients for batch normalization.
@@ -316,7 +316,7 @@ public class NnOps(
         backprop: Operand<T>,
         varianceEpsilon: Float,
         scaleAfterNormalization: Boolean
-    ): BatchNormWithGlobalNormalizationGrad<T> = java.batchNormWithGlobalNormalizationGrad<T>(
+    ): BatchNormWithGlobalNormalizationGrad<T> = java.batchNormWithGlobalNormalizationGrad<T>(    
         t,
         m,
         v,
@@ -324,7 +324,7 @@ public class NnOps(
         backprop,
         varianceEpsilon,
         scaleAfterNormalization
-    )
+        )
 
     /**
      * Adds `bias` to `value`.
@@ -353,13 +353,13 @@ public class NnOps(
         value: Operand<T>,
         bias: Operand<T>,
         dataFormat: String? = null
-    ): BiasAdd<T> = java.biasAdd<T>(
+    ): BiasAdd<T> = java.biasAdd<T>(    
         value,
         bias,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.BiasAdd.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.BiasAdd.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The backward operation for &quot;BiasAdd&quot; on the &quot;bias&quot; tensor.
@@ -385,12 +385,12 @@ public class NnOps(
      * @return this Options instance.
      */
     public fun <T : TType> biasAddGrad(outBackprop: Operand<T>, dataFormat: String? = null):
-        BiasAddGrad<T> = java.biasAddGrad<T>(
+            BiasAddGrad<T> = java.biasAddGrad<T>(    
         outBackprop,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.BiasAddGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.BiasAddGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the ids of the positions in sampled_candidates that match true_labels.
@@ -422,15 +422,15 @@ public class NnOps(
         numTrue: Long,
         seed: Long? = null,
         seed2: Long? = null
-    ): ComputeAccidentalHits = java.computeAccidentalHits(
+    ): ComputeAccidentalHits = java.computeAccidentalHits(    
         trueClasses,
         sampledCandidates,
         numTrue,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.nn.ComputeAccidentalHits.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.ComputeAccidentalHits.seed2(it) }
+            seed?.let{ org.tensorflow.op.nn.ComputeAccidentalHits.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.ComputeAccidentalHits.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes a 2-D convolution given 4-D `input` and `filter` tensors.
@@ -447,7 +447,7 @@ public class NnOps(
      *  <li>For each patch, right-multiplies the filter matrix and the image patch
      *  vector.</li>
      *  </ol>
-     *
+     *  
      * In detail, with the default NHWC format,
      *  ```
      * output[b, i, j, k] =
@@ -455,7 +455,7 @@ public class NnOps(
      * ``` input&#91;b, strides[1&#93; * i + di, strides[2] * j + dj, q] *
      *                      filter&#91;di, dj, q, k&#93;
      *  }
-     *
+     *  
      * Must have `strides[0] = strides[3] = 1`.  For the most common case of the same
      *  horizontal and vertices strides, `strides = &#91;1, stride, stride, 1&#93;`.
      *
@@ -511,18 +511,18 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv2d<T> = java.conv2d<T>(
+    ): Conv2d<T> = java.conv2d<T>(    
         input,
         filter,
         strides,
         padding,
         *listOfNotNull(
-            useCudnnOnGpu?.let { org.tensorflow.op.nn.Conv2d.useCudnnOnGpu(it) },
-            explicitPaddings?.let { org.tensorflow.op.nn.Conv2d.explicitPaddings(it) },
-            dataFormat?.let { org.tensorflow.op.nn.Conv2d.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv2d.dilations(it) }
+            useCudnnOnGpu?.let{ org.tensorflow.op.nn.Conv2d.useCudnnOnGpu(it) },
+            explicitPaddings?.let{ org.tensorflow.op.nn.Conv2d.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.Conv2d.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv2d.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of convolution with respect to the filter.
@@ -582,19 +582,19 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv2dBackpropFilter<T> = java.conv2dBackpropFilter<T>(
+    ): Conv2dBackpropFilter<T> = java.conv2dBackpropFilter<T>(    
         input,
         filterSizes,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            useCudnnOnGpu?.let { org.tensorflow.op.nn.Conv2dBackpropFilter.useCudnnOnGpu(it) },
-            explicitPaddings?.let { org.tensorflow.op.nn.Conv2dBackpropFilter.explicitPaddings(it) },
-            dataFormat?.let { org.tensorflow.op.nn.Conv2dBackpropFilter.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv2dBackpropFilter.dilations(it) }
+            useCudnnOnGpu?.let{ org.tensorflow.op.nn.Conv2dBackpropFilter.useCudnnOnGpu(it) },
+            explicitPaddings?.let{ org.tensorflow.op.nn.Conv2dBackpropFilter.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.Conv2dBackpropFilter.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv2dBackpropFilter.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of convolution with respect to the input.
@@ -654,26 +654,26 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv2dBackpropInput<T> = java.conv2dBackpropInput<T>(
+    ): Conv2dBackpropInput<T> = java.conv2dBackpropInput<T>(    
         inputSizes,
         filter,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            useCudnnOnGpu?.let { org.tensorflow.op.nn.Conv2dBackpropInput.useCudnnOnGpu(it) },
-            explicitPaddings?.let { org.tensorflow.op.nn.Conv2dBackpropInput.explicitPaddings(it) },
-            dataFormat?.let { org.tensorflow.op.nn.Conv2dBackpropInput.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv2dBackpropInput.dilations(it) }
+            useCudnnOnGpu?.let{ org.tensorflow.op.nn.Conv2dBackpropInput.useCudnnOnGpu(it) },
+            explicitPaddings?.let{ org.tensorflow.op.nn.Conv2dBackpropInput.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.Conv2dBackpropInput.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv2dBackpropInput.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes a 3-D convolution given 5-D `input` and `filter` tensors.
      *  In signal processing, cross-correlation is a measure of similarity of
      *  two waveforms as a function of a time-lag applied to one of them. This
      *  is also known as a sliding dot product or sliding inner-product.
-     *
+     *  
      * Our Conv3D implements a form of cross-correlation.
      *
      * @param <T> data type for `output` output
@@ -711,16 +711,16 @@ public class NnOps(
         padding: String,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv3d<T> = java.conv3d<T>(
+    ): Conv3d<T> = java.conv3d<T>(    
         input,
         filter,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.Conv3d.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv3d.dilations(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.Conv3d.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv3d.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of 3-D convolution with respect to the filter.
@@ -765,17 +765,17 @@ public class NnOps(
         padding: String,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv3dBackpropFilter<T> = java.conv3dBackpropFilter<T>(
+    ): Conv3dBackpropFilter<T> = java.conv3dBackpropFilter<T>(    
         input,
         filterSizes,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.Conv3dBackpropFilter.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv3dBackpropFilter.dilations(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.Conv3dBackpropFilter.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv3dBackpropFilter.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of 3-D convolution with respect to the input.
@@ -820,17 +820,17 @@ public class NnOps(
         padding: String,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): Conv3dBackpropInput<U> = java.conv3dBackpropInput<U>(
+    ): Conv3dBackpropInput<U> = java.conv3dBackpropInput<U>(    
         inputSizes,
         filter,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.Conv3dBackpropInput.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.Conv3dBackpropInput.dilations(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.Conv3dBackpropInput.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.Conv3dBackpropInput.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs beam search decoding on the logits given in input.
@@ -860,15 +860,15 @@ public class NnOps(
         beamWidth: Long,
         topPaths: Long,
         mergeRepeated: Boolean? = null
-    ): CtcBeamSearchDecoder<T> = java.ctcBeamSearchDecoder<T>(
+    ): CtcBeamSearchDecoder<T> = java.ctcBeamSearchDecoder<T>(    
         inputs,
         sequenceLength,
         beamWidth,
         topPaths,
         *listOfNotNull(
-            mergeRepeated?.let { org.tensorflow.op.nn.CtcBeamSearchDecoder.mergeRepeated(it) }
+            mergeRepeated?.let{ org.tensorflow.op.nn.CtcBeamSearchDecoder.mergeRepeated(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs greedy decoding on the logits given in inputs.
@@ -877,7 +877,7 @@ public class NnOps(
      *  these is emitted.  Labeling the blank '*', the sequence &quot;A B B * B B&quot;
      *  becomes &quot;A B B&quot; if merge_repeated = True and &quot;A B B B B&quot; if
      *  merge_repeated = False.
-     *
+     *  
      * Regardless of the value of merge_repeated, if the maximum index of a given
      *  time and batch corresponds to the blank, index `(num_classes - 1)`, no new
      *  element is emitted.
@@ -898,13 +898,13 @@ public class NnOps(
         inputs: Operand<T>,
         sequenceLength: Operand<TInt32>,
         mergeRepeated: Boolean? = null
-    ): CtcGreedyDecoder<T> = java.ctcGreedyDecoder<T>(
+    ): CtcGreedyDecoder<T> = java.ctcGreedyDecoder<T>(    
         inputs,
         sequenceLength,
         *listOfNotNull(
-            mergeRepeated?.let { org.tensorflow.op.nn.CtcGreedyDecoder.mergeRepeated(it) }
+            mergeRepeated?.let{ org.tensorflow.op.nn.CtcGreedyDecoder.mergeRepeated(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Calculates the CTC Loss (log probability) for each batch entry.  Also calculates
@@ -948,32 +948,30 @@ public class NnOps(
         preprocessCollapseRepeated: Boolean? = null,
         ctcMergeRepeated: Boolean? = null,
         ignoreLongerOutputsThanInputs: Boolean? = null
-    ): CtcLoss<T> = java.ctcLoss<T>(
+    ): CtcLoss<T> = java.ctcLoss<T>(    
         inputs,
         labelsIndices,
         labelsValues,
         sequenceLength,
         *listOfNotNull(
-            preprocessCollapseRepeated?.let {
-                org.tensorflow.op.nn.CtcLoss.preprocessCollapseRepeated(it)
+            preprocessCollapseRepeated?.let{ org.tensorflow.op.nn.CtcLoss.preprocessCollapseRepeated(it)
             },
-            ctcMergeRepeated?.let { org.tensorflow.op.nn.CtcLoss.ctcMergeRepeated(it) },
-            ignoreLongerOutputsThanInputs?.let {
-                org.tensorflow.op.nn.CtcLoss.ignoreLongerOutputsThanInputs(it)
-            }
+            ctcMergeRepeated?.let{ org.tensorflow.op.nn.CtcLoss.ctcMergeRepeated(it) },
+            ignoreLongerOutputsThanInputs?.let{
+            org.tensorflow.op.nn.CtcLoss.ignoreLongerOutputsThanInputs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Converts CudnnRNN params from canonical form to usable form. It supports the projection in
      * LSTM.
      *  Writes a set of weights into the opaque params buffer so they can be used in
      *  upcoming training or inferences.
-     *
+     *  
      * Note that the params buffer may not be compatible across different GPUs. So any
      *  save and restoration should be converted to and from the canonical weights and
      *  biases.
-     *
+     *  
      * num_layers: Specifies the number of layers in the RNN model.
      *  num_units: Specifies the size of the hidden state.
      *  input_size: Specifies the size of the input state.
@@ -1050,32 +1048,32 @@ public class NnOps(
         seed: Long? = null,
         seed2: Long? = null,
         numProj: Long? = null
-    ): CudnnRNNCanonicalToParams<T> = java.cudnnRNNCanonicalToParams<T>(
+    ): CudnnRNNCanonicalToParams<T> = java.cudnnRNNCanonicalToParams<T>(    
         numLayers,
         numUnits,
         inputSize,
         weights,
         biases,
         *listOfNotNull(
-            rnnMode?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.rnnMode(it) },
-            inputMode?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.inputMode(it) },
-            direction?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.direction(it) },
-            dropout?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.dropout(it) },
-            seed?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.seed2(it) },
-            numProj?.let { org.tensorflow.op.nn.CudnnRNNCanonicalToParams.numProj(it) }
+            rnnMode?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.rnnMode(it) },
+            inputMode?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.inputMode(it) },
+            direction?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.direction(it) },
+            dropout?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.dropout(it) },
+            seed?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.seed2(it) },
+            numProj?.let{ org.tensorflow.op.nn.CudnnRNNCanonicalToParams.numProj(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Retrieves CudnnRNN params in canonical form. It supports the projection in LSTM.
      *  Retrieves a set of weights from the opaque params buffer that can be saved and
      *  restored in a way compatible with future runs.
-     *
+     *  
      * Note that the params buffer may not be compatible across different GPUs. So any
      *  save and restoration should be converted to and from the canonical weights and
      *  biases.
-     *
+     *  
      * num_layers: Specifies the number of layers in the RNN model.
      *  num_units: Specifies the size of the hidden state.
      *  input_size: Specifies the size of the input state.
@@ -1154,7 +1152,7 @@ public class NnOps(
         seed: Long? = null,
         seed2: Long? = null,
         numProj: Long? = null
-    ): CudnnRNNParamsToCanonical<T> = java.cudnnRNNParamsToCanonical<T>(
+    ): CudnnRNNParamsToCanonical<T> = java.cudnnRNNParamsToCanonical<T>(    
         numLayers,
         numUnits,
         inputSize,
@@ -1162,21 +1160,21 @@ public class NnOps(
         numParamsWeights,
         numParamsBiases,
         *listOfNotNull(
-            rnnMode?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.rnnMode(it) },
-            inputMode?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.inputMode(it) },
-            direction?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.direction(it) },
-            dropout?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.dropout(it) },
-            seed?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.seed2(it) },
-            numProj?.let { org.tensorflow.op.nn.CudnnRNNParamsToCanonical.numProj(it) }
+            rnnMode?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.rnnMode(it) },
+            inputMode?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.inputMode(it) },
+            direction?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.direction(it) },
+            dropout?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.dropout(it) },
+            seed?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.seed2(it) },
+            numProj?.let{ org.tensorflow.op.nn.CudnnRNNParamsToCanonical.numProj(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes size of weights that can be used by a Cudnn RNN model.
      *  Return the params size that can be used by the Cudnn RNN model. Subsequent
      *  weight allocation and initialization should use this size.
-     *
+     *  
      * num_layers: Specifies the number of layers in the RNN model.
      *  num_units: Specifies the size of the hidden state.
      *  input_size: Specifies the size of the input state.
@@ -1249,22 +1247,22 @@ public class NnOps(
         seed: Long? = null,
         seed2: Long? = null,
         numProj: Long? = null
-    ): CudnnRnnParamsSize<T> = java.cudnnRnnParamsSize<T, U>(
+    ): CudnnRnnParamsSize<T> = java.cudnnRnnParamsSize<T, U>(    
         numLayers,
         numUnits,
         inputSize,
         T_,
         S,
         *listOfNotNull(
-            rnnMode?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.rnnMode(it) },
-            inputMode?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.inputMode(it) },
-            direction?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.direction(it) },
-            dropout?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.dropout(it) },
-            seed?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.seed2(it) },
-            numProj?.let { org.tensorflow.op.nn.CudnnRnnParamsSize.numProj(it) }
+            rnnMode?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.rnnMode(it) },
+            inputMode?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.inputMode(it) },
+            direction?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.direction(it) },
+            dropout?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.dropout(it) },
+            seed?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.seed2(it) },
+            numProj?.let{ org.tensorflow.op.nn.CudnnRnnParamsSize.numProj(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the dimension index in the destination data format given the one in
@@ -1290,42 +1288,42 @@ public class NnOps(
         x: Operand<T>,
         srcFormat: String? = null,
         dstFormat: String? = null
-    ): DataFormatDimMap<T> = java.dataFormatDimMap<T>(
+    ): DataFormatDimMap<T> = java.dataFormatDimMap<T>(    
         x,
         *listOfNotNull(
-            srcFormat?.let { org.tensorflow.op.nn.DataFormatDimMap.srcFormat(it) },
-            dstFormat?.let { org.tensorflow.op.nn.DataFormatDimMap.dstFormat(it) }
+            srcFormat?.let{ org.tensorflow.op.nn.DataFormatDimMap.srcFormat(it) },
+            dstFormat?.let{ org.tensorflow.op.nn.DataFormatDimMap.dstFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Permute input tensor from `src_format` to `dst_format`.
      *  Input tensor must be a vector of size 4, or a 4x2 tensor.
-     *
+     *  
      * For example, with `src_format` of `NHWC`, `dst_format` of `NCHW`, and inputs:
      *  ```
      * [1, 2, 3, 4]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * [[1, 2, 3, 4],
      *   [5, 6, 7, 8]]
-     *
+     *  
      * ```
-     *
+     *  
      * , the outputs will be (respectively):
      *  ```
      * [1, 4, 2, 3]
-     *
+     *  
      * ```
-     *
+     *  
      * and
      *  ```
      * [[1, 4, 2, 3],
      *   [5, 8, 6, 7]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -1347,13 +1345,13 @@ public class NnOps(
         x: Operand<T>,
         srcFormat: String? = null,
         dstFormat: String? = null
-    ): DataFormatVecPermute<T> = java.dataFormatVecPermute<T>(
+    ): DataFormatVecPermute<T> = java.dataFormatVecPermute<T>(    
         x,
         *listOfNotNull(
-            srcFormat?.let { org.tensorflow.op.nn.DataFormatVecPermute.srcFormat(it) },
-            dstFormat?.let { org.tensorflow.op.nn.DataFormatVecPermute.dstFormat(it) }
+            srcFormat?.let{ org.tensorflow.op.nn.DataFormatVecPermute.srcFormat(it) },
+            dstFormat?.let{ org.tensorflow.op.nn.DataFormatVecPermute.dstFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * DepthToSpace for tensors of type T.
@@ -1372,14 +1370,14 @@ public class NnOps(
      *  <li>The depth of the input tensor must be divisible by
      *  `block_size * block_size`.</li>
      *  </ul>
-     *
+     *  
      * The `data_format` attr specifies the layout of the input and output tensors
      *  with the following options:
      *  &quot;NHWC&quot;: `&#91; batch, height, width, channels &#93;`
      *  &quot;NCHW&quot;: `&#91; batch, channels, height, width &#93;`
      *  &quot;NCHW_VECT_C&quot;:
      *  `qint8 &#91; batch, channels / 4, height, width, 4 &#93;`
-     *
+     *  
      * It is useful to consider the operation as transforming a 6-D Tensor.
      *  e.g. for data_format = NHWC,
      *  Each element in the input tensor can be specified via 6 coordinates,
@@ -1389,56 +1387,56 @@ public class NnOps(
      *  within the output block, oC means output channels).
      *  The output would be the input transposed to the following layout:
      *  n,iY,bY,iX,bX,oC
-     *
+     *  
      * This operation is useful for resizing the activations between convolutions
      *  (but keeping all data), e.g. instead of pooling. It is also useful for training
      *  purely convolutional models.
-     *
+     *  
      * For example, given an input of shape `&#91;1, 1, 1, 4&#93;`, data_format = &quot;NHWC&quot;
      * and
      *  block_size = 2:
      *  ```
      * x = [[[[1, 2, 3, 4]]]]
      *
-     *
+     *  
      * ```
-     *
+     *  
      * This operation will output a tensor of shape `&#91;1, 2, 2, 1&#93;`:
      *  ```
      * [[[[1], [2]],
      *       [[3], [4]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Here, the input has a batch of 1 and each batch element has shape `&#91;1, 1, 4&#93;`,
      *  the corresponding output will have 2x2 elements and will have a depth of
      *  1 channel (1 = `4 / (block_size * block_size)`).
      *  The output element shape is `&#91;2, 2, 1&#93;`.
-     *
+     *  
      * For an input tensor with larger depth, here of shape `&#91;1, 1, 1, 12&#93;`, e.g.
      *  ```
      * x = [[[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation, for block size of 2, will return the following tensor of shape
      *  `&#91;1, 2, 2, 3&#93;`
      *  ```
      * [[[[1, 2, 3], [4, 5, 6]],
      *       [[7, 8, 9], [10, 11, 12]]]]
      *
-     *
+     *  
      * ```
-     *
+     *  
      * Similarly, for the following input of shape `&#91;1 2 2 4&#93;`, and a block size of 2:
      *  ```
      * x =  [[[[1, 2, 3, 4],
      *         [5, 6, 7, 8]],
      *        [[9, 10, 11, 12],
      *         [13, 14, 15, 16]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * the operator will return the following tensor of shape `&#91;1 4 4 1&#93;`:
      *  ```
      * x = [[[ [1],   [2],  [5],  [6]],
@@ -1446,7 +1444,7 @@ public class NnOps(
      *        [ [9],  [10], [13],  [14]],
      *        [ [11], [12], [15],  [16]]]]
      *
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -1465,13 +1463,13 @@ public class NnOps(
         input: Operand<T>,
         blockSize: Long,
         dataFormat: String? = null
-    ): DepthToSpace<T> = java.depthToSpace<T>(
+    ): DepthToSpace<T> = java.depthToSpace<T>(    
         input,
         blockSize,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.DepthToSpace.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.DepthToSpace.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes a 2-D depthwise convolution given 4-D `input` and `filter` tensors.
@@ -1490,7 +1488,7 @@ public class NnOps(
      * ``` input&#91;b, strides[1&#93; * i + di, strides[2] * j + dj, k] *
      *                          filter&#91;di, dj, k, q&#93;
      *  }
-     *
+     *  
      * Must have `strides[0] = strides[3] = 1`.  For the most common case of the same
      *  horizontal and vertices strides, `strides = &#91;1, stride, stride, 1&#93;`.
      *
@@ -1533,17 +1531,17 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): DepthwiseConv2dNative<T> = java.depthwiseConv2dNative<T>(
+    ): DepthwiseConv2dNative<T> = java.depthwiseConv2dNative<T>(    
         input,
         filter,
         strides,
         padding,
         *listOfNotNull(
-            explicitPaddings?.let { org.tensorflow.op.nn.DepthwiseConv2dNative.explicitPaddings(it) },
-            dataFormat?.let { org.tensorflow.op.nn.DepthwiseConv2dNative.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.DepthwiseConv2dNative.dilations(it) }
+            explicitPaddings?.let{ org.tensorflow.op.nn.DepthwiseConv2dNative.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.DepthwiseConv2dNative.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.DepthwiseConv2dNative.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of depthwise convolution with respect to the filter.
@@ -1596,20 +1594,19 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): DepthwiseConv2dNativeBackpropFilter<T> = java.depthwiseConv2dNativeBackpropFilter<T>(
+    ): DepthwiseConv2dNativeBackpropFilter<T> = java.depthwiseConv2dNativeBackpropFilter<T>(    
         input,
         filterSizes,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            explicitPaddings?.let {
-                org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.explicitPaddings(it)
-            },
-            dataFormat?.let { org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.dilations(it) }
+            explicitPaddings?.let{
+            org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropFilter.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the gradients of depthwise convolution with respect to the input.
@@ -1661,20 +1658,19 @@ public class NnOps(
         explicitPaddings: List<Long>? = null,
         dataFormat: String? = null,
         dilations: List<Long>? = null
-    ): DepthwiseConv2dNativeBackpropInput<T> = java.depthwiseConv2dNativeBackpropInput<T>(
+    ): DepthwiseConv2dNativeBackpropInput<T> = java.depthwiseConv2dNativeBackpropInput<T>(    
         inputSizes,
         filter,
         outBackprop,
         strides,
         padding,
         *listOfNotNull(
-            explicitPaddings?.let {
-                org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.explicitPaddings(it)
-            },
-            dataFormat?.let { org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.dataFormat(it) },
-            dilations?.let { org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.dilations(it) }
+            explicitPaddings?.let{
+            org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.explicitPaddings(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.dataFormat(it) },
+            dilations?.let{ org.tensorflow.op.nn.DepthwiseConv2dNativeBackpropInput.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes the grayscale dilation of 4-D `input` and 3-D `filter` tensors.
@@ -1685,7 +1681,7 @@ public class NnOps(
      *  `&#91;batch, out_height, out_width, depth&#93;`. The spatial dimensions of the output
      *  tensor depend on the `padding` algorithm. We currently only support the default
      *  &quot;NHWC&quot; `data_format`.
-     *
+     *  
      * In detail, the grayscale morphological 2-D dilation is the max-sum correlation
      *  (for consistency with `conv2d`, we use unmirrored filters):
      *  ```
@@ -1697,10 +1693,10 @@ public class NnOps(
      *                        c] +
      *                  filter&#91;dy, dx, c&#93;
      *  }
-     *
+     *  
      * Max-pooling is a special case when the filter has size equal to the pooling
      *  kernel size and contains all zeros.
-     *
+     *  
      * Note on duality: The dilation of `input` by the `filter` is equal to the
      *  negation of the erosion of `-input` by the reflected `filter`.
      *
@@ -1722,13 +1718,13 @@ public class NnOps(
         strides: List<Long>,
         rates: List<Long>,
         padding: String
-    ): Dilation2d<T> = java.dilation2d<T>(
+    ): Dilation2d<T> = java.dilation2d<T>(    
         input,
         filter,
         strides,
         rates,
         padding
-    )
+        )
 
     /**
      * Computes the gradient of morphological 2-D dilation with respect to the filter.
@@ -1753,14 +1749,14 @@ public class NnOps(
         strides: List<Long>,
         rates: List<Long>,
         padding: String
-    ): Dilation2dBackpropFilter<T> = java.dilation2dBackpropFilter<T>(
+    ): Dilation2dBackpropFilter<T> = java.dilation2dBackpropFilter<T>(    
         input,
         filter,
         outBackprop,
         strides,
         rates,
         padding
-    )
+        )
 
     /**
      * Computes the gradient of morphological 2-D dilation with respect to the input.
@@ -1785,14 +1781,14 @@ public class NnOps(
         strides: List<Long>,
         rates: List<Long>,
         padding: String
-    ): Dilation2dBackpropInput<T> = java.dilation2dBackpropInput<T>(
+    ): Dilation2dBackpropInput<T> = java.dilation2dBackpropInput<T>(    
         input,
         filter,
         outBackprop,
         strides,
         rates,
         padding
-    )
+        )
 
     /**
      * Computes the exponential linear function.
@@ -1801,7 +1797,7 @@ public class NnOps(
      *  <li>$ e ^ x - 1 $ if $ x < 0 $</li>
      *  <li>$ x $ if $ x >= 0 $</li>
      *  </ul>
-     *
+     *  
      * Examples:
      *  ```
      *
@@ -1812,7 +1808,7 @@ public class NnOps(
      *  tf.nn.elu(-1000.0)
      *  <tf.Tensor: shape=(), dtype=float32, numpy=-1.0>
      * ```
-     *
+     *  
      * See  [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
      *  ](http://arxiv.org/abs/1511.07289)
      *
@@ -1822,9 +1818,9 @@ public class NnOps(
      * @return a new instance of Elu
      * @see org.tensorflow.op.NnOps.elu
      */
-    public fun <T : TNumber> elu(features: Operand<T>): Elu<T> = java.elu<T>(
+    public fun <T : TNumber> elu(features: Operand<T>): Elu<T> = java.elu<T>(    
         features
-    )
+        )
 
     /**
      * Generates labels for candidate sampling with a learned unigram distribution.
@@ -1832,12 +1828,12 @@ public class NnOps(
      *  file or passed in as an in-memory array instead of building up the distribution
      *  from data on the fly. There is also an option to skew the distribution by
      *  applying a distortion power to the weights.
-     *
+     *  
      * The vocabulary file should be in CSV-like format, with the last field
      *  being the weight associated with the word.
-     *
+     *  
      * For each batch, this op picks a single set of sampled candidate labels.
-     *
+     *  
      * The advantages of sampling candidates per-batch are simplicity and the
      *  possibility of efficient dense matrix multiplication. The disadvantage is that
      *  the sampled candidates must be chosen independently of the context and of the
@@ -1920,23 +1916,23 @@ public class NnOps(
         unigrams: List<Float>? = null,
         seed: Long? = null,
         seed2: Long? = null
-    ): FixedUnigramCandidateSampler = java.fixedUnigramCandidateSampler(
+    ): FixedUnigramCandidateSampler = java.fixedUnigramCandidateSampler(    
         trueClasses,
         numTrue,
         numSampled,
         unique,
         rangeMax,
         *listOfNotNull(
-            vocabFile?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.vocabFile(it) },
-            distortion?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.distortion(it) },
-            numReservedIds?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.numReservedIds(it) },
-            numShards?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.numShards(it) },
-            shard?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.shard(it) },
-            unigrams?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.unigrams(it) },
-            seed?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.FixedUnigramCandidateSampler.seed2(it) }
+            vocabFile?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.vocabFile(it) },
+            distortion?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.distortion(it) },
+            numReservedIds?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.numReservedIds(it) },
+            numShards?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.numShards(it) },
+            shard?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.shard(it) },
+            unigrams?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.unigrams(it) },
+            seed?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.FixedUnigramCandidateSampler.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs fractional average pooling on the input.
@@ -1968,11 +1964,11 @@ public class NnOps(
      *
      * @param overlapping When set to True, it means when pooling, the values at the boundary
      *  of adjacent pooling cells are used by both cells. For example:
-     *
+     *  
      * `index  0  1  2  3  4`
-     *
+     *  
      * `value  20 5  16 3  7`
-     *
+     *  
      * If the pooling sequence is &#91;0, 2, 4&#93;, then 16, at index 2 will be used twice.
      *  The result would be &#91;41/3, 26/3&#93; for fractional avg pooling.
      * @return this Options instance.
@@ -2001,17 +1997,17 @@ public class NnOps(
         deterministic: Boolean? = null,
         seed: Long? = null,
         seed2: Long? = null
-    ): FractionalAvgPool<T> = java.fractionalAvgPool<T>(
+    ): FractionalAvgPool<T> = java.fractionalAvgPool<T>(    
         value,
         poolingRatio,
         *listOfNotNull(
-            pseudoRandom?.let { org.tensorflow.op.nn.FractionalAvgPool.pseudoRandom(it) },
-            overlapping?.let { org.tensorflow.op.nn.FractionalAvgPool.overlapping(it) },
-            deterministic?.let { org.tensorflow.op.nn.FractionalAvgPool.deterministic(it) },
-            seed?.let { org.tensorflow.op.nn.FractionalAvgPool.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.FractionalAvgPool.seed2(it) }
+            pseudoRandom?.let{ org.tensorflow.op.nn.FractionalAvgPool.pseudoRandom(it) },
+            overlapping?.let{ org.tensorflow.op.nn.FractionalAvgPool.overlapping(it) },
+            deterministic?.let{ org.tensorflow.op.nn.FractionalAvgPool.deterministic(it) },
+            seed?.let{ org.tensorflow.op.nn.FractionalAvgPool.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.FractionalAvgPool.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs fractional max pooling on the input.
@@ -2021,11 +2017,11 @@ public class NnOps(
      *  a factor of N, where N is an integer.  Fractional max pooling, as you might
      *  expect from the word &quot;fractional&quot;, means that the overall reduction ratio N
      *  does not have to be an integer.
-     *
+     *  
      * The sizes of the pooling regions are generated randomly but are fairly uniform.
      *  For example, let's look at the height dimension, and the constraints on the
      *  list of rows that will be pool boundaries.
-     *
+     *  
      * First we define the following:
      *  <ol>
      *  <li>input_row_length : the number of rows from the input set</li>
@@ -2034,7 +2030,7 @@ public class NnOps(
      *  <li>K = floor(alpha)</li>
      *  <li>row_pooling_sequence : this is the result list of pool boundary rows</li>
      *  </ol>
-     *
+     *  
      * Then, row_pooling_sequence should satisfy:
      *  <ol>
      *  <li>a[0] = 0 : the first value of the sequence is 0</li>
@@ -2042,7 +2038,7 @@ public class NnOps(
      *  <li>K <= (a&#91;i+1&#93; - a[i]) <= K+1 : all intervals are K or K+1 size</li>
      *  <li>length(row_pooling_sequence) = output_row_length+1</li>
      *  </ol>
-     *
+     *  
      * For more details on fractional max pooling, see this paper:[Benjamin Graham, Fractional
      * Max-Pooling](http://arxiv.org/abs/1412.6071)
      *
@@ -2069,11 +2065,11 @@ public class NnOps(
      *
      * @param overlapping When set to True, it means when pooling, the values at the boundary
      *  of adjacent pooling cells are used by both cells. For example:
-     *
+     *  
      * `index  0  1  2  3  4`
-     *
+     *  
      * `value  20 5  16 3  7`
-     *
+     *  
      * If the pooling sequence is &#91;0, 2, 4&#93;, then 16, at index 2 will be used twice.
      *  The result would be &#91;20, 16&#93; for fractional max pooling.
      * @return this Options instance.
@@ -2102,17 +2098,17 @@ public class NnOps(
         deterministic: Boolean? = null,
         seed: Long? = null,
         seed2: Long? = null
-    ): FractionalMaxPool<T> = java.fractionalMaxPool<T>(
+    ): FractionalMaxPool<T> = java.fractionalMaxPool<T>(    
         value,
         poolingRatio,
         *listOfNotNull(
-            pseudoRandom?.let { org.tensorflow.op.nn.FractionalMaxPool.pseudoRandom(it) },
-            overlapping?.let { org.tensorflow.op.nn.FractionalMaxPool.overlapping(it) },
-            deterministic?.let { org.tensorflow.op.nn.FractionalMaxPool.deterministic(it) },
-            seed?.let { org.tensorflow.op.nn.FractionalMaxPool.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.FractionalMaxPool.seed2(it) }
+            pseudoRandom?.let{ org.tensorflow.op.nn.FractionalMaxPool.pseudoRandom(it) },
+            overlapping?.let{ org.tensorflow.op.nn.FractionalMaxPool.overlapping(it) },
+            deterministic?.let{ org.tensorflow.op.nn.FractionalMaxPool.deterministic(it) },
+            seed?.let{ org.tensorflow.op.nn.FractionalMaxPool.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.FractionalMaxPool.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Batch normalization.
@@ -2162,19 +2158,19 @@ public class NnOps(
         exponentialAvgFactor: Float? = null,
         dataFormat: String? = null,
         isTraining: Boolean? = null
-    ): FusedBatchNorm<T, U> = java.fusedBatchNorm<T, U>(
+    ): FusedBatchNorm<T, U> = java.fusedBatchNorm<T, U>(    
         x,
         scale,
         offset,
         mean,
         variance,
         *listOfNotNull(
-            epsilon?.let { org.tensorflow.op.nn.FusedBatchNorm.epsilon(it) },
-            exponentialAvgFactor?.let { org.tensorflow.op.nn.FusedBatchNorm.exponentialAvgFactor(it) },
-            dataFormat?.let { org.tensorflow.op.nn.FusedBatchNorm.dataFormat(it) },
-            isTraining?.let { org.tensorflow.op.nn.FusedBatchNorm.isTraining(it) }
+            epsilon?.let{ org.tensorflow.op.nn.FusedBatchNorm.epsilon(it) },
+            exponentialAvgFactor?.let{ org.tensorflow.op.nn.FusedBatchNorm.exponentialAvgFactor(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.FusedBatchNorm.dataFormat(it) },
+            isTraining?.let{ org.tensorflow.op.nn.FusedBatchNorm.isTraining(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Gradient for batch normalization.
@@ -2229,7 +2225,7 @@ public class NnOps(
         epsilon: Float? = null,
         dataFormat: String? = null,
         isTraining: Boolean? = null
-    ): FusedBatchNormGrad<T, U> = java.fusedBatchNormGrad<T, U>(
+    ): FusedBatchNormGrad<T, U> = java.fusedBatchNormGrad<T, U>(    
         yBackprop,
         x,
         scale,
@@ -2237,11 +2233,11 @@ public class NnOps(
         reserveSpace2,
         reserveSpace3,
         *listOfNotNull(
-            epsilon?.let { org.tensorflow.op.nn.FusedBatchNormGrad.epsilon(it) },
-            dataFormat?.let { org.tensorflow.op.nn.FusedBatchNormGrad.dataFormat(it) },
-            isTraining?.let { org.tensorflow.op.nn.FusedBatchNormGrad.isTraining(it) }
+            epsilon?.let{ org.tensorflow.op.nn.FusedBatchNormGrad.epsilon(it) },
+            dataFormat?.let{ org.tensorflow.op.nn.FusedBatchNormGrad.dataFormat(it) },
+            isTraining?.let{ org.tensorflow.op.nn.FusedBatchNormGrad.isTraining(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs a padding as a preprocess during a convolution.
@@ -2278,14 +2274,14 @@ public class NnOps(
         mode: String,
         strides: List<Long>,
         padding: String
-    ): FusedPadConv2d<T> = java.fusedPadConv2d<T>(
+    ): FusedPadConv2d<T> = java.fusedPadConv2d<T>(    
         input,
         paddings,
         filter,
         mode,
         strides,
         padding
-    )
+        )
 
     /**
      * Performs a resize and padding as a preprocess during a convolution.
@@ -2332,7 +2328,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         resizeAlignCorners: Boolean? = null
-    ): FusedResizeAndPadConv2d<T> = java.fusedResizeAndPadConv2d<T>(
+    ): FusedResizeAndPadConv2d<T> = java.fusedResizeAndPadConv2d<T>(    
         input,
         sizeOutput,
         paddings,
@@ -2341,9 +2337,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            resizeAlignCorners?.let { org.tensorflow.op.nn.FusedResizeAndPadConv2d.resizeAlignCorners(it) }
+            resizeAlignCorners?.let{ org.tensorflow.op.nn.FusedResizeAndPadConv2d.resizeAlignCorners(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Says whether the targets are in the top `K` predictions.
@@ -2353,13 +2349,13 @@ public class NnOps(
      *  from the `TopK` op in its handling of ties; if multiple classes have the
      *  same prediction value and straddle the top-`k` boundary, all of those
      *  classes are considered to be in the top `k`.
-     *
+     *  
      * More formally, let
-     *
+     *  
      * `\(predictions_i\)` be the predictions for all classes for example `i`,
      *  `\(targets_i\)` be the target class for example `i`,
      *  `\(out_i\)` be the output for example `i`,
-     *
+     *  
      * $$out_i = predictions_{i, targets_i} \in TopKIncludingTies(predictions_i)$$
      *
      * @param predictions A `batch_size` x `classes` tensor.
@@ -2373,18 +2369,18 @@ public class NnOps(
         predictions: Operand<TFloat32>,
         targets: Operand<T>,
         k: Operand<T>
-    ): InTopK = java.inTopK<T>(
+    ): InTopK = java.inTopK<T>(    
         predictions,
         targets,
         k
-    )
+        )
 
     /**
      * L2 Loss.
      *  Computes half the L2 norm of a tensor without the `sqrt`:
      *  ```
      * output = sum(t ** 2) / 2
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -2393,9 +2389,9 @@ public class NnOps(
      * @return a new instance of L2Loss
      * @see org.tensorflow.op.NnOps.l2Loss
      */
-    public fun <T : TNumber> l2Loss(t: Operand<T>): L2Loss<T> = java.l2Loss<T>(
+    public fun <T : TNumber> l2Loss(t: Operand<T>): L2Loss<T> = java.l2Loss<T>(    
         t
-    )
+        )
 
     /**
      * Computes rectified linear: `max(features, features * alpha)`.
@@ -2412,20 +2408,20 @@ public class NnOps(
      * @return this Options instance.
      */
     public fun <T : TNumber> leakyRelu(features: Operand<T>, alpha: Float? = null): LeakyRelu<T> =
-        java.leakyRelu<T>(
-            features,
-            *listOfNotNull(
-                alpha?.let { org.tensorflow.op.nn.LeakyRelu.alpha(it) }
-            ).toTypedArray()
+            java.leakyRelu<T>(    
+        features,
+        *listOfNotNull(
+            alpha?.let{ org.tensorflow.op.nn.LeakyRelu.alpha(it) }
+        ).toTypedArray()
         )
 
     /**
      * Generates labels for candidate sampling with a learned unigram distribution.
      *  See explanations of candidate sampling and the data formats at
      *  go/candidate-sampling.
-     *
+     *  
      * For each batch, this op picks a single set of sampled candidate labels.
-     *
+     *  
      * The advantages of sampling candidates per-batch are simplicity and the
      *  possibility of efficient dense matrix multiplication. The disadvantage is that
      *  the sampled candidates must be chosen independently of the context and of the
@@ -2461,17 +2457,17 @@ public class NnOps(
         rangeMax: Long,
         seed: Long? = null,
         seed2: Long? = null
-    ): LearnedUnigramCandidateSampler = java.learnedUnigramCandidateSampler(
+    ): LearnedUnigramCandidateSampler = java.learnedUnigramCandidateSampler(    
         trueClasses,
         numTrue,
         numSampled,
         unique,
         rangeMax,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.nn.LearnedUnigramCandidateSampler.seed(it) },
-            seed2?.let { org.tensorflow.op.nn.LearnedUnigramCandidateSampler.seed2(it) }
+            seed?.let{ org.tensorflow.op.nn.LearnedUnigramCandidateSampler.seed(it) },
+            seed2?.let{ org.tensorflow.op.nn.LearnedUnigramCandidateSampler.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Local Response Normalization.
@@ -2483,9 +2479,9 @@ public class NnOps(
      * sqr_sum[a, b, c, d] =
      *      sum(input[a, b, c, d - depth_radius : d + depth_radius + 1] ** 2)
      *  output = input / (bias + alpha * sqr_sum) ** beta
-     *
+     *  
      * ```
-     *
+     *  
      * For details, see  [Krizhevsky et al., ImageNet classification with deep
      *  convolutional neural networks (NIPS
      * 2012)](http://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks)
@@ -2520,22 +2516,22 @@ public class NnOps(
         bias: Float? = null,
         alpha: Float? = null,
         beta: Float? = null
-    ): LocalResponseNormalization<T> = java.localResponseNormalization<T>(
+    ): LocalResponseNormalization<T> = java.localResponseNormalization<T>(    
         input,
         *listOfNotNull(
-            depthRadius?.let { org.tensorflow.op.nn.LocalResponseNormalization.depthRadius(it) },
-            bias?.let { org.tensorflow.op.nn.LocalResponseNormalization.bias(it) },
-            alpha?.let { org.tensorflow.op.nn.LocalResponseNormalization.alpha(it) },
-            beta?.let { org.tensorflow.op.nn.LocalResponseNormalization.beta(it) }
+            depthRadius?.let{ org.tensorflow.op.nn.LocalResponseNormalization.depthRadius(it) },
+            bias?.let{ org.tensorflow.op.nn.LocalResponseNormalization.bias(it) },
+            alpha?.let{ org.tensorflow.op.nn.LocalResponseNormalization.alpha(it) },
+            beta?.let{ org.tensorflow.op.nn.LocalResponseNormalization.beta(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes log softmax activations.
      *  For each batch `i` and class `j` we have
      *  ```
      * logsoftmax[i, j] = logits[i, j] - log(sum(exp(logits[i])))
-     *
+     *  
      * ```
      *
      * @param <T> data type for `logsoftmax` output
@@ -2544,9 +2540,9 @@ public class NnOps(
      * @return a new instance of LogSoftmax
      * @see org.tensorflow.op.NnOps.logSoftmax
      */
-    public fun <T : TNumber> logSoftmax(logits: Operand<T>): LogSoftmax<T> = java.logSoftmax<T>(
+    public fun <T : TNumber> logSoftmax(logits: Operand<T>): LogSoftmax<T> = java.logSoftmax<T>(    
         logits
-    )
+        )
 
     /**
      * Performs max pooling on the input.
@@ -2576,15 +2572,15 @@ public class NnOps(
         strides: Operand<TInt32>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPool<T> = java.maxPool<T>(
+    ): MaxPool<T> = java.maxPool<T>(    
         input,
         ksize,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPool.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPool.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs 3D max pooling on the input.
@@ -2615,15 +2611,15 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPool3d<T> = java.maxPool3d<T>(
+    ): MaxPool3d<T> = java.maxPool3d<T>(    
         input,
         ksize,
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPool3d.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPool3d.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes gradients of 3D max pooling function.
@@ -2659,7 +2655,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPool3dGrad<U> = java.maxPool3dGrad<U, T>(
+    ): MaxPool3dGrad<U> = java.maxPool3dGrad<U, T>(    
         origInput,
         origOutput,
         grad,
@@ -2667,9 +2663,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPool3dGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPool3dGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes second-order gradients of the maxpooling function.
@@ -2704,7 +2700,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPool3dGradGrad<T> = java.maxPool3dGradGrad<T>(
+    ): MaxPool3dGradGrad<T> = java.maxPool3dGradGrad<T>(    
         origInput,
         origOutput,
         grad,
@@ -2712,9 +2708,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPool3dGradGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPool3dGradGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes gradients of the maxpooling function.
@@ -2748,7 +2744,7 @@ public class NnOps(
         strides: Operand<TInt32>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPoolGrad<T> = java.maxPoolGrad<T>(
+    ): MaxPoolGrad<T> = java.maxPoolGrad<T>(    
         origInput,
         origOutput,
         grad,
@@ -2756,9 +2752,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPoolGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPoolGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes second-order gradients of the maxpooling function.
@@ -2792,7 +2788,7 @@ public class NnOps(
         strides: Operand<TInt32>,
         padding: String,
         dataFormat: String? = null
-    ): MaxPoolGradGrad<T> = java.maxPoolGradGrad<T>(
+    ): MaxPoolGradGrad<T> = java.maxPoolGradGrad<T>(    
         origInput,
         origOutput,
         grad,
@@ -2800,9 +2796,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.MaxPoolGradGrad.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.MaxPoolGradGrad.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes second-order gradients of the maxpooling function.
@@ -2833,7 +2829,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         includeBatchInIndex: Boolean? = null
-    ): MaxPoolGradGradWithArgmax<T> = java.maxPoolGradGradWithArgmax<T>(
+    ): MaxPoolGradGradWithArgmax<T> = java.maxPoolGradGradWithArgmax<T>(    
         input,
         grad,
         argmax,
@@ -2841,11 +2837,10 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            includeBatchInIndex?.let {
-                org.tensorflow.op.nn.MaxPoolGradGradWithArgmax.includeBatchInIndex(it)
-            }
+            includeBatchInIndex?.let{
+            org.tensorflow.op.nn.MaxPoolGradGradWithArgmax.includeBatchInIndex(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Performs max pooling on the input and outputs both max values and indices.
@@ -2853,7 +2848,7 @@ public class NnOps(
      *  `&#91;b, y, x, c&#93;` becomes flattened index:
      *  `(y * width + x) * channels + c` if `include_batch_in_index` is False;
      *  `((b * height + y) * width + x) * channels + c` if `include_batch_in_index` is True.
-     *
+     *  
      * The indices returned are always in `[0, height) x [0, width)` before flattening,
      *  even if padding is involved and the mathematically correct answer is outside
      *  (either negative or too large).  This is a bug, but fixing it is difficult to do
@@ -2877,13 +2872,13 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         options: Array<MaxPoolWithArgmax.Options>
-    ): MaxPoolWithArgmax<T, TInt64> = java.maxPoolWithArgmax<T>(
+    ): MaxPoolWithArgmax<T, TInt64> = java.maxPoolWithArgmax<T>(    
         input,
         ksize,
         strides,
         padding,
         options
-    )
+        )
 
     /**
      * Performs max pooling on the input and outputs both max values and indices.
@@ -2891,7 +2886,7 @@ public class NnOps(
      *  `&#91;b, y, x, c&#93;` becomes flattened index:
      *  `(y * width + x) * channels + c` if `include_batch_in_index` is False;
      *  `((b * height + y) * width + x) * channels + c` if `include_batch_in_index` is True.
-     *
+     *  
      * The indices returned are always in `[0, height) x [0, width)` before flattening,
      *  even if padding is involved and the mathematically correct answer is outside
      *  (either negative or too large).  This is a bug, but fixing it is difficult to do
@@ -2922,27 +2917,27 @@ public class NnOps(
         Targmax: Class<U>,
         padding: String,
         includeBatchInIndex: Boolean? = null
-    ): MaxPoolWithArgmax<T, U> = java.maxPoolWithArgmax<T, U>(
+    ): MaxPoolWithArgmax<T, U> = java.maxPoolWithArgmax<T, U>(    
         input,
         ksize,
         strides,
         Targmax,
         padding,
         *listOfNotNull(
-            includeBatchInIndex?.let { org.tensorflow.op.nn.MaxPoolWithArgmax.includeBatchInIndex(it) }
+            includeBatchInIndex?.let{ org.tensorflow.op.nn.MaxPoolWithArgmax.includeBatchInIndex(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Finds values of the `n`-th order statistic for the last dimension.
      *  If the input is a vector (rank-1), finds the entries which is the nth-smallest
      *  value in the vector and outputs their values as scalar tensor.
-     *
+     *  
      * For matrices (resp. higher rank input), computes the entries which is the
      *  nth-smallest value in each row (resp. vector along the last dimension). Thus,
      *  ```
      * values.shape = input.shape[:-1]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `values` output
@@ -2963,13 +2958,13 @@ public class NnOps(
         input: Operand<T>,
         n: Operand<TInt32>,
         reverse: Boolean? = null
-    ): NthElement<T> = java.nthElement<T>(
+    ): NthElement<T> = java.nthElement<T>(    
         input,
         n,
         *listOfNotNull(
-            reverse?.let { org.tensorflow.op.nn.NthElement.reverse(it) }
+            reverse?.let{ org.tensorflow.op.nn.NthElement.reverse(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Produces the average pool of the input tensor for quantized types.
@@ -2994,14 +2989,14 @@ public class NnOps(
         ksize: List<Long>,
         strides: List<Long>,
         padding: String
-    ): QuantizedAvgPool<T> = java.quantizedAvgPool<T>(
+    ): QuantizedAvgPool<T> = java.quantizedAvgPool<T>(    
         input,
         minInput,
         maxInput,
         ksize,
         strides,
         padding
-    )
+        )
 
     /**
      * Quantized Batch normalization.
@@ -3060,25 +3055,25 @@ public class NnOps(
         varianceEpsilon: Float,
         scaleAfterNormalization: Boolean
     ): QuantizedBatchNormWithGlobalNormalization<U> =
-        java.quantizedBatchNormWithGlobalNormalization<U, T>(
-            t,
-            tMin,
-            tMax,
-            m,
-            mMin,
-            mMax,
-            v,
-            vMin,
-            vMax,
-            beta,
-            betaMin,
-            betaMax,
-            gamma,
-            gammaMin,
-            gammaMax,
-            outType,
-            varianceEpsilon,
-            scaleAfterNormalization
+            java.quantizedBatchNormWithGlobalNormalization<U, T>(    
+        t,
+        tMin,
+        tMax,
+        m,
+        mMin,
+        mMax,
+        v,
+        vMin,
+        vMax,
+        beta,
+        betaMin,
+        betaMax,
+        gamma,
+        gammaMin,
+        gammaMax,
+        outType,
+        varianceEpsilon,
+        scaleAfterNormalization
         )
 
     /**
@@ -3105,7 +3100,7 @@ public class NnOps(
         minBias: Operand<TFloat32>,
         maxBias: Operand<TFloat32>,
         outType: Class<V>
-    ): QuantizedBiasAdd<V> = java.quantizedBiasAdd<V>(
+    ): QuantizedBiasAdd<V> = java.quantizedBiasAdd<V>(    
         input,
         bias,
         minInput,
@@ -3113,7 +3108,7 @@ public class NnOps(
         minBias,
         maxBias,
         outType
-    )
+        )
 
     /**
      * Computes a 2D convolution given quantized 4D input and filter tensors.
@@ -3157,7 +3152,7 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dilations: List<Long>? = null
-    ): QuantizedConv2d<V> = java.quantizedConv2d<V>(
+    ): QuantizedConv2d<V> = java.quantizedConv2d<V>(    
         input,
         filter,
         minInput,
@@ -3168,9 +3163,9 @@ public class NnOps(
         strides,
         padding,
         *listOfNotNull(
-            dilations?.let { org.tensorflow.op.nn.QuantizedConv2d.dilations(it) }
+            dilations?.let{ org.tensorflow.op.nn.QuantizedConv2d.dilations(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Quantized Instance normalization.
@@ -3215,18 +3210,18 @@ public class NnOps(
         givenYMax: Float? = null,
         varianceEpsilon: Float? = null,
         minSeparation: Float? = null
-    ): QuantizedInstanceNorm<T> = java.quantizedInstanceNorm<T>(
+    ): QuantizedInstanceNorm<T> = java.quantizedInstanceNorm<T>(    
         x,
         xMin,
         xMax,
         *listOfNotNull(
-            outputRangeGiven?.let { org.tensorflow.op.nn.QuantizedInstanceNorm.outputRangeGiven(it) },
-            givenYMin?.let { org.tensorflow.op.nn.QuantizedInstanceNorm.givenYMin(it) },
-            givenYMax?.let { org.tensorflow.op.nn.QuantizedInstanceNorm.givenYMax(it) },
-            varianceEpsilon?.let { org.tensorflow.op.nn.QuantizedInstanceNorm.varianceEpsilon(it) },
-            minSeparation?.let { org.tensorflow.op.nn.QuantizedInstanceNorm.minSeparation(it) }
+            outputRangeGiven?.let{ org.tensorflow.op.nn.QuantizedInstanceNorm.outputRangeGiven(it) },
+            givenYMin?.let{ org.tensorflow.op.nn.QuantizedInstanceNorm.givenYMin(it) },
+            givenYMax?.let{ org.tensorflow.op.nn.QuantizedInstanceNorm.givenYMax(it) },
+            varianceEpsilon?.let{ org.tensorflow.op.nn.QuantizedInstanceNorm.varianceEpsilon(it) },
+            minSeparation?.let{ org.tensorflow.op.nn.QuantizedInstanceNorm.minSeparation(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Produces the max pool of the input tensor for quantized types.
@@ -3251,14 +3246,14 @@ public class NnOps(
         ksize: List<Long>,
         strides: List<Long>,
         padding: String
-    ): QuantizedMaxPool<T> = java.quantizedMaxPool<T>(
+    ): QuantizedMaxPool<T> = java.quantizedMaxPool<T>(    
         input,
         minInput,
         maxInput,
         ksize,
         strides,
         padding
-    )
+        )
 
     /**
      * Computes Quantized Rectified Linear: `max(features, 0)`
@@ -3277,12 +3272,12 @@ public class NnOps(
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedRelu<U> = java.quantizedRelu<U>(
+    ): QuantizedRelu<U> = java.quantizedRelu<U>(    
         features,
         minFeatures,
         maxFeatures,
         outType
-    )
+        )
 
     /**
      * Computes Quantized Rectified Linear 6: `min(max(features, 0), 6)`
@@ -3301,12 +3296,12 @@ public class NnOps(
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedRelu6<U> = java.quantizedRelu6<U>(
+    ): QuantizedRelu6<U> = java.quantizedRelu6<U>(    
         features,
         minFeatures,
         maxFeatures,
         outType
-    )
+        )
 
     /**
      * Computes Quantized Rectified Linear X: `min(max(features, 0), max_value)`
@@ -3327,13 +3322,13 @@ public class NnOps(
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizedReluX<U> = java.quantizedReluX<U>(
+    ): QuantizedReluX<U> = java.quantizedReluX<U>(    
         features,
         maxValue,
         minFeatures,
         maxFeatures,
         outType
-    )
+        )
 
     /**
      * Computes rectified linear: `max(features, 0)`.
@@ -3351,9 +3346,9 @@ public class NnOps(
      * @return a new instance of Relu
      * @see org.tensorflow.op.NnOps.relu
      */
-    public fun <T : TNumber> relu(features: Operand<T>): Relu<T> = java.relu<T>(
+    public fun <T : TNumber> relu(features: Operand<T>): Relu<T> = java.relu<T>(    
         features
-    )
+        )
 
     /**
      * Computes rectified linear 6: `min(max(features, 0), 6)`.
@@ -3364,18 +3359,18 @@ public class NnOps(
      * @return a new instance of Relu6
      * @see org.tensorflow.op.NnOps.relu6
      */
-    public fun <T : TNumber> relu6(features: Operand<T>): Relu6<T> = java.relu6<T>(
+    public fun <T : TNumber> relu6(features: Operand<T>): Relu6<T> = java.relu6<T>(    
         features
-    )
+        )
 
     /**
      * Computes scaled exponential linear: `scale * alpha * (exp(features) - 1)`
      *  if < 0, `scale * features` otherwise.
-     *
+     *  
      * To be used together with
      *  `initializer = tf.variance_scaling_initializer(factor=1.0, mode='FAN_IN')`.
      *  For correct dropout, use `tf.contrib.nn.alpha_dropout`.
-     *
+     *  
      * See  [Self-Normalizing Neural Networks](https://arxiv.org/abs/1706.02515)
      *
      * @param <T> data type for `activations` output
@@ -3384,19 +3379,19 @@ public class NnOps(
      * @return a new instance of Selu
      * @see org.tensorflow.op.NnOps.selu
      */
-    public fun <T : TNumber> selu(features: Operand<T>): Selu<T> = java.selu<T>(
+    public fun <T : TNumber> selu(features: Operand<T>): Selu<T> = java.selu<T>(    
         features
-    )
+        )
 
     /**
      * Computes sigmoid cross entropy given <code>logits</code>.
      *
-     *
+     *  
      * Measures the probability error in discrete classification tasks in which each class is
      *  independent and not mutually exclusive. For instance, one could perform multilabel
      *  classification where a picture can contain both an elephant and a dog at the same time.
      *
-     *
+     *  
      * For brevity, let <code>x = logits</code>, <code>z = labels</code>. The logistic loss in
      *  pseudo-code is
      *
@@ -3407,32 +3402,32 @@ public class NnOps(
      *   = z * log(1 + exp(-x)) + (1 - z) * (x + log(1 + exp(-x))
      *   = (1 - z) * x + log(1 + exp(-x))
      *   = x - x * z + log(1 + exp(-x))
-     *
+     *  
      * ```
      *
-     *
+     *  
      * For <code>x < 0</code>, to avoid overflow in <code>exp(-x)</code>, we reformulate the above
      *
      *  ```
      * x - x * z + log(1 + exp(-x))
      *   = log(exp(x)) - x * z + log(1 + exp(-x))
      *   = - x * z + log(1 + exp(x))
-     *
+     *  
      * ```
      *
-     *
+     *  
      * Hence, to ensure stability and avoid overflow, the implementation uses this equivalent
      *  formulation
      *
      *  ```
      * max(x, 0) - x * z + log(1 + exp(-abs(x)))
-     *
+     *  
      * ```
      *
-     *
+     *  
      * </ode>logits</code> and <code>labels</code> must have the same type and shape.
      *
-     *
+     *  
      *
      *
      * @param scope The TensorFlow scope
@@ -3444,17 +3439,17 @@ public class NnOps(
      * @see org.tensorflow.op.NnOps.sigmoidCrossEntropyWithLogits
      */
     public fun <T : TNumber> sigmoidCrossEntropyWithLogits(labels: Operand<T>, logits: Operand<T>):
-        Operand<T> = java.sigmoidCrossEntropyWithLogits<T>(
+            Operand<T> = java.sigmoidCrossEntropyWithLogits<T>(    
         labels,
         logits
-    )
+        )
 
     /**
      * Computes softmax activations.
      *  For each batch `i` and class `j` we have
      *  ```
      * $$softmax[i, j] = exp(logits[i, j]) / sum_j(exp(logits[i, j]))$$
-     *
+     *  
      * ```
      *
      * @param <T> data type for `softmax` output
@@ -3463,32 +3458,32 @@ public class NnOps(
      * @return a new instance of Softmax
      * @see org.tensorflow.op.NnOps.softmax
      */
-    public fun <T : TNumber> softmax(logits: Operand<T>): Softmax<T> = java.softmax<T>(
+    public fun <T : TNumber> softmax(logits: Operand<T>): Softmax<T> = java.softmax<T>(    
         logits
-    )
+        )
 
     /**
      * Computes softmax cross entropy between <code>logits</code> and <code>labels</code>.
      *
-     *
+     *  
      * Measures the probability error in discrete classification tasks in which the classes are
      *  mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
      *  labeled with one and only one label: an image can be a dog or a truck, but not both.
      *
-     *
+     *  
      * **NOTE:**
      *
-     *
+     *  
      * While the classes are mutually exclusive, their probabilities need not be. All that is
      *  required is that each row of <code>labels</code> is a valid probability distribution. If
      * they
      *  are not, the computation of the gradient will be incorrect.
      *
-     *
+     *  
      * If using exclusive <code>labels</code> (wherein one and only one class is true at a time),
      *  see [org.tensorflow.op.NnOps.sparseSoftmaxCrossEntropyWithLogits]
      *
-     *
+     *  
      * Usage:
      *
      *  ```
@@ -3504,7 +3499,7 @@ public class NnOps(
      *    // values { 0.169846, 0.824745 }
      *  }
      *
-     *
+     *  
      * Backpropagation will happen into both <code>logits</code> and <code>labels</code>. To
      *  disallow backpropagation into <code>labels</code>, pass label tensors through <code>
      *  tf.stopGradient</code> before feeding it to this function.
@@ -3528,11 +3523,11 @@ public class NnOps(
         labels: Operand<U>,
         logits: Operand<T>,
         axis: Int
-    ): Operand<T> = java.softmaxCrossEntropyWithLogits<T, U>(
+    ): Operand<T> = java.softmaxCrossEntropyWithLogits<T, U>(    
         labels,
         logits,
         axis
-    )
+        )
 
     /**
      * Computes softsign: `features / (abs(features) + 1)`.
@@ -3543,14 +3538,14 @@ public class NnOps(
      * @return a new instance of Softsign
      * @see org.tensorflow.op.NnOps.softsign
      */
-    public fun <T : TNumber> softsign(features: Operand<T>): Softsign<T> = java.softsign<T>(
+    public fun <T : TNumber> softsign(features: Operand<T>): Softsign<T> = java.softsign<T>(    
         features
-    )
+        )
 
     /**
      * SpaceToBatch for 4-D tensors of type T.
      *  This is a legacy version of the more general SpaceToBatchND.
-     *
+     *  
      * Zero-pads and then rearranges (permutes) blocks of spatial data into batch.
      *  More specifically, this op outputs a copy of the input tensor where values from
      *  the `height` and `width` dimensions are moved to the `batch` dimension. After
@@ -3563,16 +3558,16 @@ public class NnOps(
      *  the padding of the input with zeros across the spatial dimensions as follows:
      *  `
      * paddings = [[pad_top, pad_bottom], [pad_left, pad_right]]
-     *
+     *  
      * `
-     *
+     *  
      * The effective spatial dimensions of the zero-padded input tensor will be:
      *  `
      * height_pad = pad_top + height + pad_bottom
      *    width_pad = pad_left + width + pad_right
-     *
+     *  
      * `
-     *
+     *  
      * The attr `block_size` must be greater than one. It indicates the block size.
      *  <ul>
      *  <li>Non-overlapping blocks of size `block_size x block size` in the height and
@@ -3580,75 +3575,75 @@ public class NnOps(
      *  <li>The batch of the output tensor is `batch * block_size * block_size`.</li>
      *  <li>Both height_pad and width_pad must be divisible by block_size.</li>
      *  </ul>
-     *
+     *  
      * The shape of the output will be:
      *  `
      * [batch*block_size*block_size, height_pad/block_size, width_pad/block_size,
      *   depth]
-     *
+     *  
      * `
-     *
+     *  
      * Some examples:
-     *
+     *  
      * (1) For the following input of shape `&#91;1, 2, 2, 1&#93;` and block_size of 2:
      *  `
      * x = [[[[1], [2]], [[3], [4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 1, 1, 1&#93;` and value:
      *  `
      * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (2) For the following input of shape `&#91;1, 2, 2, 3&#93;` and block_size of 2:
      *  `
      * x = [[[[1, 2, 3], [4, 5, 6]],
      *        [[7, 8, 9], [10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 1, 1, 3&#93;` and value:
      *  `
      * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (3) For the following input of shape `&#91;1, 4, 4, 1&#93;` and block_size of 2:
      *  `
      * x = [[[[1],   [2],  [3],  [4]],
      *        [[5],   [6],  [7],  [8]],
      *        [[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;4, 2, 2, 1&#93;` and value:
      *  `
      * x = [[[[1], [3]], [[9], [11]]],
      *       [[[2], [4]], [[10], [12]]],
      *       [[[5], [7]], [[13], [15]]],
      *       [[[6], [8]], [[14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * (4) For the following input of shape `&#91;2, 2, 4, 1&#93;` and block_size of 2:
      *  `
      * x = [[[[1],   [2],  [3],  [4]],
      *        [[5],   [6],  [7],  [8]]],
      *       [[[9],  [10], [11],  [12]],
      *        [[13], [14], [15],  [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * The output tensor has shape `&#91;8, 1, 2, 1&#93;` and value:
      *  `
      * x = [[[[1], [3]]], [[[9], [11]]], [[[2], [4]]], [[[10], [12]]],
      *       [[[5], [7]]], [[[13], [15]]], [[[6], [8]]], [[[14], [16]]]]
-     *
+     *  
      * `
-     *
+     *  
      * Among others, this operation is useful for reducing atrous convolution into
      *  regular convolution.
      * @param blockSize the value of the blockSize property
@@ -3660,11 +3655,11 @@ public class NnOps(
         input: Operand<T>,
         paddings: Operand<out TNumber>,
         blockSize: Long
-    ): SpaceToBatch<T> = java.spaceToBatch<T>(
+    ): SpaceToBatch<T> = java.spaceToBatch<T>(    
         input,
         paddings,
         blockSize
-    )
+        )
 
     /**
      * SpaceToDepth for tensors of type T.
@@ -3680,14 +3675,14 @@ public class NnOps(
      *  component of the output channel index.</li>
      *  <li>The input tensor's height and width must be divisible by block_size.</li>
      *  </ul>
-     *
+     *  
      * The `data_format` attr specifies the layout of the input and output tensors
      *  with the following options:
      *  &quot;NHWC&quot;: `&#91; batch, height, width, channels &#93;`
      *  &quot;NCHW&quot;: `&#91; batch, channels, height, width &#93;`
      *  &quot;NCHW_VECT_C&quot;:
      *  `qint8 &#91; batch, channels / 4, height, width, 4 &#93;`
-     *
+     *  
      * It is useful to consider the operation as transforming a 6-D Tensor.
      *  e.g. for data_format = NHWC,
      *  Each element in the input tensor can be specified via 6 coordinates,
@@ -3697,61 +3692,61 @@ public class NnOps(
      *  within the input block, iC means input channels).
      *  The output would be a transpose to the following layout:
      *  n,oY,oX,bY,bX,iC
-     *
+     *  
      * This operation is useful for resizing the activations between convolutions
      *  (but keeping all data), e.g. instead of pooling. It is also useful for training
      *  purely convolutional models.
-     *
+     *  
      * For example, given an input of shape `&#91;1, 2, 2, 1&#93;`, data_format = &quot;NHWC&quot;
      * and
      *  block_size = 2:
      *  ```
      * x = [[[[1], [2]],
      *        [[3], [4]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation will output a tensor of shape `&#91;1, 1, 1, 4&#93;`:
      *  ```
      * [[[[1, 2, 3, 4]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Here, the input has a batch of 1 and each batch element has shape `&#91;2, 2, 1&#93;`,
      *  the corresponding output will have a single element (i.e. width and height are
      *  both 1) and will have a depth of 4 channels (1 * block_size * block_size).
      *  The output element shape is `&#91;1, 1, 4&#93;`.
-     *
+     *  
      * For an input tensor with larger depth, here of shape `&#91;1, 2, 2, 3&#93;`, e.g.
      *  ```
      * x = [[[[1, 2, 3], [4, 5, 6]],
      *        [[7, 8, 9], [10, 11, 12]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * This operation, for block_size of 2, will return the following tensor of shape
      *  `&#91;1, 1, 1, 12&#93;`
      *  ```
      * [[[[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * Similarly, for the following input of shape `&#91;1 4 4 1&#93;`, and a block size of 2:
      *  ```
      * x = [[[[1],   [2],  [5],  [6]],
      *        [[3],   [4],  [7],  [8]],
      *        [[9],  [10], [13],  [14]],
      *        [[11], [12], [15],  [16]]]]
-     *
+     *  
      * ```
-     *
+     *  
      * the operator will return the following tensor of shape `&#91;1 2 2 4&#93;`:
      *  ```
      * x = [[[[1, 2, 3, 4],
      *         [5, 6, 7, 8]],
      *        [[9, 10, 11, 12],
      *         [13, 14, 15, 16]]]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -3770,26 +3765,26 @@ public class NnOps(
         input: Operand<T>,
         blockSize: Long,
         dataFormat: String? = null
-    ): SpaceToDepth<T> = java.spaceToDepth<T>(
+    ): SpaceToDepth<T> = java.spaceToDepth<T>(    
         input,
         blockSize,
         *listOfNotNull(
-            dataFormat?.let { org.tensorflow.op.nn.SpaceToDepth.dataFormat(it) }
+            dataFormat?.let{ org.tensorflow.op.nn.SpaceToDepth.dataFormat(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes sparse softmax cross entropy between <code>logits</code> and <code>labels</code>.
      *
-     *
+     *  
      * Measures the probability error in discrete classification tasks in which the classes are
      *  mutually exclusive (each entry is in exactly one class). For example, each CIFAR-10 image is
      *  labeled with one and only one label: an image can be a dog or a truck, but not both.
      *
-     *
+     *  
      * **NOTE:**
      *
-     *
+     *  
      * For this operation, the probability of a given label is considered exclusive. That is, soft
      *  classes are not allowed, and the <code>labels</code> vector must provide a single specific
      *  index for the true class for each row of <code>logits</code> (each minibatch entry). For
@@ -3797,16 +3792,16 @@ public class NnOps(
      *  softmax classification with a probability distribution for each entry,
      * [org.tensorflow.op.NnOps.softmaxCrossEntropyWithLogits].
      *
-     *
+     *  
      * **WARNING:**
      *
-     *
+     *  
      * This op expects unscaled logits, since it performs a <code>softmax</code> on <code>logits
      *  </code> internally for efficiency. Do not call this op with the output of
      * <code>softmax</code>,
      *  as it will produce incorrect results.
      *
-     *
+     *  
      * A common use case is to have logits of shape <code>&#91;batchSize, numClasses&#93;</code> and
      * have
      *  labels of shape <code>&#91;batchSize&#93;</code>, but higher dimensions are supported, in
@@ -3840,27 +3835,25 @@ public class NnOps(
      *      of the labels is not equal to the rank of the logits minus one.
      * @see org.tensorflow.op.NnOps.sparseSoftmaxCrossEntropyWithLogits
      */
-    public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(
-        labels: Operand<T>,
-        logits: Operand<U>
-    ): Operand<*> = java.sparseSoftmaxCrossEntropyWithLogits<T, U>(
+    public fun <T : TNumber, U : TNumber> sparseSoftmaxCrossEntropyWithLogits(labels: Operand<T>,
+            logits: Operand<U>): Operand<*> = java.sparseSoftmaxCrossEntropyWithLogits<T, U>(    
         labels,
         logits
-    )
+        )
 
     /**
      * Finds values and indices of the `k` largest elements for the last dimension.
      *  If the input is a vector (rank-1), finds the `k` largest entries in the vector
      *  and outputs their values and indices as vectors.  Thus `values[j]` is the
      *  `j`-th largest entry in `input`, and its index is `indices[j]`.
-     *
+     *  
      * For matrices (resp. higher rank input), computes the top `k` entries in each
      *  row (resp. vector along the last dimension).  Thus,
      *  ```
      * values.shape = indices.shape = input.shape[:-1] + [k]
-     *
+     *  
      * ```
-     *
+     *  
      * If two elements are equal, the lower-index element appears first.
      *
      * @param <T> data type for `values` output
@@ -3881,19 +3874,19 @@ public class NnOps(
         input: Operand<T>,
         k: Operand<TInt32>,
         sorted: Boolean? = null
-    ): TopK<T> = java.topK<T>(
+    ): TopK<T> = java.topK<T>(    
         input,
         k,
         *listOfNotNull(
-            sorted?.let { org.tensorflow.op.nn.TopK.sorted(it) }
+            sorted?.let{ org.tensorflow.op.nn.TopK.sorted(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Computes size of weights that can be used by a Cudnn RNN model.
      *  Return the params size that can be used by the Cudnn RNN model. Subsequent
      *  weight allocation and initialization should use this size.
-     *
+     *  
      * num_layers: Specifies the number of layers in the RNN model.
      *  num_units: Specifies the size of the hidden state.
      *  input_size: Specifies the size of the input state.
@@ -3965,11 +3958,9 @@ public class NnOps(
         seed: Long? = null,
         seed2: Long? = null,
         numProj: Long? = null
-    ): CudnnRnnParamsSize<T> = cudnnRnnParamsSize<T, U>(
-        numLayers, numUnits, inputSize,
-        U::class.java, T::class.java, rnnMode, inputMode, direction, dropout, seed, seed2,
-        numProj
-    )
+    ): CudnnRnnParamsSize<T> = cudnnRnnParamsSize<T, U>(numLayers, numUnits, inputSize,
+            U::class.java, T::class.java, rnnMode, inputMode, direction, dropout, seed, seed2,
+            numProj)
 
     /**
      * Performs max pooling on the input and outputs both max values and indices.
@@ -3977,7 +3968,7 @@ public class NnOps(
      *  `&#91;b, y, x, c&#93;` becomes flattened index:
      *  `(y * width + x) * channels + c` if `include_batch_in_index` is False;
      *  `((b * height + y) * width + x) * channels + c` if `include_batch_in_index` is True.
-     *
+     *  
      * The indices returned are always in `[0, height) x [0, width)` before flattening,
      *  even if padding is involved and the mathematically correct answer is outside
      *  (either negative or too large).  This is a bug, but fixing it is difficult to do
@@ -4008,10 +3999,8 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         includeBatchInIndex: Boolean? = null
-    ): MaxPoolWithArgmax<T, U> = maxPoolWithArgmax<T, U>(
-        input, ksize, strides, U::class.java,
-        padding, includeBatchInIndex
-    )
+    ): MaxPoolWithArgmax<T, U> = maxPoolWithArgmax<T, U>(input, ksize, strides, U::class.java,
+            padding, includeBatchInIndex)
 
     /**
      * Quantized Batch normalization.
@@ -4070,10 +4059,8 @@ public class NnOps(
         varianceEpsilon: Float,
         scaleAfterNormalization: Boolean
     ): QuantizedBatchNormWithGlobalNormalization<U> = quantizedBatchNormWithGlobalNormalization<U,
-        T>(
-        t, tMin, tMax, m, mMin, mMax, v, vMin, vMax, beta, betaMin, betaMax, gamma, gammaMin,
-        gammaMax, U::class.java, varianceEpsilon, scaleAfterNormalization
-    )
+            T>(t, tMin, tMax, m, mMin, mMax, v, vMin, vMax, beta, betaMin, betaMax, gamma, gammaMin,
+            gammaMax, U::class.java, varianceEpsilon, scaleAfterNormalization)
 
     /**
      * Adds Tensor 'bias' to Tensor 'input' for Quantized types.
@@ -4099,10 +4086,8 @@ public class NnOps(
         maxInput: Operand<TFloat32>,
         minBias: Operand<TFloat32>,
         maxBias: Operand<TFloat32>
-    ): QuantizedBiasAdd<V> = quantizedBiasAdd<V>(
-        input, bias, minInput, maxInput, minBias, maxBias,
-        V::class.java
-    )
+    ): QuantizedBiasAdd<V> = quantizedBiasAdd<V>(input, bias, minInput, maxInput, minBias, maxBias,
+            V::class.java)
 
     /**
      * Computes a 2D convolution given quantized 4D input and filter tensors.
@@ -4146,10 +4131,8 @@ public class NnOps(
         strides: List<Long>,
         padding: String,
         dilations: List<Long>? = null
-    ): QuantizedConv2d<V> = quantizedConv2d<V>(
-        input, filter, minInput, maxInput, minFilter,
-        maxFilter, V::class.java, strides, padding, dilations
-    )
+    ): QuantizedConv2d<V> = quantizedConv2d<V>(input, filter, minInput, maxInput, minFilter,
+            maxFilter, V::class.java, strides, padding, dilations)
 
     /**
      * Computes Quantized Rectified Linear: `max(features, 0)`
@@ -4208,8 +4191,6 @@ public class NnOps(
         maxValue: Operand<TFloat32>,
         minFeatures: Operand<TFloat32>,
         maxFeatures: Operand<TFloat32>
-    ): QuantizedReluX<U> = quantizedReluX<U>(
-        features, maxValue, minFeatures, maxFeatures,
-        U::class.java
-    )
+    ): QuantizedReluX<U> = quantizedReluX<U>(features, maxValue, minFeatures, maxFeatures,
+            U::class.java)
 }

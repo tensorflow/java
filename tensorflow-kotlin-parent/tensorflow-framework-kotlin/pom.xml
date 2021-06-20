@@ -86,9 +86,22 @@
         <configuration>
           <args>
             <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
-            <arg>-Xexplicit-api=strict</arg>
           </args>
         </configuration>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
+                <arg>-Xexplicit-api=strict</arg>
+              </args>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

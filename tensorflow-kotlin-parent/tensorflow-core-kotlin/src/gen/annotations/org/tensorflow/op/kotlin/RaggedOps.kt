@@ -17,12 +17,12 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Boolean
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.ragged.RaggedBincount
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
-import kotlin.Boolean
 
 /**
  * An API for building `ragged` operations as [Op][org.tensorflow.op.Op]s
@@ -49,7 +49,7 @@ public class RaggedOps(
      *  counted in `arr`. If `weights` are non-empty, then index `i` stores the sum of
      *  the value in `weights` at each index where the corresponding value in `arr` is
      *  `i`.
-     *
+     *  
      * Values in `arr` outside of the range [0, size) are ignored.
      *
      * @param <U> data type for `output` output
@@ -76,13 +76,13 @@ public class RaggedOps(
         sizeOutput: Operand<T>,
         weights: Operand<U>,
         binaryOutput: Boolean? = null
-    ): RaggedBincount<U> = java.raggedBincount<U, T>(
+    ): RaggedBincount<U> = java.raggedBincount<U, T>(    
         splits,
         values,
         sizeOutput,
         weights,
         *listOfNotNull(
-            binaryOutput?.let { org.tensorflow.op.ragged.RaggedBincount.binaryOutput(it) }
+            binaryOutput?.let{ org.tensorflow.op.ragged.RaggedBincount.binaryOutput(it) }
         ).toTypedArray()
-    )
+        )
 }

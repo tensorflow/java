@@ -17,6 +17,11 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
@@ -88,11 +93,6 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Boolean
-import kotlin.Float
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `train` operations as [Op][org.tensorflow.op.Op]s
@@ -126,11 +126,11 @@ public class TrainOps(
         handle: Operand<TString>,
         localStep: Operand<TInt64>,
         gradient: Operand<out TType>
-    ): AccumulatorApplyGradient = java.accumulatorApplyGradient(
+    ): AccumulatorApplyGradient = java.accumulatorApplyGradient(    
         handle,
         localStep,
         gradient
-    )
+        )
 
     /**
      * Returns the number of gradients aggregated in the given accumulators.
@@ -140,8 +140,8 @@ public class TrainOps(
      * @see org.tensorflow.op.TrainOps.accumulatorNumAccumulated
      */
     public fun accumulatorNumAccumulated(handle: Operand<TString>): AccumulatorNumAccumulated =
-        java.accumulatorNumAccumulated(
-            handle
+            java.accumulatorNumAccumulated(    
+        handle
         )
 
     /**
@@ -155,10 +155,10 @@ public class TrainOps(
      * @see org.tensorflow.op.TrainOps.accumulatorSetGlobalStep
      */
     public fun accumulatorSetGlobalStep(handle: Operand<TString>, newGlobalStep: Operand<TInt64>):
-        AccumulatorSetGlobalStep = java.accumulatorSetGlobalStep(
+            AccumulatorSetGlobalStep = java.accumulatorSetGlobalStep(    
         handle,
         newGlobalStep
-    )
+        )
 
     /**
      * Extracts the average gradient in the given ConditionalAccumulator.
@@ -181,11 +181,11 @@ public class TrainOps(
         handle: Operand<TString>,
         numRequired: Operand<TInt32>,
         dtype: Class<T>
-    ): AccumulatorTakeGradient<T> = java.accumulatorTakeGradient<T>(
+    ): AccumulatorTakeGradient<T> = java.accumulatorTakeGradient<T>(    
         handle,
         numRequired,
         dtype
-    )
+        )
 
     /**
      * Update '*var' according to the adadelta scheme.
@@ -222,7 +222,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyAdadelta<T> = java.applyAdadelta<T>(
+    ): ApplyAdadelta<T> = java.applyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -231,9 +231,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyAdadelta.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyAdadelta.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the adagrad scheme.
@@ -267,16 +267,16 @@ public class TrainOps(
         grad: Operand<T>,
         useLocking: Boolean? = null,
         updateSlots: Boolean? = null
-    ): ApplyAdagrad<T> = java.applyAdagrad<T>(
+    ): ApplyAdagrad<T> = java.applyAdagrad<T>(    
         `var`,
         accum,
         lr,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyAdagrad.useLocking(it) },
-            updateSlots?.let { org.tensorflow.op.train.ApplyAdagrad.updateSlots(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyAdagrad.useLocking(it) },
+            updateSlots?.let{ org.tensorflow.op.train.ApplyAdagrad.updateSlots(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the proximal adagrad scheme.
@@ -310,7 +310,7 @@ public class TrainOps(
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): ApplyAdagradDa<T> = java.applyAdagradDa<T>(
+    ): ApplyAdagradDa<T> = java.applyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -320,9 +320,9 @@ public class TrainOps(
         l2,
         globalStep,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyAdagradDa.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyAdagradDa.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the Adam algorithm.
@@ -370,7 +370,7 @@ public class TrainOps(
         grad: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ApplyAdam<T> = java.applyAdam<T>(
+    ): ApplyAdam<T> = java.applyAdam<T>(    
         `var`,
         m,
         v,
@@ -382,10 +382,10 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyAdam.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ApplyAdam.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyAdam.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ApplyAdam.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the AddSign update.
@@ -421,7 +421,7 @@ public class TrainOps(
         beta: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyAddSign<T> = java.applyAddSign<T>(
+    ): ApplyAddSign<T> = java.applyAddSign<T>(    
         `var`,
         m,
         lr,
@@ -430,9 +430,9 @@ public class TrainOps(
         beta,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyAddSign.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyAddSign.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
@@ -440,16 +440,16 @@ public class TrainOps(
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
+     *  
      * Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
-     *
+     *  
      * Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
+     *  
      * mg <- rho * mg_{t-1} + (1-rho) * grad
      *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
@@ -487,7 +487,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyCenteredRmsProp<T> = java.applyCenteredRmsProp<T>(
+    ): ApplyCenteredRmsProp<T> = java.applyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -498,9 +498,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyCenteredRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyCenteredRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the Ftrl-proximal scheme.
@@ -549,7 +549,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): ApplyFtrl<T> = java.applyFtrl<T>(
+    ): ApplyFtrl<T> = java.applyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -560,10 +560,10 @@ public class TrainOps(
         l2Shrinkage,
         lrPower,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyFtrl.useLocking(it) },
-            multiplyLinearByLr?.let { org.tensorflow.op.train.ApplyFtrl.multiplyLinearByLr(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyFtrl.useLocking(it) },
+            multiplyLinearByLr?.let{ org.tensorflow.op.train.ApplyFtrl.multiplyLinearByLr(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' by subtracting 'alpha' * 'delta' from it.
@@ -587,19 +587,19 @@ public class TrainOps(
         alpha: Operand<T>,
         delta: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyGradientDescent<T> = java.applyGradientDescent<T>(
+    ): ApplyGradientDescent<T> = java.applyGradientDescent<T>(    
         `var`,
         alpha,
         delta,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyGradientDescent.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyGradientDescent.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * accum = accum * momentum + grad
      *  var -= lr * accum
      *
@@ -634,17 +634,17 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ApplyMomentum<T> = java.applyMomentum<T>(
+    ): ApplyMomentum<T> = java.applyMomentum<T>(    
         `var`,
         accum,
         lr,
         grad,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ApplyMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ApplyMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the AddSign update.
@@ -680,7 +680,7 @@ public class TrainOps(
         beta: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyPowerSign<T> = java.applyPowerSign<T>(
+    ): ApplyPowerSign<T> = java.applyPowerSign<T>(    
         `var`,
         m,
         lr,
@@ -689,9 +689,9 @@ public class TrainOps(
         beta,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyPowerSign.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyPowerSign.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
@@ -724,7 +724,7 @@ public class TrainOps(
         l2: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyProximalAdagrad<T> = java.applyProximalAdagrad<T>(
+    ): ApplyProximalAdagrad<T> = java.applyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -732,9 +732,9 @@ public class TrainOps(
         l2,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyProximalAdagrad.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyProximalAdagrad.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' as FOBOS algorithm with fixed learning rate.
@@ -764,26 +764,26 @@ public class TrainOps(
         l2: Operand<T>,
         delta: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyProximalGradientDescent<T> = java.applyProximalGradientDescent<T>(
+    ): ApplyProximalGradientDescent<T> = java.applyProximalGradientDescent<T>(    
         `var`,
         alpha,
         l1,
         l2,
         delta,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyProximalGradientDescent.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyProximalGradientDescent.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the RMSProp algorithm.
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
+     *  
      * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
      *  var <- var - mom
@@ -818,7 +818,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ApplyRmsProp<T> = java.applyRmsProp<T>(
+    ): ApplyRmsProp<T> = java.applyRmsProp<T>(    
         `var`,
         ms,
         mom,
@@ -828,9 +828,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ApplyRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ApplyRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Multiplies slices of two tensors in batches.
@@ -840,23 +840,23 @@ public class TrainOps(
      *  individual slices can optionally be adjointed (to adjoint a matrix
      *  means to transpose and conjugate it) before multiplication by setting
      *  the `adj_x` or `adj_y` flag to `True`, which are by default `False`.
-     *
+     *  
      * The input tensors `x` and `y` are 2-D or higher with shape `&#91;..., r_x, c_x&#93;`
      *  and `&#91;..., r_y, c_y&#93;`.
-     *
+     *  
      * The output tensor is 2-D or higher with shape `&#91;..., r_o, c_o&#93;`, where:
      *  ```
      * r_o = c_x if adj_x else r_x
      *  c_o = r_y if adj_y else c_y
-     *
+     *  
      * ```
-     *
+     *  
      * It is computed as:
      *  ```
      * output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
-     *
+     *  
      * ```
-     *
+     *  
      * _NOTE_: `train.BatchMatMul` supports broadcasting in the batch dimensions. More
      *  about broadcasting[here](http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html) .
      *
@@ -881,14 +881,14 @@ public class TrainOps(
         y: Operand<T>,
         adjX: Boolean? = null,
         adjY: Boolean? = null
-    ): BatchMatMul<T> = java.batchMatMul<T>(
+    ): BatchMatMul<T> = java.batchMatMul<T>(    
         x,
         y,
         *listOfNotNull(
-            adjX?.let { org.tensorflow.op.train.BatchMatMul.adjX(it) },
-            adjY?.let { org.tensorflow.op.train.BatchMatMul.adjY(it) }
+            adjX?.let{ org.tensorflow.op.train.BatchMatMul.adjX(it) },
+            adjY?.let{ org.tensorflow.op.train.BatchMatMul.adjY(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * A conditional accumulator for aggregating gradients.
@@ -926,15 +926,15 @@ public class TrainOps(
         container: String? = null,
         sharedName: String? = null,
         reductionType: String? = null
-    ): ConditionalAccumulator = java.conditionalAccumulator<T>(
+    ): ConditionalAccumulator = java.conditionalAccumulator<T>(    
         dtype,
         shape,
         *listOfNotNull(
-            container?.let { org.tensorflow.op.train.ConditionalAccumulator.container(it) },
-            sharedName?.let { org.tensorflow.op.train.ConditionalAccumulator.sharedName(it) },
-            reductionType?.let { org.tensorflow.op.train.ConditionalAccumulator.reductionType(it) }
+            container?.let{ org.tensorflow.op.train.ConditionalAccumulator.container(it) },
+            sharedName?.let{ org.tensorflow.op.train.ConditionalAccumulator.sharedName(it) },
+            reductionType?.let{ org.tensorflow.op.train.ConditionalAccumulator.reductionType(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Given a path to new and old vocabulary files, returns a remapping Tensor of
@@ -944,22 +944,22 @@ public class TrainOps(
      *  in the new vocabulary is not in the old vocabulary.  The old vocabulary is
      *  constrained to the first `old_vocab_size` entries if `old_vocab_size` is not the
      *  default value of -1.
-     *
+     *  
      * `num_vocab_offset` enables
      *  use in the partitioned variable case, and should generally be set through
      *  examining partitioning info.  The format of the files should be a text file,
      *  with each line containing a single entity within the vocabulary.
-     *
+     *  
      * For example, with `new_vocab_file` a text file containing each of the following
      *  elements on a single line: `&#91;f0, f1, f2, f3&#93;`, old_vocab_file = &#91;f1, f0,
      * f3&#93;,
      *  `num_new_vocab = 3, new_vocab_offset = 1`, the returned remapping would be
      *  `&#91;0, -1, 2&#93;`.
-     *
+     *  
      * The op also returns a count of how many entries in the new vocabulary
      *  were present in the old vocabulary, which is used to calculate the number of
      *  values to initialize in a weight matrix remapping
-     *
+     *  
      * This functionality can be used to remap both row vocabularies (typically,
      *  features) and column vocabularies (typically, classes) from TensorFlow
      *  checkpoints.  Note that the partitioning logic relies on contiguous vocabularies
@@ -987,23 +987,23 @@ public class TrainOps(
         newVocabOffset: Long,
         numNewVocab: Long,
         oldVocabSize: Long? = null
-    ): GenerateVocabRemapping = java.generateVocabRemapping(
+    ): GenerateVocabRemapping = java.generateVocabRemapping(    
         newVocabFile,
         oldVocabFile,
         newVocabOffset,
         numNewVocab,
         *listOfNotNull(
-            oldVocabSize?.let { org.tensorflow.op.train.GenerateVocabRemapping.oldVocabSize(it) }
+            oldVocabSize?.let{ org.tensorflow.op.train.GenerateVocabRemapping.oldVocabSize(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * V2 format specific: merges the metadata files of sharded checkpoints.  The
      *  result is one logical checkpoint, with one physical metadata file and renamed
      *  data files.
-     *
+     *  
      * Intended for &quot;grouping&quot; multiple checkpoints in a sharded checkpoint setup.
-     *
+     *  
      * If delete_old_dirs is true, attempts to delete recursively the dirname of each
      *  path in the input checkpoint_prefixes.  This is useful when those paths are non
      *  user-facing temporary locations.
@@ -1023,13 +1023,13 @@ public class TrainOps(
         checkpointPrefixes: Operand<TString>,
         destinationPrefix: Operand<TString>,
         deleteOldDirs: Boolean? = null
-    ): MergeV2Checkpoints = java.mergeV2Checkpoints(
+    ): MergeV2Checkpoints = java.mergeV2Checkpoints(    
         checkpointPrefixes,
         destinationPrefix,
         *listOfNotNull(
-            deleteOldDirs?.let { org.tensorflow.op.train.MergeV2Checkpoints.deleteOldDirs(it) }
+            deleteOldDirs?.let{ org.tensorflow.op.train.MergeV2Checkpoints.deleteOldDirs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Training via negative sampling.
@@ -1052,7 +1052,7 @@ public class TrainOps(
         lr: Operand<TFloat32>,
         vocabCount: List<Long>,
         numNegativeSamples: Long
-    ): NegTrain = java.negTrain(
+    ): NegTrain = java.negTrain(    
         wIn,
         wOut,
         examples,
@@ -1060,12 +1060,12 @@ public class TrainOps(
         lr,
         vocabCount,
         numNegativeSamples
-    )
+        )
 
     /**
      * An identity op that triggers an error if a gradient is requested.
      *  When executed in a graph, this op outputs its input tensor as-is.
-     *
+     *  
      * When building ops to compute gradients, the TensorFlow gradient system
      *  will return an error when trying to lookup the gradient of this op,
      *  because no gradient must ever be registered for this function.  This
@@ -1085,12 +1085,12 @@ public class TrainOps(
      * @return this Options instance.
      */
     public fun <T : TType> preventGradient(input: Operand<T>, message: String? = null):
-        PreventGradient<T> = java.preventGradient<T>(
+            PreventGradient<T> = java.preventGradient<T>(    
         input,
         *listOfNotNull(
-            message?.let { org.tensorflow.op.train.PreventGradient.message(it) }
+            message?.let{ org.tensorflow.op.train.PreventGradient.message(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the adadelta scheme.
@@ -1126,7 +1126,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyAdadelta = java.resourceApplyAdadelta<T>(
+    ): ResourceApplyAdadelta = java.resourceApplyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -1135,9 +1135,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyAdadelta.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyAdadelta.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the proximal adagrad scheme.
@@ -1170,7 +1170,7 @@ public class TrainOps(
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): ResourceApplyAdagradDa = java.resourceApplyAdagradDa<T>(
+    ): ResourceApplyAdagradDa = java.resourceApplyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -1180,9 +1180,9 @@ public class TrainOps(
         l2,
         globalStep,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyAdagradDa.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyAdagradDa.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the Adam algorithm.
@@ -1229,7 +1229,7 @@ public class TrainOps(
         grad: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceApplyAdam = java.resourceApplyAdam<T>(
+    ): ResourceApplyAdam = java.resourceApplyAdam<T>(    
         `var`,
         m,
         v,
@@ -1241,10 +1241,10 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyAdam.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ResourceApplyAdam.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyAdam.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ResourceApplyAdam.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the Adam algorithm.
@@ -1289,7 +1289,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyAdamWithAmsgrad = java.resourceApplyAdamWithAmsgrad<T>(
+    ): ResourceApplyAdamWithAmsgrad = java.resourceApplyAdamWithAmsgrad<T>(    
         `var`,
         m,
         v,
@@ -1302,9 +1302,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyAdamWithAmsgrad.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the AddSign update.
@@ -1339,7 +1339,7 @@ public class TrainOps(
         beta: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyAddSign = java.resourceApplyAddSign<T>(
+    ): ResourceApplyAddSign = java.resourceApplyAddSign<T>(    
         `var`,
         m,
         lr,
@@ -1348,9 +1348,9 @@ public class TrainOps(
         beta,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyAddSign.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyAddSign.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
@@ -1358,16 +1358,16 @@ public class TrainOps(
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
+     *  
      * Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
-     *
+     *  
      * Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
+     *  
      * mg <- rho * mg_{t-1} + (1-rho) * grad
      *  ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms - mg * mg + epsilon)
@@ -1404,7 +1404,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyCenteredRmsProp = java.resourceApplyCenteredRmsProp<T>(
+    ): ResourceApplyCenteredRmsProp = java.resourceApplyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -1415,9 +1415,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyCenteredRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyCenteredRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the Ftrl-proximal scheme.
@@ -1465,7 +1465,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): ResourceApplyFtrl = java.resourceApplyFtrl<T>(
+    ): ResourceApplyFtrl = java.resourceApplyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -1476,10 +1476,10 @@ public class TrainOps(
         l2Shrinkage,
         lrPower,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyFtrl.useLocking(it) },
-            multiplyLinearByLr?.let { org.tensorflow.op.train.ResourceApplyFtrl.multiplyLinearByLr(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyFtrl.useLocking(it) },
+            multiplyLinearByLr?.let{ org.tensorflow.op.train.ResourceApplyFtrl.multiplyLinearByLr(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' by subtracting 'alpha' * 'delta' from it.
@@ -1502,19 +1502,19 @@ public class TrainOps(
         alpha: Operand<T>,
         delta: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyGradientDescent = java.resourceApplyGradientDescent<T>(
+    ): ResourceApplyGradientDescent = java.resourceApplyGradientDescent<T>(    
         `var`,
         alpha,
         delta,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyGradientDescent.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyGradientDescent.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * accum = accum * momentum - lr * grad
      *  var += accum
      *
@@ -1548,22 +1548,22 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceApplyKerasMomentum = java.resourceApplyKerasMomentum<T>(
+    ): ResourceApplyKerasMomentum = java.resourceApplyKerasMomentum<T>(    
         `var`,
         accum,
         lr,
         grad,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyKerasMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ResourceApplyKerasMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyKerasMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ResourceApplyKerasMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * accum = accum * momentum + grad
      *  var -= lr * accum
      *
@@ -1597,17 +1597,17 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceApplyMomentum = java.resourceApplyMomentum<T>(
+    ): ResourceApplyMomentum = java.resourceApplyMomentum<T>(    
         `var`,
         accum,
         lr,
         grad,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ResourceApplyMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ResourceApplyMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the AddSign update.
@@ -1642,7 +1642,7 @@ public class TrainOps(
         beta: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyPowerSign = java.resourceApplyPowerSign<T>(
+    ): ResourceApplyPowerSign = java.resourceApplyPowerSign<T>(    
         `var`,
         m,
         lr,
@@ -1651,9 +1651,9 @@ public class TrainOps(
         beta,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyPowerSign.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyPowerSign.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' and '*accum' according to FOBOS with Adagrad learning rate.
@@ -1685,7 +1685,7 @@ public class TrainOps(
         l2: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyProximalAdagrad = java.resourceApplyProximalAdagrad<T>(
+    ): ResourceApplyProximalAdagrad = java.resourceApplyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -1693,9 +1693,9 @@ public class TrainOps(
         l2,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyProximalAdagrad.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyProximalAdagrad.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' as FOBOS algorithm with fixed learning rate.
@@ -1724,26 +1724,26 @@ public class TrainOps(
         l2: Operand<T>,
         delta: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyProximalGradientDescent = java.resourceApplyProximalGradientDescent<T>(
+    ): ResourceApplyProximalGradientDescent = java.resourceApplyProximalGradientDescent<T>(    
         `var`,
         alpha,
         l1,
         l2,
         delta,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyProximalGradientDescent.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyProximalGradientDescent.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the RMSProp algorithm.
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
+     *  
      * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
      *  var <- var - mom
@@ -1777,7 +1777,7 @@ public class TrainOps(
         epsilon: Operand<T>,
         grad: Operand<T>,
         useLocking: Boolean? = null
-    ): ResourceApplyRmsProp = java.resourceApplyRmsProp<T>(
+    ): ResourceApplyRmsProp = java.resourceApplyRmsProp<T>(    
         `var`,
         ms,
         mom,
@@ -1787,9 +1787,9 @@ public class TrainOps(
         epsilon,
         grad,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceApplyRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceApplyRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * var: Should be from a Variable().
@@ -1822,7 +1822,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyAdadelta = java.resourceSparseApplyAdadelta<T>(
+    ): ResourceSparseApplyAdadelta = java.resourceSparseApplyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -1832,9 +1832,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyAdadelta.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyAdadelta.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the adagrad scheme.
@@ -1870,17 +1870,17 @@ public class TrainOps(
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null,
         updateSlots: Boolean? = null
-    ): ResourceSparseApplyAdagrad = java.resourceSparseApplyAdagrad<T>(
+    ): ResourceSparseApplyAdagrad = java.resourceSparseApplyAdagrad<T>(    
         `var`,
         accum,
         lr,
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyAdagrad.useLocking(it) },
-            updateSlots?.let { org.tensorflow.op.train.ResourceSparseApplyAdagrad.updateSlots(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyAdagrad.useLocking(it) },
+            updateSlots?.let{ org.tensorflow.op.train.ResourceSparseApplyAdagrad.updateSlots(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
@@ -1915,7 +1915,7 @@ public class TrainOps(
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyAdagradDa = java.resourceSparseApplyAdagradDa<T>(
+    ): ResourceSparseApplyAdagradDa = java.resourceSparseApplyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -1926,9 +1926,9 @@ public class TrainOps(
         l2,
         globalStep,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyAdagradDa.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyAdagradDa.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
@@ -1936,15 +1936,15 @@ public class TrainOps(
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
+     *  
      * Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
+     *  
      * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
      *  var <- var - mom
@@ -1982,7 +1982,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyCenteredRmsProp = java.resourceSparseApplyCenteredRmsProp<T>(
+    ): ResourceSparseApplyCenteredRmsProp = java.resourceSparseApplyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -1994,9 +1994,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyCenteredRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyCenteredRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
@@ -2047,7 +2047,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): ResourceSparseApplyFtrl = java.resourceSparseApplyFtrl<T>(
+    ): ResourceSparseApplyFtrl = java.resourceSparseApplyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -2059,19 +2059,18 @@ public class TrainOps(
         l2Shrinkage,
         lrPower,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyFtrl.useLocking(it) },
-            multiplyLinearByLr?.let {
-                org.tensorflow.op.train.ResourceSparseApplyFtrl.multiplyLinearByLr(it)
-            }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyFtrl.useLocking(it) },
+            multiplyLinearByLr?.let{
+            org.tensorflow.op.train.ResourceSparseApplyFtrl.multiplyLinearByLr(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * That is for rows we have grad for, we update var and accum as follows:
-     *
+     *  
      * accum = accum * momentum - lr * grad
      *  var += accum
      *
@@ -2107,7 +2106,7 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceSparseApplyKerasMomentum = java.resourceSparseApplyKerasMomentum<T>(
+    ): ResourceSparseApplyKerasMomentum = java.resourceSparseApplyKerasMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -2115,17 +2114,17 @@ public class TrainOps(
         indices,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyKerasMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ResourceSparseApplyKerasMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyKerasMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ResourceSparseApplyKerasMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * That is for rows we have grad for, we update var and accum as follows:
-     *
+     *  
      * accum = accum * momentum + grad
      *  var -= lr * accum
      *
@@ -2161,7 +2160,7 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): ResourceSparseApplyMomentum = java.resourceSparseApplyMomentum<T>(
+    ): ResourceSparseApplyMomentum = java.resourceSparseApplyMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -2169,10 +2168,10 @@ public class TrainOps(
         indices,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.ResourceSparseApplyMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.ResourceSparseApplyMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
@@ -2208,7 +2207,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyProximalAdagrad = java.resourceSparseApplyProximalAdagrad<T>(
+    ): ResourceSparseApplyProximalAdagrad = java.resourceSparseApplyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -2217,9 +2216,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyProximalAdagrad.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyProximalAdagrad.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Sparse update '*var' as FOBOS algorithm with fixed learning rate.
@@ -2252,18 +2251,17 @@ public class TrainOps(
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
     ): ResourceSparseApplyProximalGradientDescent =
-        java.resourceSparseApplyProximalGradientDescent<T>(
-            `var`,
-            alpha,
-            l1,
-            l2,
-            grad,
-            indices,
-            *listOfNotNull(
-                useLocking?.let {
-                    org.tensorflow.op.train.ResourceSparseApplyProximalGradientDescent.useLocking(it)
-                }
-            ).toTypedArray()
+            java.resourceSparseApplyProximalGradientDescent<T>(    
+        `var`,
+        alpha,
+        l1,
+        l2,
+        grad,
+        indices,
+        *listOfNotNull(
+            useLocking?.let{
+            org.tensorflow.op.train.ResourceSparseApplyProximalGradientDescent.useLocking(it) }
+        ).toTypedArray()
         )
 
     /**
@@ -2271,10 +2269,10 @@ public class TrainOps(
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
+     *  
      * ms <- rho * ms_{t-1} + (1-rho) * grad * grad
      *  mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)
      *  var <- var - mom
@@ -2310,7 +2308,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): ResourceSparseApplyRmsProp = java.resourceSparseApplyRmsProp<T>(
+    ): ResourceSparseApplyRmsProp = java.resourceSparseApplyRmsProp<T>(    
         `var`,
         ms,
         mom,
@@ -2321,9 +2319,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.ResourceSparseApplyRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.ResourceSparseApplyRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Restores tensors from a V2 checkpoint.
@@ -2336,11 +2334,11 @@ public class TrainOps(
      *  Relying on this behavior is not recommended, as the ability to fall back to read
      *  V1 might be deprecated and eventually removed.</li>
      *  </ul>
-     *
+     *  
      * By default, restores the named tensors in full.  If the caller wishes to restore
      *  specific slices of stored tensors, &quot;shape_and_slices&quot; should be non-empty
      *  strings and correspondingly well-formed.
-     *
+     *  
      * Callers must ensure all the named tensors are indeed stored in the checkpoint.
      *
      * @param prefix Must have a single element.  The prefix of a V2 checkpoint.
@@ -2357,19 +2355,19 @@ public class TrainOps(
         tensorNames: Operand<TString>,
         shapeAndSlices: Operand<TString>,
         dtypes: List<Class<out TType>>
-    ): Restore = java.restore(
+    ): Restore = java.restore(    
         prefix,
         tensorNames,
         shapeAndSlices,
         dtypes
-    )
+        )
 
     /**
      * Restores a tensor from checkpoint files.
      *  This is like `Restore` except that restored tensor can be listed as filling
      *  only a slice of a larger tensor.  `shape_and_slice` specifies the shape of the
      *  larger tensor and the slice that the restored tensor covers.
-     *
+     *  
      * The `shape_and_slice` input has the same format as the
      *  elements of the `shapes_and_slices` input of the `SaveSlices` op.
      *
@@ -2397,15 +2395,15 @@ public class TrainOps(
         shapeAndSlice: Operand<TString>,
         dt: Class<T>,
         preferredShard: Long? = null
-    ): RestoreSlice<T> = java.restoreSlice<T>(
+    ): RestoreSlice<T> = java.restoreSlice<T>(    
         filePattern,
         tensorName,
         shapeAndSlice,
         dt,
         *listOfNotNull(
-            preferredShard?.let { org.tensorflow.op.train.RestoreSlice.preferredShard(it) }
+            preferredShard?.let{ org.tensorflow.op.train.RestoreSlice.preferredShard(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Saves tensors in V2 checkpoint format.
@@ -2427,12 +2425,12 @@ public class TrainOps(
         tensorNames: Operand<TString>,
         shapeAndSlices: Operand<TString>,
         tensors: Iterable<Operand<*>>
-    ): Save = java.save(
+    ): Save = java.save(    
         prefix,
         tensorNames,
         shapeAndSlices,
         tensors
-    )
+        )
 
     /**
      * Saves input tensors slices to disk.
@@ -2440,7 +2438,7 @@ public class TrainOps(
      *  a slice of a larger tensor.  `shapes_and_slices` specifies the shape of the
      *  larger tensor and the slice that this tensor covers. `shapes_and_slices` must
      *  have as many elements as `tensor_names`.
-     *
+     *  
      * Elements of the `shapes_and_slices` input must either be:
      *  <ul>
      *  <li>The empty string, in which case the corresponding tensor is
@@ -2449,7 +2447,7 @@ public class TrainOps(
      *  `dimI` are the dimensions of the larger tensor and `slice-spec`
      *  specifies what part is covered by the tensor to save.</li>
      *  </ul>
-     *
+     *  
      * `slice-spec` itself is a `:`-separated list: `slice0:slice1:...:sliceN-1`
      *  where each `sliceI` is either:
      *  <ul>
@@ -2457,7 +2455,7 @@ public class TrainOps(
      *  <li>`start,length` where `start` and `length` are integers.  In that
      *  case the slice covers `length` indices starting at `start`.</li>
      *  </ul>
-     *
+     *  
      * See also `Save`.
      *
      * @param filename Must have a single element. The name of the file to which we write the
@@ -2474,12 +2472,12 @@ public class TrainOps(
         tensorNames: Operand<TString>,
         shapesAndSlices: Operand<TString>,
         `data`: Iterable<Operand<*>>
-    ): SaveSlices = java.saveSlices(
+    ): SaveSlices = java.saveSlices(    
         filename,
         tensorNames,
         shapesAndSlices,
         data
-    )
+        )
 
     /**
      * Computes fingerprints of the input strings.
@@ -2488,9 +2486,9 @@ public class TrainOps(
      * @return a new instance of SdcaFprint
      * @see org.tensorflow.op.TrainOps.sdcaFprint
      */
-    public fun sdcaFprint(input: Operand<TString>): SdcaFprint = java.sdcaFprint(
+    public fun sdcaFprint(input: Operand<TString>): SdcaFprint = java.sdcaFprint(    
         input
-    )
+        )
 
     /**
      * Applies L1 regularization shrink step on the parameters.
@@ -2506,11 +2504,11 @@ public class TrainOps(
         weights: Iterable<Operand<TFloat32>>,
         l1: Float,
         l2: Float
-    ): SdcaShrinkL1 = java.sdcaShrinkL1(
+    ): SdcaShrinkL1 = java.sdcaShrinkL1(    
         weights,
         l1,
         l2
-    )
+        )
 
     /**
      * var: Should be from a Variable().
@@ -2544,7 +2542,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyAdadelta<T> = java.sparseApplyAdadelta<T>(
+    ): SparseApplyAdadelta<T> = java.sparseApplyAdadelta<T>(    
         `var`,
         accum,
         accumUpdate,
@@ -2554,9 +2552,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyAdadelta.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyAdadelta.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update entries in '*var' and '*accum' according to the proximal adagrad scheme.
@@ -2592,7 +2590,7 @@ public class TrainOps(
         l2: Operand<T>,
         globalStep: Operand<TInt64>,
         useLocking: Boolean? = null
-    ): SparseApplyAdagradDa<T> = java.sparseApplyAdagradDa<T>(
+    ): SparseApplyAdagradDa<T> = java.sparseApplyAdagradDa<T>(    
         `var`,
         gradientAccumulator,
         gradientSquaredAccumulator,
@@ -2603,9 +2601,9 @@ public class TrainOps(
         l2,
         globalStep,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyAdagradDa.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyAdagradDa.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the centered RMSProp algorithm.
@@ -2613,15 +2611,15 @@ public class TrainOps(
      *  (i.e., the variance) for normalization, as opposed to regular RMSProp, which
      *  uses the (uncentered) second moment. This often helps with training, but is
      *  slightly more expensive in terms of computation and memory.
-     *
+     *  
      * Note that in dense implementation of this algorithm, mg, ms, and mom will
      *  update even if the grad is zero, but in this sparse implementation, mg, ms,
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  mean_grad = decay * mean_grad + (1-decay) * gradient
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon - mean_grad ** 2)
-     *
+     *  
      * $$ms <- rho * ms_{t-1} + (1-rho) * grad * grad$$
      *  $$mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
      *  $$var <- var - mom$$
@@ -2660,7 +2658,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyCenteredRmsProp<T> = java.sparseApplyCenteredRmsProp<T>(
+    ): SparseApplyCenteredRmsProp<T> = java.sparseApplyCenteredRmsProp<T>(    
         `var`,
         mg,
         ms,
@@ -2672,9 +2670,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyCenteredRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyCenteredRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' according to the Ftrl-proximal scheme.
@@ -2726,7 +2724,7 @@ public class TrainOps(
         lrPower: Operand<T>,
         useLocking: Boolean? = null,
         multiplyLinearByLr: Boolean? = null
-    ): SparseApplyFtrl<T> = java.sparseApplyFtrl<T>(
+    ): SparseApplyFtrl<T> = java.sparseApplyFtrl<T>(    
         `var`,
         accum,
         linear,
@@ -2738,17 +2736,17 @@ public class TrainOps(
         l2Shrinkage,
         lrPower,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyFtrl.useLocking(it) },
-            multiplyLinearByLr?.let { org.tensorflow.op.train.SparseApplyFtrl.multiplyLinearByLr(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyFtrl.useLocking(it) },
+            multiplyLinearByLr?.let{ org.tensorflow.op.train.SparseApplyFtrl.multiplyLinearByLr(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update relevant entries in '*var' and '*accum' according to the momentum scheme.
      *  Set use_nesterov = True if you want to use Nesterov momentum.
-     *
+     *  
      * That is for rows we have grad for, we update var and accum as follows:
-     *
+     *  
      * $$accum = accum * momentum + grad$$
      *  $$var -= lr * accum$$
      *
@@ -2785,7 +2783,7 @@ public class TrainOps(
         momentum: Operand<T>,
         useLocking: Boolean? = null,
         useNesterov: Boolean? = null
-    ): SparseApplyMomentum<T> = java.sparseApplyMomentum<T>(
+    ): SparseApplyMomentum<T> = java.sparseApplyMomentum<T>(    
         `var`,
         accum,
         lr,
@@ -2793,10 +2791,10 @@ public class TrainOps(
         indices,
         momentum,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyMomentum.useLocking(it) },
-            useNesterov?.let { org.tensorflow.op.train.SparseApplyMomentum.useNesterov(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyMomentum.useLocking(it) },
+            useNesterov?.let{ org.tensorflow.op.train.SparseApplyMomentum.useNesterov(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Sparse update entries in '*var' and '*accum' according to FOBOS algorithm.
@@ -2833,7 +2831,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyProximalAdagrad<T> = java.sparseApplyProximalAdagrad<T>(
+    ): SparseApplyProximalAdagrad<T> = java.sparseApplyProximalAdagrad<T>(    
         `var`,
         accum,
         lr,
@@ -2842,9 +2840,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyProximalAdagrad.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyProximalAdagrad.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Sparse update '*var' as FOBOS algorithm with fixed learning rate.
@@ -2877,7 +2875,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyProximalGradientDescent<T> = java.sparseApplyProximalGradientDescent<T>(
+    ): SparseApplyProximalGradientDescent<T> = java.sparseApplyProximalGradientDescent<T>(    
         `var`,
         alpha,
         l1,
@@ -2885,19 +2883,19 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyProximalGradientDescent.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyProximalGradientDescent.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Update '*var' according to the RMSProp algorithm.
      *  Note that in dense implementation of this algorithm, ms and mom will
      *  update even if the grad is zero, but in this sparse implementation, ms
      *  and mom will not update in iterations during which the grad is zero.
-     *
+     *  
      * mean_square = decay * mean_square + (1-decay) * gradient ** 2
      *  Delta = learning_rate * gradient / sqrt(mean_square + epsilon)
-     *
+     *  
      * $$ms <- rho * ms_{t-1} + (1-rho) * grad * grad$$
      *  $$mom <- momentum * mom_{t-1} + lr * grad / sqrt(ms + epsilon)$$
      *  $$var <- var - mom$$
@@ -2934,7 +2932,7 @@ public class TrainOps(
         grad: Operand<T>,
         indices: Operand<out TNumber>,
         useLocking: Boolean? = null
-    ): SparseApplyRmsProp<T> = java.sparseApplyRmsProp<T>(
+    ): SparseApplyRmsProp<T> = java.sparseApplyRmsProp<T>(    
         `var`,
         ms,
         mom,
@@ -2945,9 +2943,9 @@ public class TrainOps(
         grad,
         indices,
         *listOfNotNull(
-            useLocking?.let { org.tensorflow.op.train.SparseApplyRmsProp.useLocking(it) }
+            useLocking?.let{ org.tensorflow.op.train.SparseApplyRmsProp.useLocking(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the gradient of `Tile`.
@@ -2963,9 +2961,9 @@ public class TrainOps(
      * @see org.tensorflow.op.TrainOps.tileGrad
      */
     public fun <T : TType> tileGrad(input: Operand<T>, multiples: Operand<TInt32>): TileGrad<T> =
-        java.tileGrad<T>(
-            input,
-            multiples
+            java.tileGrad<T>(    
+        input,
+        multiples
         )
 
     /**
@@ -2986,11 +2984,9 @@ public class TrainOps(
      * @see org.tensorflow.op.TrainOps.accumulatorTakeGradient
      */
     @JvmName("accumulatorTakeGradientReified")
-    public inline fun <reified T : TType> accumulatorTakeGradient(
-        handle: Operand<TString>,
-        numRequired: Operand<TInt32>
-    ): AccumulatorTakeGradient<T> =
-        accumulatorTakeGradient<T>(handle, numRequired, T::class.java)
+    public inline fun <reified T : TType> accumulatorTakeGradient(handle: Operand<TString>,
+            numRequired: Operand<TInt32>): AccumulatorTakeGradient<T> =
+            accumulatorTakeGradient<T>(handle, numRequired, T::class.java)
 
     /**
      * A conditional accumulator for aggregating gradients.
@@ -3028,17 +3024,15 @@ public class TrainOps(
         container: String? = null,
         sharedName: String? = null,
         reductionType: String? = null
-    ): ConditionalAccumulator = conditionalAccumulator<T>(
-        T::class.java, shape, container,
-        sharedName, reductionType
-    )
+    ): ConditionalAccumulator = conditionalAccumulator<T>(T::class.java, shape, container,
+            sharedName, reductionType)
 
     /**
      * Restores a tensor from checkpoint files.
      *  This is like `Restore` except that restored tensor can be listed as filling
      *  only a slice of a larger tensor.  `shape_and_slice` specifies the shape of the
      *  larger tensor and the slice that the restored tensor covers.
-     *
+     *  
      * The `shape_and_slice` input has the same format as the
      *  elements of the `shapes_and_slices` input of the `SaveSlices` op.
      *
@@ -3066,8 +3060,6 @@ public class TrainOps(
         tensorName: Operand<TString>,
         shapeAndSlice: Operand<TString>,
         preferredShard: Long? = null
-    ): RestoreSlice<T> = restoreSlice<T>(
-        filePattern, tensorName, shapeAndSlice, T::class.java,
-        preferredShard
-    )
+    ): RestoreSlice<T> = restoreSlice<T>(filePattern, tensorName, shapeAndSlice, T::class.java,
+            preferredShard)
 }

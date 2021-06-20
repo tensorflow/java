@@ -49,7 +49,7 @@ public class BitwiseOps(
      * Elementwise computes the bitwise AND of `x` and `y`.
      *  The result will have those bits set, that are set in both `x` and `y`. The
      *  computation is performed on the underlying representations of `x` and `y`.
-     *
+     *  
      * For example:
      *  ```
      * import tensorflow as tf
@@ -64,7 +64,7 @@ public class BitwiseOps(
      *
      *    res = bitwise_ops.bitwise_and(lhs, rhs)
      *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
-     *
+     *  
      * ```
      *
      * @param <T> data type for `z` output
@@ -75,16 +75,16 @@ public class BitwiseOps(
      * @see org.tensorflow.op.BitwiseOps.bitwiseAnd
      */
     public fun <T : TNumber> bitwiseAnd(x: Operand<T>, y: Operand<T>): BitwiseAnd<T> =
-        java.bitwiseAnd<T>(
-            x,
-            y
+            java.bitwiseAnd<T>(    
+        x,
+        y
         )
 
     /**
      * Elementwise computes the bitwise OR of `x` and `y`.
      *  The result will have those bits set, that are set in `x`, `y` or both. The
      *  computation is performed on the underlying representations of `x` and `y`.
-     *
+     *  
      * For example:
      *  ```
      * import tensorflow as tf
@@ -99,7 +99,7 @@ public class BitwiseOps(
      *
      *    res = bitwise_ops.bitwise_or(lhs, rhs)
      *    tf.assert_equal(tf.cast(res,  tf.float32), exp)  # TRUE
-     *
+     *  
      * ```
      *
      * @param <T> data type for `z` output
@@ -110,16 +110,16 @@ public class BitwiseOps(
      * @see org.tensorflow.op.BitwiseOps.bitwiseOr
      */
     public fun <T : TNumber> bitwiseOr(x: Operand<T>, y: Operand<T>): BitwiseOr<T> =
-        java.bitwiseOr<T>(
-            x,
-            y
+            java.bitwiseOr<T>(    
+        x,
+        y
         )
 
     /**
      * Elementwise computes the bitwise XOR of `x` and `y`.
      *  The result will have those bits set, that are different in `x` and `y`. The
      *  computation is performed on the underlying representations of `x` and `y`.
-     *
+     *  
      * For example:
      *  ```
      * import tensorflow as tf
@@ -134,7 +134,7 @@ public class BitwiseOps(
      *
      *    res = bitwise_ops.bitwise_xor(lhs, rhs)
      *    tf.assert_equal(tf.cast(res, tf.float32), exp) # TRUE
-     *
+     *  
      * ```
      *
      * @param <T> data type for `z` output
@@ -145,9 +145,9 @@ public class BitwiseOps(
      * @see org.tensorflow.op.BitwiseOps.bitwiseXor
      */
     public fun <T : TNumber> bitwiseXor(x: Operand<T>, y: Operand<T>): BitwiseXor<T> =
-        java.bitwiseXor<T>(
-            x,
-            y
+            java.bitwiseXor<T>(    
+        x,
+        y
         )
 
     /**
@@ -156,7 +156,7 @@ public class BitwiseOps(
      *  Flip each bit of supported types.  For example, type `int8` (decimal 2) binary 00000010
      * becomes (decimal -3) binary 11111101.
      *  This operation is performed on each element of the tensor argument `x`.
-     *
+     *  
      * Example:
      *  ```
      * import tensorflow as tf
@@ -192,7 +192,7 @@ public class BitwiseOps(
      *      inverted = bitwise_ops.invert(input_tensor)
      *      expected = tf.constant([dtype.max - x for x in inputs], dtype=tf.float32)
      *      tf.assert_equal(tf.cast(inverted, tf.float32), tf.cast(expected, tf.float32))
-     *
+     *  
      * ```
      *
      * @param <T> data type for `y` output
@@ -201,15 +201,15 @@ public class BitwiseOps(
      * @return a new instance of Invert
      * @see org.tensorflow.op.BitwiseOps.invert
      */
-    public fun <T : TNumber> invert(x: Operand<T>): Invert<T> = java.invert<T>(
+    public fun <T : TNumber> invert(x: Operand<T>): Invert<T> = java.invert<T>(    
         x
-    )
+        )
 
     /**
      * Elementwise computes the bitwise left-shift of `x` and `y`.
      *  If `y` is negative, or greater than or equal to the width of `x` in bits the
      *  result is implementation defined.
-     *
+     *  
      * Example:
      *  ```
      * import tensorflow as tf
@@ -235,7 +235,7 @@ public class BitwiseOps(
      *  rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
      *  bitwise_ops.left_shift(lhs, rhs)
      *  # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
-     *
+     *  
      * ```
      *
      * @param <T> data type for `z` output
@@ -246,19 +246,19 @@ public class BitwiseOps(
      * @see org.tensorflow.op.BitwiseOps.leftShift
      */
     public fun <T : TNumber> leftShift(x: Operand<T>, y: Operand<T>): LeftShift<T> =
-        java.leftShift<T>(
-            x,
-            y
+            java.leftShift<T>(    
+        x,
+        y
         )
 
     /**
      * Elementwise computes the bitwise right-shift of `x` and `y`.
      *  Performs a logical shift for unsigned integer types, and an arithmetic shift
      *  for signed integer types.
-     *
+     *  
      * If `y` is negative, or greater than or equal to than the width of `x` in bits
      *  the result is implementation defined.
-     *
+     *  
      * Example:
      *  ```
      * import tensorflow as tf
@@ -284,7 +284,7 @@ public class BitwiseOps(
      *  rhs = np.array([-1, -5, -3, -14], dtype=np.int8)
      *  bitwise_ops.right_shift(lhs, rhs)
      *  # <tf.Tensor: shape=(4,), dtype=int8, numpy=array([ -2,  64, 101,  32], dtype=int8)>
-     *
+     *  
      * ```
      *
      * @param <T> data type for `z` output
@@ -295,8 +295,8 @@ public class BitwiseOps(
      * @see org.tensorflow.op.BitwiseOps.rightShift
      */
     public fun <T : TNumber> rightShift(x: Operand<T>, y: Operand<T>): RightShift<T> =
-        java.rightShift<T>(
-            x,
-            y
+            java.rightShift<T>(    
+        x,
+        y
         )
 }

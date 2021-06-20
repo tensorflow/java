@@ -17,6 +17,12 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.quantization.Dequantize
@@ -39,12 +45,6 @@ import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Float
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `quantization` operations as [Op][org.tensorflow.op.Op]s
@@ -69,18 +69,18 @@ public class QuantizationOps(
      *  &#91;min_range, max_range&#93; are scalar floats that specify the range for
      *  the output. The 'mode' attribute controls exactly which calculations are
      *  used to convert the float values to their quantized equivalents.
-     *
+     *  
      * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
      *  ```
      * if T == qint8: in[i] += (range(T) + 1)/ 2.0
      *  out[i] = min_range + (in[i]* (max_range - min_range) / range(T))
-     *
+     *  
      * ```
-     *
+     *  
      * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
-     *
+     *  
      * _MIN_COMBINED Mode Example_
-     *
+     *  
      * If the input comes from a QuantizedRelu6, the output type is
      *  quint8 (range of 0-255) but the possible range of QuantizedRelu6 is
      *  0-6.  The min_range and max_range values are therefore 0.0 and 6.0.
@@ -88,7 +88,7 @@ public class QuantizationOps(
      *  by 6 / 255.
      *  Note that if quantizedtype is qint8, the operation will additionally add
      *  each value by 128 prior to casting.
-     *
+     *  
      * If the mode is 'MIN_FIRST', then this approach is used:
      *  ```
      * num_discrete_values = 1 << (# of bits in T)
@@ -97,12 +97,12 @@ public class QuantizationOps(
      *  range_scale = range / num_discrete_values
      *  const double offset_input = static_cast<double>(input) - lowest_quantized;
      *  result = range_min + ((input - numeric_limits<T>::min()) * range_scale)
-     *
+     *  
      * ```
-     *
+     *  
      * If the mode is `SCALED`, dequantization is performed by multiplying each
      *  input value by a scaling_factor. (Thus an input of 0 always maps to 0.0).
-     *
+     *  
      * The scaling_factor is determined from `min_range`, `max_range`, and
      *  `narrow_range` in a way that is compatible with `QuantizeAndDequantize{V2|V3`}
      *  and `QuantizeV2`, using the following algorithm:
@@ -116,7 +116,7 @@ public class QuantizationOps(
      *      (std::numeric_limits<T>::min() == 0) ? (max_range / max_expected_T)
      *                                           : std::max(min_range / min_expected_T,
      *                                                      max_range / max_expected_T);
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -132,30 +132,30 @@ public class QuantizationOps(
         minRange: Operand<TFloat32>,
         maxRange: Operand<TFloat32>,
         options: Array<Dequantize.Options>
-    ): Dequantize<TFloat32> = java.dequantize(
+    ): Dequantize<TFloat32> = java.dequantize(    
         input,
         minRange,
         maxRange,
         options
-    )
+        )
 
     /**
      * Dequantize the 'input' tensor into a float or bfloat16 Tensor.
      *  &#91;min_range, max_range&#93; are scalar floats that specify the range for
      *  the output. The 'mode' attribute controls exactly which calculations are
      *  used to convert the float values to their quantized equivalents.
-     *
+     *  
      * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
      *  ```
      * if T == qint8: in[i] += (range(T) + 1)/ 2.0
      *  out[i] = min_range + (in[i]* (max_range - min_range) / range(T))
-     *
+     *  
      * ```
-     *
+     *  
      * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
-     *
+     *  
      * _MIN_COMBINED Mode Example_
-     *
+     *  
      * If the input comes from a QuantizedRelu6, the output type is
      *  quint8 (range of 0-255) but the possible range of QuantizedRelu6 is
      *  0-6.  The min_range and max_range values are therefore 0.0 and 6.0.
@@ -163,7 +163,7 @@ public class QuantizationOps(
      *  by 6 / 255.
      *  Note that if quantizedtype is qint8, the operation will additionally add
      *  each value by 128 prior to casting.
-     *
+     *  
      * If the mode is 'MIN_FIRST', then this approach is used:
      *  ```
      * num_discrete_values = 1 << (# of bits in T)
@@ -172,12 +172,12 @@ public class QuantizationOps(
      *  range_scale = range / num_discrete_values
      *  const double offset_input = static_cast<double>(input) - lowest_quantized;
      *  result = range_min + ((input - numeric_limits<T>::min()) * range_scale)
-     *
+     *  
      * ```
-     *
+     *  
      * If the mode is `SCALED`, dequantization is performed by multiplying each
      *  input value by a scaling_factor. (Thus an input of 0 always maps to 0.0).
-     *
+     *  
      * The scaling_factor is determined from `min_range`, `max_range`, and
      *  `narrow_range` in a way that is compatible with `QuantizeAndDequantize{V2|V3`}
      *  and `QuantizeV2`, using the following algorithm:
@@ -191,7 +191,7 @@ public class QuantizationOps(
      *      (std::numeric_limits<T>::min() == 0) ? (max_range / max_expected_T)
      *                                           : std::max(min_range / min_expected_T,
      *                                                      max_range / max_expected_T);
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -225,17 +225,17 @@ public class QuantizationOps(
         mode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): Dequantize<U> = java.dequantize<U>(
+    ): Dequantize<U> = java.dequantize<U>(    
         input,
         minRange,
         maxRange,
         dtype,
         *listOfNotNull(
-            mode?.let { org.tensorflow.op.quantization.Dequantize.mode(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.Dequantize.narrowRange(it) },
-            axis?.let { org.tensorflow.op.quantization.Dequantize.axis(it) }
+            mode?.let{ org.tensorflow.op.quantization.Dequantize.mode(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.Dequantize.narrowRange(it) },
+            axis?.let{ org.tensorflow.op.quantization.Dequantize.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Fake-quantize the 'inputs' tensor, type float to 'outputs' tensor of same type.
@@ -248,7 +248,7 @@ public class QuantizationOps(
      *  interval.</li>
      *  <li>`num_bits` is the bitwidth of the quantization; between 2 and 16, inclusive.</li>
      *  </ul>
-     *
+     *  
      * Before quantization, `min` and `max` values are adjusted with the following
      *  logic.
      *  It is suggested to have `min <= 0 <= max`. If `0` is not in the range of values,
@@ -259,7 +259,7 @@ public class QuantizationOps(
      *  <li>If `min <= 0 <= max`: `scale = (max - min) / (2^num_bits - 1) `,
      *  `min_adj = scale * round(min / scale)` and `max_adj = max + min_adj - min`.</li>
      *  </ul>
-     *
+     *  
      * Quantization is called fake since the output is still in floating point.
      *
      * @param inputs the inputs value
@@ -289,15 +289,15 @@ public class QuantizationOps(
         max: Float? = null,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxArgs = java.fakeQuantWithMinMaxArgs(
+    ): FakeQuantWithMinMaxArgs = java.fakeQuantWithMinMaxArgs(    
         inputs,
         *listOfNotNull(
-            min?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.min(it) },
-            max?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.max(it) },
-            numBits?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.numBits(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.narrowRange(it) }
+            min?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.min(it) },
+            max?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.max(it) },
+            numBits?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.numBits(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgs.narrowRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Compute gradients for a FakeQuantWithMinMaxArgs operation.
@@ -331,24 +331,23 @@ public class QuantizationOps(
         max: Float? = null,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxArgsGradient = java.fakeQuantWithMinMaxArgsGradient(
+    ): FakeQuantWithMinMaxArgsGradient = java.fakeQuantWithMinMaxArgsGradient(    
         gradients,
         inputs,
         *listOfNotNull(
-            min?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.min(it) },
-            max?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.max(it) },
-            numBits?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.numBits(it) },
-            narrowRange?.let {
-                org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.narrowRange(it)
-            }
+            min?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.min(it) },
+            max?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.max(it) },
+            numBits?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.numBits(it) },
+            narrowRange?.let{
+            org.tensorflow.op.quantization.FakeQuantWithMinMaxArgsGradient.narrowRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Fake-quantize the 'inputs' tensor of type float via global float scalars
      *  Fake-quantize the `inputs` tensor of type float via global float scalars
      *  `min` and `max` to `outputs` tensor of same shape as `inputs`.
-     *
+     *  
      * Attributes
      *  <ul>
      *  <li>`&#91;min; max&#93;` define the clamping range for the `inputs` data.</li>
@@ -358,7 +357,7 @@ public class QuantizationOps(
      *  interval.</li>
      *  <li>`num_bits` is the bitwidth of the quantization; between 2 and 16, inclusive.</li>
      *  </ul>
-     *
+     *  
      * Before quantization, `min` and `max` values are adjusted with the following
      *  logic.
      *  It is suggested to have `min <= 0 <= max`. If `0` is not in the range of values,
@@ -369,7 +368,7 @@ public class QuantizationOps(
      *  <li>If `min <= 0 <= max`: `scale = (max - min) / (2^num_bits - 1) `,
      *  `min_adj = scale * round(min / scale)` and `max_adj = max + min_adj - min`.</li>
      *  </ul>
-     *
+     *  
      * This operation has a gradient and thus allows for training `min` and `max`
      *  values.
      *
@@ -394,15 +393,15 @@ public class QuantizationOps(
         max: Operand<TFloat32>,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxVars = java.fakeQuantWithMinMaxVars(
+    ): FakeQuantWithMinMaxVars = java.fakeQuantWithMinMaxVars(    
         inputs,
         min,
         max,
         *listOfNotNull(
-            numBits?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxVars.numBits(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxVars.narrowRange(it) }
+            numBits?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxVars.numBits(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxVars.narrowRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Compute gradients for a FakeQuantWithMinMaxVars operation.
@@ -431,18 +430,17 @@ public class QuantizationOps(
         max: Operand<TFloat32>,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxVarsGradient = java.fakeQuantWithMinMaxVarsGradient(
+    ): FakeQuantWithMinMaxVarsGradient = java.fakeQuantWithMinMaxVarsGradient(    
         gradients,
         inputs,
         min,
         max,
         *listOfNotNull(
-            numBits?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient.numBits(it) },
-            narrowRange?.let {
-                org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient.narrowRange(it)
-            }
+            numBits?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient.numBits(it) },
+            narrowRange?.let{
+            org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsGradient.narrowRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Fake-quantize the 'inputs' tensor of type float via per-channel floats
@@ -450,7 +448,7 @@ public class QuantizationOps(
      *  shapes: `[d]`, `&#91;b, d&#93;` `&#91;b, h, w, d&#93;` via per-channel floats `min` and
      * `max`
      *  of shape `[d]` to `outputs` tensor of same shape as `inputs`.
-     *
+     *  
      * Attributes
      *  <ul>
      *  <li>`&#91;min; max&#93;` define the clamping range for the `inputs` data.</li>
@@ -460,7 +458,7 @@ public class QuantizationOps(
      *  interval.</li>
      *  <li>`num_bits` is the bitwidth of the quantization; between 2 and 16, inclusive.</li>
      *  </ul>
-     *
+     *  
      * Before quantization, `min` and `max` values are adjusted with the following
      *  logic.
      *  It is suggested to have `min <= 0 <= max`. If `0` is not in the range of values,
@@ -471,7 +469,7 @@ public class QuantizationOps(
      *  <li>If `min <= 0 <= max`: `scale = (max - min) / (2^num_bits - 1) `,
      *  `min_adj = scale * round(min / scale)` and `max_adj = max + min_adj - min`.</li>
      *  </ul>
-     *
+     *  
      * This operation has a gradient and thus allows for training `min` and `max`
      *  values.
      *
@@ -496,17 +494,16 @@ public class QuantizationOps(
         max: Operand<TFloat32>,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxVarsPerChannel = java.fakeQuantWithMinMaxVarsPerChannel(
+    ): FakeQuantWithMinMaxVarsPerChannel = java.fakeQuantWithMinMaxVarsPerChannel(    
         inputs,
         min,
         max,
         *listOfNotNull(
-            numBits?.let { org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel.numBits(it) },
-            narrowRange?.let {
-                org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel.narrowRange(it)
-            }
+            numBits?.let{ org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel.numBits(it) },
+            narrowRange?.let{
+            org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannel.narrowRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Compute gradients for a FakeQuantWithMinMaxVarsPerChannel operation.
@@ -537,20 +534,19 @@ public class QuantizationOps(
         max: Operand<TFloat32>,
         numBits: Long? = null,
         narrowRange: Boolean? = null
-    ): FakeQuantWithMinMaxVarsPerChannelGradient = java.fakeQuantWithMinMaxVarsPerChannelGradient(
+    ): FakeQuantWithMinMaxVarsPerChannelGradient = java.fakeQuantWithMinMaxVarsPerChannelGradient(    
         gradients,
         inputs,
         min,
         max,
         *listOfNotNull(
-            numBits?.let {
-                org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannelGradient.numBits(it)
-            },
-            narrowRange?.let {
-                org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannelGradient.narrowRange(it)
+            numBits?.let{
+            org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannelGradient.numBits(it) },
+            narrowRange?.let{
+            org.tensorflow.op.quantization.FakeQuantWithMinMaxVarsPerChannelGradient.narrowRange(it)
             }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Quantize the 'input' tensor of type float to 'output' tensor of type 'T'.
@@ -559,27 +555,27 @@ public class QuantizationOps(
      *  used to convert the float values to their quantized equivalents.  The
      *  'round_mode' attribute controls which rounding tie-breaking algorithm is used
      *  when rounding float values to their quantized equivalents.
-     *
+     *  
      * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
      *  ```
      * out[i] = (in[i] - min_range) * range(T) / (max_range - min_range)
      *  if T == qint8: out[i] -= (range(T) + 1) / 2.0
-     *
+     *  
      * ```
-     *
+     *  
      * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
-     *
+     *  
      * _MIN_COMBINED Mode Example_
-     *
+     *  
      * Assume the input is type float and has a possible range of &#91;0.0, 6.0&#93; and the
      *  output type is quint8 (&#91;0, 255&#93;). The min_range and max_range values should be
      *  specified as 0.0 and 6.0. Quantizing from float to quint8 will multiply each
      *  value of the input by 255/6 and cast to quint8.
-     *
+     *  
      * If the output type was qint8 (&#91;-128, 127&#93;), the operation will additionally
      *  subtract each value by 128 prior to casting, so that the range of values aligns
      *  with the range of qint8.
-     *
+     *  
      * If the mode is 'MIN_FIRST', then this approach is used:
      *  ```
      * num_discrete_values = 1 << (# of bits in T)
@@ -590,19 +586,19 @@ public class QuantizationOps(
      *    numeric_limits<T>::min()
      *  quantized = max(quantized, numeric_limits<T>::min())
      *  quantized = min(quantized, numeric_limits<T>::max())
-     *
+     *  
      * ```
-     *
+     *  
      * The biggest difference between this and MIN_COMBINED is that the minimum range
      *  is rounded first, before it's subtracted from the rounded value. With
      *  MIN_COMBINED, a small bias is introduced where repeated iterations of quantizing
      *  and dequantizing will introduce a larger and larger error.
-     *
+     *  
      * _SCALED mode Example_
-     *
+     *  
      * `SCALED` mode matches the quantization approach used in
      *  `QuantizeAndDequantize{V2|V3`}.
-     *
+     *  
      * If the mode is `SCALED`, the quantization is performed by multiplying each
      *  input value by a scaling_factor.
      *  The scaling_factor is determined from `min_range` and `max_range` to be as large
@@ -620,55 +616,55 @@ public class QuantizationOps(
      *
      *    const float scale_factor = std::min(scale_factor_from_min_side,
      *                                        scale_factor_from_max_side);
-     *
+     *  
      * ```
-     *
+     *  
      * We next use the scale_factor to adjust min_range and max_range as follows:
      *  ```
      * min_range = min_T / scale_factor;
      *        max_range = max_T / scale_factor;
-     *
+     *  
      * ```
-     *
+     *  
      * e.g. if T = qint8, and initially min_range = -10, and max_range = 9, we would
      *  compare -128/-10.0 = 12.8 to 127/9.0 = 14.11, and set scaling_factor = 12.8
      *  In this case, min_range would remain -10, but max_range would be adjusted to
      *  127 / 12.8 = 9.921875
-     *
+     *  
      * So we will quantize input values in the range (-10, 9.921875) to (-128, 127).
-     *
+     *  
      * The input tensor can now be quantized by clipping values to the range
      *  `min_range` to `max_range`, then multiplying by scale_factor as follows:
      *  ```
      * result = round(min(max_range, max(min_range, input)) * scale_factor)
-     *
+     *  
      * ```
-     *
+     *  
      * The adjusted `min_range` and `max_range` are returned as outputs 2 and 3 of
      *  this operation. These outputs should be used as the range for any further
      *  calculations.
-     *
+     *  
      * _narrow_range (bool) attribute_
-     *
+     *  
      * If true, we do not use the minimum quantized value.
      *  i.e. for int8 the quantized output, it would be restricted to the range
      *  -127..127 instead of the full -128..127 range.
      *  This is provided for compatibility with certain inference backends.
      *  (Only applies to SCALED mode)
-     *
+     *  
      * _axis (int) attribute_
-     *
+     *  
      * An optional `axis` attribute can specify a dimension index of the input tensor,
      *  such that quantization ranges will be calculated and applied separately for each
      *  slice of the tensor along that dimension. This is useful for per-channel
      *  quantization.
-     *
+     *  
      * If axis is specified, min_range and max_range
-     *
+     *  
      * if `axis`=None, per-tensor quantization is performed as normal.
-     *
+     *  
      * _ensure_minimum_range (float) attribute_
-     *
+     *  
      * Ensures the minimum quantization range is at least this value.
      *  The legacy default value for this is 0.01, but it is strongly suggested to
      *  set it to 0 for new uses.
@@ -721,19 +717,19 @@ public class QuantizationOps(
         narrowRange: Boolean? = null,
         axis: Long? = null,
         ensureMinimumRange: Float? = null
-    ): Quantize<T> = java.quantize<T>(
+    ): Quantize<T> = java.quantize<T>(    
         input,
         minRange,
         maxRange,
         T_,
         *listOfNotNull(
-            mode?.let { org.tensorflow.op.quantization.Quantize.mode(it) },
-            roundMode?.let { org.tensorflow.op.quantization.Quantize.roundMode(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.Quantize.narrowRange(it) },
-            axis?.let { org.tensorflow.op.quantization.Quantize.axis(it) },
-            ensureMinimumRange?.let { org.tensorflow.op.quantization.Quantize.ensureMinimumRange(it) }
+            mode?.let{ org.tensorflow.op.quantization.Quantize.mode(it) },
+            roundMode?.let{ org.tensorflow.op.quantization.Quantize.roundMode(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.Quantize.narrowRange(it) },
+            axis?.let{ org.tensorflow.op.quantization.Quantize.axis(it) },
+            ensureMinimumRange?.let{ org.tensorflow.op.quantization.Quantize.ensureMinimumRange(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Quantizes then dequantizes a tensor.
@@ -775,18 +771,18 @@ public class QuantizationOps(
         rangeGiven: Boolean? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): QuantizeAndDequantize<T> = java.quantizeAndDequantize<T>(
+    ): QuantizeAndDequantize<T> = java.quantizeAndDequantize<T>(    
         input,
         inputMin,
         inputMax,
         numBits,
         *listOfNotNull(
-            signedInput?.let { org.tensorflow.op.quantization.QuantizeAndDequantize.signedInput(it) },
-            rangeGiven?.let { org.tensorflow.op.quantization.QuantizeAndDequantize.rangeGiven(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.QuantizeAndDequantize.narrowRange(it) },
-            axis?.let { org.tensorflow.op.quantization.QuantizeAndDequantize.axis(it) }
+            signedInput?.let{ org.tensorflow.op.quantization.QuantizeAndDequantize.signedInput(it) },
+            rangeGiven?.let{ org.tensorflow.op.quantization.QuantizeAndDequantize.rangeGiven(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.QuantizeAndDequantize.narrowRange(it) },
+            axis?.let{ org.tensorflow.op.quantization.QuantizeAndDequantize.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Quantizes then dequantizes a tensor.
@@ -828,18 +824,18 @@ public class QuantizationOps(
         rangeGiven: Boolean? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): QuantizeAndDequantizeV3<T> = java.quantizeAndDequantizeV3<T>(
+    ): QuantizeAndDequantizeV3<T> = java.quantizeAndDequantizeV3<T>(    
         input,
         inputMin,
         inputMax,
         numBits,
         *listOfNotNull(
-            signedInput?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV3.signedInput(it) },
-            rangeGiven?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV3.rangeGiven(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV3.narrowRange(it) },
-            axis?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV3.axis(it) }
+            signedInput?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV3.signedInput(it) },
+            rangeGiven?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV3.rangeGiven(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV3.narrowRange(it) },
+            axis?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV3.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the gradient of `quantization.QuantizeAndDequantizeV4`.
@@ -889,19 +885,19 @@ public class QuantizationOps(
         roundMode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): QuantizeAndDequantizeV4<T> = java.quantizeAndDequantizeV4<T>(
+    ): QuantizeAndDequantizeV4<T> = java.quantizeAndDequantizeV4<T>(    
         input,
         inputMin,
         inputMax,
         *listOfNotNull(
-            signedInput?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.signedInput(it) },
-            numBits?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.numBits(it) },
-            rangeGiven?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.rangeGiven(it) },
-            roundMode?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.roundMode(it) },
-            narrowRange?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.narrowRange(it) },
-            axis?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4.axis(it) }
+            signedInput?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.signedInput(it) },
+            numBits?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.numBits(it) },
+            rangeGiven?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.rangeGiven(it) },
+            roundMode?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.roundMode(it) },
+            narrowRange?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.narrowRange(it) },
+            axis?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Returns the gradient of `QuantizeAndDequantizeV4`.
@@ -928,26 +924,26 @@ public class QuantizationOps(
         inputMin: Operand<T>,
         inputMax: Operand<T>,
         axis: Long? = null
-    ): QuantizeAndDequantizeV4Grad<T> = java.quantizeAndDequantizeV4Grad<T>(
+    ): QuantizeAndDequantizeV4Grad<T> = java.quantizeAndDequantizeV4Grad<T>(    
         gradients,
         input,
         inputMin,
         inputMax,
         *listOfNotNull(
-            axis?.let { org.tensorflow.op.quantization.QuantizeAndDequantizeV4Grad.axis(it) }
+            axis?.let{ org.tensorflow.op.quantization.QuantizeAndDequantizeV4Grad.axis(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Convert the quantized 'input' tensor into a lower-precision 'output', using the
      *  actual distribution of the values to maximize the usage of the lower bit depth
      *  and adjusting the output min and max ranges accordingly.
-     *
+     *  
      * &#91;input_min, input_max&#93; are scalar floats that specify the range for the float
      *  interpretation of the 'input' data. For example, if input_min is -1.0f and
      *  input_max is 1.0f, and we are dealing with quint16 quantized data, then a 0
      *  value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
-     *
+     *  
      * This operator tries to squeeze as much precision as possible into an output with
      *  a lower bit depth by calculating the actual min and max values found in the
      *  data. For example, maybe that quint16 input has no values lower than 16,384 and
@@ -955,7 +951,7 @@ public class QuantizationOps(
      *  the float interpretations are between -0.5f and 0.5f, so if we want to compress
      *  the data into a quint8 output, we can use that range rather than the theoretical
      *  -1.0f to 1.0f that is suggested by the input min and max.
-     *
+     *  
      * In practice, this is most useful for taking output from operations like
      *  QuantizedMatMul that can produce higher bit-depth outputs than their inputs and
      *  may have large potential output ranges, but in practice have a distribution of
@@ -977,12 +973,12 @@ public class QuantizationOps(
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>,
         outType: Class<U>
-    ): QuantizeDownAndShrinkRange<U> = java.quantizeDownAndShrinkRange<U>(
+    ): QuantizeDownAndShrinkRange<U> = java.quantizeDownAndShrinkRange<U>(    
         input,
         inputMin,
         inputMax,
         outType
-    )
+        )
 
     /**
      * Concatenates quantized tensors along one dimension.
@@ -1003,12 +999,12 @@ public class QuantizationOps(
         values: Iterable<Operand<T>>,
         inputMins: Iterable<Operand<TFloat32>>,
         inputMaxes: Iterable<Operand<TFloat32>>
-    ): QuantizedConcat<T> = java.quantizedConcat<T>(
+    ): QuantizedConcat<T> = java.quantizedConcat<T>(    
         concatDim,
         values,
         inputMins,
         inputMaxes
-    )
+        )
 
     /**
      * Computes a range that covers the actual values present in a quantized tensor.
@@ -1027,17 +1023,17 @@ public class QuantizationOps(
         input: Operand<out TNumber>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): RequantizationRange = java.requantizationRange(
+    ): RequantizationRange = java.requantizationRange(    
         input,
         inputMin,
         inputMax
-    )
+        )
 
     /**
      * Converts the quantized `input` tensor into a lower-precision `output`.
      *  Converts the quantized `input` tensor into a lower-precision `output`, using the
      *  output range specified with `requested_output_min` and `requested_output_max`.
-     *
+     *  
      * `&#91;input_min, input_max&#93;` are scalar floats that specify the range for the float
      *  interpretation of the `input` data. For example, if `input_min` is -1.0f and
      *  `input_max` is 1.0f, and we are dealing with `quint16` quantized data, then a 0
@@ -1061,32 +1057,32 @@ public class QuantizationOps(
         requestedOutputMin: Operand<TFloat32>,
         requestedOutputMax: Operand<TFloat32>,
         outType: Class<U>
-    ): Requantize<U> = java.requantize<U>(
+    ): Requantize<U> = java.requantize<U>(    
         input,
         inputMin,
         inputMax,
         requestedOutputMin,
         requestedOutputMax,
         outType
-    )
+        )
 
     /**
      * Dequantize the 'input' tensor into a float or bfloat16 Tensor.
      *  &#91;min_range, max_range&#93; are scalar floats that specify the range for
      *  the output. The 'mode' attribute controls exactly which calculations are
      *  used to convert the float values to their quantized equivalents.
-     *
+     *  
      * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
      *  ```
      * if T == qint8: in[i] += (range(T) + 1)/ 2.0
      *  out[i] = min_range + (in[i]* (max_range - min_range) / range(T))
-     *
+     *  
      * ```
-     *
+     *  
      * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
-     *
+     *  
      * _MIN_COMBINED Mode Example_
-     *
+     *  
      * If the input comes from a QuantizedRelu6, the output type is
      *  quint8 (range of 0-255) but the possible range of QuantizedRelu6 is
      *  0-6.  The min_range and max_range values are therefore 0.0 and 6.0.
@@ -1094,7 +1090,7 @@ public class QuantizationOps(
      *  by 6 / 255.
      *  Note that if quantizedtype is qint8, the operation will additionally add
      *  each value by 128 prior to casting.
-     *
+     *  
      * If the mode is 'MIN_FIRST', then this approach is used:
      *  ```
      * num_discrete_values = 1 << (# of bits in T)
@@ -1103,12 +1099,12 @@ public class QuantizationOps(
      *  range_scale = range / num_discrete_values
      *  const double offset_input = static_cast<double>(input) - lowest_quantized;
      *  result = range_min + ((input - numeric_limits<T>::min()) * range_scale)
-     *
+     *  
      * ```
-     *
+     *  
      * If the mode is `SCALED`, dequantization is performed by multiplying each
      *  input value by a scaling_factor. (Thus an input of 0 always maps to 0.0).
-     *
+     *  
      * The scaling_factor is determined from `min_range`, `max_range`, and
      *  `narrow_range` in a way that is compatible with `QuantizeAndDequantize{V2|V3`}
      *  and `QuantizeV2`, using the following algorithm:
@@ -1122,7 +1118,7 @@ public class QuantizationOps(
      *      (std::numeric_limits<T>::min() == 0) ? (max_range / max_expected_T)
      *                                           : std::max(min_range / min_expected_T,
      *                                                      max_range / max_expected_T);
-     *
+     *  
      * ```
      *
      * @param <U> data type for `output` output
@@ -1156,10 +1152,8 @@ public class QuantizationOps(
         mode: String? = null,
         narrowRange: Boolean? = null,
         axis: Long? = null
-    ): Dequantize<U> = dequantize<U>(
-        input, minRange, maxRange, U::class.java, mode, narrowRange,
-        axis
-    )
+    ): Dequantize<U> = dequantize<U>(input, minRange, maxRange, U::class.java, mode, narrowRange,
+            axis)
 
     /**
      * Quantize the 'input' tensor of type float to 'output' tensor of type 'T'.
@@ -1168,27 +1162,27 @@ public class QuantizationOps(
      *  used to convert the float values to their quantized equivalents.  The
      *  'round_mode' attribute controls which rounding tie-breaking algorithm is used
      *  when rounding float values to their quantized equivalents.
-     *
+     *  
      * In 'MIN_COMBINED' mode, each value of the tensor will undergo the following:
      *  ```
      * out[i] = (in[i] - min_range) * range(T) / (max_range - min_range)
      *  if T == qint8: out[i] -= (range(T) + 1) / 2.0
-     *
+     *  
      * ```
-     *
+     *  
      * here `range(T) = numeric_limits<T>::max() - numeric_limits<T>::min()`
-     *
+     *  
      * _MIN_COMBINED Mode Example_
-     *
+     *  
      * Assume the input is type float and has a possible range of &#91;0.0, 6.0&#93; and the
      *  output type is quint8 (&#91;0, 255&#93;). The min_range and max_range values should be
      *  specified as 0.0 and 6.0. Quantizing from float to quint8 will multiply each
      *  value of the input by 255/6 and cast to quint8.
-     *
+     *  
      * If the output type was qint8 (&#91;-128, 127&#93;), the operation will additionally
      *  subtract each value by 128 prior to casting, so that the range of values aligns
      *  with the range of qint8.
-     *
+     *  
      * If the mode is 'MIN_FIRST', then this approach is used:
      *  ```
      * num_discrete_values = 1 << (# of bits in T)
@@ -1199,19 +1193,19 @@ public class QuantizationOps(
      *    numeric_limits<T>::min()
      *  quantized = max(quantized, numeric_limits<T>::min())
      *  quantized = min(quantized, numeric_limits<T>::max())
-     *
+     *  
      * ```
-     *
+     *  
      * The biggest difference between this and MIN_COMBINED is that the minimum range
      *  is rounded first, before it's subtracted from the rounded value. With
      *  MIN_COMBINED, a small bias is introduced where repeated iterations of quantizing
      *  and dequantizing will introduce a larger and larger error.
-     *
+     *  
      * _SCALED mode Example_
-     *
+     *  
      * `SCALED` mode matches the quantization approach used in
      *  `QuantizeAndDequantize{V2|V3`}.
-     *
+     *  
      * If the mode is `SCALED`, the quantization is performed by multiplying each
      *  input value by a scaling_factor.
      *  The scaling_factor is determined from `min_range` and `max_range` to be as large
@@ -1229,55 +1223,55 @@ public class QuantizationOps(
      *
      *    const float scale_factor = std::min(scale_factor_from_min_side,
      *                                        scale_factor_from_max_side);
-     *
+     *  
      * ```
-     *
+     *  
      * We next use the scale_factor to adjust min_range and max_range as follows:
      *  ```
      * min_range = min_T / scale_factor;
      *        max_range = max_T / scale_factor;
-     *
+     *  
      * ```
-     *
+     *  
      * e.g. if T = qint8, and initially min_range = -10, and max_range = 9, we would
      *  compare -128/-10.0 = 12.8 to 127/9.0 = 14.11, and set scaling_factor = 12.8
      *  In this case, min_range would remain -10, but max_range would be adjusted to
      *  127 / 12.8 = 9.921875
-     *
+     *  
      * So we will quantize input values in the range (-10, 9.921875) to (-128, 127).
-     *
+     *  
      * The input tensor can now be quantized by clipping values to the range
      *  `min_range` to `max_range`, then multiplying by scale_factor as follows:
      *  ```
      * result = round(min(max_range, max(min_range, input)) * scale_factor)
-     *
+     *  
      * ```
-     *
+     *  
      * The adjusted `min_range` and `max_range` are returned as outputs 2 and 3 of
      *  this operation. These outputs should be used as the range for any further
      *  calculations.
-     *
+     *  
      * _narrow_range (bool) attribute_
-     *
+     *  
      * If true, we do not use the minimum quantized value.
      *  i.e. for int8 the quantized output, it would be restricted to the range
      *  -127..127 instead of the full -128..127 range.
      *  This is provided for compatibility with certain inference backends.
      *  (Only applies to SCALED mode)
-     *
+     *  
      * _axis (int) attribute_
-     *
+     *  
      * An optional `axis` attribute can specify a dimension index of the input tensor,
      *  such that quantization ranges will be calculated and applied separately for each
      *  slice of the tensor along that dimension. This is useful for per-channel
      *  quantization.
-     *
+     *  
      * If axis is specified, min_range and max_range
-     *
+     *  
      * if `axis`=None, per-tensor quantization is performed as normal.
-     *
+     *  
      * _ensure_minimum_range (float) attribute_
-     *
+     *  
      * Ensures the minimum quantization range is at least this value.
      *  The legacy default value for this is 0.01, but it is strongly suggested to
      *  set it to 0 for new uses.
@@ -1330,21 +1324,19 @@ public class QuantizationOps(
         narrowRange: Boolean? = null,
         axis: Long? = null,
         ensureMinimumRange: Float? = null
-    ): Quantize<T> = quantize<T>(
-        input, minRange, maxRange, T::class.java, mode, roundMode,
-        narrowRange, axis, ensureMinimumRange
-    )
+    ): Quantize<T> = quantize<T>(input, minRange, maxRange, T::class.java, mode, roundMode,
+            narrowRange, axis, ensureMinimumRange)
 
     /**
      * Convert the quantized 'input' tensor into a lower-precision 'output', using the
      *  actual distribution of the values to maximize the usage of the lower bit depth
      *  and adjusting the output min and max ranges accordingly.
-     *
+     *  
      * &#91;input_min, input_max&#93; are scalar floats that specify the range for the float
      *  interpretation of the 'input' data. For example, if input_min is -1.0f and
      *  input_max is 1.0f, and we are dealing with quint16 quantized data, then a 0
      *  value in the 16-bit data should be interpreted as -1.0f, and a 65535 means 1.0f.
-     *
+     *  
      * This operator tries to squeeze as much precision as possible into an output with
      *  a lower bit depth by calculating the actual min and max values found in the
      *  data. For example, maybe that quint16 input has no values lower than 16,384 and
@@ -1352,7 +1344,7 @@ public class QuantizationOps(
      *  the float interpretations are between -0.5f and 0.5f, so if we want to compress
      *  the data into a quint8 output, we can use that range rather than the theoretical
      *  -1.0f to 1.0f that is suggested by the input min and max.
-     *
+     *  
      * In practice, this is most useful for taking output from operations like
      *  QuantizedMatMul that can produce higher bit-depth outputs than their inputs and
      *  may have large potential output ranges, but in practice have a distribution of
@@ -1374,16 +1366,14 @@ public class QuantizationOps(
         input: Operand<out TNumber>,
         inputMin: Operand<TFloat32>,
         inputMax: Operand<TFloat32>
-    ): QuantizeDownAndShrinkRange<U> = quantizeDownAndShrinkRange<U>(
-        input, inputMin, inputMax,
-        U::class.java
-    )
+    ): QuantizeDownAndShrinkRange<U> = quantizeDownAndShrinkRange<U>(input, inputMin, inputMax,
+            U::class.java)
 
     /**
      * Converts the quantized `input` tensor into a lower-precision `output`.
      *  Converts the quantized `input` tensor into a lower-precision `output`, using the
      *  output range specified with `requested_output_min` and `requested_output_max`.
-     *
+     *  
      * `&#91;input_min, input_max&#93;` are scalar floats that specify the range for the float
      *  interpretation of the `input` data. For example, if `input_min` is -1.0f and
      *  `input_max` is 1.0f, and we are dealing with `quint16` quantized data, then a 0
@@ -1407,8 +1397,6 @@ public class QuantizationOps(
         inputMax: Operand<TFloat32>,
         requestedOutputMin: Operand<TFloat32>,
         requestedOutputMax: Operand<TFloat32>
-    ): Requantize<U> = requantize<U>(
-        input, inputMin, inputMax, requestedOutputMin,
-        requestedOutputMax, U::class.java
-    )
+    ): Requantize<U> = requantize<U>(input, inputMin, inputMax, requestedOutputMin,
+            requestedOutputMax, U::class.java)
 }

@@ -17,6 +17,12 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.random.AllCandidateSampler
@@ -43,12 +49,6 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Array
-import kotlin.Boolean
-import kotlin.Float
-import kotlin.Long
-import kotlin.String
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `random` operations as [Op][org.tensorflow.op.Op]s
@@ -72,9 +72,9 @@ public class RandomOps(
      * Generates labels for candidate sampling with a learned unigram distribution.
      *  See explanations of candidate sampling and the data formats at
      *  go/candidate-sampling.
-     *
+     *  
      * For each batch, this op picks a single set of sampled candidate labels.
-     *
+     *  
      * The advantages of sampling candidates per-batch are simplicity and the
      *  possibility of efficient dense matrix multiplication. The disadvantage is that
      *  the sampled candidates must be chosen independently of the context and of the
@@ -108,24 +108,24 @@ public class RandomOps(
         unique: Boolean,
         seed: Long? = null,
         seed2: Long? = null
-    ): AllCandidateSampler = java.allCandidateSampler(
+    ): AllCandidateSampler = java.allCandidateSampler(    
         trueClasses,
         numTrue,
         numSampled,
         unique,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.AllCandidateSampler.seed(it) },
-            seed2?.let { org.tensorflow.op.random.AllCandidateSampler.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.AllCandidateSampler.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.AllCandidateSampler.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Generates labels for candidate sampling with a log-uniform distribution.
      *  See explanations of candidate sampling and the data formats at
      *  go/candidate-sampling.
-     *
+     *  
      * For each batch, this op picks a single set of sampled candidate labels.
-     *
+     *  
      * The advantages of sampling candidates per-batch are simplicity and the
      *  possibility of efficient dense matrix multiplication. The disadvantage is that
      *  the sampled candidates must be chosen independently of the context and of the
@@ -161,17 +161,17 @@ public class RandomOps(
         rangeMax: Long,
         seed: Long? = null,
         seed2: Long? = null
-    ): LogUniformCandidateSampler = java.logUniformCandidateSampler(
+    ): LogUniformCandidateSampler = java.logUniformCandidateSampler(    
         trueClasses,
         numTrue,
         numSampled,
         unique,
         rangeMax,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.LogUniformCandidateSampler.seed(it) },
-            seed2?.let { org.tensorflow.op.random.LogUniformCandidateSampler.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.LogUniformCandidateSampler.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.LogUniformCandidateSampler.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Draws samples from a multinomial distribution.
@@ -189,11 +189,11 @@ public class RandomOps(
         logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
         options: Array<Multinomial.Options>
-    ): Multinomial<TInt64> = java.multinomial(
+    ): Multinomial<TInt64> = java.multinomial(    
         logits,
         numSamples,
         options
-    )
+        )
 
     /**
      * Draws samples from a multinomial distribution.
@@ -224,15 +224,15 @@ public class RandomOps(
         outputDtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): Multinomial<U> = java.multinomial<U>(
+    ): Multinomial<U> = java.multinomial<U>(    
         logits,
         numSamples,
         outputDtype,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.Multinomial.seed(it) },
-            seed2?.let { org.tensorflow.op.random.Multinomial.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.Multinomial.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.Multinomial.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random values from a normal distribution. The parameters may each be a
@@ -269,17 +269,17 @@ public class RandomOps(
         maxvals: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): ParameterizedTruncatedNormal<U> = java.parameterizedTruncatedNormal<U>(
+    ): ParameterizedTruncatedNormal<U> = java.parameterizedTruncatedNormal<U>(    
         shape,
         means,
         stdevs,
         minvals,
         maxvals,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.ParameterizedTruncatedNormal.seed(it) },
-            seed2?.let { org.tensorflow.op.random.ParameterizedTruncatedNormal.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.ParameterizedTruncatedNormal.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.ParameterizedTruncatedNormal.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random values from the Gamma distribution(s) described by alpha.
@@ -312,14 +312,14 @@ public class RandomOps(
         alpha: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomGamma<U> = java.randomGamma<U>(
+    ): RandomGamma<U> = java.randomGamma<U>(    
         shape,
         alpha,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomGamma.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomGamma.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomGamma.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomGamma.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random values from the Poisson distribution(s) described by rate.
@@ -327,7 +327,7 @@ public class RandomOps(
      *  the algorithm by Hormann is used to acquire samples via
      *  transformation-rejection.
      *  See http://www.sciencedirect.com/science/article/pii/0167668793909974.
-     *
+     *  
      * Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
      *  random variables.
      *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
@@ -346,11 +346,11 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         rate: Operand<out TNumber>,
         options: Array<RandomPoisson.Options>
-    ): RandomPoisson<TInt64> = java.randomPoisson(
+    ): RandomPoisson<TInt64> = java.randomPoisson(    
         shape,
         rate,
         options
-    )
+        )
 
     /**
      * Outputs random values from the Poisson distribution(s) described by rate.
@@ -358,7 +358,7 @@ public class RandomOps(
      *  the algorithm by Hormann is used to acquire samples via
      *  transformation-rejection.
      *  See http://www.sciencedirect.com/science/article/pii/0167668793909974.
-     *
+     *  
      * Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
      *  random variables.
      *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
@@ -391,15 +391,15 @@ public class RandomOps(
         dtype: Class<V>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomPoisson<V> = java.randomPoisson<V>(
+    ): RandomPoisson<V> = java.randomPoisson<V>(    
         shape,
         rate,
         dtype,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomPoisson.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomPoisson.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomPoisson.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomPoisson.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Randomly shuffles a tensor along its first dimension.
@@ -410,7 +410,7 @@ public class RandomOps(
      * [[1, 2],       [[5, 6],
      *   [3, 4],  ==>   [1, 2],
      *   [5, 6]]        [3, 4]]
-     *
+     *  
      * ```
      *
      * @param <T> data type for `output` output
@@ -434,13 +434,13 @@ public class RandomOps(
         value: Operand<T>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomShuffle<T> = java.randomShuffle<T>(
+    ): RandomShuffle<T> = java.randomShuffle<T>(    
         value,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomShuffle.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomShuffle.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomShuffle.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomShuffle.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random values from a normal distribution.
@@ -469,14 +469,14 @@ public class RandomOps(
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomStandardNormal<U> = java.randomStandardNormal<U>(
+    ): RandomStandardNormal<U> = java.randomStandardNormal<U>(    
         shape,
         dtype,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomStandardNormal.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomStandardNormal.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomStandardNormal.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomStandardNormal.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random values from a uniform distribution.
@@ -506,21 +506,21 @@ public class RandomOps(
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomUniform<U> = java.randomUniform<U>(
+    ): RandomUniform<U> = java.randomUniform<U>(    
         shape,
         dtype,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomUniform.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomUniform.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomUniform.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomUniform.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs random integers from a uniform distribution.
      *  The generated values are uniform integers in the range `[minval, maxval)`.
      *  The lower bound `minval` is included in the range, while the upper bound
      *  `maxval` is excluded.
-     *
+     *  
      * The random integers are slightly biased unless `maxval - minval` is an exact
      *  power of two.  The bias is small for values of `maxval - minval` significantly
      *  smaller than the range of the output (either `2^32` or `2^64`).
@@ -550,15 +550,15 @@ public class RandomOps(
         maxval: Operand<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): RandomUniformInt<U> = java.randomUniformInt<U>(
+    ): RandomUniformInt<U> = java.randomUniformInt<U>(    
         shape,
         minval,
         maxval,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.RandomUniformInt.seed(it) },
-            seed2?.let { org.tensorflow.op.random.RandomUniformInt.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.RandomUniformInt.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.RandomUniformInt.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Emits randomized records.
@@ -602,17 +602,17 @@ public class RandomOps(
         fileParallelism: Long? = null,
         batchSize: Long? = null,
         compressionType: String? = null
-    ): RecordInput = java.recordInput(
+    ): RecordInput = java.recordInput(    
         filePattern,
         *listOfNotNull(
-            fileRandomSeed?.let { org.tensorflow.op.random.RecordInput.fileRandomSeed(it) },
-            fileShuffleShiftRatio?.let { org.tensorflow.op.random.RecordInput.fileShuffleShiftRatio(it) },
-            fileBufferSize?.let { org.tensorflow.op.random.RecordInput.fileBufferSize(it) },
-            fileParallelism?.let { org.tensorflow.op.random.RecordInput.fileParallelism(it) },
-            batchSize?.let { org.tensorflow.op.random.RecordInput.batchSize(it) },
-            compressionType?.let { org.tensorflow.op.random.RecordInput.compressionType(it) }
+            fileRandomSeed?.let{ org.tensorflow.op.random.RecordInput.fileRandomSeed(it) },
+            fileShuffleShiftRatio?.let{ org.tensorflow.op.random.RecordInput.fileShuffleShiftRatio(it) },
+            fileBufferSize?.let{ org.tensorflow.op.random.RecordInput.fileBufferSize(it) },
+            fileParallelism?.let{ org.tensorflow.op.random.RecordInput.fileParallelism(it) },
+            batchSize?.let{ org.tensorflow.op.random.RecordInput.batchSize(it) },
+            compressionType?.let{ org.tensorflow.op.random.RecordInput.compressionType(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * The StatefulRandomBinomial operation
@@ -633,13 +633,13 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         counts: Operand<U>,
         probs: Operand<U>
-    ): StatefulRandomBinomial<TInt64> = java.statefulRandomBinomial<U>(
+    ): StatefulRandomBinomial<TInt64> = java.statefulRandomBinomial<U>(    
         resource,
         algorithm,
         shape,
         counts,
         probs
-    )
+        )
 
     /**
      * The StatefulRandomBinomial operation
@@ -663,14 +663,14 @@ public class RandomOps(
         counts: Operand<U>,
         probs: Operand<U>,
         dtype: Class<V>
-    ): StatefulRandomBinomial<V> = java.statefulRandomBinomial<V, U>(
+    ): StatefulRandomBinomial<V> = java.statefulRandomBinomial<V, U>(    
         resource,
         algorithm,
         shape,
         counts,
         probs,
         dtype
-    )
+        )
 
     /**
      * Outputs random values from a normal distribution.
@@ -687,11 +687,11 @@ public class RandomOps(
         resource: Operand<out TType>,
         algorithm: Operand<TInt64>,
         shape: Operand<out TType>
-    ): StatefulStandardNormal<TFloat32> = java.statefulStandardNormal(
+    ): StatefulStandardNormal<TFloat32> = java.statefulStandardNormal(    
         resource,
         algorithm,
         shape
-    )
+        )
 
     /**
      * Outputs random values from a normal distribution.
@@ -711,12 +711,12 @@ public class RandomOps(
         algorithm: Operand<TInt64>,
         shape: Operand<out TType>,
         dtype: Class<U>
-    ): StatefulStandardNormal<U> = java.statefulStandardNormal<U>(
+    ): StatefulStandardNormal<U> = java.statefulStandardNormal<U>(    
         resource,
         algorithm,
         shape,
         dtype
-    )
+        )
 
     /**
      * Draws samples from a multinomial distribution.
@@ -734,11 +734,11 @@ public class RandomOps(
         logits: Operand<out TNumber>,
         numSamples: Operand<TInt32>,
         seed: Operand<out TNumber>
-    ): StatelessMultinomial<TInt64> = java.statelessMultinomial(
+    ): StatelessMultinomial<TInt64> = java.statelessMultinomial(    
         logits,
         numSamples,
         seed
-    )
+        )
 
     /**
      * Draws samples from a multinomial distribution.
@@ -759,17 +759,17 @@ public class RandomOps(
         numSamples: Operand<TInt32>,
         seed: Operand<out TNumber>,
         outputDtype: Class<V>
-    ): StatelessMultinomial<V> = java.statelessMultinomial<V>(
+    ): StatelessMultinomial<V> = java.statelessMultinomial<V>(    
         logits,
         numSamples,
         seed,
         outputDtype
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom values from a normal distribution.
      *  The generated values will have mean 0 and standard deviation 1.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -779,15 +779,15 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomNormal
      */
     public fun statelessRandomNormal(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
-        StatelessRandomNormal<TFloat32> = java.statelessRandomNormal(
+            StatelessRandomNormal<TFloat32> = java.statelessRandomNormal(    
         shape,
         seed
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom values from a normal distribution.
      *  The generated values will have mean 0 and standard deviation 1.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -802,17 +802,17 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessRandomNormal<V> = java.statelessRandomNormal<V>(
+    ): StatelessRandomNormal<V> = java.statelessRandomNormal<V>(    
         shape,
         seed,
         dtype
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom random values from a uniform distribution.
      *  The generated values follow a uniform distribution in the range `[0, 1)`. The
      *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -822,16 +822,16 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomUniform
      */
     public fun statelessRandomUniform(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
-        StatelessRandomUniform<TFloat32> = java.statelessRandomUniform(
+            StatelessRandomUniform<TFloat32> = java.statelessRandomUniform(    
         shape,
         seed
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom random values from a uniform distribution.
      *  The generated values follow a uniform distribution in the range `[0, 1)`. The
      *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -846,18 +846,18 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessRandomUniform<V> = java.statelessRandomUniform<V>(
+    ): StatelessRandomUniform<V> = java.statelessRandomUniform<V>(    
         shape,
         seed,
         dtype
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom values from a truncated normal distribution.
      *  The generated values follow a normal distribution with mean 0 and standard
      *  deviation 1, except that values whose magnitude is more than 2 standard
      *  deviations from the mean are dropped and re-picked.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -867,17 +867,17 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
      */
     public fun statelessTruncatedNormal(shape: Operand<out TNumber>, seed: Operand<out TNumber>):
-        StatelessTruncatedNormal<TFloat32> = java.statelessTruncatedNormal(
+            StatelessTruncatedNormal<TFloat32> = java.statelessTruncatedNormal(    
         shape,
         seed
-    )
+        )
 
     /**
      * Outputs deterministic pseudorandom values from a truncated normal distribution.
      *  The generated values follow a normal distribution with mean 0 and standard
      *  deviation 1, except that values whose magnitude is more than 2 standard
      *  deviations from the mean are dropped and re-picked.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -892,11 +892,11 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         seed: Operand<out TNumber>,
         dtype: Class<V>
-    ): StatelessTruncatedNormal<V> = java.statelessTruncatedNormal<V>(
+    ): StatelessTruncatedNormal<V> = java.statelessTruncatedNormal<V>(    
         shape,
         seed,
         dtype
-    )
+        )
 
     /**
      * Outputs random values from a truncated normal distribution.
@@ -927,22 +927,22 @@ public class RandomOps(
         dtype: Class<U>,
         seed: Long? = null,
         seed2: Long? = null
-    ): TruncatedNormal<U> = java.truncatedNormal<U>(
+    ): TruncatedNormal<U> = java.truncatedNormal<U>(    
         shape,
         dtype,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.TruncatedNormal.seed(it) },
-            seed2?.let { org.tensorflow.op.random.TruncatedNormal.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.TruncatedNormal.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.TruncatedNormal.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Generates labels for candidate sampling with a uniform distribution.
      *  See explanations of candidate sampling and the data formats at
      *  go/candidate-sampling.
-     *
+     *  
      * For each batch, this op picks a single set of sampled candidate labels.
-     *
+     *  
      * The advantages of sampling candidates per-batch are simplicity and the
      *  possibility of efficient dense matrix multiplication. The disadvantage is that
      *  the sampled candidates must be chosen independently of the context and of the
@@ -978,17 +978,17 @@ public class RandomOps(
         rangeMax: Long,
         seed: Long? = null,
         seed2: Long? = null
-    ): UniformCandidateSampler = java.uniformCandidateSampler(
+    ): UniformCandidateSampler = java.uniformCandidateSampler(    
         trueClasses,
         numTrue,
         numSampled,
         unique,
         rangeMax,
         *listOfNotNull(
-            seed?.let { org.tensorflow.op.random.UniformCandidateSampler.seed(it) },
-            seed2?.let { org.tensorflow.op.random.UniformCandidateSampler.seed2(it) }
+            seed?.let{ org.tensorflow.op.random.UniformCandidateSampler.seed(it) },
+            seed2?.let{ org.tensorflow.op.random.UniformCandidateSampler.seed2(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Draws samples from a multinomial distribution.
@@ -1027,7 +1027,7 @@ public class RandomOps(
      *  the algorithm by Hormann is used to acquire samples via
      *  transformation-rejection.
      *  See http://www.sciencedirect.com/science/article/pii/0167668793909974.
-     *
+     *  
      * Otherwise, Knuth's algorithm is used to acquire samples via multiplying uniform
      *  random variables.
      *  See Donald E. Knuth (1969). Seminumerical Algorithms. The Art of Computer
@@ -1143,10 +1143,8 @@ public class RandomOps(
         shape: Operand<out TNumber>,
         counts: Operand<U>,
         probs: Operand<U>
-    ): StatefulRandomBinomial<V> = statefulRandomBinomial<V, U>(
-        resource, algorithm, shape, counts,
-        probs, V::class.java
-    )
+    ): StatefulRandomBinomial<V> = statefulRandomBinomial<V, U>(resource, algorithm, shape, counts,
+            probs, V::class.java)
 
     /**
      * Outputs random values from a normal distribution.
@@ -1166,10 +1164,8 @@ public class RandomOps(
         resource: Operand<out TType>,
         algorithm: Operand<TInt64>,
         shape: Operand<out TType>
-    ): StatefulStandardNormal<U> = statefulStandardNormal<U>(
-        resource, algorithm, shape,
-        U::class.java
-    )
+    ): StatefulStandardNormal<U> = statefulStandardNormal<U>(resource, algorithm, shape,
+            U::class.java)
 
     /**
      * Draws samples from a multinomial distribution.
@@ -1195,7 +1191,7 @@ public class RandomOps(
     /**
      * Outputs deterministic pseudorandom values from a normal distribution.
      *  The generated values will have mean 0 and standard deviation 1.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -1207,19 +1203,15 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomNormal
      */
     @JvmName("statelessRandomNormalReified")
-    public inline fun <reified V : TNumber> statelessRandomNormalTyped(
-        shape: Operand<out TNumber>,
-        seed: Operand<out TNumber>
-    ): StatelessRandomNormal<V> = statelessRandomNormal<V>(
-        shape,
-        seed, V::class.java
-    )
+    public inline fun <reified V : TNumber> statelessRandomNormalTyped(shape: Operand<out TNumber>,
+            seed: Operand<out TNumber>): StatelessRandomNormal<V> = statelessRandomNormal<V>(shape,
+            seed, V::class.java)
 
     /**
      * Outputs deterministic pseudorandom random values from a uniform distribution.
      *  The generated values follow a uniform distribution in the range `[0, 1)`. The
      *  lower bound 0 is included in the range, while the upper bound 1 is excluded.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -1231,18 +1223,16 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessRandomUniform
      */
     @JvmName("statelessRandomUniformReified")
-    public inline fun <reified V : TNumber> statelessRandomUniformTyped(
-        shape: Operand<out TNumber>,
-        seed: Operand<out TNumber>
-    ): StatelessRandomUniform<V> =
-        statelessRandomUniform<V>(shape, seed, V::class.java)
+    public inline fun <reified V : TNumber> statelessRandomUniformTyped(shape: Operand<out TNumber>,
+            seed: Operand<out TNumber>): StatelessRandomUniform<V> =
+            statelessRandomUniform<V>(shape, seed, V::class.java)
 
     /**
      * Outputs deterministic pseudorandom values from a truncated normal distribution.
      *  The generated values follow a normal distribution with mean 0 and standard
      *  deviation 1, except that values whose magnitude is more than 2 standard
      *  deviations from the mean are dropped and re-picked.
-     *
+     *  
      * The outputs are a deterministic function of `shape` and `seed`.
      *
      * @param <V> data type for `output` output
@@ -1254,12 +1244,9 @@ public class RandomOps(
      * @see org.tensorflow.op.RandomOps.statelessTruncatedNormal
      */
     @JvmName("statelessTruncatedNormalReified")
-    public inline fun <reified V : TNumber> statelessTruncatedNormalTyped(
-        shape: Operand<out
-            TNumber>,
-        seed: Operand<out TNumber>
-    ): StatelessTruncatedNormal<V> =
-        statelessTruncatedNormal<V>(shape, seed, V::class.java)
+    public inline fun <reified V : TNumber> statelessTruncatedNormalTyped(shape: Operand<out
+            TNumber>, seed: Operand<out TNumber>): StatelessTruncatedNormal<V> =
+            statelessTruncatedNormal<V>(shape, seed, V::class.java)
 
     /**
      * Outputs random values from a truncated normal distribution.

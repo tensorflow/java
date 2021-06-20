@@ -17,6 +17,7 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Long
 import org.tensorflow.Operand
 import org.tensorflow.Tensor
 import org.tensorflow.op.Scope
@@ -30,7 +31,6 @@ import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Long
 
 /**
  * An API for building `summary` operations as [Op][org.tensorflow.op.Op]s
@@ -56,7 +56,7 @@ public class SummaryOps(
      *  audio is built from `tensor` which must be 3-D with shape `&#91;batch_size, frames,
      * channels&#93;` or 2-D with shape `&#91;batch_size, frames&#93;`. The values are
      *  assumed to be in the range of `&#91;-1.0, 1.0&#93;` with a sample rate of `sample_rate`.
-     *
+     *  
      * The `tag` argument is a scalar `Tensor` of type `string`.  It is used to
      *  build the `tag` of the summary values:
      *  <ul>
@@ -81,21 +81,21 @@ public class SummaryOps(
         tensor: Operand<TFloat32>,
         sampleRate: Operand<TFloat32>,
         maxOutputs: Long? = null
-    ): AudioSummary = java.audioSummary(
+    ): AudioSummary = java.audioSummary(    
         tag,
         tensor,
         sampleRate,
         *listOfNotNull(
-            maxOutputs?.let { org.tensorflow.op.summary.AudioSummary.maxOutputs(it) }
+            maxOutputs?.let{ org.tensorflow.op.summary.AudioSummary.maxOutputs(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Outputs a `Summary` protocol buffer with a histogram.
      *  The
-     * generated[`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto)
+     * generated[`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto) 
      *  has one summary value containing a histogram for `values`.
-     *
+     *  
      * This op reports an `InvalidArgument` error if any value is not finite.
      *
      * @param tag Scalar.  Tag to use for the `Summary.Value`.
@@ -104,10 +104,10 @@ public class SummaryOps(
      * @see org.tensorflow.op.SummaryOps.histogramSummary
      */
     public fun histogramSummary(tag: Operand<TString>, values: Operand<out TNumber>):
-        HistogramSummary = java.histogramSummary(
+            HistogramSummary = java.histogramSummary(    
         tag,
         values
-    )
+        )
 
     /**
      * Outputs a `Summary` protocol buffer with images.
@@ -119,25 +119,25 @@ public class SummaryOps(
      *  <li>3: `tensor` is interpreted as RGB.</li>
      *  <li>4: `tensor` is interpreted as RGBA.</li>
      *  </ul>
-     *
+     *  
      * The images have the same number of channels as the input tensor. For float
      *  input, the values are normalized one image at a time to fit in the range
      *  `&#91;0, 255&#93;`.  `uint8` values are unchanged.  The op uses two different
      *  normalization algorithms:
      *  <ul>
      *  <li>
-     *
+     *  
      * If the input values are all positive, they are rescaled so the largest one
      *  is 255.
      *  </li>
      *  <li>
-     *
+     *  
      * If any input value is negative, the values are shifted so input value 0.0
      *  is at 127.  They are then rescaled so that either the smallest value is 0,
      *  or the largest one is 255.
      *  </li>
      *  </ul>
-     *
+     *  
      * The `tag` argument is a scalar `Tensor` of type `string`.  It is used to
      *  build the `tag` of the summary values:
      *  <ul>
@@ -145,7 +145,7 @@ public class SummaryOps(
      *  <li>If `max_images` is greater than 1, the summary value tags are
      *  generated sequentially as '_tag_/image/0', '_tag_/image/1', etc.</li>
      *  </ul>
-     *
+     *  
      * The `bad_color` argument is the color to use in the generated images for
      *  non-finite input values.  It is a `uint8` 1-D tensor of length `channels`.
      *  Each element must be in the range `&#91;0, 255&#93;` (It represents the value of a
@@ -173,22 +173,22 @@ public class SummaryOps(
         tensor: Operand<out TNumber>,
         maxImages: Long? = null,
         badColor: Tensor? = null
-    ): ImageSummary = java.imageSummary(
+    ): ImageSummary = java.imageSummary(    
         tag,
         tensor,
         *listOfNotNull(
-            maxImages?.let { org.tensorflow.op.summary.ImageSummary.maxImages(it) },
-            badColor?.let { org.tensorflow.op.summary.ImageSummary.badColor(it) }
+            maxImages?.let{ org.tensorflow.op.summary.ImageSummary.maxImages(it) },
+            badColor?.let{ org.tensorflow.op.summary.ImageSummary.badColor(it) }
         ).toTypedArray()
-    )
+        )
 
     /**
      * Merges summaries.
      *  This op creates
-     * a[`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto)
+     * a[`Summary`](https://www.tensorflow.org/code/tensorflow/core/framework/summary.proto) 
      *  protocol buffer that contains the union of all the values in the input
      *  summaries.
-     *
+     *  
      * When the Op is run, it reports an `InvalidArgument` error if multiple values
      *  in the summaries to merge use the same tag.
      *
@@ -197,9 +197,9 @@ public class SummaryOps(
      * @return a new instance of MergeSummary
      * @see org.tensorflow.op.SummaryOps.mergeSummary
      */
-    public fun mergeSummary(inputs: Iterable<Operand<TString>>): MergeSummary = java.mergeSummary(
+    public fun mergeSummary(inputs: Iterable<Operand<TString>>): MergeSummary = java.mergeSummary(    
         inputs
-    )
+        )
 
     /**
      * Outputs a `Summary` protocol buffer with scalar values.
@@ -212,9 +212,9 @@ public class SummaryOps(
      * @see org.tensorflow.op.SummaryOps.scalarSummary
      */
     public fun scalarSummary(tags: Operand<TString>, values: Operand<out TNumber>): ScalarSummary =
-        java.scalarSummary(
-            tags,
-            values
+            java.scalarSummary(    
+        tags,
+        values
         )
 
     /**
@@ -231,9 +231,9 @@ public class SummaryOps(
         tag: Operand<TString>,
         tensor: Operand<out TType>,
         serializedSummaryMetadata: Operand<TString>
-    ): TensorSummary = java.tensorSummary(
+    ): TensorSummary = java.tensorSummary(    
         tag,
         tensor,
         serializedSummaryMetadata
-    )
+        )
 }

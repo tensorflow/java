@@ -17,6 +17,9 @@
 //
 package org.tensorflow.op.kotlin
 
+import kotlin.Int
+import kotlin.Long
+import kotlin.jvm.JvmName
 import org.tensorflow.Operand
 import org.tensorflow.op.Scope
 import org.tensorflow.op.core.Shape
@@ -24,9 +27,6 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.Int
-import kotlin.Long
-import kotlin.jvm.JvmName
 
 /**
  * An API for building `shape` operations as [Op][org.tensorflow.op.Op]s
@@ -57,10 +57,10 @@ public class ShapeOps(
      *      dimension
      * @see org.tensorflow.op.ShapeOps.append
      */
-    public fun append(shape: Shape<TInt64>, lastDimension: Long): Operand<TInt64> = java.append(
+    public fun append(shape: Shape<TInt32>, lastDimension: Int): Operand<TInt32> = java.append(    
         shape,
         lastDimension
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand containing the dimensions of a shape followed by the last
@@ -73,10 +73,10 @@ public class ShapeOps(
      *      dimension
      * @see org.tensorflow.op.ShapeOps.append
      */
-    public fun append(shape: Shape<TInt32>, lastDimension: Int): Operand<TInt32> = java.append(
+    public fun append(shape: Shape<TInt64>, lastDimension: Long): Operand<TInt64> = java.append(    
         shape,
         lastDimension
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand that represents a new shape containing the dimensions of the
@@ -94,9 +94,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.append
      */
     public fun <T : TNumber> append(shape: Operand<T>, shapeToAppend: Operand<T>): Operand<T> =
-        java.append<T>(
-            shape,
-            shapeToAppend
+            java.append<T>(    
+        shape,
+        shapeToAppend
         )
 
     /**
@@ -108,9 +108,9 @@ public class ShapeOps(
      * @return the reshaped operand
      * @see org.tensorflow.op.ShapeOps.flatten
      */
-    public fun <T : TType> flatten(operand: Operand<T>): Operand<T> = java.flatten<T>(
+    public fun <T : TType> flatten(operand: Operand<T>): Operand<T> = java.flatten<T>(    
         operand
-    )
+        )
 
     /**
      * Flatten the shape to 1 dimension.
@@ -120,9 +120,9 @@ public class ShapeOps(
      * @return the flattened shape
      * @see org.tensorflow.op.ShapeOps.flatten
      */
-    public fun flatten(shape: Shape<TInt32>): Operand<TInt32> = java.flatten(
+    public fun flatten(shape: Shape<TInt32>): Operand<TInt32> = java.flatten(    
         shape
-    )
+        )
 
     /**
      * Flatten the operand to 1 dimension
@@ -136,9 +136,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.flatten
      */
     public fun <T : TType, U : TNumber> flatten(operand: Operand<T>, type: Class<U>): Operand<T> =
-        java.flatten<T, U>(
-            operand,
-            type
+            java.flatten<T, U>(    
+        operand,
+        type
         )
 
     /**
@@ -152,9 +152,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.flatten
      */
     public fun <U : TNumber> flatten(shape: Shape<U>, type: Class<U>): Operand<U> =
-        java.flatten<U>(
-            shape,
-            type
+            java.flatten<U>(    
+        shape,
+        type
         )
 
     /**
@@ -165,9 +165,9 @@ public class ShapeOps(
      * @return a 1-dimensional Operand containing the Shape's first dimension
      * @see org.tensorflow.op.ShapeOps.head
      */
-    public fun head(shape: Shape<TInt32>): Operand<TInt32> = java.head(
+    public fun head(shape: Shape<TInt32>): Operand<TInt32> = java.head(    
         shape
-    )
+        )
 
     /**
      * Creates a 1-dimensional Operand containing the Shape's first dimension.
@@ -179,10 +179,10 @@ public class ShapeOps(
      * @return a 1-dimensional Operand containing the Shape's first dimension
      * @see org.tensorflow.op.ShapeOps.head
      */
-    public fun <U : TNumber> head(shape: Shape<U>, type: Class<U>): Operand<U> = java.head<U>(
+    public fun <U : TNumber> head(shape: Shape<U>, type: Class<U>): Operand<U> = java.head<U>(    
         shape,
         type
-    )
+        )
 
     /**
      * Get the number of dimensions of the shape object.
@@ -192,9 +192,9 @@ public class ShapeOps(
      * @return the number of dimensions
      * @see org.tensorflow.op.ShapeOps.numDimensions
      */
-    public fun numDimensions(shape: Shape<TInt32>): Operand<TInt32> = java.numDimensions(
+    public fun numDimensions(shape: Shape<TInt32>): Operand<TInt32> = java.numDimensions(    
         shape
-    )
+        )
 
     /**
      * Get the number of dimensions of the shape object.
@@ -207,9 +207,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.numDimensions
      */
     public fun <U : TNumber> numDimensions(shape: Shape<U>, type: Class<U>): Operand<U> =
-        java.numDimensions<U>(
-            shape,
-            type
+            java.numDimensions<U>(    
+        shape,
+        type
         )
 
     /**
@@ -223,10 +223,10 @@ public class ShapeOps(
      *      the shape
      * @see org.tensorflow.op.ShapeOps.prepend
      */
-    public fun prepend(shape: Shape<TInt64>, firstDimension: Long): Operand<TInt64> = java.prepend(
+    public fun prepend(shape: Shape<TInt32>, firstDimension: Int): Operand<TInt32> = java.prepend(    
         shape,
         firstDimension
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand containing the first dimension followed by the dimensions of
@@ -239,10 +239,10 @@ public class ShapeOps(
      *      the shape
      * @see org.tensorflow.op.ShapeOps.prepend
      */
-    public fun prepend(shape: Shape<TInt32>, firstDimension: Int): Operand<TInt32> = java.prepend(
+    public fun prepend(shape: Shape<TInt64>, firstDimension: Long): Operand<TInt64> = java.prepend(    
         shape,
         firstDimension
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand that represents a new shape containing the dimensions of an
@@ -258,9 +258,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.prepend
      */
     public fun <T : TNumber> prepend(shape: Operand<T>, shapeToPrepend: Operand<T>): Operand<T> =
-        java.prepend<T>(
-            shape,
-            shapeToPrepend
+            java.prepend<T>(    
+        shape,
+        shapeToPrepend
         )
 
     /**
@@ -274,9 +274,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.reduceDims
      */
     public fun <T : TType> reduceDims(operand: Operand<T>, axis: Operand<TInt32>): Operand<T> =
-        java.reduceDims<T>(
-            operand,
-            axis
+            java.reduceDims<T>(    
+        operand,
+        axis
         )
 
     /**
@@ -289,9 +289,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.reduceDims
      */
     public fun reduceDims(shape: Shape<TInt32>, axis: Operand<TInt32>): Operand<TInt32> =
-        java.reduceDims(
-            shape,
-            axis
+            java.reduceDims(    
+        shape,
+        axis
         )
 
     /**
@@ -310,11 +310,11 @@ public class ShapeOps(
         operand: Operand<T>,
         axis: Operand<U>,
         type: Class<U>
-    ): Operand<T> = java.reduceDims<T, U>(
+    ): Operand<T> = java.reduceDims<T, U>(    
         operand,
         axis,
         type
-    )
+        )
 
     /**
      * Reduces the shape to the specified axis.
@@ -331,11 +331,11 @@ public class ShapeOps(
         shape: Shape<U>,
         axis: Operand<U>,
         type: Class<U>
-    ): Operand<U> = java.reduceDims<U>(
+    ): Operand<U> = java.reduceDims<U>(    
         shape,
         axis,
         type
-    )
+        )
 
     /**
      * Get the size represented by the TensorFlow shape.
@@ -345,9 +345,9 @@ public class ShapeOps(
      * @return the size
      * @see org.tensorflow.op.ShapeOps.size
      */
-    public fun size(shape: Shape<TInt32>): Operand<TInt32> = java.size(
+    public fun size(shape: Shape<TInt32>): Operand<TInt32> = java.size(    
         shape
-    )
+        )
 
     /**
      * Get the size of the specified dimension for the shape of the tensor.
@@ -359,9 +359,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.size
      */
     public fun <T : TType> size(input: Operand<T>, dim: Operand<TInt32>): Operand<TInt32> =
-        java.size<T>(
-            input,
-            dim
+            java.size<T>(    
+        input,
+        dim
         )
 
     /**
@@ -373,10 +373,10 @@ public class ShapeOps(
      * @return the size of the specified dimension
      * @see org.tensorflow.op.ShapeOps.size
      */
-    public fun size(shape: Shape<TInt32>, dim: Operand<TInt32>): Operand<TInt32> = java.size(
+    public fun size(shape: Shape<TInt32>, dim: Operand<TInt32>): Operand<TInt32> = java.size(    
         shape,
         dim
-    )
+        )
 
     /**
      * Get the size represented by the TensorFlow shape.
@@ -388,10 +388,10 @@ public class ShapeOps(
      * @return the size
      * @see org.tensorflow.op.ShapeOps.size
      */
-    public fun <U : TNumber> size(shape: Shape<U>, type: Class<U>): Operand<U> = java.size<U>(
+    public fun <U : TNumber> size(shape: Shape<U>, type: Class<U>): Operand<U> = java.size<U>(    
         shape,
         type
-    )
+        )
 
     /**
      * Get the size of the specified dimension for the shape of the tensor.
@@ -408,11 +408,11 @@ public class ShapeOps(
         input: Operand<T>,
         dim: Operand<U>,
         type: Class<U>
-    ): Operand<U> = java.size<T, U>(
+    ): Operand<U> = java.size<T, U>(    
         input,
         dim,
         type
-    )
+        )
 
     /**
      * Get the size of the specified dimension in the shape.
@@ -429,11 +429,11 @@ public class ShapeOps(
         shape: Shape<U>,
         dim: Operand<U>,
         type: Class<U>
-    ): Operand<U> = java.size<U>(
+    ): Operand<U> = java.size<U>(    
         shape,
         dim,
         type
-    )
+        )
 
     /**
      * Removes dimensions of size 1 from the shape.
@@ -443,9 +443,9 @@ public class ShapeOps(
      * @return the squeezed shape
      * @see org.tensorflow.op.ShapeOps.squeeze
      */
-    public fun squeeze(shape: Shape<TInt32>): Operand<TInt32> = java.squeeze(
+    public fun squeeze(shape: Shape<TInt32>): Operand<TInt32> = java.squeeze(    
         shape
-    )
+        )
 
     /**
      * Removes dimensions of size 1 from the shape.
@@ -458,9 +458,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.squeeze
      */
     public fun <U : TNumber> squeeze(shape: Shape<U>, type: Class<U>): Operand<U> =
-        java.squeeze<U>(
-            shape,
-            type
+            java.squeeze<U>(    
+        shape,
+        type
         )
 
     /**
@@ -475,9 +475,9 @@ public class ShapeOps(
      *      Shape
      * @see org.tensorflow.op.ShapeOps.tail
      */
-    public fun tail(shape: Shape<TInt32>): Operand<TInt32> = java.tail(
+    public fun tail(shape: Shape<TInt32>): Operand<TInt32> = java.tail(    
         shape
-    )
+        )
 
     /**
      * Creates a 1-dimensional Operand that contains the dimension matching the last dimension of *
@@ -492,10 +492,10 @@ public class ShapeOps(
      *      Shape
      * @see org.tensorflow.op.ShapeOps.tail
      */
-    public fun <U : TNumber> tail(shape: Shape<U>, type: Class<U>): Operand<U> = java.tail<U>(
+    public fun <U : TNumber> tail(shape: Shape<U>, type: Class<U>): Operand<U> = java.tail<U>(    
         shape,
         type
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand with the dimensions matching the first n dimensions of the
@@ -508,10 +508,10 @@ public class ShapeOps(
      *      shape
      * @see org.tensorflow.op.ShapeOps.take
      */
-    public fun take(shape: Shape<TInt32>, n: Operand<TInt32>): Operand<TInt32> = java.take(
+    public fun take(shape: Shape<TInt32>, n: Operand<TInt32>): Operand<TInt32> = java.take(    
         shape,
         n
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand containin the dimensions matching the first n dimensions of
@@ -531,11 +531,11 @@ public class ShapeOps(
         shape: Shape<U>,
         n: Operand<U>,
         type: Class<U>
-    ): Operand<U> = java.take<U>(
+    ): Operand<U> = java.take<U>(    
         shape,
         n,
         type
-    )
+        )
 
     /**
      * Creates a 1-dimensional operand containing the dimensions matching the last n dimensions of
@@ -551,9 +551,9 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.takeLast
      */
     public fun <U : TNumber> takeLast(shape: Shape<TInt32>, n: Operand<TInt32>): Operand<TInt32> =
-        java.takeLast<U>(
-            shape,
-            n
+            java.takeLast<U>(    
+        shape,
+        n
         )
 
     /**
@@ -575,11 +575,11 @@ public class ShapeOps(
         shape: Shape<U>,
         n: Operand<U>,
         type: Class<U>
-    ): Operand<U> = java.takeLast<U>(
+    ): Operand<U> = java.takeLast<U>(    
         shape,
         n,
         type
-    )
+        )
 
     /**
      * Flatten the operand to 1 dimension
@@ -593,8 +593,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.flatten
      */
     @JvmName("flattenReified")
-    public inline fun <T : TType, reified U : TNumber> flattenTyped(operand: Operand<T>): Operand<T> =
-        flatten<T, U>(operand, U::class.java)
+    public inline fun <T : TType, reified U : TNumber> flattenTyped(operand: Operand<T>): Operand<T>
+            = flatten<T, U>(operand, U::class.java)
 
     /**
      * Flatten the shape to 1 dimension.
@@ -607,10 +607,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.flatten
      */
     @JvmName("flattenReified")
-    public inline fun <reified U : TNumber> flatten(shape: Shape<U>): Operand<U> = flatten<U>(
-        shape,
-        U::class.java
-    )
+    public inline fun <reified U : TNumber> flatten(shape: Shape<U>): Operand<U> = flatten<U>(shape,
+            U::class.java)
 
     /**
      * Creates a 1-dimensional Operand containing the Shape's first dimension.
@@ -623,10 +621,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.head
      */
     @JvmName("headReified")
-    public inline fun <reified U : TNumber> head(shape: Shape<U>): Operand<U> = head<U>(
-        shape,
-        U::class.java
-    )
+    public inline fun <reified U : TNumber> head(shape: Shape<U>): Operand<U> = head<U>(shape,
+            U::class.java)
 
     /**
      * Get the number of dimensions of the shape object.
@@ -640,7 +636,7 @@ public class ShapeOps(
      */
     @JvmName("numDimensionsReified")
     public inline fun <reified U : TNumber> numDimensions(shape: Shape<U>): Operand<U> =
-        numDimensions<U>(shape, U::class.java)
+            numDimensions<U>(shape, U::class.java)
 
     /**
      * Reshapes the operand by reducing the shape to the specified axis.
@@ -655,10 +651,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.reduceDims
      */
     @JvmName("reduceDimsReified")
-    public inline fun <T : TType, reified U : TNumber> reduceDims(
-        operand: Operand<T>,
-        axis: Operand<U>
-    ): Operand<T> = reduceDims<T, U>(operand, axis, U::class.java)
+    public inline fun <T : TType, reified U : TNumber> reduceDims(operand: Operand<T>,
+            axis: Operand<U>): Operand<T> = reduceDims<T, U>(operand, axis, U::class.java)
 
     /**
      * Reduces the shape to the specified axis.
@@ -673,7 +667,7 @@ public class ShapeOps(
      */
     @JvmName("reduceDimsReified")
     public inline fun <reified U : TNumber> reduceDims(shape: Shape<U>, axis: Operand<U>):
-        Operand<U> = reduceDims<U>(shape, axis, U::class.java)
+            Operand<U> = reduceDims<U>(shape, axis, U::class.java)
 
     /**
      * Get the size represented by the TensorFlow shape.
@@ -686,10 +680,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.size
      */
     @JvmName("sizeReified")
-    public inline fun <reified U : TNumber> size(shape: Shape<U>): Operand<U> = size<U>(
-        shape,
-        U::class.java
-    )
+    public inline fun <reified U : TNumber> size(shape: Shape<U>): Operand<U> = size<U>(shape,
+            U::class.java)
 
     /**
      * Get the size of the specified dimension for the shape of the tensor.
@@ -704,7 +696,7 @@ public class ShapeOps(
      */
     @JvmName("sizeReified")
     public inline fun <T : TType, reified U : TNumber> size(input: Operand<T>, dim: Operand<U>):
-        Operand<U> = size<T, U>(input, dim, U::class.java)
+            Operand<U> = size<T, U>(input, dim, U::class.java)
 
     /**
      * Get the size of the specified dimension in the shape.
@@ -719,7 +711,7 @@ public class ShapeOps(
      */
     @JvmName("sizeReified")
     public inline fun <reified U : TNumber> size(shape: Shape<U>, dim: Operand<U>): Operand<U> =
-        size<U>(shape, dim, U::class.java)
+            size<U>(shape, dim, U::class.java)
 
     /**
      * Removes dimensions of size 1 from the shape.
@@ -732,10 +724,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.squeeze
      */
     @JvmName("squeezeReified")
-    public inline fun <reified U : TNumber> squeeze(shape: Shape<U>): Operand<U> = squeeze<U>(
-        shape,
-        U::class.java
-    )
+    public inline fun <reified U : TNumber> squeeze(shape: Shape<U>): Operand<U> = squeeze<U>(shape,
+            U::class.java)
 
     /**
      * Creates a 1-dimensional Operand that contains the dimension matching the last dimension of *
@@ -751,10 +741,8 @@ public class ShapeOps(
      * @see org.tensorflow.op.ShapeOps.tail
      */
     @JvmName("tailReified")
-    public inline fun <reified U : TNumber> tail(shape: Shape<U>): Operand<U> = tail<U>(
-        shape,
-        U::class.java
-    )
+    public inline fun <reified U : TNumber> tail(shape: Shape<U>): Operand<U> = tail<U>(shape,
+            U::class.java)
 
     /**
      * Creates a 1-dimensional operand containin the dimensions matching the first n dimensions of
@@ -772,7 +760,7 @@ public class ShapeOps(
      */
     @JvmName("takeReified")
     public inline fun <reified U : TNumber> take(shape: Shape<U>, n: Operand<U>): Operand<U> =
-        take<U>(shape, n, U::class.java)
+            take<U>(shape, n, U::class.java)
 
     /**
      * Creates a 1-dimensional operand containing the dimensions matching the last n dimensions of
@@ -791,5 +779,5 @@ public class ShapeOps(
      */
     @JvmName("takeLastReified")
     public inline fun <reified U : TNumber> takeLast(shape: Shape<U>, n: Operand<U>): Operand<U> =
-        takeLast<U>(shape, n, U::class.java)
+            takeLast<U>(shape, n, U::class.java)
 }
