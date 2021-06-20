@@ -1,29 +1,31 @@
 /*
-  Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2020 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow
 
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.ndarray.Shaped
 
 /**
- * The (possibly partially known) shape of the tensor referred to by the {@link Output} of this operand.
+ * The (possibly partially known) shape of the tensor referred to by the {@link Output} of this
+ * operand.
  * @see Operand.shape
  */
-public val Operand<*>.shape: Shape get() = this.shape()
+public val Operand<*>.shape: Shape
+  get() = this.shape()
 
 /**
  * Require the [Shaped] object have a certain shape.
@@ -31,9 +33,9 @@ public val Operand<*>.shape: Shape get() = this.shape()
  * Throws [IllegalStateException] on failure.
  */
 public fun <T : Shaped> T.requireShape(shape: Shape): T = apply {
-    check(this.shape().isCompatibleWith(shape)) {
-        "Shape ${this.shape()} is not compatible with the required shape $shape"
-    }
+  check(this.shape().isCompatibleWith(shape)) {
+    "Shape ${this.shape()} is not compatible with the required shape $shape"
+  }
 }
 
 /**
@@ -42,7 +44,7 @@ public fun <T : Shaped> T.requireShape(shape: Shape): T = apply {
  * Throws [IllegalStateException] on failure.
  */
 public fun <T : Shaped> T.requireShape(vararg shape: Long): T = apply {
-    check(this.shape().isCompatibleWith(Shape.of(*shape))) {
-        "Shape ${this.shape()} is not compatible with the required shape $shape"
-    }
+  check(this.shape().isCompatibleWith(Shape.of(*shape))) {
+    "Shape ${this.shape()} is not compatible with the required shape $shape"
+  }
 }

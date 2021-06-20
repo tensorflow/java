@@ -46,7 +46,7 @@
   </dependencies>
 
   <properties>
-    <kotlin.version>1.5.0</kotlin.version>
+    <kotlin.version>1.5.10</kotlin.version>
     <kotlin.jvmTarget>1.8</kotlin.jvmTarget>
   </properties>
 
@@ -84,6 +84,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <kotlin>
+            <ktfmt/>
+          </kotlin>
+        </configuration>
       </plugin>
     </plugins>
   </build>

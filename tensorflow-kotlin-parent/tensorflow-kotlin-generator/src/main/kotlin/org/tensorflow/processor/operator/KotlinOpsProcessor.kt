@@ -14,42 +14,49 @@ limitations under the License.
 ==============================================================================*/
 package org.tensorflow.processor.operator
 
+import com.squareup.javapoet.ClassName as JavaClassName
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import org.tensorflow.Names
 import java.io.File
 import java.io.IOException
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.TypeElement
 import javax.lang.model.type.ArrayType
 import javax.lang.model.util.ElementFilter
-import com.squareup.javapoet.ClassName as JavaClassName
+import org.tensorflow.Names
 
-val JavaClassName.kotlin get() = ClassName(this.packageName(), this.simpleNames())
+val JavaClassName.kotlin
+  get() = ClassName(this.packageName(), this.simpleNames())
 
 class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
-    private val T_KOTLIN_OPS = ClassName("org.tensorflow.op.kotlin", "KotlinOps")
-    private val T_KOTLIN_OPS_BASE = ClassName("org.tensorflow.op.kotlin", "OpsBase")
-    private val PACKAGE = "org.tensorflow.op.kotlin"
-    private val T_OPERAND = Names.Operand.kotlin
-    private val T_CLASS = ClassName("java.lang", "Class")
-    private val T_JAVA_LIST = ClassName("java.util", "List")
+  private val T_KOTLIN_OPS = ClassName("org.tensorflow.op.kotlin", "KotlinOps")
+  private val T_KOTLIN_OPS_BASE = ClassName("org.tensorflow.op.kotlin", "OpsBase")
+  private val PACKAGE = "org.tensorflow.op.kotlin"
+  private val T_OPERAND = Names.Operand.kotlin
+  private val T_CLASS = ClassName("java.lang", "Class")
+  private val T_JAVA_LIST = ClassName("java.util", "List")
 
-    private lateinit var sourceDir: File
+  private lateinit var sourceDir: File
 
-    @Synchronized
-    override fun init(processingEnv: ProcessingEnvironment) {
-        super.init(processingEnv)
-        val kotlinDir = File(processingEnv.options["kapt.kotlin.generated"] ?: error("Kotlin source dir not specified"))
-        val projectDir = kotlinDir.parentFile.parentFile.parentFile.parentFile
-        require(projectDir.name == "tensorflow-core-kotlin") { "Could not find project directory.  Found $projectDir" }
-        sourceDir = File(projectDir, "src/gen/annotations")
-        sourceDir.mkdirs()
+  @Synchronized
+  override fun init(processingEnv: ProcessingEnvironment) {
+    super.init(processingEnv)
+    val kotlinDir =
+        File(
+            processingEnv.options["kapt.kotlin.generated"]
+                ?: error("Kotlin source dir not specified"))
+    val projectDir = kotlinDir.parentFile.parentFile.parentFile.parentFile
+    require(projectDir.name == "tensorflow-core-kotlin") {
+      "Could not find project directory.  Found $projectDir"
     }
+    sourceDir = File(projectDir, "src/gen/annotations")
+    sourceDir.mkdirs()
+  }
 
-    override fun write(spec: TypeSpec) {
-        try {
-            val text = buildString {
+  override fun write(spec: TypeSpec) {
+    try {
+      val text =
+          buildString {
                 FileSpec.builder(PACKAGE, spec.name ?: error("Type spec has no name"))
                     .indent("    ")
                     .addComment(LICENSE)
@@ -57,281 +64,291 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
                     .addType(spec)
                     .build()
                     .writeTo(this)
-            }
-                .replace("import java.(lang|util).[\\w.*]+\r?\n".toRegex(), "")
-                .replace("java.lang.", "")
-                .replace("java.util.List", "List")
-                .replace("\t", "    ")
+              }
+              .replace("import java.(lang|util).[\\w.*]+\r?\n".toRegex(), "")
+              .replace("java.lang.", "")
+              .replace("java.util.List", "List")
+              .replace("\t", "    ")
 
-            val packageFile = File(sourceDir, PACKAGE.replace(".", "/"))
-            packageFile.mkdirs()
+      val packageFile = File(sourceDir, PACKAGE.replace(".", "/"))
+      packageFile.mkdirs()
 
-            File(packageFile, spec.name!! + ".kt").writeText(text)
-        } catch (e: IOException) {
-            throw AssertionError(e)
+      File(packageFile, spec.name!! + ".kt").writeText(text)
+    } catch (e: IOException) {
+      throw AssertionError(e)
+    }
+  }
+
+  private val OpsSpec.parents: List<OpsSpec>
+    get() = this.parent?.let { listOf(it) + it.parents }.orEmpty()
+
+  /** @see adjustType */
+  private fun adjustSingleType(type: TypeName, isVararg: Boolean): TypeName {
+    if (type == T_OPERAND) return T_OPERAND.parameterizedBy(STAR)
+
+    if (type is ParameterizedTypeName && !isVararg) {
+      if (type.rawType == ARRAY) {
+        when (type.typeArguments.single()) {
+          BOOLEAN -> return BOOLEAN_ARRAY
+          BYTE -> return BYTE_ARRAY
+          SHORT -> return SHORT_ARRAY
+          INT -> return INT_ARRAY
+          LONG -> return LONG_ARRAY
+          CHAR -> return CHAR_ARRAY
+          FLOAT -> return FLOAT_ARRAY
+          DOUBLE -> return DOUBLE_ARRAY
+          else -> {}
         }
+      }
     }
 
-    private val OpsSpec.parents: List<OpsSpec> get() = this.parent?.let { listOf(it) + it.parents }.orEmpty()
-
-    /**
-     * @see adjustType
-     */
-    private fun adjustSingleType(type: TypeName, isVararg: Boolean): TypeName {
-        if (type == T_OPERAND)
-            return T_OPERAND.parameterizedBy(STAR)
-
-        if (type is ParameterizedTypeName && !isVararg) {
-            if (type.rawType == ARRAY) {
-                when (type.typeArguments.single()) {
-                    BOOLEAN -> return BOOLEAN_ARRAY
-                    BYTE -> return BYTE_ARRAY
-                    SHORT -> return SHORT_ARRAY
-                    INT -> return INT_ARRAY
-                    LONG -> return LONG_ARRAY
-                    CHAR -> return CHAR_ARRAY
-                    FLOAT -> return FLOAT_ARRAY
-                    DOUBLE -> return DOUBLE_ARRAY
-                    else -> {
-                    }
-                }
-            }
-        }
-
-        // may not be corrected sometimes.  Can't compare to classes b/c java.lang.Boolean::class.asTypeName() is converted to kotlin.Boolean
-        when (type.toString().removeSuffix("?").removeSuffix("!")) {
-            "java.lang.Boolean" -> return BOOLEAN.copy(nullable = type.isNullable)
-            "java.lang.Byte " -> return BYTE.copy(nullable = type.isNullable)
-            "java.lang.Short" -> return SHORT.copy(nullable = type.isNullable)
-            "java.lang.Integer" -> return INT.copy(nullable = type.isNullable)
-            "java.lang.Long" -> return LONG.copy(nullable = type.isNullable)
-            "java.lang.Character" -> return CHAR.copy(nullable = type.isNullable)
-            "java.lang.Float" -> return FLOAT.copy(nullable = type.isNullable)
-            "java.lang.Double" -> return DOUBLE.copy(nullable = type.isNullable)
-            "java.lang.String" -> return STRING.copy(nullable = type.isNullable)
-            else -> {
-
-            }
-        }
-
-        return type
+    // may not be corrected sometimes.  Can't compare to classes b/c
+    // java.lang.Boolean::class.asTypeName() is converted to kotlin.Boolean
+    when (type.toString().removeSuffix("?").removeSuffix("!")) {
+      "java.lang.Boolean" -> return BOOLEAN.copy(nullable = type.isNullable)
+      "java.lang.Byte " -> return BYTE.copy(nullable = type.isNullable)
+      "java.lang.Short" -> return SHORT.copy(nullable = type.isNullable)
+      "java.lang.Integer" -> return INT.copy(nullable = type.isNullable)
+      "java.lang.Long" -> return LONG.copy(nullable = type.isNullable)
+      "java.lang.Character" -> return CHAR.copy(nullable = type.isNullable)
+      "java.lang.Float" -> return FLOAT.copy(nullable = type.isNullable)
+      "java.lang.Double" -> return DOUBLE.copy(nullable = type.isNullable)
+      "java.lang.String" -> return STRING.copy(nullable = type.isNullable)
+      else -> {}
     }
 
-    /**
-     * Adjust types to their Kotlin counterparts.
-     * Currently only changes Operand to Operand<*> and primitive arrays to their Kotlin counterparts.
-     * Changes should be made to [adjustSingleType], this is a helper for parameterized types.
-     */
-    private fun adjustType(type: TypeName, isVararg: Boolean = false): TypeName {
-        val adjusted = adjustSingleType(type, isVararg)
-        if (adjusted is ParameterizedTypeName) {
-            val newArgs = adjusted.typeArguments.map { adjustType(it) }
-            return adjusted.rawType.parameterizedBy(newArgs)
-        }
-        return adjusted
+    return type
+  }
+
+  /**
+   * Adjust types to their Kotlin counterparts. Currently only changes Operand to Operand<*> and
+   * primitive arrays to their Kotlin counterparts. Changes should be made to [adjustSingleType],
+   * this is a helper for parameterized types.
+   */
+  private fun adjustType(type: TypeName, isVararg: Boolean = false): TypeName {
+    val adjusted = adjustSingleType(type, isVararg)
+    if (adjusted is ParameterizedTypeName) {
+      val newArgs = adjusted.typeArguments.map { adjustType(it) }
+      return adjusted.rawType.parameterizedBy(newArgs)
     }
+    return adjusted
+  }
 
-    private fun List<OpMethod>.toKotlin(javaOpsClass: ClassName): List<FunSpec> {
-        val methods = map { it.toKotlin(javaOpsClass) }.toMutableList()
-        methods += methods.mapNotNull { makeCopyWithReified(it) }
+  private fun List<OpMethod>.toKotlin(javaOpsClass: ClassName): List<FunSpec> {
+    val methods = map { it.toKotlin(javaOpsClass) }.toMutableList()
+    methods += methods.mapNotNull { makeCopyWithReified(it) }
 
-        val duplicates =
-            methods.filter { it.annotations.any { it.typeName == JvmName::class.asTypeName() } }.mapNotNull { orig ->
-                val others = methods.minus(orig).filter {
+    val duplicates =
+        methods
+            .filter { it.annotations.any { it.typeName == JvmName::class.asTypeName() } }
+            .mapNotNull { orig ->
+              val others =
+                  methods.minus(orig).filter {
                     it.name == orig.name &&
-                        it.parameters.map { it.name to it.type } == orig.parameters.map { it.name to it.type }
-                }
-                if (others.isEmpty()) {
-                    null
-                } else {
-                    setOf(orig) + others
-                }
-            }.toSet()
-
-        duplicates.forEach {
-            val original = it.single { it.annotations.none { it.typeName == JvmName::class.asTypeName() } }
-            var i = 0
-            it.minus(original).forEach {
-                val idx = methods.indexOf(it)
-                methods[idx] = it.toBuilder(it.name + "Typed" + if (i == 0) "" else "$i").build()
-                i++
+                        it.parameters.map { it.name to it.type } ==
+                            orig.parameters.map { it.name to it.type }
+                  }
+              if (others.isEmpty()) {
+                null
+              } else {
+                setOf(orig) + others
+              }
             }
-        }
-        return methods
+            .toSet()
+
+    duplicates.forEach {
+      val original =
+          it.single { it.annotations.none { it.typeName == JvmName::class.asTypeName() } }
+      var i = 0
+      it.minus(original).forEach {
+        val idx = methods.indexOf(it)
+        methods[idx] = it.toBuilder(it.name + "Typed" + if (i == 0) "" else "$i").build()
+        i++
+      }
     }
+    return methods
+  }
 
-    private fun OpMethod.toKotlin(javaOpsClass: ClassName): FunSpec {
-        val builder = FunSpec.builder(name)
-            .returns(adjustType(endpointMethod.returnType.asTypeName()))
+  private fun OpMethod.toKotlin(javaOpsClass: ClassName): FunSpec {
+    val builder = FunSpec.builder(name).returns(adjustType(endpointMethod.returnType.asTypeName()))
 
-        if (deprecated)
-            builder.addAnnotation(AnnotationSpec.builder(Deprecated::class).addMember("message = Op is Deprecated")
+    if (deprecated)
+        builder.addAnnotation(
+            AnnotationSpec.builder(Deprecated::class)
+                .addMember("message = Op is Deprecated")
                 .build())
 
-        val typeParameters = endpointMethod.typeParameters.map { it.asTypeVariableName() }.toMutableList()
+    val typeParameters =
+        endpointMethod.typeParameters.map { it.asTypeVariableName() }.toMutableList()
 
-        val parameters = endpointMethod.parameters.filter {
-            com.squareup.javapoet.TypeName.get(it.asType()) != T_SCOPE
-        }.map { ParameterSpec.get(it) }
+    val parameters =
+        endpointMethod.parameters
+            .filter { com.squareup.javapoet.TypeName.get(it.asType()) != T_SCOPE }
+            .map { ParameterSpec.get(it) }
 
-        val optionsParameter = parameters.singleOrNull {
-            if (endpointMethod.isVarArgs && "Array<" in it.type.toString())
-                ((it.type as? ParameterizedTypeName)?.typeArguments?.singleOrNull() as? ClassName)?.simpleName == "Options"
-            else
-                false
+    val optionsParameter =
+        parameters.singleOrNull {
+          if (endpointMethod.isVarArgs && "Array<" in it.type.toString())
+              ((it.type as? ParameterizedTypeName)?.typeArguments?.singleOrNull() as? ClassName)
+                  ?.simpleName == "Options"
+          else false
         }
 
-        builder.addTypeVariables(typeParameters)
+    builder.addTypeVariables(typeParameters)
 
-        val typeParamNames = typeParameters.map { it.name }.toSet()
+    val typeParamNames = typeParameters.map { it.name }.toSet()
 
-        builder.addParameters(
-            parameters.filter { it != optionsParameter }.map {
-                var param = it
-                if (param.name in typeParamNames)
-                    param = param.toBuilder(param.name + "_").build()
+    builder.addParameters(
+        parameters.filter { it != optionsParameter }.map {
+          var param = it
+          if (param.name in typeParamNames) param = param.toBuilder(param.name + "_").build()
 
-                if (endpointMethod.isVarArgs && "Array<" in param.type.toString())
-                    param =
-                        param.toBuilder(type = (param.type as ParameterizedTypeName).typeArguments.single())
-                            .addModifiers(KModifier.VARARG).build()
+          if (endpointMethod.isVarArgs && "Array<" in param.type.toString())
+              param =
+                  param
+                      .toBuilder(
+                          type = (param.type as ParameterizedTypeName).typeArguments.single())
+                      .addModifiers(KModifier.VARARG)
+                      .build()
 
-                param.toBuilder(type = adjustType(param.type, KModifier.VARARG in param.modifiers)).build()
-            })
+          param
+              .toBuilder(type = adjustType(param.type, KModifier.VARARG in param.modifiers))
+              .build()
+        })
 
-        val optionsClass = if (optionsParameter != null) {
-            val paramElement = endpointMethod.parameters.single { it.simpleName.contentEquals(optionsParameter.name) }
-            val type = paramElement.asType()?.let {
-                if (it is ArrayType)
-                    it.componentType
-                else
-                    it
+    val optionsClass =
+        if (optionsParameter != null) {
+          val paramElement =
+              endpointMethod.parameters.single {
+                it.simpleName.contentEquals(optionsParameter.name)
+              }
+          val type = paramElement.asType()?.let { if (it is ArrayType) it.componentType else it }
+          types.asElement(type) as TypeElement
+        } else null
+
+    val opClassSpec = (optionsClass?.enclosingElement as TypeElement?)?.asClassName()
+
+    val optionParams =
+        if (optionsClass != null) {
+          val params =
+              ElementFilter.methodsIn(optionsClass.enclosedElements)
+                  .map {
+                    ParameterSpec.builder(
+                            it.simpleName.toString(),
+                            adjustType(it.parameters.single().asType().asTypeName())
+                                .copy(nullable = true))
+                        .addKdoc(
+                            "%L",
+                            parseJavadoc(it).toKDoc().removePrefix("@param ${it.simpleName} "))
+                        .defaultValue("null")
+                        .build()
+                  }
+                  .toMutableList()
+
+          // ensure vararg options are the ones that get removed
+          params.toList().forEach { param ->
+            val type = param.type
+            if (type is ParameterizedTypeName && type.rawType == T_JAVA_LIST) {
+              params.removeAll { it.name == param.name && it != param }
             }
-            types.asElement(type) as TypeElement
-        } else
-            null
+          }
 
-        val opClassSpec = (optionsClass?.enclosingElement as TypeElement?)?.asClassName()
+          params.distinctBy { it.name }.toSet()
+        } else emptySet()
 
-        val optionParams = if (optionsClass != null) {
-            val params = ElementFilter.methodsIn(optionsClass.enclosedElements).map {
-                ParameterSpec.builder(it.simpleName.toString(),
-                    adjustType(it.parameters.single().asType().asTypeName()).copy(nullable = true))
-                    .addKdoc("%L",
-                        parseJavadoc(it).toKDoc().removePrefix("@param ${it.simpleName} "))
-                    .defaultValue("null").build()
-            }.toMutableList()
+    if (optionParams.isNotEmpty()) builder.addParameters(optionParams)
 
-            // ensure vararg options are the ones that get removed
-            params.toList().forEach { param ->
-                val type = param.type
-                if(type is ParameterizedTypeName && type.rawType == T_JAVA_LIST){
-                    params.removeAll { it.name == param.name && it != param }
-                }
-            }
+    builder.addStatement(
+        buildString {
+          append("return java.$name")
+          if (typeParamNames.isNotEmpty()) append("<${typeParamNames.joinToString(", ")}>")
 
-            params.distinctBy { it.name }.toSet()
-        } else
-            emptySet()
+          append("(")
 
-        if (optionParams.isNotEmpty())
-            builder.addParameters(optionParams)
-
-        builder.addStatement(
-            buildString {
-                append("return java.$name")
-                if (typeParamNames.isNotEmpty())
-                    append("<${typeParamNames.joinToString(", ")}>")
-
-                append("(")
-
-                val paramStrings = builder.parameters.filter { it !in optionParams }.map {
+          val paramStrings =
+              builder
+                  .parameters
+                  .filter { it !in optionParams }
+                  .map {
                     val name = if (it.name == "var") "`var`" else it.name
 
-                    if (KModifier.VARARG in it.modifiers)
-                        "*${name}"
-                    else
-                        name
-                }.plus(
-                    if (optionParams.isNotEmpty())
-                        listOf(
-                            "*listOfNotNull(${
+                    if (KModifier.VARARG in it.modifiers) "*${name}" else name
+                  }
+                  .plus(
+                      if (optionParams.isNotEmpty())
+                          listOf(
+                              "*listOfNotNull(${
                                 optionParams.joinToString(",\n", "\n", "\n") {
                                     "\t${it.name}?.let{ ${opClassSpec!!.canonicalName}.${it.name}(it) }"
                                 }
-                            }).toTypedArray()"
-                        )
-                    else
-                        emptyList()
-                )
+                            }).toTypedArray()")
+                      else emptyList())
 
-                append(
-                    paramStrings.joinToString(",\n", "\n", "\n").prependIndent("\t")
-                )
+          append(paramStrings.joinToString(",\n", "\n", "\n").prependIndent("\t"))
 
-                append(")")
-            }
-        )
+          append(")")
+        })
 
-        val javadoc = buildOpMethodJavadoc(opClass, endpointMethod, describeByClass)
-        javadoc.addBlockTag("see", "${javaOpsClass.canonicalName}.$name")
+    val javadoc = buildOpMethodJavadoc(opClass, endpointMethod, describeByClass)
+    javadoc.addBlockTag("see", "${javaOpsClass.canonicalName}.$name")
 
+    builder.addKdoc("%L", javadoc.toKDoc())
 
-        builder.addKdoc("%L", javadoc.toKDoc())
+    return builder.build()
+  }
 
-        return builder.build()
-    }
+  private fun makeCopyWithReified(method: FunSpec): FunSpec? {
 
-    private fun makeCopyWithReified(method: FunSpec): FunSpec? {
-
-        val dataTypeParameters = method.parameters.mapNotNull { param ->
-            param.type.let {
-                if (it is ParameterizedTypeName && it.rawType == T_CLASS && it.typeArguments.singleOrNull() in method.typeVariables)
+    val dataTypeParameters =
+        method
+            .parameters
+            .mapNotNull { param ->
+              param.type.let {
+                if (it is ParameterizedTypeName &&
+                    it.rawType == T_CLASS &&
+                    it.typeArguments.singleOrNull() in method.typeVariables)
                     param to it.typeArguments.single() as TypeVariableName
-                else
-                    null
+                else null
+              }
             }
-        }.toMap()
-        val builder = method.toBuilder()
+            .toMap()
+    val builder = method.toBuilder()
 
-        if (dataTypeParameters.isEmpty())
-            return null
+    if (dataTypeParameters.isEmpty()) return null
 
-        dataTypeParameters.values.forEach {
-            val i = builder.typeVariables.indexOf(it)
-            builder.typeVariables[i] = builder.typeVariables[i].copy(reified = true)
-        }
-        if (dataTypeParameters.isNotEmpty()) {
-            builder.addModifiers(KModifier.INLINE)
-            builder.addAnnotation(AnnotationSpec.builder(JvmName::class).addMember("\"${method.name}Reified\"").build())
-        }
-
-        val paramString = builder.parameters.joinToString {
-            if (it in dataTypeParameters)
-                dataTypeParameters[it]!!.name + "::class.java"
-            else {
-                val name = if (it.name == "var") "`var`" else it.name
-
-                if (KModifier.VARARG in it.modifiers)
-                    "*${name}"
-                else
-                    name
-            }
-        }
-
-        builder.parameters.removeAll(dataTypeParameters.keys)
-
-        builder.clearBody()
-
-        builder.addStatement(
-            "return ${method.name}<${builder.typeVariables.joinToString(", ") { it.name }}>($paramString)"
-        )
-        return builder.build()
+    dataTypeParameters.values.forEach {
+      val i = builder.typeVariables.indexOf(it)
+      builder.typeVariables[i] = builder.typeVariables[i].copy(reified = true)
+    }
+    if (dataTypeParameters.isNotEmpty()) {
+      builder.addModifiers(KModifier.INLINE)
+      builder.addAnnotation(
+          AnnotationSpec.builder(JvmName::class).addMember("\"${method.name}Reified\"").build())
     }
 
-    override fun buildGroupClass(spec: OpsSpec): TypeSpec {
+    val paramString =
+        builder.parameters.joinToString {
+          if (it in dataTypeParameters) dataTypeParameters[it]!!.name + "::class.java"
+          else {
+            val name = if (it.name == "var") "`var`" else it.name
 
-        val builder = TypeSpec.classBuilder(spec.className.kotlin)
+            if (KModifier.VARARG in it.modifiers) "*${name}" else name
+          }
+        }
+
+    builder.parameters.removeAll(dataTypeParameters.keys)
+
+    builder.clearBody()
+
+    builder.addStatement(
+        "return ${method.name}<${builder.typeVariables.joinToString(", ") { it.name }}>($paramString)")
+    return builder.build()
+  }
+
+  override fun buildGroupClass(spec: OpsSpec): TypeSpec {
+
+    val builder =
+        TypeSpec.classBuilder(spec.className.kotlin)
             .addKdoc(
                 """
         An API for building `%L` operations as [Op][%T]s
@@ -341,47 +358,43 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         """.trimIndent(),
                 spec.groupName,
                 T_OP.kotlin,
-                T_OPS.kotlin
-            )
+                T_OPS.kotlin)
 
-        builder.primaryConstructor(
-            FunSpec.constructorBuilder()
-                .addParameter("ops", T_KOTLIN_OPS)
-                .build()
-        )
+    builder.primaryConstructor(
+        FunSpec.constructorBuilder().addParameter("ops", T_KOTLIN_OPS).build())
 
-        val accessorName =
-            (listOf(spec.fieldName) + spec.parents.mapNotNull { it.fieldName }).reversed().joinToString(".")
+    val accessorName =
+        (listOf(spec.fieldName) + spec.parents.mapNotNull { it.fieldName })
+            .reversed()
+            .joinToString(".")
 
-        builder.addProperty(
-            PropertySpec.builder("java", spec.className.kotlin)
-                .initializer("ops.java.$accessorName")
-                .build()
-        )
+    builder.addProperty(
+        PropertySpec.builder("java", spec.className.kotlin)
+            .initializer("ops.java.$accessorName")
+            .build())
 
-        builder.addProperty(
-            PropertySpec.builder("ops", T_KOTLIN_OPS)
-                .initializer("ops")
-                .addKdoc("Get the parent [" + T_KOTLIN_OPS.simpleName + "] object.")
-                .build()
-        )
+    builder.addProperty(
+        PropertySpec.builder("ops", T_KOTLIN_OPS)
+            .initializer("ops")
+            .addKdoc("Get the parent [" + T_KOTLIN_OPS.simpleName + "] object.")
+            .build())
 
-        builder.addProperty(
-            PropertySpec.builder("scope", T_SCOPE.kotlin)
-                .initializer("ops.scope")
-                .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
-                .build()
-        )
+    builder.addProperty(
+        PropertySpec.builder("scope", T_SCOPE.kotlin)
+            .initializer("ops.scope")
+            .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
+            .build())
 
-        addGroupFields(builder, spec.subGroups, false)
+    addGroupFields(builder, spec.subGroups, false)
 
-        builder.addFunctions(spec.methods.toKotlin(spec.className.kotlin))
+    builder.addFunctions(spec.methods.toKotlin(spec.className.kotlin))
 
-        return builder.build()
-    }
+    return builder.build()
+  }
 
-    override fun buildTopClass(spec: OpsSpec): TypeSpec {
-        val builder = TypeSpec.classBuilder(T_KOTLIN_OPS)
+  override fun buildTopClass(spec: OpsSpec): TypeSpec {
+    val builder =
+        TypeSpec.classBuilder(T_KOTLIN_OPS)
             .addKdoc(
                 """
         An API for building operations as [Op][%T]s
@@ -390,62 +403,54 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
         
         """.trimIndent(),
                 T_OP.kotlin,
-                T_OPS.kotlin
-            )
+                T_OPS.kotlin)
 
-        builder.primaryConstructor(
-            FunSpec.constructorBuilder()
-                .addParameter("java", T_OPS.kotlin)
-                .build()
-        )
-        builder.addProperty(
-            PropertySpec.builder("java", T_OPS.kotlin)
-                .initializer("java")
-                .addKdoc("Returns the java counterpart of this API\n")
-                .build()
-        )
-        builder.addProperty(
-            PropertySpec.builder("scope", T_SCOPE.kotlin)
-                .initializer("java.scope()")
-                .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
-                .build()
-        )
+    builder.primaryConstructor(
+        FunSpec.constructorBuilder().addParameter("java", T_OPS.kotlin).build())
+    builder.addProperty(
+        PropertySpec.builder("java", T_OPS.kotlin)
+            .initializer("java")
+            .addKdoc("Returns the java counterpart of this API\n")
+            .build())
+    builder.addProperty(
+        PropertySpec.builder("scope", T_SCOPE.kotlin)
+            .initializer("java.scope()")
+            .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
+            .build())
 
-        builder.addProperty(
-            PropertySpec.builder("ops", T_KOTLIN_OPS)
-                .initializer("this")
-                .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
-                .build()
-        )
+    builder.addProperty(
+        PropertySpec.builder("ops", T_KOTLIN_OPS)
+            .initializer("this")
+            .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
+            .build())
 
-        builder.addProperty(
-            PropertySpec.builder("tf", T_KOTLIN_OPS)
-                .initializer("this")
-                .addModifiers(KModifier.OVERRIDE)
-                .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
-                .build()
-        )
+    builder.addProperty(
+        PropertySpec.builder("tf", T_KOTLIN_OPS)
+            .initializer("this")
+            .addModifiers(KModifier.OVERRIDE)
+            .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
+            .build())
 
-        builder.superclass(T_KOTLIN_OPS_BASE)
+    builder.superclass(T_KOTLIN_OPS_BASE)
 
-        addGroupFields(builder, spec.subGroups, true)
+    addGroupFields(builder, spec.subGroups, true)
 
-        builder.addFunctions(spec.methods.toKotlin(T_OPS.kotlin))
+    builder.addFunctions(spec.methods.toKotlin(T_OPS.kotlin))
 
+    return builder.build()
+  }
 
-        return builder.build()
-    }
-
-    private fun addGroupFields(
-        classBuilder: TypeSpec.Builder,
-        groups: List<OpsSpec>,
-        isTopClass: Boolean,
-    ) = groups.forEach {
-        val kotlinGroup = ClassName(it.className.packageName() + ".kotlin", it.className.simpleNames())
+  private fun addGroupFields(
+      classBuilder: TypeSpec.Builder,
+      groups: List<OpsSpec>,
+      isTopClass: Boolean,
+  ) =
+      groups.forEach {
+        val kotlinGroup =
+            ClassName(it.className.packageName() + ".kotlin", it.className.simpleNames())
         classBuilder.addProperty(
             PropertySpec.builder(it.fieldName, kotlinGroup)
                 .initializer("%T(${if (isTopClass) "this" else "ops"})", kotlinGroup)
-                .build()
-        )
-    }
+                .build())
+      }
 }

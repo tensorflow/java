@@ -200,9 +200,9 @@ If you add operators or re-generate them from the native library, be sure to re-
 
 #### Formatting
 
-The Kotlin API is formatted with ktlint, which is ran on build.
-The build will not auto-format non-generated files.
-You can format them by installing ktlint as the IDE format and using its formatter, or by running `mvn antrun:run@ktlint-format`.
+[ktfmt](https://github.com/facebookincubator/ktfmt) is used to format the Kotlin files.  This is
+checked and done via maven in the same way as Java formatting.  To do the formatting via IntelliJ see
+ktfmt's repo.
 
 ## Adding Gradients
 
