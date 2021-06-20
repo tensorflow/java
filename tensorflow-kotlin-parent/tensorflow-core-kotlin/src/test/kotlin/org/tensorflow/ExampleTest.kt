@@ -18,17 +18,17 @@ package org.tensorflow
 
 import kotlin.test.Test
 import org.tensorflow.ndarray.Shape
+import org.tensorflow.op.WithOps
 import org.tensorflow.op.kotlin.KotlinOps
 import org.tensorflow.op.kotlin.tf
-import org.tensorflow.op.kotlin.withSubScope
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 
-private fun KotlinOps.DenseLayer(
+private fun WithOps.DenseLayer(
     name: String,
     x: Operand<TFloat32>,
     n: Int,
-    activation: KotlinOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) },
+    activation: WithOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) },
 ): Operand<TFloat32> =
     tf.withSubScope(name) {
       val inputDims = x.shape()[1]
@@ -45,14 +45,11 @@ public class ExampleTest {
           tf.placeholderWithDefault(
               tf.ones<TFloat32>(tf.array(1, 28, 28, 3)), Shape.of(-1, 28, 28, 3))
 
-      val output =
-          with(tf) {
-            var x: Operand<TFloat32> = tf.reshape(input, tf.array(-1))
-            tf.dtypes.cast<TInt32>(x)
-            x = DenseLayer("Layer1", x, 256)
-            x = DenseLayer("Layer2", x, 64)
-            DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
-          }
+      var x: Operand<TFloat32> = tf.reshape(input, tf.array(-1))
+      tf.dtypes.cast<TInt32>(x)
+      x = DenseLayer("Layer1", x, 256)
+      x = DenseLayer("Layer2", x, 64)
+      val output = DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
 
       useSession { session ->
         val outputValue = session.runner().fetch(output).run()[0] as TFloat32

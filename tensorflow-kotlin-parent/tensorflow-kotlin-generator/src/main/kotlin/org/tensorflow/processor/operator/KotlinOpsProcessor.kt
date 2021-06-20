@@ -410,25 +410,13 @@ class KotlinOpsProcessor : BaseOperatorProcessor<TypeSpec>() {
     builder.addProperty(
         PropertySpec.builder("java", T_OPS.kotlin)
             .initializer("java")
+            .addModifiers(KModifier.OVERRIDE)
             .addKdoc("Returns the java counterpart of this API\n")
             .build())
     builder.addProperty(
         PropertySpec.builder("scope", T_SCOPE.kotlin)
             .initializer("java.scope()")
             .addKdoc("Returns the current [scope][%T] of this API\n", T_SCOPE.kotlin)
-            .build())
-
-    builder.addProperty(
-        PropertySpec.builder("ops", T_KOTLIN_OPS)
-            .initializer("this")
-            .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
-            .build())
-
-    builder.addProperty(
-        PropertySpec.builder("tf", T_KOTLIN_OPS)
-            .initializer("this")
-            .addModifiers(KModifier.OVERRIDE)
-            .addKdoc("Get the [" + T_KOTLIN_OPS.simpleName + "] object.")
             .build())
 
     builder.superclass(T_KOTLIN_OPS_BASE)

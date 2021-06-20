@@ -316,62 +316,52 @@ public class KotlinOps(
     /**
      * Returns the java counterpart of this API
      */
-    public val java: Ops
+    public override val java: Ops
 ) : OpsBase() {
     /**
      * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = java.scope()
 
-    /**
-     * Get the [KotlinOps] object.
-     */
-    public val ops: KotlinOps = this
-
-    /**
-     * Get the [KotlinOps] object.
-     */
-    public override val tf: KotlinOps = this
-
-    public val audio: AudioOps = AudioOps(this)
-
-    public val bitwise: BitwiseOps = BitwiseOps(this)
-
-    public val shape: ShapeOps = ShapeOps(this)
-
-    public val `data`: DataOps = DataOps(this)
-
-    public val dtypes: DtypesOps = DtypesOps(this)
-
-    public val image: ImageOps = ImageOps(this)
-
-    public val io: IoOps = IoOps(this)
-
-    public val linalg: LinalgOps = LinalgOps(this)
-
-    public val math: MathOps = MathOps(this)
-
     public val nn: NnOps = NnOps(this)
-
-    public val quantization: QuantizationOps = QuantizationOps(this)
-
-    public val ragged: RaggedOps = RaggedOps(this)
-
-    public val random: RandomOps = RandomOps(this)
-
-    public val signal: SignalOps = SignalOps(this)
-
-    public val sparse: SparseOps = SparseOps(this)
-
-    public val strings: StringsOps = StringsOps(this)
 
     public val summary: SummaryOps = SummaryOps(this)
 
-    public val tpu: TpuOps = TpuOps(this)
+    public val image: ImageOps = ImageOps(this)
 
-    public val train: TrainOps = TrainOps(this)
+    public val ragged: RaggedOps = RaggedOps(this)
+
+    public val `data`: DataOps = DataOps(this)
+
+    public val shape: ShapeOps = ShapeOps(this)
+
+    public val io: IoOps = IoOps(this)
+
+    public val dtypes: DtypesOps = DtypesOps(this)
 
     public val xla: XlaOps = XlaOps(this)
+
+    public val linalg: LinalgOps = LinalgOps(this)
+
+    public val random: RandomOps = RandomOps(this)
+
+    public val strings: StringsOps = StringsOps(this)
+
+    public val sparse: SparseOps = SparseOps(this)
+
+    public val bitwise: BitwiseOps = BitwiseOps(this)
+
+    public val tpu: TpuOps = TpuOps(this)
+
+    public val audio: AudioOps = AudioOps(this)
+
+    public val math: MathOps = MathOps(this)
+
+    public val signal: SignalOps = SignalOps(this)
+
+    public val quantization: QuantizationOps = QuantizationOps(this)
+
+    public val train: TrainOps = TrainOps(this)
 
     /**
      * Raise a exception to abort the process when called.
@@ -474,6 +464,42 @@ public class KotlinOps(
         )
 
     /**
+     * Creates a constant of `String` elements, using the default UTF-8 charset.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return the `String` constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: String): Constant<TString> = java.array(    
+        *data
+        )
+
+    /**
+     * Creates a constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: Boolean): Constant<TBool> = java.array(    
+        *data
+        )
+
+    /**
+     * Creates a constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.array
+     */
+    public fun array(vararg `data`: Long): Constant<TInt64> = java.array(    
+        *data
+        )
+
+    /**
      * Creates a constant of `float` elements.
      *
      * @param scope is a scope used to add the underlying operation.
@@ -498,30 +524,6 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: Long): Constant<TInt64> = java.array(    
-        *data
-        )
-
-    /**
-     * Creates a constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: Boolean): Constant<TBool> = java.array(    
-        *data
-        )
-
-    /**
      * Creates a constant of `byte` elements.
      *
      * @param scope is a scope used to add the underlying operation.
@@ -530,18 +532,6 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.array
      */
     public fun array(vararg `data`: Byte): Constant<TUint8> = java.array(    
-        *data
-        )
-
-    /**
-     * Creates a constant of `String` elements, using the default UTF-8 charset.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant.
-     * @return the `String` constant
-     * @see org.tensorflow.op.Ops.array
-     */
-    public fun array(vararg `data`: String): Constant<TString> = java.array(    
         *data
         )
 
@@ -1534,14 +1524,14 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a constant containing a single `int` element.
+     * Creates a constant of `long` elements that is a copy of a given n-dimensional array.
      *
      * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return an integer constant
+     * @param data an n-dimensional array of `long` elements.
+     * @return a long constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Int): Constant<TInt32> = java.constant(    
+    public fun constant(`data`: LongNdArray): Constant<TInt64> = java.constant(    
         data
         )
 
@@ -1560,20 +1550,6 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a rank-2 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<IntArray>): Constant<TInt32> = java.constant(    
-        data
-        )
-
-    /**
      * Creates a rank-3 constant of `int` elements.
      *
      * @param scope is a scope used to add the underlying operation.
@@ -1584,173 +1560,6 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(`data`: Array<Array<IntArray>>): Constant<TInt32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<IntArray>>>): Constant<TInt32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-5 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<IntArray>>>>): Constant<TInt32> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-6 constant of `int` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<IntArray>>>>>): Constant<TInt32> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant of `int` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `int` elements.
-     * @return an integer constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: IntNdArray): Constant<TInt32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant containing a single `float` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Float): Constant<TFloat32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-1 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: FloatArray): Constant<TFloat32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-2 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<FloatArray>): Constant<TFloat32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-3 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<FloatArray>>): Constant<TFloat32> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<FloatArray>>>): Constant<TFloat32> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-5 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<FloatArray>>>>): Constant<TFloat32> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-6 constant of `float` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<FloatArray>>>>>): Constant<TFloat32> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant of `float` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `float` elements.
-     * @return a float constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: FloatNdArray): Constant<TFloat32> = java.constant(    
         data
         )
 
@@ -1767,173 +1576,6 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a rank-1 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: DoubleArray): Constant<TFloat64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-2 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<DoubleArray>): Constant<TFloat64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-3 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<DoubleArray>>): Constant<TFloat64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<DoubleArray>>>): Constant<TFloat64> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-5 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<DoubleArray>>>>): Constant<TFloat64> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-6 constant of `double` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<DoubleArray>>>>>): Constant<TFloat64>
-            = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant of `double` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `double` elements.
-     * @return a double constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: DoubleNdArray): Constant<TFloat64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant containing a single `long` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Long): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-1 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: LongArray): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-2 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<LongArray>): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-3 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<LongArray>>): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<LongArray>>>): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
      * Creates a rank-5 constant of `long` elements.
      *
      * @param scope is a scope used to add the underlying operation.
@@ -1944,102 +1586,6 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(`data`: Array<Array<Array<Array<LongArray>>>>): Constant<TInt64> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-6 constant of `long` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<Array<Array<LongArray>>>>>): Constant<TInt64> =
-            java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant of `long` elements that is a copy of a given n-dimensional array.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `long` elements.
-     * @return a long constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: LongNdArray): Constant<TInt64> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a constant containing a single `boolean` element.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data The value to put into the new constant.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Boolean): Constant<TBool> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-1 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: BooleanArray): Constant<TBool> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-2 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<BooleanArray>): Constant<TBool> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-3 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<BooleanArray>>): Constant<TBool> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `boolean` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a boolean constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<BooleanArray>>>): Constant<TBool> =
             java.constant(    
         data
         )
@@ -2060,29 +1606,55 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a rank-6 constant of `boolean` elements.
+     * Creates a constant of `int` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `int` elements.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: IntNdArray): Constant<TInt32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `double` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `double` elements.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: DoubleNdArray): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `int` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a boolean constant
+     * @return an integer constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<Array<Array<Array<BooleanArray>>>>>): Constant<TBool> =
-            java.constant(    
+    public fun constant(`data`: Array<Array<Array<IntArray>>>): Constant<TInt32> = java.constant(    
         data
         )
 
     /**
-     * Creates a constant of `boolean` elements that is a copy of a given n-dimensional array.
+     * Creates a rank-6 constant of `float` elements.
      *
      * @param scope is a scope used to add the underlying operation.
-     * @param data an n-dimensional array of `boolean` elements.
-     * @return a boolean constant
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: BooleanNdArray): Constant<TBool> = java.constant(    
+    public fun constant(`data`: Array<Array<Array<Array<Array<FloatArray>>>>>): Constant<TFloat32> =
+            java.constant(    
         data
         )
 
@@ -2099,58 +1671,45 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a rank-1 constant of `byte` elements.
+     * Creates a rank-3 constant of `boolean` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a byte constant
+     * @return a boolean constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: ByteArray): Constant<TUint8> = java.constant(    
+    public fun constant(`data`: Array<Array<BooleanArray>>): Constant<TBool> = java.constant(    
         data
         )
 
     /**
-     * Creates a rank-2 constant of `byte` elements.
+     * Creates a rank-4 constant of `float` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a byte constant
+     * @return a float constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<ByteArray>): Constant<TUint8> = java.constant(    
+    public fun constant(`data`: Array<Array<Array<FloatArray>>>): Constant<TFloat32> =
+            java.constant(    
         data
         )
 
     /**
-     * Creates a rank-3 constant of `byte` elements.
+     * Creates a rank-2 constant of `long` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a byte constant
+     * @return a long constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<ByteArray>>): Constant<TUint8> = java.constant(    
-        data
-        )
-
-    /**
-     * Creates a rank-4 constant of `byte` elements.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param data An array containing the values to put into the new constant. The dimensions of
-     * the
-     *      new constant will match those of the array.
-     * @return a byte constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(`data`: Array<Array<Array<ByteArray>>>): Constant<TUint8> = java.constant(    
+    public fun constant(`data`: Array<LongArray>): Constant<TInt64> = java.constant(    
         data
         )
 
@@ -2170,17 +1729,28 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a rank-6 constant of `byte` elements.
+     * Creates a constant of `boolean` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `boolean` elements.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: BooleanNdArray): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `float` elements.
      *
      * @param scope is a scope used to add the underlying operation.
      * @param data An array containing the values to put into the new constant. The dimensions of
      * the
      *      new constant will match those of the array.
-     * @return a byte constant
+     * @return a float constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: Array<Array<Array<Array<Array<ByteArray>>>>>): Constant<TUint8> =
-            java.constant(    
+    public fun constant(`data`: Array<FloatArray>): Constant<TFloat32> = java.constant(    
         data
         )
 
@@ -2197,14 +1767,87 @@ public class KotlinOps(
         )
 
     /**
-     * Creates a `String` constant using the default, UTF-8 encoding.
+     * Creates a rank-2 constant of `byte` elements.
      *
      * @param scope is a scope used to add the underlying operation.
-     * @param data The string to put into the new constant.
-     * @return a string constant
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
      * @see org.tensorflow.op.Ops.constant
      */
-    public fun constant(`data`: String): Constant<TString> = java.constant(    
+    public fun constant(`data`: Array<ByteArray>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<DoubleArray>>>>): Constant<TFloat64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<FloatArray>>): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: ByteArray): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: FloatArray): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<BooleanArray>): Constant<TBool> = java.constant(    
         data
         )
 
@@ -2222,6 +1865,353 @@ public class KotlinOps(
         )
 
     /**
+     * Creates a `String` constant using the default, UTF-8 encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The string to put into the new constant.
+     * @return a string constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: String): Constant<TString> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<DoubleArray>>>): Constant<TFloat64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<DoubleArray>): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `int` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Int): Constant<TInt32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<ByteArray>>>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<IntArray>>>>>): Constant<TInt32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `long` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Long): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `float` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Float): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `float` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<FloatArray>>>>): Constant<TFloat32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<DoubleArray>>): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<LongArray>>>>>): Constant<TInt64> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<LongArray>>>): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: LongArray): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: BooleanArray): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<ByteArray>>): Constant<TUint8> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `byte` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a byte constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<ByteArray>>>>>): Constant<TUint8> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-2 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<IntArray>): Constant<TInt32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant of `float` elements that is a copy of a given n-dimensional array.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data an n-dimensional array of `float` elements.
+     * @return a float constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: FloatNdArray): Constant<TFloat32> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-5 constant of `int` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return an integer constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<IntArray>>>>): Constant<TInt32> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-1 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: DoubleArray): Constant<TFloat64> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<BooleanArray>>>>>): Constant<TBool> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-6 constant of `double` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a double constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<Array<Array<DoubleArray>>>>>): Constant<TFloat64>
+            = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a constant containing a single `boolean` element.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data The value to put into the new constant.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Boolean): Constant<TBool> = java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-4 constant of `boolean` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a boolean constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<Array<BooleanArray>>>): Constant<TBool> =
+            java.constant(    
+        data
+        )
+
+    /**
+     * Creates a rank-3 constant of `long` elements.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param data An array containing the values to put into the new constant. The dimensions of
+     * the
+     *      new constant will match those of the array.
+     * @return a long constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(`data`: Array<Array<LongArray>>): Constant<TInt64> = java.constant(    
+        data
+        )
+
+    /**
      * Creates a rank-1 constant of `long` elements representing the size of each dimensions of
      *  the given shape.
      *
@@ -2232,20 +2222,6 @@ public class KotlinOps(
      */
     public fun constant(shape: Shape): Constant<TInt64> = java.constant(    
         shape
-        )
-
-    /**
-     * Creates a `String` constant using a specified encoding.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param charset The encoding from String to bytes.
-     * @param data The string to put into the new constant.
-     * @return a string constant
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(charset: Charset, `data`: String): Constant<TString> = java.constant(    
-        charset,
-        data
         )
 
     /**
@@ -2260,6 +2236,20 @@ public class KotlinOps(
      */
     public fun constant(charset: Charset, `data`: Array<String>): Constant<TString> =
             java.constant(    
+        charset,
+        data
+        )
+
+    /**
+     * Creates a `String` constant using a specified encoding.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param charset The encoding from String to bytes.
+     * @param data The string to put into the new constant.
+     * @return a string constant
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(charset: Charset, `data`: String): Constant<TString> = java.constant(    
         charset,
         data
         )
@@ -2281,21 +2271,6 @@ public class KotlinOps(
         )
 
     /**
-     * Create a [TInt32] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return an integer constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(    
-        shape,
-        data
-        )
-
-    /**
      * Create a [TFloat32] constant with data from the given buffer.
      *
      * @param scope is a scope used to add the underlying operation.
@@ -2306,37 +2281,6 @@ public class KotlinOps(
      * @see org.tensorflow.op.Ops.constant
      */
     public fun constant(shape: Shape, `data`: FloatDataBuffer): Constant<TFloat32> = java.constant(    
-        shape,
-        data
-        )
-
-    /**
-     * Create a [TFloat64] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return a double constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: DoubleDataBuffer): Constant<TFloat64> =
-            java.constant(    
-        shape,
-        data
-        )
-
-    /**
-     * Create a [TInt64] constant with data from the given buffer.
-     *
-     * @param scope is a scope used to add the underlying operation.
-     * @param shape the tensor shape.
-     * @param data a buffer containing the tensor data.
-     * @return a long constant
-     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
-     * @see org.tensorflow.op.Ops.constant
-     */
-    public fun constant(shape: Shape, `data`: LongDataBuffer): Constant<TInt64> = java.constant(    
         shape,
         data
         )
@@ -2372,6 +2316,21 @@ public class KotlinOps(
         )
 
     /**
+     * Create a [TInt64] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return a long constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: LongDataBuffer): Constant<TInt64> = java.constant(    
+        shape,
+        data
+        )
+
+    /**
      * Create a [TString] constant with data from the given buffer, using the default UTF-8
      *  encoding.
      *
@@ -2384,6 +2343,37 @@ public class KotlinOps(
      */
     public fun constant(shape: Shape, `data`: DataBuffer<String>): Constant<TString> =
             java.constant(    
+        shape,
+        data
+        )
+
+    /**
+     * Create a [TFloat64] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return a double constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: DoubleDataBuffer): Constant<TFloat64> =
+            java.constant(    
+        shape,
+        data
+        )
+
+    /**
+     * Create a [TInt32] constant with data from the given buffer.
+     *
+     * @param scope is a scope used to add the underlying operation.
+     * @param shape the tensor shape.
+     * @param data a buffer containing the tensor data.
+     * @return an integer constant
+     * @throws IllegalArgumentException If the tensor shape is not compatible with the buffer
+     * @see org.tensorflow.op.Ops.constant
+     */
+    public fun constant(shape: Shape, `data`: IntDataBuffer): Constant<TInt32> = java.constant(    
         shape,
         data
         )

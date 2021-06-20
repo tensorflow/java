@@ -16,9 +16,13 @@ limitations under the License.
 */
 package org.tensorflow.op.kotlin
 
+import org.tensorflow.DeviceSpec
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.ndarray.index.Index
+import org.tensorflow.op.Op
+import org.tensorflow.op.Ops
+import org.tensorflow.op.WithOps
 import org.tensorflow.op.core.Constant
 import org.tensorflow.op.core.StopGradient
 import org.tensorflow.op.core.StridedSlice
@@ -48,14 +52,122 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 /**
  * Interface extended by [KotlinOps], used for now to declare extensions on Operand
  *
  * FIXME: Should be replaced by multiple receivers when available
  */
-public abstract class OpsBase {
-  public abstract val tf: KotlinOps
+public abstract class OpsBase : WithOps {
+
+  public abstract val java: Ops
+
+  override fun tf(): Ops {
+    return java
+  }
+
+  override fun withSubScope(childScopeName: String): KotlinOps = java.withSubScope(childScopeName).tf
+
+  /**
+   * Runs [block] on a child [KotlinOps] builder that builds operations with the provided name prefix.
+   *
+   * @see org.tensorflow.op.Scope.withSubScope
+   */
+  // TODO should be a decorator too, when possible, and the same for the rest of the with methods
+  public inline fun <R> withSubScope(childScopeName: String, block: KotlinOps.() -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withSubScope(childScopeName).run(block)
+  }
+
+  override fun withName(opName: String): KotlinOps = java.withName(opName).tf
+
+  override fun withDevice(deviceSpec: DeviceSpec): KotlinOps = java.withDevice(deviceSpec).tf
+
+  /**
+   * Runs [block] on a child [KotlinOps] builder that uses the provided device for created ops.
+   *
+   * @see org.tensorflow.op.Scope.withDevice
+   */
+  public inline fun <R> withDevice(device: DeviceSpec, block: KotlinOps.() -> R): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withDevice(device).run(block)
+  }
+
+  override fun withControlDependencies(controls: Iterable<Op>): KotlinOps =
+      java.withControlDependencies(controls).tf
+
+  /**
+   * Runs [block] on a child [KotlinOps] builder that adds operations to the graph with the provided
+   * control dependencies.
+   *
+   * @see org.tensorflow.op.Scope.withControlDependencies
+   */
+  public inline fun <R> withControlDependencies(
+    controls: Iterable<Op>,
+    block: KotlinOps.() -> R
+  ): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withControlDependencies(controls).run(block)
+  }
+
+  override fun withControlDependencies(vararg controls: Op): KotlinOps =
+      java.withControlDependencies(listOf(*controls)).tf
+
+  /**
+   * Runs [block] on a child [KotlinOps] builder that adds operations to the graph with the provided
+   * control dependencies.
+   *
+   * @see org.tensorflow.op.Scope.withControlDependencies
+   */
+  public inline fun <R> withControlDependencies(
+    vararg controls: Op,
+    block: KotlinOps.() -> R
+  ): R {
+    contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
+    return withControlDependencies(*controls).run(block)
+  }
+
+  /**
+   * Returns a child [KotlinOps] builder, combining [withSubScope], [withControlDependencies], and
+   * [withDevice]. Null arguments are ignored.
+   *
+   * @see org.tensorflow.op.Scope.withSubScope
+   * @see org.tensorflow.op.Scope.withControlDependencies
+   * @see org.tensorflow.op.Scope.withDevice
+   */
+  public fun withSubScope(
+    childScopeName: String? = null,
+    controlDependencies: Iterable<Op>? = null,
+    device: DeviceSpec? = null,
+  ): KotlinOps {
+    var ops = java
+    childScopeName?.let { ops = ops.withSubScope(it) }
+    controlDependencies?.let { ops = ops.withControlDependencies(it) }
+    device?.let { ops = ops.withDevice(it) }
+    return ops.tf
+  }
+
+  /**
+   * Runs [block] on a child [KotlinOps] builder, combining [withSubScope], [withControlDependencies],
+   * and [withDevice]. Null arguments are ignored.
+   *
+   * @see org.tensorflow.op.Scope.withSubScope
+   * @see org.tensorflow.op.Scope.withControlDependencies
+   * @see org.tensorflow.op.Scope.withDevice
+   */
+  public inline fun <R> withSubScope(
+    childScopeName: String? = null,
+    controlDependencies: Iterable<Op>? = null,
+    device: DeviceSpec? = null,
+    block: KotlinOps.() -> R,
+  ): R {
+    return withSubScope(childScopeName, controlDependencies, device).run(block)
+  }
+
+
+  //TODO all of these should be context functions on WithOps.
 
   /** @see LinalgOps.matMul */
   public fun <T : TType> Operand<T>.matMul(

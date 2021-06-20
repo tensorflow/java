@@ -57,7 +57,7 @@ public class ShapeOps(
      *      dimension
      * @see org.tensorflow.op.ShapeOps.append
      */
-    public fun append(shape: Shape<TInt32>, lastDimension: Int): Operand<TInt32> = java.append(    
+    public fun append(shape: Shape<TInt64>, lastDimension: Long): Operand<TInt64> = java.append(    
         shape,
         lastDimension
         )
@@ -73,7 +73,7 @@ public class ShapeOps(
      *      dimension
      * @see org.tensorflow.op.ShapeOps.append
      */
-    public fun append(shape: Shape<TInt64>, lastDimension: Long): Operand<TInt64> = java.append(    
+    public fun append(shape: Shape<TInt32>, lastDimension: Int): Operand<TInt32> = java.append(    
         shape,
         lastDimension
         )
@@ -223,7 +223,7 @@ public class ShapeOps(
      *      the shape
      * @see org.tensorflow.op.ShapeOps.prepend
      */
-    public fun prepend(shape: Shape<TInt32>, firstDimension: Int): Operand<TInt32> = java.prepend(    
+    public fun prepend(shape: Shape<TInt64>, firstDimension: Long): Operand<TInt64> = java.prepend(    
         shape,
         firstDimension
         )
@@ -239,7 +239,7 @@ public class ShapeOps(
      *      the shape
      * @see org.tensorflow.op.ShapeOps.prepend
      */
-    public fun prepend(shape: Shape<TInt64>, firstDimension: Long): Operand<TInt64> = java.prepend(    
+    public fun prepend(shape: Shape<TInt32>, firstDimension: Int): Operand<TInt32> = java.prepend(    
         shape,
         firstDimension
         )

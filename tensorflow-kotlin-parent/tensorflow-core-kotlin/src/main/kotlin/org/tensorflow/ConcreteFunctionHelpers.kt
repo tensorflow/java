@@ -19,7 +19,7 @@ package org.tensorflow
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
 import org.tensorflow.op.kotlin.KotlinOps
-import org.tensorflow.op.kotlin.kotlin
+import org.tensorflow.op.kotlin.tf
 
 /**
  * Create a [ConcreteFunction] by building a new graph.
@@ -29,7 +29,7 @@ public inline fun ConcreteFunction(
     crossinline function: KotlinOps.() -> Signature
 ): ConcreteFunction {
   contract { callsInPlace(function, InvocationKind.EXACTLY_ONCE) }
-  return ConcreteFunction.create { function(it.kotlin) }
+  return ConcreteFunction.create { function(it.tf) }
 }
 
 /**
