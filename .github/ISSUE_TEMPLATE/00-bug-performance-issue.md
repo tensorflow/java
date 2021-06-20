@@ -8,20 +8,16 @@ about: Use this template for reporting a bug or a performance issue.
 
 **System information**
 - Have I written custom code (as opposed to using a stock example script provided in TensorFlow):
-- OS Platform and Distribution (e.g., Linux Ubuntu 16.04):
-- Mobile device (e.g. iPhone 8, Pixel 2, Samsung Galaxy) if the issue happens on mobile device:
+- OS Platform and Distribution (e.g., Linux Ubuntu 16.04 x86\_64):
 - TensorFlow installed from (source or binary):
 - TensorFlow version (use command below):
-- Python version:
+- Java version:
+- Java command line flags (e.g., GC parameters):
+- Python version (if transferring a model trained in Python):
 - Bazel version (if compiling from source):
 - GCC/Compiler version (if compiling from source):
 - CUDA/cuDNN version:
 - GPU model and memory:
-
-
-You can collect some of this information using our environment capture [script](https://github.com/tensorflow/tensorflow/tree/master/tools/tf_env_collect.sh)
-You can also obtain the TensorFlow version with
-python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)"
 
 **Describe the current behavior**
 
