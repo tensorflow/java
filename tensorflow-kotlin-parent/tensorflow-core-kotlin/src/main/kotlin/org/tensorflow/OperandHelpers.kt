@@ -26,25 +26,82 @@ import org.tensorflow.ndarray.Shaped
  */
 public val Operand<*>.shape: Shape
   get() = this.shape()
+    
 
-/**
- * Require the [Shaped] object have a certain shape.
- *
- * Throws [IllegalStateException] on failure.
- */
-public fun <T : Shaped> T.requireShape(shape: Shape): T = apply {
-  check(this.shape().isCompatibleWith(shape)) {
-    "Shape ${this.shape()} is not compatible with the required shape $shape"
-  }
+public fun interface ShapeErrorLazyMessage{
+  public fun message(actual: Shape, required: Shape): String
+}
+
+@PublishedApi
+internal val defaultShapeErrorMessage: ShapeErrorLazyMessage = ShapeErrorLazyMessage { actual, required ->
+  "Shape $actual is not compatible with the required shape $required"
 }
 
 /**
  * Require the [Shaped] object have a certain shape.
  *
- * Throws [IllegalStateException] on failure.
+ * @throws AssertionError if the shapes are not compatible
  */
-public fun <T : Shaped> T.requireShape(vararg shape: Long): T = apply {
-  check(this.shape().isCompatibleWith(Shape.of(*shape))) {
-    "Shape ${this.shape()} is not compatible with the required shape $shape"
-  }
+public inline fun <T : Shaped> T.assertShape(
+  requiredShape: Shape,
+  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = apply {
+  val actual = this.shape()
+  assert(actual.isCompatibleWith(requiredShape)) { exception.message(actual, requiredShape) }
 }
+
+/**
+ * Require the [Shaped] object have a certain shape.
+ *
+ * @throws AssertionError if the shapes are not compatible
+ */
+public inline fun <T : Shaped> T.assertShape(
+  vararg shape: Long,
+  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = checkShape(Shape.of(*shape), exception)
+
+/**
+ * Require the [Shaped] object have a certain shape.
+ *
+ * @throws IllegalArgumentException if the shapes are not compatible
+ */
+public inline fun <T : Shaped> T.requireShape(
+  requiredShape: Shape,
+  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = apply {
+  val actual = this.shape()
+  require(actual.isCompatibleWith(requiredShape)) { exception.message(actual, requiredShape) }
+}
+
+/**
+ * Require the [Shaped] object have a certain shape.
+ *
+ * @throws IllegalArgumentException if the shapes are not compatible
+ */
+public inline fun <T : Shaped> T.requireShape(
+  vararg shape: Long,
+  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = checkShape(Shape.of(*shape), exception)
+
+/**
+ * Require the [Shaped] object have a certain shape.
+ *
+ * @throws IllegalStateException if the shapes are not compatible
+ */
+public inline fun <T : Shaped> T.checkShape(
+    requiredShape: Shape,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = apply {
+  val actual = this.shape()
+  check(actual.isCompatibleWith(requiredShape)) { exception.message(actual, requiredShape) }
+}
+
+/**
+ * Require the [Shaped] object have a certain shape.
+ *
+ * @throws IllegalStateException if the shapes are not compatible
+ */
+public inline fun <T : Shaped> T.checkShape(
+    vararg shape: Long,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+): T = checkShape(Shape.of(*shape), exception)
