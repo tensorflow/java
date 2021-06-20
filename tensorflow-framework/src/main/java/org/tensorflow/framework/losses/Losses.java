@@ -14,9 +14,12 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.impl.LossTuple;
 import org.tensorflow.framework.losses.impl.LossesHelper;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.ReduceAll;
@@ -27,8 +30,6 @@ import org.tensorflow.op.math.Softplus;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Built-in loss functions. */
 public class Losses {
@@ -181,7 +182,10 @@ public class Losses {
    */
   private static <T extends TNumber> Operand<T> binaryCrossentropyHelper(
       Ops tf, Operand<T> target, Operand<T> output, boolean fromLogits) {
-    if (fromLogits) return tf.nn.sigmoidCrossEntropyWithLogits(target, output);
+    FrameworkOps ftf = FrameworkOps.create(tf);
+    if (fromLogits) {
+      return ftf.nn.sigmoidCrossEntropyWithLogits(target, output);
+    }
 
     /* TODO - skip this logic for now. It requires walking back the inputs which is not yet possible
     if (!(output instanceof Variable) && (!tf.scope().env().isEager())) {
@@ -235,6 +239,7 @@ public class Losses {
       boolean fromLogits,
       float labelSmoothing,
       int axis) {
+    FrameworkOps ftf = FrameworkOps.create(tf);
     Class<T> predictionType = predictions.type();
     Operand<T> tLabels = cast(tf, labels, predictionType);
     LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, predictions, null);
@@ -245,7 +250,7 @@ public class Losses {
       tLabels = smoothCategoricalLabels(tf, tLabels, labelSmoothing);
     }
     if (fromLogits) {
-      return tf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
+      return ftf.nn.softmaxCrossEntropyWithLogits(tLabels, predictions, axis);
     }
     /* TODO
     if (!(predictions instanceof Variable) && (!tf.scope().env().isEager())) {
@@ -515,6 +520,7 @@ public class Losses {
       Operand<T> predictions,
       boolean fromLogits,
       int axis) {
+    FrameworkOps ftf = FrameworkOps.create(tf);
     Class<T> predictionType = predictions.type();
     Operand<T> epsilonConst = cast(tf, tf.constant(EPSILON), predictionType);
     Operand<T> one = cast(tf, tf.constant(1), predictionType);
@@ -569,8 +575,7 @@ public class Losses {
                   new long[] {-1L, predictionsShape.size(predictionsShape.numDimensions() - 1)}));
     }
 
-    @SuppressWarnings("unchecked")
-    Operand<T> loss = tf.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
+    Operand<T> loss = ftf.nn.sparseSoftmaxCrossEntropyWithLogits(iLabels, predictions);
     if (updateShape && predictionsRank >= 3) {
       Shape newShape = predictionsShape.take(predictionsShape.numDimensions() - 1);
       loss = tf.reshape(loss, tf.constant(newShape));
