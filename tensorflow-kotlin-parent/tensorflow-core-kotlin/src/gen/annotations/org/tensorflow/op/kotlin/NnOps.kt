@@ -93,6 +93,13 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `nn` operations as [Op][org.tensorflow.op.Op]s
@@ -1788,8 +1795,25 @@ public class NnOps(
     )
 
     /**
-     * Computes exponential linear: `exp(features) - 1` if < 0, `features` otherwise.
-     *  See  [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
+     * Computes the exponential linear function.
+     *  The ELU function is defined as:
+     *  <ul>
+     *  <li>$ e ^ x - 1 $ if $ x < 0 $</li>
+     *  <li>$ x $ if $ x >= 0 $</li>
+     *  </ul>
+     *
+     * Examples:
+     *  ```
+     *
+     * tf.nn.elu(1.0)
+     *  <tf.Tensor: shape=(), dtype=float32, numpy=1.0>
+     *  tf.nn.elu(0.0)
+     *  <tf.Tensor: shape=(), dtype=float32, numpy=0.0>
+     *  tf.nn.elu(-1000.0)
+     *  <tf.Tensor: shape=(), dtype=float32, numpy=-1.0>
+     * ```
+     *
+     * See  [Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)
      *  ](http://arxiv.org/abs/1511.07289)
      *
      * @param <T> data type for `activations` output
@@ -3317,8 +3341,8 @@ public class NnOps(
      *  Example usage:
      *  ```
      *
-     * tf.nn.relu([-2., 0., -0., 3.]).numpy()
-     *  array([ 0.,  0., -0.,  3.], dtype=float32)
+     * tf.nn.relu([-2., 0., 3.]).numpy()
+     *  array([0., 0., 3.], dtype=float32)
      * ```
      *
      * @param <T> data type for `activations` output

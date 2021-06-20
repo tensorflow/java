@@ -26,6 +26,9 @@ import org.tensorflow.op.audio.Mfcc
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.TString
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
 
 /**
  * An API for building `audio` operations as [Op][org.tensorflow.op.Op]s

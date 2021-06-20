@@ -69,6 +69,10 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `linalg` operations as [Op][org.tensorflow.op.Op]s
@@ -104,16 +108,16 @@ public class LinalgOps(
      * For example:
      *  ```
      * # if 'input' is [[ 0,  1,  2, 3]
-     *                   [-1,  0,  1, 2]
-     *                   [-2, -1,  0, 1]
-     *                   [-3, -2, -1, 0]],
+     *  #                [-1,  0,  1, 2]
+     *  #                [-2, -1,  0, 1]
+     *  #                [-3, -2, -1, 0]],
      *
-     *  tf.matrix_band_part(input, 1, -1) ==> [[ 0,  1,  2, 3]
+     *  tf.linalg.band_part(input, 1, -1) ==> [[ 0,  1,  2, 3]
      *                                         [-1,  0,  1, 2]
      *                                         [ 0, -1,  0, 1]
      *                                         [ 0,  0, -1, 0]],
      *
-     *  tf.matrix_band_part(input, 2, 1) ==> [[ 0,  1,  0, 0]
+     *  tf.linalg.band_part(input, 2, 1) ==> [[ 0,  1,  0, 0]
      *                                        [-1,  0,  1, 0]
      *                                        [-2, -1,  0, 1]
      *                                        [ 0, -2, -1, 0]]
@@ -122,9 +126,9 @@ public class LinalgOps(
      *
      * Useful special cases:
      *  ```
-     * tf.matrix_band_part(input, 0, -1) ==> Upper triangular part.
-     *   tf.matrix_band_part(input, -1, 0) ==> Lower triangular part.
-     *   tf.matrix_band_part(input, 0, 0) ==> Diagonal.
+     * tf.linalg.band_part(input, 0, -1) ==> Upper triangular part.
+     *   tf.linalg.band_part(input, -1, 0) ==> Lower triangular part.
+     *   tf.linalg.band_part(input, 0, 0) ==> Diagonal.
      *
      * ```
      *

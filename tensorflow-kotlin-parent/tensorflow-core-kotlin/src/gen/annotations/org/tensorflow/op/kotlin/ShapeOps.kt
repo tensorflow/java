@@ -24,6 +24,9 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Int
+import kotlin.Long
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `shape` operations as [Op][org.tensorflow.op.Op]s

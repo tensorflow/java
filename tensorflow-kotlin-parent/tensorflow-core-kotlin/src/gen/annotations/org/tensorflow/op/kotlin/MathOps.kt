@@ -129,6 +129,9 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `math` operations as [Op][org.tensorflow.op.Op]s
@@ -2402,7 +2405,7 @@ public class MathOps(
     )
 
     /**
-     * Computes softplus: `log(exp(features) + 1)`.
+     * The Softplus operation
      *
      * @param <T> data type for `activations` output
      * @param features the features value

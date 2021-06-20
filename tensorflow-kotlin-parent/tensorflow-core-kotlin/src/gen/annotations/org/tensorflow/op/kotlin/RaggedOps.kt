@@ -22,6 +22,7 @@ import org.tensorflow.op.Scope
 import org.tensorflow.op.ragged.RaggedBincount
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.family.TNumber
+import kotlin.Boolean
 
 /**
  * An API for building `ragged` operations as [Op][org.tensorflow.op.Op]s

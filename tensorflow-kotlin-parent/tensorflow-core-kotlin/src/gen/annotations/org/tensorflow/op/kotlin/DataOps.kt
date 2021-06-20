@@ -20,34 +20,37 @@ package org.tensorflow.op.kotlin
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.Scope
-import org.tensorflow.op.data.AnonymousIterator
-import org.tensorflow.op.data.BatchDataset
-import org.tensorflow.op.data.ConcatenateDataset
-import org.tensorflow.op.data.DeleteIterator
-import org.tensorflow.op.data.DeserializeIterator
-import org.tensorflow.op.data.Iterator
-import org.tensorflow.op.data.IteratorGetNext
-import org.tensorflow.op.data.IteratorGetNextAsOptional
-import org.tensorflow.op.data.IteratorGetNextSync
-import org.tensorflow.op.data.IteratorToStringHandle
-import org.tensorflow.op.data.MakeIterator
-import org.tensorflow.op.data.OptionalFromValue
-import org.tensorflow.op.data.OptionalGetValue
-import org.tensorflow.op.data.OptionalHasValue
-import org.tensorflow.op.data.OptionalNone
-import org.tensorflow.op.data.RangeDataset
-import org.tensorflow.op.data.RepeatDataset
-import org.tensorflow.op.data.SerializeIterator
-import org.tensorflow.op.data.SkipDataset
-import org.tensorflow.op.data.TakeDataset
-import org.tensorflow.op.data.TensorSliceDataset
-import org.tensorflow.op.data.TextLineDataset
-import org.tensorflow.op.data.TfRecordDataset
-import org.tensorflow.op.data.ZipDataset
+import org.tensorflow.op.`data`.AnonymousIterator
+import org.tensorflow.op.`data`.BatchDataset
+import org.tensorflow.op.`data`.ConcatenateDataset
+import org.tensorflow.op.`data`.DeleteIterator
+import org.tensorflow.op.`data`.DeserializeIterator
+import org.tensorflow.op.`data`.Iterator
+import org.tensorflow.op.`data`.IteratorGetNext
+import org.tensorflow.op.`data`.IteratorGetNextAsOptional
+import org.tensorflow.op.`data`.IteratorGetNextSync
+import org.tensorflow.op.`data`.IteratorToStringHandle
+import org.tensorflow.op.`data`.MakeIterator
+import org.tensorflow.op.`data`.OptionalFromValue
+import org.tensorflow.op.`data`.OptionalGetValue
+import org.tensorflow.op.`data`.OptionalHasValue
+import org.tensorflow.op.`data`.OptionalNone
+import org.tensorflow.op.`data`.RangeDataset
+import org.tensorflow.op.`data`.RepeatDataset
+import org.tensorflow.op.`data`.SerializeIterator
+import org.tensorflow.op.`data`.SkipDataset
+import org.tensorflow.op.`data`.TakeDataset
+import org.tensorflow.op.`data`.TensorSliceDataset
+import org.tensorflow.op.`data`.TextLineDataset
+import org.tensorflow.op.`data`.TfRecordDataset
+import org.tensorflow.op.`data`.ZipDataset
 import org.tensorflow.types.TBool
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
 
 /**
  * An API for building `data` operations as [Op][org.tensorflow.op.Op]s
@@ -66,8 +69,6 @@ public class DataOps(
      * Returns the current [scope][Scope] of this API
      */
     public val scope: Scope = ops.scope
-
-    public val experimental: DataExperimentalOps = DataExperimentalOps(ops)
 
     /**
      * A container for an iterator resource.

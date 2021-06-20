@@ -44,6 +44,11 @@ import org.tensorflow.op.xla.XlaSetBound
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `xla` operations as [Op][org.tensorflow.op.Op]s
@@ -343,9 +348,13 @@ public class XlaOps(
      * @param <T> data type for `output` output
      * @param input A `Tensor` of type T.
      * @param paddingValue A scalar `Tensor` of type T.
-     * @param paddingLow the padding to apply at the start of each input dimensions
-     * @param paddingHigh the padding to apply at the end of each input dimension.
-     * @param paddingInterior the padding to apply between each input element.
+     * @param paddingLow the padding to apply at the start of each input dimensions. Must
+     *  be a compile-time constant 1D tensor of length equal to rank of input.
+     * @param paddingHigh the padding to apply at the end of each input dimension. Must
+     *  be a compile-time constant 1D tensor of length equal to rank of input.
+     * @param paddingInterior the padding to apply between each input element. Must
+     *  be a compile-time constant 1D tensor of length equal to rank of input,
+     *  containing only non-negative values.
      * @param <T> data type for `XlaPad` output and operands
      * @param <U> data type for `XlaPad` output and operands
      * @return a new instance of Pad
@@ -450,13 +459,22 @@ public class XlaOps(
      *
      * @param <T> data type for `output` output
      * @param input the input value
+     * @param options carries optional attribute values
      * @param <T> data type for `XlaSharding` output and operands
      * @return a new instance of Sharding
      * @see org.tensorflow.op.XlaOps.sharding
+     * @param sharding Sets the sharding option.
+     *
+     * @param sharding the sharding option
+     * @return this Options instance.
      */
-    public fun <T : TType> sharding(input: Operand<T>): Sharding<T> = java.sharding<T>(
-        input
-    )
+    public fun <T : TType> sharding(input: Operand<T>, sharding: String? = null): Sharding<T> =
+        java.sharding<T>(
+            input,
+            *listOfNotNull(
+                sharding?.let { org.tensorflow.op.xla.Sharding.sharding(it) }
+            ).toTypedArray()
+        )
 
     /**
      * Wraps the XLA Sort operator, documented at

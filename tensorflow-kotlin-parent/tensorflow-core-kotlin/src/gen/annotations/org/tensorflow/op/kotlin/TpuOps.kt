@@ -26,6 +26,7 @@ import org.tensorflow.op.tpu.PartitionedInput
 import org.tensorflow.op.tpu.PartitionedOutput
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TType
+import kotlin.Long
 
 /**
  * An API for building `tpu` operations as [Op][org.tensorflow.op.Op]s

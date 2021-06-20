@@ -58,6 +58,12 @@ import org.tensorflow.types.TString
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.Float
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `image` operations as [Op][org.tensorflow.op.Op]s
@@ -170,7 +176,10 @@ public class ImageOps(
      *  representing a single score corresponding to each box (each row of boxes).
      * @param maxOutputSizePerClass A scalar integer tensor representing the maximum number of
      *  boxes to be selected by non max suppression per class
-     * @param maxTotalSize A scalar representing maximum number of boxes retained over all classes.
+     * @param maxTotalSize An int32 scalar representing the maximum number of boxes retained over
+     * all
+     *  classes. Note that setting this value to a large number may result in OOM error
+     *  depending on the system workload.
      * @param iouThreshold A 0-D float tensor representing the threshold for deciding whether
      *  boxes overlap too much with respect to IOU.
      * @param scoreThreshold A 0-D float tensor representing the threshold for deciding when to

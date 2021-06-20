@@ -41,6 +41,7 @@ import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `signal` operations as [Op][org.tensorflow.op.Op]s

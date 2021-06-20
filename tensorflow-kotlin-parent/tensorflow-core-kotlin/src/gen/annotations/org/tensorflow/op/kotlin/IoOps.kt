@@ -72,6 +72,10 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `io` operations as [Op][org.tensorflow.op.Op]s
@@ -184,12 +188,14 @@ public class IoOps(
 
     /**
      * Convert JSON-encoded Example records to binary protocol buffer strings.
-     *  This op translates a tensor containing Example records, encoded using
-     *  the  [standard JSON
-     *  mapping](https://developers.google.com/protocol-buffers/docs/proto3#json) ,
-     *  into a tensor containing the same records encoded as binary protocol
-     *  buffers. The resulting tensor can then be fed to any of the other
-     *  Example-parsing ops.
+     *  Note: This is **not** a general purpose JSON parsing op.
+     *
+     * This op converts JSON-serialized
+     *  `tf.train.Example` (created with `json_format.MessageToJson`, following the[standard JSON
+     * mapping](https://developers.google.com/protocol-buffers/docs/proto3#json) )
+     *  to a binary-serialized `tf.train.Example` (equivalent to
+     *  `Example.SerializeToString()`) suitable for conversion to tensors with
+     *  `tf.io.parse_example`.
      *
      * @param jsonExamples Each string is a JSON object serialized according to the JSON
      *  mapping of the Example proto.

@@ -42,6 +42,10 @@ import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32
 import org.tensorflow.types.TString
 import org.tensorflow.types.family.TNumber
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `strings` operations as [Op][org.tensorflow.op.Op]s

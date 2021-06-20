@@ -17,6 +17,7 @@
 //
 package org.tensorflow.op.kotlin
 
+import org.tensorflow.ConcreteFunction
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.BooleanNdArray
 import org.tensorflow.ndarray.ByteNdArray
@@ -158,7 +159,6 @@ import org.tensorflow.op.core.ReduceSum
 import org.tensorflow.op.core.RefNextIteration
 import org.tensorflow.op.core.RefSelect
 import org.tensorflow.op.core.RefSwitch
-import org.tensorflow.op.core.RemoteFusedGraphExecute
 import org.tensorflow.op.core.Reshape
 import org.tensorflow.op.core.ResourceCountUpTo
 import org.tensorflow.op.core.ResourceGather
@@ -179,7 +179,6 @@ import org.tensorflow.op.core.ResourceStridedSliceAssign
 import org.tensorflow.op.core.Reverse
 import org.tensorflow.op.core.ReverseSequence
 import org.tensorflow.op.core.Roll
-import org.tensorflow.op.core.Rpc
 import org.tensorflow.op.core.ScatterAdd
 import org.tensorflow.op.core.ScatterDiv
 import org.tensorflow.op.core.ScatterMax
@@ -262,7 +261,6 @@ import org.tensorflow.op.core.Tile
 import org.tensorflow.op.core.Timestamp
 import org.tensorflow.op.core.TopKUnique
 import org.tensorflow.op.core.TopKWithUnique
-import org.tensorflow.op.core.TryRpc
 import org.tensorflow.op.core.Unbatch
 import org.tensorflow.op.core.UnbatchGrad
 import org.tensorflow.op.core.Unique
@@ -275,6 +273,9 @@ import org.tensorflow.op.core.VarIsInitializedOp
 import org.tensorflow.op.core.Variable
 import org.tensorflow.op.core.VariableShape
 import org.tensorflow.op.core.Where
+import org.tensorflow.op.core.XlaConvV2
+import org.tensorflow.op.core.XlaDotV2
+import org.tensorflow.op.core.XlaSetDynamicDimensionSize
 import org.tensorflow.op.core.XlaSpmdFullToShardShape
 import org.tensorflow.op.core.XlaSpmdShardToFullShape
 import org.tensorflow.op.core.Zeros
@@ -289,6 +290,22 @@ import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
 import java.nio.charset.Charset
+import kotlin.Array
+import kotlin.Boolean
+import kotlin.BooleanArray
+import kotlin.Byte
+import kotlin.ByteArray
+import kotlin.Double
+import kotlin.DoubleArray
+import kotlin.Float
+import kotlin.FloatArray
+import kotlin.Int
+import kotlin.IntArray
+import kotlin.Long
+import kotlin.LongArray
+import kotlin.String
+import kotlin.Unit
+import kotlin.jvm.JvmName
 
 /**
  * An API for building operations as [Op][Op]s
@@ -1439,6 +1456,37 @@ public class KotlinOps(
             input,
             boundaries
         )
+
+    /**
+     * Calls the function in an execution environment, adding its graph as a function if it isn't
+     *  already present. Only works for functions with a single input and output.
+     *
+     * @param scope the scope to call the function in
+     * @param argument the argument to the call
+     * @return the output of the function
+     * @see ConcreteFunction.call
+     * @see org.tensorflow.op.Ops.call
+     */
+    public fun call(function: ConcreteFunction, argument: Operand<*>): Operand<*> = java.call(
+        function,
+        argument
+    )
+
+    /**
+     * Calls the function in an execution environment, adding its graph as a function if it isn't
+     *  already present. The inputs and outputs are keyed by the names set in the `Signature`.
+     *
+     * @param scope the scope to call the function in
+     * @param arguments the arguments to the call
+     * @return the outputs of the function
+     * @see ConcreteFunction.call
+     * @see org.tensorflow.op.Ops.call
+     */
+    public fun call(function: ConcreteFunction, arguments: Map<String, Operand<*>>): Map<String,
+        Operand<*>> = java.call(
+        function,
+        arguments
+    )
 
     /**
      * Clips tensor values to a specified min and max.
@@ -3821,6 +3869,10 @@ public class KotlinOps(
      *
      * @param delimiter Delimiter to separate fields in a line.
      * @return this Options instance.
+     * @param offset Sets the offset option.
+     *
+     * @param offset the offset option
+     * @return this Options instance.
      */
     public fun initializeTableFromTextFile(
         tableHandle: Operand<out TType>,
@@ -3828,7 +3880,8 @@ public class KotlinOps(
         keyIndex: Long,
         valueIndex: Long,
         vocabSize: Long? = null,
-        delimiter: String? = null
+        delimiter: String? = null,
+        offset: Long? = null
     ): InitializeTableFromTextFile = java.initializeTableFromTextFile(
         tableHandle,
         filename,
@@ -3836,15 +3889,15 @@ public class KotlinOps(
         valueIndex,
         *listOfNotNull(
             vocabSize?.let { org.tensorflow.op.core.InitializeTableFromTextFile.vocabSize(it) },
-            delimiter?.let { org.tensorflow.op.core.InitializeTableFromTextFile.delimiter(it) }
+            delimiter?.let { org.tensorflow.op.core.InitializeTableFromTextFile.delimiter(it) },
+            offset?.let { org.tensorflow.op.core.InitializeTableFromTextFile.offset(it) }
         ).toTypedArray()
     )
 
     /**
-     * ```
      * Adds v into specified rows of x.
-     *
-     *  Computes y = x; y[i, :] += v; return y.
+     *  ```
+     * Computes y = x; y[i, :] += v; return y.
      *
      * ```
      *
@@ -5929,33 +5982,6 @@ public class KotlinOps(
         )
 
     /**
-     * Execute a sub graph on a remote processor.
-     *  The graph specifications(such as graph itself, input tensors and output names)
-     *  are stored as a serialized protocol buffer of RemoteFusedGraphExecuteInfo
-     *  as serialized_remote_fused_graph_execute_info.
-     *  The specifications will be passed to a dedicated registered
-     *  remote fused graph executor.  The executor will send the graph specifications
-     *  to a remote processor and execute that graph.  The execution results
-     *  will be passed to consumer nodes as outputs of this node.
-     *
-     * @param inputs Arbitrary number of tensors with arbitrary data types
-     * @param Toutputs the value of the Toutputs property
-     * @param serializedRemoteFusedGraphExecuteInfo Serialized protocol buffer
-     *  of RemoteFusedGraphExecuteInfo which contains graph specifications.
-     * @return a new instance of RemoteFusedGraphExecute
-     * @see org.tensorflow.op.Ops.remoteFusedGraphExecute
-     */
-    public fun remoteFusedGraphExecute(
-        inputs: Iterable<Operand<*>>,
-        Toutputs: List<Class<out TType>>,
-        serializedRemoteFusedGraphExecuteInfo: String
-    ): RemoteFusedGraphExecute = java.remoteFusedGraphExecute(
-        inputs,
-        Toutputs,
-        serializedRemoteFusedGraphExecuteInfo
-    )
-
-    /**
      * Reshapes a tensor.
      *  Given `tensor`, this operation returns a tensor that has the same values
      *  as `tensor` with shape `shape`.
@@ -6906,105 +6932,6 @@ public class KotlinOps(
         input,
         shift,
         axis
-    )
-
-    /**
-     * Perform batches of RPC requests.
-     *  This op asynchronously performs either a single RPC request, or a batch
-     *  of requests.  RPC requests are defined by three main parameters:
-     *  <ul>
-     *  <li>`address` (the host+port or BNS address of the request)</li>
-     *  <li>`method` (the RPC method name for the request)</li>
-     *  <li>`request` (the serialized proto string, or vector of strings,
-     *  of the RPC request argument).</li>
-     *  </ul>
-     *
-     * For example, if you have an RPC service running on port localhost:2345,
-     *  and its interface is configured with the following proto declaration:
-     *  ```
-     * service MyService {
-     *    rpc MyMethod(MyRequestProto) returns (MyResponseProto) {
-     *
-     * ```
-     *  };
-     *  }
-     *
-     * then call this op with arguments:
-     *  ```
-     * address = &quot;localhost:2345&quot;
-     *  method = &quot;MyService/MyMethod&quot;
-     *
-     * ```
-     *
-     * The `request` tensor is a string tensor representing serialized `MyRequestProto`
-     *  strings; and the output string tensor `response` will have the same shape
-     *  and contain (upon successful completion) corresponding serialized
-     *  `MyResponseProto` strings.
-     *
-     * For example, to send a single, empty, `MyRequestProto`, call
-     *  this op with `request = ""`.  To send 5 **parallel** empty requests,
-     *  call this op with `request = &#91;"", "", "", "", ""&#93;`.
-     *
-     * More generally, one can create a batch of `MyRequestProto` serialized protos
-     *  from regular batched tensors using the `encode_proto` op, and convert
-     *  the response `MyResponseProto` serialized protos to batched tensors
-     *  using the `decode_proto` op.
-     *
-     * **NOTE** Working with serialized proto strings is faster than instantiating
-     *  actual proto objects in memory, so no performance degradation is expected
-     *  compared to writing custom kernels for this workflow.
-     *
-     * If the connection fails or the remote worker returns an error
-     *  status, the op reraises this exception locally.
-     *
-     * See the `TryRpc` op if you prefer to handle RPC failures manually in the graph.
-     *
-     * @param address `0-D` or `1-D`.  The address (i.e. host_name:port) of the RPC server.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `method` and `request`.
-     * @param method `0-D` or `1-D`.  The method address on the RPC server.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `address` and `request`.
-     * @param request `0-D` or `1-D`.  Serialized proto strings: the rpc request argument.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `address` and `method`.
-     * @param options carries optional attribute values
-     * @return a new instance of Rpc
-     * @see org.tensorflow.op.Ops.rpc
-     * @param protocol Sets the protocol option.
-     *
-     * @param protocol RPC protocol to use.  Empty string means use the default protocol.
-     *  Options include 'grpc'.
-     * @return this Options instance.
-     * @param failFast Sets the failFast option.
-     *
-     * @param failFast `boolean`. If `true` (default), then failures to connect
-     *  (i.e., the server does not immediately respond) cause an RPC failure.
-     * @return this Options instance.
-     * @param timeoutInMs Sets the timeoutInMs option.
-     *
-     * @param timeoutInMs `int`. If `0` (default), then the kernel will run the RPC
-     *  request and only time out if the RPC deadline passes or the session times out.
-     *  If this value is greater than `0`, then the op will raise an exception if
-     *  the RPC takes longer than `timeout_in_ms`.
-     * @return this Options instance.
-     */
-    public fun rpc(
-        address: Operand<TString>,
-        method: Operand<TString>,
-        request: Operand<TString>,
-        protocol: String? = null,
-        failFast: Boolean? = null,
-        timeoutInMs: Long? = null
-    ): Rpc = java.rpc(
-        address,
-        method,
-        request,
-        *listOfNotNull(
-            protocol?.let { org.tensorflow.op.core.Rpc.protocol(it) },
-            failFast?.let { org.tensorflow.op.core.Rpc.failFast(it) },
-            timeoutInMs?.let { org.tensorflow.op.core.Rpc.timeoutInMs(it) }
-        ).toTypedArray()
     )
 
     /**
@@ -8567,7 +8494,42 @@ public class KotlinOps(
      *  taken into account for computing gradients.
      *
      * This is useful any time you want to compute a value with TensorFlow but need
-     *  to pretend that the value was a constant. Some examples include:
+     *  to pretend that the value was a constant. For example, the softmax function
+     *  for a vector x can be written as
+     *  ```
+     * def softmax(x):
+     *      numerator = tf.exp(x)
+     *      denominator = tf.reduce_sum(numerator)
+     *      return numerator / denominator
+     *
+     * ```
+     *
+     * This however is susceptible to overflow if the values in x are large. An
+     *  alternative more stable way is to subtract the maximum of x from each of the
+     *  values.
+     *  ```
+     * def stable_softmax(x):
+     *      z = x - tf.reduce_max(x)
+     *      numerator = tf.exp(z)
+     *      denominator = tf.reduce_sum(numerator)
+     *      return numerator / denominator
+     *
+     * ```
+     *
+     * However, when we backprop through the softmax to x, we dont want to backprop
+     *  through the `tf.reduce_max(x)` (if the max values are not unique then the
+     *  gradient could flow to the wrong input) calculation and treat that as a
+     *  constant. Therefore, we should write this out as
+     *  ```
+     * def stable_softmax(x):
+     *      z = x - tf.stop_gradient(tf.reduce_max(x))
+     *      numerator = tf.exp(z)
+     *      denominator = tf.reduce_sum(numerator)
+     *      return numerator / denominator
+     *
+     * ```
+     *
+     * Some other examples include:
      *  <ul>
      *  <li>The _EM_ algorithm where the _M-step_ should not involve backpropagation
      *  through the output of the _E-step_.</li>
@@ -9154,7 +9116,7 @@ public class KotlinOps(
      * @param identicalElementShapes Sets the identicalElementShapes option.
      *
      * @param identicalElementShapes If true (default is false), then all
-     *  elements in the TensorArray will be expected to have have identical shapes.
+     *  elements in the TensorArray will be expected to have identical shapes.
      *  This allows certain behaviors, like dynamically checking for
      *  consistent shapes on write, and being able to fill in properly
      *  shaped zero tensors on stack -- even if the element_shape attribute
@@ -10471,8 +10433,8 @@ public class KotlinOps(
     public fun timestamp(): Timestamp = java.timestamp()
 
     /**
-     * Returns the TopK unique values in the array in sorted order. The
-     *  running time is proportional to the product of K and the input
+     * Returns the TopK unique values in the array in sorted order.
+     *  The running time is proportional to the product of K and the input
      *  size. Sorting the whole array is more efficient for sufficiently large
      *  values of K. The median-of-medians algorithm is probably faster, but
      *  difficult to implement efficiently in XLA. If there are fewer than K
@@ -10496,11 +10458,12 @@ public class KotlinOps(
     )
 
     /**
-     * Returns the TopK values in the array in sorted order. This is a combination
-     *  of MakeUnique and TopKUnique. The returned top-K will have its lower bits
-     *  replaced by iota, thus it will be close to the original value but not exactly
-     *  the same. The running time is proportional to the product of K and the input
-     *  size. NaNs are never returned. Subnormal numbers are flushed to zero.
+     * Returns the TopK values in the array in sorted order.
+     *  This is a combination of MakeUnique and TopKUnique. The returned top-K will
+     *  have its lower bits replaced by iota, thus it will be close to the original
+     *  value but not exactly the same. The running time is proportional to the product
+     *  of K and the input size. NaNs are never returned. Subnormal numbers are flushed
+     *  to zero.
      *
      * @param input the input value
      * @param k the value of the k property
@@ -10512,107 +10475,6 @@ public class KotlinOps(
             input,
             k
         )
-
-    /**
-     * Perform batches of RPC requests.
-     *  This op asynchronously performs either a single RPC request, or a batch
-     *  of requests.  RPC requests are defined by three main parameters:
-     *  <ul>
-     *  <li>`address` (the host+port or BNS address of the request)</li>
-     *  <li>`method` (the method name for the request)</li>
-     *  <li>`request` (the serialized proto string, or vector of strings,
-     *  of the RPC request argument).</li>
-     *  </ul>
-     *
-     * For example, if you have an RPC service running on port localhost:2345,
-     *  and its interface is configured with the following proto declaration:
-     *  ```
-     * service MyService {
-     *    rpc MyMethod(MyRequestProto) returns (MyResponseProto) {
-     *
-     * ```
-     *  };
-     *  }
-     *
-     * then call this op with arguments:
-     *  ```
-     * address = &quot;localhost:2345&quot;
-     *  method = &quot;MyService/MyMethod&quot;
-     *
-     * ```
-     *
-     * The `request` tensor is a string tensor representing serialized `MyRequestProto`
-     *  strings; and the output string tensor `response` will have the same shape
-     *  and contain (upon successful completion) corresponding serialized
-     *  `MyResponseProto` strings.
-     *
-     * For example, to send a single, empty, `MyRequestProto`, call
-     *  this op with `request = ""`.  To send 5 **parallel** empty requests,
-     *  call this op with `request = &#91;"", "", "", "", ""&#93;`.
-     *
-     * More generally, one can create a batch of `MyRequestProto` serialized protos
-     *  from regular batched tensors using the `encode_proto` op, and convert
-     *  the response `MyResponseProto` serialized protos to batched tensors
-     *  using the `decode_proto` op.
-     *
-     * **NOTE** Working with serialized proto strings is faster than instantiating
-     *  actual proto objects in memory, so no performance degradation is expected
-     *  compared to writing custom kernels for this workflow.
-     *
-     * Unlike the standard `Rpc` op, if the connection fails or the remote worker
-     *  returns an error status, this op does **not** reraise the exception.
-     *  Instead, the `status_code` and `status_message` entry for the corresponding RPC
-     *  call is set with the error returned from the RPC call.  The `response` tensor
-     *  will contain valid response values for those minibatch entries whose RPCs did
-     *  not fail; the rest of the entries will have empty strings.
-     *
-     * @param address `0-D` or `1-D`.  The address (i.e. host_name:port) of the RPC server.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `method` and `request`.
-     * @param method `0-D` or `1-D`.  The method address on the RPC server.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `address` and `request`.
-     * @param request `0-D` or `1-D`.  Serialized proto strings: the rpc request argument.
-     *  If this tensor has more than 1 element, then multiple parallel rpc requests
-     *  are sent.  This argument broadcasts with `address` and `method`.
-     * @param options carries optional attribute values
-     * @return a new instance of TryRpc
-     * @see org.tensorflow.op.Ops.tryRpc
-     * @param protocol Sets the protocol option.
-     *
-     * @param protocol RPC protocol to use.  Empty string means use the default protocol.
-     *  Options include 'grpc'.
-     * @return this Options instance.
-     * @param failFast Sets the failFast option.
-     *
-     * @param failFast `boolean`. If `true` (default), then failures to connect
-     *  (i.e., the server does not immediately respond) cause an RPC failure.
-     * @return this Options instance.
-     * @param timeoutInMs Sets the timeoutInMs option.
-     *
-     * @param timeoutInMs `int`. If `0` (default), then the kernel will run the RPC
-     *  request and only time out if the RPC deadline passes or the session times out.
-     *  If this value is greater than `0`, then the op will raise an exception if
-     *  the RPC takes longer than `timeout_in_ms`.
-     * @return this Options instance.
-     */
-    public fun tryRpc(
-        address: Operand<TString>,
-        method: Operand<TString>,
-        request: Operand<TString>,
-        protocol: String? = null,
-        failFast: Boolean? = null,
-        timeoutInMs: Long? = null
-    ): TryRpc = java.tryRpc(
-        address,
-        method,
-        request,
-        *listOfNotNull(
-            protocol?.let { org.tensorflow.op.core.TryRpc.protocol(it) },
-            failFast?.let { org.tensorflow.op.core.TryRpc.failFast(it) },
-            timeoutInMs?.let { org.tensorflow.op.core.TryRpc.timeoutInMs(it) }
-        ).toTypedArray()
-    )
 
     /**
      * Reverses the operation of Batch for a single output Tensor.
@@ -10867,20 +10729,20 @@ public class KotlinOps(
      *
      * For example:
      *  ```
-     * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
-     *  y, idx, count = unique_with_counts(x)
+     * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+     *  y, idx, count = UniqueWithCountsV2(x, axis = [0])
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 0`:
+     * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=0)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[0])
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
@@ -10888,12 +10750,12 @@ public class KotlinOps(
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 1`:
+     * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=1)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[1])
      *  y ==> [[1, 0],
      *         [1, 0],
      *         [2, 0]]
@@ -10932,20 +10794,20 @@ public class KotlinOps(
      *
      * For example:
      *  ```
-     * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
-     *  y, idx, count = unique_with_counts(x)
+     * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+     *  y, idx, count = UniqueWithCountsV2(x, axis = [0])
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 0`:
+     * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=0)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[0])
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
@@ -10953,12 +10815,12 @@ public class KotlinOps(
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 1`:
+     * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=1)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[1])
      *  y ==> [[1, 0],
      *         [1, 0],
      *         [2, 0]]
@@ -11348,6 +11210,106 @@ public class KotlinOps(
      */
     public fun `where`(condition: Operand<out TType>): Where = java.where(
         condition
+    )
+
+    /**
+     * Wraps the XLA ConvGeneralDilated operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+     *  .
+     *
+     * @param <W> data type for `output` output
+     * @param lhs the input tensor
+     * @param rhs the kernel tensor
+     * @param windowStrides the inter-window strides
+     * @param padding the padding to apply at the start and end of each input dimensions
+     * @param lhsDilation dilation to apply between input elements
+     * @param rhsDilation dilation to apply between kernel elements
+     * @param featureGroupCount number of feature groups for grouped convolution.
+     * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <W> data type for `XlaConvV2` output and operands
+     * @param <V> data type for `XlaConvV2` output and operands
+     * @return a new instance of XlaConvV2
+     * @see org.tensorflow.op.Ops.xlaConvV2
+     */
+    public fun <W : TType, V : TNumber> xlaConvV2(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        windowStrides: Operand<V>,
+        padding: Operand<V>,
+        lhsDilation: Operand<V>,
+        rhsDilation: Operand<V>,
+        featureGroupCount: Operand<V>,
+        dimensionNumbers: String,
+        precisionConfig: String,
+        preferredElementType: Class<W>
+    ): XlaConvV2<W> = java.xlaConvV2<W, V>(
+        lhs,
+        rhs,
+        windowStrides,
+        padding,
+        lhsDilation,
+        rhsDilation,
+        featureGroupCount,
+        dimensionNumbers,
+        precisionConfig,
+        preferredElementType
+    )
+
+    /**
+     * Wraps the XLA DotGeneral operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+     *  .
+     *
+     * @param <V> data type for `output` output
+     * @param lhs the LHS tensor
+     * @param rhs the RHS tensor
+     * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <V> data type for `XlaDotV2` output and operands
+     * @return a new instance of XlaDotV2
+     * @see org.tensorflow.op.Ops.xlaDotV2
+     */
+    public fun <V : TType> xlaDotV2(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        dimensionNumbers: String,
+        precisionConfig: String,
+        preferredElementType: Class<V>
+    ): XlaDotV2<V> = java.xlaDotV2<V>(
+        lhs,
+        rhs,
+        dimensionNumbers,
+        precisionConfig,
+        preferredElementType
+    )
+
+    /**
+     * Make a static dimension into a xla bounded dynamic dimension.
+     *  ```
+     * The current static dimension size will become the bound and the second
+     *      operand becomes the dynamic size of the dimension.
+     *
+     * ```
+     *
+     * @param <T> data type for `output` output
+     * @param input the input value
+     * @param dimIndex the dimIndex value
+     * @param sizeOutput the sizeOutput value
+     * @param <T> data type for `XlaSetDynamicDimensionSize` output and operands
+     * @return a new instance of XlaSetDynamicDimensionSize
+     * @see org.tensorflow.op.Ops.xlaSetDynamicDimensionSize
+     */
+    public fun <T : TType> xlaSetDynamicDimensionSize(
+        input: Operand<T>,
+        dimIndex: Operand<TInt32>,
+        sizeOutput: Operand<TInt32>
+    ): XlaSetDynamicDimensionSize<T> = java.xlaSetDynamicDimensionSize<T>(
+        input,
+        dimIndex,
+        sizeOutput
     )
 
     /**
@@ -12154,7 +12116,7 @@ public class KotlinOps(
      * @param identicalElementShapes Sets the identicalElementShapes option.
      *
      * @param identicalElementShapes If true (default is false), then all
-     *  elements in the TensorArray will be expected to have have identical shapes.
+     *  elements in the TensorArray will be expected to have identical shapes.
      *  This allows certain behaviors, like dynamically checking for
      *  consistent shapes on write, and being able to fill in properly
      *  shaped zero tensors on stack -- even if the element_shape attribute
@@ -12626,20 +12588,20 @@ public class KotlinOps(
      *
      * For example:
      *  ```
-     * # tensor 'x' is [1, 1, 2, 4, 4, 4, 7, 8, 8]
-     *  y, idx, count = unique_with_counts(x)
+     * x = tf.constant([1, 1, 2, 4, 4, 4, 7, 8, 8])
+     *  y, idx, count = UniqueWithCountsV2(x, axis = [0])
      *  y ==> [1, 2, 4, 7, 8]
      *  idx ==> [0, 0, 1, 2, 2, 2, 3, 4, 4]
      *  count ==> [2, 1, 3, 1, 2]
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 0`:
+     * For a `2-D` tensor `x` with `axis = 0`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=0)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[0])
      *  y ==> [[1, 0, 0],
      *         [2, 0, 0]]
      *  idx ==> [0, 0, 1]
@@ -12647,12 +12609,12 @@ public class KotlinOps(
      *
      * ```
      *
-     * For an `2-D` tensor `x` with `axis = 1`:
+     * For a `2-D` tensor `x` with `axis = 1`:
      *  ```
-     * # tensor 'x' is [[1, 0, 0],
-     *  #                [1, 0, 0],
-     *  #                [2, 0, 0]]
-     *  y, idx, count = unique_with_counts(x, axis=1)
+     * x = tf.constant([[1, 0, 0],
+     *                  [1, 0, 0],
+     *                  [2, 0, 0]])
+     *  y, idx, count = UniqueWithCountsV2(x, axis=[1])
      *  y ==> [[1, 0],
      *         [1, 0],
      *         [2, 0]]
@@ -12766,6 +12728,66 @@ public class KotlinOps(
     @JvmName("variableShapeReified")
     public inline fun <reified T : TNumber> variableShapeTyped(input: Operand<out TType>):
         VariableShape<T> = variableShape<T>(input, T::class.java)
+
+    /**
+     * Wraps the XLA ConvGeneralDilated operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
+     *  .
+     *
+     * @param <W> data type for `output` output
+     * @param lhs the input tensor
+     * @param rhs the kernel tensor
+     * @param windowStrides the inter-window strides
+     * @param padding the padding to apply at the start and end of each input dimensions
+     * @param lhsDilation dilation to apply between input elements
+     * @param rhsDilation dilation to apply between kernel elements
+     * @param featureGroupCount number of feature groups for grouped convolution.
+     * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <W> data type for `XlaConvV2` output and operands
+     * @param <V> data type for `XlaConvV2` output and operands
+     * @return a new instance of XlaConvV2
+     * @see org.tensorflow.op.Ops.xlaConvV2
+     */
+    @JvmName("xlaConvV2Reified")
+    public inline fun <reified W : TType, V : TNumber> xlaConvV2(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        windowStrides: Operand<V>,
+        padding: Operand<V>,
+        lhsDilation: Operand<V>,
+        rhsDilation: Operand<V>,
+        featureGroupCount: Operand<V>,
+        dimensionNumbers: String,
+        precisionConfig: String
+    ): XlaConvV2<W> = xlaConvV2<W, V>(
+        lhs, rhs, windowStrides, padding, lhsDilation, rhsDilation,
+        featureGroupCount, dimensionNumbers, precisionConfig, W::class.java
+    )
+
+    /**
+     * Wraps the XLA DotGeneral operator, documented at
+     *  https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
+     *  .
+     *
+     * @param <V> data type for `output` output
+     * @param lhs the LHS tensor
+     * @param rhs the RHS tensor
+     * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
+     * @param precisionConfig a serialized xla::PrecisionConfig proto.
+     * @param preferredElementType The type of the tensor.
+     * @param <V> data type for `XlaDotV2` output and operands
+     * @return a new instance of XlaDotV2
+     * @see org.tensorflow.op.Ops.xlaDotV2
+     */
+    @JvmName("xlaDotV2Reified")
+    public inline fun <reified V : TType> xlaDotV2(
+        lhs: Operand<out TType>,
+        rhs: Operand<out TType>,
+        dimensionNumbers: String,
+        precisionConfig: String
+    ): XlaDotV2<V> = xlaDotV2<V>(lhs, rhs, dimensionNumbers, precisionConfig, V::class.java)
 
     /**
      * Creates a zeroed tensor given its type and shape.

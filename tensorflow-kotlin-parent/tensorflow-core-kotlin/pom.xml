@@ -27,7 +27,7 @@
   <artifactId>tensorflow-core-kotlin</artifactId>
   <packaging>jar</packaging>
 
-  <name>TensorFlow Core Kotlin Library</name>
+  <name>TensorFlow Core Kotlin API Library</name>
   <description>Kotlin API wrappers for the TensorFlow core Java library</description>
 
   <properties>

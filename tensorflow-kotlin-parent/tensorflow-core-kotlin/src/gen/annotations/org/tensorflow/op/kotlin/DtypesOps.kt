@@ -24,6 +24,10 @@ import org.tensorflow.op.dtypes.Cast
 import org.tensorflow.op.dtypes.Complex
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
+import kotlin.Boolean
+import kotlin.Long
+import kotlin.String
+import kotlin.jvm.JvmName
 
 /**
  * An API for building `dtypes` operations as [Op][org.tensorflow.op.Op]s
