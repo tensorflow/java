@@ -392,7 +392,8 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(endpointMethod.getReturnType()))
             .varargs(endpointMethod.isVarArgs())
-            .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
+            .addJavadoc(
+                "$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
 
     if (deprecated) {
       builder.addAnnotation(Deprecated.class);
