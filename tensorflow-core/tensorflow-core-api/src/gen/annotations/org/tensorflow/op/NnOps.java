@@ -1849,7 +1849,6 @@ public final class NnOps {
    *
    *  <p>
    *
-   * @param scope The TensorFlow scope
    * @param labels the labels
    * @param logits the logits of type float32 or float64
    * @param <T> the type of labels and logits
@@ -1883,7 +1882,6 @@ public final class NnOps {
    *
    * @param <T> data type for {@code loss} output
    * @param features batch_size x num_classes matrix
-   * @param scope current scope
    * @param labels batch_size x num_classes matrix
    *  The caller must ensure that each batch of labels represents a valid
    *  probability distribution.
@@ -2097,7 +2095,6 @@ public final class NnOps {
    *  , or <code>TFloat64</code>, and <code>labels</code> must have the dtype of <code>TInt32</code>
    *  or <code>TInt64</code>.
    *
-   * @param scope current scope
    * @param labels <code>Tensor</code> of shape <code>[d_0, d_1, ..., d_{r-1}]</code> (where <code>r
    *      </code> is rank of <code>labels</code> and result) and the dataType is <code>TInt32</code>
    *      or <code>TInt64</code>. Each entry in <code>labels</code> must be an index in <code>[0,

@@ -392,8 +392,7 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(endpointMethod.getReturnType()))
             .varargs(endpointMethod.isVarArgs())
-            .addJavadoc(
-                "$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
+            .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
 
     if (deprecated) {
       builder.addAnnotation(Deprecated.class);
@@ -430,22 +429,28 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
   protected Javadoc buildOpMethodJavadoc(
       TypeElement opClass, ExecutableElement endpointMethod, boolean copyClassDescription) {
     Javadoc methodJavadoc = parseJavadoc(endpointMethod);
+
+    Javadoc javadoc;
+
     if (!copyClassDescription) {
-      return methodJavadoc;
+      javadoc = new Javadoc(methodJavadoc.getDescription());
+    } else {
+      javadoc = parseJavadoc(opClass);
     }
-    Javadoc classJavadoc = parseJavadoc(opClass);
+
     // Copy all endpoint method tags to the description, except for the `scope` parameter which
     // will be inferred by the Ops class
     methodJavadoc
         .getBlockTags()
         .forEach(
             t -> {
-              if (!t.getTagName().equals("param")
-                  || t.getName().map(s -> !s.equals("scope")).orElse(true)) {
-                classJavadoc.addBlockTag(t);
+              if (!(t.getTagName().equals("param")
+                  && t.getName().map(s -> s.equals("scope")).orElse(false))) {
+                javadoc.addBlockTag(t);
               }
             });
-    return classJavadoc;
+
+    return javadoc;
   }
 
   protected static Collection<OpsSpec> collectGroupOps(

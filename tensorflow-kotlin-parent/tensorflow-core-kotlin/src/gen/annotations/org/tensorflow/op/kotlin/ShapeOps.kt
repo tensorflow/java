@@ -50,7 +50,6 @@ public class ShapeOps(
      * Creates a 1-dimensional operand containing the dimensions of a shape followed by the last
      *  dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param lastDimension the dimension(s) to append
      * @return a 1-dimensional operand containing the dimensions of a shape followed by the last
@@ -66,7 +65,6 @@ public class ShapeOps(
      * Creates a 1-dimensional operand containing the dimensions of a shape followed by the last
      *  dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param lastDimension the dimension(s) to append
      * @return a 1-dimensional operand containing the dimensions of a shape followed by the last
@@ -84,7 +82,6 @@ public class ShapeOps(
      * to
      *  append.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param shapeToAppend the other shape to append
      * @return a 1-dimensional operand that represents a new shape containing the dimensions of the
@@ -103,7 +100,6 @@ public class ShapeOps(
      * Flatten the operand to 1 dimension.
      *
      * @param <T> the type of operand
-     * @param scope current scope
      * @param operand the operand to flatten
      * @return the reshaped operand
      * @see org.tensorflow.op.ShapeOps.flatten
@@ -115,7 +111,6 @@ public class ShapeOps(
     /**
      * Flatten the shape to 1 dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @return the flattened shape
      * @see org.tensorflow.op.ShapeOps.flatten
@@ -129,7 +124,6 @@ public class ShapeOps(
      *
      * @param <T> the type of operand
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param operand the operand to flatten
      * @param type the shape datatype
      * @return the reshaped operand
@@ -145,7 +139,6 @@ public class ShapeOps(
      * Flatten the shape to 1 dimension.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype
      * @return the flattened shape
@@ -160,7 +153,6 @@ public class ShapeOps(
     /**
      * Creates a 1-dimensional Operand containing the Shape's first dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @return a 1-dimensional Operand containing the Shape's first dimension
      * @see org.tensorflow.op.ShapeOps.head
@@ -172,7 +164,6 @@ public class ShapeOps(
     /**
      * Creates a 1-dimensional Operand containing the Shape's first dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @param <U> the shape datatype.
@@ -187,7 +178,6 @@ public class ShapeOps(
     /**
      * Get the number of dimensions of the shape object.
      *
-     * @param scope current scope
      * @param shape the shape
      * @return the number of dimensions
      * @see org.tensorflow.op.ShapeOps.numDimensions
@@ -200,7 +190,6 @@ public class ShapeOps(
      * Get the number of dimensions of the shape object.
      *
      * @param <U> the shape datatype
-     * @param scope the curren scope
      * @param shape the shape
      * @param type the shape datatype
      * @return the number of dimensions
@@ -216,7 +205,6 @@ public class ShapeOps(
      * Creates a 1-dimensional operand containing the first dimension followed by the dimensions of
      *  the shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param firstDimension the dimension to prepend
      * @return a 1-dimensional operand containing the first dimension followed by the dimensions of
@@ -232,7 +220,6 @@ public class ShapeOps(
      * Creates a 1-dimensional operand containing the first dimension followed by the dimensions of
      *  the shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param firstDimension the dimension to prepend
      * @return a 1-dimensional operand containing the first dimension followed by the dimensions of
@@ -249,7 +236,6 @@ public class ShapeOps(
      *  operand representing the shape to prepend, followed by the dimensions of an operand
      *  representing a shape.
      *
-     * @param scope current scope
      * @param shape an operand containing the dimensions of a shape
      * @param shapeToPrepend an operand containing the dimensions of the shape to prepend
      * @return a 1-dimensional operand that represents a new shape containing the dimensions of an
@@ -267,7 +253,6 @@ public class ShapeOps(
      * Reshapes the operand by reducing the shape to the specified axis.
      *
      * @param <T> the type of Operand
-     * @param scope current scope
      * @param operand the operand
      * @param axis the axis
      * @return the reshaped operand
@@ -282,7 +267,6 @@ public class ShapeOps(
     /**
      * Reduces the shape to the specified axis.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param axis the axis
      * @return an operand containing the dimensions for the reduced shape
@@ -299,7 +283,6 @@ public class ShapeOps(
      *
      * @param <T> the type of Operand
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param operand the operand
      * @param axis the axis
      * @param type the shape datatype
@@ -320,7 +303,6 @@ public class ShapeOps(
      * Reduces the shape to the specified axis.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param axis the axis
      * @param type the shape datatype
@@ -340,7 +322,6 @@ public class ShapeOps(
     /**
      * Get the size represented by the TensorFlow shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @return the size
      * @see org.tensorflow.op.ShapeOps.size
@@ -352,7 +333,6 @@ public class ShapeOps(
     /**
      * Get the size of the specified dimension for the shape of the tensor.
      *
-     * @param scope current scope
      * @param input the operand
      * @param dim the dimension
      * @return the size of the specified dimension
@@ -367,7 +347,6 @@ public class ShapeOps(
     /**
      * Get the size of the specified dimension in the shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param dim the dimension
      * @return the size of the specified dimension
@@ -382,7 +361,6 @@ public class ShapeOps(
      * Get the size represented by the TensorFlow shape.
      *
      * @param <U> the type of the shape
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype
      * @return the size
@@ -397,7 +375,6 @@ public class ShapeOps(
      * Get the size of the specified dimension for the shape of the tensor.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param input the operand
      * @param dim the dimension
      * @param type the shape datatype
@@ -418,7 +395,6 @@ public class ShapeOps(
      * Get the size of the specified dimension in the shape.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param dim the dimension
      * @param type the shape datatype
@@ -438,7 +414,6 @@ public class ShapeOps(
     /**
      * Removes dimensions of size 1 from the shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @return the squeezed shape
      * @see org.tensorflow.op.ShapeOps.squeeze
@@ -451,7 +426,6 @@ public class ShapeOps(
      * Removes dimensions of size 1 from the shape.
      *
      * @param <U> the shape datatype.
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @return the squeezed shape
@@ -468,7 +442,6 @@ public class ShapeOps(
      * the
      *  Shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @return a 1-dimensional Operand that contains the dimension matching the last dimension of
      * the
@@ -483,7 +456,6 @@ public class ShapeOps(
      * Creates a 1-dimensional Operand that contains the dimension matching the last dimension of *
      *  the Shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @param <U> the shape datatype.
@@ -501,7 +473,6 @@ public class ShapeOps(
      * Creates a 1-dimensional operand with the dimensions matching the first n dimensions of the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @return a 1-dimensional operand with the dimensions matching the first n dimensions of the
@@ -518,7 +489,6 @@ public class ShapeOps(
      * the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @param type the shape datatype.
@@ -542,7 +512,6 @@ public class ShapeOps(
      * the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @return a 1-dimensional operand containing the dimensions matching the last n dimensions of
@@ -561,7 +530,6 @@ public class ShapeOps(
      * the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @param type the shape datatype.
@@ -586,7 +554,6 @@ public class ShapeOps(
      *
      * @param <T> the type of operand
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param operand the operand to flatten
      * @param type the shape datatype
      * @return the reshaped operand
@@ -600,7 +567,6 @@ public class ShapeOps(
      * Flatten the shape to 1 dimension.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype
      * @return the flattened shape
@@ -613,7 +579,6 @@ public class ShapeOps(
     /**
      * Creates a 1-dimensional Operand containing the Shape's first dimension.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @param <U> the shape datatype.
@@ -628,7 +593,6 @@ public class ShapeOps(
      * Get the number of dimensions of the shape object.
      *
      * @param <U> the shape datatype
-     * @param scope the curren scope
      * @param shape the shape
      * @param type the shape datatype
      * @return the number of dimensions
@@ -643,7 +607,6 @@ public class ShapeOps(
      *
      * @param <T> the type of Operand
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param operand the operand
      * @param axis the axis
      * @param type the shape datatype
@@ -658,7 +621,6 @@ public class ShapeOps(
      * Reduces the shape to the specified axis.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param axis the axis
      * @param type the shape datatype
@@ -673,7 +635,6 @@ public class ShapeOps(
      * Get the size represented by the TensorFlow shape.
      *
      * @param <U> the type of the shape
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype
      * @return the size
@@ -687,7 +648,6 @@ public class ShapeOps(
      * Get the size of the specified dimension for the shape of the tensor.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param input the operand
      * @param dim the dimension
      * @param type the shape datatype
@@ -702,7 +662,6 @@ public class ShapeOps(
      * Get the size of the specified dimension in the shape.
      *
      * @param <U> the shape datatype
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param dim the dimension
      * @param type the shape datatype
@@ -717,7 +676,6 @@ public class ShapeOps(
      * Removes dimensions of size 1 from the shape.
      *
      * @param <U> the shape datatype.
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @return the squeezed shape
@@ -731,7 +689,6 @@ public class ShapeOps(
      * Creates a 1-dimensional Operand that contains the dimension matching the last dimension of *
      *  the Shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param type the shape datatype.
      * @param <U> the shape datatype.
@@ -749,7 +706,6 @@ public class ShapeOps(
      * the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @param type the shape datatype.
@@ -767,7 +723,6 @@ public class ShapeOps(
      * the
      *  shape.
      *
-     * @param scope current scope
      * @param shape the TensorFlow shape
      * @param n the number of leading dimensions to get, must be <= than the shape's numDimensions()
      * @param type the shape datatype.
