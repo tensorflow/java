@@ -38,9 +38,6 @@ public class TensorflowKotlinCoreIntegration : JupyterIntegration() {
     render<Operand<*>> { it.asOutput().toString() }
     render<Op> { it.op().toString() }
 
-    onLoaded {
-      EagerSession.getDefault()
-      declare("tf" to EagerSession.getDefault().tf)
-    }
+    onLoaded { declare("tf" to EagerSession.getDefault().tf) }
   }
 }

@@ -17,8 +17,8 @@ limitations under the License.
 */
 package org.tensorflow.jupyter
 
-import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import java.util.*
+import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
 private const val tensorflowPropertiesFile = "org/tensorflow/jupyter/tensorflow.properties"
 
@@ -30,23 +30,25 @@ public class TensorflowKotlinIntegration : JupyterIntegration() {
           os.contains("mac") -> "macosx-x86_64"
           os.startsWith("windows") -> "windows-x86_64"
           else -> "linux-x86_64"
-        }// + "-gpu"
+        } + "-gpu"
 
     val version =
-        this@TensorflowKotlinIntegration.javaClass.classLoader.getResourceAsStream(tensorflowPropertiesFile).let {
-          it
-              ?: error(
-                  "No $tensorflowPropertiesFile resource found, can't determine the library version")
-          Properties().apply { load(it) }.getProperty("version")
-              ?: error(
-                  "No version property found in the $tensorflowPropertiesFile resource, did you overwrite it?")
-        }
+        this@TensorflowKotlinIntegration.javaClass.classLoader.getResourceAsStream(
+                tensorflowPropertiesFile)
+            .let {
+              it
+                  ?: error(
+                      "No $tensorflowPropertiesFile resource found, can't determine the library version")
+              Properties().apply { load(it) }.getProperty("version")
+                  ?: error(
+                      "No version property found in the $tensorflowPropertiesFile resource, did you overwrite it?")
+            }
 
-    if(version.lowercase().endsWith("snapshot")){
+    if (version.lowercase().endsWith("snapshot")) {
       repositories("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 
-    //TODO use ext instead of platform https://github.com/Kotlin/kotlin-jupyter/issues/285
+    // TODO use ext instead of platform https://github.com/Kotlin/kotlin-jupyter/issues/285
     dependencies("org.tensorflow:tensorflow-core-platform-gpu:$version")
     dependencies("org.tensorflow:tensorflow-core-kotlin-jupyter:$version")
   }
