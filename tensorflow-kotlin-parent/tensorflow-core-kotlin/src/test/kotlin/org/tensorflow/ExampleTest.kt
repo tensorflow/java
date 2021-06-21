@@ -16,12 +16,12 @@ limitations under the License.
 */
 package org.tensorflow
 
-import kotlin.test.Test
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.WithOps
 import org.tensorflow.op.kotlin.tf
 import org.tensorflow.types.TFloat32
-import org.tensorflow.types.TInt32
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 private fun WithOps.DenseLayer(
     name: String,
@@ -30,6 +30,7 @@ private fun WithOps.DenseLayer(
     activation: WithOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) },
 ): Operand<TFloat32> =
     tf.withSubScope(name) {
+      //TODO should be dynamic
       val inputDims = x.shape()[1]
       val W = tf.variable(tf.ones<TFloat32>(tf.array(inputDims.toInt(), n)))
       val b = tf.variable(tf.ones<TFloat32>(tf.array(n)))
@@ -44,15 +45,16 @@ public class ExampleTest {
           tf.placeholderWithDefault(
               tf.ones<TFloat32>(tf.array(1, 28, 28, 3)), Shape.of(-1, 28, 28, 3))
 
-      var x: Operand<TFloat32> = tf.reshape(input, tf.array(-1))
-      tf.dtypes.cast<TInt32>(x)
+      var x: Operand<TFloat32> = tf.reshape(input, tf.array(-1, 28 * 28 * 3))
       x = DenseLayer("Layer1", x, 256)
       x = DenseLayer("Layer2", x, 64)
-      val output = DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(x) }
+      val output = DenseLayer("OutputLayer", x, 10) { tf.math.sigmoid(it) }
 
       useSession { session ->
+        session.runInit()
         val outputValue = session.runner().fetch(output).run()[0] as TFloat32
-        println(outputValue.getFloat(0))
+        assertEquals(Shape.of(1,  10), outputValue.shape())
+        assertEquals(1.0f, outputValue.getFloat(0, 0))
       }
     }
   }
