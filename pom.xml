@@ -30,6 +30,7 @@
 
   <modules>
     <module>tensorflow-core</module>
+    <module>tensorflow-kotlin-parent</module>
     <module>tensorflow-framework</module>
   </modules>
 

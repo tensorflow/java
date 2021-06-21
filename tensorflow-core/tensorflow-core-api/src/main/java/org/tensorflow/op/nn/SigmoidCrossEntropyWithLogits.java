@@ -95,8 +95,8 @@ public class SigmoidCrossEntropyWithLogits {
   private static boolean isCompatible(Shape shape, Shape other) {
     if (shape.numDimensions() != other.numDimensions()) return false;
     for (int i = 0; i < shape.numDimensions(); i++) {
-      long aShapeDim = shape.size(i);
-      long bShapeDim = other.size(i);
+      long aShapeDim = shape.get(i);
+      long bShapeDim = other.get(i);
       if (aShapeDim == bShapeDim
           || (aShapeDim == Shape.UNKNOWN_SIZE || bShapeDim == Shape.UNKNOWN_SIZE)) {
         continue;

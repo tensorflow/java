@@ -1,0 +1,6 @@
+{
+  "definitions":[],
+  "producers": [
+    { "fqn" : "org.tensorflow.jupyter.TensorflowKotlinCoreIntegration" }
+  ]
+}

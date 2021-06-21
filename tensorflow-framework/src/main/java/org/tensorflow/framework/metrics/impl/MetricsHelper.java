@@ -107,8 +107,8 @@ public class MetricsHelper {
       }
 
       for (int i = 0; i < valuesRankStatic; i++) {
-        if (valuesShapeStatic.size(i) != weightsShapeStatic.size(i)
-            && weightsShapeStatic.size(i) != 1) {
+        if (valuesShapeStatic.get(i) != weightsShapeStatic.get(i)
+            && weightsShapeStatic.get(i) != 1) {
           throw new NotBroadcastableException(
               String.format(
                   "%s Mismatch at dim %d. values.shape=%s weights.shape=%s.",

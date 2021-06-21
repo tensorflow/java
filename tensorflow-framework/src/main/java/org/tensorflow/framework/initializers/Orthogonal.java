@@ -91,8 +91,8 @@ public class Orthogonal<T extends TFloating> extends BaseInitializer<T> {
     }
     long numRows = 1;
     int i = 0;
-    for (; i < dimsShape.numDimensions() - 1; i++) numRows *= dimsShape.size(i);
-    long numCols = dimsShape.size(i);
+    for (; i < dimsShape.numDimensions() - 1; i++) numRows *= dimsShape.get(i);
+    long numCols = dimsShape.get(i);
     Shape flatShape = Shape.of(Math.max(numRows, numCols), Math.min(numRows, numCols));
     long[] seeds = {seed, 0};
     Operand<T> op =

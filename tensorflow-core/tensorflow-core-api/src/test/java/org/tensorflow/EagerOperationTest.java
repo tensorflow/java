@@ -26,9 +26,7 @@ import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 
-/**
- * Unit tests for {@link EagerOperation} class.
- */
+/** Unit tests for {@link EagerOperation} class. */
 public class EagerOperationTest {
 
   @Test
@@ -50,15 +48,15 @@ public class EagerOperationTest {
   @Test
   public void outputDataTypeAndShape() {
     try (EagerSession session = EagerSession.create();
-         TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
+        TInt32 t = TInt32.tensorOf(Shape.of(2, 3))) {
       EagerOperation op =
           opBuilder(session, "Const", "OutputAttrs")
               .setAttr("dtype", t.dataType())
               .setAttr("value", t)
               .build();
       assertEquals(DataType.DT_INT32, op.dtype(0));
-      assertEquals(2, op.shape(0).size(0));
-      assertEquals(3, op.shape(0).size(1));
+      assertEquals(2, op.shape(0).get(0));
+      assertEquals(3, op.shape(0).get(1));
     }
   }
 
@@ -71,7 +69,7 @@ public class EagerOperationTest {
               .addInput(tf.constant(2).asOutput())
               .addInput(tf.constant(4).asOutput())
               .build();
-      assertEquals(6, ((TInt32)add.tensor(0)).getInt());
+      assertEquals(6, ((TInt32) add.tensor(0)).getInt());
 
       // Validate that we retrieve the right shape and datatype from the tensor
       // that has been resolved
@@ -84,12 +82,12 @@ public class EagerOperationTest {
   public void inputAndOutputListLengths() {
     try (EagerSession session = EagerSession.create()) {
       Ops tf = Ops.create(session);
-      Output<TFloat32> c1 = tf.constant(new float[]{1f, 2f}).asOutput();
-      Output<TFloat32> c2 = tf.constant(new float[]{3f, 4f}).asOutput();
+      Output<TFloat32> c1 = tf.constant(new float[] {1f, 2f}).asOutput();
+      Output<TFloat32> c2 = tf.constant(new float[] {3f, 4f}).asOutput();
 
       EagerOperation acc =
           opBuilder(session, "AddN", "InputListLength")
-              .addInputList(new Output<?>[]{c1, c2})
+              .addInputList(new Output<?>[] {c1, c2})
               .build();
       assertEquals(2, acc.inputListLength("inputs"));
       assertEquals(1, acc.outputListLength("sum"));
@@ -125,8 +123,8 @@ public class EagerOperationTest {
       Ops tf = Ops.create(session);
       EagerOperation op =
           opBuilder(session, "UniqueWithCountsV2", "unq")
-              .addInput(tf.constant(new int[]{1, 2, 1}).asOutput())
-              .addInput(tf.constant(new int[]{0}).asOutput())
+              .addInput(tf.constant(new int[] {1, 2, 1}).asOutput())
+              .addInput(tf.constant(new int[] {0}).asOutput())
               .setAttr("out_idx", DataType.DT_INT32)
               .build();
       assertEquals(3, op.numOutputs());

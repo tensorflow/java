@@ -20,7 +20,7 @@
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
     <javacpp.compiler.skip>${native.build.skip}</javacpp.compiler.skip>
     <java.module.name>org.tensorflow.core.api</java.module.name>
-    <ndarray.version>0.3.1</ndarray.version>
+    <ndarray.version>0.4.0-SNAPSHOT</ndarray.version>
     <truth.version>1.0.1</truth.version>
   </properties>
 
