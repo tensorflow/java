@@ -26,14 +26,14 @@ import org.tensorflow.ndarray.Shaped
  */
 public val Operand<*>.shape: Shape
   get() = this.shape()
-    
 
-public fun interface ShapeErrorLazyMessage{
+public fun interface ShapeErrorLazyMessage {
   public fun message(actual: Shape, required: Shape): String
 }
 
 @PublishedApi
-internal val defaultShapeErrorMessage: ShapeErrorLazyMessage = ShapeErrorLazyMessage { actual, required ->
+internal val defaultShapeErrorMessage: ShapeErrorLazyMessage =
+    ShapeErrorLazyMessage { actual, required ->
   "Shape $actual is not compatible with the required shape $required"
 }
 
@@ -43,8 +43,8 @@ internal val defaultShapeErrorMessage: ShapeErrorLazyMessage = ShapeErrorLazyMes
  * @throws AssertionError if the shapes are not compatible
  */
 public inline fun <T : Shaped> T.assertShape(
-  requiredShape: Shape,
-  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+    requiredShape: Shape,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
 ): T = apply {
   val actual = this.shape()
   assert(actual.isCompatibleWith(requiredShape)) { exception.message(actual, requiredShape) }
@@ -56,8 +56,8 @@ public inline fun <T : Shaped> T.assertShape(
  * @throws AssertionError if the shapes are not compatible
  */
 public inline fun <T : Shaped> T.assertShape(
-  vararg shape: Long,
-  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+    vararg shape: Long,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
 ): T = checkShape(Shape.of(*shape), exception)
 
 /**
@@ -66,8 +66,8 @@ public inline fun <T : Shaped> T.assertShape(
  * @throws IllegalArgumentException if the shapes are not compatible
  */
 public inline fun <T : Shaped> T.requireShape(
-  requiredShape: Shape,
-  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+    requiredShape: Shape,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
 ): T = apply {
   val actual = this.shape()
   require(actual.isCompatibleWith(requiredShape)) { exception.message(actual, requiredShape) }
@@ -79,8 +79,8 @@ public inline fun <T : Shaped> T.requireShape(
  * @throws IllegalArgumentException if the shapes are not compatible
  */
 public inline fun <T : Shaped> T.requireShape(
-  vararg shape: Long,
-  exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
+    vararg shape: Long,
+    exception: ShapeErrorLazyMessage = defaultShapeErrorMessage
 ): T = checkShape(Shape.of(*shape), exception)
 
 /**

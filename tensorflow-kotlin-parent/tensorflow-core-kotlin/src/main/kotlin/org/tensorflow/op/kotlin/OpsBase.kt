@@ -16,6 +16,8 @@ limitations under the License.
 */
 package org.tensorflow.op.kotlin
 
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import org.tensorflow.DeviceSpec
 import org.tensorflow.Operand
 import org.tensorflow.ndarray.Shape
@@ -52,8 +54,6 @@ import org.tensorflow.types.TInt64
 import org.tensorflow.types.TUint8
 import org.tensorflow.types.family.TNumber
 import org.tensorflow.types.family.TType
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 /**
  * Interface extended by [KotlinOps], used for now to declare extensions on Operand
@@ -68,10 +68,12 @@ public abstract class OpsBase : WithOps {
     return java
   }
 
-  override fun withSubScope(childScopeName: String): KotlinOps = java.withSubScope(childScopeName).tf
+  override fun withSubScope(childScopeName: String): KotlinOps =
+      java.withSubScope(childScopeName).tf
 
   /**
-   * Runs [block] on a child [KotlinOps] builder that builds operations with the provided name prefix.
+   * Runs [block] on a child [KotlinOps] builder that builds operations with the provided name
+   * prefix.
    *
    * @see org.tensorflow.op.Scope.withSubScope
    */
@@ -105,8 +107,8 @@ public abstract class OpsBase : WithOps {
    * @see org.tensorflow.op.Scope.withControlDependencies
    */
   public inline fun <R> withControlDependencies(
-    controls: Iterable<Op>,
-    block: KotlinOps.() -> R
+      controls: Iterable<Op>,
+      block: KotlinOps.() -> R
   ): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return withControlDependencies(controls).run(block)
@@ -121,10 +123,7 @@ public abstract class OpsBase : WithOps {
    *
    * @see org.tensorflow.op.Scope.withControlDependencies
    */
-  public inline fun <R> withControlDependencies(
-    vararg controls: Op,
-    block: KotlinOps.() -> R
-  ): R {
+  public inline fun <R> withControlDependencies(vararg controls: Op, block: KotlinOps.() -> R): R {
     contract { callsInPlace(block, InvocationKind.EXACTLY_ONCE) }
     return withControlDependencies(*controls).run(block)
   }
@@ -138,9 +137,9 @@ public abstract class OpsBase : WithOps {
    * @see org.tensorflow.op.Scope.withDevice
    */
   public fun withSubScope(
-    childScopeName: String? = null,
-    controlDependencies: Iterable<Op>? = null,
-    device: DeviceSpec? = null,
+      childScopeName: String? = null,
+      controlDependencies: Iterable<Op>? = null,
+      device: DeviceSpec? = null,
   ): KotlinOps {
     var ops = java
     childScopeName?.let { ops = ops.withSubScope(it) }
@@ -150,24 +149,23 @@ public abstract class OpsBase : WithOps {
   }
 
   /**
-   * Runs [block] on a child [KotlinOps] builder, combining [withSubScope], [withControlDependencies],
-   * and [withDevice]. Null arguments are ignored.
+   * Runs [block] on a child [KotlinOps] builder, combining [withSubScope],
+   * [withControlDependencies], and [withDevice]. Null arguments are ignored.
    *
    * @see org.tensorflow.op.Scope.withSubScope
    * @see org.tensorflow.op.Scope.withControlDependencies
    * @see org.tensorflow.op.Scope.withDevice
    */
   public inline fun <R> withSubScope(
-    childScopeName: String? = null,
-    controlDependencies: Iterable<Op>? = null,
-    device: DeviceSpec? = null,
-    block: KotlinOps.() -> R,
+      childScopeName: String? = null,
+      controlDependencies: Iterable<Op>? = null,
+      device: DeviceSpec? = null,
+      block: KotlinOps.() -> R,
   ): R {
     return withSubScope(childScopeName, controlDependencies, device).run(block)
   }
 
-
-  //TODO all of these should be context functions on WithOps.
+  // TODO all of these should be context functions on WithOps.
 
   /** @see LinalgOps.matMul */
   public fun <T : TType> Operand<T>.matMul(

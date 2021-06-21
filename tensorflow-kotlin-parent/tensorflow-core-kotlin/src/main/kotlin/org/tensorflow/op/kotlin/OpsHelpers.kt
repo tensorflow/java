@@ -23,15 +23,13 @@ import org.tensorflow.types.TInt32
 import org.tensorflow.types.TInt64
 import org.tensorflow.types.TUint8
 
-/**
- * Get the Kotlin ops builder.
- */
-public val WithOps.tf: KotlinOps get() = if(this is KotlinOps) this else KotlinOps(tf())
+/** Get the Kotlin ops builder. */
+public val WithOps.tf: KotlinOps
+  get() = if (this is KotlinOps) this else KotlinOps(tf())
 
-/**
- * Get the Kotlin ops builder.
- */
-public val KotlinOps.tf: KotlinOps get() = this
+/** Get the Kotlin ops builder. */
+public val KotlinOps.tf: KotlinOps
+  get() = this
 
 // TODO we could have tf that gets itself from ExecutionEnvironment.default().  I think this will be
 // too error prone to be worth doing

@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-
 package org.tensorflow.processor.operator;
 
 import com.github.javaparser.ast.comments.JavadocComment;
@@ -23,15 +22,11 @@ import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -158,26 +153,28 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
   }
 
   protected static class OpsSpec {
-    protected static final Comparator<OpMethod> PARAMETER_SPEC_COMPARATOR = (o1, o2) -> {
-      if (o1.javaMethod.parameters.size() > o2.javaMethod.parameters.size()) {
-        return 1;
-      }
-      if (o1.javaMethod.parameters.size() < o2.javaMethod.parameters.size()) {
-        return -1;
-      }
-      List<ParameterSpec> firstParams = o1.javaMethod.parameters;
-      List<ParameterSpec> secondParams = o2.javaMethod.parameters;
-      for (int i = 0; i < firstParams.size(); i++) {
-        ParameterSpec first = firstParams.get(i);
-        ParameterSpec second = secondParams.get(i);
-        int compare = first.name.compareTo(second.name);
-        if (compare != 0) {
-          return compare;
-        }
-      }
-      return 0;
-    };
-    protected static final Comparator<OpMethod> METHOD_SPEC_COMPARATOR = Comparator.comparing((OpMethod m) -> m.name).thenComparing(PARAMETER_SPEC_COMPARATOR);
+    protected static final Comparator<OpMethod> PARAMETER_SPEC_COMPARATOR =
+        (o1, o2) -> {
+          if (o1.javaMethod.parameters.size() > o2.javaMethod.parameters.size()) {
+            return 1;
+          }
+          if (o1.javaMethod.parameters.size() < o2.javaMethod.parameters.size()) {
+            return -1;
+          }
+          List<ParameterSpec> firstParams = o1.javaMethod.parameters;
+          List<ParameterSpec> secondParams = o2.javaMethod.parameters;
+          for (int i = 0; i < firstParams.size(); i++) {
+            ParameterSpec first = firstParams.get(i);
+            ParameterSpec second = secondParams.get(i);
+            int compare = first.name.compareTo(second.name);
+            if (compare != 0) {
+              return compare;
+            }
+          }
+          return 0;
+        };
+    protected static final Comparator<OpMethod> METHOD_SPEC_COMPARATOR =
+        Comparator.comparing((OpMethod m) -> m.name).thenComparing(PARAMETER_SPEC_COMPARATOR);
 
     public final @Nullable OpsSpec parent;
     public final String groupName;
@@ -186,7 +183,12 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     public final List<OpMethod> methods;
     public final List<OpsSpec> subGroups = new ArrayList<>();
 
-    OpsSpec(OpsSpec parent, String groupName, String fieldName, ClassName className, Collection<OpMethod> methods) {
+    OpsSpec(
+        OpsSpec parent,
+        String groupName,
+        String fieldName,
+        ClassName className,
+        Collection<OpMethod> methods) {
       this.parent = parent;
       this.groupName = groupName;
       this.fieldName = fieldName;
@@ -195,13 +197,12 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
       this.methods.sort(METHOD_SPEC_COMPARATOR);
     }
 
-    Iterable<MethodSpec> javaMethods(){
+    Iterable<MethodSpec> javaMethods() {
       return methods.stream().map(x -> x.javaMethod).collect(Collectors.toList());
     }
-
   }
 
-  protected static final class OpMethod{
+  protected static final class OpMethod {
     final String name;
     final TypeElement opClass;
     final ExecutableElement endpointMethod;
@@ -209,8 +210,13 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     final boolean deprecated;
     final MethodSpec javaMethod;
 
-    public OpMethod(String name, TypeElement opClass, ExecutableElement endpointMethod, boolean describeByClass,
-            boolean deprecated, MethodSpec javaMethod) {
+    public OpMethod(
+        String name,
+        TypeElement opClass,
+        ExecutableElement endpointMethod,
+        boolean describeByClass,
+        boolean deprecated,
+        MethodSpec javaMethod) {
       this.name = name;
       this.opClass = opClass;
       this.endpointMethod = endpointMethod;
@@ -252,7 +258,8 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
   protected static final ClassName T_SCOPE = ClassName.get("org.tensorflow.op", "Scope");
   protected static final ClassName T_EXEC_ENV =
       ClassName.get("org.tensorflow", "ExecutionEnvironment");
-  protected static final ClassName T_EAGER_SESSION = ClassName.get("org.tensorflow", "EagerSession");
+  protected static final ClassName T_EAGER_SESSION =
+      ClassName.get("org.tensorflow", "EagerSession");
   protected static final ClassName T_STRING = ClassName.get(String.class);
 
   protected static final String LICENSE =
@@ -311,7 +318,7 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
         result = false;
         continue;
       }
-      collectOpMethods(groupedMethods, (TypeElement)e, annotation);
+      collectOpMethods(groupedMethods, (TypeElement) e, annotation);
     }
     return result;
   }
@@ -330,7 +337,8 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     String opGroup = getAnnotationElementValueAsString("group", operatorAnnot);
     String opName = getAnnotationElementValueAsString("name", operatorAnnot);
     if (Strings.isNullOrEmpty(opName)) {
-      opName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, ClassName.get(opClass).simpleName());
+      opName =
+          CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, ClassName.get(opClass).simpleName());
     }
     // Build an endpoint for each method annotated with @Endpoint, which takes in parameter a scope
     // and, optionally, a list of arguments
@@ -342,11 +350,17 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
           throw new IllegalArgumentException(
               "Endpoint " + opMethod + " of class " + opClass + " must be static and public");
         }
-        if (opMethod.getParameters().isEmpty() ||
-            !((TypeElement)types.asElement(opMethod.getParameters().get(0).asType())).getQualifiedName()
+        if (opMethod.getParameters().isEmpty()
+            || !((TypeElement) types.asElement(opMethod.getParameters().get(0).asType()))
+                .getQualifiedName()
                 .equals(elements.getName(T_SCOPE.toString()))) {
           throw new IllegalArgumentException(
-              "Endpoint " + opMethod + " of class " + opClass + " must take an instance of " + T_SCOPE
+              "Endpoint "
+                  + opMethod
+                  + " of class "
+                  + opClass
+                  + " must take an instance of "
+                  + T_SCOPE
                   + " as its first parameter");
         }
         String endpointGroup = getAnnotationElementValueAsString("group", endpointAnnot);
@@ -360,21 +374,26 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
         boolean describeByClass =
             getAnnotationElementValueAsBoolean("describeByClass", endpointAnnot, false);
         boolean deprecated = opMethod.getAnnotation(Deprecated.class) != null || opClassDeprecated;
-        OpMethod method = buildOpMethod(endpointName, opClass, opMethod, describeByClass, deprecated);
+        OpMethod method =
+            buildOpMethod(endpointName, opClass, opMethod, describeByClass, deprecated);
         groupedMethods.put(endpointGroup, method);
       }
     }
   }
 
   protected OpMethod buildOpMethod(
-      String methodName, TypeElement opClass, ExecutableElement endpointMethod,
-      boolean describeByClass, boolean deprecated) {
+      String methodName,
+      TypeElement opClass,
+      ExecutableElement endpointMethod,
+      boolean describeByClass,
+      boolean deprecated) {
     MethodSpec.Builder builder =
         MethodSpec.methodBuilder(methodName)
             .addModifiers(Modifier.PUBLIC)
             .returns(TypeName.get(endpointMethod.getReturnType()))
             .varargs(endpointMethod.isVarArgs())
-            .addJavadoc("$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
+            .addJavadoc(
+                "$L", buildOpMethodJavadoc(opClass, endpointMethod, describeByClass).toText());
 
     if (deprecated) {
       builder.addAnnotation(Deprecated.class);
@@ -390,9 +409,7 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     if (!NoType.class.isAssignableFrom(endpointMethod.getReturnType().getClass())) {
       call.append("return ");
     }
-    call.append("$T.")
-      .append(endpointMethod.getSimpleName())
-      .append("(scope");
+    call.append("$T.").append(endpointMethod.getSimpleName()).append("(scope");
     boolean first = true;
     for (VariableElement param : endpointMethod.getParameters()) {
       ParameterSpec p = ParameterSpec.get(param);
@@ -406,7 +423,8 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     }
     call.append(")");
     builder.addStatement(call.toString(), ClassName.get(opClass));
-    return new OpMethod(methodName, opClass, endpointMethod, describeByClass, deprecated, builder.build());
+    return new OpMethod(
+        methodName, opClass, endpointMethod, describeByClass, deprecated, builder.build());
   }
 
   protected Javadoc buildOpMethodJavadoc(
@@ -418,43 +436,66 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     Javadoc classJavadoc = parseJavadoc(opClass);
     // Copy all endpoint method tags to the description, except for the `scope` parameter which
     // will be inferred by the Ops class
-    methodJavadoc.getBlockTags().forEach(t -> {
-      if (!t.getTagName().equals("param") || t.getName().map(s -> !s.equals("scope")).orElse(true)) {
-        classJavadoc.addBlockTag(t);
-      }
-    });
+    methodJavadoc
+        .getBlockTags()
+        .forEach(
+            t -> {
+              if (!t.getTagName().equals("param")
+                  || t.getName().map(s -> !s.equals("scope")).orElse(true)) {
+                classJavadoc.addBlockTag(t);
+              }
+            });
     return classJavadoc;
   }
 
-  protected static Collection<OpsSpec> collectGroupOps(OpsSpec ops, Multimap<String, OpMethod> groupedMethods) {
+  protected static Collection<OpsSpec> collectGroupOps(
+      OpsSpec ops, Multimap<String, OpMethod> groupedMethods) {
     Map<String, OpsSpec> groups = new HashMap<>();
 
-    // The `group` label added in the `@Operator` annotation has the same syntax as a package name, which (in most
-    // case) consists of a simple label but could also be a deeper tree, like `linalg.sparse`. In this case,
-    // the `LinalgSparseOps` group should be added as the `sparse` field of the `LinalgOps` group, and the latter
+    // The `group` label added in the `@Operator` annotation has the same syntax as a package name,
+    // which (in most
+    // case) consists of a simple label but could also be a deeper tree, like `linalg.sparse`. In
+    // this case,
+    // the `LinalgSparseOps` group should be added as the `sparse` field of the `LinalgOps` group,
+    // and the latter
     // should be added as the `linalg` field of the `Ops` root class.
-    groupedMethods.keys().forEach(group -> {
-      OpsSpec parentClass = ops;
-      int startPos = 0;
-      do {
-        int delimiterPos = group.indexOf('.', startPos);
-        String groupName = delimiterPos < 0 ? group : group.substring(0, delimiterPos);
-        OpsSpec groupOps = groups.get(groupName);
+    groupedMethods
+        .keys()
+        .forEach(
+            group -> {
+              OpsSpec parentClass = ops;
+              int startPos = 0;
+              do {
+                int delimiterPos = group.indexOf('.', startPos);
+                String groupName = delimiterPos < 0 ? group : group.substring(0, delimiterPos);
+                OpsSpec groupOps = groups.get(groupName);
 
-        // Create spec for this group if we have not encountered it yet in our iteration
-        if (groupOps == null) {
-          String fieldName = delimiterPos < 0 ?
-              group.substring(startPos) : group.substring(startPos, delimiterPos);
-          ClassName className = ClassName.get("org.tensorflow.op",
-              CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, groupName.replace('.', '_')) + "Ops");
-          groupOps = new OpsSpec(parentClass, groupName, fieldName, className, groupedMethods.get(groupName));
-          parentClass.subGroups.add(groupOps);
-          groups.put(groupName, groupOps);
-        }
-        parentClass = groupOps;
-        startPos = delimiterPos + 1;
-      } while (startPos > 0);
-    });
+                // Create spec for this group if we have not encountered it yet in our iteration
+                if (groupOps == null) {
+                  String fieldName =
+                      delimiterPos < 0
+                          ? group.substring(startPos)
+                          : group.substring(startPos, delimiterPos);
+                  ClassName className =
+                      ClassName.get(
+                          "org.tensorflow.op",
+                          CaseFormat.LOWER_UNDERSCORE.to(
+                                  CaseFormat.UPPER_CAMEL, groupName.replace('.', '_'))
+                              + "Ops");
+                  groupOps =
+                      new OpsSpec(
+                          parentClass,
+                          groupName,
+                          fieldName,
+                          className,
+                          groupedMethods.get(groupName));
+                  parentClass.subGroups.add(groupOps);
+                  groups.put(groupName, groupOps);
+                }
+                parentClass = groupOps;
+                startPos = delimiterPos + 1;
+              } while (startPos > 0);
+            });
 
     return groups.values();
   }
@@ -465,14 +506,17 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
 
   protected static AnnotationMirror getAnnotationMirror(Element element, Name annotationName) {
     for (AnnotationMirror am : element.getAnnotationMirrors()) {
-      if (((TypeElement)am.getAnnotationType().asElement()).getQualifiedName().equals(annotationName)) {
+      if (((TypeElement) am.getAnnotationType().asElement())
+          .getQualifiedName()
+          .equals(annotationName)) {
         return am;
       }
     }
     return null;
   }
 
-  protected static AnnotationValue getAnnotationElementValue(String elementName, AnnotationMirror am) {
+  protected static AnnotationValue getAnnotationElementValue(
+      String elementName, AnnotationMirror am) {
     for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
         am.getElementValues().entrySet()) {
       if (entry.getKey().getSimpleName().contentEquals(elementName)) {
@@ -482,12 +526,14 @@ public abstract class BaseOperatorProcessor<T> extends AbstractProcessor {
     return null;
   }
 
-  protected static String getAnnotationElementValueAsString(String elementName, AnnotationMirror am) {
+  protected static String getAnnotationElementValueAsString(
+      String elementName, AnnotationMirror am) {
     AnnotationValue value = getAnnotationElementValue(elementName, am);
     return value != null ? value.getValue().toString() : "";
   }
 
-  protected static boolean getAnnotationElementValueAsBoolean(String elementName, AnnotationMirror am, boolean defaultValue) {
+  protected static boolean getAnnotationElementValueAsBoolean(
+      String elementName, AnnotationMirror am, boolean defaultValue) {
     AnnotationValue value = getAnnotationElementValue(elementName, am);
     return value != null ? Boolean.parseBoolean(value.toString()) : defaultValue;
   }

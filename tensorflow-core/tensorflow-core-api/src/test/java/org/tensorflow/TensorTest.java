@@ -66,7 +66,7 @@ public class TensorTest {
     Shape strings_shape = Shape.scalar();
     byte[] strings_; // raw TF_STRING
     try (TString t = TString.tensorOf(NdArrays.scalarOfObject(strings))) {
-      strings_ = new byte[(int)t.numBytes()];
+      strings_ = new byte[(int) t.numBytes()];
       t.asRawTensor().data().read(strings_);
     }
 
@@ -86,8 +86,11 @@ public class TensorTest {
 
     // validate creating a tensor using a direct byte buffer (in host order)
     {
-      DoubleBuffer buf = ByteBuffer.allocateDirect(8 * doubles.length).order(ByteOrder.nativeOrder())
-          .asDoubleBuffer().put(doubles);
+      DoubleBuffer buf =
+          ByteBuffer.allocateDirect(8 * doubles.length)
+              .order(ByteOrder.nativeOrder())
+              .asDoubleBuffer()
+              .put(doubles);
       try (TFloat64 t = TFloat64.tensorOf(doubles_shape, d -> d.write(DataBuffers.of(buf)))) {
         double[] actual = new double[doubles.length];
         t.read(DataBuffers.of(actual));
@@ -140,10 +143,10 @@ public class TensorTest {
 
   @Test
   public void createWithTypedBuffer() {
-    IntBuffer ints = IntBuffer.wrap(new int[]{1, 2, 3, 4});
-    FloatBuffer floats = FloatBuffer.wrap(new float[]{1f, 2f, 3f, 4f});
-    DoubleBuffer doubles = DoubleBuffer.wrap(new double[]{1d, 2d, 3d, 4d});
-    LongBuffer longs = LongBuffer.wrap(new long[]{1L, 2L, 3L, 4L});
+    IntBuffer ints = IntBuffer.wrap(new int[] {1, 2, 3, 4});
+    FloatBuffer floats = FloatBuffer.wrap(new float[] {1f, 2f, 3f, 4f});
+    DoubleBuffer doubles = DoubleBuffer.wrap(new double[] {1d, 2d, 3d, 4d});
+    LongBuffer longs = LongBuffer.wrap(new long[] {1L, 2L, 3L, 4L});
 
     // validate creating a tensor using a typed buffer
     {
@@ -243,7 +246,7 @@ public class TensorTest {
       // validate the use of direct buffers
       {
         ByteBuffer bbuf =
-            ByteBuffer.allocateDirect((int)tdoubles.numBytes()).order(ByteOrder.nativeOrder());
+            ByteBuffer.allocateDirect((int) tdoubles.numBytes()).order(ByteOrder.nativeOrder());
         tdoubles.asRawTensor().data().copyTo(DataBuffers.of(bbuf), tdoubles.numBytes());
         assertEquals(doubles[0], bbuf.asDoubleBuffer().get(0), EPSILON);
       }
@@ -251,13 +254,17 @@ public class TensorTest {
       // validate byte order conversion
       {
         DoubleBuffer foreignBuf =
-            ByteBuffer.allocate((int)tdoubles.numBytes())
+            ByteBuffer.allocate((int) tdoubles.numBytes())
                 .order(
                     ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN
                         ? ByteOrder.BIG_ENDIAN
                         : ByteOrder.LITTLE_ENDIAN)
                 .asDoubleBuffer();
-        tdoubles.asRawTensor().data().asDoubles().copyTo(DataBuffers.of(foreignBuf), foreignBuf.capacity());
+        tdoubles
+            .asRawTensor()
+            .data()
+            .asDoubles()
+            .copyTo(DataBuffers.of(foreignBuf), foreignBuf.capacity());
         double[] actual = new double[foreignBuf.remaining()];
         foreignBuf.get(actual);
         assertArrayEquals(doubles, actual, EPSILON);
@@ -320,7 +327,7 @@ public class TensorTest {
 
   @Test
   public void nDimensional() {
-    DoubleNdArray vector = StdArrays.ndCopyOf(new double[]{1.414, 2.718, 3.1415});
+    DoubleNdArray vector = StdArrays.ndCopyOf(new double[] {1.414, 2.718, 3.1415});
     try (TFloat64 t = TFloat64.tensorOf(vector)) {
       assertEquals(TFloat64.class, t.type());
       assertEquals(DataType.DT_DOUBLE, t.dataType());
@@ -329,7 +336,7 @@ public class TensorTest {
       assertEquals(vector, t);
     }
 
-    IntNdArray matrix = StdArrays.ndCopyOf(new int[][]{{1, 2, 3}, {4, 5, 6}});
+    IntNdArray matrix = StdArrays.ndCopyOf(new int[][] {{1, 2, 3}, {4, 5, 6}});
     try (TInt32 t = TInt32.tensorOf(matrix)) {
       assertEquals(TInt32.class, t.type());
       assertEquals(DataType.DT_INT32, t.dataType());
@@ -339,9 +346,11 @@ public class TensorTest {
       assertEquals(matrix, t);
     }
 
-    LongNdArray threeD = StdArrays.ndCopyOf(new long[][][]{
-      {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
-    });
+    LongNdArray threeD =
+        StdArrays.ndCopyOf(
+            new long[][][] {
+              {{1}, {3}, {5}, {7}, {9}}, {{2}, {4}, {6}, {8}, {0}},
+            });
     try (TInt64 t = TInt64.tensorOf(threeD)) {
       assertEquals(TInt64.class, t.type());
       assertEquals(DataType.DT_INT64, t.dataType());
@@ -352,11 +361,13 @@ public class TensorTest {
       assertEquals(threeD, t);
     }
 
-    BooleanNdArray fourD = StdArrays.ndCopyOf(new boolean[][][][]{
-      {{{false, false, false, true}, {false, false, true, false}}},
-      {{{false, false, true, true}, {false, true, false, false}}},
-      {{{false, true, false, true}, {false, true, true, false}}},
-    });
+    BooleanNdArray fourD =
+        StdArrays.ndCopyOf(
+            new boolean[][][][] {
+              {{{false, false, false, true}, {false, false, true, false}}},
+              {{{false, false, true, true}, {false, true, false, false}}},
+              {{{false, true, false, true}, {false, true, true, false}}},
+            });
     try (TBool t = TBool.tensorOf(fourD)) {
       assertEquals(TBool.class, t.type());
       assertEquals(DataType.DT_BOOL, t.dataType());
@@ -387,7 +398,9 @@ public class TensorTest {
     }
 
     NdArray<byte[]> byteMatrix = NdArrays.ofObjects(byte[].class, matrix.shape());
-    matrix.scalars().forEachIndexed((i, s) -> byteMatrix.setObject(s.getObject().getBytes(UTF_8), i));
+    matrix
+        .scalars()
+        .forEachIndexed((i, s) -> byteMatrix.setObject(s.getObject().getBytes(UTF_8), i));
     try (TString t = TString.tensorOfBytes(byteMatrix)) {
       assertEquals(TString.class, t.type());
       assertEquals(DataType.DT_STRING, t.dataType());
@@ -512,9 +525,10 @@ public class TensorTest {
     //
     // An exception is made for this test, where the pitfalls of this is avoided by not calling
     // close() on both Tensors.
-    final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][]{{1, 2, 3}, {4, 5, 6}});
+    final FloatNdArray matrix = StdArrays.ndCopyOf(new float[][] {{1, 2, 3}, {4, 5, 6}});
     try (TFloat32 src = TFloat32.tensorOf(matrix)) {
-      TFloat32 cpy = (TFloat32)RawTensor.fromHandle(src.asRawTensor().nativeHandle()).asTypedTensor();
+      TFloat32 cpy =
+          (TFloat32) RawTensor.fromHandle(src.asRawTensor().nativeHandle()).asTypedTensor();
       assertEquals(src.type(), cpy.type());
       assertEquals(src.dataType(), cpy.dataType());
       assertEquals(src.shape().numDimensions(), cpy.shape().numDimensions());

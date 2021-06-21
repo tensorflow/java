@@ -19,6 +19,7 @@ import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
 
+@Operator(group = "nn")
 public class SparseSoftmaxCrossEntropyWithLogits {
 
   /**

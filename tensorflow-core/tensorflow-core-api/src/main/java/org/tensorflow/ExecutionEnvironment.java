@@ -130,7 +130,7 @@ public interface ExecutionEnvironment extends WithOps {
   boolean isInitOp(Operation op);
 
   @Override
-  default Ops tf(){
+  default Ops tf() {
     return Ops.create(this);
   }
 }

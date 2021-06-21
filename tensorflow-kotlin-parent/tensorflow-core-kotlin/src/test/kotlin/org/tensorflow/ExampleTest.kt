@@ -19,7 +19,6 @@ package org.tensorflow
 import kotlin.test.Test
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.WithOps
-import org.tensorflow.op.kotlin.KotlinOps
 import org.tensorflow.op.kotlin.tf
 import org.tensorflow.types.TFloat32
 import org.tensorflow.types.TInt32

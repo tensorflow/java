@@ -21,83 +21,58 @@
 
   <parent>
     <groupId>org.tensorflow</groupId>
-    <artifactId>tensorflow-java</artifactId>
+    <artifactId>tensorflow-kotlin-parent</artifactId>
     <version>0.4.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tensorflow-kotlin-parent</artifactId>
-  <packaging>pom</packaging>
+  <artifactId>tensorflow-core-kotlin-jupyter</artifactId>
+  <packaging>jar</packaging>
 
-  <name>TensorFlow Kotlin Parent</name>
-  <description>Parent POM of TensorFlow Kotlin artifacts</description>
+  <name>TensorFlow Core Kotlin Jupyter Integration</name>
+  <description>Kotlin Jupyter integration for tensorflow-core</description>
 
-  <modules>
-    <module>tensorflow-kotlin-generator</module>
-    <module>tensorflow-core-kotlin</module>
-    <module>tensorflow-framework-kotlin</module>
-    <module>tensorflow-kotlin</module>
-    <module>tensorflow-kotlin-jupyter</module>
-    <module>tensorflow-core-kotlin-jupyter</module>
-  </modules>
+  <properties>
+    <javacpp.platform.extension></javacpp.platform.extension>
+    <tensorflow.version>${project.version}</tensorflow.version>
+  </properties>
 
   <dependencies>
     <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-stdlib-jdk8</artifactId>
-      <version>${kotlin.version}</version>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlin-jupyter-api</artifactId>
+      <version>0.10.0-53</version>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-core-kotlin</artifactId>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
-  <properties>
-    <kotlin.version>1.5.10</kotlin.version>
-    <kotlin.jvmTarget>1.8</kotlin.jvmTarget>
-  </properties>
-
-  <profiles>
-    <profile>
-      <id>jdk11</id>
-      <properties>
-        <kotlin.jvmTarget>11</kotlin.jvmTarget>
-      </properties>
-    </profile>
-  </profiles>
-
   <build>
+    <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+<!--    <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>-->
     <plugins>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-maven-plugin</artifactId>
         <version>${kotlin.version}</version>
         <configuration>
-          <jvmTarget>${kotlin.jvmTarget}</jvmTarget>
         </configuration>
-
         <executions>
           <execution>
             <id>compile</id>
             <goals>
               <goal>compile</goal>
             </goals>
-          </execution>
-
-          <execution>
-            <id>test-compile</id>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
+            <configuration>
+              <args>
+                <arg>-Xopt-in=kotlin.contracts.ExperimentalContracts</arg>
+                <arg>-Xexplicit-api=strict</arg>
+              </args>
+            </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <version>${spotless.version}</version>
-        <configuration>
-          <kotlin>
-            <ktfmt/>
-          </kotlin>
-        </configuration>
       </plugin>
     </plugins>
   </build>
 </project>
-

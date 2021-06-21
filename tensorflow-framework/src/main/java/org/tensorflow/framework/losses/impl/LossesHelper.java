@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.losses.impl;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import java.util.Arrays;
+import java.util.Collections;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Reduction;
 import org.tensorflow.ndarray.Shape;
@@ -25,11 +29,6 @@ import org.tensorflow.op.core.Squeeze;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * These are helper methods for Losses and Metrics and will be module private when Java modularity

@@ -56,7 +56,7 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
 
   @Override
   protected TypeSpec buildGroupClass(OpsSpec spec) {
-    //System.out.println("Generating " + spec.className + " class");
+    // System.out.println("Generating " + spec.className + " class");
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
@@ -101,7 +101,7 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
 
   @Override
   protected TypeSpec buildTopClass(OpsSpec spec) {
-    //System.out.println("Generating " + spec.className + " class");
+    // System.out.println("Generating " + spec.className + " class");
 
     MethodSpec.Builder ctorBuilder =
         MethodSpec.constructorBuilder()
@@ -149,14 +149,13 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
 
     opsBuilder.addMethod(ctorBuilder.build());
 
-    opsBuilder.addMethod(MethodSpec
-        .methodBuilder("tf")
-        .addModifiers(Modifier.PUBLIC)
-        .addAnnotation(Override.class)
-        .returns(Names.Ops)
-        .addStatement("return this")
-        .build()
-    );
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("tf")
+            .addModifiers(Modifier.PUBLIC)
+            .addAnnotation(Override.class)
+            .returns(Names.Ops)
+            .addStatement("return this")
+            .build());
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withSubScope")
@@ -238,8 +237,8 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
             .addParameter(ArrayTypeName.of(Names.Op), "controls")
             .varargs()
             .returns(Names.Ops)
-            .addStatement("return withControlDependencies($T.asList(controls))", ClassName.get(
-                Arrays.class))
+            .addStatement(
+                "return withControlDependencies($T.asList(controls))", ClassName.get(Arrays.class))
             .addJavadoc("{@inheritDoc}")
             .build());
 
@@ -317,15 +316,25 @@ public final class OperatorProcessor extends BaseOperatorProcessor<TypeSpec> {
     return opsBuilder.build();
   }
 
-  private static void addGroupFields(TypeSpec.Builder classBuilder, MethodSpec.Builder ctorBuilder, List<OpsSpec> groups, boolean isTopClass) {
-    groups.forEach(group -> {
-      System.out.println("Adding field in " + classBuilder.build().name + ": " + group.fieldName);
-      classBuilder.addField(
-          FieldSpec.builder(group.className, group.fieldName)
-              .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-              .build()
-      );
-      ctorBuilder.addStatement("$L = new $T(" + (isTopClass ? "this" : "ops") + ")", group.fieldName, group.className).build();
-    });
+  private static void addGroupFields(
+      TypeSpec.Builder classBuilder,
+      MethodSpec.Builder ctorBuilder,
+      List<OpsSpec> groups,
+      boolean isTopClass) {
+    groups.forEach(
+        group -> {
+          System.out.println(
+              "Adding field in " + classBuilder.build().name + ": " + group.fieldName);
+          classBuilder.addField(
+              FieldSpec.builder(group.className, group.fieldName)
+                  .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                  .build());
+          ctorBuilder
+              .addStatement(
+                  "$L = new $T(" + (isTopClass ? "this" : "ops") + ")",
+                  group.fieldName,
+                  group.className)
+              .build();
+        });
   }
 }
