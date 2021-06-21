@@ -16,12 +16,12 @@ limitations under the License.
 */
 package org.tensorflow
 
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.tensorflow.ndarray.Shape
 import org.tensorflow.op.WithOps
 import org.tensorflow.op.kotlin.tf
 import org.tensorflow.types.TFloat32
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 private fun WithOps.DenseLayer(
     name: String,
@@ -30,7 +30,7 @@ private fun WithOps.DenseLayer(
     activation: WithOps.(Operand<TFloat32>) -> Operand<TFloat32> = { tf.nn.relu(it) },
 ): Operand<TFloat32> =
     tf.withSubScope(name) {
-      //TODO should be dynamic
+      // TODO should be dynamic
       val inputDims = x.shape()[1]
       val W = tf.variable(tf.ones<TFloat32>(tf.array(inputDims.toInt(), n)))
       val b = tf.variable(tf.ones<TFloat32>(tf.array(n)))
@@ -53,7 +53,7 @@ public class ExampleTest {
       useSession { session ->
         session.runInit()
         val outputValue = session.runner().fetch(output).run()[0] as TFloat32
-        assertEquals(Shape.of(1,  10), outputValue.shape())
+        assertEquals(Shape.of(1, 10), outputValue.shape())
         assertEquals(1.0f, outputValue.getFloat(0, 0))
       }
     }
