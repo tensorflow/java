@@ -11,7 +11,7 @@ about: Use this template for reporting a bug or a performance issue.
 - OS Platform and Distribution (e.g., Linux Ubuntu 16.04 x86\_64):
 - TensorFlow installed from (source or binary):
 - TensorFlow version (use command below):
-- Java version:
+- Java version (i.e., the output of `java -version`):
 - Java command line flags (e.g., GC parameters):
 - Python version (if transferring a model trained in Python):
 - Bazel version (if compiling from source):

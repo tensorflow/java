@@ -10,7 +10,7 @@ about: Use this template for build/installation issues
 - OS Platform and Distribution (e.g., Linux Ubuntu 16.04 x86\_64):
 - TensorFlow installed from (source or binary):
 - TensorFlow version:
-- Java version:
+- Java version (i.e., the output of `java -version`):
 - Java command line flags (e.g., GC parameters):
 - Installed from Maven Central?:
 - Bazel version (if compiling from source):
