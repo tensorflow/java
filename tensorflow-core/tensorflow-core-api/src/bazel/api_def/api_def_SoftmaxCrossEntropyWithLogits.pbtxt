@@ -1,6 +1,6 @@
 op {
   graph_op_name: "SoftmaxCrossEntropyWithLogits"
   endpoint {
-    name: "nn.raw.SoftmaxCrossEntropyWithLogits"
+    name: "nn.SoftmaxCrossEntropyWithLogits"
   }
 }
