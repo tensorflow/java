@@ -61,7 +61,7 @@
     <javacpp.platform.macosx-x86_64.extension>macosx-x86_64${javacpp.platform.extension}</javacpp.platform.macosx-x86_64.extension>
     <javacpp.platform.windows-x86.extension>windows-x86${javacpp.platform.extension}</javacpp.platform.windows-x86.extension>
     <javacpp.platform.windows-x86_64.extension>windows-x86_64${javacpp.platform.extension}</javacpp.platform.windows-x86_64.extension>
-    <javacpp.version>1.5.4</javacpp.version>
+    <javacpp.version>1.5.5</javacpp.version>
   </properties>
 
   <profiles>
