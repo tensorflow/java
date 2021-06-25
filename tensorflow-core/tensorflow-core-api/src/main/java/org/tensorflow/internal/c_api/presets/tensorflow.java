@@ -46,7 +46,9 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
-            "tensorflow/c/eager/c_api.h"
+            "tensorflow/c/eager/c_api.h",
+            "tensorflow/core/platform/default/logging.h",
+            "absl/base/log_severity.h"
           },
           link = "tensorflow_cc@.2",
           preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
@@ -385,6 +387,49 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "TF_ShapeInferenceContextDimValueKnown",
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
                     "TF_InitKernel")
-                .skip());
+                .skip())
+        .put(
+            new Info("tensorflow::uint32", "tensorflow::int32", "uint32", "int32")
+                .cast()
+                .valueTypes("int")
+                .pointerTypes("IntPointer", "int[]"))
+        .put(
+            new Info("tensorflow::int16", "tensorflow::uint16", "int16", "uint16")
+                .cast()
+                .valueTypes("short")
+                .pointerTypes("ShortPointer", "short[]"))
+        .put(
+            new Info("tensorflow::uint64", "tensorflow::int64", "int64", "uint64")
+                .cast()
+                .valueTypes("long")
+                .pointerTypes("LongPointer", "long[]"))
+        .put(new Info("absl::string_view", "absl::lts_2020_09_23::string_view", "string", "std::string", "tensorflow::string").annotations("@StdString")
+            .valueTypes("@Cast({\"char*\", \"std::string&&\"}) BytePointer", "@Cast({\"char*\", \"std::string&&\"}) String")
+            .pointerTypes("@Cast({\"char*\", \"std::string*\"}) BytePointer"))
+    .put(new Info("absl::LogSeverity", "LogSeverity", "tensorflow::LogSeverity").cast().valueTypes("int").pointerTypes("IntPointer", "int[]"))
+    .put(new Info("tensorflow::internal::LogEveryNSecState",
+        "tensorflow::internal::LogEveryNState",
+        "tensorflow::internal::LogEveryPow2State",
+        "tensorflow::internal::LogFirstNState",
+        "tensorflow::internal::Voidifier",
+        "tensorflow::internal::LogMessage",
+        "tensorflow::internal::LogMessageFatal",
+        "tensorflow::internal::LogMessageNull",
+        "tensorflow::internal::CheckOpMessageBuilder",
+        "tensorflow::internal::CheckOpString",
+        "tensorflow::internal::GetReferenceableValue",
+        "DVLOG",
+        "absl::LogSeverities").skip())
+    .put(new Info(
+        "tensorflow::INFO",
+        "tensorflow::WARNING",
+        "tensorflow::ERROR",
+        "tensorflow::FATAL",
+        "tensorflow::NUM_SEVERITIES",
+        "_TF_LOG_INFO",
+        "_TF_LOG_WARNING",
+        "_TF_LOG_ERROR",
+        "_TF_LOG_FATAL",
+        "_TF_LOG_QFATAL").skip());
   }
 }

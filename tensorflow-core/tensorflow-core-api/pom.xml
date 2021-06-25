@@ -212,6 +212,8 @@
           <includePaths>
             <includePath>${project.basedir}/</includePath>
             <includePath>${project.basedir}/bazel-${project.artifactId}/external/org_tensorflow/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/com_google_absl/</includePath>
+            <includePath>${project.basedir}/bazel-${project.artifactId}/external/eigen_archive/</includePath>
           </includePaths>
           <linkPaths>
             <linkPath>${project.basedir}/bazel-bin/external/llvm_openmp/</linkPath>
