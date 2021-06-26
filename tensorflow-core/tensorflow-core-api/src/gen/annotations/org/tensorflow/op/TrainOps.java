@@ -18,6 +18,7 @@
 package org.tensorflow.op;
 
 import java.util.List;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.train.AccumulatorApplyGradient;
@@ -81,6 +82,7 @@ import org.tensorflow.op.train.SparseApplyMomentum;
 import org.tensorflow.op.train.SparseApplyProximalAdagrad;
 import org.tensorflow.op.train.SparseApplyProximalGradientDescent;
 import org.tensorflow.op.train.SparseApplyRmsProp;
+import org.tensorflow.op.train.SymbolicGradient;
 import org.tensorflow.op.train.TileGrad;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
@@ -1608,6 +1610,32 @@ public final class TrainOps {
       Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon,
       Operand<T> grad, Operand<? extends TNumber> indices, SparseApplyRmsProp.Options... options) {
     return SparseApplyRmsProp.create(scope, var, ms, mom, lr, rho, momentum, epsilon, grad, indices, options);
+  }
+
+  /**
+   * Computes the gradient function for function f via backpropagation.
+   *
+   * @param input a list of input tensors of size N + M;
+   * @param Tout the type list for the input list.
+   * @param f The function we want to compute the gradient for.
+   *  <p>The function 'f' must be a numerical function which takes N inputs and
+   *  produces M outputs. Its gradient function 'g', which is computed by
+   *  this SymbolicGradient op is a function taking N + M inputs and
+   *  produces N outputs.
+   *  <p>I.e. if we have
+   *  (y1, y2, ..., y_M) = f(x1, x2, ..., x_N),
+   *  then, g is
+   *  (dL/dx1, dL/dx2, ..., dL/dx_N) = g(x1, x2, ..., x_N,
+   *  dL/dy1, dL/dy2, ..., dL/dy_M),
+   *  <p>where L is a scalar-value function of (x1, x2, ..., xN) (e.g., the
+   *  loss function). dL/dx_i is the partial derivative of L with respect
+   *  to x_i.
+   *  <p>(Needs some math expert to say the comment above better.)
+   * @return a new instance of SymbolicGradient
+   */
+  public SymbolicGradient symbolicGradient(Iterable<Operand<?>> input,
+      List<Class<? extends TType>> Tout, ConcreteFunction f) {
+    return SymbolicGradient.create(scope, input, Tout, f);
   }
 
   /**

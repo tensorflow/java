@@ -1,6 +1,4 @@
 op {
   graph_op_name: "CSVDataset"
-  endpoint {
-    name: "data.CSVDataset"
-  }
+  visibility: SKIP
 }

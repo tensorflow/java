@@ -1,6 +1,7 @@
 op {
   graph_op_name: "OptimizeDatasetV2"
+  visibility: VISIBLE
   endpoint {
-    name: "data.OptimizeDatasetV2"
+    name: "data.OptimizeDataset"
   }
 }

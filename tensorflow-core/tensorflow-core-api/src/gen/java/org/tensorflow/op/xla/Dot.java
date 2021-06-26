@@ -21,6 +21,7 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
+import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -32,18 +33,18 @@ import org.tensorflow.types.family.TType;
  * https://www.tensorflow.org/performance/xla/operation_semantics#dotgeneral
  * .
  *
- * @param <T> data type for {@code output} output
+ * @param <V> data type for {@code output} output
  */
 @Operator(
     group = "xla"
 )
-public final class Dot<T extends TType> extends RawOp implements Operand<T> {
+public final class Dot<V extends TType> extends RawOp implements Operand<V> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaDot";
+  public static final String OP_NAME = "XlaDotV2";
 
-  private Output<T> output;
+  private Output<V> output;
 
   private Dot(Operation operation) {
     super(operation);
@@ -52,27 +53,30 @@ public final class Dot<T extends TType> extends RawOp implements Operand<T> {
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaDot operation.
+   * Factory method to create a class wrapping a new XlaDotV2 operation.
    *
    * @param scope current scope
    * @param lhs the LHS tensor
    * @param rhs the RHS tensor
    * @param dimensionNumbers a serialized xla::DotDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param <T> data type for {@code XlaDot} output and operands
+   * @param preferredElementType The type of the tensor.
+   * @param <V> data type for {@code XlaDotV2} output and operands
    * @return a new instance of Dot
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> Dot<T> create(Scope scope, Operand<T> lhs, Operand<T> rhs,
-      String dimensionNumbers, String precisionConfig) {
+  public static <V extends TType> Dot<V> create(Scope scope, Operand<? extends TType> lhs,
+      Operand<? extends TType> rhs, String dimensionNumbers, String precisionConfig,
+      Class<V> preferredElementType) {
     OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dot"));
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
+    opBuilder.setAttr("preferred_element_type", Operands.toDataType(preferredElementType));
     return new Dot<>(opBuilder.build());
   }
 
@@ -81,12 +85,12 @@ public final class Dot<T extends TType> extends RawOp implements Operand<T> {
    *
    * @return output.
    */
-  public Output<T> output() {
+  public Output<V> output() {
     return output;
   }
 
   @Override
-  public Output<T> asOutput() {
+  public Output<V> asOutput() {
     return output;
   }
 }

@@ -1,4 +1,6 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
@@ -86,7 +88,9 @@
     </snapshotRepository>
     <repository>
       <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+      <url>
+        https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
+      </url>
     </repository>
   </distributionManagement>
 
@@ -156,7 +160,9 @@
         <repository>
           <id>ossrh-staging</id>
           <name>OSSRH Sonatype Staging</name>
-          <url>https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/</url>
+          <url>
+            https://oss.sonatype.org/service/local/staging/deployByRepositoryId/${stagingRepositoryId}/
+          </url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -225,6 +231,33 @@
                 </path>
               </annotationProcessorPaths>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!--
+      Profile to run spotless:apply on builds.  Will run before format's check.
+    -->
+    <profile>
+      <id>apply-format</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.diffplug.spotless</groupId>
+            <artifactId>spotless-maven-plugin</artifactId>
+            <version>${spotless.version}</version>
+
+            <executions>
+              <execution>
+                <!-- Runs in initialize phase to fail fast in case of formatting issues (should be before codegen).-->
+                <id>spotless-apply</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>apply</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

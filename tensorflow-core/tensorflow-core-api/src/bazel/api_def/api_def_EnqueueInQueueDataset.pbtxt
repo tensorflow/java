@@ -1,5 +1,6 @@
 op {
   graph_op_name: "EnqueueInQueueDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.EnqueueInQueueDataset"
   }

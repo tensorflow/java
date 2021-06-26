@@ -1,6 +1,4 @@
 op {
   graph_op_name: "XlaDot"
-  endpoint {
-    name: "xla.Dot"
-  }
+  visibility: SKIP
 }

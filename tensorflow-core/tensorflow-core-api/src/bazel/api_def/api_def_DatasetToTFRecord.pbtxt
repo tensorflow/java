@@ -1,5 +1,6 @@
 op {
   graph_op_name: "DatasetToTFRecord"
+  visibility: VISIBLE
   endpoint {
     name: "data.DatasetToTfRecord"
   }
