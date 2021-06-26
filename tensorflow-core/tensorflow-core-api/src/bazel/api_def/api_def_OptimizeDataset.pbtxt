@@ -1,6 +1,4 @@
 op {
   graph_op_name: "OptimizeDataset"
-  endpoint {
-    name: "data.OptimizeDataset"
-  }
+  visibility: SKIP
 }

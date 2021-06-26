@@ -27,72 +27,57 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TInt64;
-import org.tensorflow.types.TString;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * The CSVDatasetV2 operation
+ * Creates a dataset by attaching tf.data.Options to {@code input_dataset}.
  */
-public final class CSVDatasetV2 extends RawOp implements Operand<TType> {
+@Operator(
+    group = "data"
+)
+public final class OptionsDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "CSVDatasetV2";
+  public static final String OP_NAME = "OptionsDataset";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private CSVDatasetV2(Operation operation) {
+  private OptionsDataset(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new CSVDatasetV2 operation.
+   * Factory method to create a class wrapping a new OptionsDataset operation.
    *
    * @param scope current scope
-   * @param filenames the filenames value
-   * @param compressionType the compressionType value
-   * @param bufferSize the bufferSize value
-   * @param header the header value
-   * @param fieldDelim the fieldDelim value
-   * @param useQuoteDelim the useQuoteDelim value
-   * @param naValue the naValue value
-   * @param selectCols the selectCols value
-   * @param recordDefaults the recordDefaults value
-   * @param excludeCols the excludeCols value
+   * @param inputDataset A variant tensor representing the input dataset.
+   * @param serializedOptions A {@code tf.string} scalar {@code tf.Tensor} of serialized {@code tf.data.Options} protocol buffer.
+   * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
-   * @return a new instance of CSVDatasetV2
+   * @return a new instance of OptionsDataset
    */
   @Endpoint(
       describeByClass = true
   )
-  public static CSVDatasetV2 create(Scope scope, Operand<TString> filenames,
-      Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header,
-      Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue,
-      Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, Operand<TInt64> excludeCols,
+  public static OptionsDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      String serializedOptions, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSVDatasetV2"));
-    opBuilder.addInput(filenames.asOutput());
-    opBuilder.addInput(compressionType.asOutput());
-    opBuilder.addInput(bufferSize.asOutput());
-    opBuilder.addInput(header.asOutput());
-    opBuilder.addInput(fieldDelim.asOutput());
-    opBuilder.addInput(useQuoteDelim.asOutput());
-    opBuilder.addInput(naValue.asOutput());
-    opBuilder.addInput(selectCols.asOutput());
-    opBuilder.addInputList(Operands.asOutputs(recordDefaults));
-    opBuilder.addInput(excludeCols.asOutput());
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptionsDataset"));
+    opBuilder.addInput(inputDataset.asOutput());
     opBuilder = scope.apply(opBuilder);
+    opBuilder.setAttr("serialized_options", serializedOptions);
+    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new CSVDatasetV2(opBuilder.build());
+    return new OptionsDataset(opBuilder.build());
   }
 
   /**

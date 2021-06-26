@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.rawops;
+package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -27,52 +27,47 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TBool;
-import org.tensorflow.types.TInt64;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
- * The ParallelBatchDataset operation
+ * Creates a dataset by applying {@code tf.data.Options} to {@code input_dataset}.
  */
-public final class ParallelBatchDataset extends RawOp implements Operand<TType> {
+@Operator(
+    group = "data"
+)
+public final class FinalizeDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "ParallelBatchDataset";
+  public static final String OP_NAME = "FinalizeDataset";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private ParallelBatchDataset(Operation operation) {
+  private FinalizeDataset(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new ParallelBatchDataset operation.
+   * Factory method to create a class wrapping a new FinalizeDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param batchSize the batchSize value
-   * @param numParallelCalls the numParallelCalls value
-   * @param dropRemainder the dropRemainder value
+   * @param inputDataset A variant tensor representing the input dataset.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
    * @param options carries optional attribute values
-   * @return a new instance of ParallelBatchDataset
+   * @return a new instance of FinalizeDataset
    */
   @Endpoint(
       describeByClass = true
   )
-  public static ParallelBatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TInt64> batchSize, Operand<TInt64> numParallelCalls, Operand<TBool> dropRemainder,
+  public static FinalizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelBatchDataset"));
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FinalizeDataset"));
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(batchSize.asOutput());
-    opBuilder.addInput(numParallelCalls.asOutput());
-    opBuilder.addInput(dropRemainder.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
@@ -82,22 +77,22 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
     opBuilder.setAttr("output_shapes", outputShapesArray);
     if (options != null) {
       for (Options opts : options) {
-        if (opts.deterministic != null) {
-          opBuilder.setAttr("deterministic", opts.deterministic);
+        if (opts.hasCapturedRef != null) {
+          opBuilder.setAttr("has_captured_ref", opts.hasCapturedRef);
         }
       }
     }
-    return new ParallelBatchDataset(opBuilder.build());
+    return new FinalizeDataset(opBuilder.build());
   }
 
   /**
-   * Sets the deterministic option.
+   * Sets the hasCapturedRef option.
    *
-   * @param deterministic the deterministic option
+   * @param hasCapturedRef the hasCapturedRef option
    * @return this Options instance.
    */
-  public static Options deterministic(String deterministic) {
-    return new Options().deterministic(deterministic);
+  public static Options hasCapturedRef(Boolean hasCapturedRef) {
+    return new Options().hasCapturedRef(hasCapturedRef);
   }
 
   /**
@@ -116,22 +111,22 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.rawops.ParallelBatchDataset}
+   * Optional attributes for {@link org.tensorflow.op.data.FinalizeDataset}
    */
   public static class Options {
-    private String deterministic;
+    private Boolean hasCapturedRef;
 
     private Options() {
     }
 
     /**
-     * Sets the deterministic option.
+     * Sets the hasCapturedRef option.
      *
-     * @param deterministic the deterministic option
+     * @param hasCapturedRef the hasCapturedRef option
      * @return this Options instance.
      */
-    public Options deterministic(String deterministic) {
-      this.deterministic = deterministic;
+    public Options hasCapturedRef(Boolean hasCapturedRef) {
+      this.hasCapturedRef = hasCapturedRef;
       return this;
     }
   }

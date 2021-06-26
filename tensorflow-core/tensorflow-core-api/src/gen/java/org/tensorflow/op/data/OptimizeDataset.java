@@ -28,18 +28,22 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset by applying optimizations to {@code input_dataset}.
- * Creates a dataset by applying optimizations to {@code input_dataset}.
+ * Creates a dataset by applying related optimizations to {@code input_dataset}.
+ * Creates a dataset by applying related optimizations to {@code input_dataset}.
  */
+@Operator(
+    group = "data"
+)
 public final class OptimizeDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "OptimizeDataset";
+  public static final String OP_NAME = "OptimizeDatasetV2";
 
   private Output<? extends TType> handle;
 
@@ -51,11 +55,13 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Factory method to create a class wrapping a new OptimizeDataset operation.
+   * Factory method to create a class wrapping a new OptimizeDatasetV2 operation.
    *
    * @param scope current scope
    * @param inputDataset A variant tensor representing the input dataset.
-   * @param optimizations A {@code tf.string} vector {@code tf.Tensor} identifying optimizations to use.
+   * @param optimizationsEnabled A {@code tf.string} vector {@code tf.Tensor} identifying user enabled optimizations.
+   * @param optimizationsDisabled A {@code tf.string} vector {@code tf.Tensor} identifying user disabled optimizations.
+   * @param optimizationsDefault A {@code tf.string} vector {@code tf.Tensor} identifying optimizations by default.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
    * @param options carries optional attribute values
@@ -65,11 +71,14 @@ public final class OptimizeDataset extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static OptimizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TString> optimizations, List<Class<? extends TType>> outputTypes,
+      Operand<TString> optimizationsEnabled, Operand<TString> optimizationsDisabled,
+      Operand<TString> optimizationsDefault, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
     OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OptimizeDataset"));
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(optimizations.asOutput());
+    opBuilder.addInput(optimizationsEnabled.asOutput());
+    opBuilder.addInput(optimizationsDisabled.asOutput());
+    opBuilder.addInput(optimizationsDefault.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

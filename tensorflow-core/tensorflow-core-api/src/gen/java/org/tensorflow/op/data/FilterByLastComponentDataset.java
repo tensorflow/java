@@ -27,11 +27,15 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset containing elements of first component of {@code input_dataset} having true in the last component.
  */
+@Operator(
+    group = "data"
+)
 public final class FilterByLastComponentDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

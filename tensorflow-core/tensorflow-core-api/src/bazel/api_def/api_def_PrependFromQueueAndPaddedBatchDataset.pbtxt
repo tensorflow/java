@@ -1,5 +1,6 @@
 op {
   graph_op_name: "PrependFromQueueAndPaddedBatchDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.PrependFromQueueAndPaddedBatchDataset"
   }

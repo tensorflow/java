@@ -27,21 +27,21 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Creates a dataset that caches elements from {@code input_dataset}.
- * A CacheDataset will iterate over the input_dataset, and store tensors. If the
- * cache already exists, the cache will be used. If the cache is inappropriate
- * (e.g. cannot be opened, contains tensors of the wrong shape / size), an error
- * will the returned when used.
+ * The CacheDatasetV2 operation
  */
+@Operator(
+    group = "data"
+)
 public final class CacheDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "CacheDataset";
+  public static final String OP_NAME = "CacheDatasetV2";
 
   private Output<? extends TType> handle;
 
@@ -53,12 +53,12 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Factory method to create a class wrapping a new CacheDataset operation.
+   * Factory method to create a class wrapping a new CacheDatasetV2 operation.
    *
    * @param scope current scope
    * @param inputDataset the inputDataset value
-   * @param filename A path on the filesystem where we should cache the dataset. Note: this
-   * will be a directory.
+   * @param filename the filename value
+   * @param cache the cache value
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
    * @return a new instance of CacheDataset
@@ -67,11 +67,12 @@ public final class CacheDataset extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static CacheDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TString> filename, List<Class<? extends TType>> outputTypes,
-      List<Shape> outputShapes) {
+      Operand<TString> filename, Operand<? extends TType> cache,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CacheDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
+    opBuilder.addInput(cache.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

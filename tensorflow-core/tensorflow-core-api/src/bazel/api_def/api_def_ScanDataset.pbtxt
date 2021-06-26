@@ -1,5 +1,6 @@
 op {
   graph_op_name: "ScanDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.ScanDataset"
   }

@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.rawops;
+package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -27,6 +27,7 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
@@ -34,6 +35,9 @@ import org.tensorflow.types.family.TType;
 /**
  * Creates a dataset that reads data from the tf.data service.
  */
+@Operator(
+    group = "data"
+)
 public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -141,7 +145,7 @@ public final class DataServiceDatasetV2 extends RawOp implements Operand<TType> 
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.rawops.DataServiceDatasetV2}
+   * Optional attributes for {@link org.tensorflow.op.data.DataServiceDatasetV2}
    */
   public static class Options {
     private Long taskRefreshIntervalHintMs;

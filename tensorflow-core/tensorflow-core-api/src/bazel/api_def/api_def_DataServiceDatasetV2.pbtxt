@@ -1,6 +1,7 @@
 op {
   graph_op_name: "DataServiceDatasetV2"
+  visibility: VISIBLE
   endpoint {
-    name: "rawops.DataServiceDatasetV2"
+    name: "data.DataServiceDatasetV2"
   }
 }

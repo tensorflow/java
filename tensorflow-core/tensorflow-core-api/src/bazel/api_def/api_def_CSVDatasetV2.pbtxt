@@ -1,6 +1,7 @@
 op {
   graph_op_name: "CSVDatasetV2"
+  visibility: VISIBLE
   endpoint {
-    name: "data.CSVDatasetV2"
+    name: "data.CSVDataset"
   }
 }
