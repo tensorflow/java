@@ -1,18 +1,18 @@
 /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_FunctionName;
@@ -76,10 +76,21 @@ class NativeFunction {
       Set<String> deps = new LinkedHashSet<>();
 
       for (NodeDef node : getFunctionDef().getNodeDefList()) {
-        if (node.getOp().equals(ConcreteFunction.CALL_OP)
-            || node.getOp().equals(ConcreteFunction.STATEFUL_CALL_OP)) {
-          deps.add(node.getAttrMap().get("f").getFunc().getName());
-        }
+        node.getAttrMap()
+            .values()
+            .forEach(
+                (attr) -> {
+                  if (attr.hasFunc()) {
+                    deps.add(attr.getFunc().getName());
+                  } else if (attr.hasList()) {
+                    attr.getList()
+                        .getFuncList()
+                        .forEach(
+                            funcs -> {
+                              deps.add(funcs.getName());
+                            });
+                  }
+                });
       }
       dependencies = Collections.unmodifiableList(new ArrayList<>(deps));
     }

@@ -1,6 +1,7 @@
 op {
   graph_op_name: "OptionsDataset"
+  visibility: VISIBLE
   endpoint {
-    name: "rawops.OptionsDataset"
+    name: "data.OptionsDataset"
   }
 }

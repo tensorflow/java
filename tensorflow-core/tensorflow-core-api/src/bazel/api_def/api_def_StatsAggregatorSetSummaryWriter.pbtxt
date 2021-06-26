@@ -1,6 +1,6 @@
 op {
   graph_op_name: "StatsAggregatorSetSummaryWriter"
   endpoint {
-    name: "data.experimental.StatsAggregatorSetSummaryWriter"
+    name: "data.StatsAggregatorSetSummaryWriter"
   }
 }

@@ -1,6 +1,6 @@
 op {
   graph_op_name: "CompressElement"
   endpoint {
-    name: "data.experimental.CompressElement"
+    name: "data.CompressElement"
   }
 }

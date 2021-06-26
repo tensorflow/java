@@ -1,5 +1,4 @@
-/*
- Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,17 +11,14 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-==============================================================================
+=======================================================================
 */
 package org.tensorflow.op.generator;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.UnknownFieldSet;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import org.tensorflow.proto.framework.ApiDef;
-import org.tensorflow.proto.framework.OpDef;
-import org.tensorflow.proto.framework.OpList;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -35,7 +31,12 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import org.tensorflow.proto.framework.ApiDef;
+import org.tensorflow.proto.framework.OpDef;
+import org.tensorflow.proto.framework.OpList;
 
 public final class OpGenerator {
 
@@ -169,7 +170,8 @@ public final class OpGenerator {
                     .getField(API_DEF_FIELD_NUMBER)
                     .getLengthDelimitedList()
                     .get(0));
-        defs.put(op, api);
+        defs.put(
+            op.toBuilder().setUnknownFields(UnknownFieldSet.newBuilder().build()).build(), api);
       } catch (InvalidProtocolBufferException e) {
         throw new RuntimeException(
             "Could not parse attached ApiDef for op "
@@ -184,80 +186,76 @@ public final class OpGenerator {
     generate(outputDir, packageName, defs);
   }
 
+  private static void writeToFile(TypeSpec spec, File outputDir, String packageName) {
+    JavaFile file =
+        JavaFile.builder(packageName, spec).indent("  ").skipJavaLangImports(true).build();
+
+    File outputFile =
+        new File(outputDir, packageName.replace('.', '/') + '/' + spec.name + ".java");
+    outputFile.getParentFile().mkdirs();
+    try {
+      StringBuilder builder = new StringBuilder();
+      builder.append(LICENSE + '\n');
+      builder.append("// This class has been generated, DO NOT EDIT!\n\n");
+      file.writeTo(builder);
+
+      Files.write(
+          outputFile.toPath(),
+          builder.toString().getBytes(StandardCharsets.UTF_8),
+          StandardOpenOption.WRITE,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.TRUNCATE_EXISTING);
+    } catch (IOException ioException) {
+      throw new IllegalStateException("Failed to write file " + outputFile, ioException);
+    }
+  }
+
   /** Generate all the ops that pass {@link ClassGenerator#canGenerateOp(OpDef, ApiDef)}. */
   private static void generate(File outputDir, String basePackage, Map<OpDef, ApiDef> ops) {
-    ops.entrySet().stream()
-        .filter(e -> ClassGenerator.canGenerateOp(e.getKey(), e.getValue()))
-        .forEach(
-            (entry) -> {
-              entry
-                  .getValue()
-                  .getEndpointList()
-                  .forEach(
-                      (endpoint) -> {
-                        String name;
-                        String pack;
+    List<FullOpDef> fullOps =
+        ops.entrySet().stream()
+            .filter(e -> ClassGenerator.canGenerateOp(e.getKey(), e.getValue()))
+            .flatMap(
+                (entry) ->
+                    entry.getValue().getEndpointList().stream()
+                        .map(
+                            (endpoint) -> {
+                              String name;
+                              String pack;
 
-                        int pos = endpoint.getName().lastIndexOf('.');
-                        if (pos > -1) {
-                          pack = endpoint.getName().substring(0, pos);
-                          name = endpoint.getName().substring(pos + 1);
-                        } else {
-                          pack = "core";
-                          name = endpoint.getName();
-                        }
+                              int pos = endpoint.getName().lastIndexOf('.');
+                              if (pos > -1) {
+                                pack = endpoint.getName().substring(0, pos);
+                                name = endpoint.getName().substring(pos + 1);
+                              } else {
+                                pack = "core";
+                                name = endpoint.getName();
+                              }
 
-                        TypeSpec.Builder cls = TypeSpec.classBuilder(name);
-                        try {
-                          new ClassGenerator(
-                                  cls,
+                              return new FullOpDef(
                                   entry.getKey(),
                                   entry.getValue(),
                                   basePackage,
                                   basePackage + "." + pack,
                                   pack,
                                   name,
-                                  endpoint)
-                              .buildClass();
-                        } catch (Exception e) {
-                          throw new IllegalStateException(
-                              "Failed to generate class for op " + entry.getKey().getName(), e);
-                        }
-                        TypeSpec spec = cls.build();
+                                  endpoint);
+                            }))
+            .collect(Collectors.toList());
 
-                        JavaFile file =
-                            JavaFile.builder(basePackage + "." + pack, spec)
-                                .indent("  ")
-                                .skipJavaLangImports(true)
-                                .build();
+    List<StatefulPair> statefulPairs = StatefulPair.extractStatefulPairs(fullOps);
 
-                        File outputFile =
-                            new File(
-                                outputDir,
-                                basePackage.replace('.', '/')
-                                    + '/'
-                                    + pack.replace('.', '/')
-                                    + '/'
-                                    + spec.name
-                                    + ".java");
-                        outputFile.getParentFile().mkdirs();
-                        try {
-                          StringBuilder builder = new StringBuilder();
-                          builder.append(LICENSE + '\n');
-                          builder.append("// This class has been generated, DO NOT EDIT!\n\n");
-                          file.writeTo(builder);
+    fullOps.forEach(
+        (def) -> {
+          TypeSpec spec = def.buildOpClass();
 
-                          Files.write(
-                              outputFile.toPath(),
-                              builder.toString().getBytes(StandardCharsets.UTF_8),
-                              StandardOpenOption.WRITE,
-                              StandardOpenOption.CREATE,
-                              StandardOpenOption.TRUNCATE_EXISTING);
-                        } catch (IOException ioException) {
-                          throw new IllegalStateException(
-                              "Failed to write file " + outputFile, ioException);
-                        }
-                      });
-            });
+          writeToFile(spec, outputDir, def.packageName);
+        });
+
+    statefulPairs.forEach(
+        (pair) -> {
+          pair.buildOpClasses()
+              .forEach((spec) -> writeToFile(spec, outputDir, pair.getPackageName()));
+        });
   }
 }

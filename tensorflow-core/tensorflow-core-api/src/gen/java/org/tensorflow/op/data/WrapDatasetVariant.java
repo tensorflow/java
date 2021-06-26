@@ -24,11 +24,15 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * The WrapDatasetVariant operation
  */
+@Operator(
+    group = "data"
+)
 public final class WrapDatasetVariant extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

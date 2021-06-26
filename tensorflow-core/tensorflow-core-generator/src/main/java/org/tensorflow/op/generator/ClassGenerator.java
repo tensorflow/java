@@ -41,6 +41,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import javax.lang.model.element.Modifier;
 import org.tensorflow.Names;
 import org.tensorflow.proto.framework.ApiDef;
@@ -57,7 +58,6 @@ final class ClassGenerator {
   /** Return true if we can generate the operation class for {@code op}. */
   static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
-        && !op.getAttrList().stream().anyMatch(x -> x.getType().contains("func"))
         && !op.getName()
             .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
@@ -69,6 +69,8 @@ final class ClassGenerator {
     LIST_OPERAND,
     OPERAND;
   }
+
+  private static final String OP_NAME_FIELD = "OP_NAME";
 
   /** The in-progress class builder for the top level op class. */
   private final TypeSpec.Builder builder;
@@ -96,6 +98,10 @@ final class ClassGenerator {
 
   /** The endpoint being generated in this class. */
   private final Endpoint endpoint;
+
+  private final StatefulPair statefulPair;
+  private final boolean isStateSelector;
+  private final boolean isStateSubclass;
 
   /**
    * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has
@@ -129,7 +135,8 @@ final class ClassGenerator {
       String fullPackage,
       String group,
       String className,
-      Endpoint endpoint) {
+      Endpoint endpoint,
+      StatefulPair statefulPair) {
 
     this.builder = builder;
     this.op = op;
@@ -140,6 +147,9 @@ final class ClassGenerator {
     this.group = group;
     this.className = className;
     this.endpoint = endpoint;
+    this.statefulPair = statefulPair;
+    this.isStateSelector = statefulPair != null && className.equals(statefulPair.selectorClassName);
+    this.isStateSubclass = statefulPair != null && !isStateSelector;
 
     op.getAttrList()
         .forEach(
@@ -207,8 +217,15 @@ final class ClassGenerator {
 
   /** Build the class. */
   void buildClass() {
-    builder.addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-    builder.superclass(Names.RawOp);
+    builder.addModifiers(Modifier.PUBLIC);
+    if (!isStateSelector) {
+      builder.addModifiers(Modifier.FINAL);
+      builder.superclass(Names.RawOp);
+    }
+
+    if (isStateSubclass) {
+      builder.addSuperinterface(ClassName.get(fullPackage, statefulPair.selectorClassName));
+    }
 
     // add class javadocs
     String summary = parseDocumentation(apiDef.getSummary());
@@ -222,6 +239,16 @@ final class ClassGenerator {
       builder.addJavadoc("$L", desc + "\n");
     }
 
+    if (isStateSelector) {
+      builder.addJavadoc("\n<p>");
+      builder.addJavadoc(
+          "Selects between {@link "
+              + statefulPair.statefulClassName
+              + "} and {@link "
+              + statefulPair.statelessClassName
+              + "} based on the statefulness of the function arguments.");
+    }
+
     // add superinterface and set mode
     if (op.getOutputArgCount() == 1) {
       ArgDef output = op.getOutputArg(0);
@@ -233,11 +260,15 @@ final class ClassGenerator {
 
       if (iterable) {
         mode = RenderMode.LIST_OPERAND;
-        builder.addSuperinterface(
-            ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));
+        if (!isStateSubclass) {
+          builder.addSuperinterface(
+              ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));
+        }
       } else {
         mode = RenderMode.OPERAND;
-        builder.addSuperinterface(operandType);
+        if (!isStateSubclass) {
+          builder.addSuperinterface(operandType);
+        }
       }
     }
 
@@ -277,7 +308,7 @@ final class ClassGenerator {
       builder.addAnnotation(annotation.build());
     }
 
-    if (!optionalAttributes.isEmpty()) {
+    if (!optionalAttributes.isEmpty() && !isStateSubclass) {
       buildOptionsClass();
     }
 
@@ -287,29 +318,31 @@ final class ClassGenerator {
       buildInterfaceImpl();
     }
 
-    // add op name field
-    builder.addField(
-        FieldSpec.builder(
-                TypeResolver.STRING,
-                OP_NAME_FIELD_NAME,
-                Modifier.PUBLIC,
-                Modifier.STATIC,
-                Modifier.FINAL)
-            .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
-            .initializer("$S", op.getName())
-            .build());
+    if (!isStateSelector) {
+      // add op name field
+      builder.addField(
+          FieldSpec.builder(
+                  TypeResolver.STRING,
+                  OP_NAME_FIELD,
+                  Modifier.PUBLIC,
+                  Modifier.STATIC,
+                  Modifier.FINAL)
+              .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
+              .initializer("$S", op.getName())
+              .build());
 
-    // add output fields
-    if (op.getOutputArgCount() > 0) {
-      for (ArgDef output : op.getOutputArgList()) {
-        builder.addField(
-            resolver.typeOf(output).listIfIterable().javaType,
-            getJavaName(output),
-            Modifier.PRIVATE);
+      // add output fields
+      if (op.getOutputArgCount() > 0) {
+        for (ArgDef output : op.getOutputArgList()) {
+          builder.addField(
+              resolver.typeOf(output).listIfIterable().javaType,
+              getJavaName(output),
+              Modifier.PRIVATE);
+        }
       }
-    }
 
-    buildConstructor();
+      buildConstructor();
+    }
   }
 
   /** Add a nested class for Options */
@@ -376,9 +409,14 @@ final class ClassGenerator {
                 .build());
       }
 
+      FieldSpec.Builder field =
+          FieldSpec.builder(type.classIfGeneric().listIfIterable().javaType, name);
+      if (!isStateSelector) {
+        field.addModifiers(Modifier.PRIVATE);
+      }
+
       // add the field
-      optionsBuilder.addField(
-          type.classIfGeneric().listIfIterable().javaType, name, Modifier.PRIVATE);
+      optionsBuilder.addField(field.build());
     }
 
     // add a private constructor
@@ -444,8 +482,16 @@ final class ClassGenerator {
     }
     factoryBuilder.returns(returnType);
 
-    factoryBuilder.addAnnotation(
-        AnnotationSpec.builder(Names.Endpoint).addMember("describeByClass", "true").build());
+    AnnotationSpec.Builder endpointAnnotation =
+        AnnotationSpec.builder(Names.Endpoint).addMember("describeByClass", "true");
+
+    String methodName = GeneratorUtils.getOpMethodName(className);
+
+    if (methodName != null) {
+      endpointAnnotation.addMember("name", "$S", methodName);
+    }
+
+    factoryBuilder.addAnnotation(endpointAnnotation.build());
 
     factoryBuilder.addJavadoc(
         "Factory method to create a class wrapping a new $L operation.\n", op.getName());
@@ -463,14 +509,25 @@ final class ClassGenerator {
     body.addStatement(
         "$T opBuilder = scope.env().opBuilder($L, scope.makeOpName($S))",
         Names.OperationBuilder,
-        OP_NAME_FIELD_NAME,
+        OP_NAME_FIELD,
         className);
+
+    List<String> functionArgs = new ArrayList<>();
+    List<String> iterableFunctionArgs = new ArrayList<>();
 
     // add the inputs as parameters, and add them to the op builder
     for (ArgDef input : op.getInputArgList()) {
       ApiDef.Arg argDef = argApis.get(input);
       ResolvedType type = resolver.typeOf(input);
       String name = getJavaName(input);
+
+      if (type.javaType.equals(Names.ConcreteFunction)) {
+        if (type.iterable) {
+          iterableFunctionArgs.add(name);
+        } else {
+          functionArgs.add(name);
+        }
+      }
 
       ParameterSpec.Builder param = ParameterSpec.builder(type.iterableIfIterable().javaType, name);
       String description =
@@ -502,11 +559,19 @@ final class ClassGenerator {
 
       ResolvedType type = resolver.typeOf(attr);
       ApiDef.Attr apiAttr = attrApis.get(attr);
+      String javaName = getJavaName(attr);
+
+      if (type.javaType.equals(Names.ConcreteFunction)) {
+        if (type.iterable) {
+          iterableFunctionArgs.add(javaName);
+        } else {
+          functionArgs.add(javaName);
+        }
+      }
 
       ParameterSpec.Builder builder =
           ParameterSpec.builder(type.classIfGeneric().listIfIterable().javaType, getJavaName(attr));
 
-      String javaName = getJavaName(attr);
       String description =
           apiAttr.getDescription().isEmpty()
               ? String.format("the value of the %s property", javaName)
@@ -529,18 +594,26 @@ final class ClassGenerator {
       writeSetAttr(body, attr, type, false);
     }
 
+    // TODO optional function attrs (there currently aren't any)
+
     // add optional attributes
-    if (optionsClass != null) {
+    if (optionsClass != null || (isStateSubclass && statefulPair.hasOptionalAttrs())) {
+
+      ClassName optionsClassName;
+      if (isStateSubclass) {
+        optionsClassName = ClassName.get(fullPackage, statefulPair.selectorClassName, "Options");
+      } else {
+        optionsClassName = ClassName.get(fullPackage, className, "Options");
+      }
+
       factoryBuilder.addParameter(
-          ParameterSpec.builder(
-                  ArrayTypeName.of(ClassName.get(fullPackage, className, "Options")), "options")
-              .build());
+          ParameterSpec.builder(ArrayTypeName.of(optionsClassName), "options").build());
       paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values"));
       factoryBuilder.varargs();
 
       body.beginControlFlow("if (options != null)");
 
-      body.beginControlFlow("for (Options opts : options)");
+      body.beginControlFlow("for ($T opts : options)", optionsClassName);
       for (AttrDef attr : optionalAttributes) {
         String name = getJavaName(attr);
         body.beginControlFlow("if (opts.$L != null)", name);
@@ -557,7 +630,40 @@ final class ClassGenerator {
     body.addStatement(
         "return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
 
+    if (isStateSelector) {
+      body.clear();
+
+      body.addStatement("boolean isStateful = false");
+      functionArgs.forEach(
+          arg -> {
+            body.beginControlFlow("if ($L.isStateful())", arg)
+                .addStatement("isStateful = true")
+                .endControlFlow();
+          });
+      iterableFunctionArgs.forEach(
+          arg -> {
+            body.beginControlFlow("if ($L.stream().anyMatch(x -> x.isStateful()))", arg)
+                .addStatement("isStateful = true")
+                .endControlFlow();
+          });
+
+      StringJoiner argList = new StringJoiner(", ");
+      factoryBuilder.parameters.forEach(x -> argList.add(x.name));
+
+      body.beginControlFlow("if (isStateful)")
+          .addStatement(
+              "return $T.create($L)",
+              ClassName.get(fullPackage, statefulPair.statefulClassName),
+              argList.toString())
+          .nextControlFlow("else")
+          .addStatement(
+              "return $T.create($L)",
+              ClassName.get(fullPackage, statefulPair.statelessClassName),
+              argList.toString())
+          .endControlFlow();
+    }
     factoryBuilder.addCode(body.build());
+
     paramTags.forEach(
         (param, doc) -> {
           String description = doc.toString();
@@ -651,7 +757,10 @@ final class ClassGenerator {
 
     factoryBuilder.addJavadoc(
         "\n@return a new instance of $L, with default output types", className);
-    factoryBuilder.addCode(body.build());
+
+    if (!isStateSelector) {
+      factoryBuilder.addCode(body.build());
+    }
     factoryBuilder.addTypeVariables(typeVars);
 
     builder.addMethod(factoryBuilder.build());
@@ -683,15 +792,25 @@ final class ClassGenerator {
     for (ArgDef output : op.getOutputArgList()) {
       String name = getJavaName(output);
       ApiDef.Arg argDef = argApis.get(output);
-      builder.addMethod(
+
+      MethodSpec.Builder method =
           MethodSpec.methodBuilder(name)
               .addModifiers(Modifier.PUBLIC)
               .returns(resolver.typeOf(output).listIfIterable().javaType)
               .addJavadoc("Gets $L.\n", name)
               .addJavadoc("$L", parseDocumentation(argDef.getDescription()))
-              .addJavadoc("\n@return $L.", name)
-              .addCode("return $L;", name)
-              .build());
+              .addJavadoc("\n@return $L.", name);
+
+      if (isStateSelector) {
+        method.addModifiers(Modifier.ABSTRACT);
+      } else {
+        if (isStateSubclass) {
+          method.addAnnotation(Override.class);
+        }
+        method.addCode("return $L;", name);
+      }
+
+      builder.addMethod(method.build());
     }
   }
 
@@ -711,14 +830,18 @@ final class ClassGenerator {
               .returns(outputType)
               .addAnnotation(Override.class);
 
-      if (uncheckedCast) {
-        asOutput.addAnnotation(
-            AnnotationSpec.builder(SuppressWarnings.class)
-                .addMember("value", "$S", "unchecked")
-                .build());
-        asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
+      if (isStateSelector) {
+        asOutput.addModifiers(Modifier.ABSTRACT);
       } else {
-        asOutput.addCode("return $L;", getJavaName(output));
+        if (uncheckedCast) {
+          asOutput.addAnnotation(
+              AnnotationSpec.builder(SuppressWarnings.class)
+                  .addMember("value", "$S", "unchecked")
+                  .build());
+          asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
+        } else {
+          asOutput.addCode("return $L;", getJavaName(output));
+        }
       }
 
       builder.addMethod(asOutput.build());
@@ -736,7 +859,11 @@ final class ClassGenerator {
                       .addMember("value", "{$S, $S}", "rawtypes", "unchecked")
                       .build());
 
-      iterator.addCode("return ($T) $L.iterator();", Iterator.class, getJavaName(output));
+      if (isStateSelector) {
+        iterator.addModifiers(Modifier.ABSTRACT);
+      } else {
+        iterator.addCode("return ($T) $L.iterator();", Iterator.class, getJavaName(output));
+      }
 
       builder.addMethod(iterator.build());
     }

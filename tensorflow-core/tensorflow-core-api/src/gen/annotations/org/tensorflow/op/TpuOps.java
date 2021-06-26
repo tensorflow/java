@@ -18,12 +18,15 @@
 package org.tensorflow.op;
 
 import java.util.List;
+import org.tensorflow.ConcreteFunction;
 import org.tensorflow.Operand;
+import org.tensorflow.op.tpu.Compile;
 import org.tensorflow.op.tpu.CompileSucceededAssert;
 import org.tensorflow.op.tpu.Execute;
 import org.tensorflow.op.tpu.ExecuteAndUpdateVariables;
 import org.tensorflow.op.tpu.PartitionedInput;
 import org.tensorflow.op.tpu.PartitionedOutput;
+import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -40,6 +43,36 @@ public final class TpuOps {
   TpuOps(Ops ops) {
     this.scope = ops.scope();
     this.ops = ops;
+  }
+
+  /**
+   * Compiles a computations for execution on one or more TPU devices.
+   *  For the internal use of the distributed TPU compiler.
+   *  <p>'num_computations' is the number of computations to be compiled.
+   *  'function' is a function containing the computation to compile.
+   *  'dynamic_shapes' contains dynamic shapes of arguments whose shapes were not
+   *  known statically at TPUReplication rewrite time.
+   *  'guaranteed_constants' is a list of tensors which have been guaranteed to not
+   *  change their values during the session lifetime. These contain tensors marked as
+   *  constant using the GuaranteeConstOp.
+   *  'metadata' is a serialized TPUCompileMetadataProto describing
+   *  the shapes and types of the inputs to the computation, as well as a mapping onto
+   *  the TPU pod topology.
+   *  Each 'program' output is a string key that is passed to the _TPUExecute op and
+   *  used to look up the program in the compilation cache.
+   *  'may_modify_variables' indicates whether variables may be modified.
+   *
+   * @param dynamicShapes the dynamicShapes value
+   * @param guaranteedConstants the guaranteedConstants value
+   * @param numComputations the value of the numComputations property
+   * @param function the value of the function property
+   * @param metadata the value of the metadata property
+   * @return a new instance of Compile
+   */
+  public Compile compile(Iterable<Operand<TInt64>> dynamicShapes,
+      Iterable<Operand<?>> guaranteedConstants, Long numComputations, ConcreteFunction function,
+      String metadata) {
+    return Compile.create(scope, dynamicShapes, guaranteedConstants, numComputations, function, metadata);
   }
 
   /**

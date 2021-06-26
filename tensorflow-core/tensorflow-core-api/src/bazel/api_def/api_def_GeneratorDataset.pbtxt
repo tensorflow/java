@@ -1,5 +1,6 @@
 op {
   graph_op_name: "GeneratorDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.GeneratorDataset"
   }

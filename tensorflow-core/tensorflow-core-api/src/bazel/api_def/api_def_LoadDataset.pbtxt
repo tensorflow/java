@@ -1,5 +1,6 @@
 op {
   graph_op_name: "LoadDataset"
+  visibility: VISIBLE
   endpoint {
     name: "data.LoadDataset"
   }
