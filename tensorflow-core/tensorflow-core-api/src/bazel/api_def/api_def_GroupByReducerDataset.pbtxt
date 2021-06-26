@@ -1,3 +1,6 @@
 op {
   graph_op_name: "GroupByReducerDataset"
+  endpoint {
+    name: "data.GroupByReducerDataset"
+  }
 }

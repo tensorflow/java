@@ -35,6 +35,7 @@ import org.tensorflow.op.data.IteratorGetNextAsOptional;
 import org.tensorflow.op.data.IteratorGetNextSync;
 import org.tensorflow.op.data.IteratorToStringHandle;
 import org.tensorflow.op.data.MakeIterator;
+import org.tensorflow.op.data.MapAndBatchDataset;
 import org.tensorflow.op.data.MapDataset;
 import org.tensorflow.op.data.OneShotIterator;
 import org.tensorflow.op.data.OptionalFromValue;
@@ -288,6 +289,38 @@ public final class DataOps {
   public MakeIterator makeIterator(Operand<? extends TType> dataset,
       Operand<? extends TType> iterator) {
     return MakeIterator.create(scope, dataset, iterator);
+  }
+
+  /**
+   * Creates a dataset that fuses mapping with batching.
+   *  Creates a dataset that applies {@code f} to the outputs of {@code input_dataset} and then
+   *  batches {@code batch_size} of them.
+   *  <p>Unlike a &quot;MapDataset&quot;, which applies {@code f} sequentially, this dataset invokes up
+   *  to {@code batch_size * num_parallel_batches} copies of {@code f} in parallel.
+   *
+   * @param inputDataset A variant tensor representing the input dataset.
+   * @param otherArguments A list of tensors, typically values that were captured when building a closure
+   *  for {@code f}.
+   * @param batchSize A scalar representing the number of elements to accumulate in a
+   *  batch. It determines the number of concurrent invocations of {@code f} that process
+   *  elements from {@code input_dataset} in parallel.
+   * @param numParallelCalls A scalar representing the maximum number of parallel invocations of the {@code map_fn}
+   *  function. Applying the {@code map_fn} on consecutive input elements in parallel has
+   *  the potential to improve input pipeline throughput.
+   * @param dropRemainder A scalar representing whether the last batch should be dropped in case its size
+   *  is smaller than desired.
+   * @param f A function to apply to the outputs of {@code input_dataset}.
+   * @param outputTypes the value of the outputTypes property
+   * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
+   * @return a new instance of MapAndBatchDataset
+   */
+  public MapAndBatchDataset mapAndBatchDataset(Operand<? extends TType> inputDataset,
+      Iterable<Operand<?>> otherArguments, Operand<TInt64> batchSize,
+      Operand<TInt64> numParallelCalls, Operand<TBool> dropRemainder, ConcreteFunction f,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      MapAndBatchDataset.Options... options) {
+    return MapAndBatchDataset.create(scope, inputDataset, otherArguments, batchSize, numParallelCalls, dropRemainder, f, outputTypes, outputShapes, options);
   }
 
   /**

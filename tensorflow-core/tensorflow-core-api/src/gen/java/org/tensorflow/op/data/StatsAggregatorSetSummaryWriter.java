@@ -15,62 +15,46 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.random.experimental;
+package org.tensorflow.op.data;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
-import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
 
 /**
- * The DummySeedGenerator operation
+ * Set a summary_writer_interface to record statistics using given stats_aggregator.
  */
-public final class DummySeedGenerator extends RawOp implements Operand<TType> {
+public final class StatsAggregatorSetSummaryWriter extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "DummySeedGenerator";
+  public static final String OP_NAME = "StatsAggregatorSetSummaryWriter";
 
-  private Output<? extends TType> handle;
-
-  @SuppressWarnings("unchecked")
-  private DummySeedGenerator(Operation operation) {
+  private StatsAggregatorSetSummaryWriter(Operation operation) {
     super(operation);
-    int outputIdx = 0;
-    handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new DummySeedGenerator operation.
+   * Factory method to create a class wrapping a new StatsAggregatorSetSummaryWriter operation.
    *
    * @param scope current scope
-   * @return a new instance of DummySeedGenerator
+   * @param statsAggregator the statsAggregator value
+   * @param summary the summary value
+   * @return a new instance of StatsAggregatorSetSummaryWriter
    */
   @Endpoint(
       describeByClass = true
   )
-  public static DummySeedGenerator create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DummySeedGenerator"));
+  public static StatsAggregatorSetSummaryWriter create(Scope scope,
+      Operand<? extends TType> statsAggregator, Operand<? extends TType> summary) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatsAggregatorSetSummaryWriter"));
+    opBuilder.addInput(statsAggregator.asOutput());
+    opBuilder.addInput(summary.asOutput());
     opBuilder = scope.apply(opBuilder);
-    return new DummySeedGenerator(opBuilder.build());
-  }
-
-  /**
-   * Gets handle.
-   *
-   * @return handle.
-   */
-  public Output<? extends TType> handle() {
-    return handle;
-  }
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public Output<TType> asOutput() {
-    return (Output<TType>) handle;
+    return new StatsAggregatorSetSummaryWriter(opBuilder.build());
   }
 }

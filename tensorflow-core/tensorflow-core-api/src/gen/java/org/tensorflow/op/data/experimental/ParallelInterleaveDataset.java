@@ -28,28 +28,24 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that applies {@code f} to the outputs of {@code input_dataset}.
- * The resulting dataset is similar to the {@code InterleaveDataset}, except that the
- * dataset will fetch records from the interleaved datasets in parallel.
- * <p>The {@code tf.data} Python API creates instances of this op from
- * {@code Dataset.interleave()} when the {@code num_parallel_calls} parameter of that method
- * is set to any value other than {@code None}.
- * <p>By default, the output of this dataset will be deterministic, which may result
- * in the dataset blocking if the next data item to be returned isn't available.
- * In order to avoid head-of-line blocking, one can either set the {@code deterministic}
- * attribute to &quot;false&quot;, or leave it as &quot;default&quot; and set the
- * {@code experimental_deterministic} parameter of {@code tf.data.Options} to {@code False}.
- * This can improve performance at the expense of non-determinism.
+ * The resulting dataset is similar to the {@code InterleaveDataset}, with the exception
+ * that if retrieving the next value from a dataset would cause the requester to
+ * block, it will skip that input dataset. This dataset is especially useful
+ * when loading data from a variable-latency datastores (e.g. HDFS, GCS), as it
+ * allows the training step to proceed so long as some data is available.
+ * <p>!! WARNING !! This dataset is not deterministic!
  */
 public final class ParallelInterleaveDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "ParallelInterleaveDatasetV4";
+  public static final String OP_NAME = "ExperimentalParallelInterleaveDataset";
 
   private Output<? extends TType> handle;
 
@@ -61,30 +57,21 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
   }
 
   /**
-   * Factory method to create a class wrapping a new ParallelInterleaveDatasetV4 operation.
+   * Factory method to create a class wrapping a new ExperimentalParallelInterleaveDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset Dataset that produces a stream of arguments for the function {@code f}.
-   * @param otherArguments Additional arguments to pass to {@code f} beyond those produced by {@code input_dataset}.
-   * Evaluated once when the dataset is instantiated.
-   * @param cycleLength Number of datasets (each created by applying {@code f} to the elements of
-   * {@code input_dataset}) among which the {@code ParallelInterleaveDatasetV2} will cycle in a
-   * round-robin fashion.
-   * @param blockLength Number of elements at a time to produce from each interleaved invocation of a
-   * dataset returned by {@code f}.
-   * @param bufferOutputElements The number of elements each iterator being interleaved should buffer (similar
-   * to the {@code .prefetch()} transformation for each interleaved iterator).
-   * @param prefetchInputElements Determines the number of iterators to prefetch, allowing buffers to warm up and
-   * data to be pre-fetched without blocking the main thread.
-   * @param numParallelCalls Determines the number of threads that should be used for fetching data from
-   * input datasets in parallel. The Python API {@code tf.data.experimental.AUTOTUNE}
-   * constant can be used to indicate that the level of parallelism should be autotuned.
+   * @param inputDataset the inputDataset value
+   * @param otherArguments the otherArguments value
+   * @param cycleLength the cycleLength value
+   * @param blockLength the blockLength value
+   * @param sloppy the sloppy value
+   * @param bufferOutputElements the bufferOutputElements value
+   * @param prefetchInputElements the prefetchInputElements value
    * @param f A function mapping elements of {@code input_dataset}, concatenated with
    * {@code other_arguments}, to a Dataset variant that contains elements matching
    * {@code output_types} and {@code output_shapes}.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
-   * @param options carries optional attribute values
    * @return a new instance of ParallelInterleaveDataset
    */
   @Endpoint(
@@ -92,17 +79,17 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
   )
   public static ParallelInterleaveDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, Operand<TInt64> cycleLength, Operand<TInt64> blockLength,
-      Operand<TInt64> bufferOutputElements, Operand<TInt64> prefetchInputElements,
-      Operand<TInt64> numParallelCalls, ConcreteFunction f,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+      Operand<TBool> sloppy, Operand<TInt64> bufferOutputElements,
+      Operand<TInt64> prefetchInputElements, ConcreteFunction f,
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
     OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelInterleaveDataset"));
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(cycleLength.asOutput());
     opBuilder.addInput(blockLength.asOutput());
+    opBuilder.addInput(sloppy.asOutput());
     opBuilder.addInput(bufferOutputElements.asOutput());
     opBuilder.addInput(prefetchInputElements.asOutput());
-    opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
@@ -111,28 +98,7 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    if (options != null) {
-      for (Options opts : options) {
-        if (opts.deterministic != null) {
-          opBuilder.setAttr("deterministic", opts.deterministic);
-        }
-      }
-    }
     return new ParallelInterleaveDataset(opBuilder.build());
-  }
-
-  /**
-   * Sets the deterministic option.
-   *
-   * @param deterministic A string indicating the op-level determinism to use. Deterministic controls
-   * whether the interleave is allowed to return elements out of order if the next
-   * element to be returned isn't available, but a later element is. Options are
-   * &quot;true&quot;, &quot;false&quot;, and &quot;default&quot;. &quot;default&quot; indicates that determinism should be
-   * decided by the {@code experimental_deterministic} parameter of {@code tf.data.Options}.
-   * @return this Options instance.
-   */
-  public static Options deterministic(String deterministic) {
-    return new Options().deterministic(deterministic);
   }
 
   /**
@@ -148,30 +114,5 @@ public final class ParallelInterleaveDataset extends RawOp implements Operand<TT
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
-  }
-
-  /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.ParallelInterleaveDataset}
-   */
-  public static class Options {
-    private String deterministic;
-
-    private Options() {
-    }
-
-    /**
-     * Sets the deterministic option.
-     *
-     * @param deterministic A string indicating the op-level determinism to use. Deterministic controls
-     * whether the interleave is allowed to return elements out of order if the next
-     * element to be returned isn't available, but a later element is. Options are
-     * &quot;true&quot;, &quot;false&quot;, and &quot;default&quot;. &quot;default&quot; indicates that determinism should be
-     * decided by the {@code experimental_deterministic} parameter of {@code tf.data.Options}.
-     * @return this Options instance.
-     */
-    public Options deterministic(String deterministic) {
-      this.deterministic = deterministic;
-      return this;
-    }
   }
 }

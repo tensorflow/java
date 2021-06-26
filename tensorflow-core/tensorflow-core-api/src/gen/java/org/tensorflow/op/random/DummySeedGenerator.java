@@ -15,65 +15,62 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data.experimental;
+package org.tensorflow.op.random;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.family.TType;
 
 /**
- * Compresses a dataset element.
+ * The DummySeedGenerator operation
  */
-public final class CompressElement extends RawOp implements Operand<TType> {
+public final class DummySeedGenerator extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "CompressElement";
+  public static final String OP_NAME = "DummySeedGenerator";
 
-  private Output<? extends TType> compressed;
+  private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private CompressElement(Operation operation) {
+  private DummySeedGenerator(Operation operation) {
     super(operation);
     int outputIdx = 0;
-    compressed = operation.output(outputIdx++);
+    handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new CompressElement operation.
+   * Factory method to create a class wrapping a new DummySeedGenerator operation.
    *
    * @param scope current scope
-   * @param components the components value
-   * @return a new instance of CompressElement
+   * @return a new instance of DummySeedGenerator
    */
   @Endpoint(
       describeByClass = true
   )
-  public static CompressElement create(Scope scope, Iterable<Operand<?>> components) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompressElement"));
-    opBuilder.addInputList(Operands.asOutputs(components));
+  public static DummySeedGenerator create(Scope scope) {
+    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DummySeedGenerator"));
     opBuilder = scope.apply(opBuilder);
-    return new CompressElement(opBuilder.build());
+    return new DummySeedGenerator(opBuilder.build());
   }
 
   /**
-   * Gets compressed.
+   * Gets handle.
    *
-   * @return compressed.
+   * @return handle.
    */
-  public Output<? extends TType> compressed() {
-    return compressed;
+  public Output<? extends TType> handle() {
+    return handle;
   }
 
   @Override
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
-    return (Output<TType>) compressed;
+    return (Output<TType>) handle;
   }
 }

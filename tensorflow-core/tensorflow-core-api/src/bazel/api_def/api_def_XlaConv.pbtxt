@@ -1,6 +1,4 @@
 op {
   graph_op_name: "XlaConv"
-  endpoint {
-    name: "xla.Conv"
-  }
+  visibility: SKIP
 }

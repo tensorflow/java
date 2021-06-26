@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.data;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -122,7 +122,7 @@ public final class ReduceDataset extends RawOp implements Iterable<Operand<TType
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.ReduceDataset}
+   * Optional attributes for {@link org.tensorflow.op.data.ReduceDataset}
    */
   public static class Options {
     private Boolean useInterOpParallelism;

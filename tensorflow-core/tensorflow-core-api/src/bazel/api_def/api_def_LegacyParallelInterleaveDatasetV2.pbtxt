@@ -1,6 +1,6 @@
 op {
   graph_op_name: "LegacyParallelInterleaveDatasetV2"
   endpoint {
-    name: "data.experimental.LegacyParallelInterleaveDataset"
+    name: "data.LegacyParallelInterleaveDataset"
   }
 }

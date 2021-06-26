@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data.experimental;
+package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
@@ -133,7 +133,7 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.LegacyParallelInterleaveDataset}
+   * Optional attributes for {@link org.tensorflow.op.data.LegacyParallelInterleaveDataset}
    */
   public static class Options {
     private String deterministic;

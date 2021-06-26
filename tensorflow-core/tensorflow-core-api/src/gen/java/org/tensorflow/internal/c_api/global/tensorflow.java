@@ -3150,7 +3150,7 @@ limitations under the License.
 // TF_InitKernel to do op/kernel registration.
 // Plugin should implement TF_InitKernel to register kernels. This function
 // should register all kernels in a plugin.
-public static native void TF_InitKernel();
+
 // Targeting ../Create_func_TF_OpKernelConstruction.java
 
 

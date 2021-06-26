@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data.experimental;
+package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -137,7 +137,7 @@ public final class DataServiceDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.experimental.DataServiceDataset}
+   * Optional attributes for {@link org.tensorflow.op.data.DataServiceDataset}
    */
   public static class Options {
     private Long taskRefreshIntervalHintMs;
