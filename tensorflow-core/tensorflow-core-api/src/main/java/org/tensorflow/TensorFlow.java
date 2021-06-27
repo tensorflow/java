@@ -15,6 +15,7 @@
  */
 package org.tensorflow;
 
+import static org.tensorflow.internal.c_api.global.tensorflow.TFAddLogSink;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteBuffer;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_DeleteLibraryHandle;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_GetAllOpList;
@@ -96,6 +97,13 @@ public final class TensorFlow {
     }
   }
 
+  @SuppressWarnings("FieldCanBeLocal")
+  private static NativeLogSink sink;
+  private static void setupLogger(){
+    sink = new NativeLogSink();
+    TFAddLogSink(sink);
+  }
+
   private static TF_Library libraryLoad(String filename) {
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
@@ -137,5 +145,6 @@ public final class TensorFlow {
       e.printStackTrace();
       throw e;
     }
+    setupLogger();
   }
 }
