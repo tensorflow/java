@@ -12,8 +12,20 @@ import static org.tensorflow.internal.c_api.global.tensorflow.*;
 @Namespace("tensorflow") @Properties(inherit = org.tensorflow.internal.c_api.presets.tensorflow.class)
 public class TFLogSink extends Pointer {
     static { Loader.load(); }
+    /** Default native constructor. */
+    public TFLogSink() { super((Pointer)null); allocate(); }
+    /** Native array allocator. Access with {@link Pointer#position(long)}. */
+    public TFLogSink(long size) { super((Pointer)null); allocateArray(size); }
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
     public TFLogSink(Pointer p) { super(p); }
+    private native void allocate();
+    private native void allocateArray(long size);
+    @Override public TFLogSink position(long position) {
+        return (TFLogSink)super.position(position);
+    }
+    @Override public TFLogSink getPointer(long i) {
+        return new TFLogSink(this).position(position + i);
+    }
 
 
   // `Send` is called synchronously during the log statement.  The logging
@@ -24,7 +36,7 @@ public class TFLogSink extends Pointer {
   // `e` is guaranteed to remain valid until the subsequent call to
   // `WaitTillSent` completes, so implementations may store a pointer to or
   // copy of `e` (e.g. in a thread local variable) for use in `WaitTillSent`.
-  public native void Send(@Const @ByRef TFLogEntry entry);
+  @Virtual(true) public native void Send(@Const @ByRef TFLogEntry entry);
 
   // `WaitTillSent` blocks the calling thread (the thread that generated a log
   // message) until the sink has finished processing the log message.
@@ -34,5 +46,5 @@ public class TFLogSink extends Pointer {
   // The default implementation returns immediately.  Like `Send`,
   // implementations should be careful not to call `LOG` or `CHECK or take any
   // locks that might be held by the `LOG` caller, to avoid deadlock.
-  public native void WaitTillSent();
+  @Virtual public native void WaitTillSent();
 }

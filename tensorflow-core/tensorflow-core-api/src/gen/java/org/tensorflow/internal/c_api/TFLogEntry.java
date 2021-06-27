@@ -26,5 +26,5 @@ public class TFLogEntry extends Pointer {
   public native @StdString @Cast({"char*", "std::string&&"}) BytePointer FName();
   public native int Line();
   public native @StdString @Cast({"char*", "std::string&&"}) BytePointer ToString();
-  public native @StdString @Cast({"", "", "std::string"}) BytePointer text_message();
+  
 }

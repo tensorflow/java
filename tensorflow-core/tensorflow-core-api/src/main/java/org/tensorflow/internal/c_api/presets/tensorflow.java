@@ -403,15 +403,27 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                 .cast()
                 .valueTypes("long")
                 .pointerTypes("LongPointer", "long[]"))
-        .put(new Info("string", "std::string", "tensorflow::string").annotations("@StdString")
-            .valueTypes("@Cast({\"char*\", \"std::string&&\"}) BytePointer", "@Cast({\"char*\", \"std::string&&\"}) String")
-            .pointerTypes("@Cast({\"char*\", \"std::string*\"}) BytePointer"))
+        .put(
+            new Info("string", "std::string", "tensorflow::string")
+                .annotations("@StdString")
+                .valueTypes(
+                    "@Cast({\"char*\", \"std::string&&\"}) BytePointer",
+                    "@Cast({\"char*\", \"std::string&&\"}) String")
+                .pointerTypes("@Cast({\"char*\", \"std::string*\"}) BytePointer"))
+//        .put(
+//            new Info("absl::string_view")
+//                .annotations("@StdString")
+//                .valueTypes(
+//                    "@Cast({\"char*\", \"std::string&&\", \"std::string\"}) BytePointer",
+//                    "@Cast({\"char*\", \"std::string&&\", \"std::string\"}) String"))
         .put(
             new Info("absl::LogSeverity", "LogSeverity", "tensorflow::LogSeverity")
                 .cast()
                 .valueTypes("int")
                 .pointerTypes("IntPointer", "int[]"))
         .put(new Info("tensorflow::TFLogEntry").purify())
+        .put(new Info("tensorflow::TFLogSink").virtualize())
+        .put(new Info("tensorflow::TFLogEntry::text_message").skip())
         .put(
             new Info(
                     "tensorflow::internal::LogEveryNSecState",
