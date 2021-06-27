@@ -21,23 +21,10 @@ public class TFLogEntry extends Pointer {
     /** Pointer cast constructor. Invokes {@link Pointer#Pointer(Pointer)}. */
     public TFLogEntry(Pointer p) { super(p); }
 
-  public TFLogEntry(int severity, @StdString @Cast({"char*", "std::string&&"}) BytePointer message) { super((Pointer)null); allocate(severity, message); }
-  private native void allocate(int severity, @StdString @Cast({"char*", "std::string&&"}) BytePointer message);
-  public TFLogEntry(int severity, @StdString @Cast({"char*", "std::string&&"}) String message) { super((Pointer)null); allocate(severity, message); }
-  private native void allocate(int severity, @StdString @Cast({"char*", "std::string&&"}) String message);
-
-  public TFLogEntry(int severity, @StdString @Cast({"char*", "std::string&&"}) BytePointer fname, int line,
-                        @StdString @Cast({"char*", "std::string&&"}) BytePointer message) { super((Pointer)null); allocate(severity, fname, line, message); }
-  private native void allocate(int severity, @StdString @Cast({"char*", "std::string&&"}) BytePointer fname, int line,
-                        @StdString @Cast({"char*", "std::string&&"}) BytePointer message);
-  public TFLogEntry(int severity, @StdString @Cast({"char*", "std::string&&"}) String fname, int line,
-                        @StdString @Cast({"char*", "std::string&&"}) String message) { super((Pointer)null); allocate(severity, fname, line, message); }
-  private native void allocate(int severity, @StdString @Cast({"char*", "std::string&&"}) String fname, int line,
-                        @StdString @Cast({"char*", "std::string&&"}) String message);
 
   public native @Cast("absl::LogSeverity") int log_severity();
   public native @StdString @Cast({"char*", "std::string&&"}) BytePointer FName();
   public native int Line();
   public native @StdString @Cast({"char*", "std::string&&"}) BytePointer ToString();
-  public native @StdString @Cast({"char*", "std::string&&"}) BytePointer text_message();
+  public native @StdString @Cast({"", "", "std::string"}) BytePointer text_message();
 }
