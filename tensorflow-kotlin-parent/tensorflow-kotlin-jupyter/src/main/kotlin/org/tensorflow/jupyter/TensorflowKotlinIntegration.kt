@@ -44,10 +44,6 @@ public class TensorflowKotlinIntegration : JupyterIntegration() {
                       "No version property found in the $tensorflowPropertiesFile resource, did you overwrite it?")
             }
 
-    if (version.lowercase().endsWith("snapshot")) {
-      repositories("https://oss.sonatype.org/content/repositories/snapshots/")
-    }
-
     // TODO use ext instead of platform https://github.com/Kotlin/kotlin-jupyter/issues/285
     dependencies("org.tensorflow:tensorflow-core-platform-gpu:$version")
     dependencies("org.tensorflow:tensorflow-core-kotlin-jupyter:$version")

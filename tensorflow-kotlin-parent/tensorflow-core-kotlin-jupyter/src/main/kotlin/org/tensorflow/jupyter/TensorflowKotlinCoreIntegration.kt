@@ -38,6 +38,7 @@ public class TensorflowKotlinCoreIntegration : JupyterIntegration() {
     render<Operand<*>> { it.asOutput().toString() }
     render<Op> { it.op().toString() }
 
+    //TODO add a implicit receiver of EagerSession.getDefault() instead
     onLoaded { declare("tf" to EagerSession.getDefault().tf) }
   }
 }
