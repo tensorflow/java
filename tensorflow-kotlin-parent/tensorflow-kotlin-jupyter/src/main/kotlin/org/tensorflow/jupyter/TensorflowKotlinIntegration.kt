@@ -44,8 +44,7 @@ public class TensorflowKotlinIntegration : JupyterIntegration() {
                       "No version property found in the $tensorflowPropertiesFile resource, did you overwrite it?")
             }
 
-    // TODO use ext instead of platform https://github.com/Kotlin/kotlin-jupyter/issues/285
-    dependencies("org.tensorflow:tensorflow-core-platform-gpu:$version")
+    dependencies("org.tensorflow:tensorflow-core-api:jar:$ext:$version")
     dependencies("org.tensorflow:tensorflow-core-kotlin-jupyter:$version")
   }
 }
