@@ -15,6 +15,7 @@
   <description>Platform-dependent native code and pure-Java code for the TensorFlow machine intelligence library.</description>
 
   <properties>
+    <maven.install.skip>false</maven.install.skip>
     <native.build.skip>false</native.build.skip>
     <javacpp.build.skip>${native.build.skip}</javacpp.build.skip>
     <javacpp.parser.skip>${native.build.skip}</javacpp.parser.skip>
@@ -475,12 +476,35 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
+          <appendAssemblyId>false</appendAssemblyId>
+          <descriptors>
+            <descriptor>src/assembly/mrjar.xml</descriptor>
+          </descriptors>
+          <archive>
+            <manifestEntries>
+              <Multi-Release>true</Multi-Release>
+            </manifestEntries>
+          </archive>
+          <mergeManifestMode>merge</mergeManifestMode>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-archiver</artifactId>
+            <version>3.0.3</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

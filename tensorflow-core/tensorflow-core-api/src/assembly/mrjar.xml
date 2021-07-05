@@ -1,0 +1,54 @@
+
+<!--
+  /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  =======================================================================
+  */
+  -->
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd">
+  <id>mvjar</id>
+  <formats>
+    <format>jar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <moduleSets>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>org.tensorflow:tensorflow-core-api</include>
+      </includes>
+      <binaries>
+        <unpack>true</unpack>
+        <includeDependencies>false</includeDependencies>
+      </binaries>
+    </moduleSet>
+    <moduleSet>
+      <useAllReactorProjects>true</useAllReactorProjects>
+      <includes>
+        <include>org.tensorflow:tensorflow-core-api-java9</include>
+      </includes>
+      <binaries>
+        <outputDirectory>META-INF/versions/9</outputDirectory>
+        <unpack>true</unpack>
+        <includeDependencies>false</includeDependencies>
+        <unpackOptions>
+          <excludes>
+            <exclude>/META-INF/**</exclude>
+          </excludes>
+        </unpackOptions>
+      </binaries>
+    </moduleSet>
+  </moduleSets>
+</assembly>

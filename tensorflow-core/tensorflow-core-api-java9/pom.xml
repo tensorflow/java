@@ -1,0 +1,31 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.tensorflow</groupId>
+    <artifactId>tensorflow-core</artifactId>
+    <version>0.4.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>tensorflow-core-java9</artifactId>
+  <packaging>jar</packaging>
+
+  <name>TensorFlow Core Java 9 API Classes</name>
+  <description>Java 9 classes for the Tensorflow Core API</description>
+
+  <properties>
+    <java.module.name>org.tensorflow.core.api.java9</java.module.name>
+    <maven.compiler.source>9</maven.compiler.source>
+    <maven.compiler.target>9</maven.compiler.target>
+    <maven.compiler.release>9</maven.compiler.release>
+    <maven.install.skip>true</maven.install.skip>
+  </properties>
+
+  <dependencies>
+  </dependencies>
+
+  <build>
+    <plugins>
+    </plugins>
+  </build>
+</project>

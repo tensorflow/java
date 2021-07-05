@@ -31,6 +31,7 @@
   <description>Parent POM of TensorFlow core artifacts</description>
 
   <modules>
+    <module>tensorflow-core-api-java9</module>
     <module>tensorflow-core-generator</module>
     <module>tensorflow-core-api</module>
   </modules>
