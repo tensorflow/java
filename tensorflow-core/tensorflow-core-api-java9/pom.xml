@@ -7,7 +7,7 @@
     <artifactId>tensorflow-core</artifactId>
     <version>0.4.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tensorflow-core-java9</artifactId>
+  <artifactId>tensorflow-core-api-java9</artifactId>
   <packaging>jar</packaging>
 
   <name>TensorFlow Core Java 9 API Classes</name>
