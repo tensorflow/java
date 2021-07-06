@@ -22,6 +22,9 @@
     <java.module.name>org.tensorflow.core.api</java.module.name>
     <ndarray.version>0.3.1</ndarray.version>
     <truth.version>1.0.1</truth.version>
+
+    <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
+    <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
   </properties>
 
   <dependencies>
@@ -139,6 +142,50 @@
               <sources>
                 <source>${project.basedir}/src/gen/java</source>
               </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>compile-java9</id>
+            <phase>compile</phase>
+            <configuration>
+              <target>
+                <mkdir dir="${java9.build.outputDirectory}" />
+                <javac srcdir="${java9.sourceDirectory}" destdir="${java9.build.outputDirectory}"
+                  classpath="${project.build.outputDirectory}" includeantruntime="false"
+                  target="9" source="9" release="9"/>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${java9.build.outputDirectory}</directory>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
@@ -372,6 +419,7 @@
           <archive>
             <manifestEntries>
               <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
+              <Multi-Release>true</Multi-Release>
             </manifestEntries>
           </archive>
         </configuration>
