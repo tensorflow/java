@@ -115,6 +115,7 @@ public interface ExecutionEnvironment {
    *
    * <p><b>Should generally only be used internally, prefer {@link
    * org.tensorflow.op.Ops#initScope()}.</b>
+   *
    * @throws IllegalArgumentException if the op or one of its inputs can't be made an init op.
    */
   void registerInitOp(Operation op);

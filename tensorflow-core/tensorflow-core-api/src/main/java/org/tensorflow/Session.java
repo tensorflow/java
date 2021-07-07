@@ -145,6 +145,7 @@ public final class Session implements AutoCloseable {
    * Execute the graph's initializers.
    *
    * <p>This runs any ops that have been created with an init scope.
+   *
    * @throws IllegalStateException if the session has already been initialized
    */
   public synchronized void initialize() {

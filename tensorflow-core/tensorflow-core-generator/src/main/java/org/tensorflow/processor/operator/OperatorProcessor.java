@@ -26,7 +26,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.TypeVariableName;
@@ -40,8 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -575,8 +572,10 @@ public final class OperatorProcessor extends AbstractProcessor {
             .returns(T)
             .addStatement("scope.env().registerInitOp(op.op())")
             .addStatement("return op")
-            .addJavadoc("Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n" + initScopeComment +
-                "\n@throws IllegalArgumentException if the op or one of its inputs can't be made an init op.")
+            .addJavadoc(
+                "Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n"
+                    + initScopeComment
+                    + "\n@throws IllegalArgumentException if the op or one of its inputs can't be made an init op.")
             .build());
 
     opsBuilder.addMethod(

@@ -134,8 +134,7 @@ public class AdaGrad extends Optimizer {
    */
   private <T extends TType> void createAdaGradSlot(Output<T> v) {
     Operand<T> initializer =
-        tf.fill(
-            tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
   }
 

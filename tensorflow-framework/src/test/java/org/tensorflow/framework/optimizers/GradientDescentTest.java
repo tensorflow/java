@@ -20,7 +20,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
@@ -140,7 +139,8 @@ public class GradientDescentTest {
       Variable<TFloat32> fcWeights =
           tf.initScope().variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
       fcWeightName = fcWeights.op().name();
-      Variable<TFloat32> fcBiases = tf.initScope().variable(tf.fill(tf.array(200), tf.constant(0.1f)));
+      Variable<TFloat32> fcBiases =
+          tf.initScope().variable(tf.fill(tf.array(200), tf.constant(0.1f)));
       fcBiasName = fcBiases.op().name();
       Relu<TFloat32> relu = tf.nn.relu(tf.math.add(tf.linalg.matMul(input, fcWeights), fcBiases));
 
@@ -148,7 +148,8 @@ public class GradientDescentTest {
       Variable<TFloat32> outputWeights =
           tf.initScope().variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
       outputWeightName = outputWeights.op().name();
-      Variable<TFloat32> outputBiases = tf.initScope().variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
+      Variable<TFloat32> outputBiases =
+          tf.initScope().variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
       outputBiasName = outputBiases.op().name();
       Add<TFloat32> output = tf.math.add(tf.linalg.matMul(relu, outputWeights), outputBiases);
 

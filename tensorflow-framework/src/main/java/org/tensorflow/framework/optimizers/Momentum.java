@@ -124,8 +124,7 @@ public class Momentum extends Optimizer {
    * @param <T> the data type of the variable
    */
   private <T extends TType> void createMomentumSlot(Output<T> v) {
-    Operand<T> initializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), MOMENTUM, initializer);
   }
 

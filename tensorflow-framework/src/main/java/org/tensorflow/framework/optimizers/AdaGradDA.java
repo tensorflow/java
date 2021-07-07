@@ -186,7 +186,8 @@ public class AdaGradDA extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdaGradDASlot(v);
     }
-    globalStep = tf.initScope().withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
+    globalStep =
+        tf.initScope().withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
     tf.initScope().assign(globalStep, tf.constant(0L));
   }
 
@@ -197,12 +198,10 @@ public class AdaGradDA extends Optimizer {
    * @param <T> the datatype of the variable.
    */
   private <T extends TType> void createAdaGradDASlot(Output<T> v) {
-    Operand<T> initializer =
-        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
+    Operand<T> initializer = tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(0.0f), v.type()));
     createSlot(v.asOutput(), ACCUMULATOR, initializer);
     Operand<T> sqInitializer =
-        tf.fill(
-            tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
+        tf.fill(tf.shape(v), tf.dtypes.cast(tf.constant(initialAccumulatorValue), v.type()));
     createSlot(v.asOutput(), SQUARED_ACCUMULATOR, sqInitializer);
   }
 

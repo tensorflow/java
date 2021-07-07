@@ -96,8 +96,8 @@ public class GraphTestSession extends TestSession {
     hasInited = true;
   }
 
-  private synchronized void initIfNeeded(){
-    if(!hasInited){
+  private synchronized void initIfNeeded() {
+    if (!hasInited) {
       session.initialize();
       hasInited = true;
     }
