@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - master
+      - r[0-9]+.*
     types: [opened, reopened, synchronize, labeled, unlabeled]
 env:
   STAGING_PROFILE_ID: 46f80d0729c92d
