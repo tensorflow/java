@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
@@ -529,7 +530,7 @@ public class SavedModelBundle implements AutoCloseable {
   }
 
   private static void validateTags(String[] tags) {
-    if (tags == null || Arrays.stream(tags).anyMatch(t -> t == null || t.isEmpty())) {
+    if (tags == null || Arrays.stream(tags).anyMatch(Objects::isNull)) {
       throw new IllegalArgumentException("Invalid tags: " + Arrays.toString(tags));
     }
   }
