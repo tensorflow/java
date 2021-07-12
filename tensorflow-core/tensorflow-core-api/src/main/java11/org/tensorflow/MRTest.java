@@ -19,6 +19,6 @@ package org.tensorflow;
 
 class MRTest {
   static int version(){
-    return 9;
+    return 11;
   }
 }

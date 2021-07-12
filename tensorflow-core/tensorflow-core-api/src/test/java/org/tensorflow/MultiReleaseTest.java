@@ -28,8 +28,8 @@ public class MultiReleaseTest {
     String javaVersion = System.getProperty("java.version");
     System.out.println("Testing on Java version " + javaVersion);
     int value = MRTest.version();
-    if (javaVersion.compareTo("9") >= 0) {
-      assertEquals(9, value);
+    if (javaVersion.compareTo("11") >= 0) {
+      assertEquals(11, value);
     } else {
       assertEquals(8, value);
     }

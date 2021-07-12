@@ -170,17 +170,17 @@
             </configuration>
           </execution>
           <execution>
-            <id>compile-java-9</id>
+            <id>compile-java-11</id>
             <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
             <configuration>
-              <release>9</release>
-              <source>9</source>
-              <target>9</target>
+              <release>11</release>
+              <source>11</source>
+              <target>11</target>
               <compileSourceRoots>
-                <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
+                <compileSourceRoot>${project.basedir}/src/main/java11</compileSourceRoot>
               </compileSourceRoots>
               <multiReleaseOutput>true</multiReleaseOutput>
             </configuration>
