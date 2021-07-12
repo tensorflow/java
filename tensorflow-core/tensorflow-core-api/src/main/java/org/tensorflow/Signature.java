@@ -172,8 +172,9 @@ public class Signature  {
   @Override
   public String toString() {
     StringBuilder strBuilder = new StringBuilder("Signature for \"" + key +"\":\n");
-    if (!methodName().isEmpty()) {
-      strBuilder.append("\tMethod: \"").append(methodName()).append("\"\n");
+    String methodName = methodName();
+    if (methodName != null && !methodName.isEmpty()) {
+      strBuilder.append("\tMethod: \"").append(methodName).append("\"\n");
     }
     if (signatureDef.getInputsCount() > 0) {
       strBuilder.append("\tInputs:\n");
