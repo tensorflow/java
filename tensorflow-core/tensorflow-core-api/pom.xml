@@ -22,9 +22,6 @@
     <java.module.name>org.tensorflow.core.api</java.module.name>
     <ndarray.version>0.3.1</ndarray.version>
     <truth.version>1.0.1</truth.version>
-
-    <java9.sourceDirectory>${project.basedir}/src/main/java9</java9.sourceDirectory>
-    <java9.build.outputDirectory>${project.build.directory}/classes-java9</java9.build.outputDirectory>
   </properties>
 
   <dependencies>
@@ -147,50 +144,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>compile-java9</id>
-            <phase>compile</phase>
-            <configuration>
-              <target>
-                <mkdir dir="${java9.build.outputDirectory}" />
-                <javac srcdir="${java9.sourceDirectory}" destdir="${java9.build.outputDirectory}"
-                  classpath="${project.build.outputDirectory}" includeantruntime="false"
-                  target="9" source="9" release="9"/>
-              </target>
-            </configuration>
-            <goals>
-              <goal>run</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.outputDirectory}/META-INF/versions/9</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${java9.build.outputDirectory}</directory>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
         <executions>
@@ -214,6 +167,22 @@
               </annotationProcessorPaths>
               <!-- Important: Cannot be ${project.basedir}/src/gen/java or wherever the ops are -->
               <generatedSourcesDirectory>${project.basedir}/src/gen/annotations</generatedSourcesDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>compile-java-9</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <release>9</release>
+              <source>9</source>
+              <target>9</target>
+              <compileSourceRoots>
+                <compileSourceRoot>${project.basedir}/src/main/java9</compileSourceRoot>
+              </compileSourceRoots>
+              <multiReleaseOutput>true</multiReleaseOutput>
             </configuration>
           </execution>
           <!--
