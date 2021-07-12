@@ -40,6 +40,32 @@ jobs:
       - name: Run lint checks
         run: |
           mvn compiler:compile -Pdev,jdk11 -B -U -e
+  quick-build-jdk8:
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
+    runs-on: ubuntu-latest
+    container: centos:7
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Install environment
+        run: |
+          yum -y update
+          yum -y install centos-release-scl-rh epel-release
+          yum -y install java-1.8.0-openjdk-devel devtoolset-7
+          echo Downloading Maven
+          curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
+          tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
+          ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      - name: Build project
+        run: |
+          source scl_source enable devtoolset-7 || true
+          export JAVA_HOME=$(dirname $(dirname $(readlink $(readlink $(which javac)))))
+          echo $JAVA_HOME
+          mvn -version
+          mvn clean install -Pdev -B -U -e -Dlint.skip=true
+      - name: Run lint checks
+        run: |
+          mvn compiler:compile -Pdev -B -U -e
   check-format:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
