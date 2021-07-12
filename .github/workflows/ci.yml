@@ -46,12 +46,16 @@ jobs:
     container: centos:7
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v1      
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8 
       - name: Install environment
         run: |
           yum -y update
           yum -y install centos-release-scl-rh epel-release
-          yum -y install java-1.8.0-openjdk-devel devtoolset-7
+          yum -y install devtoolset-7
           echo Downloading Maven
           curl -L https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -o $HOME/apache-maven-3.6.3-bin.tar.gz
           tar xzf $HOME/apache-maven-3.6.3-bin.tar.gz -C /opt/
@@ -63,9 +67,6 @@ jobs:
           echo $JAVA_HOME
           mvn -version
           mvn clean install -Pdev -B -U -e -Dlint.skip=true
-      - name: Run lint checks
-        run: |
-          mvn compiler:compile -Pdev -B -U -e
   check-format:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
