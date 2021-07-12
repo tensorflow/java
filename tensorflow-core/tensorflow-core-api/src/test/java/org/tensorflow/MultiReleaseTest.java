@@ -17,8 +17,22 @@
  */
 package org.tensorflow;
 
-class MRTest {
-  static int version(){
-    return 9;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class MultiReleaseTest {
+
+  @Test
+  public void testMultirelease(){
+    String javaVersion = System.getProperty("java.version");
+    System.out.println("Testing on Java version " + javaVersion);
+    int value = MRTest.version();
+    if(javaVersion.compareTo("9") >= 0){
+      assertEquals(9, value);
+    } else {
+      assertEquals(8, value);
+    }
   }
+
 }

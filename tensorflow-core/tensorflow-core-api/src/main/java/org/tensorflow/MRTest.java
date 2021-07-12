@@ -17,8 +17,8 @@ limitations under the License.
 */
 package org.tensorflow;
 
-public class MRTest {
-  public static int version() {
+class MRTest {
+  static int version() {
     return 8;
   }
 }
