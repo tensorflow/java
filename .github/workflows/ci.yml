@@ -40,7 +40,7 @@ jobs:
       - name: Run lint checks
         run: |
           mvn compiler:compile -Pdev,jdk11 -B -U -e
-  quick-build-jdk9:
+  test-mr:
     if: github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'CI build')
     runs-on: ubuntu-latest
     container: centos:7

@@ -28,7 +28,9 @@ public class MultiReleaseTest {
     String javaVersion = System.getProperty("java.version");
     System.out.println("Testing on Java version " + javaVersion);
     int value = MRTest.version();
-    if (javaVersion.compareTo("11") >= 0) {
+    int majorVersion = Integer.parseInt(javaVersion.substring(0, javaVersion.indexOf('.')));
+
+    if (majorVersion >= 11) {
       assertEquals(11, value);
     } else {
       assertEquals(8, value);
