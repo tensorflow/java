@@ -1,19 +1,19 @@
 /*
-  Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- ==============================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+==============================================================================
+*/
 package org.tensorflow;
 
 import com.squareup.javapoet.ClassName;
@@ -53,24 +53,27 @@ public class Names {
   public static final ClassName Operation = ClassName.get(TensorflowPackage, "Operation");
   public static final ClassName GraphOperation = ClassName.get(TensorflowPackage, "GraphOperation");
   public static final ClassName Operands = ClassName.get(OpPackage, "Operands");
-  public static final ClassName OperationBuilder = ClassName.get(TensorflowPackage, "OperationBuilder");
-  public static final TypeName IterableOp = ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
+  public static final ClassName OperationBuilder =
+      ClassName.get(TensorflowPackage, "OperationBuilder");
+  public static final TypeName IterableOp =
+      ParameterizedTypeName.get(ClassName.get(Iterable.class), Op);
 
   public static final ClassName Operand = ClassName.get(TensorflowPackage, "Operand");
   public static final ClassName Output = ClassName.get(TensorflowPackage, "Output");
 
   public static final ClassName Shape = ClassName.get(TensorflowPackage + ".ndarray", "Shape");
   public static final ClassName Tensor = ClassName.get(TensorflowPackage, "Tensor");
-  public static final ClassName ConcreteFunction = ClassName.get(TensorflowPackage, "ConcreteFunction");
+  public static final ClassName ConcreteFunction =
+      ClassName.get(TensorflowPackage, "ConcreteFunction");
 
   public static final ClassName Scope = ClassName.get(OpPackage, "Scope");
   public static final TypeName DeviceSpec = ClassName.get(TensorflowPackage, "DeviceSpec");
   public static final ClassName Ops = ClassName.get(OpPackage, "Ops");
 
-  public static final TypeName ExecutionEnvironment = ClassName.get(TensorflowPackage, "ExecutionEnvironment");
+  public static final TypeName ExecutionEnvironment =
+      ClassName.get(TensorflowPackage, "ExecutionEnvironment");
   public static final TypeName EagerSession = ClassName.get(TensorflowPackage, "EagerSession");
 
   public static final TypeName String = ClassName.get(String.class);
   public static final TypeName Arrays = ClassName.get(Arrays.class);
-
 }

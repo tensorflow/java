@@ -53,18 +53,14 @@ import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
 
-/**
- * A generator to generate a op class
- */
+/** A generator to generate a op class */
 final class ClassGenerator {
 
-  /**
-   * Return true if we can generate the operation class for {@code op}.
-   */
+  /** Return true if we can generate the operation class for {@code op}. */
   static boolean canGenerateOp(OpDef op, ApiDef apiDef) {
     return apiDef.getVisibility() != Visibility.SKIP
         && !op.getName()
-        .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
+            .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
 
   enum RenderMode {
@@ -75,49 +71,31 @@ final class ClassGenerator {
 
   private static final String OP_NAME_FIELD = "OP_NAME";
 
-  /**
-   * The in-progress class builder for the top level op class.
-   */
+  /** The in-progress class builder for the top level op class. */
   private final TypeSpec.Builder builder;
 
-  /**
-   * The op to build.
-   */
+  /** The op to build. */
   private final OpDef op;
 
-  /**
-   * The api definition for the current op.
-   */
+  /** The api definition for the current op. */
   private final ApiDef apiDef;
 
-  /**
-   * A type resolver for the current op.
-   */
+  /** A type resolver for the current op. */
   private final TypeResolver resolver;
 
-  /**
-   * The full package of the class.
-   */
+  /** The full package of the class. */
   private final String fullPackage;
 
-  /**
-   * The base package for this op generation run.
-   */
+  /** The base package for this op generation run. */
   private final String basePackage;
 
-  /**
-   * The group of this op.
-   */
+  /** The group of this op. */
   private final String group;
 
-  /**
-   * The class name for this op.
-   */
+  /** The class name for this op. */
   private final String className;
 
-  /**
-   * The endpoint being generated in this class.
-   */
+  /** The endpoint being generated in this class. */
   private final Endpoint endpoint;
 
   private final StatefulPair statefulPair;
@@ -125,38 +103,27 @@ final class ClassGenerator {
   private final boolean isStateSubclass;
 
   /**
-   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has not been ran.
+   * The generated options class, or null if it doesn't have one or {@link #buildOptionsClass()} has
+   * not been ran.
    */
   private TypeSpec optionsClass = null;
 
-  /**
-   * What type of op this is.
-   */
+  /** What type of op this is. */
   private RenderMode mode = RenderMode.DEFAULT;
 
-  /**
-   * The required attributes of this op.
-   */
+  /** The required attributes of this op. */
   private final List<AttrDef> requiredAttributes = new ArrayList<>();
 
-  /**
-   * The optional attributes of this op.
-   */
+  /** The optional attributes of this op. */
   private final List<AttrDef> optionalAttributes = new ArrayList<>();
 
-  /**
-   * The class's type parameters, initialized in {@link #buildClass()}.
-   */
+  /** The class's type parameters, initialized in {@link #buildClass()}. */
   private final Set<TypeVariableName> typeParams = new LinkedHashSet<>();
 
-  /**
-   * The api defs for the arguments.
-   */
+  /** The api defs for the arguments. */
   private final Map<ArgDef, ApiDef.Arg> argApis = new HashMap<>();
 
-  /**
-   * The api defs for the attributes.
-   */
+  /** The api defs for the attributes. */
   private final Map<AttrDef, ApiDef.Attr> attrApis = new HashMap<>();
 
   ClassGenerator(
@@ -220,9 +187,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Get the Java variable name for an argument.
-   */
+  /** Get the Java variable name for an argument. */
   private String getJavaName(ArgDef arg) {
     String name = arg.getName();
     String rename = argApis.get(arg).getRenameTo();
@@ -233,9 +198,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Get the Java variable name for an attribute.
-   */
+  /** Get the Java variable name for an attribute. */
   private String getJavaName(AttrDef arg) {
     String name = arg.getName();
     String rename = attrApis.get(arg).getRenameTo();
@@ -246,16 +209,12 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Get the fully qualified name of the class being generated.
-   */
+  /** Get the fully qualified name of the class being generated. */
   private String fullClassName() {
     return fullPackage + "." + className;
   }
 
-  /**
-   * Build the class.
-   */
+  /** Build the class. */
   void buildClass() {
     builder.addModifiers(Modifier.PUBLIC);
     if (!isStateSelector) {
@@ -300,8 +259,10 @@ final class ClassGenerator {
 
       if (iterable) {
         mode = RenderMode.LIST_OPERAND;
-        if (!isStateSubclass) {builder.addSuperinterface(
-            ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));}
+        if (!isStateSubclass) {
+          builder.addSuperinterface(
+              ParameterizedTypeName.get(ClassName.get(Iterable.class), operandType));
+        }
       } else {
         mode = RenderMode.OPERAND;
         if (!isStateSubclass) {
@@ -356,31 +317,34 @@ final class ClassGenerator {
       buildInterfaceImpl();
     }
 
-    if (!isStateSelector) {// add op name field
-    builder.addField(
-        FieldSpec.builder(
-            TypeResolver.STRING, OP_NAME_FIELD, Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-            .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
-            .initializer("$S", op.getName())
-            .build());
+    if (!isStateSelector) { // add op name field
+      builder.addField(
+          FieldSpec.builder(
+                  TypeResolver.STRING,
+                  OP_NAME_FIELD,
+                  Modifier.PUBLIC,
+                  Modifier.STATIC,
+                  Modifier.FINAL)
+              .addJavadoc("$L", "The name of this op, as known by TensorFlow core engine")
+              .initializer("$S", op.getName())
+              .build());
 
-    // add output fields
-    if (op.getOutputArgCount() > 0) {
-      for (ArgDef output : op.getOutputArgList()) {
-        builder.addField(
-            resolver.typeOf(output).listIfIterable().javaType,
-            getJavaName(output),
-            Modifier.PRIVATE);
+      // add output fields
+      if (op.getOutputArgCount() > 0) {
+        for (ArgDef output : op.getOutputArgList()) {
+          builder.addField(
+              resolver.typeOf(output).listIfIterable().javaType,
+              getJavaName(output),
+              Modifier.PRIVATE);
+        }
       }
-    }
 
-    buildConstructor();
-    buildInputsClass();
+      buildConstructor();
+      buildInputsClass();
+    }
   }
 
-  /**
-   * Add a nested class for Options
-   */
+  /** Add a nested class for Options */
   private void buildOptionsClass() {
 
     if (optionalAttributes.isEmpty()) {
@@ -451,8 +415,7 @@ final class ClassGenerator {
       }
 
       // add the field
-      optionsBuilder.addField(
-          field.build());
+      optionsBuilder.addField(field.build());
     }
 
     // add a private constructor
@@ -464,7 +427,8 @@ final class ClassGenerator {
   }
 
   /**
-   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link #buildFactoryMethods()}
+   * Write statements to set an attribute in an OperationBuilder. Meant to be used in {@link
+   * #buildFactoryMethods()}
    *
    * @param body the body to write to
    * @param attr the attribute to set
@@ -504,9 +468,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Add the {@code create} factory methods.
-   */
+  /** Add the {@code create} factory methods. */
   private void buildFactoryMethods() {
     MethodSpec.Builder factoryBuilder =
         MethodSpec.methodBuilder("create").addModifiers(Modifier.PUBLIC, Modifier.STATIC);
@@ -639,9 +601,7 @@ final class ClassGenerator {
       }
 
       factoryBuilder.addParameter(
-          ParameterSpec.builder(
-              ArrayTypeName.of(optionsClassName), "options")
-              .build());
+          ParameterSpec.builder(ArrayTypeName.of(optionsClassName), "options").build());
       paramTags.put("options", CodeBlock.of("$L", "carries optional attribute values"));
       factoryBuilder.varargs();
 
@@ -659,7 +619,7 @@ final class ClassGenerator {
       body.endControlFlow();
 
       body.endControlFlow();
-}
+    }
 
     body.addStatement(
         "return new $L(opBuilder.build())", typeParams.isEmpty() ? className : (className + "<>"));
@@ -726,9 +686,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Add a secondary factory method with the provided default type maps
-   */
+  /** Add a secondary factory method with the provided default type maps */
   private void buildSecondaryFactory(
       Map<AttrDef, TypeName> defaultTypes,
       Map<String, TypeName> defaultTypeVars,
@@ -851,9 +809,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Add interface implementation methods if this is a single output or list output op.
-   */
+  /** Add interface implementation methods if this is a single output or list output op. */
   private void buildInterfaceImpl() {
     ArgDef output = op.getOutputArg(0);
     TypeName type = resolver.typeOf(output).unwrapArg();
@@ -871,14 +827,16 @@ final class ClassGenerator {
 
       if (isStateSelector) {
         asOutput.addModifiers(Modifier.ABSTRACT);
-      } else {if (uncheckedCast) {
-        asOutput.addAnnotation(
-            AnnotationSpec.builder(SuppressWarnings.class)
-                .addMember("value", "$S", "unchecked")
-                .build());
-        asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
       } else {
-        asOutput.addCode("return $L;", getJavaName(output));}
+        if (uncheckedCast) {
+          asOutput.addAnnotation(
+              AnnotationSpec.builder(SuppressWarnings.class)
+                  .addMember("value", "$S", "unchecked")
+                  .build());
+          asOutput.addCode("return ($T) $L;", outputType, getJavaName(output));
+        } else {
+          asOutput.addCode("return $L;", getJavaName(output));
+        }
       }
 
       builder.addMethod(asOutput.build());
@@ -906,9 +864,7 @@ final class ClassGenerator {
     }
   }
 
-  /**
-   * Add a constructor to get the outputs from an operation
-   */
+  /** Add a constructor to get the outputs from an operation */
   private void buildConstructor() {
     MethodSpec.Builder ctor = MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE);
 
