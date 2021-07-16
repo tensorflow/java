@@ -133,8 +133,9 @@ public class Adamax extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdamaxSlot(v.asOutput());
     }
-    betaOnePower = tf.initScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
-    tf.initScope().assign(betaOnePower, tf.constant(betaOne));
+    betaOnePower =
+        tf.withInitScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(betaOnePower, tf.constant(betaOne));
   }
 
   /**

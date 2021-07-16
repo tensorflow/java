@@ -79,8 +79,8 @@ public class MomentumTest {
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-      tf.initScope().assign(var0, tf.constant(var0Init));
-      tf.initScope().assign(var1, tf.constant(var1Init));
+      tf.withInitScope().assign(var0, tf.constant(var0Init));
+      tf.withInitScope().assign(var1, tf.constant(var1Init));
 
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);

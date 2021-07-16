@@ -220,10 +220,10 @@ public abstract class Optimizer {
   protected <T extends TType> void createSlot(
       Output<T> variable, String slotName, Operand<T> initializer) {
     Variable<T> slot =
-        tf.initScope()
+        tf.withInitScope()
             .withName(createName(variable, slotName))
             .variable(variable.shape(), variable.type());
-    tf.initScope().assign(slot, initializer);
+    tf.withInitScope().assign(slot, initializer);
     String varName = variable.op().name();
     Map<String, Variable<? extends TType>> variables =
         slots.computeIfAbsent(slotName, (k) -> new HashMap<>());

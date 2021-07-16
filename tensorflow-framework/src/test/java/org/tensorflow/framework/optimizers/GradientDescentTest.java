@@ -78,8 +78,8 @@ public class GradientDescentTest {
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-      tf.initScope().assign(var0, tf.constant(var0Init));
-      tf.initScope().assign(var1, tf.constant(var1Init));
+      tf.withInitScope().assign(var0, tf.constant(var0Init));
+      tf.withInitScope().assign(var1, tf.constant(var1Init));
 
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
@@ -137,19 +137,19 @@ public class GradientDescentTest {
 
       // Fully connected layer
       Variable<TFloat32> fcWeights =
-          tf.initScope().variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
+          tf.withInitScope().variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
       fcWeightName = fcWeights.op().name();
       Variable<TFloat32> fcBiases =
-          tf.initScope().variable(tf.fill(tf.array(200), tf.constant(0.1f)));
+          tf.withInitScope().variable(tf.fill(tf.array(200), tf.constant(0.1f)));
       fcBiasName = fcBiases.op().name();
       Relu<TFloat32> relu = tf.nn.relu(tf.math.add(tf.linalg.matMul(input, fcWeights), fcBiases));
 
       // Output layer
       Variable<TFloat32> outputWeights =
-          tf.initScope().variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
+          tf.withInitScope().variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
       outputWeightName = outputWeights.op().name();
       Variable<TFloat32> outputBiases =
-          tf.initScope().variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
+          tf.withInitScope().variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
       outputBiasName = outputBiases.op().name();
       Add<TFloat32> output = tf.math.add(tf.linalg.matMul(relu, outputWeights), outputBiases);
 

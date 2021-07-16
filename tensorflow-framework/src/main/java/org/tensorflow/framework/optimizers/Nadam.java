@@ -139,14 +139,16 @@ public class Nadam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createNadamSlot(v.asOutput());
     }
-    betaOnePower = tf.initScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
-    tf.initScope().assign(betaOnePower, tf.constant(betaOne));
+    betaOnePower =
+        tf.withInitScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(betaOnePower, tf.constant(betaOne));
 
-    betaTwoPower = tf.initScope().withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
-    tf.initScope().assign(betaTwoPower, tf.constant(betaTwo));
+    betaTwoPower =
+        tf.withInitScope().withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(betaTwoPower, tf.constant(betaTwo));
 
-    momentum = tf.initScope().withName("momentum").variable(Shape.scalar(), TFloat32.class);
-    tf.initScope().assign(momentum, tf.constant(1.0F));
+    momentum = tf.withInitScope().withName("momentum").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(momentum, tf.constant(1.0F));
   }
 
   /**

@@ -114,7 +114,7 @@ public interface ExecutionEnvironment {
    * Register an op and all of its inputs (and control inputs) as an initialization op.
    *
    * <p><b>Should generally only be used internally, prefer {@link
-   * org.tensorflow.op.Ops#initScope()}.</b>
+   * org.tensorflow.op.Ops#withInitScope()}.</b>
    *
    * @throws IllegalArgumentException if the op or one of its inputs can't be made an init op.
    */

@@ -69,7 +69,7 @@ public class GraphTest {
     GraphDef graphDef;
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Ops init = tf.initScope();
+      Ops init = tf.withInitScope();
 
       Operand<TInt32> var = init.variable(init.constant(4));
       Operand<TInt32> result = tf.withName("result").math.add(var, tf.constant(2));
@@ -80,7 +80,7 @@ public class GraphTest {
       g.importGraphDef(graphDef);
 
       Ops tf = Ops.create(g);
-      Ops init = tf.initScope();
+      Ops init = tf.withInitScope();
 
       Operand<TInt32> var2 = init.withName("var2").variable(init.constant(4));
 
@@ -102,7 +102,7 @@ public class GraphTest {
     GraphDef graphDef;
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
-      Ops init = tf.initScope();
+      Ops init = tf.withInitScope();
 
       Operand<TInt32> var = init.variable(init.constant(4));
       Operand<TInt32> result = tf.withName("result").math.add(var, tf.constant(2));

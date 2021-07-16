@@ -183,9 +183,9 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.initScope().variable(Shape.scalar(), TInt32.class);
-      tf.initScope().assign(var1, tf.initScope().constant(10));
-      Variable<TInt32> var2 = tf.variable(tf.initScope().constant(20));
+      Variable<TInt32> var1 = tf.withInitScope().variable(Shape.scalar(), TInt32.class);
+      tf.withInitScope().assign(var1, tf.withInitScope().constant(10));
+      Variable<TInt32> var2 = tf.variable(tf.withInitScope().constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
 
       try (Session s = new Session(g)) {
@@ -206,15 +206,15 @@ public class SessionTest {
       Variable<TFloat32> x =
           tf.withName("x")
               .variable(
-                  tf.initScope()
+                  tf.withInitScope()
                       .random
-                      .randomUniform(tf.initScope().constant(Shape.of(3, 3L)), TFloat32.class));
+                      .randomUniform(tf.withInitScope().constant(Shape.of(3, 3L)), TFloat32.class));
       Variable<TFloat32> y =
           tf.withName("y")
               .variable(
-                  tf.initScope()
+                  tf.withInitScope()
                       .random
-                      .randomUniform(tf.initScope().constant(Shape.of(3, 3L)), TFloat32.class));
+                      .randomUniform(tf.withInitScope().constant(Shape.of(3, 3L)), TFloat32.class));
 
       try (Session s = new Session(g)) {
         s.initialize();

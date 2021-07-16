@@ -187,8 +187,10 @@ public class AdaGradDA extends Optimizer {
       createAdaGradDASlot(v);
     }
     globalStep =
-        tf.initScope().withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
-    tf.initScope().assign(globalStep, tf.constant(0L));
+        tf.withInitScope()
+            .withName("adagrad-da-global-step")
+            .variable(Shape.scalar(), TInt64.class);
+    tf.withInitScope().assign(globalStep, tf.constant(0L));
   }
 
   /**
