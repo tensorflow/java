@@ -44,8 +44,8 @@ public abstract class Helpers {
   @Endpoint(name = "variable")
   public static <T extends TType> Variable<T> createVariableWithInit(
       Scope scope, Operand<T> init, Variable.Options... options) {
-    Variable<T> newVar = Variable.create(scope.initScope(), init.shape(), init.type(), options);
-    Assign<T> assignOp = Assign.create(scope.initScope(), newVar, init);
+    Variable<T> newVar = Variable.create(scope, init.shape(), init.type(), options);
+    Assign<T> assignOp = Assign.create(scope, newVar, init);
     return newVar;
   }
 }
