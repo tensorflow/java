@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ResourceScope implements AutoCloseable {
   private static final Map<Resource, Integer> references = new WeakIdentityHashMap<>();
@@ -56,8 +57,8 @@ public class ResourceScope implements AutoCloseable {
   }
 
   /**
-   * Adds a resource to this scope.  The resource will be kept alive at least until this scope is closed,
-   * or it is unreachable if this is a weak scope.
+   * Adds a resource to this scope. The resource will be kept alive at least until this scope is
+   * closed, or it is unreachable if this is a weak scope.
    */
   public void add(Resource resource) {
     synchronized (resources) {
@@ -69,7 +70,8 @@ public class ResourceScope implements AutoCloseable {
   }
 
   /**
-   * Remove a resource from this scope.  If this was the only scope referencing it, it will be deallocated.
+   * Remove a resource from this scope. If this was the only scope referencing it, it will be
+   * deallocated.
    */
   public void remove(Resource resource) {
     synchronized (resources) {
@@ -146,25 +148,23 @@ public class ResourceScope implements AutoCloseable {
     }
   }
 
-  private synchronized void addConsumer(){
-    consumers++;
+  private void addConsumer() {
+    consumers.incrementAndGet();
   }
 
-  private synchronized void removeConsumer(){
-    consumers--;
+  private void removeConsumer() {
+    consumers.decrementAndGet();
   }
 
   private void ensureOpen() {
-    synchronized (resources) {
-      if (isClosed[0]) {
-        throw new IllegalStateException("Resource scope has been closed");
-      }
+    if (isClosed[0]) {
+      throw new IllegalStateException("Resource scope has been closed");
     }
   }
 
   private static void closeHelper(
-      Set<Resource> resources, int consumers, Set<ResourceScope> dependencies, boolean[] isClosed) {
-    if (consumers > 0) {
+      Set<Resource> resources, AtomicInteger consumers, Set<ResourceScope> dependencies, boolean[] isClosed) {
+    if (consumers.get() > 0) {
       throw new IllegalStateException(
           "There are still "
               + consumers
@@ -182,7 +182,7 @@ public class ResourceScope implements AutoCloseable {
   private final boolean isWeak;
   private final boolean isImplicit;
   private final boolean[] isClosed = new boolean[] {false};
-  private int consumers = 0;
+  private final AtomicInteger consumers = new AtomicInteger(0);
   private final Set<ResourceScope> dependencies =
       Collections.newSetFromMap(new IdentityHashMap<>());
 }
