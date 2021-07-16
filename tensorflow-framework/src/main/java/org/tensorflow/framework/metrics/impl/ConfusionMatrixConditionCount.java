@@ -16,7 +16,6 @@ package org.tensorflow.framework.metrics.impl;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
-import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -22,8 +22,10 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -97,6 +99,32 @@ public final class Session implements AutoCloseable {
    *     protocol buffer.
    */
   public Session(Graph g, ConfigProto config) {
+    this(g, true, config);
+  }
+
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph}.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param autoInit Whether to initialize the session.
+   */
+  public Session(Graph g, boolean autoInit) {
+    this(g, autoInit, null);
+  }
+
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph} and
+   * configuration options.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param autoInit Whether to initialize the session.
+   * @param config Configuration parameters for the session specified as a <a
+   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
+   *     protocol buffer.
+   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
+   *     protocol buffer.
+   */
+  public Session(Graph g, boolean autoInit, ConfigProto config) {
     graph = g;
     Graph.Reference r = g.ref();
     try {
@@ -105,38 +133,7 @@ public final class Session implements AutoCloseable {
     } finally {
       r.close();
     }
-  }
-
-  /**
-   * Construct and optionally initialize a new session with the associated {@link Graph}.
-   *
-   * @param g The {@link Graph} the created Session will operate on.
-   * @param initialize Whether to initialize the session.
-   */
-  public Session(Graph g, boolean initialize) {
-    this(g);
-    if (initialize) {
-      initialize();
-    }
-  }
-
-  /**
-   * Construct and optionally initialize a new session with the associated {@link Graph} and
-   * configuration options.
-   *
-   * @param g The {@link Graph} the created Session will operate on.
-   * @param initialize Whether to initialize the session.
-   * @param config Configuration parameters for the session specified as a <a
-   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
-   *     protocol buffer.
-   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
-   *     protocol buffer.
-   */
-  public Session(Graph g, boolean initialize, ConfigProto config) {
-    this(g, config);
-    if (initialize) {
-      initialize();
-    }
+    this.autoInit = autoInit;
   }
 
   /** Wrap an existing session with the associated {@link Graph}. */
@@ -144,6 +141,7 @@ public final class Session implements AutoCloseable {
     graph = g;
     this.nativeHandle = nativeHandle;
     graphRef = g.ref();
+    this.autoInit = false;
   }
 
   /**
@@ -174,31 +172,20 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Execute the graph's initializers.
+   * Execute any un-ran initializers. Will be done automatically unless disabled at session
+   * creation.
    *
-   * <p>This runs any ops that have been created with an init scope.
-   *
-   * @return this
-   * @throws IllegalStateException if the session has already been initialized
+   * <p>This runs any ops that have been created with an init scope that have not already been ran.
    */
-  public synchronized Session initialize() {
-    if (hasInitialized) {
-      throw new IllegalStateException("Session has already been initialized.");
+  public synchronized void initialize() {
+    Runner runner = runner();
+    synchronized (graph) {
+      graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
+      ranInits = graph.initializers();
     }
-
-    if (!graph.hasInitializers()) {
-      hasInitialized = true;
-      return this;
-    }
-
-    List<Operation> initializers = graph.initializers();
-    if (!initializers.isEmpty()) {
-      Runner runner = runner();
-      initializers.forEach(runner::addTarget);
+    if (!runner.isEmpty()) {
       runner.runNoInit();
     }
-    hasInitialized = true;
-    return this;
   }
 
   /**
@@ -209,18 +196,13 @@ public final class Session implements AutoCloseable {
    * @return this
    */
   public synchronized Session forceInitialize() {
-    if (!graph.hasInitializers()) {
-      hasInitialized = true;
-      return this;
-    }
-
-    List<Operation> initializers = graph.initializers();
+    Set<Operation> initializers = graph.initializers();
     if (!initializers.isEmpty()) {
       Runner runner = runner();
       initializers.forEach(runner::addTarget);
       runner.runNoInit();
     }
-    hasInitialized = true;
+    ranInits = graph.initializers();
     return this;
   }
 
@@ -456,12 +438,23 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
-    private void checkInitialization() {
-      synchronized (Session.this) {
-        if (!hasInitialized && graph.hasInitializers()) {
-          throw new IllegalStateException(
-              "Graph has initializers, but session has not been initialized.");
-        }
+    /** True if there are no targets or fetches. */
+    public boolean isEmpty() {
+      return targets.isEmpty() && outputs.isEmpty();
+    }
+
+    private void doInit() {
+      if (autoInit) {
+        initialize();
+      } else {
+        graph
+            .initializers()
+            .forEach(
+                x -> {
+                  if (!ranInits.contains(x))
+                    throw new IllegalStateException(
+                        "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
+                });
       }
     }
 
@@ -483,7 +476,7 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner
      */
     public List<Tensor> run() {
-      checkInitialization();
+      doInit();
       return runNoInit();
     }
 
@@ -502,7 +495,7 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
     public Run runAndFetchMetadata() {
-      checkInitialization();
+      doInit();
       return runHelper(true);
     }
 
@@ -686,7 +679,8 @@ public final class Session implements AutoCloseable {
         .addTarget(saverDef.getRestoreOpName())
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
         .runNoInit();
-    hasInitialized = true;
+    // TODO better way of doing this, only count as ran assignments to the restored variables.
+    ranInits = graph.initializers();
   }
 
   /**
@@ -719,7 +713,9 @@ public final class Session implements AutoCloseable {
   private final Object nativeHandleLock = new Object();
   private TF_Session nativeHandle;
   private int numActiveRuns;
-  private boolean hasInitialized;
+
+  private final boolean autoInit;
+  private Set<Operation> ranInits = new LinkedHashSet<>();
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
