@@ -278,10 +278,10 @@ public final class Scope {
     ArrayList<Operation> toAdd = new ArrayList<>();
     for (Operation control : controls) {
       env.checkInput(control);
-      if(isInit && !env.isInitOp(control)){
+      if (isInit && !env.isInitOp(control)) {
         throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
       }
-      if(isInit || !env.isInitOp(control)){
+      if (isInit || !env.isInitOp(control)) {
         toAdd.add(control);
       }
     }
@@ -318,12 +318,6 @@ public final class Scope {
     }
   }
 
-  private final ExecutionEnvironment env;
-  private final List<Operation> controlDependencies;
-  private final NameScope nameScope;
-  private final DeviceSpec deviceSpec;
-  private final boolean isInit;
-
   /** Returns device string from the scope. */
   public String getDeviceString() {
     return deviceSpec.toString();
@@ -333,4 +327,10 @@ public final class Scope {
   public boolean isInit() {
     return isInit;
   }
+
+  private final ExecutionEnvironment env;
+  private final List<Operation> controlDependencies;
+  private final NameScope nameScope;
+  private final DeviceSpec deviceSpec;
+  private final boolean isInit;
 }
