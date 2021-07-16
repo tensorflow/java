@@ -308,14 +308,18 @@ public class Recall<T extends TNumber> extends Metric<T> {
     Operand<T> zero = zeros.call(tf, tf.constant(Shape.of(this.thresholds.length)), type);
     if (truePositives == null) {
 
-      truePositives = tf.withName(truePositivesName).variable(zero);
-      initializers.add(tf.assign(truePositives, zero));
+      truePositives = tf.withName(truePositivesName)
+          .withInitScope().variable(zero);
+      initializers.add(tf
+          .withInitScope().assign(truePositives, zero));
     }
 
     if (this.falseNegatives == null) {
 
-      falseNegatives = tf.withName(falseNegativesName).variable(zero);
-      initializers.add(tf.assign(falseNegatives, zero));
+      falseNegatives = tf.withName(falseNegativesName)
+          .withInitScope().variable(zero);
+      initializers.add(tf
+          .withInitScope().assign(falseNegatives, zero));
     }
   }
 

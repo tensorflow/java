@@ -88,12 +88,16 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
       Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), type);
 
       if (total == null) {
-        total = getTF().withName(totalName).variable(zero);
-        totalInitializer = getTF().assign(total, zero);
+        total = getTF().withName(totalName)
+            .withInitScope().variable(zero);
+        totalInitializer = getTF()
+            .withInitScope().assign(total, zero);
       }
       if (count == null) {
-        count = getTF().withName(countName).variable(zero);
-        countInitializer = getTF().assign(count, zero);
+        count = getTF().withName(countName)
+            .withInitScope().variable(zero);
+        countInitializer = getTF()
+            .withInitScope().assign(count, zero);
       }
       this.initialized = true;
       return true;

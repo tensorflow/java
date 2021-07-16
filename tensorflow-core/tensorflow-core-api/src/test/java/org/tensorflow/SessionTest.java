@@ -185,7 +185,7 @@ public class SessionTest {
 
       Variable<TInt32> var1 = tf.withInitScope().variable(Shape.scalar(), TInt32.class);
       tf.withInitScope().assign(var1, tf.withInitScope().constant(10));
-      Variable<TInt32> var2 = tf.variable(tf.withInitScope().constant(20));
+      Variable<TInt32> var2 = tf.withInitScope().variable(tf.withInitScope().constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
 
       try (Session s = new Session(g)) {
@@ -205,12 +205,14 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       Variable<TFloat32> x =
           tf.withName("x")
+              .withInitScope()
               .variable(
                   tf.withInitScope()
                       .random
                       .randomUniform(tf.withInitScope().constant(Shape.of(3, 3L)), TFloat32.class));
       Variable<TFloat32> y =
           tf.withName("y")
+              .withInitScope()
               .variable(
                   tf.withInitScope()
                       .random

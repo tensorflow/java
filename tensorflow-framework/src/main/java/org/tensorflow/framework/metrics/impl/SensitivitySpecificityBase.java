@@ -92,23 +92,31 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
 
     if (this.getTruePositives() == null) {
 
-      truePositives = tf.withName(truePositivesName).variable(zero);
-      truePositivesInitializer = tf.assign(truePositives, zero);
+      truePositives = tf.withName(truePositivesName)
+          .withInitScope().variable(zero);
+      truePositivesInitializer = tf
+          .withInitScope().assign(truePositives, zero);
     }
     if (this.getFalsePositives() == null) {
 
-      falsePositives = tf.withName(falsePositivesName).variable(zero);
-      falsePositivesInitializer = tf.assign(falsePositives, zero);
+      falsePositives = tf.withName(falsePositivesName)
+          .withInitScope().variable(zero);
+      falsePositivesInitializer = tf
+          .withInitScope().assign(falsePositives, zero);
     }
     if (this.getTrueNegatives() == null) {
 
-      trueNegatives = tf.withName(trueNegativesName).variable(zero);
-      trueNegativesInitializer = tf.assign(trueNegatives, zero);
+      trueNegatives = tf
+          .withInitScope().withName(trueNegativesName).variable(zero);
+      trueNegativesInitializer = tf
+          .withInitScope().assign(trueNegatives, zero);
     }
     if (this.getFalseNegatives() == null) {
 
-      falseNegatives = tf.withName(falseNegativesName).variable(zero);
-      falseNegativesInitializer = tf.assign(falseNegatives, zero);
+      falseNegatives = tf
+          .withInitScope().withName(falseNegativesName).variable(zero);
+      falseNegativesInitializer = tf
+          .withInitScope().assign(falseNegatives, zero);
     }
   }
 
