@@ -31,7 +31,7 @@ public class ResourceManager {
       }
     }
   }
-  public static void addGc(Resource resource, Deallocator deallocator){
+  public static void addGc(Object resource, Deallocator deallocator){
 
   }
 }
