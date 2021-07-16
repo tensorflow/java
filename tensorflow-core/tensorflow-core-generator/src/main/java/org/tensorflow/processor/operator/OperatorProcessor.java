@@ -556,10 +556,10 @@ public final class OperatorProcessor extends AbstractProcessor {
             + "  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.";
 
     opsBuilder.addMethod(
-        MethodSpec.methodBuilder("initScope")
+        MethodSpec.methodBuilder("withInitScope")
             .addModifiers(Modifier.PUBLIC)
             .returns(Names.Ops)
-            .addStatement("return new $T(scope.initScope())", Names.Ops)
+            .addStatement("return new $T(scope.withInitScope())", Names.Ops)
             .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
             .build());
 
