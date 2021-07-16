@@ -94,29 +94,25 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
 
       truePositives = tf.withName(truePositivesName)
           .withInitScope().variable(zero);
-      truePositivesInitializer = tf
-          .withInitScope().assign(truePositives, zero);
+      truePositivesInitializer = tf.assign(truePositives, zero);
     }
     if (this.getFalsePositives() == null) {
 
       falsePositives = tf.withName(falsePositivesName)
           .withInitScope().variable(zero);
-      falsePositivesInitializer = tf
-          .withInitScope().assign(falsePositives, zero);
+      falsePositivesInitializer = tf.assign(falsePositives, zero);
     }
     if (this.getTrueNegatives() == null) {
 
       trueNegatives = tf
           .withInitScope().withName(trueNegativesName).variable(zero);
-      trueNegativesInitializer = tf
-          .withInitScope().assign(trueNegatives, zero);
+      trueNegativesInitializer = tf.assign(trueNegatives, zero);
     }
     if (this.getFalseNegatives() == null) {
 
       falseNegatives = tf
           .withInitScope().withName(falseNegativesName).variable(zero);
-      falseNegativesInitializer = tf
-          .withInitScope().assign(falseNegatives, zero);
+      falseNegativesInitializer = tf.assign(falseNegatives, zero);
     }
   }
 

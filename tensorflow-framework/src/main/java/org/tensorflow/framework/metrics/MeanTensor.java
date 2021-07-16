@@ -90,14 +90,12 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
       if (total == null) {
         total = getTF().withName(totalName)
             .withInitScope().variable(zero);
-        totalInitializer = getTF()
-            .withInitScope().assign(total, zero);
+        totalInitializer = getTF().assign(total, zero);
       }
       if (count == null) {
         count = getTF().withName(countName)
             .withInitScope().variable(zero);
-        countInitializer = getTF()
-            .withInitScope().assign(count, zero);
+        countInitializer = getTF().assign(count, zero);
       }
       this.initialized = true;
       return true;

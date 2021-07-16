@@ -687,29 +687,25 @@ public class AUC<T extends TNumber> extends Metric<T> {
     if (truePositives == null) {
       truePositives = tf.withName(getTruePositivesName())
           .withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf
-          .withInitScope().assign(truePositives, zero));
+      initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf.assign(truePositives, zero));
     }
 
     if (falsePositives == null) {
       falsePositives = tf.withName(getFalsePositivesName())
           .withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, tf
-          .withInitScope().assign(falsePositives, zero));
+      initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, tf.assign(falsePositives, zero));
     }
 
     if (trueNegatives == null) {
       trueNegatives = tf.withName(getTrueNegativesName())
           .withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, tf
-          .withInitScope().assign(trueNegatives, zero));
+      initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, tf.assign(trueNegatives, zero));
     }
 
     if (falseNegatives == null) {
       falseNegatives = tf.withName(getFalseNegativesName())
           .withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf
-          .withInitScope().assign(falseNegatives, zero));
+      initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf.assign(falseNegatives, zero));
     }
 
     initialized = true;

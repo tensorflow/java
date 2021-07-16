@@ -281,14 +281,12 @@ public class Precision<T extends TNumber> extends Metric<T> {
     if (this.truePositives == null) {
       this.truePositives = tf.withName(truePositivesName)
           .withInitScope().variable(zero);
-      initializers.add(tf
-          .withInitScope().assign(truePositives, zero));
+      initializers.add(tf.assign(truePositives, zero));
     }
     if (this.falsePositives == null) {
       this.falsePositives = tf.withName(falsePositivesName)
           .withInitScope().variable(zero);
-      initializers.add(tf
-          .withInitScope().assign(falsePositives, zero));
+      initializers.add(tf.assign(falsePositives, zero));
     }
   }
 
