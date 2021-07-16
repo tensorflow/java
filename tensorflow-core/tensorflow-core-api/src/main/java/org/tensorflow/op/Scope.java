@@ -16,6 +16,7 @@ limitations under the License.
 package org.tensorflow.op;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.tensorflow.DeviceSpec;
@@ -232,7 +233,7 @@ public final class Scope {
   private Scope(
       ExecutionEnvironment env,
       NameScope nameScope,
-      Iterable<Operation> controlDependencies,
+      List<Operation> controlDependencies,
       DeviceSpec deviceSpec,
       boolean isInit) {
     this.env = env;
@@ -274,11 +275,18 @@ public final class Scope {
    * @return a new scope with the provided control dependencies
    */
   public Scope withControlDependencyOps(Iterable<Operation> controls) {
+    ArrayList<Operation> toAdd = new ArrayList<>();
     for (Operation control : controls) {
       env.checkInput(control);
+      if(isInit && !env.isInitOp(control)){
+        throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
+      }
+      if(isInit || !env.isInitOp(control)){
+        toAdd.add(control);
+      }
     }
 
-    return new Scope(env, nameScope, controls, deviceSpec, isInit);
+    return new Scope(env, nameScope, toAdd, deviceSpec, isInit);
   }
 
   /**
@@ -311,7 +319,7 @@ public final class Scope {
   }
 
   private final ExecutionEnvironment env;
-  private final Iterable<Operation> controlDependencies;
+  private final List<Operation> controlDependencies;
   private final NameScope nameScope;
   private final DeviceSpec deviceSpec;
   private final boolean isInit;
