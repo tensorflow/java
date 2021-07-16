@@ -596,7 +596,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /** Returns all initializers added to the graph via {@link #registerInitOp(Operation)} */
   public List<Operation> initializers() {
-    return List.copyOf(initializers);
+    return new ArrayList<>(initializers);
   }
 
   /** Get whether the graph has any initializers */
