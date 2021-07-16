@@ -112,7 +112,7 @@ public class GraphTest {
     try (Graph g = new Graph()) {
       g.importGraphDef(graphDef, "test");
       System.out.println(g.initializers());
-      try (Session s = new Session(g).initialize();
+      try (Session s = new Session(g);
           TInt32 result = (TInt32) s.runner().fetch("test/result").run().get(0)) {
         assertEquals(6, result.getInt());
       }
