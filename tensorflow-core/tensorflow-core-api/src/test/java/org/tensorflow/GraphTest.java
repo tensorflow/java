@@ -84,7 +84,7 @@ public class GraphTest {
 
       Operand<TInt32> var2 = init.withName("var2").variable(init.constant(4));
 
-      try (Session s = Session.initialized(g)) {
+      try (Session s = new Session(g, true)) {
         List<Tensor> results = s.runner().fetch("result").fetch("var2").run();
         TInt32 result = (TInt32) results.get(0);
         assertEquals(6, result.getInt());
@@ -112,7 +112,7 @@ public class GraphTest {
     try (Graph g = new Graph()) {
       g.importGraphDef(graphDef, "test");
       System.out.println(g.initializers());
-      try (Session s = Session.initialized(g);
+      try (Session s = new Session(g).initialize();
           TInt32 result = (TInt32) s.runner().fetch("test/result").run().get(0)) {
         assertEquals(6, result.getInt());
       }

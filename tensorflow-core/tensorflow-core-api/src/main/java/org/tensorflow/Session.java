@@ -107,6 +107,38 @@ public final class Session implements AutoCloseable {
     }
   }
 
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph}.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param initialize Whether to initialize the session.
+   */
+  public Session(Graph g, boolean initialize) {
+    this(g);
+    if (initialize) {
+      initialize();
+    }
+  }
+
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph} and
+   * configuration options.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param initialize Whether to initialize the session.
+   * @param config Configuration parameters for the session specified as a <a
+   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
+   *     protocol buffer.
+   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
+   *     protocol buffer.
+   */
+  public Session(Graph g, boolean initialize, ConfigProto config) {
+    this(g, config);
+    if (initialize) {
+      initialize();
+    }
+  }
+
   /** Wrap an existing session with the associated {@link Graph}. */
   Session(Graph g, TF_Session nativeHandle) {
     graph = g;
@@ -146,16 +178,17 @@ public final class Session implements AutoCloseable {
    *
    * <p>This runs any ops that have been created with an init scope.
    *
+   * @return this
    * @throws IllegalStateException if the session has already been initialized
    */
-  public synchronized void initialize() {
+  public synchronized Session initialize() {
     if (hasInitialized) {
       throw new IllegalStateException("Session has already been initialized.");
     }
 
     if (!graph.hasInitializers()) {
       hasInitialized = true;
-      return;
+      return this;
     }
 
     List<Operation> initializers = graph.initializers();
@@ -165,17 +198,20 @@ public final class Session implements AutoCloseable {
       runner.runNoInit();
     }
     hasInitialized = true;
+    return this;
   }
 
   /**
    * Execute the graph's initializers, regardless of whether the session has been initialized.
    *
    * <p>This runs any ops that have been created with an init scope.
+   *
+   * @return this
    */
-  public synchronized void forceInitialize() {
+  public synchronized Session forceInitialize() {
     if (!graph.hasInitializers()) {
       hasInitialized = true;
-      return;
+      return this;
     }
 
     List<Operation> initializers = graph.initializers();
@@ -185,20 +221,7 @@ public final class Session implements AutoCloseable {
       runner.runNoInit();
     }
     hasInitialized = true;
-  }
-
-  /** Create a session and initialize it. */
-  public static Session initialized(Graph graph) {
-    Session s = new Session(graph);
-    s.initialize();
-    return s;
-  }
-
-  /** Create a session and initialize it. */
-  public static Session initialized(Graph graph, ConfigProto config) {
-    Session s = new Session(graph, config);
-    s.initialize();
-    return s;
+    return this;
   }
 
   /**
