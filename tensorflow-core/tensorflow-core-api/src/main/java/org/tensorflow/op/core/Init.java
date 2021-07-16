@@ -18,14 +18,14 @@ public final class Init extends RawOp {
   /**
    * Factory method to create an operation executing all initializers of a graph.
    *
-   * <p>All initializers added to a graph via
-   * {@link org.tensorflow.op.core.Init#add(Scope, Op) tf.initAdd} are grouped together as a single
-   * unit of computation in the graph. This operation must then be added to any graph using one or
-   * more {@link Variable variables} and executed once before running the graph so the variable
-   * states are initialized properly.</p>
+   * <p>All initializers added to a graph via {@link org.tensorflow.op.core.Init#add(Scope, Op)
+   * tf.initAdd} are grouped together as a single unit of computation in the graph. This operation
+   * must then be added to any graph using one or more {@link Variable variables} and executed once
+   * before running the graph so the variable states are initialized properly.
    *
    * <p>When the graph is built by the same process that is running the session, the initializers
-   * can be invoked by executing this single endpoint. For example:</p>
+   * can be invoked by executing this single endpoint. For example:
+   *
    * <pre>{@code
    * try (Graph g = new Graph()) {
    *   Variable<TInt32> x = tf.variable(tf.constant(10));  // initAdd is called implicitly
@@ -44,7 +44,8 @@ public final class Init extends RawOp {
    *
    * <p>When the graph is built by a separate process, the initializers can be invoked by running
    * the init op by its name, which defaults to {@link org.tensorflow.op.core.Init#DEFAULT_NAME}.
-   * For example:</p>
+   * For example:
+   *
    * <pre>{@code
    * // Building the model
    * try (Graph g = new Graph()) {
@@ -78,18 +79,18 @@ public final class Init extends RawOp {
     if (!(exEnv instanceof Graph)) {
       throw new IllegalArgumentException("init is only supported on Graph sessions.");
     }
-    Graph graph = (Graph)exEnv;
+    Graph graph = (Graph) exEnv;
     OperationBuilder opBuilder = scope.env().opBuilder("NoOp", scope.makeOpName(DEFAULT_NAME));
-    scope.withControlDependencies(graph.initializers()).applyControlDependencies(opBuilder);
+    scope.withControlDependencies(graph.initializers()).apply(opBuilder);
     return new Init(opBuilder.build());
   }
 
   /**
    * Register an op as an initializer of the graph.
    *
-   * <p>Registered initializers are then grouped as a single unit of computation by adding
-   * and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   * session.  This is a no-op if executed in an eager session.
+   * <p>Registered initializers are then grouped as a single unit of computation by adding and
+   * executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
+   * session. This is a no-op if executed in an eager session.
    *
    * @param scope
    * @param initializer

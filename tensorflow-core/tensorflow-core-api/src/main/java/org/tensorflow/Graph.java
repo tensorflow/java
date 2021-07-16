@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
@@ -39,6 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
@@ -46,6 +47,7 @@ import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacpp.SizeTPointer;
 import org.tensorflow.exceptions.TensorFlowException;
+import org.tensorflow.internal.c_api.NativeGraphPointer;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Function;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -55,6 +57,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_WhileParams;
 import org.tensorflow.ndarray.StdArrays;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
@@ -81,14 +84,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /** Create an empty Graph. */
   public Graph() {
-    nativeHandle = allocate();
-    this.baseScope = new Scope(this);
+    this(allocate());
   }
 
   /** Create a Graph from an existing handle (takes ownership). */
   Graph(TF_Graph nativeHandle) {
     this.nativeHandle = nativeHandle;
-    this.baseScope = new Scope(this);
+    this.baseScope = new JavaScope(this);
+    allGraphs.add(this);
   }
 
   Graph(TF_Graph nativeHandle, SaverDef saverDef) {
@@ -119,6 +122,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
       delete(nativeHandle);
       nativeHandle = null;
+      allGraphs.remove(this);
     }
   }
 
@@ -215,7 +219,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * <p>The order of iteration is unspecified. Consumers of the iterator will receive no
    * notification should the underlying graph change during iteration.
    */
-  public Iterator<Operation> operations() {
+  public Iterator<GraphOperation> operations() {
     return new OperationIterator(this);
   }
 
@@ -380,7 +384,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    return new GraphOperationBuilder(this, type, name);
+    return new GraphOperationBuilder(this, type, name, dangerousGradientBuilder);
   }
 
   @Override
@@ -576,7 +580,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * @param dx if not null, the partial derivatives of some loss function {@code L} w.r.t. {@code y}
    * @return the partial derivatives {@code dy} with the size of {@code x}
    */
-  public Output<?>[] addGradients(String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
+  public synchronized Output<?>[] addGradients(
+      String prefix, Output<?>[] y, Output<?>[] x, Output<?>[] dx) {
     Output<?>[] dy = new Output<?>[x.length];
     final TF_Operation[] yHandles = new TF_Operation[y.length];
     final int[] yIndices = new int[y.length];
@@ -771,6 +776,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Return the {@link SaverDef} instance used to save the state of all variables present in this
    * graph.
    *
+   * <p>
+   *
    * <p>The first time this method is called it builds the {@link SaverDef}. If this graph already
    * contains a "save/restore_all" operation then it is assumed to contain all necessary saving and
    * restoring operations. If that operation does not exist then the graph is mutated to add all the
@@ -808,7 +815,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
   private final Scope baseScope;
 
+  private boolean dangerousGradientBuilder;
+
   private final List<Op> initializers = new ArrayList<>();
+
+  synchronized void setDangerousGradientBuilder(boolean dangerous) {
+    dangerousGradientBuilder = dangerous;
+  }
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not
@@ -855,7 +868,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return new Reference();
   }
 
-  private static final class OperationIterator implements Iterator<Operation> {
+  private static final class OperationIterator implements Iterator<GraphOperation> {
 
     OperationIterator(Graph g) {
       this.graph = g;
@@ -889,8 +902,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     @Override
-    public Operation next() {
-      Operation rhett = this.operation;
+    public GraphOperation next() {
+      GraphOperation rhett = this.operation;
       this.advance();
       return rhett;
     }
@@ -901,7 +914,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     private final Graph graph;
-    private Operation operation;
+    private GraphOperation operation;
     private int position;
   }
 
@@ -1162,7 +1175,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     List<Operand<?>> varOutputs = new ArrayList<>();
     List<Class<? extends TType>> varTypes = new ArrayList<>();
 
-    for (Iterator<Operation> iter = graph.operations(); iter.hasNext(); ) {
+    for (Iterator<GraphOperation> iter = graph.operations(); iter.hasNext(); ) {
       Operation op = iter.next();
       if (op.type().equals("VariableV2")) {
         varNames.add(op.name());
@@ -1202,6 +1215,24 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         .setSaveTensorName(id.op().name())
         .setRestoreOpName(restoreAll.op().name())
         .build();
+  }
+
+  private static Set<Graph> allGraphs = Collections.newSetFromMap(new WeakHashMap<>());
+
+  /**
+   * Find the graph with the matching underlying native pointer.
+   *
+   * @return the graph if there is one, else null.
+   */
+  public static Graph findGraphForPointer(NativeGraphPointer pointer) {
+    for (Graph g : allGraphs) {
+      if (g.nativeHandle != null
+          && !g.nativeHandle.isNull()
+          && g.nativeHandle.graph().equals(pointer)) {
+        return g;
+      }
+    }
+    return null;
   }
 
   static {

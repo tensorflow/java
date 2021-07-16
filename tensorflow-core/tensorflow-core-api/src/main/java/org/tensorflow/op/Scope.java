@@ -1,21 +1,20 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.op;
 
-import java.util.ArrayList;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
 import org.tensorflow.OperationBuilder;
@@ -76,24 +75,10 @@ import org.tensorflow.OperationBuilder;
  *
  * <p>Scope objects are <b>not</b> thread-safe.
  */
-public final class Scope {
-
-  /**
-   * Create a new top-level scope.
-   *
-   * <p><b>For internal use only</b>, use {@link ExecutionEnvironment#baseScope()} if you need a
-   * base level scope.
-   *
-   * @param env The execution environment used by the scope.
-   */
-  public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
-  }
+public interface Scope {
 
   /** Returns the execution environment used by this scope. */
-  public ExecutionEnvironment env() {
-    return env;
-  }
+  ExecutionEnvironment env();
 
   /**
    * Returns a new scope where added operations will have the provided name prefix.
@@ -108,10 +93,7 @@ public final class Scope {
    * @return a new subscope
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withSubScope(String childScopeName) {
-    return new Scope(
-        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec);
-  }
+  Scope withSubScope(String childScopeName);
 
   /**
    * Return a new scope that uses the provided name for an op.
@@ -125,9 +107,7 @@ public final class Scope {
    * @return a new Scope that uses opName for operations.
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withName(String opName) {
-    return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec);
-  }
+  Scope withName(String opName);
 
   /**
    * Returns a new scope where added operations will be prefixed by this scope's op name (set by
@@ -145,13 +125,7 @@ public final class Scope {
    * @return a new subscope
    * @throws IllegalArgumentException if the name is invalid
    */
-  public Scope withNameAsSubScope(String defaultName) {
-    return new Scope(
-        env,
-        nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
-        controlDependencies,
-        deviceSpec);
-  }
+  Scope withNameAsSubScope(String defaultName);
 
   /**
    * Return a new scope that uses the provided device specification for an op.
@@ -162,9 +136,7 @@ public final class Scope {
    * @param deviceSpec device specification for an operator in the returned scope
    * @return a new Scope that uses opName for operations.
    */
-  public Scope withDevice(DeviceSpec deviceSpec) {
-    return new Scope(env, nameScope, controlDependencies, deviceSpec);
-  }
+  Scope withDevice(DeviceSpec deviceSpec);
 
   /**
    * Create a unique name for an operator, using a provided default if necessary.
@@ -186,24 +158,7 @@ public final class Scope {
    * @return unique name for the operator.
    * @throws IllegalArgumentException if the default name is invalid.
    */
-  public String makeOpName(String defaultName) {
-    return nameScope.makeOpName(defaultName);
-  }
-
-  public static boolean isValidOpName(String name) {
-    return NameScope.isValidName(name);
-  }
-
-  private Scope(
-      ExecutionEnvironment env,
-      NameScope nameScope,
-      Iterable<Op> controlDependencies,
-      DeviceSpec deviceSpec) {
-    this.env = env;
-    this.nameScope = nameScope;
-    this.controlDependencies = controlDependencies;
-    this.deviceSpec = deviceSpec;
-  }
+  String makeOpName(String defaultName);
 
   /**
    * Returns a new scope where added operations will have the provided control dependencies.
@@ -214,12 +169,7 @@ public final class Scope {
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
    */
-  public Scope withControlDependencies(Iterable<Op> controls) {
-    for (Op control : controls) {
-      env.checkInput(control);
-    }
-    return new Scope(env, nameScope, controls, deviceSpec);
-  }
+  Scope withControlDependencies(Iterable<Op> controls);
 
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
@@ -227,30 +177,5 @@ public final class Scope {
    *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
-  public OperationBuilder apply(OperationBuilder builder) {
-    builder.setDevice(deviceSpec.toString());
-    return applyControlDependencies(builder);
-  }
-
-  /**
-   * Adds each Operand in controlDependencies as a control input to the provided builder.
-   *
-   * @param builder OperationBuilder to add control inputs to
-   */
-  public OperationBuilder applyControlDependencies(OperationBuilder builder) {
-    for (Op control : controlDependencies) {
-      builder = builder.addControlInput(control.op());
-    }
-    return builder;
-  }
-
-  private final ExecutionEnvironment env;
-  private final Iterable<Op> controlDependencies;
-  private final NameScope nameScope;
-  private final DeviceSpec deviceSpec;
-
-  /** Returns device string from the scope. */
-  public String getDeviceString() {
-    return deviceSpec.toString();
-  }
+  OperationBuilder apply(OperationBuilder builder);
 }

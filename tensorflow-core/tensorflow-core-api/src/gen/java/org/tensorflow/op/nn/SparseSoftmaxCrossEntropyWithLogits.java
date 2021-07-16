@@ -54,7 +54,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
     super(operation);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
-    backprop = operation.output(outputIdx);
+    backprop = operation.output(outputIdx++);
   }
 
   /**

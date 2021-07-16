@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextAddFunction;
@@ -29,6 +29,7 @@ import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
@@ -388,7 +389,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   private final WeakPointerScope nativeResources;
   private TFE_Context nativeHandle;
 
-  private final Scope baseScope = new Scope(this);
+  private final Scope baseScope = new JavaScope(this);
 
   private EagerSession(Options options) {
     this.nativeResources = new WeakPointerScope();

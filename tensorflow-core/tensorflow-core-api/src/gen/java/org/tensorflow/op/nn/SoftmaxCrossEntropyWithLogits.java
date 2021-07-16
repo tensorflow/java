@@ -50,7 +50,7 @@ public final class SoftmaxCrossEntropyWithLogits<T extends TNumber> extends RawO
     super(operation);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
-    backprop = operation.output(outputIdx);
+    backprop = operation.output(outputIdx++);
   }
 
   /**

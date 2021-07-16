@@ -1,18 +1,18 @@
 /* Copyright 2017-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.op;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,7 +50,7 @@ public class ScopeTest {
   @Test
   public void basicNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       assertEquals("add", root.makeOpName("add"));
       assertEquals("add_1", root.makeOpName("add"));
       assertEquals("add_2", root.makeOpName("add"));
@@ -61,7 +61,7 @@ public class ScopeTest {
   @Test
   public void hierarchicalNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       Scope child = root.withSubScope("child");
       assertEquals("child/add", child.makeOpName("add"));
       assertEquals("child/add_1", child.makeOpName("add"));
@@ -87,7 +87,7 @@ public class ScopeTest {
   @Test
   public void scopeAndOpNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
 
       Scope child = root.withSubScope("child");
 
@@ -100,7 +100,7 @@ public class ScopeTest {
   @Test
   public void validateNames() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
 
       final String[] invalid_names = {
         "_", "-", "-x", // Names are constrained to start with [A-Za-z0-9.]
@@ -137,7 +137,7 @@ public class ScopeTest {
   @Test
   public void basic() {
     try (Graph g = new Graph()) {
-      Scope s = new Scope(g);
+      Scope s = new JavaScope(g);
       Const<TInt32> c1 = Const.create(s, 42);
       assertEquals("Const", c1.output().op().name());
       Const<TInt32> c2 = Const.create(s, 7);
@@ -152,7 +152,7 @@ public class ScopeTest {
   @Test
   public void hierarchy() {
     try (Graph g = new Graph()) {
-      Scope root = new Scope(g);
+      Scope root = new JavaScope(g);
       Scope child = root.withSubScope("child");
       assertEquals("child/Const", Const.create(child, 42).output().op().name());
       assertEquals("child/four", Const.create(child.withName("four"), 4).output().op().name());
@@ -163,7 +163,7 @@ public class ScopeTest {
   public void composite() {
     try (Graph g = new Graph();
         Session sess = new Session(g)) {
-      Scope s = new Scope(g);
+      Scope s = new JavaScope(g);
       Output<TInt32> data =
           Const.create(s.withName("data"), new int[] {600, 470, 170, 430, 300}).output();
 
@@ -195,6 +195,7 @@ public class ScopeTest {
 
   // "handwritten" sample operator classes
   private static final class Const<T extends TType> {
+
     private final Output<T> output;
 
     static Const<TInt32> create(Scope s, int v) {
@@ -225,6 +226,7 @@ public class ScopeTest {
   }
 
   private static final class Mean<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> Mean<T> create(Scope s, Output<T> input, Output<T> reductionIndices) {
@@ -247,6 +249,7 @@ public class ScopeTest {
   }
 
   private static final class SquaredDifference<T extends TType> {
+
     private final Output<T> output;
 
     static <T extends TType> SquaredDifference<T> create(Scope s, Output<T> x, Output<T> y) {
@@ -269,6 +272,7 @@ public class ScopeTest {
   }
 
   private static final class Variance<T extends TType> {
+
     private final Output<T> output;
 
     static Variance<TInt32> create(Scope base, Output<TInt32> x) {

@@ -15,10 +15,17 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.Output;
+import org.tensorflow.op.JavaScope;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.Scope;
@@ -26,9 +33,6 @@ import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.NoOp;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TType;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /** Base class for gradient optimizers. */
 public abstract class Optimizer {
@@ -276,7 +280,7 @@ public abstract class Optimizer {
    * @return A NoOp with a control dependency on each update operation.
    */
   protected Op finish(List<Op> updateOperations, String name) {
-    Scope scope = new Scope(graph);
+    Scope scope = new JavaScope(graph);
     scope = scope.withName(name);
     scope = scope.withControlDependencies(updateOperations);
     return NoOp.create(scope);
