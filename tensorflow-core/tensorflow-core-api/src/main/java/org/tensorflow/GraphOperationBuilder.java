@@ -377,8 +377,20 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return this;
   }
 
+  // TODO add for eager and add interface method.  Waiting on
+  // https://github.com/tensorflow/tensorflow/pull/50816
+  public OperationBuilder setAttr(String name, AttrValue value) {
+    Graph.Reference r = graph.ref();
+    try {
+      setAttrValue(unsafeNativeHandle, name, value);
+    } finally {
+      r.close();
+    }
+    return this;
+  }
+
   private TF_OperationDescription unsafeNativeHandle;
-  private Graph graph;
+  private final Graph graph;
   private final Scope scope;
 
   private static void requireHandle(Pointer handle) {
@@ -597,19 +609,24 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private static void setAttrFunctionList(
       TF_OperationDescription opHandle, String attrName, List<String> functionNames) {
+    AttrValue value =
+        AttrValue.newBuilder()
+            .setList(
+                ListValue.newBuilder()
+                    .addAllFunc(
+                        functionNames.stream()
+                            .map(x -> NameAttrList.newBuilder().setName(x).build())
+                            .collect(Collectors.toList()))
+                    .build())
+            .build();
+    setAttrValue(opHandle, attrName, value);
+  }
+
+  private static void setAttrValue(
+      TF_OperationDescription opHandle, String attrName, AttrValue value) {
     requireHandle(opHandle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      AttrValue value =
-          AttrValue.newBuilder()
-              .setList(
-                  ListValue.newBuilder()
-                      .addAllFunc(
-                          functionNames.stream()
-                              .map(x -> NameAttrList.newBuilder().setName(x).build())
-                              .collect(Collectors.toList()))
-                      .build())
-              .build();
       byte[] bytes = value.toByteArray();
       TF_SetAttrValueProto(opHandle, attrName, new BytePointer(bytes), bytes.length, status);
       status.throwExceptionIfNotOK();
