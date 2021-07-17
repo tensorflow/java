@@ -174,7 +174,7 @@ public final class Scope {
   // TODO stop gradient recording in init scopes (once we have gradient recording)
 
   /** Get an extension of this scope that generates initialization ops. */
-  public Scope withwithInitScope() {
+  public Scope withInitScope() {
     return new Scope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
