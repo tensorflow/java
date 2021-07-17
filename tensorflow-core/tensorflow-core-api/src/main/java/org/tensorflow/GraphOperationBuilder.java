@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput;
@@ -376,8 +376,20 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return this;
   }
 
+  // TODO add for eager and add interface method.  Waiting on
+  // https://github.com/tensorflow/tensorflow/pull/50816
+  public OperationBuilder setAttr(String name, AttrValue value) {
+    Graph.Reference r = graph.ref();
+    try {
+      setAttrValue(unsafeNativeHandle, name, value);
+    } finally {
+      r.close();
+    }
+    return this;
+  }
+
   private TF_OperationDescription unsafeNativeHandle;
-  private Graph graph;
+  private final Graph graph;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
@@ -595,19 +607,24 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private static void setAttrFunctionList(
       TF_OperationDescription opHandle, String attrName, List<String> functionNames) {
+    AttrValue value =
+        AttrValue.newBuilder()
+            .setList(
+                ListValue.newBuilder()
+                    .addAllFunc(
+                        functionNames.stream()
+                            .map(x -> NameAttrList.newBuilder().setName(x).build())
+                            .collect(Collectors.toList()))
+                    .build())
+            .build();
+    setAttrValue(opHandle, attrName, value);
+  }
+
+  private static void setAttrValue(
+      TF_OperationDescription opHandle, String attrName, AttrValue value) {
     requireHandle(opHandle);
     try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
-      AttrValue value =
-          AttrValue.newBuilder()
-              .setList(
-                  ListValue.newBuilder()
-                      .addAllFunc(
-                          functionNames.stream()
-                              .map(x -> NameAttrList.newBuilder().setName(x).build())
-                              .collect(Collectors.toList()))
-                      .build())
-              .build();
       byte[] bytes = value.toByteArray();
       TF_SetAttrValueProto(opHandle, attrName, new BytePointer(bytes), bytes.length, status);
       status.throwExceptionIfNotOK();
