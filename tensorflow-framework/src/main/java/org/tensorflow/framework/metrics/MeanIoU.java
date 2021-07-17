@@ -96,6 +96,7 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
       totalConfusionMatrix =
           getTF()
               .withName(totalCMName)
+              .withInitScope()
               .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
       initializer =
           getTF()

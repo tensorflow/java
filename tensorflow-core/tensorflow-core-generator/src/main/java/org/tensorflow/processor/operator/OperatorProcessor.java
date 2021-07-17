@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.processor.operator;
 
 import com.github.javaparser.ast.comments.JavadocComment;
@@ -548,6 +548,34 @@ public final class OperatorProcessor extends AbstractProcessor {
                 "Returns an API that builds operations with the provided name prefix.\n"
                     + "\n@see {@link $T#withSubScope(String)}\n",
                 Names.Scope)
+            .build());
+
+    String initScopeComment =
+        "<p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.\n"
+            + "Additionally, this scope drops all of its control dependencies."
+            + "  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.";
+
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withInitScope")
+            .addModifiers(Modifier.PUBLIC)
+            .returns(Names.Ops)
+            .addStatement("return new $T(scope.withInitScope())", Names.Ops)
+            .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
+            .build());
+
+    TypeVariableName T = TypeVariableName.get("T").withBounds(Names.Operand);
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("liftToInitScope")
+            .addTypeVariable(T)
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(T, "op")
+            .returns(T)
+            .addStatement("scope.env().registerInitOp(op.op())")
+            .addStatement("return op")
+            .addJavadoc(
+                "Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n"
+                    + initScopeComment
+                    + "\n@throws IllegalArgumentException if the op or one of its inputs can't be made an init op.")
             .build());
 
     opsBuilder.addMethod(

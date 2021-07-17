@@ -173,7 +173,7 @@ try (Graph graph = new Graph()) {
     // instantiate graph-mode session
     try (Session session = new Session(graph)) {
         // Run graph initializers
-        session.run(tf.init());
+        session.initialize();
 
         // Iterate over dataset elements
         while (true) {

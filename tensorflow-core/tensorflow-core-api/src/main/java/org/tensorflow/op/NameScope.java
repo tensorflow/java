@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.op;
 
 import java.util.HashMap;
@@ -55,9 +55,7 @@ final class NameScope {
 
   private static final Pattern NAME_PATTERN = Pattern.compile("(.+)_(\\d+)", Pattern.DOTALL);
 
-  /** "Import" used names from a graph. Useful when adding to a loaded graph. */
-  private NameScope withUsedFrom(ExecutionEnvironment env) {
-
+  void importIdsFrom(ExecutionEnvironment env) {
     if (env instanceof Graph) {
       ((Graph) env)
           .operations()
@@ -90,6 +88,11 @@ final class NameScope {
                 }
               });
     }
+  }
+
+  /** "Import" used names from a graph. Useful when adding to a loaded graph. */
+  private NameScope withUsedFrom(ExecutionEnvironment env) {
+    importIdsFrom(env);
     return this;
   }
 
@@ -134,7 +137,7 @@ final class NameScope {
   //
   // The second use of makeUnique("a") updates ids to "a" -> 2
   // and returns "a_1", and so on.
-  private String makeUnique(String id) {
+  String makeUnique(String id) {
     if (!ids.containsKey(id)) {
       ids.put(id, 1);
       return id;

@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,7 +32,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.linalg.MatMul;
@@ -184,43 +183,16 @@ public class SessionTest {
     try (Graph g = new Graph()) {
       Ops tf = Ops.create(g);
 
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
-      tf.initAdd(tf.assign(var1, tf.constant(10)));
-      Variable<TInt32> var2 = tf.variable(tf.constant(20));
+      Variable<TInt32> var1 = tf.withInitScope().variable(Shape.scalar(), TInt32.class);
+      tf.withInitScope().assign(var1, tf.withInitScope().constant(10));
+      Variable<TInt32> var2 = tf.withInitScope().variable(tf.withInitScope().constant(20));
       Add<TInt32> add = tf.math.add(var1, var2);
 
       try (Session s = new Session(g)) {
-        s.run(tf.init());
+        s.initialize();
 
         try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
           assertEquals(30, t.getInt());
-        }
-      }
-    }
-  }
-
-  @Test
-  public void runInitByName() {
-    try (Graph g = new Graph()) {
-      Ops tf = Ops.create(g);
-
-      Variable<TInt32> var1 = tf.variable(Shape.scalar(), TInt32.class);
-      tf.initAdd(tf.assign(var1, tf.constant(10)));
-      Variable<TInt32> var2 = tf.variable(tf.constant(20));
-      Add<TInt32> add = tf.math.add(var1, var2);
-      tf.withName("init_test").init();
-
-      try (Session s = new Session(g)) {
-        s.run("init_test");
-
-        try (TInt32 t = (TInt32) s.runner().fetch(add).run().get(0)) {
-          assertEquals(30, t.getInt());
-        }
-        try {
-          s.run("wrong_name");
-          fail();
-        } catch (IllegalArgumentException e) {
-          // as expected
         }
       }
     }
@@ -233,14 +205,21 @@ public class SessionTest {
       Ops tf = Ops.create(g);
       Variable<TFloat32> x =
           tf.withName("x")
-              .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
+              .withInitScope()
+              .variable(
+                  tf.withInitScope()
+                      .random
+                      .randomUniform(tf.withInitScope().constant(Shape.of(3, 3L)), TFloat32.class));
       Variable<TFloat32> y =
           tf.withName("y")
-              .variable(tf.random.randomUniform(tf.constant(Shape.of(3, 3L)), TFloat32.class));
-      Init init = tf.init();
+              .withInitScope()
+              .variable(
+                  tf.withInitScope()
+                      .random
+                      .randomUniform(tf.withInitScope().constant(Shape.of(3, 3L)), TFloat32.class));
 
       try (Session s = new Session(g)) {
-        s.run(init);
+        s.initialize();
         s.save(testFolder.resolve("checkpoint").toString());
         GraphDef graphDef = g.toGraphDef();
 

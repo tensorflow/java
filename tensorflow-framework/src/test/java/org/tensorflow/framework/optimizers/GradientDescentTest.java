@@ -20,9 +20,7 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.buffer.DataBuffers;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.math.Add;
@@ -80,8 +78,8 @@ public class GradientDescentTest {
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+      tf.withInitScope().assign(var0, tf.constant(var0Init));
+      tf.withInitScope().assign(var1, tf.constant(var1Init));
 
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
@@ -94,12 +92,8 @@ public class GradientDescentTest {
       GradientDescent instance = new GradientDescent(graph, learningRate);
       Op update = instance.applyGradients(gradsAndVars, "SGDTest");
 
-      /* initialize the local variables */
-      session.run(var0Initializer);
-      session.run(var1Initializer);
-
       /* initialize the accumulators */
-      session.run(tf.init());
+      session.initialize();
 
       /* make sure the variables were initialized properly */
       session.evaluate(var0Init, var0);
@@ -127,7 +121,6 @@ public class GradientDescentTest {
             .build();
 
     GraphDef def;
-    String initName;
     String trainName;
     String lossName;
 
@@ -144,17 +137,19 @@ public class GradientDescentTest {
 
       // Fully connected layer
       Variable<TFloat32> fcWeights =
-          tf.variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
+          tf.withInitScope().variable(initializer.call(tf, tf.array(20L, 200L), TFloat32.class));
       fcWeightName = fcWeights.op().name();
-      Variable<TFloat32> fcBiases = tf.variable(tf.fill(tf.array(200), tf.constant(0.1f)));
+      Variable<TFloat32> fcBiases =
+          tf.withInitScope().variable(tf.fill(tf.array(200), tf.constant(0.1f)));
       fcBiasName = fcBiases.op().name();
       Relu<TFloat32> relu = tf.nn.relu(tf.math.add(tf.linalg.matMul(input, fcWeights), fcBiases));
 
       // Output layer
       Variable<TFloat32> outputWeights =
-          tf.variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
+          tf.withInitScope().variable(initializer.call(tf, tf.array(200L, 2L), TFloat32.class));
       outputWeightName = outputWeights.op().name();
-      Variable<TFloat32> outputBiases = tf.variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
+      Variable<TFloat32> outputBiases =
+          tf.withInitScope().variable(tf.fill(tf.array(2L), tf.constant(0.1f)));
       outputBiasName = outputBiases.op().name();
       Add<TFloat32> output = tf.math.add(tf.linalg.matMul(relu, outputWeights), outputBiases);
 
@@ -169,10 +164,6 @@ public class GradientDescentTest {
       GradientDescent gd = new GradientDescent(g, 10.0f);
       Op trainingOp = gd.minimize(loss);
       trainName = trainingOp.op().name();
-
-      // Create the init op
-      Init init = tf.init();
-      initName = init.op().name();
 
       def = g.toGraphDef();
     }
@@ -196,7 +187,7 @@ public class GradientDescentTest {
       try (Graph g = new Graph();
           Session s = new Session(g, config)) {
         g.importGraphDef(def);
-        s.run(initName);
+        s.initialize();
 
         initialized.add(
             s.runner()

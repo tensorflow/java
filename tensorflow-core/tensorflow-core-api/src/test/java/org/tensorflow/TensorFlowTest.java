@@ -23,13 +23,12 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.io.File;
 import java.nio.file.Paths;
-
 import org.junit.jupiter.api.Test;
 import org.tensorflow.proto.framework.OpList;
 
 /** Unit tests for {@link org.tensorflow.TensorFlow}. */
 public class TensorFlowTest {
-    
+
   @Test
   public void version() {
     assertTrue(TensorFlow.version().length() > 0);
@@ -51,7 +50,7 @@ public class TensorFlowTest {
     try (Graph g = new Graph()) {
       // Build a graph with an unrecognized operation.
       try {
-        g.opBuilder("MyTest", "MyTest").build();
+        g.baseScope().opBuilder("MyTest", "MyTest").build();
         fail("should not be able to construct graphs with unregistered ops");
       } catch (IllegalArgumentException e) {
         // expected exception
@@ -64,7 +63,7 @@ public class TensorFlowTest {
       assertEquals(opList.getOpList().get(0).getName(), "MyTest");
 
       // Now graph building should succeed.
-      g.opBuilder("MyTest", "MyTest").build();
+      g.baseScope().opBuilder("MyTest", "MyTest").build();
     }
   }
 }

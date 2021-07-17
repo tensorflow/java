@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -21,8 +23,6 @@ import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 public class MeanRelativeErrorTest {
   private final TestSession.Mode tfMode = TestSession.Mode.GRAPH;
@@ -38,8 +38,8 @@ public class MeanRelativeErrorTest {
 
       MeanRelativeError<TFloat32> instance =
           new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
+      session.initialize();
       session.run(instance.resetStates());
-      session.run(tf.init());
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -63,8 +63,8 @@ public class MeanRelativeErrorTest {
 
       MeanRelativeError<TFloat32> instance =
           new MeanRelativeError<>(tf, labels, 1001L, TFloat32.class);
+      session.initialize();
       session.run(instance.resetStates());
-      session.run(tf.init());
       Op update = instance.updateState(labels, predictions, sampleWeight);
       session.run(update);
       Operand<TFloat32> result = instance.result();
@@ -87,8 +87,8 @@ public class MeanRelativeErrorTest {
       MeanRelativeError<TFloat32> instance =
           new MeanRelativeError<>(
               tf, cast(tf, tf.zerosLike(labels), TFloat32.class), 1001L, TFloat32.class);
+      session.initialize();
       session.run(instance.resetStates());
-      session.run(tf.init());
       Op update = instance.updateState(labels, predictions, null);
       session.run(update);
       Operand<TFloat32> result = instance.result();

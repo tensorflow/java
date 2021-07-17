@@ -15,19 +15,18 @@
  */
 package org.tensorflow.framework.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Session;
-import org.tensorflow.types.family.TType;
 import org.tensorflow.exceptions.TFOutOfRangeException;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TInt32;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.tensorflow.types.family.TType;
 
 public class DatasetIteratorTest extends DatasetTestBase {
 
@@ -48,15 +47,15 @@ public class DatasetIteratorTest extends DatasetTestBase {
       Operand<?> y = components.get(1);
 
       try (Session session = new Session(graph)) {
-        session.run(tf.init());
+        session.initialize();
 
         int batches = 0;
         while (true) {
           try {
             List<?> outputs = session.runner().fetch(x).fetch(y).run();
 
-            try (TInt32 xBatch = (TInt32)outputs.get(0);
-                TInt32 yBatch = (TInt32)outputs.get(1)) {
+            try (TInt32 xBatch = (TInt32) outputs.get(0);
+                TInt32 yBatch = (TInt32) outputs.get(1)) {
               assertEquals(testMatrix1.get(batches), xBatch);
               assertEquals(testMatrix2.get(batches), yBatch);
               batches++;
@@ -81,8 +80,8 @@ public class DatasetIteratorTest extends DatasetTestBase {
     Dataset dataset = Dataset.fromTensorSlices(tf, tensors, dataTypes);
     int count = 0;
     for (List<Operand<?>> outputs : dataset) {
-      try (TInt32 batch1 = (TInt32)outputs.get(0).asTensor();
-          TInt32 batch2 = (TInt32)outputs.get(1).asTensor()) {
+      try (TInt32 batch1 = (TInt32) outputs.get(0).asTensor();
+          TInt32 batch2 = (TInt32) outputs.get(1).asTensor()) {
         assertEquals(testMatrix1.get(count), batch1);
         assertEquals(testMatrix2.get(count), batch2);
 

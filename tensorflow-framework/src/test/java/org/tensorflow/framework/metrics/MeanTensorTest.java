@@ -32,7 +32,7 @@ public class MeanTensorTest {
       Ops tf = session.getTF();
       Operand<TInt64> values = tf.constant(new long[] {100, 40});
       MeanTensor<TFloat64> instance = new MeanTensor<>(tf, 1001L, TFloat64.class);
-      session.run(tf.init());
+      session.initialize();
       Op update = instance.updateState(values, null);
       session.run(update);
       Operand<TFloat64> result = instance.result();
@@ -54,7 +54,7 @@ public class MeanTensorTest {
       Ops tf = session.getTF();
       Operand<TInt64> values = tf.constant(new long[] {100, 30});
       MeanTensor<TFloat64> instance = new MeanTensor<>(tf, 1001L, TFloat64.class);
-      session.run(tf.init());
+      session.initialize();
 
       // check scalar weight
       Op update = instance.updateState(values, tf.constant(0.5f));

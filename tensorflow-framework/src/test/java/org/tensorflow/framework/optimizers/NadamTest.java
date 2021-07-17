@@ -14,6 +14,10 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.optimizers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import org.tensorflow.Graph;
 import org.tensorflow.framework.utils.ND;
@@ -23,16 +27,10 @@ import org.tensorflow.ndarray.NdArrays;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Constant;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.family.TType;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /** Test cases for Nadam Optimizer */
 public class NadamTest {
@@ -104,8 +102,8 @@ public class NadamTest {
       Variable<TFloat32> var0 = tf.withName("var0").variable(shape0, TFloat32.class);
       Variable<TFloat32> var1 = tf.withName("var1").variable(shape1, TFloat32.class);
 
-      Assign<TFloat32> var0Initializer = tf.assign(var0, tf.constant(var0Init));
-      Assign<TFloat32> var1Initializer = tf.assign(var1, tf.constant(var1Init));
+      tf.withInitScope().assign(var0, tf.constant(var0Init));
+      tf.withInitScope().assign(var1, tf.constant(var1Init));
 
       Constant<TFloat32> grads0 = tf.constant(grads0Init);
       Constant<TFloat32> grads1 = tf.constant(grads1Init);
@@ -134,12 +132,8 @@ public class NadamTest {
       secondMomentSlots[1] = instance.getSlot(var1.asOutput(), Nadam.SECOND_MOMENT).get();
       assertEquals(secondMomentSlots[1].shape(), var1.shape());
 
-      /* initialize the local variables */
-      session.run(var0Initializer);
-      session.run(var1Initializer);
-
       /* initialize the accumulators */
-      session.run(tf.init());
+      session.initialize();
 
       session.setEpsilon(epsilon1);
 
@@ -147,12 +141,7 @@ public class NadamTest {
       session.evaluate(var1Init, var1);
 
       try (TFloat32 result =
-          (TFloat32)session
-              .getGraphSession()
-              .runner()
-              .fetch("momentum")
-              .run()
-              .get(0)) {
+          (TFloat32) session.getGraphSession().runner().fetch("momentum").run().get(0)) {
         result.scalars().forEach(f -> assertEquals(1F, f.getFloat(), epsilon1));
       }
       momentum = 1F;
@@ -166,12 +155,7 @@ public class NadamTest {
         momentum = momentum * mut;
 
         try (TFloat32 result =
-            (TFloat32)session
-                .getGraphSession()
-                .runner()
-                .fetch("momentum")
-                .run()
-                .get(0)) {
+            (TFloat32) session.getGraphSession().runner().fetch("momentum").run().get(0)) {
           result.scalars().forEach(f -> assertEquals(momentum, f.getFloat(), epsilon1));
         }
         mcache = ND.mul(mcache, momentum);

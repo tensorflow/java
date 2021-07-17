@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddControlInput;
@@ -58,6 +58,7 @@ import org.tensorflow.internal.c_api.TF_Output;
 import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.internal.c_api.TF_Tensor;
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.op.Scope;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.AttrValue.ListValue;
 import org.tensorflow.proto.framework.DataType;
@@ -66,8 +67,9 @@ import org.tensorflow.proto.framework.NameAttrList;
 /** An {@link OperationBuilder} for adding {@link GraphOperation}s to a {@link Graph}. */
 public final class GraphOperationBuilder implements OperationBuilder {
 
-  GraphOperationBuilder(Graph graph, String type, String name) {
+  GraphOperationBuilder(Graph graph, String type, String name, Scope scope) {
     this.graph = graph;
+    this.scope = scope;
     Graph.Reference r = graph.ref();
     try {
       this.unsafeNativeHandle = allocate(r.nativeHandle(), type, name);
@@ -83,10 +85,12 @@ public final class GraphOperationBuilder implements OperationBuilder {
    */
   @Override
   public GraphOperation build() {
+    scope.apply(this);
     Graph.Reference r = graph.ref();
     try {
       GraphOperation op = new GraphOperation(graph, finish(unsafeNativeHandle));
       unsafeNativeHandle = null;
+      scope.onOpCreated(op);
       return op;
     } finally {
       r.close();
@@ -95,10 +99,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   @Override
   public GraphOperationBuilder addControlInput(Operation control) {
-    if (!(control instanceof GraphOperation)) {
-      throw new IllegalArgumentException(
-          "Only GraphOperation instances can be used as control inputs");
-    }
+    graph.checkInput(control);
 
     if (control.env() != graph) {
       throw new IllegalArgumentException(
@@ -378,6 +379,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
 
   private TF_OperationDescription unsafeNativeHandle;
   private Graph graph;
+  private final Scope scope;
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {

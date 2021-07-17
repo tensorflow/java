@@ -29,7 +29,6 @@ import org.tensorflow.framework.data.impl.TakeDataset;
 import org.tensorflow.framework.data.impl.TensorSliceDataset;
 import org.tensorflow.framework.data.impl.TextLineDataset;
 import org.tensorflow.ndarray.Shape;
-import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TType;
 
@@ -254,7 +253,7 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    * <pre>
    *     try (Session session = new Session(graph) {
    *         // Immediately run initializers
-   *         session.run(tf.init());
+   *         session.initialize();
    *     }
    * </pre>
    *
@@ -264,8 +263,8 @@ public abstract class Dataset implements Iterable<List<Operand<?>>> {
    */
   public DatasetIterator makeOneShotIterator() {
     DatasetIterator iterator = makeInitializeableIterator();
-    Op initializer = iterator.makeInitializer(this);
-    if (tf.scope().env().isGraph()) tf.initAdd(initializer);
+    // TODO should pass the scope instead
+    tf.scope().env().registerInitOp(iterator.makeInitializer(this).op());
     return iterator;
   }
 
