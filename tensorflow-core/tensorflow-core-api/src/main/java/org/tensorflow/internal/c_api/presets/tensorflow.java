@@ -46,7 +46,8 @@ import org.bytedeco.javacpp.tools.InfoMapper;
             //                "tensorflow/c/env.h",
             "tensorflow/c/kernels.h",
             "tensorflow/c/ops.h",
-            "tensorflow/c/eager/c_api.h"
+            "tensorflow/c/eager/c_api.h",
+            "tensorflow/c/eager/c_api_experimental.h"
           },
           link = "tensorflow_cc@.2",
           preload = {"iomp5", "mklml", "mklml_intel", "tensorflow_framework@.2"},
@@ -385,6 +386,12 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "TF_ShapeInferenceContextDimValueKnown",
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
                     "TF_InitKernel")
-                .skip());
+                .skip())
+        .put(
+            new Info(
+                "TFE_CustomDeviceTensorHandle",
+                "TFE_CustomDevice"
+            ).skip()
+        );
   }
 }
