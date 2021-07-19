@@ -377,8 +377,7 @@ public final class GraphOperationBuilder implements OperationBuilder {
     return this;
   }
 
-  // TODO add for eager and add interface method.  Waiting on
-  // https://github.com/tensorflow/tensorflow/pull/50816
+  @Override
   public OperationBuilder setAttr(String name, AttrValue value) {
     Graph.Reference r = graph.ref();
     try {
