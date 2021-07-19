@@ -484,9 +484,9 @@ final class EagerOperationBuilder implements OperationBuilder {
     }
   }
 
-  private static void setAttrValue(TFE_Op opHandle, String name, AttrValue value){
+  private static void setAttrValue(TFE_Op opHandle, String name, AttrValue value) {
     requireOp(opHandle);
-    try(PointerScope scope = new PointerScope()){
+    try (PointerScope scope = new PointerScope()) {
       TF_Status status = TF_Status.newStatus();
       byte[] bytes = value.toByteArray();
       TFE_OpSetAttrValueProto(opHandle, name, new BytePointer(bytes), bytes.length, status);
