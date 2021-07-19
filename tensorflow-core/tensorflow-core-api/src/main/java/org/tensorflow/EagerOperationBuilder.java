@@ -253,7 +253,7 @@ final class EagerOperationBuilder implements OperationBuilder {
     return this;
   }
 
-  private TFE_Op opHandle;
+  private final TFE_Op opHandle;
 
   private final EagerSession session;
   private final String type;
