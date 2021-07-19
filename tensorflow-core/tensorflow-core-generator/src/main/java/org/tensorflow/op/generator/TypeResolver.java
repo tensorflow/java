@@ -21,18 +21,17 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeVariableName;
 import com.squareup.javapoet.WildcardTypeName;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import org.tensorflow.Names;
 import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.OpDef;
 import org.tensorflow.proto.framework.OpDef.ArgDef;
 import org.tensorflow.proto.framework.OpDef.AttrDef;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A utility class to handle type calculations for a {@link ClassGenerator}. Should be one to one
@@ -77,6 +76,7 @@ final class TypeResolver {
    * <p>These are excluded from factory methods.
    */
   private final Set<String> reachedFromInput = new HashSet<>();
+
   private char nextGenericLetter = 'T';
 
   TypeResolver(OpDef op) {
@@ -225,30 +225,31 @@ final class TypeResolver {
 
     switch (typeName) {
       case "string":
-        types = new ResolvedType(STRING);
+        types = new ResolvedType(STRING, AttributeType.STRING);
         break;
       case "int":
-        types = new ResolvedType(TypeName.LONG);
+        types = new ResolvedType(TypeName.LONG, AttributeType.INT);
         break;
       case "float":
-        types = new ResolvedType(TypeName.FLOAT);
+        types = new ResolvedType(TypeName.FLOAT, AttributeType.FLOAT);
         break;
       case "bool":
-        types = new ResolvedType(TypeName.BOOLEAN);
+        types = new ResolvedType(TypeName.BOOLEAN, AttributeType.BOOL);
         break;
       case "shape":
-        types = new ResolvedType(Names.Shape);
+        types = new ResolvedType(Names.Shape, AttributeType.SHAPE);
         break;
       case "tensor":
-        types = new ResolvedType(Names.Tensor);
+        types = new ResolvedType(Names.Tensor, AttributeType.TENSOR);
         break;
       case "type":
         TypeName family = typeFamily(attr);
         TypeName type =
             iterable ? WildcardTypeName.subtypeOf(family) : nextGeneric().withBounds(family);
-        types = new ResolvedType(type, TypeName.get(DataType.class));
+        types = new ResolvedType(type, TypeName.get(DataType.class), AttributeType.TYPE);
         break;
       case "func":
+        // TODO add attribute type once supported
         types = new ResolvedType(Names.ConcreteFunction);
         break;
       default:
