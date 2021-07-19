@@ -16,6 +16,7 @@
 package org.tensorflow;
 
 import org.tensorflow.ndarray.Shape;
+import org.tensorflow.proto.framework.AttrValue;
 import org.tensorflow.proto.framework.DataType;
 
 /**
@@ -244,4 +245,14 @@ public interface OperationBuilder {
    * @return the OperationBuilder instance for chaining.
    */
   OperationBuilder setAttr(String name, ConcreteFunction[] value);
+
+  /**
+   * Set value of an attribute of the operation being built.
+   * Does not attach any functions.
+   *
+   * @param name attribute name
+   * @param value attribute value
+   * @return the OperationBuilder instance for chaining.
+   */
+  OperationBuilder setAttr(String name, AttrValue value);
 }
