@@ -387,11 +387,6 @@ public class tensorflow implements LoadEnabled, InfoMapper {
                     "TFE_NewTensorHandle(const tensorflow::Tensor&, TF_Status*)",
                     "TF_InitKernel")
                 .skip())
-        .put(
-            new Info(
-                "TFE_CustomDeviceTensorHandle",
-                "TFE_CustomDevice"
-            ).skip()
-        );
+        .put(new Info("TFE_CustomDeviceTensorHandle", "TFE_CustomDevice").skip());
   }
 }
