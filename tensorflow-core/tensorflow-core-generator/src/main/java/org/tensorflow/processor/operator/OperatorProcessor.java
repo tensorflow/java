@@ -551,9 +551,9 @@ public final class OperatorProcessor extends AbstractProcessor {
             .build());
 
     String initScopeComment =
-        "<p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.\n"
-            + "Additionally, this scope drops all of its control dependencies."
-            + "  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.";
+        "<p>\nInit operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,\nand are ignored when used as control dependencies.\n"
+            + "Additionally, this scope ignores any control dependencies."
+            + "  If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.";
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withInitScope")

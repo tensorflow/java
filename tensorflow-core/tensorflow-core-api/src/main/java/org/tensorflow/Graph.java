@@ -545,7 +545,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!newInitializers) {
       return;
     }
-    if (initializers.isEmpty()) return;
+    if (initializers.isEmpty()) {
+      return;
+    }
 
     OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
     initializers.forEach(builder::addControlInput);
@@ -573,12 +575,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     checkInput(op);
 
     if (!(op instanceof GraphOperation)) {
-      throw new IllegalArgumentException("Can't use a non-graph op as a graph's init op.");
+      throw new IllegalStateException("Can't use a non-graph op as a graph's init op.");
     }
     GraphOperation graphOp = (GraphOperation) op;
 
     if (op.type().equals(Placeholder.OP_NAME)) {
-      throw new IllegalArgumentException("Can not make a placeholder an init op.");
+      throw new IllegalStateException("Can not make a placeholder an init op.");
     }
 
     graphOp.controlInputs().forEach(this::registerInitOp);

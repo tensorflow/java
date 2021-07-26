@@ -8078,8 +8078,10 @@ public final class Ops {
 
   /**
    * Returns an API that builds init operations.
-   * <p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.
-   * Additionally, this scope drops all of its control dependencies.  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.
+   * <p>
+   * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
+   * and are never used as control dependencies.
+   * Additionally, this scope ignores any control dependencies.  If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
    */
   public Ops withInitScope() {
     return new Ops(scope.withInitScope());
@@ -8087,8 +8089,10 @@ public final class Ops {
 
   /**
    * Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).
-   * <p>Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well, and are never used as control dependencies.
-   * Additionally, this scope drops all of its control dependencies.  If an input can not be made an init op (i.e. a Placeholder), will error on op creation.
+   * <p>
+   * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
+   * and are never used as control dependencies.
+   * Additionally, this scope ignores any control dependencies.  If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
    * @throws IllegalArgumentException if the op or one of its inputs can't be made an init op.
    */
   public <T extends Operand> T liftToInitScope(T op) {
