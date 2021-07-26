@@ -76,8 +76,8 @@ import org.tensorflow.types.TString;
  * <p><b>WARNING:</b>A {@code Session} owns resources that <b>must</b> be explicitly freed by
  * invoking {@link #close()}.
  *
- * <p>Instances of a Session are thread-safe.
- * Modifying the graph from another thread <b>is not safe</b>.
+ * <p>Instances of a Session are thread-safe. Modifying the graph from another thread <b>is not
+ * safe</b>.
  */
 public final class Session implements AutoCloseable {
 
