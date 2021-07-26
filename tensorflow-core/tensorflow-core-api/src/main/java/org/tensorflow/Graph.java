@@ -545,15 +545,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!newInitializers) {
       return;
     }
-    if (initializers.isEmpty() || topInitializers.isEmpty()) {
+    if (initializers.isEmpty()) {
       return;
     }
 
     OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
-    topInitializers.forEach(builder::addControlInput);
-
-    topInitializers.clear();
-    topInitializers.add(builder.build());
+    initializers.forEach(builder::addControlInput);
 
     newInitializers = false;
   }
@@ -606,9 +603,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
 
     GraphOperation graphOp = (GraphOperation) op;
-
-    topInitializers.removeAll(subgraphToOps(Collections.singleton(graphOp)));
-    topInitializers.add(op);
     newInitializers = true;
   }
 
@@ -622,7 +616,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * #registerInitOp(Operation)}
    */
   public Set<Operation> initializers() {
-    return Collections.unmodifiableSet(topInitializers);
+    return Collections.unmodifiableSet(initializers);
   }
 
   /** Get whether the graph has any initializers */
@@ -886,7 +880,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private final Scope baseScope;
 
   private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
-  private final Set<Operation> topInitializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private boolean newInitializers = false;
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
