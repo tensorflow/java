@@ -545,13 +545,15 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!newInitializers) {
       return;
     }
-    if (initializers.isEmpty()) {
+    if (initializers.isEmpty() || topInitializers.isEmpty()) {
       return;
     }
 
     OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
-    initializers.forEach(builder::addControlInput);
-    builder.build();
+    topInitializers.forEach(builder::addControlInput);
+
+    topInitializers.clear();
+    topInitializers.add(builder.build());
 
     newInitializers = false;
   }
@@ -571,9 +573,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     }
   }
 
-  @Override
-  public synchronized void registerInitOp(Operation op) {
-    if (isInitOp(op)) return;
+  private boolean registerInitOpHelper(Operation op) {
+    if (isInitOp(op)) return false;
     checkInput(op);
 
     if (!(op instanceof GraphOperation)) {
@@ -582,14 +583,32 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     GraphOperation graphOp = (GraphOperation) op;
 
     if (op.type().equals(Placeholder.OP_NAME)) {
-      throw new IllegalStateException("Can not make a placeholder an init op.");
+      throw new IllegalStateException("Can not make a placeholder " + op + " an init op.");
     }
 
-    graphOp.controlInputs().forEach(this::registerInitOp);
-    graphOp.inputs().forEach(x -> registerInitOp(x.op()));
+    boolean added = false;
 
-    initializers.removeAll(subgraphToOps(Collections.singleton(graphOp)));
-    initializers.add(op);
+    for (GraphOperation controlInput : graphOp.controlInputs()) {
+      added = added || registerInitOpHelper(controlInput);
+    }
+
+    for (Operand<?> input : graphOp.inputs()) {
+      added = added || registerInitOpHelper(input.op());
+    }
+    added = added || initializers.add(op);
+    return added;
+  }
+
+  @Override
+  public void registerInitOp(Operation op) {
+    if (!registerInitOpHelper(op)) {
+      return;
+    }
+
+    GraphOperation graphOp = (GraphOperation) op;
+
+    topInitializers.removeAll(subgraphToOps(Collections.singleton(graphOp)));
+    topInitializers.add(op);
     newInitializers = true;
   }
 
@@ -598,9 +617,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return initializers.contains(op);
   }
 
-  /** Returns all initializers added to the graph via {@link #registerInitOp(Operation)} */
+  /**
+   * Returns a set of ops that will run all initializers added to the graph via {@link
+   * #registerInitOp(Operation)}
+   */
   public Set<Operation> initializers() {
-    return Collections.unmodifiableSet(initializers);
+    return Collections.unmodifiableSet(topInitializers);
   }
 
   /** Get whether the graph has any initializers */
@@ -863,7 +885,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
   private final Scope baseScope;
 
-  private final Set<Operation> initializers = new LinkedHashSet<>();
+  private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
+  private final Set<Operation> topInitializers = Collections.synchronizedSet(new LinkedHashSet<>());
   private boolean newInitializers = false;
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
