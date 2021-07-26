@@ -551,7 +551,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
     OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
     initializers.forEach(builder::addControlInput);
-
+    builder.build();
     newInitializers = false;
   }
 
@@ -583,25 +583,21 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       throw new IllegalStateException("Can not make a placeholder " + op + " an init op.");
     }
 
-    boolean added = false;
-
     for (GraphOperation controlInput : graphOp.controlInputs()) {
-      added = added || registerInitOpHelper(controlInput);
+      registerInitOpHelper(controlInput);
     }
 
     for (Operand<?> input : graphOp.inputs()) {
-      added = added || registerInitOpHelper(input.op());
+      registerInitOpHelper(input.op());
     }
-    added = added || initializers.add(op);
-    return added;
+    return initializers.add(op);
   }
 
   @Override
   public void registerInitOp(Operation op) {
-    if (!registerInitOpHelper(op)) {
-      return;
+    if (registerInitOpHelper(op)) {
+      newInitializers = true;
     }
-    newInitializers = true;
   }
 
   @Override
