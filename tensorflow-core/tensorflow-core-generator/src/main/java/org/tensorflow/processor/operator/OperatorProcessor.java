@@ -551,16 +551,21 @@ public final class OperatorProcessor extends AbstractProcessor {
             .build());
 
     String initScopeComment =
-        "<p>\nInit operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,\nand are ignored when used as control dependencies.\n"
-            + "Additionally, this scope ignores any control dependencies."
-            + "  If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.";
+        "<p>\nInit operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,\n"
+            + "and are ignored when used as control dependencies.\n"
+            + "Additionally, this scope ignores any control dependencies.\n"
+            + "<p>\nIf an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.";
 
     opsBuilder.addMethod(
         MethodSpec.methodBuilder("withInitScope")
             .addModifiers(Modifier.PUBLIC)
             .returns(Names.Ops)
             .addStatement("return new $T(scope.withInitScope())", Names.Ops)
-            .addJavadoc("Returns an API that builds init operations.\n" + initScopeComment)
+            .addJavadoc(
+                "Returns an API that builds init operations.  {@link #liftToInitScope(Operand)} will be called for all created operations.\n"
+                    + initScopeComment
+                    + "\n"
+                    + "@see #liftToInitScope(Operand)")
             .build());
 
     TypeVariableName T = TypeVariableName.get("T").withBounds(Names.Operand);
@@ -575,7 +580,8 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addJavadoc(
                 "Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).\n"
                     + initScopeComment
-                    + "\n@throws IllegalArgumentException if the op or one of its inputs can't be made an init op.")
+                    + "@see ExecutionEnvironment#registerInitOp(Operation)\n"
+                    + "\n@throws IllegalStateException if the op or one of its inputs can't be made an init op.")
             .build());
 
     opsBuilder.addMethod(

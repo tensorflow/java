@@ -226,7 +226,12 @@ public final class Scope {
     return NameScope.isValidName(name);
   }
 
-  public void refreshIds() {
+  /**
+   * Refresh the used name list (used for uniquifying names) from the underlying graph.
+   *
+   * <p>Should be used if you made changes to the graph from non-{@code Scope} APIs.
+   */
+  public void refreshNames() {
     nameScope.importIdsFrom(env);
   }
 
@@ -249,8 +254,8 @@ public final class Scope {
    * <p>Ops created with this scope will have a control edge from each of the provided controls. All
    * other properties are inherited from the current scope.
    *
-   * <p>Init ops will never be used as control dependencies, they are assumed to be created during
-   * session initialization.
+   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
+   * during session initialization.
    *
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
@@ -268,8 +273,8 @@ public final class Scope {
    * <p>Ops created with this scope will have a control edge from each of the provided controls. All
    * other properties are inherited from the current scope.
    *
-   * <p>Init ops will never be used as control dependencies, they are assumed to be created during
-   * session initialization.
+   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
+   * during session initialization.
    *
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies

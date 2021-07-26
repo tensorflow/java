@@ -519,7 +519,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     synchronized (nativeHandleLock) {
       importGraphDef(nativeHandle, graphDef, prefix);
     }
-    baseScope.refreshIds();
+    baseScope.refreshNames();
 
     String initPrefix;
     if (!prefix.isEmpty()) {
@@ -558,6 +558,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
 
   /**
    * Generate a representation of the Graph.
+   *
+   * <p>Will create an initialization operation that depends on all registered init ops.
    *
    * @see #importGraphDef(GraphDef)
    * @see #importGraphDef(GraphDef, String)

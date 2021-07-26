@@ -111,7 +111,6 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
-        s.initialize();
         try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
             TFloat32 t = (TFloat32) f1.call(x)) {
           reducedSum = t.getFloat();

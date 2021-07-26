@@ -136,7 +136,11 @@ public final class Session implements AutoCloseable {
     this.autoInit = autoInit;
   }
 
-  /** Wrap an existing session with the associated {@link Graph}. */
+  /**
+   * Wrap an existing session with the associated {@link Graph}.
+   *
+   * <p>Does not enable auto-init.
+   */
   Session(Graph g, TF_Session nativeHandle) {
     graph = g;
     this.nativeHandle = nativeHandle;

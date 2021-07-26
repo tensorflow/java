@@ -71,8 +71,8 @@ public class GraphTest {
       Ops tf = Ops.create(g);
       Ops init = tf.withInitScope();
 
-      Operand<TInt32> var = init.variable(init.constant(4));
-      Operand<TInt32> result = tf.withName("result").math.add(var, tf.constant(2));
+      Operand<TInt32> variable = init.variable(init.constant(4));
+      Operand<TInt32> result = tf.withName("result").math.add(variable, tf.constant(2));
       graphDef = g.toGraphDef();
     }
 
@@ -82,7 +82,7 @@ public class GraphTest {
       Ops tf = Ops.create(g);
       Ops init = tf.withInitScope();
 
-      Operand<TInt32> var2 = init.withName("var2").variable(init.constant(4));
+      Operand<TInt32> variable2 = init.withName("var2").variable(init.constant(4));
 
       try (Session s = new Session(g, true)) {
         List<Tensor> results = s.runner().fetch("result").fetch("var2").run();
@@ -104,14 +104,13 @@ public class GraphTest {
       Ops tf = Ops.create(g);
       Ops init = tf.withInitScope();
 
-      Operand<TInt32> var = init.variable(init.constant(4));
-      Operand<TInt32> result = tf.withName("result").math.add(var, tf.constant(2));
+      Operand<TInt32> variable = init.variable(init.constant(4));
+      Operand<TInt32> result = tf.withName("result").math.add(variable, tf.constant(2));
       graphDef = g.toGraphDef();
     }
 
     try (Graph g = new Graph()) {
       g.importGraphDef(graphDef, "test");
-      System.out.println(g.initializers());
       try (Session s = new Session(g);
           TInt32 result = (TInt32) s.runner().fetch("test/result").run().get(0)) {
         assertEquals(6, result.getInt());
