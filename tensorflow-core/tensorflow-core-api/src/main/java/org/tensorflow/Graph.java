@@ -601,8 +601,6 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (!registerInitOpHelper(op)) {
       return;
     }
-
-    GraphOperation graphOp = (GraphOperation) op;
     newInitializers = true;
   }
 

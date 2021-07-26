@@ -22,6 +22,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +77,7 @@ import org.tensorflow.types.TString;
  * invoking {@link #close()}.
  *
  * <p>Instances of a Session are thread-safe.
+ * Modifying the graph from another thread <b>is not safe</b>.
  */
 public final class Session implements AutoCloseable {
 
@@ -181,12 +183,10 @@ public final class Session implements AutoCloseable {
    *
    * <p>This runs any ops that have been created with an init scope that have not already been ran.
    */
-  public synchronized void initialize() {
+  public void initialize() {
     Runner runner = runner();
-    synchronized (graph) {
-      graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
-      ranInits = graph.initializers();
-    }
+    graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
+    ranInits = graph.initializers();
     if (!runner.isEmpty()) {
       runner.runNoInit();
     }
@@ -199,7 +199,7 @@ public final class Session implements AutoCloseable {
    *
    * @return this
    */
-  public synchronized Session forceInitialize() {
+  public Session forceInitialize() {
     Set<Operation> initializers = graph.initializers();
     if (!initializers.isEmpty()) {
       Runner runner = runner();
@@ -677,7 +677,7 @@ public final class Session implements AutoCloseable {
    *
    * @param prefix prefix to restore from
    */
-  public synchronized void restore(String prefix) {
+  public void restore(String prefix) {
     SaverDef saverDef = graph.saverDef();
     runner()
         .addTarget(saverDef.getRestoreOpName())
@@ -719,7 +719,7 @@ public final class Session implements AutoCloseable {
   private int numActiveRuns;
 
   private final boolean autoInit;
-  private Set<Operation> ranInits = new LinkedHashSet<>();
+  private Set<Operation> ranInits = Collections.synchronizedSet(new LinkedHashSet<>());
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
