@@ -34,6 +34,7 @@ import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import org.junit.jupiter.api.Test;
 import org.tensorflow.ndarray.buffer.DataBuffer;
+import org.tensorflow.ndarray.index.Indices;
 
 public abstract class NdArrayTestBase<T> {
 
@@ -334,5 +335,27 @@ public abstract class NdArrayTestBase<T> {
     assertNotEquals(array1.hashCode(), array3.hashCode());
     assertNotEquals(array1, array4);
     assertNotEquals(array1.hashCode(), array4.hashCode());
+  }
+
+  @Test
+  public void iterateScalarsOnSegmentedElements() {
+    NdArray<T> originalTensor = allocate(Shape.of(2, 3));
+
+    originalTensor
+        .setObject(valueOf(0L), 0, 0)
+        .setObject(valueOf(1L), 0, 1)
+        .setObject(valueOf(2L), 0, 2)
+        .setObject(valueOf(3L), 1, 0)
+        .setObject(valueOf(4L), 1, 1)
+        .setObject(valueOf(5L), 1, 2);
+
+    NdArray<T> slice = originalTensor.slice(Indices.all(), Indices.sliceFrom(1));
+    assertEquals(Shape.of(2, 2), slice.shape());
+
+    slice.elements(0).forEachIndexed((eCoord, e) -> {
+      e.scalars().forEachIndexed((sCoord, s) -> {
+        assertEquals(valueOf((eCoord[0] * originalTensor.shape().get(1)) + sCoord[0] + 1), s.getObject());
+      });
+    });
   }
 }

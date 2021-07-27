@@ -144,7 +144,7 @@ public class DimensionalSpace {
       throw new IndexOutOfBoundsException();
     }
     Dimension[] newDimensions = Arrays.copyOfRange(dimensions, dimensionStart, dimensions.length);
-    if (segmentationIdx > dimensionStart) {
+    if (segmentationIdx >= dimensionStart) {
       return new DimensionalSpace(newDimensions, segmentationIdx - dimensionStart);
     }
     return new DimensionalSpace(newDimensions);
