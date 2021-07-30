@@ -490,15 +490,31 @@
           <java>
             <includes>
               <include>src/gen/**/*.java</include>
+              <include>src/main/**/*.java</include>
+              <include>src/test/**/*.java</include>
             </includes>
             <excludes>
-              <exclude>
-                src/main/**/c_api/**/*.java
-                src/gen/**/c_api/**/*.java
-              </exclude>
+              <exclude>src/main/**/c_api/**/*.java</exclude>
+              <exclude>src/gen/**/c_api/**/*.java</exclude>
             </excludes>
           </java>
         </configuration>
+        <executions>
+          <execution>
+            <id>format-generated</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+            <configuration>
+              <java>
+                <includes>
+                  <include>src/gen/**/*.java</include>
+                </includes>
+              </java>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
