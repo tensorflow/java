@@ -482,6 +482,24 @@
           </descriptorRefs>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${spotless.version}</version>
+        <configuration>
+          <java>
+            <includes>
+              <include>src/gen/**/*.java</include>
+            </includes>
+            <excludes>
+              <exclude>
+                src/main/**/c_api/**/*.java
+                src/gen/**/c_api/**/*.java
+              </exclude>
+            </excludes>
+          </java>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
