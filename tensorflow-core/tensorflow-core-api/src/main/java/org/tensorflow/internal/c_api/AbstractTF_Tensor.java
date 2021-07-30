@@ -25,6 +25,7 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Dealloc
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TString_Init;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorData;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorElementCount;
+import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorMaybeMove;
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_TensorType;
 
 import org.bytedeco.javacpp.Pointer;
@@ -37,14 +38,22 @@ public abstract class AbstractTF_Tensor extends Pointer {
         @Override public void deallocate() {
             if (!isNull()) {
                 if (TF_TensorType(this) == TF_STRING) {
-                    // we need to deallocate the strings themselves before deallocating the tensor memory
-                    long n = TF_TensorElementCount(this);
-                    TF_TString data = new TF_TString(TF_TensorData(this));
-                    for (int i = 0; i < n; i++) {
-                        TF_TString_Dealloc(data.position(i));
+                    TF_Tensor moved = TF_TensorMaybeMove(this);
+                    if (moved != null) {
+                        // we need to deallocate the strings themselves before deallocating the tensor memory                        
+                        long n = TF_TensorElementCount(moved);
+                        TF_TString data = new TF_TString(TF_TensorData(moved));
+                        for (int i = 0; i < n; i++) {
+                            TF_TString_Dealloc(data.position(i));
+                        }
+                        TF_DeleteTensor(moved);
+                    } else {
+                        // TensorBuffer is shared, leave contained strings alone.
+                        TF_DeleteTensor(this);
                     }
+                } else {
+                    TF_DeleteTensor(this);
                 }
-                TF_DeleteTensor(this);
             }
             setNull();
         }
