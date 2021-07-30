@@ -549,7 +549,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       return;
     }
 
-    OperationBuilder builder = baseScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
+    baseScope.refreshNames();
+    OperationBuilder builder =
+        baseScope().withInitScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
     initializers.forEach(builder::addControlInput);
     builder.build();
     newInitializers = false;
@@ -558,7 +560,9 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   /**
    * Generate a representation of the Graph.
    *
-   * <p>Will create an initialization operation that depends on all registered init ops.
+   * <p>If there are newly registered initializers (after the last {@link #toGraphDef()} call), this
+   * call adds an initialization operation to this graph that depends on them, so that they can be
+   * loaded properly if the graph def is later imported.
    *
    * @see #importGraphDef(GraphDef)
    * @see #importGraphDef(GraphDef, String)
