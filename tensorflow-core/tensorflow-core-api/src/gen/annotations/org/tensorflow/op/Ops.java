@@ -7880,7 +7880,8 @@ public final class Ops {
   }
 
   /**
-   * Factory method to create a new Variable with it's initializer.
+   * Factory method to create a new Variable with its initializer. Both the creation and assignment
+   *  are done in the init scope.
    *
    *  <p>Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op does not
    *  work in an EagerSession.
@@ -8097,7 +8098,8 @@ public final class Ops {
    * and are ignored when used as control dependencies.
    * Additionally, this scope ignores any control dependencies.
    * <p>
-   * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.@see ExecutionEnvironment#registerInitOp(Operation)
+   * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
+   * @see ExecutionEnvironment#registerInitOp(Operation)
    *
    * @throws IllegalStateException if the op or one of its inputs can't be made an init op.
    */

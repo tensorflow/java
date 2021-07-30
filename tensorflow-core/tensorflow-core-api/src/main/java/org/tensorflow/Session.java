@@ -186,7 +186,8 @@ public final class Session implements AutoCloseable {
   public void initialize() {
     Runner runner = runner();
     graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
-    ranInits = graph.initializers();
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
     if (!runner.isEmpty()) {
       runner.runNoInit();
     }
@@ -206,7 +207,8 @@ public final class Session implements AutoCloseable {
       initializers.forEach(runner::addTarget);
       runner.runNoInit();
     }
-    ranInits = graph.initializers();
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
     return this;
   }
 
@@ -684,7 +686,8 @@ public final class Session implements AutoCloseable {
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
         .runNoInit();
     // TODO better way of doing this, only count as ran assignments to the restored variables.
-    ranInits = graph.initializers();
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
   }
 
   /**
@@ -719,7 +722,7 @@ public final class Session implements AutoCloseable {
   private int numActiveRuns;
 
   private final boolean autoInit;
-  private Set<Operation> ranInits = Collections.synchronizedSet(new LinkedHashSet<>());
+  private final Set<Operation> ranInits = Collections.synchronizedSet(new LinkedHashSet<>());
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {
