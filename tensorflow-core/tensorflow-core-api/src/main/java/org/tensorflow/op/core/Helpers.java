@@ -31,7 +31,8 @@ public abstract class Helpers {
   private Helpers() {}
 
   /**
-   * Factory method to create a new Variable with it's initializer.
+   * Factory method to create a new Variable with its initializer. Both the creation and assignment
+   * are done in the init scope.
    *
    * <p>Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op does not
    * work in an EagerSession.
@@ -44,8 +45,8 @@ public abstract class Helpers {
   @Endpoint(name = "variable")
   public static <T extends TType> Variable<T> createVariableWithInit(
       Scope scope, Operand<T> init, Variable.Options... options) {
-    Variable<T> newVar = Variable.create(scope, init.shape(), init.type(), options);
-    Assign<T> assignOp = Assign.create(scope, newVar, init);
+    Variable<T> newVar = Variable.create(scope.withInitScope(), init.shape(), init.type(), options);
+    Assign<T> assignOp = Assign.create(scope.withInitScope(), newVar, init);
     return newVar;
   }
 }
