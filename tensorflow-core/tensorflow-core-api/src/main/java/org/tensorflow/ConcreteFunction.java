@@ -244,7 +244,7 @@ public class ConcreteFunction implements AutoCloseable, TensorFunction {
         PartitionedCall.create(
                 scope,
                 inputList,
-                Arrays.stream(inputDtypes)
+                Arrays.stream(outputDtypes)
                     .map(x -> TensorTypeRegistry.find(x).type())
                     .collect(Collectors.toList()),
                 this)
