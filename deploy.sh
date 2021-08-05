@@ -81,13 +81,16 @@ echo "Downloading native artifacts from Maven repository..."
 for p in `find tensorflow-core -name tensorflow-core-platform* -type d -exec basename {} \;`; do
   if [[ $p =~ tensorflow-core-platform(.*) ]]; then
     # Remember each of our platform extension, we will it that when deploying the artifacts
+    # Note: Disable (temporarily?) MKL platforms for now, as their build is often broken
     PLATFORM_EXT=${BASH_REMATCH[1]}
-    if [[ -n $PLATFORM_EXT ]]; then
-      [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
+    if [[ $PLATFORM_EXT != -mkl* ]]; then                                                                                            
+        if [[ -n $PLATFORM_EXT ]]; then
+          [[ -n $PLATFORM_EXTS ]] && PLATFORM_EXTS="$PLATFORM_EXTS $PLATFORM_EXT" || PLATFORM_EXTS=$PLATFORM_EXT
+        fi
+        mvn dependency:copy-dependencies $MVN_OPTIONS -q \
+            -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-api \
+            -DoutputDirectory=../../tensorflow-core/tensorflow-core-api/target -pl tensorflow-core/$p
     fi
-    mvn dependency:copy-dependencies $MVN_OPTIONS -q \
-        -Djavacpp.platform.extension=$PLATFORM_EXT -DincludeArtifactIds=tensorflow-core-api \
-        -DoutputDirectory=../../tensorflow-core/tensorflow-core-api/target -pl tensorflow-core/$p
   fi
 done
 
