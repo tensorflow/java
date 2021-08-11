@@ -501,7 +501,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     importGraphDef(graphDef, "");
   }
 
-  private static final String INIT_OP_BASE_NAME = "tf_java_init";
+  private static final String INIT_OP_BASE_NAME = "Init";
 
   /**
    * Import a representation of a TensorFlow graph.
