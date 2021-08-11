@@ -93,6 +93,8 @@ version number.
     update the ['Using Maven Artifacts'](https://github.com/tensorflow/java/blob/master/README.md#using-maven-artifacts)
     section and the ['TensorFlow Version Support'](https://github.com/tensorflow/java/blob/master/README.md#tensorflow-version-support)
     table to reflect the new version being released.
+    Also update all references to the previous version in the [installation instructions](https://github.com/tensorflow/java/blob/master/docs/install.md)
+    for the new one.
 
 6.  Commit the changes and push the branch to the GitHub repository
     ```
