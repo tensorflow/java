@@ -613,12 +613,14 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
    * Returns a set of ops that will run all initializers added to the graph via {@link
    * #registerInitOp(Operation)}.
    *
-   * Note that NoOps aren't included in this list, since any inputs or control dependencies
-   * are guaranteed to also be in this list, and including the no-ops wouldn't change the
-   * initialization result.
+   * <p>Note that NoOps aren't included in this list, since any inputs or control dependencies are
+   * guaranteed to also be in this list, and including the no-ops wouldn't change the initialization
+   * result.
    */
   public Set<Operation> initializers() {
-    return initializers.stream().filter(x -> !x.type().equals(NoOp.OP_NAME)).collect(Collectors.toSet());
+    return initializers.stream()
+        .filter(x -> !x.type().equals(NoOp.OP_NAME))
+        .collect(Collectors.toSet());
   }
 
   /** Get whether the graph has any initializers */
