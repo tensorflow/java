@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.Graph.resolveOutputs;
@@ -22,8 +22,11 @@ import static org.tensorflow.internal.c_api.global.tensorflow.TF_SetConfig;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
@@ -73,7 +76,8 @@ import org.tensorflow.types.TString;
  * <p><b>WARNING:</b>A {@code Session} owns resources that <b>must</b> be explicitly freed by
  * invoking {@link #close()}.
  *
- * <p>Instances of a Session are thread-safe.
+ * <p>Instances of a Session are thread-safe. Modifying a graph concurrently while other threads are
+ * using sessions of that graph <b>is not safe</b>.
  */
 public final class Session implements AutoCloseable {
 
@@ -97,6 +101,32 @@ public final class Session implements AutoCloseable {
    *     protocol buffer.
    */
   public Session(Graph g, ConfigProto config) {
+    this(g, true, config);
+  }
+
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph}.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param autoInit Whether to initialize the session.
+   */
+  public Session(Graph g, boolean autoInit) {
+    this(g, autoInit, null);
+  }
+
+  /**
+   * Construct and optionally initialize a new session with the associated {@link Graph} and
+   * configuration options.
+   *
+   * @param g The {@link Graph} the created Session will operate on.
+   * @param autoInit Whether to initialize the session.
+   * @param config Configuration parameters for the session specified as a <a
+   *     href="https://www.tensorflow.org/code/tensorflow/core/protobuf/config.proto">ConfigProto</a>
+   *     protocol buffer.
+   * @throws IllegalArgumentException if the config is not a valid serialization of the ConfigProto
+   *     protocol buffer.
+   */
+  public Session(Graph g, boolean autoInit, ConfigProto config) {
     graph = g;
     Graph.Reference r = g.ref();
     try {
@@ -105,13 +135,19 @@ public final class Session implements AutoCloseable {
     } finally {
       r.close();
     }
+    this.autoInit = autoInit;
   }
 
-  /** Wrap an existing session with the associated {@link Graph}. */
+  /**
+   * Wrap an existing session with the associated {@link Graph}.
+   *
+   * <p>Does not enable auto-init.
+   */
   Session(Graph g, TF_Session nativeHandle) {
     graph = g;
     this.nativeHandle = nativeHandle;
     graphRef = g.ref();
+    this.autoInit = false;
   }
 
   /**
@@ -139,6 +175,41 @@ public final class Session implements AutoCloseable {
       delete(nativeHandle);
       nativeHandle = null;
     }
+  }
+
+  /**
+   * Execute any un-ran initializers. Will be done automatically unless disabled at session
+   * creation.
+   *
+   * <p>This runs any ops that have been created with an init scope that have not already been ran.
+   */
+  public void initialize() {
+    Runner runner = runner();
+    graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
+    if (!runner.isEmpty()) {
+      runner.runNoInit();
+    }
+  }
+
+  /**
+   * Execute the graph's initializers, regardless of whether the session has been initialized.
+   *
+   * <p>This runs any ops that have been created with an init scope.
+   *
+   * @return this
+   */
+  public Session forceInitialize() {
+    Set<Operation> initializers = graph.initializers();
+    if (!initializers.isEmpty()) {
+      Runner runner = runner();
+      initializers.forEach(runner::addTarget);
+      runner.runNoInit();
+    }
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
+    return this;
   }
 
   /**
@@ -373,6 +444,26 @@ public final class Session implements AutoCloseable {
       return this;
     }
 
+    /** True if there are no targets or fetches. */
+    public boolean isEmpty() {
+      return targets.isEmpty() && outputs.isEmpty();
+    }
+
+    private void doInit() {
+      if (autoInit) {
+        initialize();
+      } else {
+        graph
+            .initializers()
+            .forEach(
+                x -> {
+                  if (!ranInits.contains(x))
+                    throw new IllegalStateException(
+                        "Graph has un-ran initializers, but the session's autoInit is false.  Run Session.initialize() before calling run().");
+                });
+      }
+    }
+
     /**
      * Execute the graph fragments necessary to compute all requested fetches.
      *
@@ -391,6 +482,11 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner
      */
     public List<Tensor> run() {
+      doInit();
+      return runNoInit();
+    }
+
+    List<Tensor> runNoInit() {
       return runHelper(false).outputs;
     }
 
@@ -405,6 +501,7 @@ public final class Session implements AutoCloseable {
      * @return list of resulting tensors fetched by this session runner, with execution metadata
      */
     public Run runAndFetchMetadata() {
+      doInit();
       return runHelper(true);
     }
 
@@ -548,20 +645,6 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Execute the graph's initializers.
-   *
-   * <p>This method is equivalent to {@code session.run(Ops.create(session.graph).init())}.
-   */
-  public void runInit() {
-    List<Op> initializers = graph.initializers();
-    if (!initializers.isEmpty()) {
-      Runner runner = runner();
-      initializers.forEach(runner::addTarget);
-      runner.run();
-    }
-  }
-
-  /**
    * Saves the actual state of the variables of this session's graph.
    *
    * <p>{@code prefix} is a path where the files containing the variables state will be saved,
@@ -583,7 +666,8 @@ public final class Session implements AutoCloseable {
   }
 
   /**
-   * Restore the actual state of the variables of this session's graph.
+   * Restore the actual state of the variables of this session's graph. Counts as initialization,
+   * but can be done after other initializations.
    *
    * <p>{@code prefix} is the path where the files containing the variables state live, followed by
    * the filename prefix. For example, if {@code prefix} is set to
@@ -600,7 +684,10 @@ public final class Session implements AutoCloseable {
     runner()
         .addTarget(saverDef.getRestoreOpName())
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
-        .run();
+        .runNoInit();
+    // TODO better way of doing this, only count as ran assignments to the restored variables.
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
   }
 
   /**
@@ -633,6 +720,9 @@ public final class Session implements AutoCloseable {
   private final Object nativeHandleLock = new Object();
   private TF_Session nativeHandle;
   private int numActiveRuns;
+
+  private final boolean autoInit;
+  private final Set<Operation> ranInits = Collections.synchronizedSet(new LinkedHashSet<>());
 
   private static void requireHandle(Pointer handle) {
     if (handle == null || handle.isNull()) {

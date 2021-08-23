@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,7 +36,6 @@ import org.tensorflow.ndarray.Shape;
 import org.tensorflow.ndarray.StdArrays;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.Identity;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.Placeholder;
 import org.tensorflow.op.core.ReduceSum;
 import org.tensorflow.op.core.Variable;
@@ -112,7 +111,6 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
-        s.runInit();
         try (TFloat32 x = TFloat32.tensorOf(StdArrays.ndCopyOf(new float[] {2, 2}));
             TFloat32 t = (TFloat32) f1.call(x)) {
           reducedSum = t.getFloat();
@@ -154,7 +152,7 @@ public class SavedModelBundleTest {
       Ops tf = Ops.create(g);
       SessionFunction f = session.function(buildGraphWithVariables(tf, xyShape));
       // Init variable state by running the Init operation directly
-      session.runInit();
+      session.initialize();
 
       // Call the graph and remember the result of computation for later
       try (TFloat32 xTensor = TFloat32.tensorOf(xValue);
@@ -230,8 +228,8 @@ public class SavedModelBundleTest {
       Signature f2Signature = buildIdentityGraph(tf, "identity");
       SessionFunction f1 = s1.function(f1Signature);
       SessionFunction f2 = s2.function(f2Signature);
-      s1.runInit();
-      s2.runInit();
+      s1.initialize();
+      s2.initialize();
       try {
         SavedModelBundle.exporter(testFolder.toString()).withFunction(f1).withFunction(f2).export();
         fail();
@@ -251,7 +249,7 @@ public class SavedModelBundleTest {
       try (Session s = new Session(g); ) {
         SessionFunction f1 = SessionFunction.create(f1Signature, s);
         SessionFunction f2 = SessionFunction.create(f2Signature, s);
-        s.runInit();
+        s.initialize();
         try {
           SavedModelBundle.exporter(testFolder.toString()).withFunctions(f1, f2).export();
           fail();
@@ -324,10 +322,10 @@ public class SavedModelBundleTest {
   private static Signature buildGraphWithVariables(Ops tf, Shape xShape) {
     Placeholder<TFloat32> x = tf.placeholder(TFloat32.class, Placeholder.shape(xShape));
     Variable<TFloat32> y =
-        tf.withName("variable")
+        tf.withInitScope()
+            .withName("variable")
             .variable(tf.random.randomUniform(tf.constant(xShape), TFloat32.class));
     ReduceSum<TFloat32> z = tf.reduceSum(tf.math.add(x, y), tf.array(0, 1));
-    Init init = tf.init();
     return Signature.builder().input("input", x).output("reducedSum", z).build();
   }
 

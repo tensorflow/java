@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TFE_ContextAddFunction;
@@ -29,7 +29,6 @@ import org.tensorflow.internal.WeakPointerScope;
 import org.tensorflow.internal.c_api.TFE_Context;
 import org.tensorflow.internal.c_api.TFE_ContextOptions;
 import org.tensorflow.internal.c_api.TF_Status;
-import org.tensorflow.op.Op;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Placeholder;
@@ -277,12 +276,12 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public OperationBuilder opBuilder(String type, String name) {
+  public OperationBuilder opBuilder(String type, String name, Scope scope) {
     checkSession();
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in eager mode.");
     }
-    return new EagerOperationBuilder(this, type, name);
+    return new EagerOperationBuilder(this, type, name, scope);
   }
 
   @Override
@@ -322,7 +321,7 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void checkInput(Op input) {
+  public void checkInput(Operation input) {
     if (!input.env().isEager()) {
       throw new IllegalArgumentException("Can't use graph operation " + input + " in eager mode.");
     }
@@ -332,6 +331,16 @@ public final class EagerSession implements ExecutionEnvironment, AutoCloseable {
   public Scope baseScope() {
     return baseScope;
   }
+
+  /** Noop, initialization is meaningless for eager sessions */
+  @Override
+  public boolean isInitOp(Operation op) {
+    return false;
+  }
+
+  /** Noop, initialization is meaningless for eager sessions */
+  @Override
+  public void registerInitOp(Operation op) {}
 
   TFE_Context nativeHandle() {
     checkSession();

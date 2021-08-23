@@ -1,5 +1,7 @@
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
@@ -11,9 +13,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Nadam Optimizer that implements the NAdam algorithm.
@@ -140,17 +139,16 @@ public class Nadam extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createNadamSlot(v.asOutput());
     }
-    betaOnePower = tf.withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> betaOnePowerInit = tf.assign(betaOnePower, tf.constant(betaOne));
-    ((Graph) tf.scope().env()).addInitializer(betaOnePowerInit);
+    betaOnePower =
+        tf.withInitScope().withName("beta1_power").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(betaOnePower, tf.constant(betaOne));
 
-    betaTwoPower = tf.withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> betaTwoPowerInit = tf.assign(betaTwoPower, tf.constant(betaTwo));
-    ((Graph) tf.scope().env()).addInitializer(betaTwoPowerInit);
+    betaTwoPower =
+        tf.withInitScope().withName("beta2_power").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(betaTwoPower, tf.constant(betaTwo));
 
-    momentum = tf.withName("momentum").variable(Shape.scalar(), TFloat32.class);
-    Assign<TFloat32> momentumInit = tf.assign(momentum, tf.constant(1.0F));
-    ((Graph) tf.scope().env()).addInitializer(momentumInit);
+    momentum = tf.withInitScope().withName("momentum").variable(Shape.scalar(), TFloat32.class);
+    tf.withInitScope().assign(momentum, tf.constant(1.0F));
   }
 
   /**

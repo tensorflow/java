@@ -125,7 +125,7 @@ public class EagerSessionTest {
   private static void buildOp(EagerSession s) {
     // Creating an operation is a safe point for resource cleanup
     try {
-      s.opBuilder("Const", "Const");
+      s.baseScope().opBuilder("Const", "Const");
     } catch (UnsupportedOperationException e) {
       // TODO (karlllessard) remove this exception catch when EagerOperationBuilder is implemented
     }

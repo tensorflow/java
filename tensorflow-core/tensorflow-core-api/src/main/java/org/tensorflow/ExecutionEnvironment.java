@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import org.tensorflow.op.Op;
@@ -30,12 +30,14 @@ public interface ExecutionEnvironment {
    * Returns a builder to create a new {@link Operation}.
    *
    * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in this environment scope.
+   * @param name to refer to the created Operation in this environment scope. Should already have
+   *     been made unique.
+   * @param scope the scope that owns the created op
    * @return an {@link OperationBuilder} to create an Operation when {@link
    *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
    *     then some resources may leak.
    */
-  OperationBuilder opBuilder(String type, String name);
+  OperationBuilder opBuilder(String type, String name, Scope scope);
 
   /**
    * Attach the function and its dependencies to this execution environment, allowing it to be
@@ -64,7 +66,19 @@ public interface ExecutionEnvironment {
    * @throws IllegalArgumentException if input can't be used as an input in this execution
    *     environment.
    */
-  void checkInput(Op input);
+  default void checkInput(Op input) {
+    checkInput(input.op());
+  }
+
+  /**
+   * Checks that {@code input} is valid to use as an input in this execution environment. Throws
+   * {@link IllegalArgumentException} if not.
+   *
+   * @param input The op to check
+   * @throws IllegalArgumentException if input can't be used as an input in this execution
+   *     environment.
+   */
+  void checkInput(Operation input);
 
   /**
    * Get the type of this environment (from the `Environments` enumeration.
@@ -86,4 +100,30 @@ public interface ExecutionEnvironment {
    * prevent name collisions.
    */
   Scope baseScope();
+
+  /**
+   * Get the execution environment to use for initialization. In most cases is {@code this}.
+   *
+   * <p><b>Should generally only be used internally.</b>
+   */
+  default ExecutionEnvironment initEnv() {
+    return this;
+  }
+
+  /**
+   * Register an op and all of its inputs (and control inputs) as an initialization op.
+   *
+   * <p><b>Should generally only be used internally, prefer {@link
+   * org.tensorflow.op.Ops#withInitScope()}.</b>
+   *
+   * @throws IllegalStateException if the op or one of its inputs can't be made an init op.
+   */
+  void registerInitOp(Operation op);
+
+  /**
+   * Get whether an op is an initialization op.
+   *
+   * <p><b>Should generally only be used internally.</b>
+   */
+  boolean isInitOp(Operation op);
 }

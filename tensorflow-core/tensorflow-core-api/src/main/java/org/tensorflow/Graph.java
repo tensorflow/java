@@ -1,18 +1,18 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow;
 
 import static org.tensorflow.internal.c_api.global.tensorflow.TF_AddGradientsWithPrefix;
@@ -366,21 +366,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     return downstream;
   }
 
-  /**
-   * Returns a builder to add {@link Operation}s to the Graph.
-   *
-   * @param type of the Operation (i.e., identifies the computation to be performed)
-   * @param name to refer to the created Operation in the graph.
-   * @return an {@link OperationBuilder}, which will add the Operation to the graph when {@link
-   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
-   *     then some resources may leak.
-   */
   @Override
-  public GraphOperationBuilder opBuilder(String type, String name) {
+  public GraphOperationBuilder opBuilder(String type, String name, Scope scope) {
     if (!isOpEnabled(type)) {
       throw new IllegalArgumentException("Op " + type + " is not valid in graph mode.");
     }
-    return new GraphOperationBuilder(this, type, name);
+    return new GraphOperationBuilder(this, type, name, scope);
   }
 
   @Override
@@ -478,7 +469,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   @Override
-  public void checkInput(Op input) {
+  public void checkInput(Operation input) {
     if (input.env().isEager()) {
       throw new IllegalArgumentException(
           "Input "
@@ -510,6 +501,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     importGraphDef(graphDef, "");
   }
 
+  private static final String INIT_OP_BASE_NAME = "Init";
+
   /**
    * Import a representation of a TensorFlow graph.
    *
@@ -522,35 +515,117 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     if (graphDef == null || prefix == null) {
       throw new IllegalArgumentException("graphDef and prefix cannot be null");
     }
+
     synchronized (nativeHandleLock) {
       importGraphDef(nativeHandle, graphDef, prefix);
     }
+    baseScope.refreshNames();
+
+    String initPrefix;
+    if (!prefix.isEmpty()) {
+      if (prefix.endsWith("/")) {
+        initPrefix = prefix + INIT_OP_BASE_NAME;
+      } else {
+        initPrefix = prefix + "/" + INIT_OP_BASE_NAME;
+      }
+    } else {
+      initPrefix = INIT_OP_BASE_NAME;
+    }
+
+    operations()
+        .forEachRemaining(
+            op -> {
+              if (op.name().startsWith(initPrefix)) {
+                registerInitOp(op);
+              }
+            });
+  }
+
+  private synchronized void addInitOp() {
+    if (!newInitializers) {
+      return;
+    }
+    if (initializers.isEmpty()) {
+      return;
+    }
+
+    baseScope.refreshNames();
+    OperationBuilder builder =
+        baseScope().withInitScope().opBuilder(NoOp.OP_NAME, INIT_OP_BASE_NAME);
+    initializers.forEach(builder::addControlInput);
+    builder.build();
+    newInitializers = false;
   }
 
   /**
    * Generate a representation of the Graph.
    *
+   * <p>If there are newly registered initializers (after the last {@link #toGraphDef()} call), this
+   * call adds an initialization operation to this graph that depends on them, so that they can be
+   * loaded properly if the graph def is later imported.
+   *
    * @see #importGraphDef(GraphDef)
    * @see #importGraphDef(GraphDef, String)
    */
   public GraphDef toGraphDef() {
+    addInitOp();
     synchronized (nativeHandleLock) {
       return toGraphDef(nativeHandle);
     }
   }
 
-  /**
-   * Adds an initializer to the graph initializer list.
-   *
-   * @param initializer An initializer to add to the list.
-   */
-  public synchronized void addInitializer(Op initializer) {
-    initializers.add(initializer);
+  private boolean registerInitOpHelper(Operation op) {
+    if (isInitOp(op)) return false;
+    checkInput(op);
+
+    if (!(op instanceof GraphOperation)) {
+      throw new IllegalStateException("Can't use a non-graph op as a graph's init op.");
+    }
+    GraphOperation graphOp = (GraphOperation) op;
+
+    if (op.type().equals(Placeholder.OP_NAME)) {
+      throw new IllegalStateException("Can not make a placeholder " + op + " an init op.");
+    }
+
+    for (GraphOperation controlInput : graphOp.controlInputs()) {
+      registerInitOpHelper(controlInput);
+    }
+
+    for (Operand<?> input : graphOp.inputs()) {
+      registerInitOpHelper(input.op());
+    }
+    return initializers.add(op);
   }
 
-  /** Returns all initializers added to the graph via {@link #addInitializer(Op)} */
-  public List<Op> initializers() {
-    return Collections.unmodifiableList(initializers);
+  @Override
+  public void registerInitOp(Operation op) {
+    if (registerInitOpHelper(op)) {
+      newInitializers = true;
+    }
+  }
+
+  @Override
+  public boolean isInitOp(Operation op) {
+    return initializers.contains(op);
+  }
+
+  /**
+   * Returns a set of ops that will run all initializers added to the graph via {@link
+   * #registerInitOp(Operation)}.
+   *
+   * <p>Note that NoOps aren't included in this list, since any inputs or control dependencies are
+   * guaranteed to also be in this list, and including the no-ops wouldn't change the initialization
+   * result.
+   */
+  public Set<Operation> initializers() {
+    return initializers.stream()
+        .filter(x -> !x.type().equals(NoOp.OP_NAME))
+        .collect(Collectors.toSet());
+  }
+
+  /** Get whether the graph has any initializers */
+  public boolean hasInitializers() {
+    return !initializers.isEmpty();
   }
 
   /**
@@ -808,7 +883,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private SaverDef saverDef;
   private final Scope baseScope;
 
-  private final List<Op> initializers = new ArrayList<>();
+  private final Set<Operation> initializers = Collections.synchronizedSet(new LinkedHashSet<>());
+  private boolean newInitializers = false;
 
   // Related native objects (such as the TF_Operation object backing an Operation instance)
   // have a validity tied to that of the Graph. The handles to those native objects are not

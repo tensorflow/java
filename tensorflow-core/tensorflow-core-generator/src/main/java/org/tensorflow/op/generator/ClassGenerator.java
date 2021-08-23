@@ -1,4 +1,5 @@
-/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+/*
+ Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -61,8 +62,6 @@ final class ClassGenerator {
         && !op.getName()
             .startsWith("_"); // TODO do I want this?  Some interesting ops like _XlaCompile
   }
-
-  private static final String OP_NAME_FIELD_NAME = "OP_NAME";
 
   enum RenderMode {
     DEFAULT,
@@ -318,8 +317,7 @@ final class ClassGenerator {
       buildInterfaceImpl();
     }
 
-    if (!isStateSelector) {
-      // add op name field
+    if (!isStateSelector) { // add op name field
       builder.addField(
           FieldSpec.builder(
                   TypeResolver.STRING,
@@ -507,10 +505,7 @@ final class ClassGenerator {
     Set<TypeVariableName> typeVars = new LinkedHashSet<>(typeParams);
 
     body.addStatement(
-        "$T opBuilder = scope.env().opBuilder($L, scope.makeOpName($S))",
-        Names.OperationBuilder,
-        OP_NAME_FIELD,
-        className);
+        "$T opBuilder = scope.opBuilder($L, $S)", Names.OperationBuilder, OP_NAME_FIELD, className);
 
     List<String> functionArgs = new ArrayList<>();
     List<String> iterableFunctionArgs = new ArrayList<>();
@@ -545,8 +540,6 @@ final class ClassGenerator {
         body.addStatement("opBuilder.addInput($L.asOutput())", name);
       }
     }
-
-    body.addStatement("opBuilder = scope.apply(opBuilder)");
 
     // add the required attribute params, and build the default type maps for use in the secondary
     // factory

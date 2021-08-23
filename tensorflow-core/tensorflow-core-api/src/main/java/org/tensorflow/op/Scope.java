@@ -1,23 +1,27 @@
 /* Copyright 2019-2021 The TensorFlow Authors. All Rights Reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- =======================================================================
- */
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+=======================================================================
+*/
 package org.tensorflow.op;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.tensorflow.DeviceSpec;
 import org.tensorflow.ExecutionEnvironment;
+import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 
 /**
@@ -87,7 +91,7 @@ public final class Scope {
    * @param env The execution environment used by the scope.
    */
   public Scope(ExecutionEnvironment env) {
-    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build());
+    this(env, new NameScope(env), new ArrayList<>(), DeviceSpec.newBuilder().build(), false);
   }
 
   /** Returns the execution environment used by this scope. */
@@ -110,7 +114,7 @@ public final class Scope {
    */
   public Scope withSubScope(String childScopeName) {
     return new Scope(
-        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec);
+        env, nameScope.withSubScope(childScopeName, env), controlDependencies, deviceSpec, isInit);
   }
 
   /**
@@ -126,7 +130,7 @@ public final class Scope {
    * @throws IllegalArgumentException if the name is invalid
    */
   public Scope withName(String opName) {
-    return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec);
+    return new Scope(env, nameScope.withName(opName), controlDependencies, deviceSpec, isInit);
   }
 
   /**
@@ -150,7 +154,8 @@ public final class Scope {
         env,
         nameScope.withSubScope(nameScope.makeOpName(defaultName), env),
         controlDependencies,
-        deviceSpec);
+        deviceSpec,
+        isInit);
   }
 
   /**
@@ -163,11 +168,18 @@ public final class Scope {
    * @return a new Scope that uses opName for operations.
    */
   public Scope withDevice(DeviceSpec deviceSpec) {
-    return new Scope(env, nameScope, controlDependencies, deviceSpec);
+    return new Scope(env, nameScope, controlDependencies, deviceSpec, isInit);
+  }
+
+  // TODO stop gradient recording in init scopes (once we have gradient recording)
+
+  /** Get an extension of this scope that generates initialization ops. */
+  public Scope withInitScope() {
+    return new Scope(env.initEnv(), nameScope, new ArrayList<>(), deviceSpec, true);
   }
 
   /**
-   * Create a unique name for an operator, using a provided default if necessary.
+   * Create a unique name for an operator and reserves it, using a provided default if necessary.
    *
    * <p>This is normally called only by operator building classes.
    *
@@ -190,19 +202,50 @@ public final class Scope {
     return nameScope.makeOpName(defaultName);
   }
 
+  /** Makes a unique name from {@code id} and reserves it. */
+  public String makeUnique(String id) {
+    return nameScope.makeUnique(id);
+  }
+
+  /**
+   * Returns a builder to create a new {@link Operation}.
+   *
+   * <p>Note that {@code name} is automatically made unique.
+   *
+   * @param type of the Operation (i.e., identifies the computation to be performed)
+   * @param name to refer to the created Operation in this environment scope. Is uniquified.
+   * @return an {@link OperationBuilder} to create an Operation when {@link
+   *     OperationBuilder#build()} is invoked. If {@link OperationBuilder#build()} is not invoked,
+   *     then some resources may leak.
+   */
+  public OperationBuilder opBuilder(String type, String name) {
+    return env.opBuilder(type, makeOpName(name), this);
+  }
+
   public static boolean isValidOpName(String name) {
     return NameScope.isValidName(name);
+  }
+
+  /**
+   * Refresh the used name list (used for uniquifying names) from the underlying graph.
+   *
+   * <p>Should be used if you made changes to the graph from non-{@code Scope} APIs.
+   */
+  public void refreshNames() {
+    nameScope.importIdsFrom(env);
   }
 
   private Scope(
       ExecutionEnvironment env,
       NameScope nameScope,
-      Iterable<Op> controlDependencies,
-      DeviceSpec deviceSpec) {
+      List<Operation> controlDependencies,
+      DeviceSpec deviceSpec,
+      boolean isInit) {
     this.env = env;
     this.nameScope = nameScope;
     this.controlDependencies = controlDependencies;
     this.deviceSpec = deviceSpec;
+    this.isInit = isInit;
   }
 
   /**
@@ -211,46 +254,88 @@ public final class Scope {
    * <p>Ops created with this scope will have a control edge from each of the provided controls. All
    * other properties are inherited from the current scope.
    *
+   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
+   * during session initialization.
+   *
    * @param controls control dependencies for ops created with the returned scope
    * @return a new scope with the provided control dependencies
    */
   public Scope withControlDependencies(Iterable<Op> controls) {
-    for (Op control : controls) {
+    return withControlDependencyOps(
+        StreamSupport.stream(controls.spliterator(), false)
+            .map(Op::op)
+            .collect(Collectors.toList()));
+  }
+
+  /**
+   * Returns a new scope where added operations will have the provided control dependencies.
+   *
+   * <p>Ops created with this scope will have a control edge from each of the provided controls. All
+   * other properties are inherited from the current scope.
+   *
+   * <p>Init ops will be ignored when used as control dependencies, they are assumed to be executed
+   * during session initialization.
+   *
+   * @param controls control dependencies for ops created with the returned scope
+   * @return a new scope with the provided control dependencies
+   */
+  public Scope withControlDependencyOps(Iterable<Operation> controls) {
+    ArrayList<Operation> toAdd = new ArrayList<>();
+    for (Operation control : controls) {
       env.checkInput(control);
+      if (isInit && !env.isInitOp(control)) {
+        throw new IllegalArgumentException("Init scope can not have non-init control dependency.");
+      }
+      if (isInit || !env.isInitOp(control)) {
+        toAdd.add(control);
+      }
     }
-    return new Scope(env, nameScope, controls, deviceSpec);
+
+    return new Scope(env, nameScope, toAdd, deviceSpec, isInit);
   }
 
   /**
    * Applies device specification and adds each Operand in controlDependencies as a control input to
    * the provided builder.
    *
+   * <p><b>Should only be used from {@link OperationBuilder} implementations</b>
+   *
    * @param builder OperationBuilder to add control inputs and device specification to
    */
   public OperationBuilder apply(OperationBuilder builder) {
     builder.setDevice(deviceSpec.toString());
-    return applyControlDependencies(builder);
-  }
-
-  /**
-   * Adds each Operand in controlDependencies as a control input to the provided builder.
-   *
-   * @param builder OperationBuilder to add control inputs to
-   */
-  public OperationBuilder applyControlDependencies(OperationBuilder builder) {
-    for (Op control : controlDependencies) {
-      builder = builder.addControlInput(control.op());
+    for (Operation control : controlDependencies) {
+      if (isInit || !env.isInitOp(control)) {
+        builder.addControlInput(control);
+      }
     }
     return builder;
   }
 
-  private final ExecutionEnvironment env;
-  private final Iterable<Op> controlDependencies;
-  private final NameScope nameScope;
-  private final DeviceSpec deviceSpec;
+  /**
+   * Handle op creation, like registering it as an init op if the scope is init.
+   *
+   * <p><b>FOR INTERNAL USE ONLY</b>
+   */
+  public void onOpCreated(Operation op) {
+    if (isInit) {
+      env.registerInitOp(op);
+    }
+  }
 
   /** Returns device string from the scope. */
   public String getDeviceString() {
     return deviceSpec.toString();
   }
+
+  /** Get whether this scope is building init ops. */
+  public boolean isInit() {
+    return isInit;
+  }
+
+  private final ExecutionEnvironment env;
+  private final List<Operation> controlDependencies;
+  private final NameScope nameScope;
+  private final DeviceSpec deviceSpec;
+  private final boolean isInit;
 }

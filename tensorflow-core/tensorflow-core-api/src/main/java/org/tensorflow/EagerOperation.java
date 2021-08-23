@@ -92,6 +92,31 @@ class EagerOperation extends AbstractOperation {
   }
 
   @Override
+  public int hashCode() {
+    return Long.valueOf(opHandle.address()).hashCode();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+    if (!(o instanceof EagerOperation)) {
+      return false;
+    }
+    EagerOperation that = (EagerOperation) o;
+    if (session != that.session) {
+      return false;
+    }
+
+    if (opHandle == null || that.opHandle == null || opHandle.isNull() || that.opHandle.isNull()) {
+      // if they are the same object, we will already have returned
+      return false;
+    }
+    return opHandle.equals(that.opHandle);
+  }
+
+  @Override
   Shape shape(int outputIndex) {
     // If the tensor of this output has already been resolved, return its shape.
     // Otherwise, retrieve the tensor shape from the native library.

@@ -15,19 +15,17 @@
  */
 package org.tensorflow.framework.optimizers;
 
+import java.util.List;
+import java.util.Optional;
 import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.Output;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.train.ApplyAdagradDa;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Optimizer that implements the Adagrad Dual-Averaging algorithm.
@@ -188,9 +186,11 @@ public class AdaGradDA extends Optimizer {
     for (Output<? extends TType> v : variables) {
       createAdaGradDASlot(v);
     }
-    globalStep = tf.withName("adagrad-da-global-step").variable(Shape.scalar(), TInt64.class);
-    Assign<TInt64> globalStepInitializer = tf.assign(globalStep, tf.constant(0L));
-    graph.addInitializer(globalStepInitializer);
+    globalStep =
+        tf.withInitScope()
+            .withName("adagrad-da-global-step")
+            .variable(Shape.scalar(), TInt64.class);
+    tf.withInitScope().assign(globalStep, tf.constant(0L));
   }
 
   /**

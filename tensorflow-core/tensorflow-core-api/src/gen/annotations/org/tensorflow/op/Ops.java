@@ -106,7 +106,6 @@ import org.tensorflow.op.core.Identity;
 import org.tensorflow.op.core.IdentityN;
 import org.tensorflow.op.core.If;
 import org.tensorflow.op.core.ImmutableConst;
-import org.tensorflow.op.core.Init;
 import org.tensorflow.op.core.InitializeTable;
 import org.tensorflow.op.core.InitializeTableFromTextFile;
 import org.tensorflow.op.core.InplaceAdd;
@@ -295,6 +294,12 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
+import org.tensorflow.op.core.XlaConvV2;
+import org.tensorflow.op.core.XlaDotV2;
+import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
+import org.tensorflow.op.core.XlaSpmdFullToShardShape;
+import org.tensorflow.op.core.XlaSpmdShardToFullShape;
+import org.tensorflow.op.core.XlaVariadicSort;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -366,9 +371,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final TpuOps tpu;
-
   public final BitwiseOps bitwise;
+
+  public final TpuOps tpu;
 
   public final MathOps math;
 
@@ -376,9 +381,9 @@ public final class Ops {
 
   public final SignalOps signal;
 
-  public final QuantizationOps quantization;
-
   public final TrainOps train;
+
+  public final QuantizationOps quantization;
 
   private final Scope scope;
 
@@ -397,13 +402,13 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    tpu = new TpuOps(this);
     bitwise = new BitwiseOps(this);
+    tpu = new TpuOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
-    quantization = new QuantizationOps(this);
     train = new TrainOps(this);
+    quantization = new QuantizationOps(this);
   }
 
   /**
@@ -1952,14 +1957,15 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be truncated if it does not
-   *  fit in the target type.
+   * Creates a scalar of {@code type}, with the value of {@code number}. {@code number} may be
+   *  truncated if it does not fit in the target type.
    *
-   * @param type the type of tensor to create.  Must be concrete (i.e. not {@link org.tensorflow.types.family.TFloating})
+   * @param type the type of tensor to create. Must be concrete (i.e. not {@link
+   *      org.tensorflow.types.family.TFloating})
    * @param number the value of the tensor
    * @return a constant of the passed type
-   * @throws IllegalArgumentException if the type is abstract (i.e. {@link org.tensorflow.types.family.TFloating}) or
-   *  unknown.
+   * @throws IllegalArgumentException if the type is abstract (i.e. {@link
+   *      org.tensorflow.types.family.TFloating}) or unknown.
    */
   public <T extends TNumber> Constant<T> constant(Class<T> type, Number number) {
     return Constant.tensorOf(scope, type, number);
@@ -1994,11 +2000,12 @@ public final class Ops {
   }
 
   /**
-   * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed afterwards without
-   *  issue.
+   * Create a constant by making an immutable copy of {@code tensor}. {@code tensor} may be closed
+   *  afterwards without issue.
    *
    *  <p>Note: this endpoint cannot be simply called {@code constant} since it will conflict with
-   *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope, FloatNdArray)}}.
+   *  other endpoints accepting an NdArray in parameter {e.g. {@link #tensorOf(Scope,
+   *  FloatNdArray)}}.
    *
    * @param tensor a Tensor holding the constant value
    * @return a constant of the same data type as `tensor`
@@ -2008,8 +2015,8 @@ public final class Ops {
   }
 
   /**
-   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code number} may be
-   *  truncated if it does not fit in the target type.
+   * Creates a scalar of the same type as {@code toMatch}, with the value of {@code number}. {@code
+   *  number} may be truncated if it does not fit in the target type.
    *
    * @param toMatch the operand providing the target type
    * @param number the value of the tensor
@@ -2991,80 +2998,6 @@ public final class Ops {
   public <T extends TType> ImmutableConst<T> immutableConst(Class<T> dtype, Shape shape,
       String memoryRegionName) {
     return ImmutableConst.create(scope, dtype, shape, memoryRegionName);
-  }
-
-  /**
-   * Factory method to create an operation executing all initializers of a graph.
-   *
-   *  <p>All initializers added to a graph via
-   *  {@link org.tensorflow.op.core.Init#add(Scope, Op) tf.initAdd} are grouped together as a single
-   *  unit of computation in the graph. This operation must then be added to any graph using one or
-   *  more {@link Variable variables} and executed once before running the graph so the variable
-   *  states are initialized properly.</p>
-   *
-   *  <p>When the graph is built by the same process that is running the session, the initializers
-   *  can be invoked by executing this single endpoint. For example:</p>
-   *  <pre>{@code
-   *  try (Graph g = new Graph()) {
-   *    Variable<TInt32> x = tf.variable(tf.constant(10));  // initAdd is called implicitly
-   *    Variable<TInt32> y = tf.variable(tf.constant(20));  // idem
-   *    Add<TInt32> z = tf.math.add(x, y);
-   *
-   *    try (Session s = new Session(g)) {
-   *      s.run(tf.init());  // initialize all variables
-   *
-   *      try (TInt32 t = (TInt32)s.runner().fetch(z).run().get(0)) {
-   *        assertEquals(30, t.data().getInt());
-   *      }
-   *    }
-   *  }
-   *  }</pre>
-   *
-   *  <p>When the graph is built by a separate process, the initializers can be invoked by running
-   *  the init op by its name, which defaults to {@link org.tensorflow.op.core.Init#DEFAULT_NAME}.
-   *  For example:</p>
-   *  <pre>{@code
-   *  // Building the model
-   *  try (Graph g = new Graph()) {
-   *    Variable<TInt32> x = tf.variable(tf.constant(10));  // initAdd is called implicitly
-   *    Variable<TInt32> y = tf.variable(tf.constant(20));  // idem
-   *    Add<TInt32> z = tf.withName("z").math.add(x, y);
-   *
-   *    tf.init();  // add variables initializers to the graph, as Init.DEFAULT_NAME
-   *    // ...exporting graph as a saved model...
-   *  }
-   *
-   *  ...
-   *
-   *  // Running the model
-   *  try (SavedModelBundle model = SavedModelBundle.load("/path/to/model", "train")) {
-   *    model.session().run(Init.DEFAULT_NAME);
-   *
-   *    try (TInt32 t = (TInt32)s.runner().fetch("z").run().get(0)) {
-   *      assertEquals(30, t.data().getInt());
-   *    }
-   *  }
-   *  }</pre>
-   *
-   * @return an op grouping all initializers added to the graph
-   * @throws IllegalArgumentException if the execution environment in scope is not a graph
-   */
-  public Init init() {
-    return Init.create(scope);
-  }
-
-  /**
-   * Register an op as an initializer of the graph.
-   *
-   *  <p>Registered initializers are then grouped as a single unit of computation by adding
-   *  and executing an {@link org.tensorflow.op.core.Init#create(Scope) init} operation from a graph
-   *  session.  This is a no-op if executed in an eager session.
-   *
-   * @param initializer
-   * @see org.tensorflow.op.core.Init#create(Scope) init
-   */
-  public void initAdd(Op initializer) {
-    Init.add(scope, initializer);
   }
 
   /**
@@ -7947,10 +7880,11 @@ public final class Ops {
   }
 
   /**
-   * Factory method to create a new Variable with it's initializer.
-   *  <p>
-   *  Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op
-   *  does not work in an EagerSession.
+   * Factory method to create a new Variable with its initializer. Both the creation and assignment
+   *  are done in the init scope.
+   *
+   *  <p>Only supported on Graph sessions as the {@link org.tensorflow.op.core.Assign} op does not
+   *  work in an EagerSession.
    *
    * @param init The op to use to initialise this variable.
    * @param options carries optional attributes values
@@ -8141,6 +8075,37 @@ public final class Ops {
    */
   public Ops withSubScope(String childScopeName) {
     return new Ops(scope.withSubScope(childScopeName));
+  }
+
+  /**
+   * Returns an API that builds init operations.  {@link #liftToInitScope(Operand)} will be called for all created operations.
+   * <p>
+   * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
+   * and are ignored when used as control dependencies.
+   * Additionally, this scope ignores any control dependencies.
+   * <p>
+   * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
+   * @see #liftToInitScope(Operand)
+   */
+  public Ops withInitScope() {
+    return new Ops(scope.withInitScope());
+  }
+
+  /**
+   * Make {@code op} an init operation, doing the same for all of it's inputs (and control inputs).
+   * <p>
+   * Init operations will be initialized at session creation, will have their inputs (and control inputs) made init ops as well,
+   * and are ignored when used as control dependencies.
+   * Additionally, this scope ignores any control dependencies.
+   * <p>
+   * If an input can not be made an init op (i.e. a Placeholder), will throw an {@link IllegalStateException} on op creation.
+   * @see ExecutionEnvironment#registerInitOp(Operation)
+   *
+   * @throws IllegalStateException if the op or one of its inputs can't be made an init op.
+   */
+  public <T extends Operand> T liftToInitScope(T op) {
+    scope.env().registerInitOp(op.op());
+    return op;
   }
 
   /**

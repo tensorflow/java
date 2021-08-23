@@ -119,6 +119,7 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
     accumulator =
         getTF()
             .withName(getAccumulatorName())
+            .withInitScope()
             .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
     initializer =
         getTF().assign(accumulator, zeros.call(getTF(), getTF().constant(variableShape), type));
