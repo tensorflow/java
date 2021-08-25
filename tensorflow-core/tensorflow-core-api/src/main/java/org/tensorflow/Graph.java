@@ -461,11 +461,12 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
         // regenerate SaverDef without mutating. The names mirror
         // the python implementation for compatibility.
         // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
-        saverDef = SaverDef.newBuilder()
-                           .setFilenameTensorName("save/filename")
-                           .setSaveTensorName("save/control_dependency")
-                           .setRestoreOpName("save/restore_all")
-                           .build();
+        saverDef =
+            SaverDef.newBuilder()
+                .setFilenameTensorName("save/filename:0")
+                .setSaveTensorName("save/control_dependency")
+                .setRestoreOpName("save/restore_all")
+                .build();
       }
     }
     return saverDef;
@@ -812,36 +813,35 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
     }
 
-    // FIXME Need an easier way to initialize an NdArray from a list
-    String[] tmp = new String[varNames.size()];
-    Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
-    Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
+    Placeholder<TString> filename = tf.withName("filename").placeholder(TString.class);
+    Identity<TString> save = null;
+    NoOp restore = null;
 
-    Placeholder<TString> saveFilename = tf.withName("filename").placeholder(TString.class);
-    Save saveVariables = tf.train.save(
-        saveFilename,
-        varNamesTensor,
-        varSlices,
-        varOutputs
-    );
-    Identity<TString> id = tf.withControlDependencies(Arrays.asList(saveFilename,saveVariables))
-            .withName("control_dependency").identity(saveFilename);
-    Restore restoreVariables = tf.train.restore(
-        saveFilename,
-        varNamesTensor,
-        varSlices,
-        varTypes
-    );
-    List<Op> restoreOps = new ArrayList<>(varOutputs.size());
-    for (int i = 0; i < varOutputs.size(); ++i) {
-      restoreOps.add(tf.assign(varOutputs.get(i), (Operand) restoreVariables.tensors().get(i)));
+    if (varNames.isEmpty()) {
+      save = tf.withName("empty_save").identity(filename);
+      restore = tf.withName("restore_all").noOp();
+    } else {
+      String[] tmp = new String[varNames.size()];
+      Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
+      Operand<TString> varSlices = tf.zerosLike(varNamesTensor);
+      Save saveVars = tf.train.save(filename, varNamesTensor, varSlices, varOutputs);
+      List<Op> saveDeps = Arrays.asList(filename, saveVars);
+      Restore restoreVars = tf.train.restore(filename, varNamesTensor, varSlices, varTypes);
+      List<Op> restoreDeps = new ArrayList<>(varOutputs.size());
+      for (int i = 0; i < varOutputs.size(); ++i) {
+        restoreDeps.add(tf.assign(varOutputs.get(i), (Operand) restoreVars.tensors().get(i)));
+      }
+      save = tf.withControlDependencies(saveDeps).withName("control_dependency").identity(filename);
+      restore = tf.withControlDependencies(restoreDeps).withName("restore_all").noOp();
     }
-    NoOp restoreAll = tf.withControlDependencies(restoreOps).withName("restore_all").noOp();
 
+    // 'Filename' must be the name of a tensor (i.e. with output index)
+    // 'Save' must be an operation name, even if the field name is confusing (see SaverDef doc)
+    // 'Restore' must be an operation name
     return SaverDef.newBuilder()
-        .setFilenameTensorName(saveFilename.op().name())
-        .setSaveTensorName(id.op().name())
-        .setRestoreOpName(restoreAll.op().name())
+        .setFilenameTensorName(filename.output().name())
+        .setSaveTensorName(save.op().name())
+        .setRestoreOpName(restore.op().name())
         .build();
   }
 

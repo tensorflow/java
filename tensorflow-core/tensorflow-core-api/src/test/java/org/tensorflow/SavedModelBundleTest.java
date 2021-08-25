@@ -44,6 +44,7 @@ import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.proto.util.SaverDef;
 import org.tensorflow.types.TFloat32;
 
 /** Unit tests for {@link org.tensorflow.SavedModelBundle}. */
@@ -123,7 +124,13 @@ public class SavedModelBundleTest {
     try (SavedModelBundle savedModel =
         SavedModelBundle.load(testFolder.toString(), SavedModelBundle.DEFAULT_TAG)) {
       assertNotNull(savedModel.metaGraphDef());
-      assertNotNull(savedModel.metaGraphDef().getSaverDef());
+
+      SaverDef saverDef = savedModel.metaGraphDef().getSaverDef();
+      assertNotNull(saverDef);
+      assertEquals("save/filename:0", saverDef.getFilenameTensorName());
+      assertEquals("save/control_dependency", saverDef.getSaveTensorName());
+      assertEquals("save/restore_all", saverDef.getRestoreOpName());
+
       assertEquals(1, savedModel.metaGraphDef().getSignatureDefCount());
       assertEquals(Signature.DEFAULT_KEY,
           savedModel.metaGraphDef().getSignatureDefMap().keySet().iterator().next());
