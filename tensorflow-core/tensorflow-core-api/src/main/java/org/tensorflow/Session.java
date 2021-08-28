@@ -186,11 +186,19 @@ public final class Session implements AutoCloseable {
   public void initialize() {
     Runner runner = runner();
     graph.initializers().stream().filter((x) -> !ranInits.contains(x)).forEach(runner::addTarget);
-    ranInits.clear();
-    ranInits.addAll(graph.initializers());
+    setInitialized();
     if (!runner.isEmpty()) {
       runner.runNoInit();
     }
+  }
+
+  /**
+   * Set the ran initializers to all initializers in the graph, as if they had been run. <b>Does not
+   * actually ensure they are ran.</b>
+   */
+  void setInitialized() {
+    ranInits.clear();
+    ranInits.addAll(graph.initializers());
   }
 
   /**
@@ -686,8 +694,7 @@ public final class Session implements AutoCloseable {
         .feed(saverDef.getFilenameTensorName(), TString.scalarOf(prefix))
         .runNoInit();
     // TODO better way of doing this, only count as ran assignments to the restored variables.
-    ranInits.clear();
-    ranInits.addAll(graph.initializers());
+    setInitialized();
   }
 
   /**

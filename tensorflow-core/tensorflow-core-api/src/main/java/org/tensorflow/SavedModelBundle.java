@@ -35,12 +35,15 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
+import org.tensorflow.Session.Runner;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
 import org.tensorflow.internal.c_api.TF_Session;
 import org.tensorflow.internal.c_api.TF_SessionOptions;
 import org.tensorflow.internal.c_api.TF_Status;
+import org.tensorflow.proto.framework.CollectionDef;
+import org.tensorflow.proto.framework.CollectionDef.NodeList;
 import org.tensorflow.proto.framework.ConfigProto;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
@@ -63,6 +66,10 @@ import org.tensorflow.proto.util.SaverDef;
 public class SavedModelBundle implements AutoCloseable {
 
   public static final String DEFAULT_TAG = "serve";
+  private static final String INIT_OP_SIGNATURE_KEY = "__saved_model_init_op";
+  private static final String MAIN_OP_COLLECTION_KEY = "saved_model_main_op";
+  private static final String LEGACY_INIT_OP_COLLECTION_KEY = "legacy_init_op";
+  private static final String TABLE_INITIALIZERS_COLLECTION_KEY = "table_initializer";
 
   /** Options for loading a SavedModel. */
   public static final class Loader {
@@ -459,6 +466,31 @@ public class SavedModelBundle implements AutoCloseable {
                 Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)));
   }
 
+  private static GraphOperation findInitOp(Graph graph, Map<String, Signature> signatures,
+      Map<String, CollectionDef> collections){
+
+    Signature initSig = signatures.get(INIT_OP_SIGNATURE_KEY);
+    if(initSig != null){
+      return graph.operationOrThrow(initSig.getOutputs().get(INIT_OP_SIGNATURE_KEY).name);
+    }
+
+    CollectionDef initCollection;
+    if(collections.containsKey(MAIN_OP_COLLECTION_KEY)){
+      initCollection = collections.get(MAIN_OP_COLLECTION_KEY);
+    } else {
+      initCollection = collections.get(LEGACY_INIT_OP_COLLECTION_KEY);
+    }
+
+    if(initCollection != null){
+      NodeList nodes = initCollection.getNodeList();
+      if(nodes.getValueCount() != 1){
+        throw new IllegalArgumentException("Expected exactly one main op in saved model.");
+      }
+      return graph.operationOrThrow(nodes.getValue(0));
+    }
+    return null;
+  }
+
   /**
    * Create a SavedModelBundle object from a handle to the C TF_Graph object and to the C TF_Session
    * object, plus the MetaGraphDef.
@@ -486,6 +518,22 @@ public class SavedModelBundle implements AutoCloseable {
                 functions.put(signatureName, signature);
               }
             });
+
+    GraphOperation initOp = findInitOp(graph, functions, metaGraphDef.getCollectionDefMap());
+    if (initOp != null) {
+      graph.registerInitOp(initOp);
+    }
+    session.setInitialized();
+
+    if(metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)){
+      metaGraphDef.getCollectionDefMap().get(TABLE_INITIALIZERS_COLLECTION_KEY)
+          .getNodeList()
+          .getValueList()
+          .forEach(node -> {
+            graph.registerInitOp(graph.operationOrThrow(node));
+          });
+    }
+
     return new SavedModelBundle(graph, session, metaGraphDef, functions);
   }
 
