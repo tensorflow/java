@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * The ShuffleDatasetV3 operation
  */
-@Operator(
-    group = "data"
-)
 public final class ShuffleDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -73,13 +69,12 @@ public final class ShuffleDataset extends RawOp implements Operand<TType> {
       Operand<TInt64> bufferSize, Operand<TInt64> seed, Operand<TInt64> seed2,
       Operand<? extends TType> seedGenerator, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ShuffleDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ShuffleDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
     opBuilder.addInput(seedGenerator.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

@@ -73,7 +73,7 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
       Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header,
       Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue,
       Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSVDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CSVDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
@@ -83,7 +83,6 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(naValue.asOutput());
     opBuilder.addInput(selectCols.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
-    opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);

@@ -90,9 +90,8 @@ public final class UnicodeDecodeWithOffsets<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> UnicodeDecodeWithOffsets<T> create(Scope scope,
       Operand<TString> input, String inputEncoding, Class<T> Tsplits, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnicodeDecodeWithOffsets"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnicodeDecodeWithOffsets");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_encoding", inputEncoding);
     opBuilder.setAttr("Tsplits", Operands.toDataType(Tsplits));
     if (options != null) {

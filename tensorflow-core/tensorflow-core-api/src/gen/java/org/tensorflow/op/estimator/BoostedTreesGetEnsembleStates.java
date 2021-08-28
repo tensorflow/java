@@ -69,9 +69,8 @@ public final class BoostedTreesGetEnsembleStates extends RawOp {
   )
   public static BoostedTreesGetEnsembleStates create(Scope scope,
       Operand<? extends TType> treeEnsembleHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesGetEnsembleStates"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesGetEnsembleStates");
     opBuilder.addInput(treeEnsembleHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BoostedTreesGetEnsembleStates(opBuilder.build());
   }
 

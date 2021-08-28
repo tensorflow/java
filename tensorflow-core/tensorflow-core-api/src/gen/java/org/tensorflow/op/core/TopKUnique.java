@@ -73,9 +73,8 @@ public final class TopKUnique extends RawOp {
       describeByClass = true
   )
   public static TopKUnique create(Scope scope, Operand<TFloat32> input, Long k) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TopKUnique"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TopKUnique");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("k", k);
     return new TopKUnique(opBuilder.build());
   }

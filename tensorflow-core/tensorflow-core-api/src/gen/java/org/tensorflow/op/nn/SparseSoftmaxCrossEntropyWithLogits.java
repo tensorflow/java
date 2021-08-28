@@ -54,7 +54,7 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
     super(operation);
     int outputIdx = 0;
     loss = operation.output(outputIdx++);
-    backprop = operation.output(outputIdx);
+    backprop = operation.output(outputIdx++);
   }
 
   /**
@@ -72,10 +72,9 @@ public final class SparseSoftmaxCrossEntropyWithLogits<T extends TNumber> extend
   )
   public static <T extends TNumber> SparseSoftmaxCrossEntropyWithLogits<T> create(Scope scope,
       Operand<T> features, Operand<? extends TNumber> labels) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSoftmaxCrossEntropyWithLogits"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSoftmaxCrossEntropyWithLogits");
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(labels.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSoftmaxCrossEntropyWithLogits<>(opBuilder.build());
   }
 

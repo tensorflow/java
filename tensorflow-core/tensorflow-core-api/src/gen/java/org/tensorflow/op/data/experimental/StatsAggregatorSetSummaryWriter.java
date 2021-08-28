@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.data.experimental;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -51,10 +51,9 @@ public final class StatsAggregatorSetSummaryWriter extends RawOp {
   )
   public static StatsAggregatorSetSummaryWriter create(Scope scope,
       Operand<? extends TType> statsAggregator, Operand<? extends TType> summary) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatsAggregatorSetSummaryWriter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatsAggregatorSetSummaryWriter");
     opBuilder.addInput(statsAggregator.asOutput());
     opBuilder.addInput(summary.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new StatsAggregatorSetSummaryWriter(opBuilder.build());
   }
 }

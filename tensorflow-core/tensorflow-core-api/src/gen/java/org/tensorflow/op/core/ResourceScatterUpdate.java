@@ -66,11 +66,10 @@ public final class ResourceScatterUpdate extends RawOp {
   )
   public static ResourceScatterUpdate create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterUpdate"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceScatterUpdate");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ResourceScatterUpdate(opBuilder.build());
   }
 }

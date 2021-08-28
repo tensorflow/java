@@ -77,14 +77,13 @@ public final class QuantizedMul<V extends TNumber> extends RawOp {
   public static <V extends TNumber> QuantizedMul<V> create(Scope scope,
       Operand<? extends TNumber> x, Operand<? extends TNumber> y, Operand<TFloat32> minX,
       Operand<TFloat32> maxX, Operand<TFloat32> minY, Operand<TFloat32> maxY, Class<V> Toutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedMul");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(minX.asOutput());
     opBuilder.addInput(maxX.asOutput());
     opBuilder.addInput(minY.asOutput());
     opBuilder.addInput(maxY.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
     return new QuantizedMul<>(opBuilder.build());
   }

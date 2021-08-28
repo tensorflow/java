@@ -68,11 +68,10 @@ public final class MaxPoolGradWithArgmax<T extends TNumber> extends RawOp implem
   public static <T extends TNumber> MaxPoolGradWithArgmax<T> create(Scope scope, Operand<T> input,
       Operand<T> grad, Operand<? extends TNumber> argmax, List<Long> ksize, List<Long> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPoolGradWithArgmax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxPoolGradWithArgmax");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(argmax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);

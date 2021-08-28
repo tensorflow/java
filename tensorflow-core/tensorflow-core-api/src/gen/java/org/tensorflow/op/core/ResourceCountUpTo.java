@@ -65,9 +65,8 @@ public final class ResourceCountUpTo<T extends TNumber> extends RawOp implements
   )
   public static <T extends TNumber> ResourceCountUpTo<T> create(Scope scope,
       Operand<? extends TType> resource, Long limit, Class<T> T) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceCountUpTo"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceCountUpTo");
     opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("limit", limit);
     opBuilder.setAttr("T", Operands.toDataType(T));
     return new ResourceCountUpTo<>(opBuilder.build());

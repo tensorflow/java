@@ -72,13 +72,12 @@ public final class StatefulRandomBinomial<V extends TNumber> extends RawOp imple
   public static <V extends TNumber, U extends TNumber> StatefulRandomBinomial<V> create(Scope scope,
       Operand<? extends TType> resource, Operand<TInt64> algorithm,
       Operand<? extends TNumber> shape, Operand<U> counts, Operand<U> probs, Class<V> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatefulRandomBinomial"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatefulRandomBinomial");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(algorithm.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(counts.asOutput());
     opBuilder.addInput(probs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatefulRandomBinomial<>(opBuilder.build());
   }

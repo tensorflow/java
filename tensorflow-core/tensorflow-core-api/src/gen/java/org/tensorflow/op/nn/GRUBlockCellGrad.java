@@ -150,7 +150,7 @@ public final class GRUBlockCellGrad<T extends TNumber> extends RawOp {
   public static <T extends TNumber> GRUBlockCellGrad<T> create(Scope scope, Operand<T> x,
       Operand<T> hPrev, Operand<T> wRu, Operand<T> wC, Operand<T> bRu, Operand<T> bC, Operand<T> r,
       Operand<T> u, Operand<T> c, Operand<T> dH) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GRUBlockCellGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GRUBlockCellGrad");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(hPrev.asOutput());
     opBuilder.addInput(wRu.asOutput());
@@ -161,7 +161,6 @@ public final class GRUBlockCellGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(u.asOutput());
     opBuilder.addInput(c.asOutput());
     opBuilder.addInput(dH.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new GRUBlockCellGrad<>(opBuilder.build());
   }
 

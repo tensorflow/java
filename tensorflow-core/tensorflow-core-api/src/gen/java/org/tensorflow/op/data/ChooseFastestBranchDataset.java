@@ -28,16 +28,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * The ChooseFastestBranchDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class ChooseFastestBranchDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -76,12 +72,11 @@ public final class ChooseFastestBranchDataset extends RawOp implements Operand<T
       Operand<TInt64> ratioDenominator, Iterable<Operand<?>> otherArguments,
       Long numElementsPerBranch, List<ConcreteFunction> branches, List<Long> otherArgumentsLengths,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ChooseFastestBranchDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ChooseFastestBranchDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(ratioNumerator.asOutput());
     opBuilder.addInput(ratioDenominator.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_elements_per_branch", numElementsPerBranch);
     ConcreteFunction[] branchesArray = new ConcreteFunction[branches.size()];
     for (int i = 0 ; i < branchesArray.length ; i++) {

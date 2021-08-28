@@ -69,9 +69,8 @@ public final class MaxPool3d<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber> MaxPool3d<T> create(Scope scope, Operand<T> input,
       List<Long> ksize, List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPool3d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxPool3d");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);

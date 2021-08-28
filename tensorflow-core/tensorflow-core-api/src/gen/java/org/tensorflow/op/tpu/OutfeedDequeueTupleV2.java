@@ -71,9 +71,8 @@ public final class OutfeedDequeueTupleV2 extends RawOp implements Iterable<Opera
   )
   public static OutfeedDequeueTupleV2 create(Scope scope, Operand<TInt32> deviceOrdinal,
       List<Class<? extends TType>> dtypes, List<Shape> shapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OutfeedDequeueTupleV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OutfeedDequeueTupleV2");
     opBuilder.addInput(deviceOrdinal.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     Shape[] shapesArray = new Shape[shapes.size()];
     for (int i = 0 ; i < shapesArray.length ; i++) {

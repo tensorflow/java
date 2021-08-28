@@ -83,7 +83,7 @@ public final class QuantizedMatMulWithBias<W extends TNumber> extends RawOp {
       Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<? extends TNumber> bias,
       Operand<TFloat32> minA, Operand<TFloat32> maxA, Operand<TFloat32> minB,
       Operand<TFloat32> maxB, Class<W> Toutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedMatMulWithBias"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedMatMulWithBias");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(bias.asOutput());
@@ -91,7 +91,6 @@ public final class QuantizedMatMulWithBias<W extends TNumber> extends RawOp {
     opBuilder.addInput(maxA.asOutput());
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
     if (options != null) {
       for (Options opts : options) {

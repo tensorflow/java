@@ -68,10 +68,9 @@ public final class SwitchCond<T extends TType> extends RawOp {
   )
   public static <T extends TType> SwitchCond<T> create(Scope scope, Operand<T> data,
       Operand<TBool> pred) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SwitchCond"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SwitchCond");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(pred.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SwitchCond<>(opBuilder.build());
   }
 

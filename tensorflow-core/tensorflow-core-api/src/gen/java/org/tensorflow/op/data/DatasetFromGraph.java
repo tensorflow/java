@@ -24,7 +24,6 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -32,9 +31,6 @@ import org.tensorflow.types.family.TType;
  * Creates a dataset from the given {@code graph_def}.
  * Creates a dataset from the provided {@code graph_def}.
  */
-@Operator(
-    group = "data"
-)
 public final class DatasetFromGraph extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -61,9 +57,8 @@ public final class DatasetFromGraph extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static DatasetFromGraph create(Scope scope, Operand<TString> graphDef) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetFromGraph"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetFromGraph");
     opBuilder.addInput(graphDef.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DatasetFromGraph(opBuilder.build());
   }
 

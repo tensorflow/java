@@ -92,10 +92,9 @@ public final class GenerateVocabRemapping extends RawOp {
   )
   public static GenerateVocabRemapping create(Scope scope, Operand<TString> newVocabFile,
       Operand<TString> oldVocabFile, Long newVocabOffset, Long numNewVocab, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GenerateVocabRemapping"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GenerateVocabRemapping");
     opBuilder.addInput(newVocabFile.asOutput());
     opBuilder.addInput(oldVocabFile.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("new_vocab_offset", newVocabOffset);
     opBuilder.setAttr("num_new_vocab", numNewVocab);
     if (options != null) {

@@ -77,12 +77,11 @@ public final class SparseTensorDenseMatMul<U extends TType> extends RawOp implem
   public static <U extends TType> SparseTensorDenseMatMul<U> create(Scope scope,
       Operand<? extends TNumber> aIndices, Operand<U> aValues, Operand<TInt64> aShape, Operand<U> b,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseTensorDenseMatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseTensorDenseMatMul");
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjointA != null) {

@@ -55,9 +55,8 @@ public final class GetOptions extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static GetOptions create(Scope scope, Operand<? extends TType> inputDataset) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GetOptions"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GetOptions");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new GetOptions(opBuilder.build());
   }
 

@@ -73,11 +73,10 @@ public final class MaxPool3dGrad<U extends TNumber> extends RawOp implements Ope
   public static <U extends TNumber, T extends TNumber> MaxPool3dGrad<U> create(Scope scope,
       Operand<T> origInput, Operand<T> origOutput, Operand<U> grad, List<Long> ksize,
       List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPool3dGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxPool3dGrad");
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);

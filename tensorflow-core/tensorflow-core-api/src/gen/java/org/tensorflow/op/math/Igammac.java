@@ -69,10 +69,9 @@ public final class Igammac<T extends TNumber> extends RawOp implements Operand<T
       describeByClass = true
   )
   public static <T extends TNumber> Igammac<T> create(Scope scope, Operand<T> a, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Igammac"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Igammac");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Igammac<>(opBuilder.build());
   }
 

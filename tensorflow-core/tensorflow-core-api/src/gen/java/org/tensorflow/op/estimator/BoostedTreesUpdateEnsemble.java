@@ -75,7 +75,7 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
       Iterable<Operand<TInt32>> thresholds, Iterable<Operand<TFloat32>> leftNodeContribs,
       Iterable<Operand<TFloat32>> rightNodeContribs, Operand<TInt32> maxDepth,
       Operand<TFloat32> learningRate, Long pruningMode) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesUpdateEnsemble"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesUpdateEnsemble");
     opBuilder.addInput(treeEnsembleHandle.asOutput());
     opBuilder.addInput(featureIds.asOutput());
     opBuilder.addInputList(Operands.asOutputs(nodeIds));
@@ -85,7 +85,6 @@ public final class BoostedTreesUpdateEnsemble extends RawOp {
     opBuilder.addInputList(Operands.asOutputs(rightNodeContribs));
     opBuilder.addInput(maxDepth.asOutput());
     opBuilder.addInput(learningRate.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("pruning_mode", pruningMode);
     return new BoostedTreesUpdateEnsemble(opBuilder.build());
   }

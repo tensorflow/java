@@ -66,10 +66,9 @@ public final class MapDataset extends RawOp implements Operand<TType> {
   public static MapDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MapDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

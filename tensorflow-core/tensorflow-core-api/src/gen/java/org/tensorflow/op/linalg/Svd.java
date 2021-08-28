@@ -79,9 +79,8 @@ public final class Svd<T extends TType> extends RawOp {
       describeByClass = true
   )
   public static <T extends TType> Svd<T> create(Scope scope, Operand<T> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Svd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Svd");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.computeUv != null) {

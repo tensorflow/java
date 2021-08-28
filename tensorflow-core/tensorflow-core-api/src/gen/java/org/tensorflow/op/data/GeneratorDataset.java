@@ -28,15 +28,11 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that invokes a function to generate elements.
  */
-@Operator(
-    group = "data"
-)
 public final class GeneratorDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -73,11 +69,10 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
       Iterable<Operand<?>> nextFuncOtherArgs, Iterable<Operand<?>> finalizeFuncOtherArgs,
       ConcreteFunction initFunc, ConcreteFunction nextFunc, ConcreteFunction finalizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GeneratorDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GeneratorDataset");
     opBuilder.addInputList(Operands.asOutputs(initFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(nextFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(finalizeFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("init_func", initFunc);
     opBuilder.setAttr("next_func", nextFunc);
     opBuilder.setAttr("finalize_func", finalizeFunc);

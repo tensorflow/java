@@ -71,11 +71,10 @@ public final class Range<T extends TNumber> extends RawOp implements Operand<T> 
   )
   public static <T extends TNumber> Range<T> create(Scope scope, Operand<T> start, Operand<T> limit,
       Operand<T> delta) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Range"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Range");
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(limit.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Range<>(opBuilder.build());
   }
 

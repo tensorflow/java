@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.random;
+package org.tensorflow.op.random.experimental;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -54,8 +54,7 @@ public final class DummySeedGenerator extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static DummySeedGenerator create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DummySeedGenerator"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DummySeedGenerator");
     return new DummySeedGenerator(opBuilder.build());
   }
 

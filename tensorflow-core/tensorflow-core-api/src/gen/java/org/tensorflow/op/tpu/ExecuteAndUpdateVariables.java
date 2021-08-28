@@ -79,10 +79,9 @@ public final class ExecuteAndUpdateVariables extends RawOp implements Iterable<O
   public static ExecuteAndUpdateVariables create(Scope scope, Iterable<Operand<?>> args,
       Operand<TString> key, List<Class<? extends TType>> Tresults, List<Long> deviceVarReadsIndices,
       List<Long> deviceVarUpdatesIndices) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ExecuteAndUpdateVariables"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ExecuteAndUpdateVariables");
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder.addInput(key.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tresults", Operands.toDataTypes(Tresults));
     long[] deviceVarReadsIndicesArray = new long[deviceVarReadsIndices.size()];
     for (int i = 0 ; i < deviceVarReadsIndicesArray.length ; i++) {

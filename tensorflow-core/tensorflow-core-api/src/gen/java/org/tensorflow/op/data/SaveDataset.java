@@ -25,16 +25,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The SaveDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class SaveDataset extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -62,11 +58,10 @@ public final class SaveDataset extends RawOp {
   public static SaveDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> path, Iterable<Operand<?>> shardFuncOtherArgs, ConcreteFunction shardFunc,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SaveDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SaveDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(path.asOutput());
     opBuilder.addInputList(Operands.asOutputs(shardFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shard_func", shardFunc);
     if (options != null) {
       for (Options opts : options) {

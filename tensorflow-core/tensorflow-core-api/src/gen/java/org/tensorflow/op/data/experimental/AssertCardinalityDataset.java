@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.data.experimental;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * The AssertCardinalityDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class AssertCardinalityDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -68,10 +64,9 @@ public final class AssertCardinalityDataset extends RawOp implements Operand<TTy
   public static AssertCardinalityDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> cardinality, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssertCardinalityDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssertCardinalityDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(cardinality.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

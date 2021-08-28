@@ -27,7 +27,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
@@ -42,9 +41,6 @@ import org.tensorflow.types.family.TType;
  * performed is determined by the {@code experimental_optimization.hoist_random_uniform}
  * option of {@code tf.data.Options}.
  */
-@Operator(
-    group = "data"
-)
 public final class RandomDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -77,10 +73,9 @@ public final class RandomDataset extends RawOp implements Operand<TType> {
   )
   public static RandomDataset create(Scope scope, Operand<TInt64> seed, Operand<TInt64> seed2,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RandomDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RandomDataset");
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(seed2.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

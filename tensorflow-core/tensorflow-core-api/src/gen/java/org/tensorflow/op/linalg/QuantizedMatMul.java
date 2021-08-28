@@ -86,14 +86,13 @@ public final class QuantizedMatMul<V extends TNumber> extends RawOp {
       Operand<? extends TNumber> a, Operand<? extends TNumber> b, Operand<TFloat32> minA,
       Operand<TFloat32> maxA, Operand<TFloat32> minB, Operand<TFloat32> maxB, Class<V> Toutput,
       Class<W> Tactivation, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedMatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedMatMul");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
     opBuilder.addInput(minA.asOutput());
     opBuilder.addInput(maxA.asOutput());
     opBuilder.addInput(minB.asOutput());
     opBuilder.addInput(maxB.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
     opBuilder.setAttr("Tactivation", Operands.toDataType(Tactivation));
     if (options != null) {

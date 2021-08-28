@@ -57,8 +57,7 @@ public final class EmptyTensorMap extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static EmptyTensorMap create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EmptyTensorMap"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EmptyTensorMap");
     return new EmptyTensorMap(opBuilder.build());
   }
 

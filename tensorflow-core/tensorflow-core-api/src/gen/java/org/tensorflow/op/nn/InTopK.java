@@ -75,11 +75,10 @@ public final class InTopK extends RawOp implements Operand<TBool> {
   )
   public static <T extends TNumber> InTopK create(Scope scope, Operand<TFloat32> predictions,
       Operand<T> targets, Operand<T> k) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InTopK"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InTopK");
     opBuilder.addInput(predictions.asOutput());
     opBuilder.addInput(targets.asOutput());
     opBuilder.addInput(k.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InTopK(opBuilder.build());
   }
 

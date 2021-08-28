@@ -72,11 +72,10 @@ public final class XlaLaunch extends RawOp implements Iterable<Operand<TType>> {
   public static XlaLaunch create(Scope scope, Iterable<Operand<?>> constants,
       Iterable<Operand<?>> args, Iterable<Operand<? extends TType>> resources,
       List<Class<? extends TType>> Tresults, ConcreteFunction function) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaLaunch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaLaunch");
     opBuilder.addInputList(Operands.asOutputs(constants));
     opBuilder.addInputList(Operands.asOutputs(args));
     opBuilder.addInputList(Operands.asOutputs(resources));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tresults", Operands.toDataTypes(Tresults));
     opBuilder.setAttr("function", function);
     return new XlaLaunch(opBuilder.build());

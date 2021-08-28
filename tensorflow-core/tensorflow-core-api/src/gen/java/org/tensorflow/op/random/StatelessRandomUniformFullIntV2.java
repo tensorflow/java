@@ -68,12 +68,11 @@ public final class StatelessRandomUniformFullIntV2<U extends TNumber> extends Ra
   public static <U extends TNumber> StatelessRandomUniformFullIntV2<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TType> key,
       Operand<? extends TType> counter, Operand<TInt32> alg, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomUniformFullIntV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomUniformFullIntV2");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(counter.asOutput());
     opBuilder.addInput(alg.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomUniformFullIntV2<>(opBuilder.build());
   }

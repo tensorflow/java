@@ -65,10 +65,9 @@ public final class Cross<T extends TNumber> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TNumber> Cross<T> create(Scope scope, Operand<T> a, Operand<T> b) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Cross"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Cross");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Cross<>(opBuilder.build());
   }
 

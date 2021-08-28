@@ -69,10 +69,9 @@ public final class Mfcc extends RawOp implements Operand<TFloat32> {
   )
   public static Mfcc create(Scope scope, Operand<TFloat32> spectrogram, Operand<TInt32> sampleRate,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Mfcc"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Mfcc");
     opBuilder.addInput(spectrogram.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.upperFrequencyLimit != null) {

@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Records the latency of producing {@code input_dataset} elements in a StatsAggregator.
  */
-@Operator(
-    group = "data"
-)
 public final class LatencyStatsDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -67,10 +63,9 @@ public final class LatencyStatsDataset extends RawOp implements Operand<TType> {
   )
   public static LatencyStatsDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> tag, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LatencyStatsDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LatencyStatsDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(tag.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

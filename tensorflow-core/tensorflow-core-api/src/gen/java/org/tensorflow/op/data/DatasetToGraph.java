@@ -24,7 +24,6 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -32,9 +31,6 @@ import org.tensorflow.types.family.TType;
  * Returns a serialized GraphDef representing {@code input_dataset}.
  * Returns a graph representation for {@code input_dataset}.
  */
-@Operator(
-    group = "data"
-)
 public final class DatasetToGraph extends RawOp implements Operand<TString> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -62,9 +58,8 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
   )
   public static DatasetToGraph create(Scope scope, Operand<? extends TType> inputDataset,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetToGraph"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetToGraph");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.externalStatePolicy != null) {

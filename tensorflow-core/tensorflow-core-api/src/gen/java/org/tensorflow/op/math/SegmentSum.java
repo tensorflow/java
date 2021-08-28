@@ -82,10 +82,9 @@ public final class SegmentSum<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> SegmentSum<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SegmentSum"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SegmentSum");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SegmentSum<>(opBuilder.build());
   }
 

@@ -70,12 +70,11 @@ public final class CTCLossV2 extends RawOp {
   public static CTCLossV2 create(Scope scope, Operand<TFloat32> inputs,
       Operand<TInt64> labelsIndices, Operand<TInt32> labelsValues, Operand<TInt32> sequenceLength,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CTCLossV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CTCLossV2");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(labelsIndices.asOutput());
     opBuilder.addInput(labelsValues.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.preprocessCollapseRepeated != null) {

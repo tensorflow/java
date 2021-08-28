@@ -27,15 +27,11 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * A substitute for {@code InterleaveDataset} on a fixed list of {@code N} datasets.
  */
-@Operator(
-    group = "data"
-)
 public final class DirectedInterleaveDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -70,10 +66,9 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
       Operand<? extends TType> selectorInputDataset,
       Iterable<Operand<? extends TType>> dataInputDatasets,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DirectedInterleaveDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DirectedInterleaveDataset");
     opBuilder.addInput(selectorInputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(dataInputDatasets));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

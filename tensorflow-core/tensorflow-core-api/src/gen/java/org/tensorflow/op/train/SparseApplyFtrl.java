@@ -83,7 +83,7 @@ public final class SparseApplyFtrl<T extends TType> extends RawOp implements Ope
       Operand<T> accum, Operand<T> linear, Operand<T> grad, Operand<? extends TNumber> indices,
       Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage, Operand<T> lrPower,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyFtrl"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseApplyFtrl");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(linear.asOutput());
@@ -94,7 +94,6 @@ public final class SparseApplyFtrl<T extends TType> extends RawOp implements Ope
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(l2Shrinkage.asOutput());
     opBuilder.addInput(lrPower.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

@@ -74,10 +74,9 @@ public final class UnicodeEncode extends RawOp implements Operand<TString> {
   )
   public static UnicodeEncode create(Scope scope, Operand<TInt32> inputValues,
       Operand<? extends TNumber> inputSplits, String outputEncoding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnicodeEncode"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnicodeEncode");
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputSplits.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_encoding", outputEncoding);
     if (options != null) {
       for (Options opts : options) {

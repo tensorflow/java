@@ -55,11 +55,10 @@ public final class WriteGraphSummary extends RawOp {
   )
   public static WriteGraphSummary create(Scope scope, Operand<? extends TType> writer,
       Operand<TInt64> step, Operand<TString> tensor) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WriteGraphSummary"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "WriteGraphSummary");
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new WriteGraphSummary(opBuilder.build());
   }
 }

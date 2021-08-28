@@ -63,9 +63,8 @@ public final class Fft2d<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Fft2d<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Fft2d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Fft2d");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Fft2d<>(opBuilder.build());
   }
 

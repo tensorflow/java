@@ -64,10 +64,9 @@ public final class MulNoNan<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> MulNoNan<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MulNoNan"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MulNoNan");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MulNoNan<>(opBuilder.build());
   }
 

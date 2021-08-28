@@ -24,16 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that splits a SparseTensor into elements row-wise.
  */
-@Operator(
-    group = "data"
-)
 public final class SparseTensorSliceDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -63,11 +59,10 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
   )
   public static SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices,
       Operand<? extends TType> values, Operand<TInt64> denseShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseTensorSliceDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseTensorSliceDataset");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseTensorSliceDataset(opBuilder.build());
   }
 

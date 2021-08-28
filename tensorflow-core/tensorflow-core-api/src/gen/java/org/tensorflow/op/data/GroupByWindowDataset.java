@@ -28,16 +28,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that computes a windowed group-by on {@code input_dataset}.
  * // TODO(mrry): Support non-int64 keys.
  */
-@Operator(
-    group = "data"
-)
 public final class GroupByWindowDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -77,12 +73,11 @@ public final class GroupByWindowDataset extends RawOp implements Operand<TType> 
       Iterable<Operand<?>> windowSizeFuncOtherArguments, ConcreteFunction keyFunc,
       ConcreteFunction reduceFunc, ConcreteFunction windowSizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GroupByWindowDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GroupByWindowDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(keyFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(reduceFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(windowSizeFuncOtherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_func", keyFunc);
     opBuilder.setAttr("reduce_func", reduceFunc);
     opBuilder.setAttr("window_size_func", windowSizeFunc);

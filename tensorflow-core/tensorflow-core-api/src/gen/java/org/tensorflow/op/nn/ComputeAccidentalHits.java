@@ -74,10 +74,9 @@ public final class ComputeAccidentalHits extends RawOp {
   )
   public static ComputeAccidentalHits create(Scope scope, Operand<TInt64> trueClasses,
       Operand<TInt64> sampledCandidates, Long numTrue, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ComputeAccidentalHits"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ComputeAccidentalHits");
     opBuilder.addInput(trueClasses.asOutput());
     opBuilder.addInput(sampledCandidates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);
     if (options != null) {
       for (Options opts : options) {

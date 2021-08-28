@@ -131,11 +131,10 @@ public final class Substr extends RawOp implements Operand<TString> {
   )
   public static <T extends TNumber> Substr create(Scope scope, Operand<TString> input,
       Operand<T> pos, Operand<T> len, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Substr"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Substr");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(pos.asOutput());
     opBuilder.addInput(len.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.unit != null) {

@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that executes a SQL query and emits rows of the result set.
  */
-@Operator(
-    group = "data"
-)
 public final class SqlDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -69,11 +65,10 @@ public final class SqlDataset extends RawOp implements Operand<TType> {
   public static SqlDataset create(Scope scope, Operand<TString> driverName,
       Operand<TString> dataSourceName, Operand<TString> query,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SqlDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SqlDataset");
     opBuilder.addInput(driverName.asOutput());
     opBuilder.addInput(dataSourceName.asOutput());
     opBuilder.addInput(query.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

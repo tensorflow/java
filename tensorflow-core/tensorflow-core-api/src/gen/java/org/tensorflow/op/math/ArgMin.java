@@ -79,10 +79,9 @@ public final class ArgMin<V extends TNumber> extends RawOp implements Operand<V>
   )
   public static <V extends TNumber> ArgMin<V> create(Scope scope, Operand<? extends TType> input,
       Operand<? extends TNumber> dimension, Class<V> outputType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ArgMin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ArgMin");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimension.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_type", Operands.toDataType(outputType));
     return new ArgMin<>(opBuilder.build());
   }

@@ -68,11 +68,10 @@ public final class TensorListSplit extends RawOp implements Operand<TType> {
   )
   public static TensorListSplit create(Scope scope, Operand<? extends TType> tensor,
       Operand<? extends TNumber> elementShape, Operand<TInt64> lengths) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListSplit"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListSplit");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(lengths.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorListSplit(opBuilder.build());
   }
 

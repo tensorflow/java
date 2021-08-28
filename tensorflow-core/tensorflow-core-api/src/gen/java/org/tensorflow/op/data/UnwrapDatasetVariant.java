@@ -24,15 +24,11 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * The UnwrapDatasetVariant operation
  */
-@Operator(
-    group = "data"
-)
 public final class UnwrapDatasetVariant extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -59,9 +55,8 @@ public final class UnwrapDatasetVariant extends RawOp implements Operand<TType> 
       describeByClass = true
   )
   public static UnwrapDatasetVariant create(Scope scope, Operand<? extends TType> inputHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnwrapDatasetVariant"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnwrapDatasetVariant");
     opBuilder.addInput(inputHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnwrapDatasetVariant(opBuilder.build());
   }
 

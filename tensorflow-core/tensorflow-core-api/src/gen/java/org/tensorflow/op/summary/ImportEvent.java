@@ -52,10 +52,9 @@ public final class ImportEvent extends RawOp {
   )
   public static ImportEvent create(Scope scope, Operand<? extends TType> writer,
       Operand<TString> event) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ImportEvent"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ImportEvent");
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(event.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ImportEvent(opBuilder.build());
   }
 }

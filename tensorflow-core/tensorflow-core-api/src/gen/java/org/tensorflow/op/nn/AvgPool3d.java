@@ -71,9 +71,8 @@ public final class AvgPool3d<T extends TNumber> extends RawOp implements Operand
   )
   public static <T extends TNumber> AvgPool3d<T> create(Scope scope, Operand<T> input,
       List<Long> ksize, List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AvgPool3d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AvgPool3d");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);

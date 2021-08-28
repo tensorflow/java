@@ -71,12 +71,11 @@ public final class QuantizedReshape<T extends TType> extends RawOp {
   )
   public static <T extends TType> QuantizedReshape<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> shape, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedReshape"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedReshape");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new QuantizedReshape<>(opBuilder.build());
   }
 

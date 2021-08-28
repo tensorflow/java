@@ -75,14 +75,13 @@ public final class SelectAndScatter<T extends TType> extends RawOp implements Op
   public static <T extends TType, U extends TNumber> SelectAndScatter<T> create(Scope scope,
       Operand<T> operand, Operand<U> windowDimensions, Operand<U> windowStrides, Operand<U> padding,
       Operand<T> source, Operand<T> initValue, ConcreteFunction select, ConcreteFunction scatter) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SelectAndScatter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SelectAndScatter");
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(windowDimensions.asOutput());
     opBuilder.addInput(windowStrides.asOutput());
     opBuilder.addInput(padding.asOutput());
     opBuilder.addInput(source.asOutput());
     opBuilder.addInput(initValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("select", select);
     opBuilder.setAttr("scatter", scatter);
     return new SelectAndScatter<>(opBuilder.build());

@@ -73,10 +73,9 @@ public final class NthElement<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> NthElement<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> n, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NthElement"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "NthElement");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(n.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.reverse != null) {

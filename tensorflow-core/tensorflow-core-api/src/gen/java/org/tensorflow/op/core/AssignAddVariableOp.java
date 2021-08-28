@@ -55,10 +55,9 @@ public final class AssignAddVariableOp extends RawOp {
   )
   public static AssignAddVariableOp create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TType> value) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssignAddVariableOp"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssignAddVariableOp");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new AssignAddVariableOp(opBuilder.build());
   }
 }

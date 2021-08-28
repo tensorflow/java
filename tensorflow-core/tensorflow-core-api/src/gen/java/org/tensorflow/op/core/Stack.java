@@ -77,9 +77,8 @@ public final class Stack<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Stack<T> create(Scope scope, Iterable<Operand<T>> values,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Stack"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Stack");
     opBuilder.addInputList(Operands.asOutputs(values));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.axis != null) {

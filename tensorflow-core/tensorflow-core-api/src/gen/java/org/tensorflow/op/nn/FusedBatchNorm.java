@@ -90,13 +90,12 @@ public final class FusedBatchNorm<T extends TNumber, U extends TNumber> extends 
   public static <T extends TNumber, U extends TNumber> FusedBatchNorm<T, U> create(Scope scope,
       Operand<T> x, Operand<U> scale, Operand<U> offset, Operand<U> mean, Operand<U> variance,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FusedBatchNorm"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FusedBatchNorm");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(offset.asOutput());
     opBuilder.addInput(mean.asOutput());
     opBuilder.addInput(variance.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.epsilon != null) {

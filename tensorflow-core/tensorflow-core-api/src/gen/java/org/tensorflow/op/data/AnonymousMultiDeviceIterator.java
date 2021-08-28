@@ -63,8 +63,7 @@ public final class AnonymousMultiDeviceIterator extends RawOp {
   )
   public static AnonymousMultiDeviceIterator create(Scope scope, List<String> devices,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AnonymousMultiDeviceIterator"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AnonymousMultiDeviceIterator");
     String[] devicesArray = new String[devices.size()];
     for (int i = 0 ; i < devicesArray.length ; i++) {
       devicesArray[i] = devices.get(i);

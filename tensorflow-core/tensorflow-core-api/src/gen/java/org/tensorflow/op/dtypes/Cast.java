@@ -65,9 +65,8 @@ public final class Cast<U extends TType> extends RawOp implements Operand<U> {
   )
   public static <U extends TType> Cast<U> create(Scope scope, Operand<? extends TType> x,
       Class<U> DstT, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Cast"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Cast");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("DstT", Operands.toDataType(DstT));
     if (options != null) {
       for (Options opts : options) {

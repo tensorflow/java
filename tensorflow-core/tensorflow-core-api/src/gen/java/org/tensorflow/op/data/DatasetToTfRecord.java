@@ -23,16 +23,12 @@ import org.tensorflow.OperationBuilder;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * Writes the given dataset to the given file using the TFRecord format.
  */
-@Operator(
-    group = "data"
-)
 public final class DatasetToTfRecord extends RawOp {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -58,11 +54,10 @@ public final class DatasetToTfRecord extends RawOp {
   )
   public static DatasetToTfRecord create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> filename, Operand<TString> compressionType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetToTfRecord"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetToTfRecord");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(compressionType.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DatasetToTfRecord(opBuilder.build());
   }
 }

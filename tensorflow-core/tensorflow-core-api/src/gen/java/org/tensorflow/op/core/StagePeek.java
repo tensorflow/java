@@ -70,9 +70,8 @@ public final class StagePeek extends RawOp implements Iterable<Operand<TType>> {
   )
   public static StagePeek create(Scope scope, Operand<TInt32> index,
       List<Class<? extends TType>> dtypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StagePeek"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StagePeek");
     opBuilder.addInput(index.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     if (options != null) {
       for (Options opts : options) {

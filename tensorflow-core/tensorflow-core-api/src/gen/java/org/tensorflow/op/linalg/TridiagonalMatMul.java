@@ -66,12 +66,11 @@ public final class TridiagonalMatMul<T extends TType> extends RawOp implements O
   )
   public static <T extends TType> TridiagonalMatMul<T> create(Scope scope, Operand<T> superdiag,
       Operand<T> maindiag, Operand<T> subdiag, Operand<T> rhs) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TridiagonalMatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TridiagonalMatMul");
     opBuilder.addInput(superdiag.asOutput());
     opBuilder.addInput(maindiag.asOutput());
     opBuilder.addInput(subdiag.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TridiagonalMatMul<>(opBuilder.build());
   }
 

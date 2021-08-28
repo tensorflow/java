@@ -60,10 +60,9 @@ public final class RiscTriangularSolve<T extends TNumber> extends RawOp implemen
   )
   public static <T extends TNumber> RiscTriangularSolve<T> create(Scope scope, Operand<T> matrix,
       Operand<T> rhs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscTriangularSolve"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscTriangularSolve");
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.lower != null) {

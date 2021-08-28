@@ -56,11 +56,10 @@ public final class LoadTPUEmbeddingProximalYogiParameters extends RawOp {
   public static LoadTPUEmbeddingProximalYogiParameters create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> v, Operand<TFloat32> m, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingProximalYogiParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingProximalYogiParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(v.asOutput());
     opBuilder.addInput(m.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

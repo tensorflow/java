@@ -76,7 +76,7 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
   public static <T extends TType> SparseApplyProximalAdagrad<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> grad,
       Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyProximalAdagrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseApplyProximalAdagrad");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
@@ -84,7 +84,6 @@ public final class SparseApplyProximalAdagrad<T extends TType> extends RawOp imp
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

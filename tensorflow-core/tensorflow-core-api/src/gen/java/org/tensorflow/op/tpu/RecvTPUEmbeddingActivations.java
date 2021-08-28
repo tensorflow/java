@@ -68,8 +68,7 @@ public final class RecvTPUEmbeddingActivations extends RawOp implements Iterable
       describeByClass = true
   )
   public static RecvTPUEmbeddingActivations create(Scope scope, Long numOutputs, String config) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RecvTPUEmbeddingActivations"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RecvTPUEmbeddingActivations");
     opBuilder.setAttr("num_outputs", numOutputs);
     opBuilder.setAttr("config", config);
     return new RecvTPUEmbeddingActivations(opBuilder.build());

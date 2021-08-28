@@ -138,9 +138,8 @@ public final class DepthToSpace<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType> DepthToSpace<T> create(Scope scope, Operand<T> input,
       Long blockSize, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DepthToSpace"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DepthToSpace");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     if (options != null) {
       for (Options opts : options) {

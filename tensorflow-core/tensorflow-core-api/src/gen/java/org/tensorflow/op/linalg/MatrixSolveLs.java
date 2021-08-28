@@ -99,11 +99,10 @@ public final class MatrixSolveLs<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> MatrixSolveLs<T> create(Scope scope, Operand<T> matrix,
       Operand<T> rhs, Operand<TFloat64> l2Regularizer, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixSolveLs"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatrixSolveLs");
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(l2Regularizer.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.fast != null) {

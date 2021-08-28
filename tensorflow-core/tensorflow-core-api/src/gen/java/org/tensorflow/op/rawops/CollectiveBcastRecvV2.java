@@ -67,12 +67,11 @@ public final class CollectiveBcastRecvV2<U extends TType> extends RawOp implemen
   public static <U extends TType> CollectiveBcastRecvV2<U> create(Scope scope,
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
       Operand<? extends TNumber> shape, Class<U> T, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CollectiveBcastRecvV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CollectiveBcastRecvV2");
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());
     opBuilder.addInput(instanceKey.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("T", Operands.toDataType(T));
     if (options != null) {
       for (Options opts : options) {

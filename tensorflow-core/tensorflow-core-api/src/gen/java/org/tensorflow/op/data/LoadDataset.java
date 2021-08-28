@@ -28,16 +28,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The LoadDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class LoadDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -71,10 +67,9 @@ public final class LoadDataset extends RawOp implements Operand<TType> {
   public static LoadDataset create(Scope scope, Operand<TString> path,
       Iterable<Operand<?>> readerFuncOtherArgs, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, ConcreteFunction readerFunc, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadDataset");
     opBuilder.addInput(path.asOutput());
     opBuilder.addInputList(Operands.asOutputs(readerFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

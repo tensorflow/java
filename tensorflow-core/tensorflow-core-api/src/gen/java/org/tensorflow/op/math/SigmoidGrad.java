@@ -60,10 +60,9 @@ public final class SigmoidGrad<T extends TType> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TType> SigmoidGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SigmoidGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SigmoidGrad");
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SigmoidGrad<>(opBuilder.build());
   }
 

@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.xla;
+package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -36,10 +36,8 @@ import org.tensorflow.types.family.TType;
  *
  * @param <T> data type for {@code output} output
  */
-@Operator(
-    group = "xla"
-)
-public final class SpmdShardToFullShape<T extends TType> extends RawOp implements Operand<T> {
+@Operator
+public final class XlaSpmdShardToFullShape<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
@@ -47,7 +45,7 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
 
   private Output<T> output;
 
-  private SpmdShardToFullShape(Operation operation) {
+  private XlaSpmdShardToFullShape(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
@@ -61,19 +59,18 @@ public final class SpmdShardToFullShape<T extends TType> extends RawOp implement
    * @param manualSharding the value of the manualSharding property
    * @param fullShape the value of the fullShape property
    * @param <T> data type for {@code XlaSpmdShardToFullShape} output and operands
-   * @return a new instance of SpmdShardToFullShape
+   * @return a new instance of XlaSpmdShardToFullShape
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> SpmdShardToFullShape<T> create(Scope scope, Operand<T> input,
+  public static <T extends TType> XlaSpmdShardToFullShape<T> create(Scope scope, Operand<T> input,
       String manualSharding, Shape fullShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpmdShardToFullShape"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSpmdShardToFullShape");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("manual_sharding", manualSharding);
     opBuilder.setAttr("full_shape", fullShape);
-    return new SpmdShardToFullShape<>(opBuilder.build());
+    return new XlaSpmdShardToFullShape<>(opBuilder.build());
   }
 
   /**

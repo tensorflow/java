@@ -61,11 +61,10 @@ public final class RiscScatter<U extends TNumber> extends RawOp implements Opera
   )
   public static <U extends TNumber, T extends TNumber> RiscScatter<U> create(Scope scope,
       Operand<T> indices, Operand<U> updates, Operand<T> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscScatter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscScatter");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscScatter<>(opBuilder.build());
   }
 

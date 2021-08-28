@@ -94,9 +94,8 @@ public final class MlirPassthroughOp extends RawOp implements Iterable<Operand<T
   )
   public static MlirPassthroughOp create(Scope scope, Iterable<Operand<?>> inputs,
       String mlirModule, List<Class<? extends TType>> Toutputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MlirPassthroughOp"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MlirPassthroughOp");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("mlir_module", mlirModule);
     opBuilder.setAttr("Toutputs", Operands.toDataTypes(Toutputs));
     return new MlirPassthroughOp(opBuilder.build());

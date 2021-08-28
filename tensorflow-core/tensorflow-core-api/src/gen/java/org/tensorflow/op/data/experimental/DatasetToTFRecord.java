@@ -54,11 +54,10 @@ public final class DatasetToTFRecord extends RawOp {
   )
   public static DatasetToTFRecord create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> filename, Operand<TString> compressionType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetToTFRecord"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetToTFRecord");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(filename.asOutput());
     opBuilder.addInput(compressionType.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DatasetToTFRecord(opBuilder.build());
   }
 }

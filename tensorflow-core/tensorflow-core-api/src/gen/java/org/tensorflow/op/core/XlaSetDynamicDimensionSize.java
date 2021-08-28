@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.xla;
+package org.tensorflow.op.core;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -25,53 +25,53 @@ import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TType;
 
 /**
- * An op used by XLA SPMD partitioner to switch from automatic partitioning to
- * manual partitioning. It annotates the input (full-shape, to be automatically
- * partitioned) with the same sharding used by manual partitioning, and outputs a
- * shard-shaped tensor to be consumed by later manually-partitioned ops. If the
- * shape is not evenly partitionable, the padding region will be masked with 0s.
+ * Make a static dimension into a xla bounded dynamic dimension.
+ * <pre>
+ *     The current static dimension size will become the bound and the second
+ *     operand becomes the dynamic size of the dimension.
+ * </pre>
  *
  * @param <T> data type for {@code output} output
  */
-@Operator(
-    group = "xla"
-)
-public final class SpmdFullToShardShape<T extends TType> extends RawOp implements Operand<T> {
+@Operator
+public final class XlaSetDynamicDimensionSize<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaSpmdFullToShardShape";
+  public static final String OP_NAME = "XlaSetDynamicDimensionSize";
 
   private Output<T> output;
 
-  private SpmdFullToShardShape(Operation operation) {
+  private XlaSetDynamicDimensionSize(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaSpmdFullToShardShape operation.
+   * Factory method to create a class wrapping a new XlaSetDynamicDimensionSize operation.
    *
    * @param scope current scope
    * @param input the input value
-   * @param manualSharding the value of the manualSharding property
-   * @param <T> data type for {@code XlaSpmdFullToShardShape} output and operands
-   * @return a new instance of SpmdFullToShardShape
+   * @param dimIndex the dimIndex value
+   * @param sizeOutput the sizeOutput value
+   * @param <T> data type for {@code XlaSetDynamicDimensionSize} output and operands
+   * @return a new instance of XlaSetDynamicDimensionSize
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> SpmdFullToShardShape<T> create(Scope scope, Operand<T> input,
-      String manualSharding) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpmdFullToShardShape"));
+  public static <T extends TType> XlaSetDynamicDimensionSize<T> create(Scope scope,
+      Operand<T> input, Operand<TInt32> dimIndex, Operand<TInt32> sizeOutput) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaSetDynamicDimensionSize");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
-    opBuilder.setAttr("manual_sharding", manualSharding);
-    return new SpmdFullToShardShape<>(opBuilder.build());
+    opBuilder.addInput(dimIndex.asOutput());
+    opBuilder.addInput(sizeOutput.asOutput());
+    return new XlaSetDynamicDimensionSize<>(opBuilder.build());
   }
 
   /**

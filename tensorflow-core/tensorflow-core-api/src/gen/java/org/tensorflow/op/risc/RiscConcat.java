@@ -61,10 +61,9 @@ public final class RiscConcat<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> RiscConcat<T> create(Scope scope, Iterable<Operand<T>> values,
       Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscConcat"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscConcat");
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscConcat<>(opBuilder.build());
   }
 

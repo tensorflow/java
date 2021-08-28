@@ -92,10 +92,9 @@ public final class RightShift<T extends TNumber> extends RawOp implements Operan
       describeByClass = true
   )
   public static <T extends TNumber> RightShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RightShift"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RightShift");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RightShift<>(opBuilder.build());
   }
 

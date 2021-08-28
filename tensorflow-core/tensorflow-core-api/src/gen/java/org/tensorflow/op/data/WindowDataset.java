@@ -27,7 +27,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -70,9 +69,6 @@ import org.tensorflow.types.family.TType;
  * produces {@code {{"a": {0, 1}}, {"a": {2, 3}}}}</li>
  * </ul>
  */
-@Operator(
-    group = "data"
-)
 public final class WindowDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -114,13 +110,12 @@ public final class WindowDataset extends RawOp implements Operand<TType> {
       Operand<TInt64> sizeOutput, Operand<TInt64> shift, Operand<TInt64> stride,
       Operand<TBool> dropRemainder, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WindowDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "WindowDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(shift.asOutput());
     opBuilder.addInput(stride.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

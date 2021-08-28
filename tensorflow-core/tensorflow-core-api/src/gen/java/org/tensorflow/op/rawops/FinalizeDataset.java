@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.rawops;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -27,15 +27,11 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset by applying {@code tf.data.Options} to {@code input_dataset}.
  */
-@Operator(
-    group = "data"
-)
 public final class FinalizeDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -66,9 +62,8 @@ public final class FinalizeDataset extends RawOp implements Operand<TType> {
   )
   public static FinalizeDataset create(Scope scope, Operand<? extends TType> inputDataset,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FinalizeDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FinalizeDataset");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
@@ -111,7 +106,7 @@ public final class FinalizeDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.data.FinalizeDataset}
+   * Optional attributes for {@link org.tensorflow.op.rawops.FinalizeDataset}
    */
   public static class Options {
     private Boolean hasCapturedRef;

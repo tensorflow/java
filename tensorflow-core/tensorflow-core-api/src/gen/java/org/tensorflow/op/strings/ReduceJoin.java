@@ -85,10 +85,9 @@ public final class ReduceJoin extends RawOp implements Operand<TString> {
   )
   public static ReduceJoin create(Scope scope, Operand<TString> inputs,
       Operand<TInt32> reductionIndices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceJoin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReduceJoin");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(reductionIndices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

@@ -79,7 +79,7 @@ public final class ApplyRmsProp<T extends TType> extends RawOp implements Operan
   public static <T extends TType> ApplyRmsProp<T> create(Scope scope, Operand<T> var, Operand<T> ms,
       Operand<T> mom, Operand<T> lr, Operand<T> rho, Operand<T> momentum, Operand<T> epsilon,
       Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ApplyRmsProp"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ApplyRmsProp");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(ms.asOutput());
     opBuilder.addInput(mom.asOutput());
@@ -88,7 +88,6 @@ public final class ApplyRmsProp<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(momentum.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

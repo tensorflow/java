@@ -63,8 +63,7 @@ public final class RetrieveTPUEmbeddingProximalAdagradParameters extends RawOp {
   )
   public static RetrieveTPUEmbeddingProximalAdagradParameters create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingProximalAdagradParameters"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RetrieveTPUEmbeddingProximalAdagradParameters");
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

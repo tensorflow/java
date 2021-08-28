@@ -58,11 +58,10 @@ public final class MultiDeviceIteratorInit extends RawOp implements Operand<TInt
   )
   public static MultiDeviceIteratorInit create(Scope scope, Operand<? extends TType> dataset,
       Operand<? extends TType> multiDeviceIterator, Operand<TInt64> maxBufferSize) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MultiDeviceIteratorInit"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MultiDeviceIteratorInit");
     opBuilder.addInput(dataset.asOutput());
     opBuilder.addInput(multiDeviceIterator.asOutput());
     opBuilder.addInput(maxBufferSize.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MultiDeviceIteratorInit(opBuilder.build());
   }
 

@@ -73,11 +73,10 @@ public final class DynamicUpdateSlice<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> DynamicUpdateSlice<T> create(Scope scope, Operand<T> input,
       Operand<T> update, Operand<? extends TNumber> indices) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DynamicUpdateSlice"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicUpdateSlice");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(update.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DynamicUpdateSlice<>(opBuilder.build());
   }
 

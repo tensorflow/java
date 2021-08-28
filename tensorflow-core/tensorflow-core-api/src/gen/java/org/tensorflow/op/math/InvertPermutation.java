@@ -72,9 +72,8 @@ public final class InvertPermutation<T extends TNumber> extends RawOp implements
       describeByClass = true
   )
   public static <T extends TNumber> InvertPermutation<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InvertPermutation"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InvertPermutation");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InvertPermutation<>(opBuilder.build());
   }
 

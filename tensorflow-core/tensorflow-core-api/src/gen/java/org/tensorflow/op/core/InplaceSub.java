@@ -67,11 +67,10 @@ public final class InplaceSub<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> InplaceSub<T> create(Scope scope, Operand<T> x, Operand<TInt32> i,
       Operand<T> v) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InplaceSub"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InplaceSub");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InplaceSub<>(opBuilder.build());
   }
 

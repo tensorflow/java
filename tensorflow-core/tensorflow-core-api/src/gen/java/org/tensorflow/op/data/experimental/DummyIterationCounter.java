@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.data.experimental;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -54,8 +54,7 @@ public final class DummyIterationCounter extends RawOp implements Operand<TType>
       describeByClass = true
   )
   public static DummyIterationCounter create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DummyIterationCounter"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DummyIterationCounter");
     return new DummyIterationCounter(opBuilder.build());
   }
 

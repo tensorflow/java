@@ -71,12 +71,11 @@ public final class SparseSegmentMeanWithNumSegments<T extends TNumber> extends R
   public static <T extends TNumber> SparseSegmentMeanWithNumSegments<T> create(Scope scope,
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
       Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSegmentMeanWithNumSegments"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentMeanWithNumSegments");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentMeanWithNumSegments<>(opBuilder.build());
   }
 

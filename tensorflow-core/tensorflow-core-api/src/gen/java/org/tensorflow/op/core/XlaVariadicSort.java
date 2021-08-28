@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.xla;
+package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -40,9 +40,7 @@ import org.tensorflow.types.family.TType;
  * <p>Sorts one or more tensors, with support for custom comparator, dimension, and
  * is_stable attributes.
  */
-@Operator(
-    group = "xla"
-)
+@Operator
 public final class XlaVariadicSort extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -77,10 +75,9 @@ public final class XlaVariadicSort extends RawOp implements Iterable<Operand<TTy
   )
   public static XlaVariadicSort create(Scope scope, Iterable<Operand<?>> inputs,
       Operand<TInt32> dimension, ConcreteFunction comparator, Boolean isStable) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaVariadicSort"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaVariadicSort");
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder.addInput(dimension.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("comparator", comparator);
     opBuilder.setAttr("is_stable", isStable);
     return new XlaVariadicSort(opBuilder.build());

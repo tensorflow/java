@@ -83,7 +83,7 @@ public final class QuantizedConv2DAndRequantize<V extends TNumber> extends RawOp
       Operand<TFloat32> maxFilter, Operand<TFloat32> minFreezedOutput,
       Operand<TFloat32> maxFreezedOutput, Class<V> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConv2DAndRequantize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedConv2DAndRequantize");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(minInput.asOutput());
@@ -92,7 +92,6 @@ public final class QuantizedConv2DAndRequantize<V extends TNumber> extends RawOp
     opBuilder.addInput(maxFilter.asOutput());
     opBuilder.addInput(minFreezedOutput.asOutput());
     opBuilder.addInput(maxFreezedOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {

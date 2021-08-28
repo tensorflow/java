@@ -86,14 +86,13 @@ public final class RaggedCross<T extends TType, U extends TNumber> extends RawOp
       Iterable<Operand<TInt64>> sparseShape, Iterable<Operand<?>> denseInputs, String inputOrder,
       Boolean hashedOutput, Long numBuckets, Long hashKey, Class<T> outValuesType,
       Class<U> outRowSplitsType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedCross"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RaggedCross");
     opBuilder.addInputList(Operands.asOutputs(raggedValues));
     opBuilder.addInputList(Operands.asOutputs(raggedRowSplits));
     opBuilder.addInputList(Operands.asOutputs(sparseIndices));
     opBuilder.addInputList(Operands.asOutputs(sparseValues));
     opBuilder.addInputList(Operands.asOutputs(sparseShape));
     opBuilder.addInputList(Operands.asOutputs(denseInputs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("input_order", inputOrder);
     opBuilder.setAttr("hashed_output", hashedOutput);
     opBuilder.setAttr("num_buckets", numBuckets);

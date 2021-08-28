@@ -75,12 +75,11 @@ public final class QuantizeAndDequantizeV4Grad<T extends TNumber> extends RawOp 
   public static <T extends TNumber> QuantizeAndDequantizeV4Grad<T> create(Scope scope,
       Operand<T> gradients, Operand<T> input, Operand<T> inputMin, Operand<T> inputMax,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizeAndDequantizeV4Grad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizeAndDequantizeV4Grad");
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.axis != null) {

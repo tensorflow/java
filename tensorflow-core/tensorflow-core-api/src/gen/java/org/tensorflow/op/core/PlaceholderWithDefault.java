@@ -62,9 +62,8 @@ public final class PlaceholderWithDefault<T extends TType> extends RawOp impleme
   )
   public static <T extends TType> PlaceholderWithDefault<T> create(Scope scope, Operand<T> input,
       Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PlaceholderWithDefault"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "PlaceholderWithDefault");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new PlaceholderWithDefault<>(opBuilder.build());
   }

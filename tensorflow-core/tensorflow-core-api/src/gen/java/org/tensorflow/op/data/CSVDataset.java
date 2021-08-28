@@ -27,23 +27,19 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * The CSVDatasetV2 operation
+ * The CSVDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class CSVDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "CSVDatasetV2";
+  public static final String OP_NAME = "CSVDataset";
 
   private Output<? extends TType> handle;
 
@@ -55,7 +51,7 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
   }
 
   /**
-   * Factory method to create a class wrapping a new CSVDatasetV2 operation.
+   * Factory method to create a class wrapping a new CSVDataset operation.
    *
    * @param scope current scope
    * @param filenames the filenames value
@@ -67,7 +63,6 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
    * @param naValue the naValue value
    * @param selectCols the selectCols value
    * @param recordDefaults the recordDefaults value
-   * @param excludeCols the excludeCols value
    * @param outputShapes the value of the outputShapes property
    * @return a new instance of CSVDataset
    */
@@ -77,9 +72,8 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
   public static CSVDataset create(Scope scope, Operand<TString> filenames,
       Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header,
       Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue,
-      Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, Operand<TInt64> excludeCols,
-      List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CSVDataset"));
+      Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CSVDataset");
     opBuilder.addInput(filenames.asOutput());
     opBuilder.addInput(compressionType.asOutput());
     opBuilder.addInput(bufferSize.asOutput());
@@ -89,8 +83,6 @@ public final class CSVDataset extends RawOp implements Operand<TType> {
     opBuilder.addInput(naValue.asOutput());
     opBuilder.addInput(selectCols.asOutput());
     opBuilder.addInputList(Operands.asOutputs(recordDefaults));
-    opBuilder.addInput(excludeCols.asOutput());
-    opBuilder = scope.apply(opBuilder);
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);

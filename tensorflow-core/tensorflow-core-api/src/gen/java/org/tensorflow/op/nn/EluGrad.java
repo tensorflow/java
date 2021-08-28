@@ -59,10 +59,9 @@ public final class EluGrad<T extends TNumber> extends RawOp implements Operand<T
   )
   public static <T extends TNumber> EluGrad<T> create(Scope scope, Operand<T> gradients,
       Operand<T> outputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EluGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EluGrad");
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(outputs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new EluGrad<>(opBuilder.build());
   }
 

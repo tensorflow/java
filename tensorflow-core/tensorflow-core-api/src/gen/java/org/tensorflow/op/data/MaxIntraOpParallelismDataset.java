@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that overrides the maximum intra-op parallelism.
  */
-@Operator(
-    group = "data"
-)
 public final class MaxIntraOpParallelismDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -68,10 +64,9 @@ public final class MaxIntraOpParallelismDataset extends RawOp implements Operand
   public static MaxIntraOpParallelismDataset create(Scope scope,
       Operand<? extends TType> inputDataset, Operand<TInt64> maxIntraOpParallelism,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxIntraOpParallelismDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxIntraOpParallelismDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(maxIntraOpParallelism.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

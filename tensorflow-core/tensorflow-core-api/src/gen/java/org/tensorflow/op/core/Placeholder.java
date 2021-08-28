@@ -66,8 +66,7 @@ public final class Placeholder<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> Placeholder<T> create(Scope scope, Class<T> dtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Placeholder"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Placeholder");
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {

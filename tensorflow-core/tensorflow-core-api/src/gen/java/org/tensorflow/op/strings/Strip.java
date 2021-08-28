@@ -58,9 +58,8 @@ public final class Strip extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static Strip create(Scope scope, Operand<TString> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Strip"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Strip");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Strip(opBuilder.build());
   }
 

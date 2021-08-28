@@ -64,10 +64,9 @@ public final class AssignAdd<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> AssignAdd<T> create(Scope scope, Operand<T> ref, Operand<T> value,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AssignAdd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssignAdd");
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

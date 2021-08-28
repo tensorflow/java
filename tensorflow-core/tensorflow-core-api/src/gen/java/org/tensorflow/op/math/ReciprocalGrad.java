@@ -61,10 +61,9 @@ public final class ReciprocalGrad<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> ReciprocalGrad<T> create(Scope scope, Operand<T> y,
       Operand<T> dy) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReciprocalGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReciprocalGrad");
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ReciprocalGrad<>(opBuilder.build());
   }
 

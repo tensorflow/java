@@ -84,10 +84,9 @@ public final class StringNGrams<T extends TNumber> extends RawOp {
   public static <T extends TNumber> StringNGrams<T> create(Scope scope, Operand<TString> data,
       Operand<T> dataSplits, String separator, List<Long> ngramWidths, String leftPad,
       String rightPad, Long padWidth, Boolean preserveShortSequences) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StringNGrams"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StringNGrams");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(dataSplits.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("separator", separator);
     long[] ngramWidthsArray = new long[ngramWidths.size()];
     for (int i = 0 ; i < ngramWidthsArray.length ; i++) {

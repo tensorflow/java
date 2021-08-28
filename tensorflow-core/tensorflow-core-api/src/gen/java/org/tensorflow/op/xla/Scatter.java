@@ -73,11 +73,10 @@ public final class Scatter<T extends TType> extends RawOp implements Operand<T> 
   public static <T extends TType> Scatter<T> create(Scope scope, Operand<T> operand,
       Operand<? extends TNumber> scatterIndices, Operand<T> updates,
       ConcreteFunction updateComputation, String dimensionNumbers, Boolean indicesAreSorted) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Scatter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Scatter");
     opBuilder.addInput(operand.asOutput());
     opBuilder.addInput(scatterIndices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("update_computation", updateComputation);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("indices_are_sorted", indicesAreSorted);

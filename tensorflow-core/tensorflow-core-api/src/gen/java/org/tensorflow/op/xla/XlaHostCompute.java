@@ -77,9 +77,8 @@ public final class XlaHostCompute extends RawOp implements Iterable<Operand<TTyp
   public static XlaHostCompute create(Scope scope, Iterable<Operand<?>> inputs,
       List<Class<? extends TType>> Toutputs, List<String> ancestors, List<Shape> shapes,
       ConcreteFunction shapeInferenceGraph, String key, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaHostCompute"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaHostCompute");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Toutputs", Operands.toDataTypes(Toutputs));
     String[] ancestorsArray = new String[ancestors.size()];
     for (int i = 0 ; i < ancestorsArray.length ; i++) {

@@ -24,16 +24,12 @@ import org.tensorflow.Output;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
  * The MatchingFilesDataset operation
  */
-@Operator(
-    group = "data"
-)
 public final class MatchingFilesDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -60,9 +56,8 @@ public final class MatchingFilesDataset extends RawOp implements Operand<TType> 
       describeByClass = true
   )
   public static MatchingFilesDataset create(Scope scope, Operand<TString> patterns) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatchingFilesDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatchingFilesDataset");
     opBuilder.addInput(patterns.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MatchingFilesDataset(opBuilder.build());
   }
 

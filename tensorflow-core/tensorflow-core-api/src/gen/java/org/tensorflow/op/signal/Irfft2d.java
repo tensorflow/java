@@ -80,10 +80,9 @@ public final class Irfft2d<U extends TNumber> extends RawOp implements Operand<U
   )
   public static <U extends TNumber> Irfft2d<U> create(Scope scope, Operand<? extends TType> input,
       Operand<TInt32> fftLength, Class<U> Treal) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Irfft2d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Irfft2d");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(fftLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Treal", Operands.toDataType(Treal));
     return new Irfft2d<>(opBuilder.build());
   }

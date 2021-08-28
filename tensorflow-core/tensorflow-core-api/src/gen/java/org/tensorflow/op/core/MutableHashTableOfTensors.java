@@ -67,8 +67,7 @@ public final class MutableHashTableOfTensors extends RawOp implements Operand<TT
   )
   public static <T extends TType, U extends TType> MutableHashTableOfTensors create(Scope scope,
       Class<T> keyDtype, Class<U> valueDtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MutableHashTableOfTensors"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MutableHashTableOfTensors");
     opBuilder.setAttr("key_dtype", Operands.toDataType(keyDtype));
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));
     if (options != null) {

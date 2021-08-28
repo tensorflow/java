@@ -64,8 +64,7 @@ public final class RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAc
   )
   public static RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug create(
       Scope scope, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RetrieveTPUEmbeddingStochasticGradientDescentParametersGradAccumDebug");
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

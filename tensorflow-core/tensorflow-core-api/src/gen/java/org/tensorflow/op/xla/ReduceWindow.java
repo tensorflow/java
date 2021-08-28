@@ -75,7 +75,7 @@ public final class ReduceWindow<T extends TType> extends RawOp implements Operan
       Operand<T> input, Operand<T> initValue, Operand<U> windowDimensions, Operand<U> windowStrides,
       Operand<U> baseDilations, Operand<U> windowDilations, Operand<U> padding,
       ConcreteFunction computation) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceWindow"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReduceWindow");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(initValue.asOutput());
     opBuilder.addInput(windowDimensions.asOutput());
@@ -83,7 +83,6 @@ public final class ReduceWindow<T extends TType> extends RawOp implements Operan
     opBuilder.addInput(baseDilations.asOutput());
     opBuilder.addInput(windowDilations.asOutput());
     opBuilder.addInput(padding.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("computation", computation);
     return new ReduceWindow<>(opBuilder.build());
   }

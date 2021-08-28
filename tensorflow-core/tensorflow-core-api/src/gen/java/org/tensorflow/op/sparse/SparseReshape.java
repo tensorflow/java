@@ -77,11 +77,10 @@ public final class SparseReshape extends RawOp {
   )
   public static SparseReshape create(Scope scope, Operand<TInt64> inputIndices,
       Operand<TInt64> inputShape, Operand<TInt64> newShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseReshape"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseReshape");
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputShape.asOutput());
     opBuilder.addInput(newShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseReshape(opBuilder.build());
   }
 

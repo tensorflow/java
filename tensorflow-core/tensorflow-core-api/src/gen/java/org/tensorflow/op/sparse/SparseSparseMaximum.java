@@ -74,14 +74,13 @@ public final class SparseSparseMaximum<T extends TNumber> extends RawOp {
   public static <T extends TNumber> SparseSparseMaximum<T> create(Scope scope,
       Operand<TInt64> aIndices, Operand<T> aValues, Operand<TInt64> aShape,
       Operand<TInt64> bIndices, Operand<T> bValues, Operand<TInt64> bShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSparseMaximum"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSparseMaximum");
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
     opBuilder.addInput(bIndices.asOutput());
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSparseMaximum<>(opBuilder.build());
   }
 

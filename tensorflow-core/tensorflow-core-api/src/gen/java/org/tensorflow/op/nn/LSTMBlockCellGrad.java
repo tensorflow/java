@@ -89,7 +89,7 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
       Operand<T> csPrev, Operand<T> hPrev, Operand<T> w, Operand<T> wci, Operand<T> wcf,
       Operand<T> wco, Operand<T> b, Operand<T> i, Operand<T> cs, Operand<T> f, Operand<T> o,
       Operand<T> ci, Operand<T> co, Operand<T> csGrad, Operand<T> hGrad, Boolean usePeephole) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LSTMBlockCellGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LSTMBlockCellGrad");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(csPrev.asOutput());
     opBuilder.addInput(hPrev.asOutput());
@@ -106,7 +106,6 @@ public final class LSTMBlockCellGrad<T extends TNumber> extends RawOp {
     opBuilder.addInput(co.asOutput());
     opBuilder.addInput(csGrad.asOutput());
     opBuilder.addInput(hGrad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("use_peephole", usePeephole);
     return new LSTMBlockCellGrad<>(opBuilder.build());
   }

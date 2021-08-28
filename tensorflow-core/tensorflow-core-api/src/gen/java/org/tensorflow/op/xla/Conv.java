@@ -21,7 +21,6 @@ import org.tensorflow.Operand;
 import org.tensorflow.Operation;
 import org.tensorflow.OperationBuilder;
 import org.tensorflow.Output;
-import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
@@ -34,18 +33,18 @@ import org.tensorflow.types.family.TType;
  * https://www.tensorflow.org/performance/xla/operation_semantics#conv_convolution
  * .
  *
- * @param <W> data type for {@code output} output
+ * @param <T> data type for {@code output} output
  */
 @Operator(
     group = "xla"
 )
-public final class Conv<W extends TType> extends RawOp implements Operand<W> {
+public final class Conv<T extends TType> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaConvV2";
+  public static final String OP_NAME = "XlaConv";
 
-  private Output<W> output;
+  private Output<T> output;
 
   private Conv(Operation operation) {
     super(operation);
@@ -54,7 +53,7 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaConvV2 operation.
+   * Factory method to create a class wrapping a new XlaConv operation.
    *
    * @param scope current scope
    * @param lhs the input tensor
@@ -66,20 +65,18 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
    * @param featureGroupCount number of feature groups for grouped convolution.
    * @param dimensionNumbers a serialized xla::ConvolutionDimensionNumbers proto.
    * @param precisionConfig a serialized xla::PrecisionConfig proto.
-   * @param preferredElementType The type of the tensor.
-   * @param <W> data type for {@code XlaConvV2} output and operands
-   * @param <V> data type for {@code XlaConvV2} output and operands
+   * @param <T> data type for {@code XlaConv} output and operands
+   * @param <U> data type for {@code XlaConv} output and operands
    * @return a new instance of Conv
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <W extends TType, V extends TNumber> Conv<W> create(Scope scope,
-      Operand<? extends TType> lhs, Operand<? extends TType> rhs, Operand<V> windowStrides,
-      Operand<V> padding, Operand<V> lhsDilation, Operand<V> rhsDilation,
-      Operand<V> featureGroupCount, String dimensionNumbers, String precisionConfig,
-      Class<W> preferredElementType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Conv"));
+  public static <T extends TType, U extends TNumber> Conv<T> create(Scope scope, Operand<T> lhs,
+      Operand<T> rhs, Operand<U> windowStrides, Operand<U> padding, Operand<U> lhsDilation,
+      Operand<U> rhsDilation, Operand<U> featureGroupCount, String dimensionNumbers,
+      String precisionConfig) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv");
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(windowStrides.asOutput());
@@ -87,10 +84,8 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
     opBuilder.addInput(lhsDilation.asOutput());
     opBuilder.addInput(rhsDilation.asOutput());
     opBuilder.addInput(featureGroupCount.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
-    opBuilder.setAttr("preferred_element_type", Operands.toDataType(preferredElementType));
     return new Conv<>(opBuilder.build());
   }
 
@@ -99,12 +94,12 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
    *
    * @return output.
    */
-  public Output<W> output() {
+  public Output<T> output() {
     return output;
   }
 
   @Override
-  public Output<W> asOutput() {
+  public Output<T> asOutput() {
     return output;
   }
 }

@@ -74,11 +74,10 @@ public final class Conv3dBackpropInput<U extends TNumber> extends RawOp implemen
   public static <U extends TNumber> Conv3dBackpropInput<U> create(Scope scope,
       Operand<? extends TNumber> inputSizes, Operand<U> filter, Operand<U> outBackprop,
       List<Long> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Conv3dBackpropInput"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv3dBackpropInput");
     opBuilder.addInput(inputSizes.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);

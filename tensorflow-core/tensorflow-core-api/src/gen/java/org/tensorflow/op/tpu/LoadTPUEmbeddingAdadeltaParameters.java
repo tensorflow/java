@@ -61,11 +61,10 @@ public final class LoadTPUEmbeddingAdadeltaParameters extends RawOp {
   public static LoadTPUEmbeddingAdadeltaParameters create(Scope scope, Operand<TFloat32> parameters,
       Operand<TFloat32> accumulators, Operand<TFloat32> updates, Long numShards, Long shardId,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingAdadeltaParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingAdadeltaParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

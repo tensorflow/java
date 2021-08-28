@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.data.experimental;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -65,9 +65,8 @@ public final class UncompressElement extends RawOp implements Iterable<Operand<T
   )
   public static UncompressElement create(Scope scope, Operand<? extends TType> compressed,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UncompressElement"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UncompressElement");
     opBuilder.addInput(compressed.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

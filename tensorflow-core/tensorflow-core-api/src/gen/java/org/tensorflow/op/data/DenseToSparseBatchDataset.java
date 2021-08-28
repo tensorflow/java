@@ -27,16 +27,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that batches input elements into a SparseTensor.
  */
-@Operator(
-    group = "data"
-)
 public final class DenseToSparseBatchDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -72,11 +68,10 @@ public final class DenseToSparseBatchDataset extends RawOp implements Operand<TT
   public static DenseToSparseBatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSize, Operand<TInt64> rowShape, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseToSparseBatchDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DenseToSparseBatchDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(rowShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

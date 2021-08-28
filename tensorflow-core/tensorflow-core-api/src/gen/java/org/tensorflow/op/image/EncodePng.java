@@ -72,9 +72,8 @@ public final class EncodePng extends RawOp implements Operand<TString> {
   )
   public static EncodePng create(Scope scope, Operand<? extends TNumber> image,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EncodePng"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EncodePng");
     opBuilder.addInput(image.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.compression != null) {

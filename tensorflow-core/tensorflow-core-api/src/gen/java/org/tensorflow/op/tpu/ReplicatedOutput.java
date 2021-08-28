@@ -73,9 +73,8 @@ public final class ReplicatedOutput<T extends TType> extends RawOp implements It
   )
   public static <T extends TType> ReplicatedOutput<T> create(Scope scope, Operand<T> input,
       Long numReplicas) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReplicatedOutput"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReplicatedOutput");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_replicas", numReplicas);
     return new ReplicatedOutput<>(opBuilder.build());
   }

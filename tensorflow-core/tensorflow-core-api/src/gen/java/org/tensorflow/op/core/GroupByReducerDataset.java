@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.core;
 
 import java.util.List;
 import org.tensorflow.ConcreteFunction;
@@ -28,16 +28,12 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
  * Creates a dataset that computes a group-by on {@code input_dataset}.
  * Creates a dataset that computes a group-by on {@code input_dataset}.
  */
-@Operator(
-    group = "data"
-)
 public final class GroupByReducerDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
@@ -86,13 +82,12 @@ public final class GroupByReducerDataset extends RawOp implements Operand<TType>
       Iterable<Operand<?>> finalizeFuncOtherArguments, ConcreteFunction keyFunc,
       ConcreteFunction initFunc, ConcreteFunction reduceFunc, ConcreteFunction finalizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GroupByReducerDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GroupByReducerDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(keyFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(initFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(reduceFuncOtherArguments));
     opBuilder.addInputList(Operands.asOutputs(finalizeFuncOtherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("key_func", keyFunc);
     opBuilder.setAttr("init_func", initFunc);
     opBuilder.setAttr("reduce_func", reduceFunc);
