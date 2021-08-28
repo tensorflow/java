@@ -35,7 +35,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.PointerScope;
-import org.tensorflow.Session.Runner;
 import org.tensorflow.exceptions.TensorFlowException;
 import org.tensorflow.internal.c_api.TF_Buffer;
 import org.tensorflow.internal.c_api.TF_Graph;
@@ -45,14 +44,12 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.proto.framework.CollectionDef;
 import org.tensorflow.proto.framework.CollectionDef.NodeList;
 import org.tensorflow.proto.framework.ConfigProto;
-import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
 import org.tensorflow.proto.framework.SignatureDef;
 import org.tensorflow.proto.framework.TensorInfo;
-import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.util.SaverDef;
 
 /**
@@ -272,7 +269,7 @@ public class SavedModelBundle implements AutoCloseable {
       SaverDef saverDef = graph.saverDef();
 
       GraphOperation initOp = null;
-      if(!functions.containsKey(INIT_OP_SIGNATURE_KEY)){
+      if (!functions.containsKey(INIT_OP_SIGNATURE_KEY)) {
         initOp = graph.addInitOp(true);
       }
 
@@ -283,17 +280,13 @@ public class SavedModelBundle implements AutoCloseable {
               .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
-      if(!functions.containsKey(INIT_OP_SIGNATURE_KEY)){
+      if (!functions.containsKey(INIT_OP_SIGNATURE_KEY)) {
         metaGraphDef.putSignatureDef(
             INIT_OP_SIGNATURE_KEY,
             SignatureDef.newBuilder()
                 .putOutputs(
                     INIT_OP_SIGNATURE_KEY,
-                    TensorInfo.newBuilder()
-                        .setName(initOp.name() + ":0")
-                        .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
-                        .setDtype(DataType.UNRECOGNIZED)
-                        .build())
+                    TensorInfo.newBuilder().setName(initOp.name() + ":0").build())
                 .build());
       }
 
@@ -489,27 +482,28 @@ public class SavedModelBundle implements AutoCloseable {
                 Collectors.toMap(Entry::getKey, e -> new SessionFunction(e.getValue(), session)));
   }
 
-  private static GraphOperation findInitOp(Graph graph, Map<String, Signature> signatures,
-      Map<String, CollectionDef> collections){
+  private static GraphOperation findInitOp(
+      Graph graph, Map<String, Signature> signatures, Map<String, CollectionDef> collections) {
 
     Signature initSig = signatures.get(INIT_OP_SIGNATURE_KEY);
-    if(initSig != null){
-      return graph.operationOrThrow(initSig.getOutputs().get(INIT_OP_SIGNATURE_KEY).name);
+    if (initSig != null) {
+      return (GraphOperation)
+          graph.outputOrThrow(initSig.getOutputs().get(INIT_OP_SIGNATURE_KEY).name).op();
     }
 
     CollectionDef initCollection;
-    if(collections.containsKey(MAIN_OP_COLLECTION_KEY)){
+    if (collections.containsKey(MAIN_OP_COLLECTION_KEY)) {
       initCollection = collections.get(MAIN_OP_COLLECTION_KEY);
     } else {
       initCollection = collections.get(LEGACY_INIT_OP_COLLECTION_KEY);
     }
 
-    if(initCollection != null){
+    if (initCollection != null) {
       NodeList nodes = initCollection.getNodeList();
-      if(nodes.getValueCount() != 1){
+      if (nodes.getValueCount() != 1) {
         throw new IllegalArgumentException("Expected exactly one main op in saved model.");
       }
-      return graph.operationOrThrow(nodes.getValue(0));
+      return (GraphOperation) graph.outputOrThrow(nodes.getValue(0)).op();
     }
     return null;
   }
@@ -548,13 +542,16 @@ public class SavedModelBundle implements AutoCloseable {
     }
     session.setInitialized();
 
-    if(metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)){
-      metaGraphDef.getCollectionDefMap().get(TABLE_INITIALIZERS_COLLECTION_KEY)
+    if (metaGraphDef.containsCollectionDef(TABLE_INITIALIZERS_COLLECTION_KEY)) {
+      metaGraphDef
+          .getCollectionDefMap()
+          .get(TABLE_INITIALIZERS_COLLECTION_KEY)
           .getNodeList()
           .getValueList()
-          .forEach(node -> {
-            graph.registerInitOp(graph.operationOrThrow(node));
-          });
+          .forEach(
+              node -> {
+                graph.registerInitOp(graph.operationOrThrow(node));
+              });
     }
 
     return new SavedModelBundle(graph, session, metaGraphDef, functions);
