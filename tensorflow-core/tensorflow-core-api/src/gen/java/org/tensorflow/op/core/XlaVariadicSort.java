@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.xla;
+package org.tensorflow.op.core;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -40,9 +40,7 @@ import org.tensorflow.types.family.TType;
  * <p>Sorts one or more tensors, with support for custom comparator, dimension, and
  * is_stable attributes.
  */
-@Operator(
-    group = "xla"
-)
+@Operator
 public final class XlaVariadicSort extends RawOp implements Iterable<Operand<TType>> {
   /**
    * The name of this op, as known by TensorFlow core engine

@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.data.experimental;
 
 import java.util.Arrays;
 import java.util.Iterator;

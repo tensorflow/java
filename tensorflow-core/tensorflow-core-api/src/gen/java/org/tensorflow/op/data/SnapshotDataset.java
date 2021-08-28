@@ -28,7 +28,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -39,9 +38,6 @@ import org.tensorflow.types.family.TType;
  * If not, it will run the preprocessing pipeline as usual, and write out a
  * snapshot of the data processed for future use.
  */
-@Operator(
-    group = "data"
-)
 public final class SnapshotDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

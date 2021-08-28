@@ -27,57 +27,71 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
+import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
+import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * The AssertCardinalityDataset operation
+ * The CSVDatasetV2 operation
  */
-@Operator(
-    group = "data"
-)
-public final class AssertCardinalityDataset extends RawOp implements Operand<TType> {
+public final class CSVDatasetV2 extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "AssertCardinalityDataset";
+  public static final String OP_NAME = "CSVDatasetV2";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private AssertCardinalityDataset(Operation operation) {
+  private CSVDatasetV2(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new AssertCardinalityDataset operation.
+   * Factory method to create a class wrapping a new CSVDatasetV2 operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param cardinality the cardinality value
-   * @param outputTypes the value of the outputTypes property
+   * @param filenames the filenames value
+   * @param compressionType the compressionType value
+   * @param bufferSize the bufferSize value
+   * @param header the header value
+   * @param fieldDelim the fieldDelim value
+   * @param useQuoteDelim the useQuoteDelim value
+   * @param naValue the naValue value
+   * @param selectCols the selectCols value
+   * @param recordDefaults the recordDefaults value
+   * @param excludeCols the excludeCols value
    * @param outputShapes the value of the outputShapes property
-   * @return a new instance of AssertCardinalityDataset
+   * @return a new instance of CSVDatasetV2
    */
   @Endpoint(
       describeByClass = true
   )
-  public static AssertCardinalityDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TInt64> cardinality, List<Class<? extends TType>> outputTypes,
+  public static CSVDatasetV2 create(Scope scope, Operand<TString> filenames,
+      Operand<TString> compressionType, Operand<TInt64> bufferSize, Operand<TBool> header,
+      Operand<TString> fieldDelim, Operand<TBool> useQuoteDelim, Operand<TString> naValue,
+      Operand<TInt64> selectCols, Iterable<Operand<?>> recordDefaults, Operand<TInt64> excludeCols,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AssertCardinalityDataset");
-    opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(cardinality.asOutput());
-    opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CSVDatasetV2");
+    opBuilder.addInput(filenames.asOutput());
+    opBuilder.addInput(compressionType.asOutput());
+    opBuilder.addInput(bufferSize.asOutput());
+    opBuilder.addInput(header.asOutput());
+    opBuilder.addInput(fieldDelim.asOutput());
+    opBuilder.addInput(useQuoteDelim.asOutput());
+    opBuilder.addInput(naValue.asOutput());
+    opBuilder.addInput(selectCols.asOutput());
+    opBuilder.addInputList(Operands.asOutputs(recordDefaults));
+    opBuilder.addInput(excludeCols.asOutput());
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new AssertCardinalityDataset(opBuilder.build());
+    return new CSVDatasetV2(opBuilder.build());
   }
 
   /**

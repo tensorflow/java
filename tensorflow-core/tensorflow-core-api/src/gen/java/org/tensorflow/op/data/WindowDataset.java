@@ -27,7 +27,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.family.TType;
@@ -70,9 +69,6 @@ import org.tensorflow.types.family.TType;
  * produces {@code {{"a": {0, 1}}, {"a": {2, 3}}}}</li>
  * </ul>
  */
-@Operator(
-    group = "data"
-)
 public final class WindowDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

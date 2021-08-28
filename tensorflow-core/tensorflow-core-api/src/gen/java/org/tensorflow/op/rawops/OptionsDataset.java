@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.data;
+package org.tensorflow.op.rawops;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -27,52 +27,52 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
 /**
- * Records the bytes size of each element of {@code input_dataset} in a StatsAggregator.
+ * Creates a dataset by attaching tf.data.Options to {@code input_dataset}.
  */
-public final class BytesProducedStatsDataset extends RawOp implements Operand<TType> {
+public final class OptionsDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "BytesProducedStatsDataset";
+  public static final String OP_NAME = "OptionsDataset";
 
   private Output<? extends TType> handle;
 
   @SuppressWarnings("unchecked")
-  private BytesProducedStatsDataset(Operation operation) {
+  private OptionsDataset(Operation operation) {
     super(operation);
     int outputIdx = 0;
     handle = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new BytesProducedStatsDataset operation.
+   * Factory method to create a class wrapping a new OptionsDataset operation.
    *
    * @param scope current scope
-   * @param inputDataset the inputDataset value
-   * @param tag the tag value
+   * @param inputDataset A variant tensor representing the input dataset.
+   * @param serializedOptions A {@code tf.string} scalar {@code tf.Tensor} of serialized {@code tf.data.Options} protocol buffer.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
-   * @return a new instance of BytesProducedStatsDataset
+   * @return a new instance of OptionsDataset
    */
   @Endpoint(
       describeByClass = true
   )
-  public static BytesProducedStatsDataset create(Scope scope, Operand<? extends TType> inputDataset,
-      Operand<TString> tag, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BytesProducedStatsDataset");
+  public static OptionsDataset create(Scope scope, Operand<? extends TType> inputDataset,
+      String serializedOptions, List<Class<? extends TType>> outputTypes,
+      List<Shape> outputShapes) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OptionsDataset");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder.addInput(tag.asOutput());
+    opBuilder.setAttr("serialized_options", serializedOptions);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
-    return new BytesProducedStatsDataset(opBuilder.build());
+    return new OptionsDataset(opBuilder.build());
   }
 
   /**

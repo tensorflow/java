@@ -27,7 +27,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 import org.tensorflow.types.family.TType;
 
@@ -42,9 +41,6 @@ import org.tensorflow.types.family.TType;
  * <p>LMDB uses different file formats on big- and little-endian machines.
  * {@code data.LMDBDataset} can only read files in the format of the host machine.
  */
-@Operator(
-    group = "data"
-)
 public final class LMDBDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine

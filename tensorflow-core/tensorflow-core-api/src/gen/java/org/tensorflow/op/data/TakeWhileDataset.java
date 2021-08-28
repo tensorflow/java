@@ -28,7 +28,6 @@ import org.tensorflow.op.Operands;
 import org.tensorflow.op.RawOp;
 import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
-import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -40,9 +39,6 @@ import org.tensorflow.types.family.TType;
  * <li>One tensor for each value in {@code other_arguments}.</li>
  * </ul>
  */
-@Operator(
-    group = "data"
-)
 public final class TakeWhileDataset extends RawOp implements Operand<TType> {
   /**
    * The name of this op, as known by TensorFlow core engine
