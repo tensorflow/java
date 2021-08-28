@@ -45,10 +45,14 @@ import org.tensorflow.internal.c_api.TF_Status;
 import org.tensorflow.proto.framework.CollectionDef;
 import org.tensorflow.proto.framework.CollectionDef.NodeList;
 import org.tensorflow.proto.framework.ConfigProto;
+import org.tensorflow.proto.framework.DataType;
 import org.tensorflow.proto.framework.MetaGraphDef;
 import org.tensorflow.proto.framework.MetaGraphDef.MetaInfoDef;
 import org.tensorflow.proto.framework.RunOptions;
 import org.tensorflow.proto.framework.SavedModel;
+import org.tensorflow.proto.framework.SignatureDef;
+import org.tensorflow.proto.framework.TensorInfo;
+import org.tensorflow.proto.framework.TensorShapeProto;
 import org.tensorflow.proto.util.SaverDef;
 
 /**
@@ -267,12 +271,31 @@ public class SavedModelBundle implements AutoCloseable {
       // new ops to the graph for saving and restoring the variables.
       SaverDef saverDef = graph.saverDef();
 
+      GraphOperation initOp = null;
+      if(!functions.containsKey(INIT_OP_SIGNATURE_KEY)){
+        initOp = graph.addInitOp(true);
+      }
+
       MetaGraphDef.Builder metaGraphDef =
           metaGraphDefBuilder
               .setSaverDef(saverDef)
               .setGraphDef(graph.toGraphDef())
               .setMetaInfoDef(MetaInfoDef.newBuilder().addAllTags(Arrays.asList(tags)));
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
+
+      if(!functions.containsKey(INIT_OP_SIGNATURE_KEY)){
+        metaGraphDef.putSignatureDef(
+            INIT_OP_SIGNATURE_KEY,
+            SignatureDef.newBuilder()
+                .putOutputs(
+                    INIT_OP_SIGNATURE_KEY,
+                    TensorInfo.newBuilder()
+                        .setName(initOp.name() + ":0")
+                        .setTensorShape(TensorShapeProto.newBuilder().setUnknownRank(true).build())
+                        .setDtype(DataType.UNRECOGNIZED)
+                        .build())
+                .build());
+      }
 
       // Make sure saved model directories exist
       Path variableDir = Paths.get(exportDir, "variables");
