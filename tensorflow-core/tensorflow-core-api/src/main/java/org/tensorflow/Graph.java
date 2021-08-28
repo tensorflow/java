@@ -1244,6 +1244,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   private static SaverDef addVariableSaver(Graph graph) {
     Ops tf = Ops.create(graph).withSubScope(SAVER_DEF_SCOPE);
 
+    // TODO handle resource variables, too
+
     List<String> varNames = new ArrayList<>();
     List<Operand<?>> varOutputs = new ArrayList<>();
     List<Class<? extends TType>> varTypes = new ArrayList<>();

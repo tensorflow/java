@@ -281,6 +281,7 @@ public class SavedModelBundle implements AutoCloseable {
       functions.forEach((k, f) -> metaGraphDef.putSignatureDef(k, f.signature().asSignatureDef()));
 
       if (!functions.containsKey(INIT_OP_SIGNATURE_KEY)) {
+
         metaGraphDef.putSignatureDef(
             INIT_OP_SIGNATURE_KEY,
             SignatureDef.newBuilder()
@@ -388,7 +389,10 @@ public class SavedModelBundle implements AutoCloseable {
 
   /** Return the signature of all functions available in this saved model. */
   public List<Signature> signatures() {
-    return functions.values().stream().map(f -> f.signature()).collect(Collectors.toList());
+    return functions.values().stream()
+        .map(SessionFunction::signature)
+        .filter(signature -> !signature.key().equals(INIT_OP_SIGNATURE_KEY))
+        .collect(Collectors.toList());
   }
 
   /**
@@ -593,6 +597,9 @@ public class SavedModelBundle implements AutoCloseable {
         throw new TensorFlowException("Cannot parse MetaGraphDef protocol buffer", e);
       }
     }
+    bundle.session.initialize();
+
+    //    bundle.session.restore(exportDir + "/variables/variables");
 
     return bundle;
   }

@@ -625,7 +625,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addParameter(Names.ArrayOp, "controls")
             .varargs()
             .returns(Names.Ops)
-            .addStatement("return withControlDependencies(%T.asList(controls))", Names.Arrays)
+            .addStatement("return withControlDependencies($T.asList(controls))", Names.Arrays)
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
                     + "@see {@link $T#withControlDependencies(Iterable<Op<?>>)}\n",
@@ -650,7 +650,7 @@ public final class OperatorProcessor extends AbstractProcessor {
             .addParameter(Names.ArrayOperation, "controls")
             .varargs()
             .returns(Names.Ops)
-            .addStatement("return withControlDependencyOps(%T.asList(controls))", Names.Arrays)
+            .addStatement("return withControlDependencyOps($T.asList(controls))", Names.Arrays)
             .addJavadoc(
                 "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
                     + "@see {@link $T#withControlDependencyOps(Iterable<Operation>)}\n",
