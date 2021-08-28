@@ -619,6 +619,44 @@ public final class OperatorProcessor extends AbstractProcessor {
                 Names.Scope)
             .build());
 
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withControlDependencies")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(Names.ArrayOp, "controls")
+            .varargs()
+            .returns(Names.Ops)
+            .addStatement("return withControlDependencies(%T.asList(controls))", Names.Arrays)
+            .addJavadoc(
+                "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
+                    + "@see {@link $T#withControlDependencies(Iterable<Op<?>>)}\n",
+                Names.Scope)
+            .build());
+
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withControlDependencyOps")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(Names.IterableOperation, "controls")
+            .returns(Names.Ops)
+            .addStatement("return new Ops(scope.withControlDependencyOps(controls))")
+            .addJavadoc(
+                "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
+                    + "@see {@link $T#withControlDependencyOps(Iterable<Operation>)}\n",
+                Names.Scope)
+            .build());
+
+    opsBuilder.addMethod(
+        MethodSpec.methodBuilder("withControlDependencyOps")
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(Names.ArrayOperation, "controls")
+            .varargs()
+            .returns(Names.Ops)
+            .addStatement("return withControlDependencyOps(%T.asList(controls))", Names.Arrays)
+            .addJavadoc(
+                "Returns an API that adds operations to the graph with the provided control dependencies.\n\n"
+                    + "@see {@link $T#withControlDependencyOps(Iterable<Operation>)}\n",
+                Names.Scope)
+            .build());
+
     opsBuilder.addField(
         FieldSpec.builder(Names.Scope, "scope")
             .addModifiers(Modifier.PRIVATE, Modifier.FINAL)
