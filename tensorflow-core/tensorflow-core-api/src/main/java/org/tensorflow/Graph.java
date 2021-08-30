@@ -453,19 +453,17 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   synchronized SaverDef saverDef() {
     if (saverDef == null) {
       // Check to see if this graph has a restore operation
-      if (operation("save/restore_all") == null) {
+      if (operation(SAVER_DEF_SCOPE + "/" + SAVER_DEF_RESTORE_OP) == null) {
         // No saver, create one by mutating the graph
         saverDef = addVariableSaver(this);
       } else {
         // This graph already has saving/restoring operations,
-        // regenerate SaverDef without mutating. The names mirror
-        // the python implementation for compatibility.
-        // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
+        // regenerate SaverDef without mutating.
         saverDef =
             SaverDef.newBuilder()
-                .setFilenameTensorName("save/filename:0")
-                .setSaveTensorName("save/control_dependency")
-                .setRestoreOpName("save/restore_all")
+                .setFilenameTensorName(SAVER_DEF_SCOPE + "/" + SAVER_DEF_FILENAME_OP + ":0")
+                .setSaveTensorName(SAVER_DEF_SCOPE + "/" + SAVER_DEF_SAVE_OP)
+                .setRestoreOpName(SAVER_DEF_SCOPE + "/" + SAVER_DEF_RESTORE_OP)
                 .build();
       }
     }
@@ -570,6 +568,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
     private Operation operation;
     private int position;
   }
+
+  // These names mirror the python implementation, to reduce the risk of incompatibility.
+  // https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/training/saver.py
+  private static final String SAVER_DEF_SCOPE = "save";
+  private static final String SAVER_DEF_FILENAME_OP = "filename";
+  private static final String SAVER_DEF_SAVE_OP = "control_dependency";
+  private static final String SAVER_DEF_RESTORE_OP = "restore_all";
 
   private static TF_Graph allocate() {
       return TF_NewGraph();
@@ -798,7 +803,7 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
   }
 
   private static SaverDef addVariableSaver(Graph graph) {
-    Ops tf = Ops.create(graph).withSubScope("save");
+    Ops tf = Ops.create(graph).withSubScope(SAVER_DEF_SCOPE);
 
     List<String> varNames = new ArrayList<>();
     List<Operand<?>> varOutputs = new ArrayList<>();
@@ -813,13 +818,13 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       }
     }
 
-    Placeholder<TString> filename = tf.withName("filename").placeholder(TString.class);
+    Placeholder<TString> filename = tf.withName(SAVER_DEF_FILENAME_OP).placeholder(TString.class);
     Identity<TString> save = null;
     NoOp restore = null;
 
     if (varNames.isEmpty()) {
-      save = tf.withName("empty_save").identity(filename);
-      restore = tf.withName("restore_all").noOp();
+      save = tf.withName(SAVER_DEF_SAVE_OP).identity(filename);
+      restore = tf.withName(SAVER_DEF_RESTORE_OP).noOp();
     } else {
       String[] tmp = new String[varNames.size()];
       Constant<TString> varNamesTensor = tf.constant(StdArrays.ndCopyOf(varNames.toArray(tmp)));
@@ -831,8 +836,8 @@ public final class Graph implements ExecutionEnvironment, AutoCloseable {
       for (int i = 0; i < varOutputs.size(); ++i) {
         restoreDeps.add(tf.assign(varOutputs.get(i), (Operand) restoreVars.tensors().get(i)));
       }
-      save = tf.withControlDependencies(saveDeps).withName("control_dependency").identity(filename);
-      restore = tf.withControlDependencies(restoreDeps).withName("restore_all").noOp();
+      save = tf.withControlDependencies(saveDeps).withName(SAVER_DEF_SAVE_OP).identity(filename);
+      restore = tf.withControlDependencies(restoreDeps).withName(SAVER_DEF_RESTORE_OP).noOp();
     }
 
     // 'Filename' must be the name of a tensor (i.e. with output index)
