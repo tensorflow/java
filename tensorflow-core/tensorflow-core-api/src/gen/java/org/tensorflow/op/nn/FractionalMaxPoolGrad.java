@@ -68,13 +68,12 @@ public final class FractionalMaxPoolGrad<T extends TNumber> extends RawOp implem
   public static <T extends TNumber> FractionalMaxPoolGrad<T> create(Scope scope,
       Operand<T> origInput, Operand<T> origOutput, Operand<T> outBackprop,
       Operand<TInt64> rowPoolingSequence, Operand<TInt64> colPoolingSequence, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FractionalMaxPoolGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FractionalMaxPoolGrad");
     opBuilder.addInput(origInput.asOutput());
     opBuilder.addInput(origOutput.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
     opBuilder.addInput(rowPoolingSequence.asOutput());
     opBuilder.addInput(colPoolingSequence.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.overlapping != null) {

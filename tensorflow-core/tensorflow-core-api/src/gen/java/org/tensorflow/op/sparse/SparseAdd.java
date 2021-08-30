@@ -89,7 +89,7 @@ public final class SparseAdd<T extends TType> extends RawOp {
   public static <T extends TType> SparseAdd<T> create(Scope scope, Operand<TInt64> aIndices,
       Operand<T> aValues, Operand<TInt64> aShape, Operand<TInt64> bIndices, Operand<T> bValues,
       Operand<TInt64> bShape, Operand<? extends TNumber> thresh) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseAdd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseAdd");
     opBuilder.addInput(aIndices.asOutput());
     opBuilder.addInput(aValues.asOutput());
     opBuilder.addInput(aShape.asOutput());
@@ -97,7 +97,6 @@ public final class SparseAdd<T extends TType> extends RawOp {
     opBuilder.addInput(bValues.asOutput());
     opBuilder.addInput(bShape.asOutput());
     opBuilder.addInput(thresh.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseAdd<>(opBuilder.build());
   }
 

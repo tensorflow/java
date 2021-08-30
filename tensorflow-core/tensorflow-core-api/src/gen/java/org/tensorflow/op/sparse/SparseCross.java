@@ -108,13 +108,12 @@ public final class SparseCross extends RawOp {
   public static SparseCross create(Scope scope, Iterable<Operand<TInt64>> indices,
       Iterable<Operand<?>> values, Iterable<Operand<TInt64>> shapes,
       Iterable<Operand<?>> denseInputs, Operand<TString> sep) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseCross"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseCross");
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInputList(Operands.asOutputs(shapes));
     opBuilder.addInputList(Operands.asOutputs(denseInputs));
     opBuilder.addInput(sep.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseCross(opBuilder.build());
   }
 

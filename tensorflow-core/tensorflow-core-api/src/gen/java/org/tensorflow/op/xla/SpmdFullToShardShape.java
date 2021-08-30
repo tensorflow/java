@@ -67,9 +67,8 @@ public final class SpmdFullToShardShape<T extends TType> extends RawOp implement
   )
   public static <T extends TType> SpmdFullToShardShape<T> create(Scope scope, Operand<T> input,
       String manualSharding) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpmdFullToShardShape"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SpmdFullToShardShape");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("manual_sharding", manualSharding);
     return new SpmdFullToShardShape<>(opBuilder.build());
   }

@@ -67,10 +67,9 @@ public final class AvgPoolGrad<T extends TNumber> extends RawOp implements Opera
   public static <T extends TNumber> AvgPoolGrad<T> create(Scope scope,
       Operand<TInt32> origInputShape, Operand<T> grad, List<Long> ksize, List<Long> strides,
       String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AvgPoolGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AvgPoolGrad");
     opBuilder.addInput(origInputShape.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] ksizeArray = new long[ksize.size()];
     for (int i = 0 ; i < ksizeArray.length ; i++) {
       ksizeArray[i] = ksize.get(i);

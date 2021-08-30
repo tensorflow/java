@@ -65,10 +65,9 @@ public final class Concat<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Concat<T> create(Scope scope, Iterable<Operand<T>> values,
       Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Concat"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Concat");
     opBuilder.addInputList(Operands.asOutputs(values));
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Concat<>(opBuilder.build());
   }
 

@@ -27,8 +27,9 @@ import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TString;
 
 /**
- * Asserts that compilation succeeded. This op produces no output and closes the
- * device during failure to ensure all pending device interactions fail.
+ * Asserts that compilation succeeded.
+ * This op produces no output and closes the device during failure to ensure all
+ * pending device interactions fail.
  * <p>'compilation_status' is a serialized CompilationResultProto.
  */
 @Operator(
@@ -55,9 +56,8 @@ public final class CompileSucceededAssert extends RawOp {
       describeByClass = true
   )
   public static CompileSucceededAssert create(Scope scope, Operand<TString> compilationStatus) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompileSucceededAssert"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CompileSucceededAssert");
     opBuilder.addInput(compilationStatus.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new CompileSucceededAssert(opBuilder.build());
   }
 }

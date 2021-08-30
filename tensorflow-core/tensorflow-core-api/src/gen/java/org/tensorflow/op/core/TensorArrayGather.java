@@ -70,11 +70,10 @@ public final class TensorArrayGather<T extends TType> extends RawOp implements O
   public static <T extends TType> TensorArrayGather<T> create(Scope scope,
       Operand<? extends TType> handle, Operand<TInt32> indices, Operand<TFloat32> flowIn,
       Class<T> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayGather"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArrayGather");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {

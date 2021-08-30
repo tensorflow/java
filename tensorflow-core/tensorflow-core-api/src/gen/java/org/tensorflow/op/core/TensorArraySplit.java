@@ -72,12 +72,11 @@ public final class TensorArraySplit extends RawOp implements Operand<TFloat32> {
   )
   public static TensorArraySplit create(Scope scope, Operand<? extends TType> handle,
       Operand<? extends TType> value, Operand<TInt64> lengths, Operand<TFloat32> flowIn) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArraySplit"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArraySplit");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(lengths.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorArraySplit(opBuilder.build());
   }
 

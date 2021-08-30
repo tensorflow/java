@@ -78,12 +78,11 @@ public final class UnbatchGrad<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> UnbatchGrad<T> create(Scope scope, Operand<T> originalInput,
       Operand<TInt64> batchIndex, Operand<T> grad, Operand<TInt64> id, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnbatchGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnbatchGrad");
     opBuilder.addInput(originalInput.asOutput());
     opBuilder.addInput(batchIndex.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(id.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.container != null) {

@@ -25,7 +25,6 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.types.TInt64;
 import org.tensorflow.types.TString;
-import org.tensorflow.types.family.TNumber;
 import org.tensorflow.types.family.TType;
 
 /**
@@ -56,13 +55,12 @@ public final class WriteHistogramSummary extends RawOp {
       describeByClass = true
   )
   public static WriteHistogramSummary create(Scope scope, Operand<? extends TType> writer,
-      Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WriteHistogramSummary"));
+      Operand<TInt64> step, Operand<TString> tag, Operand<? extends TType> values) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "WriteHistogramSummary");
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new WriteHistogramSummary(opBuilder.build());
   }
 }

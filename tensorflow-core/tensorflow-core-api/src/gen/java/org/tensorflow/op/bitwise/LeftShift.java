@@ -90,10 +90,9 @@ public final class LeftShift<T extends TNumber> extends RawOp implements Operand
       describeByClass = true
   )
   public static <T extends TNumber> LeftShift<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LeftShift"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LeftShift");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new LeftShift<>(opBuilder.build());
   }
 

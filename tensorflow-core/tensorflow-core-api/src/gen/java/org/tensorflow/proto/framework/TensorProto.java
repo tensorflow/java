@@ -599,7 +599,7 @@ private static final long serialVersionUID = 0L;
   private com.google.protobuf.Internal.IntList intVal_;
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -610,7 +610,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -620,7 +620,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2531,7 +2531,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2543,7 +2543,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2553,7 +2553,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2563,7 +2563,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2577,7 +2577,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2590,7 +2590,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -2605,7 +2605,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+     * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
      * </pre>
      *
      * <code>repeated int32 int_val = 7 [packed = true];</code>

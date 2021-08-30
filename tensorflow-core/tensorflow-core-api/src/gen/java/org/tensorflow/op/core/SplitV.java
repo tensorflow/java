@@ -74,11 +74,10 @@ public final class SplitV<T extends TType> extends RawOp implements Iterable<Ope
   )
   public static <T extends TType> SplitV<T> create(Scope scope, Operand<T> value,
       Operand<? extends TNumber> sizeSplits, Operand<TInt32> axis, Long numSplit) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SplitV"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SplitV");
     opBuilder.addInput(value.asOutput());
     opBuilder.addInput(sizeSplits.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_split", numSplit);
     return new SplitV<>(opBuilder.build());
   }

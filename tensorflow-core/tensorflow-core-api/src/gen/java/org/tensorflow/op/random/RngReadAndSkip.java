@@ -63,11 +63,10 @@ public final class RngReadAndSkip extends RawOp implements Operand<TInt64> {
   )
   public static RngReadAndSkip create(Scope scope, Operand<? extends TType> resource,
       Operand<TInt32> alg, Operand<? extends TType> delta) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RngReadAndSkip"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RngReadAndSkip");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(alg.asOutput());
     opBuilder.addInput(delta.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RngReadAndSkip(opBuilder.build());
   }
 

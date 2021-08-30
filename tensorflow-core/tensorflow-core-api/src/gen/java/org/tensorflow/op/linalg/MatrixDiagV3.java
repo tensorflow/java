@@ -185,13 +185,12 @@ public final class MatrixDiagV3<T extends TType> extends RawOp implements Operan
   public static <T extends TType> MatrixDiagV3<T> create(Scope scope, Operand<T> diagonal,
       Operand<TInt32> k, Operand<TInt32> numRows, Operand<TInt32> numCols, Operand<T> paddingValue,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixDiagV3"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatrixDiagV3");
     opBuilder.addInput(diagonal.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(numRows.asOutput());
     opBuilder.addInput(numCols.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.align != null) {

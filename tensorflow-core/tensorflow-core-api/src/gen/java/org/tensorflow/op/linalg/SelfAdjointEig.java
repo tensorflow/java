@@ -76,9 +76,8 @@ public final class SelfAdjointEig<T extends TType> extends RawOp {
   )
   public static <T extends TType> SelfAdjointEig<T> create(Scope scope, Operand<T> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SelfAdjointEig"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SelfAdjointEig");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.computeV != null) {

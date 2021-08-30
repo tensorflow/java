@@ -61,9 +61,8 @@ public final class QueueIsClosed extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static QueueIsClosed create(Scope scope, Operand<? extends TType> handle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QueueIsClosed"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QueueIsClosed");
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new QueueIsClosed(opBuilder.build());
   }
 

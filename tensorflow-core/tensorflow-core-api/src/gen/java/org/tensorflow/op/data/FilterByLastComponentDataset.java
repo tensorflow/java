@@ -66,9 +66,8 @@ public final class FilterByLastComponentDataset extends RawOp implements Operand
   public static FilterByLastComponentDataset create(Scope scope,
       Operand<? extends TType> inputDataset, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FilterByLastComponentDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FilterByLastComponentDataset");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

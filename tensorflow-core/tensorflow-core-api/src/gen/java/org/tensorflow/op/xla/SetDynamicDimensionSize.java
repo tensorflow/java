@@ -69,11 +69,10 @@ public final class SetDynamicDimensionSize<T extends TType> extends RawOp implem
   )
   public static <T extends TType> SetDynamicDimensionSize<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> dimIndex, Operand<TInt32> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SetDynamicDimensionSize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SetDynamicDimensionSize");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(dimIndex.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SetDynamicDimensionSize<>(opBuilder.build());
   }
 

@@ -54,4 +54,28 @@ public interface FunctionDefLibraryOrBuilder extends
    */
   org.tensorflow.proto.framework.GradientDefOrBuilder getGradientOrBuilder(
       int index);
+
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  java.util.List<org.tensorflow.proto.framework.RegisteredGradient> 
+      getRegisteredGradientsList();
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  org.tensorflow.proto.framework.RegisteredGradient getRegisteredGradients(int index);
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  int getRegisteredGradientsCount();
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  java.util.List<? extends org.tensorflow.proto.framework.RegisteredGradientOrBuilder> 
+      getRegisteredGradientsOrBuilderList();
+  /**
+   * <code>repeated .tensorflow.RegisteredGradient registered_gradients = 3;</code>
+   */
+  org.tensorflow.proto.framework.RegisteredGradientOrBuilder getRegisteredGradientsOrBuilder(
+      int index);
 }

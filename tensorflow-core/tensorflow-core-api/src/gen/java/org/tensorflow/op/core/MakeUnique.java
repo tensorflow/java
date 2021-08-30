@@ -60,9 +60,8 @@ public final class MakeUnique extends RawOp implements Operand<TFloat32> {
       describeByClass = true
   )
   public static MakeUnique create(Scope scope, Operand<TFloat32> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MakeUnique"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MakeUnique");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MakeUnique(opBuilder.build());
   }
 

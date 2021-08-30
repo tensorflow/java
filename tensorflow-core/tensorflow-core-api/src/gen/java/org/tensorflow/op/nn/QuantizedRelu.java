@@ -74,11 +74,10 @@ public final class QuantizedRelu<U extends TNumber> extends RawOp {
   public static <U extends TNumber> QuantizedRelu<U> create(Scope scope,
       Operand<? extends TNumber> features, Operand<TFloat32> minFeatures,
       Operand<TFloat32> maxFeatures, Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedRelu"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedRelu");
     opBuilder.addInput(features.asOutput());
     opBuilder.addInput(minFeatures.asOutput());
     opBuilder.addInput(maxFeatures.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new QuantizedRelu<>(opBuilder.build());
   }

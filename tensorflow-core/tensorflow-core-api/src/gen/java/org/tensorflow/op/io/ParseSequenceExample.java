@@ -186,7 +186,7 @@ public final class ParseSequenceExample extends RawOp {
       List<Class<? extends TType>> featureListSparseTypes,
       List<Class<? extends TType>> featureListRaggedValueTypes,
       List<Class<? extends TNumber>> featureListRaggedSplitTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseSequenceExample"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ParseSequenceExample");
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInput(debugName.asOutput());
     opBuilder.addInput(contextSparseKeys.asOutput());
@@ -197,7 +197,6 @@ public final class ParseSequenceExample extends RawOp {
     opBuilder.addInput(featureListRaggedKeys.asOutput());
     opBuilder.addInput(featureListDenseMissingAssumedEmpty.asOutput());
     opBuilder.addInputList(Operands.asOutputs(contextDenseDefaults));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("context_sparse_types", Operands.toDataTypes(contextSparseTypes));
     opBuilder.setAttr("context_ragged_value_types", Operands.toDataTypes(contextRaggedValueTypes));
     opBuilder.setAttr("context_ragged_split_types", Operands.toDataTypes(contextRaggedSplitTypes));

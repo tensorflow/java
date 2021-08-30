@@ -62,9 +62,8 @@ public final class LmdbDataset extends RawOp implements Operand<TType> {
   )
   public static LmdbDataset create(Scope scope, Operand<TString> filenames,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LmdbDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LmdbDataset");
     opBuilder.addInput(filenames.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

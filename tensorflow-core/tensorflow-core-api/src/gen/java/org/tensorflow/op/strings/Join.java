@@ -73,9 +73,8 @@ public final class Join extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static Join create(Scope scope, Iterable<Operand<TString>> inputs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Join"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Join");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.separator != null) {

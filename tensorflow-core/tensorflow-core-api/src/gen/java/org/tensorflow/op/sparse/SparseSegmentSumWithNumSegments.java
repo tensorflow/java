@@ -90,12 +90,11 @@ public final class SparseSegmentSumWithNumSegments<T extends TNumber> extends Ra
   public static <T extends TNumber> SparseSegmentSumWithNumSegments<T> create(Scope scope,
       Operand<T> data, Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
       Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSegmentSumWithNumSegments"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentSumWithNumSegments");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSegmentSumWithNumSegments<>(opBuilder.build());
   }
 

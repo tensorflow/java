@@ -72,11 +72,10 @@ public final class RaggedCountSparseOutput<U extends TNumber> extends RawOp {
   public static <U extends TNumber> RaggedCountSparseOutput<U> create(Scope scope,
       Operand<TInt64> splits, Operand<? extends TNumber> values, Operand<U> weights,
       Boolean binaryOutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedCountSparseOutput"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RaggedCountSparseOutput");
     opBuilder.addInput(splits.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("binary_output", binaryOutput);
     if (options != null) {
       for (Options opts : options) {

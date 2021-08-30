@@ -84,11 +84,10 @@ public final class UnsortedSegmentProd<T extends TType> extends RawOp implements
   )
   public static <T extends TType> UnsortedSegmentProd<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentProd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnsortedSegmentProd");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnsortedSegmentProd<>(opBuilder.build());
   }
 

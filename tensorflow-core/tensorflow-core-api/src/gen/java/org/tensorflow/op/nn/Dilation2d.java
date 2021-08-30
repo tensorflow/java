@@ -90,10 +90,9 @@ public final class Dilation2d<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> Dilation2d<T> create(Scope scope, Operand<T> input,
       Operand<T> filter, List<Long> strides, List<Long> rates, String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dilation2d"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Dilation2d");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);

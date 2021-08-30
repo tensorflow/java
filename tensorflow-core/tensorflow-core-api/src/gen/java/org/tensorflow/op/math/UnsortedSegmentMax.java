@@ -87,11 +87,10 @@ public final class UnsortedSegmentMax<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> UnsortedSegmentMax<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentMax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnsortedSegmentMax");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnsortedSegmentMax<>(opBuilder.build());
   }
 

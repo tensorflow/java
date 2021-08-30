@@ -58,11 +58,10 @@ public final class ResourceScatterNdMax extends RawOp {
   )
   public static ResourceScatterNdMax create(Scope scope, Operand<? extends TType> ref,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterNdMax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceScatterNdMax");
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

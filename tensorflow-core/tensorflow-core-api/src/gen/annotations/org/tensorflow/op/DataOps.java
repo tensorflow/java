@@ -475,13 +475,15 @@ public final class DataOps {
    *  the values of {@code selector_input_dataset}.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of DirectedInterleaveDataset
    */
   public DirectedInterleaveDataset directedInterleaveDataset(
       Operand<? extends TType> selectorInputDataset,
       Iterable<Operand<? extends TType>> dataInputDatasets,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    return DirectedInterleaveDataset.create(scope, selectorInputDataset, dataInputDatasets, outputTypes, outputShapes);
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
+      DirectedInterleaveDataset.Options... options) {
+    return DirectedInterleaveDataset.create(scope, selectorInputDataset, dataInputDatasets, outputTypes, outputShapes, options);
   }
 
   /**

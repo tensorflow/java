@@ -62,9 +62,8 @@ public final class NonDeterministicInts<U extends TType> extends RawOp implement
   )
   public static <U extends TType> NonDeterministicInts<U> create(Scope scope,
       Operand<? extends TType> shape, Class<U> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NonDeterministicInts"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "NonDeterministicInts");
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new NonDeterministicInts<>(opBuilder.build());
   }

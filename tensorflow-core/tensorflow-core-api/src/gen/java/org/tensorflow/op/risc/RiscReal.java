@@ -62,9 +62,8 @@ public final class RiscReal<U extends TNumber> extends RawOp implements Operand<
   )
   public static <U extends TNumber> RiscReal<U> create(Scope scope, Operand<? extends TType> input,
       Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscReal"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscReal");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     return new RiscReal<>(opBuilder.build());
   }

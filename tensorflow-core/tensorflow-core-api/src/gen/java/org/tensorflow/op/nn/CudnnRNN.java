@@ -115,13 +115,12 @@ public final class CudnnRNN<T extends TNumber> extends RawOp {
   public static <T extends TNumber> CudnnRNN<T> create(Scope scope, Operand<T> input,
       Operand<T> inputH, Operand<T> inputC, Operand<T> params, Operand<TInt32> sequenceLengths,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CudnnRNN"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CudnnRNN");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());
     opBuilder.addInput(inputC.asOutput());
     opBuilder.addInput(params.asOutput());
     opBuilder.addInput(sequenceLengths.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.rnnMode != null) {

@@ -73,13 +73,12 @@ public final class RequantizePerChannel<U extends TNumber> extends RawOp {
       Operand<? extends TNumber> input, Operand<TFloat32> inputMin, Operand<TFloat32> inputMax,
       Operand<TFloat32> requestedOutputMin, Operand<TFloat32> requestedOutputMax,
       Class<U> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RequantizePerChannel"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RequantizePerChannel");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputMin.asOutput());
     opBuilder.addInput(inputMax.asOutput());
     opBuilder.addInput(requestedOutputMin.asOutput());
     opBuilder.addInput(requestedOutputMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new RequantizePerChannel<>(opBuilder.build());
   }

@@ -72,12 +72,11 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
   public static ParallelBatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSize, Operand<TInt64> numParallelCalls, Operand<TBool> dropRemainder,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelBatchDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ParallelBatchDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
@@ -86,12 +85,25 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
     opBuilder.setAttr("output_shapes", outputShapesArray);
     if (options != null) {
       for (Options opts : options) {
+        if (opts.parallelCopy != null) {
+          opBuilder.setAttr("parallel_copy", opts.parallelCopy);
+        }
         if (opts.deterministic != null) {
           opBuilder.setAttr("deterministic", opts.deterministic);
         }
       }
     }
     return new ParallelBatchDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the parallelCopy option.
+   *
+   * @param parallelCopy the parallelCopy option
+   * @return this Options instance.
+   */
+  public static Options parallelCopy(Boolean parallelCopy) {
+    return new Options().parallelCopy(parallelCopy);
   }
 
   /**
@@ -123,9 +135,22 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
    * Optional attributes for {@link org.tensorflow.op.data.ParallelBatchDataset}
    */
   public static class Options {
+    private Boolean parallelCopy;
+
     private String deterministic;
 
     private Options() {
+    }
+
+    /**
+     * Sets the parallelCopy option.
+     *
+     * @param parallelCopy the parallelCopy option
+     * @return this Options instance.
+     */
+    public Options parallelCopy(Boolean parallelCopy) {
+      this.parallelCopy = parallelCopy;
+      return this;
     }
 
     /**

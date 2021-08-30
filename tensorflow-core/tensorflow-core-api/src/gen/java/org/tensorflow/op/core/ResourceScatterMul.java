@@ -72,11 +72,10 @@ public final class ResourceScatterMul extends RawOp {
   )
   public static ResourceScatterMul create(Scope scope, Operand<? extends TType> resource,
       Operand<? extends TNumber> indices, Operand<? extends TType> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceScatterMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceScatterMul");
     opBuilder.addInput(resource.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ResourceScatterMul(opBuilder.build());
   }
 }

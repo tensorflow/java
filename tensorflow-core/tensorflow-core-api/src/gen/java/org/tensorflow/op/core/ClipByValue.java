@@ -68,11 +68,10 @@ public final class ClipByValue<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> ClipByValue<T> create(Scope scope, Operand<T> t,
       Operand<T> clipValueMin, Operand<T> clipValueMax) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ClipByValue"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ClipByValue");
     opBuilder.addInput(t.asOutput());
     opBuilder.addInput(clipValueMin.asOutput());
     opBuilder.addInput(clipValueMax.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ClipByValue<>(opBuilder.build());
   }
 

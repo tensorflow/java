@@ -77,10 +77,9 @@ public final class XlaVariadicSort extends RawOp implements Iterable<Operand<TTy
   )
   public static XlaVariadicSort create(Scope scope, Iterable<Operand<?>> inputs,
       Operand<TInt32> dimension, ConcreteFunction comparator, Boolean isStable) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaVariadicSort"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaVariadicSort");
     opBuilder.addInputList(Operands.asOutputs(inputs));
     opBuilder.addInput(dimension.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("comparator", comparator);
     opBuilder.setAttr("is_stable", isStable);
     return new XlaVariadicSort(opBuilder.build());

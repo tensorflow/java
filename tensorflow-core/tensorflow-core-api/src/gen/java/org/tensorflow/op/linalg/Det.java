@@ -64,9 +64,8 @@ public final class Det<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Det<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Det"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Det");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Det<>(opBuilder.build());
   }
 

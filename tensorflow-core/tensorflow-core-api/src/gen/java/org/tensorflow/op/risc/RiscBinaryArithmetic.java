@@ -60,10 +60,9 @@ public final class RiscBinaryArithmetic<T extends TNumber> extends RawOp impleme
   )
   public static <T extends TNumber> RiscBinaryArithmetic<T> create(Scope scope, Operand<T> x,
       Operand<T> y, String opType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscBinaryArithmetic"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscBinaryArithmetic");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("op_type", opType);
     return new RiscBinaryArithmetic<>(opBuilder.build());
   }

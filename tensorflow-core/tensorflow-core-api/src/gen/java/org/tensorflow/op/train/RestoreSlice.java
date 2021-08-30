@@ -77,11 +77,10 @@ public final class RestoreSlice<T extends TType> extends RawOp implements Operan
   public static <T extends TType> RestoreSlice<T> create(Scope scope, Operand<TString> filePattern,
       Operand<TString> tensorName, Operand<TString> shapeAndSlice, Class<T> dt,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RestoreSlice"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RestoreSlice");
     opBuilder.addInput(filePattern.asOutput());
     opBuilder.addInput(tensorName.asOutput());
     opBuilder.addInput(shapeAndSlice.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dt", Operands.toDataType(dt));
     if (options != null) {
       for (Options opts : options) {

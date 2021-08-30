@@ -63,10 +63,9 @@ public final class SparseMatrixMul extends RawOp implements Operand<TType> {
   )
   public static SparseMatrixMul create(Scope scope, Operand<? extends TType> a,
       Operand<? extends TType> b) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseMatrixMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseMatrixMul");
     opBuilder.addInput(a.asOutput());
     opBuilder.addInput(b.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseMatrixMul(opBuilder.build());
   }
 

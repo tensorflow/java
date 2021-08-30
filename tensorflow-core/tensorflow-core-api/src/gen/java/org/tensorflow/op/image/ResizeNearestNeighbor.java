@@ -66,10 +66,9 @@ public final class ResizeNearestNeighbor<T extends TNumber> extends RawOp implem
   )
   public static <T extends TNumber> ResizeNearestNeighbor<T> create(Scope scope, Operand<T> images,
       Operand<TInt32> sizeOutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResizeNearestNeighbor"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResizeNearestNeighbor");
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

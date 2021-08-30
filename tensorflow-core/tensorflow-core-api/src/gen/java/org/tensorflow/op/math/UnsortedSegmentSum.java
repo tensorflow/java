@@ -47,9 +47,9 @@ import org.tensorflow.types.family.TType;
  * </div>
  * <pre>
  * c = tf.constant([[1,2,3,4], [5,6,7,8], [4,3,2,1]])
- * tf.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
- * # ==&gt; [[ 5,  5, 5, 5],
- * #       [5,  6, 7, 8]]
+ * tf.math.unsorted_segment_sum(c, tf.constant([0, 1, 0]), num_segments=2)
+ * # ==&gt; [[ 5, 5, 5, 5],
+ * #       [5, 6, 7, 8]]
  * </pre>
  *
  * @param <T> data type for {@code output} output
@@ -86,11 +86,10 @@ public final class UnsortedSegmentSum<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> UnsortedSegmentSum<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentSum"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnsortedSegmentSum");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnsortedSegmentSum<>(opBuilder.build());
   }
 

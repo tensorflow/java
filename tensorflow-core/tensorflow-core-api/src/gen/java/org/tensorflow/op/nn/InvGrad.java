@@ -60,10 +60,9 @@ public final class InvGrad<T extends TType> extends RawOp implements Operand<T> 
       describeByClass = true
   )
   public static <T extends TType> InvGrad<T> create(Scope scope, Operand<T> y, Operand<T> dy) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InvGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InvGrad");
     opBuilder.addInput(y.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InvGrad<>(opBuilder.build());
   }
 

@@ -71,9 +71,8 @@ public final class AllReduce<T extends TNumber> extends RawOp implements Operand
   public static <T extends TNumber> AllReduce<T> create(Scope scope, Operand<T> input,
       Long groupSize, Long groupKey, Long instanceKey, String mergeOp, String finalOp,
       List<Long> subdivOffsets, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AllReduce"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AllReduce");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("group_size", groupSize);
     opBuilder.setAttr("group_key", groupKey);
     opBuilder.setAttr("instance_key", instanceKey);

@@ -59,6 +59,7 @@ import org.tensorflow.op.core.BarrierReadySize;
 import org.tensorflow.op.core.BarrierTakeMany;
 import org.tensorflow.op.core.Batch;
 import org.tensorflow.op.core.BatchFunction;
+import org.tensorflow.op.core.BatchMatMulV3;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
@@ -212,6 +213,7 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
+import org.tensorflow.op.core.SparseSegmentSumGrad;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -294,12 +296,7 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaConvV2;
-import org.tensorflow.op.core.XlaDotV2;
-import org.tensorflow.op.core.XlaSetDynamicDimensionSize;
-import org.tensorflow.op.core.XlaSpmdFullToShardShape;
-import org.tensorflow.op.core.XlaSpmdShardToFullShape;
-import org.tensorflow.op.core.XlaVariadicSort;
+import org.tensorflow.op.core.XlaRemoveDynamicDimensionSize;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -371,9 +368,9 @@ public final class Ops {
 
   public final SparseOps sparse;
 
-  public final BitwiseOps bitwise;
-
   public final TpuOps tpu;
+
+  public final BitwiseOps bitwise;
 
   public final MathOps math;
 
@@ -402,8 +399,8 @@ public final class Ops {
     random = new RandomOps(this);
     strings = new StringsOps(this);
     sparse = new SparseOps(this);
-    bitwise = new BitwiseOps(this);
     tpu = new TpuOps(this);
+    bitwise = new BitwiseOps(this);
     math = new MathOps(this);
     audio = new AudioOps(this);
     signal = new SignalOps(this);
@@ -843,6 +840,42 @@ public final class Ops {
       Long maxBatchSize, Long batchTimeoutMicros, List<Class<? extends TType>> Tout,
       BatchFunction.Options... options) {
     return BatchFunction.create(scope, inTensors, capturedTensors, f, numBatchThreads, maxBatchSize, batchTimeoutMicros, Tout, options);
+  }
+
+  /**
+   * Multiplies slices of two tensors in batches.
+   *  Multiplies all slices of {@code Tensor} {@code x} and {@code y} (each slice can be
+   *  viewed as an element of a batch), and arranges the individual results
+   *  in a single output tensor of the same batch size. Each of the
+   *  individual slices can optionally be adjointed (to adjoint a matrix
+   *  means to transpose and conjugate it) before multiplication by setting
+   *  the {@code adj_x} or {@code adj_y} flag to {@code True}, which are by default {@code False}.
+   *  <p>The input tensors {@code x} and {@code y} are 2-D or higher with shape {@code [..., r_x, c_x]}
+   *  and {@code [..., r_y, c_y]}.
+   *  <p>The output tensor is 2-D or higher with shape {@code [..., r_o, c_o]}, where:
+   *  <pre>
+   *  r_o = c_x if adj_x else r_x
+   *  c_o = r_y if adj_y else c_y
+   *  </pre>
+   *  <p>It is computed as:
+   *  <pre>
+   *  output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
+   *  </pre>
+   *  <p><em>NOTE</em>: {@code BatchMatMulV3} supports broadcasting in the batch dimensions. More
+   *  about broadcasting
+   *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
+   *
+   * @param <V> data type for {@code output} output
+   * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
+   * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
+   * @param Tout If not spcified, Tout is the same type to input type.
+   * @param options carries optional attribute values
+   * @param <V> data type for {@code BatchMatMulV3} output and operands
+   * @return a new instance of BatchMatMulV3
+   */
+  public <V extends TType> BatchMatMulV3<V> batchMatMulV3(Operand<? extends TType> x,
+      Operand<? extends TType> y, Class<V> Tout, BatchMatMulV3.Options... options) {
+    return BatchMatMulV3.create(scope, x, y, Tout, options);
   }
 
   /**
@@ -5716,17 +5749,8 @@ public final class Ops {
    *  {@code [1, ..., M]} correspond to the position within the grid, and the batch
    *  dimension combines both the position within a spatial block and the original
    *  batch position.  Prior to division into blocks, the spatial dimensions of the
-   *  input are optionally zero padded according to {@code paddings}.  See below for a
+   *  input are optionally zero padded according to {@code paddings}. See below for a
    *  precise description.
-   *
-   * @param <T> data type for {@code output} output
-   * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
-   *  where spatial_shape has {@code M} dimensions.
-   * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
-   * @param paddings 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
-   *  {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
-   *  {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
-   *  {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
    *  <p>This operation is equivalent to the following steps:
    *  <ol>
    *  <li>
@@ -5815,12 +5839,40 @@ public final class Ops {
    *  </pre>
    *  <p>Among others, this operation is useful for reducing atrous convolution into
    *  regular convolution.
+   *
+   * @param <T> data type for {@code output} output
+   * @param input N-D with shape {@code input_shape = [batch] + spatial_shape + remaining_shape},
+   *  where spatial_shape has {@code M} dimensions.
+   * @param blockShape 1-D with shape {@code [M]}, all values must be &gt;= 1.
+   * @param paddings 2-D with shape {@code [M, 2]}, all values must be &gt;= 0.
+   *  {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
+   *  {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
+   *  {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
    * @param <T> data type for {@code SpaceToBatchND} output and operands
    * @return a new instance of SpaceToBatchNd
    */
   public <T extends TType> SpaceToBatchNd<T> spaceToBatchNd(Operand<T> input,
       Operand<? extends TNumber> blockShape, Operand<? extends TNumber> paddings) {
     return SpaceToBatchNd.create(scope, input, blockShape, paddings);
+  }
+
+  /**
+   * Computes gradients for SparseSegmentSum.
+   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+   *  value is output_dim0.
+   *
+   * @param <T> data type for {@code output} output
+   * @param grad gradient propagated to the SparseSegmentSum op.
+   * @param indices indices passed to the corresponding SparseSegmentSum op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
+   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
+   * @param <T> data type for {@code SparseSegmentSumGrad} output and operands
+   * @return a new instance of SparseSegmentSumGrad
+   */
+  public <T extends TNumber> SparseSegmentSumGrad<T> sparseSegmentSumGrad(Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> outputDim0) {
+    return SparseSegmentSumGrad.create(scope, grad, indices, segmentIds, outputDim0);
   }
 
   /**
@@ -6112,6 +6164,9 @@ public final class Ops {
 
   /**
    * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+   *  Asynchronously executes a function, potentially across multiple devices but
+   *  within a single process. The kernel places and partitions a given function's
+   *  underlying graph, and executes each of the partitioned subgraphs as a function.
    *
    * @param args A list of input tensors.
    * @param Tout A list of output types.
@@ -7170,7 +7225,7 @@ public final class Ops {
    * Adds sparse {@code updates} to an existing tensor according to {@code indices}.
    *  This operation creates a new tensor by adding sparse {@code updates} to the passed
    *  in {@code tensor}.
-   *  This operation is very similar to {@code tf.scatter_nd_add}, except that the updates
+   *  This operation is very similar to {@code tf.compat.v1.scatter_nd_add}, except that the updates
    *  are added onto an existing tensor (as opposed to a variable). If the memory
    *  for the existing tensor cannot be re-used, a copy is made and updated.
    *  <p>{@code indices} is an integer tensor containing indices into a new tensor of shape
@@ -8042,6 +8097,24 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
+  }
+
+  /**
+   * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
+   *  <pre>
+   *      dynamic dimension into a static dimension. The bound of the size of
+   *      dimension `dim_index` becomes the static dimension size.
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param dimIndex the dimIndex value
+   * @param <T> data type for {@code XlaRemoveDynamicDimensionSize} output and operands
+   * @return a new instance of XlaRemoveDynamicDimensionSize
+   */
+  public <T extends TType> XlaRemoveDynamicDimensionSize<T> xlaRemoveDynamicDimensionSize(
+      Operand<T> input, Operand<TInt32> dimIndex) {
+    return XlaRemoveDynamicDimensionSize.create(scope, input, dimIndex);
   }
 
   /**

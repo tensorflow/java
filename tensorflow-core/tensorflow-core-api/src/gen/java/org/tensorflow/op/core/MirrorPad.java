@@ -89,10 +89,9 @@ public final class MirrorPad<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> MirrorPad<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> paddings, String mode) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MirrorPad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MirrorPad");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("mode", mode);
     return new MirrorPad<>(opBuilder.build());
   }

@@ -56,8 +56,7 @@ public final class CompilationResult extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static CompilationResult create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CompilationResult"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CompilationResult");
     return new CompilationResult(opBuilder.build());
   }
 

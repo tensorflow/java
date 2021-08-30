@@ -63,8 +63,7 @@ public final class OutfeedDequeue<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> OutfeedDequeue<T> create(Scope scope, Class<T> dtype, Shape shape,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OutfeedDequeue"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OutfeedDequeue");
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);
     if (options != null) {

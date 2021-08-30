@@ -488,14 +488,18 @@ public final class QuantizationOps {
   }
 
   /**
-   * Returns the gradient of {@code quantization.QuantizeAndDequantizeV4}.
+   * Quantizes then dequantizes a tensor.
    *  This is almost identical to QuantizeAndDequantizeV2, except that it returns a
    *  gradient of 1 for inputs that are within the quantization range, or 0 otherwise.
    *
    * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param inputMin the inputMin value
-   * @param inputMax the inputMax value
+   * @param input Tensor to quantize and then dequantize.
+   * @param inputMin If {@code range_given == True}, this specifies the minimum input value that needs to
+   *  be represented, otherwise it is determined from the min value of the {@code input}
+   *  tensor.
+   * @param inputMax If {@code range_given == True}, this specifies the maximum input value that needs to
+   *  be represented, otherwise it is determined from the max value of the {@code input}
+   *  tensor.
    * @param options carries optional attribute values
    * @param <T> data type for {@code QuantizeAndDequantizeV4} output and operands
    * @return a new instance of QuantizeAndDequantizeV4

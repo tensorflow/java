@@ -57,13 +57,12 @@ public final class CreateSummaryFileWriter extends RawOp {
   public static CreateSummaryFileWriter create(Scope scope, Operand<? extends TType> writer,
       Operand<TString> logdir, Operand<TInt32> maxQueue, Operand<TInt32> flushMillis,
       Operand<TString> filenameSuffix) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CreateSummaryFileWriter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CreateSummaryFileWriter");
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(logdir.asOutput());
     opBuilder.addInput(maxQueue.asOutput());
     opBuilder.addInput(flushMillis.asOutput());
     opBuilder.addInput(filenameSuffix.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new CreateSummaryFileWriter(opBuilder.build());
   }
 }

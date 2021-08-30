@@ -80,11 +80,10 @@ public final class TensorListConcat<U extends TType> extends RawOp {
   public static <U extends TType> TensorListConcat<U> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<? extends TNumber> elementShape,
       Operand<TInt64> leadingDims, Class<U> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListConcat"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListConcat");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(leadingDims.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListConcat<>(opBuilder.build());
   }

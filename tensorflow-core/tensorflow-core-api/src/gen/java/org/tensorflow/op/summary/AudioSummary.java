@@ -73,11 +73,10 @@ public final class AudioSummary extends RawOp implements Operand<TString> {
   )
   public static AudioSummary create(Scope scope, Operand<TString> tag, Operand<TFloat32> tensor,
       Operand<TFloat32> sampleRate, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AudioSummary"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AudioSummary");
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(sampleRate.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.maxOutputs != null) {

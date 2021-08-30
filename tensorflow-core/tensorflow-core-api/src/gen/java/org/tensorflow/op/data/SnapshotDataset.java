@@ -80,12 +80,11 @@ public final class SnapshotDataset extends RawOp implements Operand<TType> {
       Iterable<Operand<?>> shardFuncOtherArgs, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes, ConcreteFunction readerFunc, ConcreteFunction shardFunc,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SnapshotDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SnapshotDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(path.asOutput());
     opBuilder.addInputList(Operands.asOutputs(readerFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(shardFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

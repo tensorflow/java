@@ -60,9 +60,8 @@ public final class RiscBitcast<U extends TType> extends RawOp implements Operand
   )
   public static <U extends TType> RiscBitcast<U> create(Scope scope, Operand<? extends TType> x,
       Class<U> DstT) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscBitcast"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscBitcast");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("DstT", Operands.toDataType(DstT));
     return new RiscBitcast<>(opBuilder.build());
   }

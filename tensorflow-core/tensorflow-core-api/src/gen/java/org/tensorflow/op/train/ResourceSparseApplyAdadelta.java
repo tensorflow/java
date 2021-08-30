@@ -66,7 +66,7 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> accum,
       Operand<? extends TType> accumUpdate, Operand<T> lr, Operand<T> rho, Operand<T> epsilon,
       Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceSparseApplyAdadelta"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceSparseApplyAdadelta");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(accumUpdate.asOutput());
@@ -75,7 +75,6 @@ public final class ResourceSparseApplyAdadelta extends RawOp {
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

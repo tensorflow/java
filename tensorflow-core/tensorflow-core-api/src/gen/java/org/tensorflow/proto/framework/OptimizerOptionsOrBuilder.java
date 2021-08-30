@@ -10,6 +10,9 @@ public interface OptimizerOptionsOrBuilder extends
   /**
    * <pre>
    * If true, optimize the graph using common subexpression elimination.
+   * Note: the optimization Level L1 will override this setting to true. So in
+   * order to disable common subexpression elimination the opt_level has to be
+   * set to L0.
    * </pre>
    *
    * <code>bool do_common_subexpression_elimination = 1;</code>
@@ -19,6 +22,8 @@ public interface OptimizerOptionsOrBuilder extends
   /**
    * <pre>
    * If true, perform constant folding optimization on the graph.
+   * Note: the optimization Level L1 will override this setting to true. So in
+   * order to disable constant folding the opt_level has to be set to L0.
    * </pre>
    *
    * <code>bool do_constant_folding = 2;</code>

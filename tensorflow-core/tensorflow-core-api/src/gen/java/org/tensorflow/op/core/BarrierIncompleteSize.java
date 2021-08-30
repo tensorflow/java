@@ -57,9 +57,8 @@ public final class BarrierIncompleteSize extends RawOp implements Operand<TInt32
       describeByClass = true
   )
   public static BarrierIncompleteSize create(Scope scope, Operand<TString> handle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BarrierIncompleteSize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BarrierIncompleteSize");
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BarrierIncompleteSize(opBuilder.build());
   }
 

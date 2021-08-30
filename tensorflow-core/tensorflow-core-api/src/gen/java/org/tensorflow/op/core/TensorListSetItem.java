@@ -61,11 +61,10 @@ public final class TensorListSetItem extends RawOp implements Operand<TType> {
   )
   public static TensorListSetItem create(Scope scope, Operand<? extends TType> inputHandle,
       Operand<TInt32> index, Operand<? extends TType> item) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListSetItem"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListSetItem");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(item.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorListSetItem(opBuilder.build());
   }
 

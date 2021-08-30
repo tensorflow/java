@@ -59,10 +59,9 @@ public final class RiscReverse<T extends TNumber> extends RawOp implements Opera
   )
   public static <T extends TNumber> RiscReverse<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> axis) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscReverse"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscReverse");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscReverse<>(opBuilder.build());
   }
 

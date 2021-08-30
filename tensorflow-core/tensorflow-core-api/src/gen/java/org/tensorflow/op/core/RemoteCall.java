@@ -69,10 +69,9 @@ public final class RemoteCall extends RawOp implements Iterable<Operand<TType>> 
   )
   public static RemoteCall create(Scope scope, Operand<TString> target, Iterable<Operand<?>> args,
       List<Class<? extends TType>> Tout, ConcreteFunction f) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RemoteCall"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RemoteCall");
     opBuilder.addInput(target.asOutput());
     opBuilder.addInputList(Operands.asOutputs(args));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     opBuilder.setAttr("f", f);
     return new RemoteCall(opBuilder.build());

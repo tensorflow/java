@@ -88,7 +88,8 @@ public final class ServiceConfig {
     /**
      * <pre>
      * How long a job needs to be unused before it becomes a candidate for garbage
-     * collection.
+     * collection. A value of -1 indicates that jobs should never be garbage
+     * collected.
      * </pre>
      *
      * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -342,7 +343,8 @@ public final class ServiceConfig {
     /**
      * <pre>
      * How long a job needs to be unused before it becomes a candidate for garbage
-     * collection.
+     * collection. A value of -1 indicates that jobs should never be garbage
+     * collected.
      * </pre>
      *
      * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1053,7 +1055,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
-       * collection.
+       * collection. A value of -1 indicates that jobs should never be garbage
+       * collected.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1064,7 +1067,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
-       * collection.
+       * collection. A value of -1 indicates that jobs should never be garbage
+       * collected.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1078,7 +1082,8 @@ public final class ServiceConfig {
       /**
        * <pre>
        * How long a job needs to be unused before it becomes a candidate for garbage
-       * collection.
+       * collection. A value of -1 indicates that jobs should never be garbage
+       * collected.
        * </pre>
        *
        * <code>int64 job_gc_timeout_ms = 6;</code>
@@ -1253,6 +1258,28 @@ public final class ServiceConfig {
 
     /**
      * <pre>
+     * The data transfer address of the worker server. The substring "%port%", if
+     * specified, will be replaced with the worker's bound port. This is useful
+     * when the port is set to `0`.
+     * </pre>
+     *
+     * <code>string data_transfer_address = 8;</code>
+     */
+    java.lang.String getDataTransferAddress();
+    /**
+     * <pre>
+     * The data transfer address of the worker server. The substring "%port%", if
+     * specified, will be replaced with the worker's bound port. This is useful
+     * when the port is set to `0`.
+     * </pre>
+     *
+     * <code>string data_transfer_address = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getDataTransferAddressBytes();
+
+    /**
+     * <pre>
      * When shutting down a worker, how long to wait for the gRPC server to
      * process the final requests. This is used to achieve clean shutdown in unit
      * tests.
@@ -1283,6 +1310,7 @@ public final class ServiceConfig {
       dispatcherAddress_ = "";
       workerAddress_ = "";
       dataTransferProtocol_ = "";
+      dataTransferAddress_ = "";
     }
 
     @java.lang.Override
@@ -1352,6 +1380,12 @@ public final class ServiceConfig {
               java.lang.String s = input.readStringRequireUtf8();
 
               dataTransferProtocol_ = s;
+              break;
+            }
+            case 66: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              dataTransferAddress_ = s;
               break;
             }
             case 72: {
@@ -1604,6 +1638,52 @@ public final class ServiceConfig {
       }
     }
 
+    public static final int DATA_TRANSFER_ADDRESS_FIELD_NUMBER = 8;
+    private volatile java.lang.Object dataTransferAddress_;
+    /**
+     * <pre>
+     * The data transfer address of the worker server. The substring "%port%", if
+     * specified, will be replaced with the worker's bound port. This is useful
+     * when the port is set to `0`.
+     * </pre>
+     *
+     * <code>string data_transfer_address = 8;</code>
+     */
+    public java.lang.String getDataTransferAddress() {
+      java.lang.Object ref = dataTransferAddress_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dataTransferAddress_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * The data transfer address of the worker server. The substring "%port%", if
+     * specified, will be replaced with the worker's bound port. This is useful
+     * when the port is set to `0`.
+     * </pre>
+     *
+     * <code>string data_transfer_address = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDataTransferAddressBytes() {
+      java.lang.Object ref = dataTransferAddress_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dataTransferAddress_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     public static final int SHUTDOWN_QUIET_PERIOD_MS_FIELD_NUMBER = 9;
     private long shutdownQuietPeriodMs_;
     /**
@@ -1654,6 +1734,9 @@ public final class ServiceConfig {
       if (!getDataTransferProtocolBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 7, dataTransferProtocol_);
       }
+      if (!getDataTransferAddressBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, dataTransferAddress_);
+      }
       if (shutdownQuietPeriodMs_ != 0L) {
         output.writeInt64(9, shutdownQuietPeriodMs_);
       }
@@ -1690,6 +1773,9 @@ public final class ServiceConfig {
       if (!getDataTransferProtocolBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, dataTransferProtocol_);
       }
+      if (!getDataTransferAddressBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, dataTransferAddress_);
+      }
       if (shutdownQuietPeriodMs_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(9, shutdownQuietPeriodMs_);
@@ -1723,6 +1809,8 @@ public final class ServiceConfig {
           != other.getDispatcherTimeoutMs()) return false;
       if (!getDataTransferProtocol()
           .equals(other.getDataTransferProtocol())) return false;
+      if (!getDataTransferAddress()
+          .equals(other.getDataTransferAddress())) return false;
       if (getShutdownQuietPeriodMs()
           != other.getShutdownQuietPeriodMs()) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -1753,6 +1841,8 @@ public final class ServiceConfig {
           getDispatcherTimeoutMs());
       hash = (37 * hash) + DATA_TRANSFER_PROTOCOL_FIELD_NUMBER;
       hash = (53 * hash) + getDataTransferProtocol().hashCode();
+      hash = (37 * hash) + DATA_TRANSFER_ADDRESS_FIELD_NUMBER;
+      hash = (53 * hash) + getDataTransferAddress().hashCode();
       hash = (37 * hash) + SHUTDOWN_QUIET_PERIOD_MS_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getShutdownQuietPeriodMs());
@@ -1907,6 +1997,8 @@ public final class ServiceConfig {
 
         dataTransferProtocol_ = "";
 
+        dataTransferAddress_ = "";
+
         shutdownQuietPeriodMs_ = 0L;
 
         return this;
@@ -1942,6 +2034,7 @@ public final class ServiceConfig {
         result.heartbeatIntervalMs_ = heartbeatIntervalMs_;
         result.dispatcherTimeoutMs_ = dispatcherTimeoutMs_;
         result.dataTransferProtocol_ = dataTransferProtocol_;
+        result.dataTransferAddress_ = dataTransferAddress_;
         result.shutdownQuietPeriodMs_ = shutdownQuietPeriodMs_;
         onBuilt();
         return result;
@@ -2014,6 +2107,10 @@ public final class ServiceConfig {
         }
         if (!other.getDataTransferProtocol().isEmpty()) {
           dataTransferProtocol_ = other.dataTransferProtocol_;
+          onChanged();
+        }
+        if (!other.getDataTransferAddress().isEmpty()) {
+          dataTransferAddress_ = other.dataTransferAddress_;
           onChanged();
         }
         if (other.getShutdownQuietPeriodMs() != 0L) {
@@ -2534,6 +2631,105 @@ public final class ServiceConfig {
         return this;
       }
 
+      private java.lang.Object dataTransferAddress_ = "";
+      /**
+       * <pre>
+       * The data transfer address of the worker server. The substring "%port%", if
+       * specified, will be replaced with the worker's bound port. This is useful
+       * when the port is set to `0`.
+       * </pre>
+       *
+       * <code>string data_transfer_address = 8;</code>
+       */
+      public java.lang.String getDataTransferAddress() {
+        java.lang.Object ref = dataTransferAddress_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          dataTransferAddress_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * The data transfer address of the worker server. The substring "%port%", if
+       * specified, will be replaced with the worker's bound port. This is useful
+       * when the port is set to `0`.
+       * </pre>
+       *
+       * <code>string data_transfer_address = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDataTransferAddressBytes() {
+        java.lang.Object ref = dataTransferAddress_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          dataTransferAddress_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * The data transfer address of the worker server. The substring "%port%", if
+       * specified, will be replaced with the worker's bound port. This is useful
+       * when the port is set to `0`.
+       * </pre>
+       *
+       * <code>string data_transfer_address = 8;</code>
+       */
+      public Builder setDataTransferAddress(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        dataTransferAddress_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * The data transfer address of the worker server. The substring "%port%", if
+       * specified, will be replaced with the worker's bound port. This is useful
+       * when the port is set to `0`.
+       * </pre>
+       *
+       * <code>string data_transfer_address = 8;</code>
+       */
+      public Builder clearDataTransferAddress() {
+        
+        dataTransferAddress_ = getDefaultInstance().getDataTransferAddress();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * The data transfer address of the worker server. The substring "%port%", if
+       * specified, will be replaced with the worker's bound port. This is useful
+       * when the port is set to `0`.
+       * </pre>
+       *
+       * <code>string data_transfer_address = 8;</code>
+       */
+      public Builder setDataTransferAddressBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        dataTransferAddress_ = value;
+        onChanged();
+        return this;
+      }
+
       private long shutdownQuietPeriodMs_ ;
       /**
        * <pre>
@@ -2654,14 +2850,17 @@ public final class ServiceConfig {
       "\n\020DispatcherConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010prot" +
       "ocol\030\002 \001(\t\022\020\n\010work_dir\030\003 \001(\t\022\033\n\023fault_to" +
       "lerant_mode\030\004 \001(\010\022 \n\030job_gc_check_interv" +
-      "al_ms\030\005 \001(\003\022\031\n\021job_gc_timeout_ms\030\006 \001(\003\"\342" +
-      "\001\n\014WorkerConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010protoco" +
+      "al_ms\030\005 \001(\003\022\031\n\021job_gc_timeout_ms\030\006 \001(\003\"\201" +
+      "\002\n\014WorkerConfig\022\014\n\004port\030\001 \001(\003\022\020\n\010protoco" +
       "l\030\002 \001(\t\022\032\n\022dispatcher_address\030\003 \001(\t\022\026\n\016w" +
       "orker_address\030\004 \001(\t\022\035\n\025heartbeat_interva" +
       "l_ms\030\005 \001(\003\022\035\n\025dispatcher_timeout_ms\030\006 \001(" +
-      "\003\022\036\n\026data_transfer_protocol\030\007 \001(\t\022 \n\030shu" +
-      "tdown_quiet_period_ms\030\t \001(\003B(\n&org.tenso" +
-      "rflow.proto.data.experimentalb\006proto3"
+      "\003\022\036\n\026data_transfer_protocol\030\007 \001(\t\022\035\n\025dat" +
+      "a_transfer_address\030\010 \001(\t\022 \n\030shutdown_qui" +
+      "et_period_ms\030\t \001(\003B\177\n&org.tensorflow.pro" +
+      "to.data.experimentalZUgithub.com/tensorf" +
+      "low/tensorflow/tensorflow/go/core/protob" +
+      "uf/for_core_protos_go_protob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -2678,7 +2877,7 @@ public final class ServiceConfig {
     internal_static_tensorflow_data_experimental_WorkerConfig_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tensorflow_data_experimental_WorkerConfig_descriptor,
-        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "ShutdownQuietPeriodMs", });
+        new java.lang.String[] { "Port", "Protocol", "DispatcherAddress", "WorkerAddress", "HeartbeatIntervalMs", "DispatcherTimeoutMs", "DataTransferProtocol", "DataTransferAddress", "ShutdownQuietPeriodMs", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

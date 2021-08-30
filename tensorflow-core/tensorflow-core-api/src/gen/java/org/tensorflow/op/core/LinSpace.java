@@ -67,11 +67,10 @@ public final class LinSpace<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> LinSpace<T> create(Scope scope, Operand<T> start,
       Operand<T> stop, Operand<? extends TNumber> num) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LinSpace"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LinSpace");
     opBuilder.addInput(start.asOutput());
     opBuilder.addInput(stop.asOutput());
     opBuilder.addInput(num.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new LinSpace<>(opBuilder.build());
   }
 

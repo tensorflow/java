@@ -75,11 +75,10 @@ public final class DrawBoundingBoxes<T extends TNumber> extends RawOp implements
   )
   public static <T extends TNumber> DrawBoundingBoxes<T> create(Scope scope, Operand<T> images,
       Operand<TFloat32> boxes, Operand<TFloat32> colors) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DrawBoundingBoxes"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DrawBoundingBoxes");
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(colors.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DrawBoundingBoxes<>(opBuilder.build());
   }
 

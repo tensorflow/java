@@ -80,10 +80,9 @@ public final class UnravelIndex<T extends TNumber> extends RawOp implements Oper
   )
   public static <T extends TNumber> UnravelIndex<T> create(Scope scope, Operand<T> indices,
       Operand<T> dims) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnravelIndex"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnravelIndex");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(dims.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnravelIndex<>(opBuilder.build());
   }
 

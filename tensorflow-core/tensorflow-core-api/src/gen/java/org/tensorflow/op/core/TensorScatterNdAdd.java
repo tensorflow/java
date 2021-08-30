@@ -32,7 +32,7 @@ import org.tensorflow.types.family.TType;
  * Adds sparse {@code updates} to an existing tensor according to {@code indices}.
  * This operation creates a new tensor by adding sparse {@code updates} to the passed
  * in {@code tensor}.
- * This operation is very similar to {@code tf.scatter_nd_add}, except that the updates
+ * This operation is very similar to {@code tf.compat.v1.scatter_nd_add}, except that the updates
  * are added onto an existing tensor (as opposed to a variable). If the memory
  * for the existing tensor cannot be re-used, a copy is made and updated.
  * <p>{@code indices} is an integer tensor containing indices into a new tensor of shape
@@ -119,11 +119,10 @@ public final class TensorScatterNdAdd<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> TensorScatterNdAdd<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> indices, Operand<T> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorScatterNdAdd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorScatterNdAdd");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorScatterNdAdd<>(opBuilder.build());
   }
 

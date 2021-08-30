@@ -66,10 +66,9 @@ public final class Add<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Add<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Add"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Add");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Add<>(opBuilder.build());
   }
 

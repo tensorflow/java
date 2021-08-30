@@ -65,10 +65,9 @@ public final class TensorMapErase extends RawOp implements Operand<TType> {
   )
   public static <U extends TType> TensorMapErase create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<? extends TType> key, Class<U> valueDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorMapErase"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorMapErase");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(key.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("value_dtype", Operands.toDataType(valueDtype));
     return new TensorMapErase(opBuilder.build());
   }

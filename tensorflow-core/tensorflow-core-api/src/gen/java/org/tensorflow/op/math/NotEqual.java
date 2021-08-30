@@ -65,10 +65,9 @@ public final class NotEqual extends RawOp implements Operand<TBool> {
   )
   public static <T extends TType> NotEqual create(Scope scope, Operand<T> x, Operand<T> y,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NotEqual"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "NotEqual");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.incompatibleShapeError != null) {

@@ -75,9 +75,8 @@ public final class AsString extends RawOp implements Operand<TString> {
       describeByClass = true
   )
   public static AsString create(Scope scope, Operand<? extends TType> input, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AsString"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AsString");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.precision != null) {

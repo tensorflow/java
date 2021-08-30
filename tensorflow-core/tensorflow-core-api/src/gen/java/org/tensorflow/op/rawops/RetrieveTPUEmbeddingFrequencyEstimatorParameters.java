@@ -63,8 +63,7 @@ public final class RetrieveTPUEmbeddingFrequencyEstimatorParameters extends RawO
   )
   public static RetrieveTPUEmbeddingFrequencyEstimatorParameters create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingFrequencyEstimatorParameters"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RetrieveTPUEmbeddingFrequencyEstimatorParameters");
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

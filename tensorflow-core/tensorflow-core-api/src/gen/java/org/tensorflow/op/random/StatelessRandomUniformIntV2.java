@@ -68,14 +68,13 @@ public final class StatelessRandomUniformIntV2<U extends TNumber> extends RawOp 
   public static <U extends TNumber> StatelessRandomUniformIntV2<U> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TType> key,
       Operand<? extends TType> counter, Operand<TInt32> alg, Operand<U> minval, Operand<U> maxval) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomUniformIntV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomUniformIntV2");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(key.asOutput());
     opBuilder.addInput(counter.asOutput());
     opBuilder.addInput(alg.asOutput());
     opBuilder.addInput(minval.asOutput());
     opBuilder.addInput(maxval.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new StatelessRandomUniformIntV2<>(opBuilder.build());
   }
 

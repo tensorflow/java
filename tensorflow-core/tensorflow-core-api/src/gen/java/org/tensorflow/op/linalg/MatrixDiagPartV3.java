@@ -160,11 +160,10 @@ public final class MatrixDiagPartV3<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> MatrixDiagPartV3<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> k, Operand<T> paddingValue, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixDiagPartV3"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatrixDiagPartV3");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.align != null) {

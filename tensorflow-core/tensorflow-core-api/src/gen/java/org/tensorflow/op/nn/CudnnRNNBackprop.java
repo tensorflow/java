@@ -131,7 +131,7 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
       Operand<T> output, Operand<T> outputH, Operand<T> outputC, Operand<T> outputBackprop,
       Operand<T> outputHBackprop, Operand<T> outputCBackprop, Operand<T> reserveSpace,
       Operand<? extends TType> hostReserved, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CudnnRNNBackprop"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CudnnRNNBackprop");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(inputH.asOutput());
     opBuilder.addInput(inputC.asOutput());
@@ -145,7 +145,6 @@ public final class CudnnRNNBackprop<T extends TNumber> extends RawOp {
     opBuilder.addInput(outputCBackprop.asOutput());
     opBuilder.addInput(reserveSpace.asOutput());
     opBuilder.addInput(hostReserved.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.rnnMode != null) {

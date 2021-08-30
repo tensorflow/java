@@ -140,13 +140,6 @@ private static final long serialVersionUID = 0L;
   public static final int BOUND_INPUTS_FIELD_NUMBER = 2;
   private com.google.protobuf.Internal.IntList boundInputs_;
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   public java.util.List<java.lang.Integer>
@@ -154,26 +147,12 @@ private static final long serialVersionUID = 0L;
     return boundInputs_;
   }
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   public int getBoundInputsCount() {
     return boundInputs_.size();
   }
   /**
-   * <pre>
-   * Bound inputs to the function. The SavedObjects identified by the node ids
-   * given here are appended as extra inputs to the caller-supplied inputs.
-   * The only types of SavedObjects valid here are SavedVariable, SavedResource
-   * and SavedAsset.
-   * </pre>
-   *
    * <code>repeated int32 bound_inputs = 2;</code>
    */
   public int getBoundInputs(int index) {
@@ -661,13 +640,6 @@ private static final long serialVersionUID = 0L;
        }
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public java.util.List<java.lang.Integer>
@@ -676,39 +648,18 @@ private static final long serialVersionUID = 0L;
                java.util.Collections.unmodifiableList(boundInputs_) : boundInputs_;
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public int getBoundInputsCount() {
       return boundInputs_.size();
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public int getBoundInputs(int index) {
       return boundInputs_.getInt(index);
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public Builder setBoundInputs(
@@ -719,13 +670,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public Builder addBoundInputs(int value) {
@@ -735,13 +679,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public Builder addAllBoundInputs(
@@ -753,13 +690,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * Bound inputs to the function. The SavedObjects identified by the node ids
-     * given here are appended as extra inputs to the caller-supplied inputs.
-     * The only types of SavedObjects valid here are SavedVariable, SavedResource
-     * and SavedAsset.
-     * </pre>
-     *
      * <code>repeated int32 bound_inputs = 2;</code>
      */
     public Builder clearBoundInputs() {

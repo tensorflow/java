@@ -68,11 +68,10 @@ public final class RiscCondition<U extends TNumber> extends RawOp implements Ope
   public static <U extends TNumber, T extends TNumber> RiscCondition<U> create(Scope scope,
       Operand<TBool> pred, Operand<T> inputTrue, Operand<T> inputFalse, ConcreteFunction funcTrue,
       ConcreteFunction funcFalse, Class<U> DstT) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscCondition"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscCondition");
     opBuilder.addInput(pred.asOutput());
     opBuilder.addInput(inputTrue.asOutput());
     opBuilder.addInput(inputFalse.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("func_true", funcTrue);
     opBuilder.setAttr("func_false", funcFalse);
     opBuilder.setAttr("DstT", Operands.toDataType(DstT));

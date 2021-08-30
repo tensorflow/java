@@ -103,12 +103,11 @@ public final class SparseSplit<T extends TType> extends RawOp {
   )
   public static <T extends TType> SparseSplit<T> create(Scope scope, Operand<TInt64> splitDim,
       Operand<TInt64> indices, Operand<T> values, Operand<TInt64> shape, Long numSplit) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSplit"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSplit");
     opBuilder.addInput(splitDim.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_split", numSplit);
     return new SparseSplit<>(opBuilder.build());
   }

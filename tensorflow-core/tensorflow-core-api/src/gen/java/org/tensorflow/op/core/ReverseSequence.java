@@ -113,10 +113,9 @@ public final class ReverseSequence<T extends TType> extends RawOp implements Ope
   )
   public static <T extends TType> ReverseSequence<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> seqLengths, Long seqDim, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReverseSequence"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReverseSequence");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(seqLengths.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("seq_dim", seqDim);
     if (options != null) {
       for (Options opts : options) {

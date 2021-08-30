@@ -73,12 +73,11 @@ public final class ImageProjectiveTransformV3<T extends TNumber> extends RawOp i
   public static <T extends TNumber> ImageProjectiveTransformV3<T> create(Scope scope,
       Operand<T> images, Operand<TFloat32> transforms, Operand<TInt32> outputShape,
       Operand<TFloat32> fillValue, String interpolation, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ImageProjectiveTransformV3"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ImageProjectiveTransformV3");
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(transforms.asOutput());
     opBuilder.addInput(outputShape.asOutput());
     opBuilder.addInput(fillValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("interpolation", interpolation);
     if (options != null) {
       for (Options opts : options) {

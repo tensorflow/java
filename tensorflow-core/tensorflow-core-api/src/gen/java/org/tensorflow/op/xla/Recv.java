@@ -68,8 +68,7 @@ public final class Recv<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Recv<T> create(Scope scope, Class<T> dtype, String tensorName,
       Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Recv"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Recv");
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("tensor_name", tensorName);
     opBuilder.setAttr("shape", shape);

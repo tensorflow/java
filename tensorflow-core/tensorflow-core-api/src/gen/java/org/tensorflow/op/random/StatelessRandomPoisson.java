@@ -66,11 +66,10 @@ public final class StatelessRandomPoisson<W extends TNumber> extends RawOp imple
   public static <W extends TNumber> StatelessRandomPoisson<W> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> seed,
       Operand<? extends TNumber> lam, Class<W> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomPoisson"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomPoisson");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
     opBuilder.addInput(lam.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomPoisson<>(opBuilder.build());
   }

@@ -70,13 +70,12 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
       Iterable<Operand<? extends TType>> orderingToken, String mergeOp, String finalOp,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReduceV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReduceV2");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());
     opBuilder.addInput(instanceKey.asOutput());
     opBuilder.addInputList(Operands.asOutputs(orderingToken));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("merge_op", mergeOp);
     opBuilder.setAttr("final_op", finalOp);
     if (options != null) {
@@ -89,6 +88,9 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
         }
         if (opts.NorderingToken != null) {
           opBuilder.setAttr("Nordering_token", opts.NorderingToken);
+        }
+        if (opts.maxSubdivsPerDevice != null) {
+          opBuilder.setAttr("max_subdivs_per_device", opts.maxSubdivsPerDevice);
         }
       }
     }
@@ -126,6 +128,16 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
   }
 
   /**
+   * Sets the maxSubdivsPerDevice option.
+   *
+   * @param maxSubdivsPerDevice the maxSubdivsPerDevice option
+   * @return this Options instance.
+   */
+  public static Options maxSubdivsPerDevice(Long maxSubdivsPerDevice) {
+    return new Options().maxSubdivsPerDevice(maxSubdivsPerDevice);
+  }
+
+  /**
    * Gets data.
    *
    * @return data.
@@ -148,6 +160,8 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
     private Float timeoutSeconds;
 
     private Long NorderingToken;
+
+    private Long maxSubdivsPerDevice;
 
     private Options() {
     }
@@ -182,6 +196,17 @@ public final class ReduceV2<T extends TNumber> extends RawOp implements Operand<
      */
     public Options NorderingToken(Long NorderingToken) {
       this.NorderingToken = NorderingToken;
+      return this;
+    }
+
+    /**
+     * Sets the maxSubdivsPerDevice option.
+     *
+     * @param maxSubdivsPerDevice the maxSubdivsPerDevice option
+     * @return this Options instance.
+     */
+    public Options maxSubdivsPerDevice(Long maxSubdivsPerDevice) {
+      this.maxSubdivsPerDevice = maxSubdivsPerDevice;
       return this;
     }
   }

@@ -62,10 +62,9 @@ public final class ResizeBilinearGrad<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> ResizeBilinearGrad<T> create(Scope scope,
       Operand<TFloat32> grads, Operand<T> originalImage, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResizeBilinearGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResizeBilinearGrad");
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(originalImage.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

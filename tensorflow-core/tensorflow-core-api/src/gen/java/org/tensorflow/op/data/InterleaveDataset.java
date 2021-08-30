@@ -79,12 +79,11 @@ public final class InterleaveDataset extends RawOp implements Operand<TType> {
   public static InterleaveDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, Operand<TInt64> cycleLength, Operand<TInt64> blockLength,
       ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InterleaveDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InterleaveDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(cycleLength.asOutput());
     opBuilder.addInput(blockLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

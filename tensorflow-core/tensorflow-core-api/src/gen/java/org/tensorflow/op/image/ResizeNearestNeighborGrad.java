@@ -62,10 +62,9 @@ public final class ResizeNearestNeighborGrad<T extends TNumber> extends RawOp im
   )
   public static <T extends TNumber> ResizeNearestNeighborGrad<T> create(Scope scope,
       Operand<T> grads, Operand<TInt32> sizeOutput, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResizeNearestNeighborGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResizeNearestNeighborGrad");
     opBuilder.addInput(grads.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.alignCorners != null) {

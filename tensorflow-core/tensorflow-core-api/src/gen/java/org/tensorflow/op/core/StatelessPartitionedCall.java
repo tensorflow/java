@@ -34,6 +34,9 @@ import org.tensorflow.types.family.TType;
 
 /**
  * returns {@code f(inputs)}, where {@code f}'s body is placed and partitioned.
+ * Asynchronously executes a function, potentially across multiple devices but
+ * within a single process. The kernel places and partitions a given function's
+ * underlying graph, and executes each of the partitioned subgraphs as a function.
  */
 @Operator
 public final class StatelessPartitionedCall extends RawOp implements PartitionedCall {
@@ -73,9 +76,8 @@ public final class StatelessPartitionedCall extends RawOp implements Partitioned
   )
   public static StatelessPartitionedCall create(Scope scope, Iterable<Operand<?>> args,
       List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessPartitionedCall"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessPartitionedCall");
     opBuilder.addInputList(Operands.asOutputs(args));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     opBuilder.setAttr("f", f);
     if (options != null) {

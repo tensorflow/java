@@ -69,12 +69,11 @@ public final class SparseDenseCwiseDiv<T extends TType> extends RawOp implements
   )
   public static <T extends TType> SparseDenseCwiseDiv<T> create(Scope scope,
       Operand<TInt64> spIndices, Operand<T> spValues, Operand<TInt64> spShape, Operand<T> dense) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseDenseCwiseDiv"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseDenseCwiseDiv");
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
     opBuilder.addInput(dense.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseDenseCwiseDiv<>(opBuilder.build());
   }
 

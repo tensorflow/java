@@ -96,14 +96,13 @@ public final class FusedBatchNormGrad<T extends TNumber, U extends TNumber> exte
   public static <T extends TNumber, U extends TNumber> FusedBatchNormGrad<T, U> create(Scope scope,
       Operand<T> yBackprop, Operand<T> x, Operand<TFloat32> scale, Operand<U> reserveSpace1,
       Operand<U> reserveSpace2, Operand<U> reserveSpace3, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FusedBatchNormGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FusedBatchNormGrad");
     opBuilder.addInput(yBackprop.asOutput());
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(scale.asOutput());
     opBuilder.addInput(reserveSpace1.asOutput());
     opBuilder.addInput(reserveSpace2.asOutput());
     opBuilder.addInput(reserveSpace3.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.epsilon != null) {

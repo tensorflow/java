@@ -72,10 +72,9 @@ public final class TakeWhileDataset extends RawOp implements Operand<TType> {
   public static TakeWhileDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> otherArguments, ConcreteFunction predicate,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TakeWhileDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TakeWhileDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("predicate", predicate);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

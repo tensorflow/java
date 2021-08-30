@@ -129,11 +129,10 @@ public final class MatrixDiagPart<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> MatrixDiagPart<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> k, Operand<T> paddingValue) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MatrixDiagPart"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MatrixDiagPart");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(k.asOutput());
     opBuilder.addInput(paddingValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MatrixDiagPart<>(opBuilder.build());
   }
 

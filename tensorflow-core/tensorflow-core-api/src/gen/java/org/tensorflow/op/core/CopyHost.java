@@ -66,9 +66,8 @@ public final class CopyHost<T extends TType> extends RawOp implements Operand<T>
   )
   public static <T extends TType> CopyHost<T> create(Scope scope, Operand<T> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CopyHost"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CopyHost");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.tensorName != null) {

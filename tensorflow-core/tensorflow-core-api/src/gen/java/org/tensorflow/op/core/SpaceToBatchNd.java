@@ -36,8 +36,96 @@ import org.tensorflow.types.family.TType;
  * {@code [1, ..., M]} correspond to the position within the grid, and the batch
  * dimension combines both the position within a spatial block and the original
  * batch position.  Prior to division into blocks, the spatial dimensions of the
- * input are optionally zero padded according to {@code paddings}.  See below for a
+ * input are optionally zero padded according to {@code paddings}. See below for a
  * precise description.
+ * <p>This operation is equivalent to the following steps:
+ * <ol>
+ * <li>
+ * <p>Zero-pad the start and end of dimensions {@code [1, ..., M]} of the
+ * input according to {@code paddings} to produce {@code padded} of shape {@code padded_shape}.
+ * </li>
+ * <li>
+ * <p>Reshape {@code padded} to {@code reshaped_padded} of shape:
+ * <p>[batch] +
+ * [padded_shape[1] / block_shape[0],
+ * block_shape[0],
+ * ...,
+ * padded_shape[M] / block_shape[M-1],
+ * block_shape[M-1]] +
+ * remaining_shape
+ * </li>
+ * <li>
+ * <p>Permute dimensions of {@code reshaped_padded} to produce
+ * {@code permuted_reshaped_padded} of shape:
+ * <p>block_shape +
+ * [batch] +
+ * [padded_shape[1] / block_shape[0],
+ * ...,
+ * padded_shape[M] / block_shape[M-1]] +
+ * remaining_shape
+ * </li>
+ * <li>
+ * <p>Reshape {@code permuted_reshaped_padded} to flatten {@code block_shape} into the batch
+ * dimension, producing an output tensor of shape:
+ * <p>[batch * prod(block_shape)] +
+ * [padded_shape[1] / block_shape[0],
+ * ...,
+ * padded_shape[M] / block_shape[M-1]] +
+ * remaining_shape
+ * </li>
+ * </ol>
+ * <p>Some examples:
+ * <p>(1) For the following input of shape {@code [1, 2, 2, 1]}, {@code block_shape = [2, 2]}, and
+ * {@code paddings = [[0, 0], [0, 0]]}:
+ * <pre>
+ * x = [[[[1], [2]], [[3], [4]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 1, 1, 1]} and value:
+ * <pre>
+ * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
+ * </pre>
+ * <p>(2) For the following input of shape {@code [1, 2, 2, 3]}, {@code block_shape = [2, 2]}, and
+ * {@code paddings = [[0, 0], [0, 0]]}:
+ * <pre>
+ * x = [[[[1, 2, 3], [4, 5, 6]],
+ *       [[7, 8, 9], [10, 11, 12]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 1, 1, 3]} and value:
+ * <pre>
+ * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
+ * </pre>
+ * <p>(3) For the following input of shape {@code [1, 4, 4, 1]}, {@code block_shape = [2, 2]}, and
+ * {@code paddings = [[0, 0], [0, 0]]}:
+ * <pre>
+ * x = [[[[1],   [2],  [3],  [4]],
+ *       [[5],   [6],  [7],  [8]],
+ *       [[9],  [10], [11],  [12]],
+ *       [[13], [14], [15],  [16]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 2, 2, 1]} and value:
+ * <pre>
+ * x = [[[[1], [3]], [[9], [11]]],
+ *      [[[2], [4]], [[10], [12]]],
+ *      [[[5], [7]], [[13], [15]]],
+ *      [[[6], [8]], [[14], [16]]]]
+ * </pre>
+ * <p>(4) For the following input of shape {@code [2, 2, 4, 1]}, block_shape = {@code [2, 2]}, and
+ * paddings = {@code [[0, 0], [2, 0]]}:
+ * <pre>
+ * x = [[[[1],   [2],  [3],  [4]],
+ *       [[5],   [6],  [7],  [8]]],
+ *      [[[9],  [10], [11],  [12]],
+ *       [[13], [14], [15],  [16]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [8, 1, 3, 1]} and value:
+ * <pre>
+ * x = [[[[0], [1], [3]]], [[[0], [9], [11]]],
+ *      [[[0], [2], [4]]], [[[0], [10], [12]]],
+ *      [[[0], [5], [7]]], [[[0], [13], [15]]],
+ *      [[[0], [6], [8]]], [[[0], [14], [16]]]]
+ * </pre>
+ * <p>Among others, this operation is useful for reducing atrous convolution into
+ * regular convolution.
  *
  * @param <T> data type for {@code output} output
  */
@@ -67,94 +155,6 @@ public final class SpaceToBatchNd<T extends TType> extends RawOp implements Oper
    * {@code paddings[i] = [pad_start, pad_end]} specifies the padding for input dimension
    * {@code i + 1}, which corresponds to spatial dimension {@code i}.  It is required that
    * {@code block_shape[i]} divides {@code input_shape[i + 1] + pad_start + pad_end}.
-   * <p>This operation is equivalent to the following steps:
-   * <ol>
-   * <li>
-   * <p>Zero-pad the start and end of dimensions {@code [1, ..., M]} of the
-   * input according to {@code paddings} to produce {@code padded} of shape {@code padded_shape}.
-   * </li>
-   * <li>
-   * <p>Reshape {@code padded} to {@code reshaped_padded} of shape:
-   * <p>[batch] +
-   * [padded_shape[1] / block_shape[0],
-   * block_shape[0],
-   * ...,
-   * padded_shape[M] / block_shape[M-1],
-   * block_shape[M-1]] +
-   * remaining_shape
-   * </li>
-   * <li>
-   * <p>Permute dimensions of {@code reshaped_padded} to produce
-   * {@code permuted_reshaped_padded} of shape:
-   * <p>block_shape +
-   * [batch] +
-   * [padded_shape[1] / block_shape[0],
-   * ...,
-   * padded_shape[M] / block_shape[M-1]] +
-   * remaining_shape
-   * </li>
-   * <li>
-   * <p>Reshape {@code permuted_reshaped_padded} to flatten {@code block_shape} into the batch
-   * dimension, producing an output tensor of shape:
-   * <p>[batch * prod(block_shape)] +
-   * [padded_shape[1] / block_shape[0],
-   * ...,
-   * padded_shape[M] / block_shape[M-1]] +
-   * remaining_shape
-   * </li>
-   * </ol>
-   * <p>Some examples:
-   * <p>(1) For the following input of shape {@code [1, 2, 2, 1]}, {@code block_shape = [2, 2]}, and
-   * {@code paddings = [[0, 0], [0, 0]]}:
-   * <pre>
-   * x = [[[[1], [2]], [[3], [4]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 1, 1, 1]} and value:
-   * <pre>
-   * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-   * </pre>
-   * <p>(2) For the following input of shape {@code [1, 2, 2, 3]}, {@code block_shape = [2, 2]}, and
-   * {@code paddings = [[0, 0], [0, 0]]}:
-   * <pre>
-   * x = [[[[1, 2, 3], [4, 5, 6]],
-   *       [[7, 8, 9], [10, 11, 12]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 1, 1, 3]} and value:
-   * <pre>
-   * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-   * </pre>
-   * <p>(3) For the following input of shape {@code [1, 4, 4, 1]}, {@code block_shape = [2, 2]}, and
-   * {@code paddings = [[0, 0], [0, 0]]}:
-   * <pre>
-   * x = [[[[1],   [2],  [3],  [4]],
-   *       [[5],   [6],  [7],  [8]],
-   *       [[9],  [10], [11],  [12]],
-   *       [[13], [14], [15],  [16]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 2, 2, 1]} and value:
-   * <pre>
-   * x = [[[[1], [3]], [[9], [11]]],
-   *      [[[2], [4]], [[10], [12]]],
-   *      [[[5], [7]], [[13], [15]]],
-   *      [[[6], [8]], [[14], [16]]]]
-   * </pre>
-   * <p>(4) For the following input of shape {@code [2, 2, 4, 1]}, block_shape = {@code [2, 2]}, and
-   * paddings = {@code [[0, 0], [2, 0]]}:
-   * <pre>
-   * x = [[[[1],   [2],  [3],  [4]],
-   *       [[5],   [6],  [7],  [8]]],
-   *      [[[9],  [10], [11],  [12]],
-   *       [[13], [14], [15],  [16]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [8, 1, 3, 1]} and value:
-   * <pre>
-   * x = [[[[0], [1], [3]]], [[[0], [9], [11]]],
-   *      [[[0], [2], [4]]], [[[0], [10], [12]]],
-   *      [[[0], [5], [7]]], [[[0], [13], [15]]],
-   *      [[[0], [6], [8]]], [[[0], [14], [16]]]]
-   * </pre>
-   * <p>Among others, this operation is useful for reducing atrous convolution into
-   * regular convolution.
    * @param <T> data type for {@code SpaceToBatchND} output and operands
    * @return a new instance of SpaceToBatchNd
    */
@@ -163,11 +163,10 @@ public final class SpaceToBatchNd<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> SpaceToBatchNd<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> blockShape, Operand<? extends TNumber> paddings) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpaceToBatchNd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SpaceToBatchNd");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(blockShape.asOutput());
     opBuilder.addInput(paddings.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SpaceToBatchNd<>(opBuilder.build());
   }
 

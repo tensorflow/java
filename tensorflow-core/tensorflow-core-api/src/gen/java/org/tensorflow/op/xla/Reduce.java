@@ -68,10 +68,9 @@ public final class Reduce<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Reduce<T> create(Scope scope, Operand<T> input,
       Operand<T> initValue, List<Long> dimensionsToReduce, ConcreteFunction reducer) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reduce"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Reduce");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(initValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] dimensionsToReduceArray = new long[dimensionsToReduce.size()];
     for (int i = 0 ; i < dimensionsToReduceArray.length ; i++) {
       dimensionsToReduceArray[i] = dimensionsToReduce.get(i);

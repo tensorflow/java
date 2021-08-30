@@ -62,9 +62,8 @@ public final class DatasetToGraph extends RawOp implements Operand<TString> {
   )
   public static DatasetToGraph create(Scope scope, Operand<? extends TType> inputDataset,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetToGraph"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetToGraph");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.externalStatePolicy != null) {

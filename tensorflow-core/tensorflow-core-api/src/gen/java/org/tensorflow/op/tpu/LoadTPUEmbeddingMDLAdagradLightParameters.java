@@ -62,12 +62,11 @@ public final class LoadTPUEmbeddingMDLAdagradLightParameters extends RawOp {
   public static LoadTPUEmbeddingMDLAdagradLightParameters create(Scope scope,
       Operand<TFloat32> parameters, Operand<TFloat32> accumulators, Operand<TFloat32> weights,
       Operand<TFloat32> benefits, Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingMDLAdagradLightParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingMDLAdagradLightParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(accumulators.asOutput());
     opBuilder.addInput(weights.asOutput());
     opBuilder.addInput(benefits.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

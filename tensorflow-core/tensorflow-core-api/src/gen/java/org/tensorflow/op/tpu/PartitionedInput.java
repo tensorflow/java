@@ -64,9 +64,8 @@ public final class PartitionedInput<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> PartitionedInput<T> create(Scope scope,
       Iterable<Operand<T>> inputs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PartitionedInput"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "PartitionedInput");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.partitionDim != null) {

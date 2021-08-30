@@ -92,12 +92,11 @@ public final class DenseToSparseSetOperation<T extends TType> extends RawOp {
   public static <T extends TType> DenseToSparseSetOperation<T> create(Scope scope, Operand<T> set1,
       Operand<TInt64> set2Indices, Operand<T> set2Values, Operand<TInt64> set2Shape,
       String setOperation, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseToSparseSetOperation"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DenseToSparseSetOperation");
     opBuilder.addInput(set1.asOutput());
     opBuilder.addInput(set2Indices.asOutput());
     opBuilder.addInput(set2Values.asOutput());
     opBuilder.addInput(set2Shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("set_operation", setOperation);
     if (options != null) {
       for (Options opts : options) {

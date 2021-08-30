@@ -73,10 +73,9 @@ public final class GreaterEqual extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static <T extends TNumber> GreaterEqual create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GreaterEqual"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GreaterEqual");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new GreaterEqual(opBuilder.build());
   }
 

@@ -67,10 +67,9 @@ public final class Max<T extends TNumber> extends RawOp implements Operand<T> {
   )
   public static <T extends TNumber> Max<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> axis, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Max"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Max");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(axis.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.keepDims != null) {

@@ -64,10 +64,9 @@ public final class PrivateThreadPoolDataset extends RawOp implements Operand<TTy
   public static PrivateThreadPoolDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> numThreads, List<Class<? extends TType>> outputTypes,
       List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("PrivateThreadPoolDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "PrivateThreadPoolDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(numThreads.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

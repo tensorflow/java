@@ -149,6 +149,11 @@ private static final long serialVersionUID = 0L;
             controlOutput_.add(s);
             break;
           }
+          case 168: {
+
+            isDistributedCommunication_ = input.readBool();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -378,6 +383,52 @@ private static final long serialVersionUID = 0L;
      * <code>bool is_ref = 16;</code>
      */
     boolean getIsRef();
+
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    boolean hasExperimentalFullType();
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    org.tensorflow.proto.framework.FullTypeDef getExperimentalFullType();
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalFullTypeOrBuilder();
   }
   /**
    * <pre>
@@ -484,6 +535,19 @@ private static final long serialVersionUID = 0L;
             case 128: {
 
               isRef_ = input.readBool();
+              break;
+            }
+            case 138: {
+              org.tensorflow.proto.framework.FullTypeDef.Builder subBuilder = null;
+              if (experimentalFullType_ != null) {
+                subBuilder = experimentalFullType_.toBuilder();
+              }
+              experimentalFullType_ = input.readMessage(org.tensorflow.proto.framework.FullTypeDef.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(experimentalFullType_);
+                experimentalFullType_ = subBuilder.buildPartial();
+              }
+
               break;
             }
             default: {
@@ -846,6 +910,60 @@ private static final long serialVersionUID = 0L;
       return isRef_;
     }
 
+    public static final int EXPERIMENTAL_FULL_TYPE_FIELD_NUMBER = 17;
+    private org.tensorflow.proto.framework.FullTypeDef experimentalFullType_;
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    public boolean hasExperimentalFullType() {
+      return experimentalFullType_ != null;
+    }
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    public org.tensorflow.proto.framework.FullTypeDef getExperimentalFullType() {
+      return experimentalFullType_ == null ? org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalFullType_;
+    }
+    /**
+     * <pre>
+     * Experimental. Full type declaration for this argument.
+     * The full type specification combines type, type_attr, type_list_attr,
+     * etc. into a unified representation.
+     * This declaration may contain non-concrete types (for example,
+     * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+     * Note: this is a transient field. The long-term aim is to represent the
+     * entire OpDef as a single type: a callable. In that context, this field is
+     * just the type of a single argument.
+     * </pre>
+     *
+     * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+     */
+    public org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalFullTypeOrBuilder() {
+      return getExperimentalFullType();
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -884,6 +1002,9 @@ private static final long serialVersionUID = 0L;
       if (isRef_ != false) {
         output.writeBool(16, isRef_);
       }
+      if (experimentalFullType_ != null) {
+        output.writeMessage(17, getExperimentalFullType());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -920,6 +1041,10 @@ private static final long serialVersionUID = 0L;
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(16, isRef_);
       }
+      if (experimentalFullType_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(17, getExperimentalFullType());
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -950,6 +1075,11 @@ private static final long serialVersionUID = 0L;
           .equals(other.getHandleDataList())) return false;
       if (getIsRef()
           != other.getIsRef()) return false;
+      if (hasExperimentalFullType() != other.hasExperimentalFullType()) return false;
+      if (hasExperimentalFullType()) {
+        if (!getExperimentalFullType()
+            .equals(other.getExperimentalFullType())) return false;
+      }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -980,6 +1110,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + IS_REF_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
           getIsRef());
+      if (hasExperimentalFullType()) {
+        hash = (37 * hash) + EXPERIMENTAL_FULL_TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + getExperimentalFullType().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1138,6 +1272,12 @@ private static final long serialVersionUID = 0L;
         }
         isRef_ = false;
 
+        if (experimentalFullTypeBuilder_ == null) {
+          experimentalFullType_ = null;
+        } else {
+          experimentalFullType_ = null;
+          experimentalFullTypeBuilder_ = null;
+        }
         return this;
       }
 
@@ -1181,6 +1321,11 @@ private static final long serialVersionUID = 0L;
           result.handleData_ = handleDataBuilder_.build();
         }
         result.isRef_ = isRef_;
+        if (experimentalFullTypeBuilder_ == null) {
+          result.experimentalFullType_ = experimentalFullType_;
+        } else {
+          result.experimentalFullType_ = experimentalFullTypeBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -1280,6 +1425,9 @@ private static final long serialVersionUID = 0L;
         }
         if (other.getIsRef() != false) {
           setIsRef(other.getIsRef());
+        }
+        if (other.hasExperimentalFullType()) {
+          mergeExperimentalFullType(other.getExperimentalFullType());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -2225,6 +2373,222 @@ private static final long serialVersionUID = 0L;
         isRef_ = false;
         onChanged();
         return this;
+      }
+
+      private org.tensorflow.proto.framework.FullTypeDef experimentalFullType_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder> experimentalFullTypeBuilder_;
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public boolean hasExperimentalFullType() {
+        return experimentalFullTypeBuilder_ != null || experimentalFullType_ != null;
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public org.tensorflow.proto.framework.FullTypeDef getExperimentalFullType() {
+        if (experimentalFullTypeBuilder_ == null) {
+          return experimentalFullType_ == null ? org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalFullType_;
+        } else {
+          return experimentalFullTypeBuilder_.getMessage();
+        }
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public Builder setExperimentalFullType(org.tensorflow.proto.framework.FullTypeDef value) {
+        if (experimentalFullTypeBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          experimentalFullType_ = value;
+          onChanged();
+        } else {
+          experimentalFullTypeBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public Builder setExperimentalFullType(
+          org.tensorflow.proto.framework.FullTypeDef.Builder builderForValue) {
+        if (experimentalFullTypeBuilder_ == null) {
+          experimentalFullType_ = builderForValue.build();
+          onChanged();
+        } else {
+          experimentalFullTypeBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public Builder mergeExperimentalFullType(org.tensorflow.proto.framework.FullTypeDef value) {
+        if (experimentalFullTypeBuilder_ == null) {
+          if (experimentalFullType_ != null) {
+            experimentalFullType_ =
+              org.tensorflow.proto.framework.FullTypeDef.newBuilder(experimentalFullType_).mergeFrom(value).buildPartial();
+          } else {
+            experimentalFullType_ = value;
+          }
+          onChanged();
+        } else {
+          experimentalFullTypeBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public Builder clearExperimentalFullType() {
+        if (experimentalFullTypeBuilder_ == null) {
+          experimentalFullType_ = null;
+          onChanged();
+        } else {
+          experimentalFullType_ = null;
+          experimentalFullTypeBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public org.tensorflow.proto.framework.FullTypeDef.Builder getExperimentalFullTypeBuilder() {
+        
+        onChanged();
+        return getExperimentalFullTypeFieldBuilder().getBuilder();
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      public org.tensorflow.proto.framework.FullTypeDefOrBuilder getExperimentalFullTypeOrBuilder() {
+        if (experimentalFullTypeBuilder_ != null) {
+          return experimentalFullTypeBuilder_.getMessageOrBuilder();
+        } else {
+          return experimentalFullType_ == null ?
+              org.tensorflow.proto.framework.FullTypeDef.getDefaultInstance() : experimentalFullType_;
+        }
+      }
+      /**
+       * <pre>
+       * Experimental. Full type declaration for this argument.
+       * The full type specification combines type, type_attr, type_list_attr,
+       * etc. into a unified representation.
+       * This declaration may contain non-concrete types (for example,
+       * Tensor&lt;TypeVar&lt;'T'&gt;&gt; is a valid type declaration.
+       * Note: this is a transient field. The long-term aim is to represent the
+       * entire OpDef as a single type: a callable. In that context, this field is
+       * just the type of a single argument.
+       * </pre>
+       *
+       * <code>.tensorflow.FullTypeDef experimental_full_type = 17;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder> 
+          getExperimentalFullTypeFieldBuilder() {
+        if (experimentalFullTypeBuilder_ == null) {
+          experimentalFullTypeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              org.tensorflow.proto.framework.FullTypeDef, org.tensorflow.proto.framework.FullTypeDef.Builder, org.tensorflow.proto.framework.FullTypeDefOrBuilder>(
+                  getExperimentalFullType(),
+                  getParentForChildren(),
+                  isClean());
+          experimentalFullType_ = null;
+        }
+        return experimentalFullTypeBuilder_;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -4430,6 +4794,21 @@ private static final long serialVersionUID = 0L;
     return allowsUninitializedInput_;
   }
 
+  public static final int IS_DISTRIBUTED_COMMUNICATION_FIELD_NUMBER = 21;
+  private boolean isDistributedCommunication_;
+  /**
+   * <pre>
+   * Indicates whether the op implementation uses distributed communication.
+   * If True, the op is allowed to return errors for network disconnection and
+   * trigger TF network failure handling logics.
+   * </pre>
+   *
+   * <code>bool is_distributed_communication = 21;</code>
+   */
+  public boolean getIsDistributedCommunication() {
+    return isDistributedCommunication_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -4479,6 +4858,9 @@ private static final long serialVersionUID = 0L;
     }
     for (int i = 0; i < controlOutput_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 20, controlOutput_.getRaw(i));
+    }
+    if (isDistributedCommunication_ != false) {
+      output.writeBool(21, isDistributedCommunication_);
     }
     unknownFields.writeTo(output);
   }
@@ -4538,6 +4920,10 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 2 * getControlOutputList().size();
     }
+    if (isDistributedCommunication_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(21, isDistributedCommunication_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -4580,6 +4966,8 @@ private static final long serialVersionUID = 0L;
         != other.getIsStateful()) return false;
     if (getAllowsUninitializedInput()
         != other.getAllowsUninitializedInput()) return false;
+    if (getIsDistributedCommunication()
+        != other.getIsDistributedCommunication()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -4629,6 +5017,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + ALLOWS_UNINITIALIZED_INPUT_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getAllowsUninitializedInput());
+    hash = (37 * hash) + IS_DISTRIBUTED_COMMUNICATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getIsDistributedCommunication());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -4811,6 +5202,8 @@ private static final long serialVersionUID = 0L;
 
       allowsUninitializedInput_ = false;
 
+      isDistributedCommunication_ = false;
+
       return this;
     }
 
@@ -4882,6 +5275,7 @@ private static final long serialVersionUID = 0L;
       result.isAggregate_ = isAggregate_;
       result.isStateful_ = isStateful_;
       result.allowsUninitializedInput_ = allowsUninitializedInput_;
+      result.isDistributedCommunication_ = isDistributedCommunication_;
       onBuilt();
       return result;
     }
@@ -5044,6 +5438,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getAllowsUninitializedInput() != false) {
         setAllowsUninitializedInput(other.getAllowsUninitializedInput());
+      }
+      if (other.getIsDistributedCommunication() != false) {
+        setIsDistributedCommunication(other.getIsDistributedCommunication());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -6708,6 +7105,50 @@ private static final long serialVersionUID = 0L;
     public Builder clearAllowsUninitializedInput() {
       
       allowsUninitializedInput_ = false;
+      onChanged();
+      return this;
+    }
+
+    private boolean isDistributedCommunication_ ;
+    /**
+     * <pre>
+     * Indicates whether the op implementation uses distributed communication.
+     * If True, the op is allowed to return errors for network disconnection and
+     * trigger TF network failure handling logics.
+     * </pre>
+     *
+     * <code>bool is_distributed_communication = 21;</code>
+     */
+    public boolean getIsDistributedCommunication() {
+      return isDistributedCommunication_;
+    }
+    /**
+     * <pre>
+     * Indicates whether the op implementation uses distributed communication.
+     * If True, the op is allowed to return errors for network disconnection and
+     * trigger TF network failure handling logics.
+     * </pre>
+     *
+     * <code>bool is_distributed_communication = 21;</code>
+     */
+    public Builder setIsDistributedCommunication(boolean value) {
+      
+      isDistributedCommunication_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * Indicates whether the op implementation uses distributed communication.
+     * If True, the op is allowed to return errors for network disconnection and
+     * trigger TF network failure handling logics.
+     * </pre>
+     *
+     * <code>bool is_distributed_communication = 21;</code>
+     */
+    public Builder clearIsDistributedCommunication() {
+      
+      isDistributedCommunication_ = false;
       onChanged();
       return this;
     }

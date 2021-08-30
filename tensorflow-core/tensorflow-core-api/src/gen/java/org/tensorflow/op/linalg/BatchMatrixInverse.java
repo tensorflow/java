@@ -63,9 +63,8 @@ public final class BatchMatrixInverse<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> BatchMatrixInverse<T> create(Scope scope, Operand<T> input,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatrixInverse"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchMatrixInverse");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjoint != null) {

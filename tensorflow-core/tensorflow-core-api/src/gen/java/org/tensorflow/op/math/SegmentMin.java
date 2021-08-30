@@ -81,10 +81,9 @@ public final class SegmentMin<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> SegmentMin<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SegmentMin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SegmentMin");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SegmentMin<>(opBuilder.build());
   }
 

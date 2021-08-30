@@ -68,9 +68,8 @@ public final class Sinh<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Sinh<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Sinh"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Sinh");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Sinh<>(opBuilder.build());
   }
 

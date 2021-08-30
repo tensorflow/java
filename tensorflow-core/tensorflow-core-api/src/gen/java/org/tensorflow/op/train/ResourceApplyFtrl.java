@@ -28,8 +28,8 @@ import org.tensorflow.types.family.TType;
 
 /**
  * Update '*var' according to the Ftrl-proximal scheme.
+ * accum_new = accum + grad * grad
  * grad_with_shrinkage = grad + 2 * l2_shrinkage * var
- * accum_new = accum + grad_with_shrinkage * grad_with_shrinkage
  * linear += grad_with_shrinkage +
  * (accum_new^(-lr_power) - accum^(-lr_power)) / lr * var
  * quadratic = 1.0 / (accum_new^(lr_power) * lr) + 2 * l2
@@ -73,7 +73,7 @@ public final class ResourceApplyFtrl extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<? extends TType> linear,
       Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage,
       Operand<T> lrPower, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyFtrl"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyFtrl");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(linear.asOutput());
@@ -83,7 +83,6 @@ public final class ResourceApplyFtrl extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(l2Shrinkage.asOutput());
     opBuilder.addInput(lrPower.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

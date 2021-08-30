@@ -116,10 +116,9 @@ public final class Reshape<T extends TType> extends RawOp implements Operand<T> 
   )
   public static <T extends TType> Reshape<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Reshape"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Reshape");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(shape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Reshape<>(opBuilder.build());
   }
 

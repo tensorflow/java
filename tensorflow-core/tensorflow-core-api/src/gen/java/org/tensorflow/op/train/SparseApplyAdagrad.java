@@ -69,14 +69,13 @@ public final class SparseApplyAdagrad<T extends TType> extends RawOp implements 
   public static <T extends TType> SparseApplyAdagrad<T> create(Scope scope, Operand<T> var,
       Operand<T> accum, Operand<T> lr, Operand<T> epsilon, Operand<T> grad,
       Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseApplyAdagrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseApplyAdagrad");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

@@ -55,9 +55,8 @@ public final class RiscIsFinite extends RawOp implements Operand<TBool> {
       describeByClass = true
   )
   public static RiscIsFinite create(Scope scope, Operand<? extends TNumber> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscIsFinite"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscIsFinite");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscIsFinite(opBuilder.build());
   }
 

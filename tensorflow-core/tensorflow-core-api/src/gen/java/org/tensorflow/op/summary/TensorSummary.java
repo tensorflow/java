@@ -63,11 +63,10 @@ public final class TensorSummary extends RawOp implements Operand<TString> {
   )
   public static TensorSummary create(Scope scope, Operand<TString> tag,
       Operand<? extends TType> tensor, Operand<TString> serializedSummaryMetadata) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorSummary"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorSummary");
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(serializedSummaryMetadata.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorSummary(opBuilder.build());
   }
 

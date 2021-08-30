@@ -36,6 +36,64 @@ import org.tensorflow.types.family.TType;
  * the {@code height} and {@code width} dimensions are moved to the {@code batch} dimension. After
  * the zero-padding, both {@code height} and {@code width} of the input must be divisible by the
  * block size.
+ * <p>The attr {@code block_size} must be greater than one. It indicates the block size.
+ * <ul>
+ * <li>Non-overlapping blocks of size {@code block_size x block size} in the height and
+ * width dimensions are rearranged into the batch dimension at each location.</li>
+ * <li>The batch of the output tensor is {@code batch * block_size * block_size}.</li>
+ * <li>Both height_pad and width_pad must be divisible by block_size.</li>
+ * </ul>
+ * <p>The shape of the output will be:
+ * <pre>
+ * [batch*block_size*block_size, height_pad/block_size, width_pad/block_size,
+ *  depth]
+ * </pre>
+ * <p>Some examples:
+ * <p>(1) For the following input of shape {@code [1, 2, 2, 1]} and block_size of 2:
+ * <pre>
+ * x = [[[[1], [2]], [[3], [4]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 1, 1, 1]} and value:
+ * <pre>
+ * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
+ * </pre>
+ * <p>(2) For the following input of shape {@code [1, 2, 2, 3]} and block_size of 2:
+ * <pre>
+ * x = [[[[1, 2, 3], [4, 5, 6]],
+ *       [[7, 8, 9], [10, 11, 12]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 1, 1, 3]} and value:
+ * <pre>
+ * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
+ * </pre>
+ * <p>(3) For the following input of shape {@code [1, 4, 4, 1]} and block_size of 2:
+ * <pre>
+ * x = [[[[1],   [2],  [3],  [4]],
+ *       [[5],   [6],  [7],  [8]],
+ *       [[9],  [10], [11],  [12]],
+ *       [[13], [14], [15],  [16]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [4, 2, 2, 1]} and value:
+ * <pre>
+ * x = [[[[1], [3]], [[9], [11]]],
+ *      [[[2], [4]], [[10], [12]]],
+ *      [[[5], [7]], [[13], [15]]],
+ *      [[[6], [8]], [[14], [16]]]]
+ * </pre>
+ * <p>(4) For the following input of shape {@code [2, 2, 4, 1]} and block_size of 2:
+ * <pre>
+ * x = [[[[1],   [2],  [3],  [4]],
+ *       [[5],   [6],  [7],  [8]]],
+ *      [[[9],  [10], [11],  [12]],
+ *       [[13], [14], [15],  [16]]]]
+ * </pre>
+ * <p>The output tensor has shape {@code [8, 1, 2, 1]} and value:
+ * <pre>
+ * x = [[[[1], [3]]], [[[9], [11]]], [[[2], [4]]], [[[10], [12]]],
+ *      [[[5], [7]]], [[[13], [15]]], [[[6], [8]]], [[[14], [16]]]]
+ * </pre>
+ * <p>Among others, this operation is useful for reducing atrous convolution into
+ * regular convolution.
  *
  * @param <T> data type for {@code output} output
  */
@@ -71,64 +129,6 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
    *   height_pad = pad_top + height + pad_bottom
    *   width_pad = pad_left + width + pad_right
    * </pre>
-   * <p>The attr {@code block_size} must be greater than one. It indicates the block size.
-   * <ul>
-   * <li>Non-overlapping blocks of size {@code block_size x block size} in the height and
-   * width dimensions are rearranged into the batch dimension at each location.</li>
-   * <li>The batch of the output tensor is {@code batch * block_size * block_size}.</li>
-   * <li>Both height_pad and width_pad must be divisible by block_size.</li>
-   * </ul>
-   * <p>The shape of the output will be:
-   * <pre>
-   * [batch*block_size*block_size, height_pad/block_size, width_pad/block_size,
-   *  depth]
-   * </pre>
-   * <p>Some examples:
-   * <p>(1) For the following input of shape {@code [1, 2, 2, 1]} and block_size of 2:
-   * <pre>
-   * x = [[[[1], [2]], [[3], [4]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 1, 1, 1]} and value:
-   * <pre>
-   * [[[[1]]], [[[2]]], [[[3]]], [[[4]]]]
-   * </pre>
-   * <p>(2) For the following input of shape {@code [1, 2, 2, 3]} and block_size of 2:
-   * <pre>
-   * x = [[[[1, 2, 3], [4, 5, 6]],
-   *       [[7, 8, 9], [10, 11, 12]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 1, 1, 3]} and value:
-   * <pre>
-   * [[[[1, 2, 3]]], [[[4, 5, 6]]], [[[7, 8, 9]]], [[[10, 11, 12]]]]
-   * </pre>
-   * <p>(3) For the following input of shape {@code [1, 4, 4, 1]} and block_size of 2:
-   * <pre>
-   * x = [[[[1],   [2],  [3],  [4]],
-   *       [[5],   [6],  [7],  [8]],
-   *       [[9],  [10], [11],  [12]],
-   *       [[13], [14], [15],  [16]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [4, 2, 2, 1]} and value:
-   * <pre>
-   * x = [[[[1], [3]], [[9], [11]]],
-   *      [[[2], [4]], [[10], [12]]],
-   *      [[[5], [7]], [[13], [15]]],
-   *      [[[6], [8]], [[14], [16]]]]
-   * </pre>
-   * <p>(4) For the following input of shape {@code [2, 2, 4, 1]} and block_size of 2:
-   * <pre>
-   * x = [[[[1],   [2],  [3],  [4]],
-   *       [[5],   [6],  [7],  [8]]],
-   *      [[[9],  [10], [11],  [12]],
-   *       [[13], [14], [15],  [16]]]]
-   * </pre>
-   * <p>The output tensor has shape {@code [8, 1, 2, 1]} and value:
-   * <pre>
-   * x = [[[[1], [3]]], [[[9], [11]]], [[[2], [4]]], [[[10], [12]]],
-   *      [[[5], [7]]], [[[13], [15]]], [[[6], [8]]], [[[14], [16]]]]
-   * </pre>
-   * <p>Among others, this operation is useful for reducing atrous convolution into
-   * regular convolution.
    * @param blockSize the value of the blockSize property
    * @param <T> data type for {@code SpaceToBatch} output and operands
    * @return a new instance of SpaceToBatch
@@ -138,10 +138,9 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType> SpaceToBatch<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> paddings, Long blockSize) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpaceToBatch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SpaceToBatch");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     return new SpaceToBatch<>(opBuilder.build());
   }

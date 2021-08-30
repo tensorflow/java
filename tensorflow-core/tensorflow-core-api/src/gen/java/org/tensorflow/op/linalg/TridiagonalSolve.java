@@ -71,14 +71,16 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> TridiagonalSolve<T> create(Scope scope, Operand<T> diagonals,
       Operand<T> rhs, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TridiagonalSolve"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TridiagonalSolve");
     opBuilder.addInput(diagonals.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.partialPivoting != null) {
           opBuilder.setAttr("partial_pivoting", opts.partialPivoting);
+        }
+        if (opts.perturbSingular != null) {
+          opBuilder.setAttr("perturb_singular", opts.perturbSingular);
         }
       }
     }
@@ -94,6 +96,16 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
    */
   public static Options partialPivoting(Boolean partialPivoting) {
     return new Options().partialPivoting(partialPivoting);
+  }
+
+  /**
+   * Sets the perturbSingular option.
+   *
+   * @param perturbSingular the perturbSingular option
+   * @return this Options instance.
+   */
+  public static Options perturbSingular(Boolean perturbSingular) {
+    return new Options().perturbSingular(perturbSingular);
   }
 
   /**
@@ -116,6 +128,8 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
   public static class Options {
     private Boolean partialPivoting;
 
+    private Boolean perturbSingular;
+
     private Options() {
     }
 
@@ -128,6 +142,17 @@ public final class TridiagonalSolve<T extends TType> extends RawOp implements Op
      */
     public Options partialPivoting(Boolean partialPivoting) {
       this.partialPivoting = partialPivoting;
+      return this;
+    }
+
+    /**
+     * Sets the perturbSingular option.
+     *
+     * @param perturbSingular the perturbSingular option
+     * @return this Options instance.
+     */
+    public Options perturbSingular(Boolean perturbSingular) {
+      this.perturbSingular = perturbSingular;
       return this;
     }
   }

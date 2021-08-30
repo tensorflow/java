@@ -59,10 +59,9 @@ public final class RiscBinaryComparison extends RawOp implements Operand<TBool> 
   )
   public static <T extends TNumber> RiscBinaryComparison create(Scope scope, Operand<T> x,
       Operand<T> y, String opType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscBinaryComparison"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscBinaryComparison");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("op_type", opType);
     return new RiscBinaryComparison(opBuilder.build());
   }

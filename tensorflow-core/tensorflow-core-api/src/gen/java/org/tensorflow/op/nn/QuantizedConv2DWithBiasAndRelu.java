@@ -81,7 +81,7 @@ public final class QuantizedConv2DWithBiasAndRelu<V extends TNumber> extends Raw
       Operand<TFloat32> minInput, Operand<TFloat32> maxInput, Operand<TFloat32> minFilter,
       Operand<TFloat32> maxFilter, Class<V> outType, List<Long> strides, String padding,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QuantizedConv2DWithBiasAndRelu"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QuantizedConv2DWithBiasAndRelu");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(bias.asOutput());
@@ -89,7 +89,6 @@ public final class QuantizedConv2DWithBiasAndRelu<V extends TNumber> extends Raw
     opBuilder.addInput(maxInput.asOutput());
     opBuilder.addInput(minFilter.asOutput());
     opBuilder.addInput(maxFilter.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {

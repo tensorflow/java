@@ -67,14 +67,13 @@ public final class ResourceSparseApplyKerasMomentum extends RawOp {
   public static <T extends TType> ResourceSparseApplyKerasMomentum create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> grad,
       Operand<? extends TNumber> indices, Operand<T> momentum, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceSparseApplyKerasMomentum"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceSparseApplyKerasMomentum");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(momentum.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

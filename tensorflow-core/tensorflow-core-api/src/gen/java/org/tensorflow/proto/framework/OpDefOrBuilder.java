@@ -293,4 +293,15 @@ public interface OpDefOrBuilder extends
    * <code>bool allows_uninitialized_input = 19;</code>
    */
   boolean getAllowsUninitializedInput();
+
+  /**
+   * <pre>
+   * Indicates whether the op implementation uses distributed communication.
+   * If True, the op is allowed to return errors for network disconnection and
+   * trigger TF network failure handling logics.
+   * </pre>
+   *
+   * <code>bool is_distributed_communication = 21;</code>
+   */
+  boolean getIsDistributedCommunication();
 }

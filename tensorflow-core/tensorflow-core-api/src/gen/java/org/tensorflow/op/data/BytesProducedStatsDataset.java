@@ -67,10 +67,9 @@ public final class BytesProducedStatsDataset extends RawOp implements Operand<TT
   )
   public static BytesProducedStatsDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TString> tag, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BytesProducedStatsDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BytesProducedStatsDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(tag.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

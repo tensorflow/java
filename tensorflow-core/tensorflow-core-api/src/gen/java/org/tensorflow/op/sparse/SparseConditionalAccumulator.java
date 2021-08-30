@@ -71,8 +71,7 @@ public final class SparseConditionalAccumulator extends RawOp implements Operand
   )
   public static <T extends TType> SparseConditionalAccumulator create(Scope scope, Class<T> dtype,
       Shape shape, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseConditionalAccumulator"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseConditionalAccumulator");
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);
     if (options != null) {

@@ -52,25 +52,25 @@ public interface SavedUserObjectOrBuilder extends
 
   /**
    * <pre>
+   * Metadata for deserializing this object.
    * Deprecated! At the time of deprecation, Keras was the only user of this
    * field, and its saving and loading code will be updated shortly.
-   * Please save your application-specific metadata to separate file
-   * Initialization-related metadata.
+   * Please save your application-specific metadata to a separate file.
    * </pre>
    *
-   * <code>string metadata = 3;</code>
+   * <code>string metadata = 3 [deprecated = true];</code>
    */
-  java.lang.String getMetadata();
+  @java.lang.Deprecated java.lang.String getMetadata();
   /**
    * <pre>
+   * Metadata for deserializing this object.
    * Deprecated! At the time of deprecation, Keras was the only user of this
    * field, and its saving and loading code will be updated shortly.
-   * Please save your application-specific metadata to separate file
-   * Initialization-related metadata.
+   * Please save your application-specific metadata to a separate file.
    * </pre>
    *
-   * <code>string metadata = 3;</code>
+   * <code>string metadata = 3 [deprecated = true];</code>
    */
-  com.google.protobuf.ByteString
+  @java.lang.Deprecated com.google.protobuf.ByteString
       getMetadataBytes();
 }

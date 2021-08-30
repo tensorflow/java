@@ -80,9 +80,8 @@ public final class AllCandidateSampler extends RawOp {
   )
   public static AllCandidateSampler create(Scope scope, Operand<TInt64> trueClasses, Long numTrue,
       Long numSampled, Boolean unique, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AllCandidateSampler"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AllCandidateSampler");
     opBuilder.addInput(trueClasses.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_true", numTrue);
     opBuilder.setAttr("num_sampled", numSampled);
     opBuilder.setAttr("unique", unique);

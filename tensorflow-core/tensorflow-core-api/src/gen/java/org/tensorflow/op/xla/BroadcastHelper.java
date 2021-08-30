@@ -71,11 +71,10 @@ public final class BroadcastHelper<T extends TType> extends RawOp {
   )
   public static <T extends TType> BroadcastHelper<T> create(Scope scope, Operand<T> lhs,
       Operand<T> rhs, Operand<? extends TNumber> broadcastDims) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastHelper"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BroadcastHelper");
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(broadcastDims.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BroadcastHelper<>(opBuilder.build());
   }
 

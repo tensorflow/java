@@ -68,10 +68,9 @@ public final class StatelessRandomNormal<V extends TNumber> extends RawOp implem
   )
   public static <V extends TNumber> StatelessRandomNormal<V> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessRandomNormal"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessRandomNormal");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessRandomNormal<>(opBuilder.build());
   }

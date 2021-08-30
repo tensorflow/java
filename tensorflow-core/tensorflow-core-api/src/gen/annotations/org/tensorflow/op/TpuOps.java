@@ -76,8 +76,9 @@ public final class TpuOps {
   }
 
   /**
-   * Asserts that compilation succeeded. This op produces no output and closes the
-   *  device during failure to ensure all pending device interactions fail.
+   * Asserts that compilation succeeded.
+   *  This op produces no output and closes the device during failure to ensure all
+   *  pending device interactions fail.
    *  <p>'compilation_status' is a serialized CompilationResultProto.
    *
    * @param compilationStatus the compilationStatus value

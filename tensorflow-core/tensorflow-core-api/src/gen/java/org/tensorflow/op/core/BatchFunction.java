@@ -109,10 +109,9 @@ public final class BatchFunction extends RawOp implements Iterable<Operand<TType
       Iterable<Operand<?>> capturedTensors, ConcreteFunction f, Long numBatchThreads,
       Long maxBatchSize, Long batchTimeoutMicros, List<Class<? extends TType>> Tout,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchFunction"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchFunction");
     opBuilder.addInputList(Operands.asOutputs(inTensors));
     opBuilder.addInputList(Operands.asOutputs(capturedTensors));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("num_batch_threads", numBatchThreads);
     opBuilder.setAttr("max_batch_size", maxBatchSize);

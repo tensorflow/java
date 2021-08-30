@@ -61,6 +61,7 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
    * the values of {@code selector_input_dataset}.
    * @param outputTypes the value of the outputTypes property
    * @param outputShapes the value of the outputShapes property
+   * @param options carries optional attribute values
    * @return a new instance of DirectedInterleaveDataset
    */
   @Endpoint(
@@ -69,18 +70,34 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
   public static DirectedInterleaveDataset create(Scope scope,
       Operand<? extends TType> selectorInputDataset,
       Iterable<Operand<? extends TType>> dataInputDatasets,
-      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DirectedInterleaveDataset"));
+      List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DirectedInterleaveDataset");
     opBuilder.addInput(selectorInputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(dataInputDatasets));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {
       outputShapesArray[i] = outputShapes.get(i);
     }
     opBuilder.setAttr("output_shapes", outputShapesArray);
+    if (options != null) {
+      for (Options opts : options) {
+        if (opts.stopOnEmptyDataset != null) {
+          opBuilder.setAttr("stop_on_empty_dataset", opts.stopOnEmptyDataset);
+        }
+      }
+    }
     return new DirectedInterleaveDataset(opBuilder.build());
+  }
+
+  /**
+   * Sets the stopOnEmptyDataset option.
+   *
+   * @param stopOnEmptyDataset the stopOnEmptyDataset option
+   * @return this Options instance.
+   */
+  public static Options stopOnEmptyDataset(Boolean stopOnEmptyDataset) {
+    return new Options().stopOnEmptyDataset(stopOnEmptyDataset);
   }
 
   /**
@@ -96,5 +113,26 @@ public final class DirectedInterleaveDataset extends RawOp implements Operand<TT
   @SuppressWarnings("unchecked")
   public Output<TType> asOutput() {
     return (Output<TType>) handle;
+  }
+
+  /**
+   * Optional attributes for {@link org.tensorflow.op.data.DirectedInterleaveDataset}
+   */
+  public static class Options {
+    private Boolean stopOnEmptyDataset;
+
+    private Options() {
+    }
+
+    /**
+     * Sets the stopOnEmptyDataset option.
+     *
+     * @param stopOnEmptyDataset the stopOnEmptyDataset option
+     * @return this Options instance.
+     */
+    public Options stopOnEmptyDataset(Boolean stopOnEmptyDataset) {
+      this.stopOnEmptyDataset = stopOnEmptyDataset;
+      return this;
+    }
   }
 }

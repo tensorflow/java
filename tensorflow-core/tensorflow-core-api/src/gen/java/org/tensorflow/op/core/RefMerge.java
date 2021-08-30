@@ -66,9 +66,8 @@ public final class RefMerge<T extends TType> extends RawOp {
       describeByClass = true
   )
   public static <T extends TType> RefMerge<T> create(Scope scope, Iterable<Operand<T>> inputs) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RefMerge"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RefMerge");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     return new RefMerge<>(opBuilder.build());
   }
 

@@ -75,13 +75,12 @@ public final class StridedSliceGrad<U extends TType> extends RawOp implements Op
   public static <U extends TType, T extends TNumber> StridedSliceGrad<U> create(Scope scope,
       Operand<T> shape, Operand<T> begin, Operand<T> end, Operand<T> strides, Operand<U> dy,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StridedSliceGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StridedSliceGrad");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(end.asOutput());
     opBuilder.addInput(strides.asOutput());
     opBuilder.addInput(dy.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.beginMask != null) {

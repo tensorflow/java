@@ -56,9 +56,8 @@ public final class DatasetCardinality extends RawOp implements Operand<TInt64> {
       describeByClass = true
   )
   public static DatasetCardinality create(Scope scope, Operand<? extends TType> inputDataset) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetCardinality"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetCardinality");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DatasetCardinality(opBuilder.build());
   }
 

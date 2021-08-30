@@ -78,11 +78,10 @@ public final class SparseSoftmax<T extends TNumber> extends RawOp implements Ope
   )
   public static <T extends TNumber> SparseSoftmax<T> create(Scope scope, Operand<TInt64> spIndices,
       Operand<T> spValues, Operand<TInt64> spShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSoftmax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSoftmax");
     opBuilder.addInput(spIndices.asOutput());
     opBuilder.addInput(spValues.asOutput());
     opBuilder.addInput(spShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSoftmax<>(opBuilder.build());
   }
 

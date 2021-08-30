@@ -54,11 +54,10 @@ public final class InitializeTable extends RawOp {
   )
   public static InitializeTable create(Scope scope, Operand<? extends TType> tableHandle,
       Operand<? extends TType> keys, Operand<? extends TType> values) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InitializeTable"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InitializeTable");
     opBuilder.addInput(tableHandle.asOutput());
     opBuilder.addInput(keys.asOutput());
     opBuilder.addInput(values.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InitializeTable(opBuilder.build());
   }
 }

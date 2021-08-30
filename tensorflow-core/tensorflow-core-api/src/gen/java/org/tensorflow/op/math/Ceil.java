@@ -61,9 +61,8 @@ public final class Ceil<T extends TNumber> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TNumber> Ceil<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Ceil"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Ceil");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Ceil<>(opBuilder.build());
   }
 

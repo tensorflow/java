@@ -69,9 +69,8 @@ public final class TensorArray extends RawOp {
   )
   public static <T extends TType> TensorArray create(Scope scope, Operand<TInt32> sizeOutput,
       Class<T> dtype, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArray"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArray");
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {

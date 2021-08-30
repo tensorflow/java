@@ -78,10 +78,9 @@ public final class TensorArrayConcat<T extends TType> extends RawOp {
   public static <T extends TType> TensorArrayConcat<T> create(Scope scope,
       Operand<? extends TType> handle, Operand<TFloat32> flowIn, Class<T> dtype,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayConcat"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArrayConcat");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     if (options != null) {
       for (Options opts : options) {

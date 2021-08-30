@@ -146,7 +146,7 @@ public interface TensorProtoOrBuilder extends
 
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -154,7 +154,7 @@ public interface TensorProtoOrBuilder extends
   java.util.List<java.lang.Integer> getIntValList();
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>
@@ -162,7 +162,7 @@ public interface TensorProtoOrBuilder extends
   int getIntValCount();
   /**
    * <pre>
-   * DT_INT32, DT_INT16, DT_INT8, DT_UINT8.
+   * DT_INT32, DT_INT16, DT_UINT16, DT_INT8, DT_UINT8.
    * </pre>
    *
    * <code>repeated int32 int_val = 7 [packed = true];</code>

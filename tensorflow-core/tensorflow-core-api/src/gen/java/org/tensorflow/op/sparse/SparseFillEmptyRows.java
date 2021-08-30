@@ -113,12 +113,11 @@ public final class SparseFillEmptyRows<T extends TType> extends RawOp {
   public static <T extends TType> SparseFillEmptyRows<T> create(Scope scope,
       Operand<TInt64> indices, Operand<T> values, Operand<TInt64> denseShape,
       Operand<T> defaultValue) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseFillEmptyRows"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseFillEmptyRows");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
     opBuilder.addInput(defaultValue.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseFillEmptyRows<>(opBuilder.build());
   }
 
