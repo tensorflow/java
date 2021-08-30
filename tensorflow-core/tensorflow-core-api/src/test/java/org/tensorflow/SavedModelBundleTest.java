@@ -275,16 +275,10 @@ public class SavedModelBundleTest {
         SavedModelBundle.loader("/").withTags(new String[]{"tag", null})
     );
     assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.loader("/").withTags(new String[]{"tag", ""})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
         SavedModelBundle.exporter("/").withTags(null)
     );
     assertThrows(IllegalArgumentException.class, () ->
         SavedModelBundle.exporter("/").withTags(new String[]{"tag", null})
-    );
-    assertThrows(IllegalArgumentException.class, () ->
-        SavedModelBundle.exporter("/").withTags(new String[]{"tag", ""})
     );
   }
 
