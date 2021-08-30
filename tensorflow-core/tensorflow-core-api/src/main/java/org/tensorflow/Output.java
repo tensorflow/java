@@ -38,6 +38,11 @@ public final class Output<T extends TType> implements Operand<T> {
     return index;
   }
 
+  /** Returns the full name of this Output (a.k.a. tensor name) */
+  public String name() {
+    return op().name() + ":" + index;
+  }
+
   /** Returns the DataType of the tensor referred to by this Output. */
   @SuppressWarnings("unchecked")
   public DataType dataType() {
@@ -48,7 +53,7 @@ public final class Output<T extends TType> implements Operand<T> {
   @SuppressWarnings("unchecked")
   @Override
   public Class<T> type() {
-    return (Class<T>)TensorTypeRegistry.find(dataType()).type();
+    return (Class<T>) TensorTypeRegistry.find(dataType()).type();
   }
 
   /**
@@ -63,7 +68,10 @@ public final class Output<T extends TType> implements Operand<T> {
   public <U extends TType> Output<U> expect(Class<U> type) {
     if (type != type()) {
       throw new IllegalArgumentException(
-          "Cannot cast from output of " + this.type().getSimpleName() + " to output of " + type.getSimpleName());
+          "Cannot cast from output of "
+              + this.type().getSimpleName()
+              + " to output of "
+              + type.getSimpleName());
     }
     return ((Output<U>) this);
   }
@@ -80,17 +88,16 @@ public final class Output<T extends TType> implements Operand<T> {
    *
    * @return tensor
    * @throws IllegalStateException if this output results from a graph
-   * @throws ClassCastException if the type of the tensor and this output are unexpectedly incompatible
+   * @throws ClassCastException if the type of the tensor and this output are unexpectedly
+   *     incompatible
    * @see EagerSession
    */
   @SuppressWarnings("unchecked")
   public T asTensor() {
-    return (T)operation.tensor(index);
+    return (T) operation.tensor(index);
   }
 
-  /**
-   * Returns the (possibly partially known) shape of the tensor referred to by this output.
-   */
+  /** Returns the (possibly partially known) shape of the tensor referred to by this output. */
   @Override
   public Shape shape() {
     return operation.shape(index);
