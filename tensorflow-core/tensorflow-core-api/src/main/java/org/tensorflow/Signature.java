@@ -208,7 +208,7 @@ public class Signature {
 
   @Override
   public String toString() {
-    StringBuilder strBuilder = new StringBuilder("Signature for \"" + key +"\":\n");
+    StringBuilder strBuilder = new StringBuilder("Signature for \"" + key + "\":\n");
     String methodName = methodName();
     if (methodName != null && !methodName.isEmpty()) {
       strBuilder.append("\tMethod: \"").append(methodName).append("\"\n");
