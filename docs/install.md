@@ -64,7 +64,7 @@ For example,
 <dependency>
   <groupId>org.tensorflow</groupId>
   <artifactId>tensorflow-core-platform</artifactId>
-  <version>0.3.2</version>
+  <version>0.3.3</version>
 </dependency>
 ```
 
@@ -124,7 +124,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.3.2'
+    compile group: 'org.tensorflow', name: 'tensorflow-core-platform', version: '0.3.3'
 }
 ```
 
@@ -170,7 +170,7 @@ add the TensorFlow dependency to the project's `pom.xml` file:
         <dependency>
             <groupId>org.tensorflow</groupId>
             <artifactId>tensorflow-core-platform</artifactId>
-            <version>0.3.2</version>
+            <version>0.3.3</version>
         </dependency>
     </dependencies>
 </project>
