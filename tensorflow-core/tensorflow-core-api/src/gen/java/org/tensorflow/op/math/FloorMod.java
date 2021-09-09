@@ -66,10 +66,9 @@ public final class FloorMod<T extends TNumber> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TNumber> FloorMod<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FloorMod"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FloorMod");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new FloorMod<>(opBuilder.build());
   }
 

@@ -73,10 +73,9 @@ public final class AccumulatorTakeGradient<T extends TType> extends RawOp implem
   )
   public static <T extends TType> AccumulatorTakeGradient<T> create(Scope scope,
       Operand<TString> handle, Operand<TInt32> numRequired, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AccumulatorTakeGradient"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AccumulatorTakeGradient");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(numRequired.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new AccumulatorTakeGradient<>(opBuilder.build());
   }

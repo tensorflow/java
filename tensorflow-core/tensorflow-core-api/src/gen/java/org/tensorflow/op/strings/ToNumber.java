@@ -78,9 +78,8 @@ public final class ToNumber<T extends TNumber> extends RawOp implements Operand<
   )
   public static <T extends TNumber> ToNumber<T> create(Scope scope, Operand<TString> stringTensor,
       Class<T> outType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ToNumber"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ToNumber");
     opBuilder.addInput(stringTensor.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("out_type", Operands.toDataType(outType));
     return new ToNumber<>(opBuilder.build());
   }

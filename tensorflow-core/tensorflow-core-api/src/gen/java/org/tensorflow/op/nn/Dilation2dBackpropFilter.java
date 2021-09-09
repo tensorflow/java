@@ -71,11 +71,10 @@ public final class Dilation2dBackpropFilter<T extends TNumber> extends RawOp imp
   public static <T extends TNumber> Dilation2dBackpropFilter<T> create(Scope scope,
       Operand<T> input, Operand<T> filter, Operand<T> outBackprop, List<Long> strides,
       List<Long> rates, String padding) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dilation2dBackpropFilter"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Dilation2dBackpropFilter");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(filter.asOutput());
     opBuilder.addInput(outBackprop.asOutput());
-    opBuilder = scope.apply(opBuilder);
     long[] stridesArray = new long[strides.size()];
     for (int i = 0 ; i < stridesArray.length ; i++) {
       stridesArray[i] = strides.get(i);

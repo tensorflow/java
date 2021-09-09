@@ -61,9 +61,8 @@ public final class DatasetFromGraph extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static DatasetFromGraph create(Scope scope, Operand<TString> graphDef) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DatasetFromGraph"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DatasetFromGraph");
     opBuilder.addInput(graphDef.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DatasetFromGraph(opBuilder.build());
   }
 

@@ -56,10 +56,9 @@ public final class DeserializeIterator extends RawOp {
   )
   public static DeserializeIterator create(Scope scope, Operand<? extends TType> resourceHandle,
       Operand<? extends TType> serialized) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DeserializeIterator"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DeserializeIterator");
     opBuilder.addInput(resourceHandle.asOutput());
     opBuilder.addInput(serialized.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new DeserializeIterator(opBuilder.build());
   }
 }

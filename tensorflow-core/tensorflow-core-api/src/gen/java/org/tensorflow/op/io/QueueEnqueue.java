@@ -61,10 +61,9 @@ public final class QueueEnqueue extends RawOp {
   )
   public static QueueEnqueue create(Scope scope, Operand<? extends TType> handle,
       Iterable<Operand<?>> components, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QueueEnqueue"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QueueEnqueue");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInputList(Operands.asOutputs(components));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.timeoutMs != null) {

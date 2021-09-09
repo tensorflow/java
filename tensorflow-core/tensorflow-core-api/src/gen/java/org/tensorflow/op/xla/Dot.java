@@ -70,10 +70,9 @@ public final class Dot<V extends TType> extends RawOp implements Operand<V> {
   public static <V extends TType> Dot<V> create(Scope scope, Operand<? extends TType> lhs,
       Operand<? extends TType> rhs, String dimensionNumbers, String precisionConfig,
       Class<V> preferredElementType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Dot"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Dot");
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
     opBuilder.setAttr("preferred_element_type", Operands.toDataType(preferredElementType));

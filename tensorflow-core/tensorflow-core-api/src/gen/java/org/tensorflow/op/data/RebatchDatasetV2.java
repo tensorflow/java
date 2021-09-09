@@ -73,11 +73,10 @@ public final class RebatchDatasetV2 extends RawOp implements Operand<TType> {
   public static RebatchDatasetV2 create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSizes, Operand<TBool> dropRemainder,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RebatchDatasetV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RebatchDatasetV2");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSizes.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

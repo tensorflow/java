@@ -67,9 +67,8 @@ public final class ReadVariableOp<T extends TType> extends RawOp implements Oper
   )
   public static <T extends TType> ReadVariableOp<T> create(Scope scope,
       Operand<? extends TType> resource, Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ReadVariableOp"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ReadVariableOp");
     opBuilder.addInput(resource.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new ReadVariableOp<>(opBuilder.build());
   }

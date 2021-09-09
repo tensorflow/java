@@ -59,9 +59,8 @@ public final class WrapDatasetVariant extends RawOp implements Operand<TType> {
       describeByClass = true
   )
   public static WrapDatasetVariant create(Scope scope, Operand<? extends TType> inputHandle) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WrapDatasetVariant"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "WrapDatasetVariant");
     opBuilder.addInput(inputHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new WrapDatasetVariant(opBuilder.build());
   }
 

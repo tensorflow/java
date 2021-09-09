@@ -65,9 +65,8 @@ public final class IsotonicRegression<U extends TNumber> extends RawOp {
   )
   public static <U extends TNumber> IsotonicRegression<U> create(Scope scope,
       Operand<? extends TNumber> input, Class<U> outputDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IsotonicRegression"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "IsotonicRegression");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_dtype", Operands.toDataType(outputDtype));
     return new IsotonicRegression<>(opBuilder.build());
   }

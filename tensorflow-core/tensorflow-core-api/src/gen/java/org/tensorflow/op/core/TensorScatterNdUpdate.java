@@ -92,11 +92,10 @@ public final class TensorScatterNdUpdate<T extends TType> extends RawOp implemen
   )
   public static <T extends TType> TensorScatterNdUpdate<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> indices, Operand<T> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorScatterNdUpdate"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorScatterNdUpdate");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorScatterNdUpdate<>(opBuilder.build());
   }
 

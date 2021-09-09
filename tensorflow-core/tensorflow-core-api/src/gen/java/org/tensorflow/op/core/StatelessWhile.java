@@ -84,9 +84,8 @@ public final class StatelessWhile extends RawOp implements While {
   )
   public static StatelessWhile create(Scope scope, Iterable<Operand<?>> input,
       ConcreteFunction cond, ConcreteFunction body, While.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessWhile"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessWhile");
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("cond", cond);
     opBuilder.setAttr("body", body);
     if (options != null) {

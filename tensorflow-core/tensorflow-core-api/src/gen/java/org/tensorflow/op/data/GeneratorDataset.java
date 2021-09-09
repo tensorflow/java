@@ -73,11 +73,10 @@ public final class GeneratorDataset extends RawOp implements Operand<TType> {
       Iterable<Operand<?>> nextFuncOtherArgs, Iterable<Operand<?>> finalizeFuncOtherArgs,
       ConcreteFunction initFunc, ConcreteFunction nextFunc, ConcreteFunction finalizeFunc,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GeneratorDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GeneratorDataset");
     opBuilder.addInputList(Operands.asOutputs(initFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(nextFuncOtherArgs));
     opBuilder.addInputList(Operands.asOutputs(finalizeFuncOtherArgs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("init_func", initFunc);
     opBuilder.setAttr("next_func", nextFunc);
     opBuilder.setAttr("finalize_func", finalizeFunc);

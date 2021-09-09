@@ -64,13 +64,12 @@ public final class ResourceApplyMomentum extends RawOp {
   public static <T extends TType> ResourceApplyMomentum create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> grad,
       Operand<T> momentum, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyMomentum"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyMomentum");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(momentum.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

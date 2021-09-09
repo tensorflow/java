@@ -73,7 +73,7 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> m, Operand<? extends TType> v,
       Operand<? extends TType> vhat, Operand<T> beta1Power, Operand<T> beta2Power, Operand<T> lr,
       Operand<T> beta1, Operand<T> beta2, Operand<T> epsilon, Operand<T> grad, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyAdamWithAmsgrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyAdamWithAmsgrad");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(m.asOutput());
     opBuilder.addInput(v.asOutput());
@@ -85,7 +85,6 @@ public final class ResourceApplyAdamWithAmsgrad extends RawOp {
     opBuilder.addInput(beta2.asOutput());
     opBuilder.addInput(epsilon.asOutput());
     opBuilder.addInput(grad.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

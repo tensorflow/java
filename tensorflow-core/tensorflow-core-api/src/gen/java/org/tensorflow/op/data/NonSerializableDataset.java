@@ -65,9 +65,8 @@ public final class NonSerializableDataset extends RawOp implements Operand<TType
   )
   public static NonSerializableDataset create(Scope scope, Operand<? extends TType> inputDataset,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NonSerializableDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "NonSerializableDataset");
     opBuilder.addInput(inputDataset.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

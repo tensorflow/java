@@ -78,10 +78,9 @@ public final class Complex<U extends TType> extends RawOp implements Operand<U> 
   )
   public static <U extends TType, T extends TNumber> Complex<U> create(Scope scope, Operand<T> real,
       Operand<T> imag, Class<U> Tout) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Complex"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Complex");
     opBuilder.addInput(real.asOutput());
     opBuilder.addInput(imag.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     return new Complex<>(opBuilder.build());
   }

@@ -71,10 +71,9 @@ public final class RaggedTensorToSparse<U extends TType> extends RawOp {
   )
   public static <U extends TType> RaggedTensorToSparse<U> create(Scope scope,
       Iterable<Operand<? extends TNumber>> rtNestedSplits, Operand<U> rtDenseValues) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedTensorToSparse"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RaggedTensorToSparse");
     opBuilder.addInputList(Operands.asOutputs(rtNestedSplits));
     opBuilder.addInput(rtDenseValues.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RaggedTensorToSparse<>(opBuilder.build());
   }
 

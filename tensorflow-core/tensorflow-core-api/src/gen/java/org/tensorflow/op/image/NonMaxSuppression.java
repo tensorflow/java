@@ -104,14 +104,13 @@ public final class NonMaxSuppression<T extends TNumber> extends RawOp {
   public static <T extends TNumber> NonMaxSuppression<T> create(Scope scope, Operand<T> boxes,
       Operand<T> scores, Operand<TInt32> maxOutputSize, Operand<T> iouThreshold,
       Operand<T> scoreThreshold, Operand<T> softNmsSigma, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("NonMaxSuppression"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "NonMaxSuppression");
     opBuilder.addInput(boxes.asOutput());
     opBuilder.addInput(scores.asOutput());
     opBuilder.addInput(maxOutputSize.asOutput());
     opBuilder.addInput(iouThreshold.asOutput());
     opBuilder.addInput(scoreThreshold.asOutput());
     opBuilder.addInput(softNmsSigma.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.padToMaxOutputSize != null) {

@@ -56,9 +56,8 @@ public final class MultiDeviceIteratorToStringHandle extends RawOp implements Op
   )
   public static MultiDeviceIteratorToStringHandle create(Scope scope,
       Operand<? extends TType> multiDeviceIterator) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MultiDeviceIteratorToStringHandle"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MultiDeviceIteratorToStringHandle");
     opBuilder.addInput(multiDeviceIterator.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new MultiDeviceIteratorToStringHandle(opBuilder.build());
   }
 

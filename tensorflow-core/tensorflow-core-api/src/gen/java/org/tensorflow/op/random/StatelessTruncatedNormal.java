@@ -70,10 +70,9 @@ public final class StatelessTruncatedNormal<V extends TNumber> extends RawOp imp
   )
   public static <V extends TNumber> StatelessTruncatedNormal<V> create(Scope scope,
       Operand<? extends TNumber> shape, Operand<? extends TNumber> seed, Class<V> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessTruncatedNormal"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessTruncatedNormal");
     opBuilder.addInput(shape.asOutput());
     opBuilder.addInput(seed.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new StatelessTruncatedNormal<>(opBuilder.build());
   }

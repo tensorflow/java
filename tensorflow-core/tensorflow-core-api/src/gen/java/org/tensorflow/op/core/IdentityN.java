@@ -76,9 +76,8 @@ public final class IdentityN extends RawOp implements Iterable<Operand<TType>> {
       describeByClass = true
   )
   public static IdentityN create(Scope scope, Iterable<Operand<?>> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IdentityN"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "IdentityN");
     opBuilder.addInputList(Operands.asOutputs(input));
-    opBuilder = scope.apply(opBuilder);
     return new IdentityN(opBuilder.build());
   }
 

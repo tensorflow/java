@@ -77,12 +77,11 @@ public final class RaggedBincount<U extends TNumber> extends RawOp implements Op
   public static <U extends TNumber, T extends TNumber> RaggedBincount<U> create(Scope scope,
       Operand<TInt64> splits, Operand<T> values, Operand<T> sizeOutput, Operand<U> weights,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RaggedBincount"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RaggedBincount");
     opBuilder.addInput(splits.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {

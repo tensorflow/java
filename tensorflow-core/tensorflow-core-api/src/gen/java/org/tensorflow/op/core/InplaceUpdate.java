@@ -66,11 +66,10 @@ public final class InplaceUpdate<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> InplaceUpdate<T> create(Scope scope, Operand<T> x,
       Operand<TInt32> i, Operand<T> v) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InplaceUpdate"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InplaceUpdate");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InplaceUpdate<>(opBuilder.build());
   }
 

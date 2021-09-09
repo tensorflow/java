@@ -69,8 +69,7 @@ public final class RetrieveTPUEmbeddingMDLAdagradLightParameters extends RawOp {
   )
   public static RetrieveTPUEmbeddingMDLAdagradLightParameters create(Scope scope, Long numShards,
       Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingMDLAdagradLightParameters"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RetrieveTPUEmbeddingMDLAdagradLightParameters");
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

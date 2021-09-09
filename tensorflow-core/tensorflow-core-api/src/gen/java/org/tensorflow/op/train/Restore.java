@@ -85,11 +85,10 @@ public final class Restore extends RawOp implements Iterable<Operand<TType>> {
   )
   public static Restore create(Scope scope, Operand<TString> prefix, Operand<TString> tensorNames,
       Operand<TString> shapeAndSlices, List<Class<? extends TType>> dtypes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Restore"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Restore");
     opBuilder.addInput(prefix.asOutput());
     opBuilder.addInput(tensorNames.asOutput());
     opBuilder.addInput(shapeAndSlices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtypes", Operands.toDataTypes(dtypes));
     return new Restore(opBuilder.build());
   }

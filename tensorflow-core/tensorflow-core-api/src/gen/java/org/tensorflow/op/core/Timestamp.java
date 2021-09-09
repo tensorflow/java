@@ -58,8 +58,7 @@ public final class Timestamp extends RawOp implements Operand<TFloat64> {
       describeByClass = true
   )
   public static Timestamp create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Timestamp"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Timestamp");
     return new Timestamp(opBuilder.build());
   }
 

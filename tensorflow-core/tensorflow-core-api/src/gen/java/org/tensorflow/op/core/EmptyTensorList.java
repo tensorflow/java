@@ -70,10 +70,9 @@ public final class EmptyTensorList extends RawOp implements Operand<TType> {
   public static <U extends TType> EmptyTensorList create(Scope scope,
       Operand<? extends TNumber> elementShape, Operand<TInt32> maxNumElements,
       Class<U> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EmptyTensorList"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EmptyTensorList");
     opBuilder.addInput(elementShape.asOutput());
     opBuilder.addInput(maxNumElements.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new EmptyTensorList(opBuilder.build());
   }

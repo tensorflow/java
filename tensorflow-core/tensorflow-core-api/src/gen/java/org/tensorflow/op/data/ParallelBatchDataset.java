@@ -72,12 +72,11 @@ public final class ParallelBatchDataset extends RawOp implements Operand<TType> 
   public static ParallelBatchDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> batchSize, Operand<TInt64> numParallelCalls, Operand<TBool> dropRemainder,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParallelBatchDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ParallelBatchDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

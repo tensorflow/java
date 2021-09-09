@@ -79,7 +79,7 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
       Operand<V> padding, Operand<V> lhsDilation, Operand<V> rhsDilation,
       Operand<V> featureGroupCount, String dimensionNumbers, String precisionConfig,
       Class<W> preferredElementType) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Conv"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Conv");
     opBuilder.addInput(lhs.asOutput());
     opBuilder.addInput(rhs.asOutput());
     opBuilder.addInput(windowStrides.asOutput());
@@ -87,7 +87,6 @@ public final class Conv<W extends TType> extends RawOp implements Operand<W> {
     opBuilder.addInput(lhsDilation.asOutput());
     opBuilder.addInput(rhsDilation.asOutput());
     opBuilder.addInput(featureGroupCount.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dimension_numbers", dimensionNumbers);
     opBuilder.setAttr("precision_config", precisionConfig);
     opBuilder.setAttr("preferred_element_type", Operands.toDataType(preferredElementType));

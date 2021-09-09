@@ -66,9 +66,8 @@ public final class BoostedTreesFlushQuantileSummaries extends RawOp implements I
   )
   public static BoostedTreesFlushQuantileSummaries create(Scope scope,
       Operand<? extends TType> quantileStreamResourceHandle, Long numFeatures) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesFlushQuantileSummaries"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesFlushQuantileSummaries");
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_features", numFeatures);
     return new BoostedTreesFlushQuantileSummaries(opBuilder.build());
   }

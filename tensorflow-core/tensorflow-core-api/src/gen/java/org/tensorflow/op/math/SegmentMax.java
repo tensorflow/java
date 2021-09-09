@@ -81,10 +81,9 @@ public final class SegmentMax<T extends TNumber> extends RawOp implements Operan
   )
   public static <T extends TNumber> SegmentMax<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SegmentMax"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SegmentMax");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SegmentMax<>(opBuilder.build());
   }
 

@@ -73,7 +73,7 @@ public final class ResourceApplyFtrl extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<? extends TType> linear,
       Operand<T> grad, Operand<T> lr, Operand<T> l1, Operand<T> l2, Operand<T> l2Shrinkage,
       Operand<T> lrPower, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyFtrl"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyFtrl");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(linear.asOutput());
@@ -83,7 +83,6 @@ public final class ResourceApplyFtrl extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(l2Shrinkage.asOutput());
     opBuilder.addInput(lrPower.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

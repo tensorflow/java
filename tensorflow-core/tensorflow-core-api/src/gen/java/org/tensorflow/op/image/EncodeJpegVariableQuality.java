@@ -64,10 +64,9 @@ public final class EncodeJpegVariableQuality extends RawOp implements Operand<TS
   )
   public static EncodeJpegVariableQuality create(Scope scope, Operand<TUint8> images,
       Operand<TInt32> quality) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("EncodeJpegVariableQuality"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "EncodeJpegVariableQuality");
     opBuilder.addInput(images.asOutput());
     opBuilder.addInput(quality.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new EncodeJpegVariableQuality(opBuilder.build());
   }
 

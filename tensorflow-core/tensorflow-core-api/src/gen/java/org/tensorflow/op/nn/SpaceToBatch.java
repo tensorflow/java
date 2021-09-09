@@ -138,10 +138,9 @@ public final class SpaceToBatch<T extends TType> extends RawOp implements Operan
   )
   public static <T extends TType> SpaceToBatch<T> create(Scope scope, Operand<T> input,
       Operand<? extends TNumber> paddings, Long blockSize) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SpaceToBatch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SpaceToBatch");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(paddings.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("block_size", blockSize);
     return new SpaceToBatch<>(opBuilder.build());
   }

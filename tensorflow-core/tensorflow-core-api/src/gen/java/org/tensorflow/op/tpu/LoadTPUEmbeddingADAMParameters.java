@@ -61,11 +61,10 @@ public final class LoadTPUEmbeddingADAMParameters extends RawOp {
   public static LoadTPUEmbeddingADAMParameters create(Scope scope, Operand<TFloat32> parameters,
       Operand<TFloat32> momenta, Operand<TFloat32> velocities, Long numShards, Long shardId,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LoadTPUEmbeddingADAMParameters"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LoadTPUEmbeddingADAMParameters");
     opBuilder.addInput(parameters.asOutput());
     opBuilder.addInput(momenta.asOutput());
     opBuilder.addInput(velocities.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

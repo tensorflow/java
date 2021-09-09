@@ -64,9 +64,8 @@ public final class Sort<T extends TType> extends RawOp implements Operand<T> {
       describeByClass = true
   )
   public static <T extends TType> Sort<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Sort"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Sort");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Sort<>(opBuilder.build());
   }
 

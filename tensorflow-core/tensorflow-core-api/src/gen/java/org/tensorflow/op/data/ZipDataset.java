@@ -69,9 +69,8 @@ public final class ZipDataset extends RawOp implements Operand<TType> {
   )
   public static ZipDataset create(Scope scope, Iterable<Operand<? extends TType>> inputDatasets,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ZipDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ZipDataset");
     opBuilder.addInputList(Operands.asOutputs(inputDatasets));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

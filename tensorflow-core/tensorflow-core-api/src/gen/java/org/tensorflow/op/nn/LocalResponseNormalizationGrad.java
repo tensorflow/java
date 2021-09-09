@@ -61,11 +61,10 @@ public final class LocalResponseNormalizationGrad<T extends TNumber> extends Raw
   )
   public static <T extends TNumber> LocalResponseNormalizationGrad<T> create(Scope scope,
       Operand<T> inputGrads, Operand<T> inputImage, Operand<T> outputImage, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LocalResponseNormalizationGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LocalResponseNormalizationGrad");
     opBuilder.addInput(inputGrads.asOutput());
     opBuilder.addInput(inputImage.asOutput());
     opBuilder.addInput(outputImage.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.depthRadius != null) {

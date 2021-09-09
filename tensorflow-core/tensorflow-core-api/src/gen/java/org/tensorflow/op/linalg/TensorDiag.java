@@ -74,9 +74,8 @@ public final class TensorDiag<T extends TType> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TType> TensorDiag<T> create(Scope scope, Operand<T> diagonal) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorDiag"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorDiag");
     opBuilder.addInput(diagonal.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorDiag<>(opBuilder.build());
   }
 

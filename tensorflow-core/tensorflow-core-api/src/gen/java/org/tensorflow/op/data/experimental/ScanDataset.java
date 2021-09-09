@@ -67,11 +67,10 @@ public final class ScanDataset extends RawOp implements Operand<TType> {
   public static ScanDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Iterable<Operand<?>> initialState, Iterable<Operand<?>> otherArguments, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScanDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScanDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(initialState));
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

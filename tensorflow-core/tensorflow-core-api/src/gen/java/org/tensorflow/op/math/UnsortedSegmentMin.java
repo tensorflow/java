@@ -84,11 +84,10 @@ public final class UnsortedSegmentMin<T extends TNumber> extends RawOp implement
   )
   public static <T extends TNumber> UnsortedSegmentMin<T> create(Scope scope, Operand<T> data,
       Operand<? extends TNumber> segmentIds, Operand<? extends TNumber> numSegments) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("UnsortedSegmentMin"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "UnsortedSegmentMin");
     opBuilder.addInput(data.asOutput());
     opBuilder.addInput(segmentIds.asOutput());
     opBuilder.addInput(numSegments.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new UnsortedSegmentMin<>(opBuilder.build());
   }
 

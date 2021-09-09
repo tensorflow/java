@@ -92,11 +92,10 @@ public final class ScatterNdUpdate<T extends TType> extends RawOp implements Ope
   )
   public static <T extends TType> ScatterNdUpdate<T> create(Scope scope, Operand<T> ref,
       Operand<? extends TNumber> indices, Operand<T> updates, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ScatterNdUpdate"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ScatterNdUpdate");
     opBuilder.addInput(ref.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

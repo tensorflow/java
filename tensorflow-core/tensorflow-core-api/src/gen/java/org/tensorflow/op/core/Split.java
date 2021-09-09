@@ -71,10 +71,9 @@ public final class Split<T extends TType> extends RawOp implements Iterable<Oper
   )
   public static <T extends TType> Split<T> create(Scope scope, Operand<TInt32> axis,
       Operand<T> value, Long numSplit) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Split"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Split");
     opBuilder.addInput(axis.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_split", numSplit);
     return new Split<>(opBuilder.build());
   }

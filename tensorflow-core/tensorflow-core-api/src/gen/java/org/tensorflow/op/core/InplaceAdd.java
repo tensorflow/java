@@ -66,11 +66,10 @@ public final class InplaceAdd<T extends TType> extends RawOp implements Operand<
   )
   public static <T extends TType> InplaceAdd<T> create(Scope scope, Operand<T> x, Operand<TInt32> i,
       Operand<T> v) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("InplaceAdd"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "InplaceAdd");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(i.asOutput());
     opBuilder.addInput(v.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new InplaceAdd<>(opBuilder.build());
   }
 

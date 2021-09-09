@@ -71,9 +71,8 @@ public final class AccumulateN<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> AccumulateN<T> create(Scope scope, Iterable<Operand<T>> inputs,
       Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("AccumulateN"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "AccumulateN");
     opBuilder.addInputList(Operands.asOutputs(inputs));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("shape", shape);
     return new AccumulateN<>(opBuilder.build());
   }

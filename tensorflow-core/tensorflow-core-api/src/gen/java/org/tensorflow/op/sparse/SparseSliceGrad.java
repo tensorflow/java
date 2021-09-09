@@ -70,12 +70,11 @@ public final class SparseSliceGrad<T extends TType> extends RawOp implements Ope
   )
   public static <T extends TType> SparseSliceGrad<T> create(Scope scope, Operand<T> backpropValGrad,
       Operand<TInt64> inputIndices, Operand<TInt64> inputStart, Operand<TInt64> outputIndices) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseSliceGrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSliceGrad");
     opBuilder.addInput(backpropValGrad.asOutput());
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputStart.asOutput());
     opBuilder.addInput(outputIndices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseSliceGrad<>(opBuilder.build());
   }
 

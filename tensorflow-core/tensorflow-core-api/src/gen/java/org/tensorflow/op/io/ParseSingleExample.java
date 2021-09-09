@@ -113,10 +113,9 @@ public final class ParseSingleExample extends RawOp {
   public static ParseSingleExample create(Scope scope, Operand<TString> serialized,
       Iterable<Operand<?>> denseDefaults, Long numSparse, List<String> sparseKeys,
       List<String> denseKeys, List<Class<? extends TType>> sparseTypes, List<Shape> denseShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ParseSingleExample"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ParseSingleExample");
     opBuilder.addInput(serialized.asOutput());
     opBuilder.addInputList(Operands.asOutputs(denseDefaults));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("num_sparse", numSparse);
     String[] sparseKeysArray = new String[sparseKeys.size()];
     for (int i = 0 ; i < sparseKeysArray.length ; i++) {

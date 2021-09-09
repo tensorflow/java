@@ -67,11 +67,10 @@ public final class TensorArrayRead<T extends TType> extends RawOp implements Ope
   public static <T extends TType> TensorArrayRead<T> create(Scope scope,
       Operand<? extends TType> handle, Operand<TInt32> index, Operand<TFloat32> flowIn,
       Class<T> dtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorArrayRead"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorArrayRead");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(index.asOutput());
     opBuilder.addInput(flowIn.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     return new TensorArrayRead<>(opBuilder.build());
   }

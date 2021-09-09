@@ -116,10 +116,9 @@ public final class DynamicStitch<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> DynamicStitch<T> create(Scope scope,
       Iterable<Operand<TInt32>> indices, Iterable<Operand<T>> data) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DynamicStitch"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DynamicStitch");
     opBuilder.addInputList(Operands.asOutputs(indices));
     opBuilder.addInputList(Operands.asOutputs(data));
-    opBuilder = scope.apply(opBuilder);
     return new DynamicStitch<>(opBuilder.build());
   }
 

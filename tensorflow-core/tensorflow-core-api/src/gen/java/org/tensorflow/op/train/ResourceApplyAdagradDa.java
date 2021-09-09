@@ -66,7 +66,7 @@ public final class ResourceApplyAdagradDa extends RawOp {
       Operand<? extends TType> var, Operand<? extends TType> gradientAccumulator,
       Operand<? extends TType> gradientSquaredAccumulator, Operand<T> grad, Operand<T> lr,
       Operand<T> l1, Operand<T> l2, Operand<TInt64> globalStep, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceApplyAdagradDa"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceApplyAdagradDa");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(gradientAccumulator.asOutput());
     opBuilder.addInput(gradientSquaredAccumulator.asOutput());
@@ -75,7 +75,6 @@ public final class ResourceApplyAdagradDa extends RawOp {
     opBuilder.addInput(l1.asOutput());
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(globalStep.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

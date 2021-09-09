@@ -68,11 +68,10 @@ public final class MaxPool<T extends TNumber> extends RawOp implements Operand<T
   )
   public static <T extends TNumber> MaxPool<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> ksize, Operand<TInt32> strides, String padding, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MaxPool"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MaxPool");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(ksize.asOutput());
     opBuilder.addInput(strides.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("padding", padding);
     if (options != null) {
       for (Options opts : options) {

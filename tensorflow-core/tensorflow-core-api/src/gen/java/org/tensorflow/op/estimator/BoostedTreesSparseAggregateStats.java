@@ -78,14 +78,13 @@ public final class BoostedTreesSparseAggregateStats extends RawOp {
       Operand<TFloat32> gradients, Operand<TFloat32> hessians, Operand<TInt32> featureIndices,
       Operand<TInt32> featureValues, Operand<TInt32> featureShape, Long maxSplits,
       Long numBuckets) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesSparseAggregateStats"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesSparseAggregateStats");
     opBuilder.addInput(nodeIds.asOutput());
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(hessians.asOutput());
     opBuilder.addInput(featureIndices.asOutput());
     opBuilder.addInput(featureValues.asOutput());
     opBuilder.addInput(featureShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("max_splits", maxSplits);
     opBuilder.setAttr("num_buckets", numBuckets);
     return new BoostedTreesSparseAggregateStats(opBuilder.build());

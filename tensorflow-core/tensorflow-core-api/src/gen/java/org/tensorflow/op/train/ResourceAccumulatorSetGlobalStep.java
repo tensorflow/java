@@ -54,10 +54,9 @@ public final class ResourceAccumulatorSetGlobalStep extends RawOp {
   )
   public static ResourceAccumulatorSetGlobalStep create(Scope scope,
       Operand<? extends TType> handle, Operand<TInt64> newGlobalStep) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceAccumulatorSetGlobalStep"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceAccumulatorSetGlobalStep");
     opBuilder.addInput(handle.asOutput());
     opBuilder.addInput(newGlobalStep.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new ResourceAccumulatorSetGlobalStep(opBuilder.build());
   }
 }

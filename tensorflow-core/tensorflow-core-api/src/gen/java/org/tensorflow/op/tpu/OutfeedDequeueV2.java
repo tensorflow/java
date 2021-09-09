@@ -67,9 +67,8 @@ public final class OutfeedDequeueV2<T extends TType> extends RawOp implements Op
   )
   public static <T extends TType> OutfeedDequeueV2<T> create(Scope scope,
       Operand<TInt32> deviceOrdinal, Class<T> dtype, Shape shape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OutfeedDequeueV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OutfeedDequeueV2");
     opBuilder.addInput(deviceOrdinal.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("dtype", Operands.toDataType(dtype));
     opBuilder.setAttr("shape", shape);
     return new OutfeedDequeueV2<>(opBuilder.build());

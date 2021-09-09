@@ -63,11 +63,10 @@ public final class SparseTensorSliceDataset extends RawOp implements Operand<TTy
   )
   public static SparseTensorSliceDataset create(Scope scope, Operand<TInt64> indices,
       Operand<? extends TType> values, Operand<TInt64> denseShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseTensorSliceDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseTensorSliceDataset");
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(values.asOutput());
     opBuilder.addInput(denseShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseTensorSliceDataset(opBuilder.build());
   }
 

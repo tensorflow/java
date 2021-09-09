@@ -86,13 +86,12 @@ public final class MapAndBatchDataset extends RawOp implements Operand<TType> {
       Iterable<Operand<?>> otherArguments, Operand<TInt64> batchSize,
       Operand<TInt64> numParallelCalls, Operand<TBool> dropRemainder, ConcreteFunction f,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MapAndBatchDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MapAndBatchDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(batchSize.asOutput());
     opBuilder.addInput(numParallelCalls.asOutput());
     opBuilder.addInput(dropRemainder.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

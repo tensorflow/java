@@ -91,10 +91,9 @@ public final class CtcBeamSearchDecoder<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> CtcBeamSearchDecoder<T> create(Scope scope, Operand<T> inputs,
       Operand<TInt32> sequenceLength, Long beamWidth, Long topPaths, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CtcBeamSearchDecoder"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CtcBeamSearchDecoder");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("beam_width", beamWidth);
     opBuilder.setAttr("top_paths", topPaths);
     if (options != null) {

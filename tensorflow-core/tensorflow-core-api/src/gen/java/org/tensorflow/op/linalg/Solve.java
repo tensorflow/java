@@ -70,10 +70,9 @@ public final class Solve<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType> Solve<T> create(Scope scope, Operand<T> matrix, Operand<T> rhs,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Solve"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Solve");
     opBuilder.addInput(matrix.asOutput());
     opBuilder.addInput(rhs.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjoint != null) {

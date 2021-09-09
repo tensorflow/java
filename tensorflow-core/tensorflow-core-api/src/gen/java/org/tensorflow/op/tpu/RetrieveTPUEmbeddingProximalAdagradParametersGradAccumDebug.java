@@ -66,8 +66,7 @@ public final class RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug e
   )
   public static RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug create(Scope scope,
       Long numShards, Long shardId, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RetrieveTPUEmbeddingProximalAdagradParametersGradAccumDebug");
     opBuilder.setAttr("num_shards", numShards);
     opBuilder.setAttr("shard_id", shardId);
     if (options != null) {

@@ -84,10 +84,9 @@ public final class BatchMatMul<T extends TType> extends RawOp implements Operand
   )
   public static <T extends TType> BatchMatMul<T> create(Scope scope, Operand<T> x, Operand<T> y,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BatchMatMul"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BatchMatMul");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.adjX != null) {

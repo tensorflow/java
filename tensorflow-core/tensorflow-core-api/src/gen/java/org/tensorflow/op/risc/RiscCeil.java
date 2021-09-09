@@ -57,9 +57,8 @@ public final class RiscCeil<T extends TNumber> extends RawOp implements Operand<
       describeByClass = true
   )
   public static <T extends TNumber> RiscCeil<T> create(Scope scope, Operand<T> x) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscCeil"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscCeil");
     opBuilder.addInput(x.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscCeil<>(opBuilder.build());
   }
 

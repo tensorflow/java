@@ -78,9 +78,8 @@ public final class Eig<U extends TType> extends RawOp {
   )
   public static <U extends TType> Eig<U> create(Scope scope, Operand<? extends TType> input,
       Class<U> Tout, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Eig"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Eig");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataType(Tout));
     if (options != null) {
       for (Options opts : options) {

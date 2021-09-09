@@ -63,10 +63,9 @@ public final class BroadcastGradientArgs<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> BroadcastGradientArgs<T> create(Scope scope, Operand<T> s0,
       Operand<T> s1) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BroadcastGradientArgs"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BroadcastGradientArgs");
     opBuilder.addInput(s0.asOutput());
     opBuilder.addInput(s1.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new BroadcastGradientArgs<>(opBuilder.build());
   }
 

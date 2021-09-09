@@ -65,9 +65,8 @@ public final class IteratorGetNextAsOptional extends RawOp implements Operand<TT
   )
   public static IteratorGetNextAsOptional create(Scope scope, Operand<? extends TType> iterator,
       List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("IteratorGetNextAsOptional"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "IteratorGetNextAsOptional");
     opBuilder.addInput(iterator.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

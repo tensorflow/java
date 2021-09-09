@@ -55,10 +55,9 @@ public final class BoostedTreesQuantileStreamResourceFlush extends RawOp {
   public static BoostedTreesQuantileStreamResourceFlush create(Scope scope,
       Operand<? extends TType> quantileStreamResourceHandle, Operand<TInt64> numBuckets,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("BoostedTreesQuantileStreamResourceFlush"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "BoostedTreesQuantileStreamResourceFlush");
     opBuilder.addInput(quantileStreamResourceHandle.asOutput());
     opBuilder.addInput(numBuckets.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.generateQuantiles != null) {

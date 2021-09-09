@@ -63,10 +63,9 @@ public final class MergeV2Checkpoints extends RawOp {
   )
   public static MergeV2Checkpoints create(Scope scope, Operand<TString> checkpointPrefixes,
       Operand<TString> destinationPrefix, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("MergeV2Checkpoints"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "MergeV2Checkpoints");
     opBuilder.addInput(checkpointPrefixes.asOutput());
     opBuilder.addInput(destinationPrefix.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.deleteOldDirs != null) {

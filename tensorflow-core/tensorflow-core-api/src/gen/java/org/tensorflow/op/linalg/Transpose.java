@@ -66,10 +66,9 @@ public final class Transpose<T extends TType> extends RawOp implements Operand<T
   )
   public static <T extends TType> Transpose<T> create(Scope scope, Operand<T> x,
       Operand<? extends TNumber> perm) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Transpose"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Transpose");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Transpose<>(opBuilder.build());
   }
 

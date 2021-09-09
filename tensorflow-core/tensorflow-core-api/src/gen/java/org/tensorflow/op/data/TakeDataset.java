@@ -69,10 +69,9 @@ public final class TakeDataset extends RawOp implements Operand<TType> {
   )
   public static TakeDataset create(Scope scope, Operand<? extends TType> inputDataset,
       Operand<TInt64> count, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TakeDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TakeDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInput(count.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];
     for (int i = 0 ; i < outputShapesArray.length ; i++) {

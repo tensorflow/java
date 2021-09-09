@@ -118,11 +118,10 @@ public final class TensorScatterNdSub<T extends TType> extends RawOp implements 
   )
   public static <T extends TType> TensorScatterNdSub<T> create(Scope scope, Operand<T> tensor,
       Operand<? extends TNumber> indices, Operand<T> updates) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorScatterNdSub"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorScatterNdSub");
     opBuilder.addInput(tensor.asOutput());
     opBuilder.addInput(indices.asOutput());
     opBuilder.addInput(updates.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorScatterNdSub<>(opBuilder.build());
   }
 

@@ -56,8 +56,7 @@ public final class OrdinalSelector extends RawOp implements Operand<TInt32> {
       describeByClass = true
   )
   public static OrdinalSelector create(Scope scope) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("OrdinalSelector"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "OrdinalSelector");
     return new OrdinalSelector(opBuilder.build());
   }
 

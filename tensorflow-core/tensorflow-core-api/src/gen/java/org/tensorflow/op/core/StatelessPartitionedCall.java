@@ -73,9 +73,8 @@ public final class StatelessPartitionedCall extends RawOp implements Partitioned
   )
   public static StatelessPartitionedCall create(Scope scope, Iterable<Operand<?>> args,
       List<Class<? extends TType>> Tout, ConcreteFunction f, PartitionedCall.Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("StatelessPartitionedCall"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "StatelessPartitionedCall");
     opBuilder.addInputList(Operands.asOutputs(args));
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("Tout", Operands.toDataTypes(Tout));
     opBuilder.setAttr("f", f);
     if (options != null) {

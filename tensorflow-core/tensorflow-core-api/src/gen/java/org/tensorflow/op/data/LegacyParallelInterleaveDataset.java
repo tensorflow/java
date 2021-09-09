@@ -86,14 +86,13 @@ public final class LegacyParallelInterleaveDataset extends RawOp implements Oper
       Operand<TInt64> bufferOutputElements, Operand<TInt64> prefetchInputElements,
       ConcreteFunction f, List<Class<? extends TType>> outputTypes, List<Shape> outputShapes,
       Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("LegacyParallelInterleaveDataset"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "LegacyParallelInterleaveDataset");
     opBuilder.addInput(inputDataset.asOutput());
     opBuilder.addInputList(Operands.asOutputs(otherArguments));
     opBuilder.addInput(cycleLength.asOutput());
     opBuilder.addInput(blockLength.asOutput());
     opBuilder.addInput(bufferOutputElements.asOutput());
     opBuilder.addInput(prefetchInputElements.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("f", f);
     opBuilder.setAttr("output_types", Operands.toDataTypes(outputTypes));
     Shape[] outputShapesArray = new Shape[outputShapes.size()];

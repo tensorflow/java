@@ -57,12 +57,11 @@ public final class WriteScalarSummary extends RawOp {
   )
   public static WriteScalarSummary create(Scope scope, Operand<? extends TType> writer,
       Operand<TInt64> step, Operand<TString> tag, Operand<? extends TNumber> value) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("WriteScalarSummary"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "WriteScalarSummary");
     opBuilder.addInput(writer.asOutput());
     opBuilder.addInput(step.asOutput());
     opBuilder.addInput(tag.asOutput());
     opBuilder.addInput(value.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new WriteScalarSummary(opBuilder.build());
   }
 }

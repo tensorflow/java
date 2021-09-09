@@ -70,8 +70,7 @@ public final class XlaRecvFromHost<T extends TType> extends RawOp implements Ope
   )
   public static <T extends TType> XlaRecvFromHost<T> create(Scope scope, Class<T> Toutput,
       Shape shape, String key) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("XlaRecvFromHost"));
-    opBuilder = scope.apply(opBuilder);
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaRecvFromHost");
     opBuilder.setAttr("Toutput", Operands.toDataType(Toutput));
     opBuilder.setAttr("shape", shape);
     opBuilder.setAttr("key", key);

@@ -68,10 +68,9 @@ public final class TPUEmbeddingActivations extends RawOp implements Operand<TFlo
   )
   public static TPUEmbeddingActivations create(Scope scope, Operand<TFloat32> embeddingVariable,
       Operand<TFloat32> slicedActivations, Long tableId, Long lookupId) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TPUEmbeddingActivations"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TPUEmbeddingActivations");
     opBuilder.addInput(embeddingVariable.asOutput());
     opBuilder.addInput(slicedActivations.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("table_id", tableId);
     opBuilder.setAttr("lookup_id", lookupId);
     return new TPUEmbeddingActivations(opBuilder.build());

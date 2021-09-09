@@ -75,11 +75,10 @@ public final class SparseReorder<T extends TType> extends RawOp {
   )
   public static <T extends TType> SparseReorder<T> create(Scope scope, Operand<TInt64> inputIndices,
       Operand<T> inputValues, Operand<TInt64> inputShape) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("SparseReorder"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseReorder");
     opBuilder.addInput(inputIndices.asOutput());
     opBuilder.addInput(inputValues.asOutput());
     opBuilder.addInput(inputShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new SparseReorder<>(opBuilder.build());
   }
 

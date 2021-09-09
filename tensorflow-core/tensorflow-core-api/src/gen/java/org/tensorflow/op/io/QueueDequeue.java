@@ -73,9 +73,8 @@ public final class QueueDequeue extends RawOp implements Iterable<Operand<TType>
   )
   public static QueueDequeue create(Scope scope, Operand<? extends TType> handle,
       List<Class<? extends TType>> componentTypes, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("QueueDequeue"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "QueueDequeue");
     opBuilder.addInput(handle.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("component_types", Operands.toDataTypes(componentTypes));
     if (options != null) {
       for (Options opts : options) {

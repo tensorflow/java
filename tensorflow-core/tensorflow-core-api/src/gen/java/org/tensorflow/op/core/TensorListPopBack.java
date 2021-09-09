@@ -73,10 +73,9 @@ public final class TensorListPopBack<T extends TType> extends RawOp {
   )
   public static <T extends TType> TensorListPopBack<T> create(Scope scope,
       Operand<? extends TType> inputHandle, Operand<TInt32> elementShape, Class<T> elementDtype) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListPopBack"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListPopBack");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(elementShape.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("element_dtype", Operands.toDataType(elementDtype));
     return new TensorListPopBack<>(opBuilder.build());
   }

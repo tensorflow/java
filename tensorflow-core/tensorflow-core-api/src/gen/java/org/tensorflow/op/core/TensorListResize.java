@@ -62,10 +62,9 @@ public final class TensorListResize extends RawOp implements Operand<TType> {
   )
   public static TensorListResize create(Scope scope, Operand<? extends TType> inputHandle,
       Operand<TInt32> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorListResize"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorListResize");
     opBuilder.addInput(inputHandle.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorListResize(opBuilder.build());
   }
 

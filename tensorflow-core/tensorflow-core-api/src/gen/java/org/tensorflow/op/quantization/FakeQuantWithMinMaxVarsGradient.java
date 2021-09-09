@@ -70,12 +70,11 @@ public final class FakeQuantWithMinMaxVarsGradient extends RawOp {
   )
   public static FakeQuantWithMinMaxVarsGradient create(Scope scope, Operand<TFloat32> gradients,
       Operand<TFloat32> inputs, Operand<TFloat32> min, Operand<TFloat32> max, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FakeQuantWithMinMaxVarsGradient"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FakeQuantWithMinMaxVarsGradient");
     opBuilder.addInput(gradients.asOutput());
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(min.asOutput());
     opBuilder.addInput(max.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.numBits != null) {

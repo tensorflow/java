@@ -63,9 +63,8 @@ public final class CheckNumerics<T extends TNumber> extends RawOp implements Ope
   )
   public static <T extends TNumber> CheckNumerics<T> create(Scope scope, Operand<T> tensor,
       String message) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CheckNumerics"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CheckNumerics");
     opBuilder.addInput(tensor.asOutput());
-    opBuilder = scope.apply(opBuilder);
     opBuilder.setAttr("message", message);
     return new CheckNumerics<>(opBuilder.build());
   }

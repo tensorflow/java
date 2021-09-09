@@ -74,11 +74,10 @@ public final class DenseBincount<U extends TNumber> extends RawOp implements Ope
   )
   public static <U extends TNumber, T extends TNumber> DenseBincount<U> create(Scope scope,
       Operand<T> input, Operand<T> sizeOutput, Operand<U> weights, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("DenseBincount"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "DenseBincount");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
     opBuilder.addInput(weights.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.binaryOutput != null) {

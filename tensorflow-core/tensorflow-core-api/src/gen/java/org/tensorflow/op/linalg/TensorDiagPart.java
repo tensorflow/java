@@ -75,9 +75,8 @@ public final class TensorDiagPart<T extends TType> extends RawOp implements Oper
       describeByClass = true
   )
   public static <T extends TType> TensorDiagPart<T> create(Scope scope, Operand<T> input) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TensorDiagPart"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TensorDiagPart");
     opBuilder.addInput(input.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TensorDiagPart<>(opBuilder.build());
   }
 

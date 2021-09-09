@@ -73,11 +73,10 @@ public final class Slice<T extends TType> extends RawOp implements Operand<T> {
   )
   public static <T extends TType, U extends TNumber> Slice<T> create(Scope scope, Operand<T> input,
       Operand<U> begin, Operand<U> sizeOutput) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("Slice"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "Slice");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(begin.asOutput());
     opBuilder.addInput(sizeOutput.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new Slice<>(opBuilder.build());
   }
 

@@ -59,11 +59,10 @@ public final class TPUReshardVariables extends RawOp {
   )
   public static TPUReshardVariables create(Scope scope, Iterable<Operand<? extends TType>> vars,
       Operand<TString> newFormatKey, Operand<? extends TType> formatStateVar) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("TPUReshardVariables"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "TPUReshardVariables");
     opBuilder.addInputList(Operands.asOutputs(vars));
     opBuilder.addInput(newFormatKey.asOutput());
     opBuilder.addInput(formatStateVar.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new TPUReshardVariables(opBuilder.build());
   }
 }

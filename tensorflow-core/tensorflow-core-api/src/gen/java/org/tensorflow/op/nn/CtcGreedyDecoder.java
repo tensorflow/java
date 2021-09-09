@@ -83,10 +83,9 @@ public final class CtcGreedyDecoder<T extends TNumber> extends RawOp {
   )
   public static <T extends TNumber> CtcGreedyDecoder<T> create(Scope scope, Operand<T> inputs,
       Operand<TInt32> sequenceLength, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("CtcGreedyDecoder"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "CtcGreedyDecoder");
     opBuilder.addInput(inputs.asOutput());
     opBuilder.addInput(sequenceLength.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.mergeRepeated != null) {

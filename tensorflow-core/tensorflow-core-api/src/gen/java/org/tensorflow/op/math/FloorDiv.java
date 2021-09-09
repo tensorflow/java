@@ -64,10 +64,9 @@ public final class FloorDiv<T extends TType> extends RawOp implements Operand<T>
       describeByClass = true
   )
   public static <T extends TType> FloorDiv<T> create(Scope scope, Operand<T> x, Operand<T> y) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("FloorDiv"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "FloorDiv");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(y.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new FloorDiv<>(opBuilder.build());
   }
 

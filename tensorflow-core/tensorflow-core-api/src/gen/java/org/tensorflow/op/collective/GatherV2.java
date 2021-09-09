@@ -67,13 +67,12 @@ public final class GatherV2<T extends TNumber> extends RawOp implements Operand<
   public static <T extends TNumber> GatherV2<T> create(Scope scope, Operand<T> input,
       Operand<TInt32> groupSize, Operand<TInt32> groupKey, Operand<TInt32> instanceKey,
       Iterable<Operand<? extends TType>> orderingToken, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("GatherV2"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "GatherV2");
     opBuilder.addInput(input.asOutput());
     opBuilder.addInput(groupSize.asOutput());
     opBuilder.addInput(groupKey.asOutput());
     opBuilder.addInput(instanceKey.asOutput());
     opBuilder.addInputList(Operands.asOutputs(orderingToken));
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.communicationHint != null) {

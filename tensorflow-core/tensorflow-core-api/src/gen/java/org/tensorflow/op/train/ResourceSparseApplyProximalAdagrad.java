@@ -69,7 +69,7 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
   public static <T extends TType> ResourceSparseApplyProximalAdagrad create(Scope scope,
       Operand<? extends TType> var, Operand<? extends TType> accum, Operand<T> lr, Operand<T> l1,
       Operand<T> l2, Operand<T> grad, Operand<? extends TNumber> indices, Options... options) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("ResourceSparseApplyProximalAdagrad"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "ResourceSparseApplyProximalAdagrad");
     opBuilder.addInput(var.asOutput());
     opBuilder.addInput(accum.asOutput());
     opBuilder.addInput(lr.asOutput());
@@ -77,7 +77,6 @@ public final class ResourceSparseApplyProximalAdagrad extends RawOp {
     opBuilder.addInput(l2.asOutput());
     opBuilder.addInput(grad.asOutput());
     opBuilder.addInput(indices.asOutput());
-    opBuilder = scope.apply(opBuilder);
     if (options != null) {
       for (Options opts : options) {
         if (opts.useLocking != null) {

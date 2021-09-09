@@ -60,10 +60,9 @@ public final class RiscTranspose<T extends TType> extends RawOp implements Opera
   )
   public static <T extends TType> RiscTranspose<T> create(Scope scope, Operand<T> x,
       Operand<? extends TNumber> perm) {
-    OperationBuilder opBuilder = scope.env().opBuilder(OP_NAME, scope.makeOpName("RiscTranspose"));
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "RiscTranspose");
     opBuilder.addInput(x.asOutput());
     opBuilder.addInput(perm.asOutput());
-    opBuilder = scope.apply(opBuilder);
     return new RiscTranspose<>(opBuilder.build());
   }
 
