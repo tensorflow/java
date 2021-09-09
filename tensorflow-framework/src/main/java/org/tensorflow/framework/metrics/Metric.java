@@ -1,4 +1,4 @@
-/* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+/* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,182 +14,109 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import java.util.List;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-import java.util.Collections;
-import java.util.List;
-
-/**
- * Base class for Metrics
- *
- * @param <T> The data type for the metric result
- */
-public abstract class Metric<T extends TNumber> {
-
-  /** The TensorFlow Ops */
-  private final Ops tf;
-
-  /** The seed for random number generation */
-  private final long seed;
-
-  /** The name for this metric. Defaults to {@link Class#getSimpleName()}. */
-  private final String name;
-
-  /**
-   * Creates a Metric with a name of {@link Class#getSimpleName()}
-   *
-   * @param tf the TensorFlow Ops
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   */
-  protected Metric(Ops tf, long seed) {
-    this(tf, null, seed);
-  }
-
-  /**
-   * Creates a Metric
-   *
-   * @param tf the TensorFlow Ops
-   * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
-   * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   */
-  protected Metric(Ops tf, String name, long seed) {
-    if (!tf.scope().env().isGraph()) {
-      throw new IllegalArgumentException("Metrics are required to execute in Graph mode.");
-    }
-    this.seed = seed;
-    this.name = name != null ? name : this.getClass().getSimpleName();
-    this.tf = tf.withName(this.getClass().getSimpleName());
-  }
+/** Interface for metrics */
+interface Metric {
 
   /**
    * Creates a List of Operations to update the metric state based on input values.
    *
-   * <p>This is an empty implementation that should be overridden in a subclass, if needed.
-   *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment. encapsulating a {@link
+   *     Graph} environment.
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
    * @return a List of Operations to update the metric state
    */
-  @SuppressWarnings({"unchecked", "unused"})
-  public List<Op> updateStateList(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-    return Collections.EMPTY_LIST;
-  }
+  List<Op> updateStateList(
+      Ops tf, Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights);
 
   /**
    * Creates a List of Operations to update the metric state based on labels and predictions.
    *
    * <p>This is an empty implementation that should be overridden in a sub class, if needed.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights sample weights to be applied to values, may be null.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
    * @return a List of Operations to update the metric state
    */
-  @SuppressWarnings({"unchecked", "unused"})
-  public List<Op> updateStateList(
+  List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
-      Operand<? extends TNumber> sampleWeights) {
-    return Collections.EMPTY_LIST;
-  }
-
-  /**
-   * Creates a NoOp Operation with control dependencies to update the metric state
-   *
-   * @param values the inputs to be passed to update state, this may not be null
-   * @param sampleWeights sample weights to be applied to values, may be null.
-   * @return the Operation to update the metric state
-   */
-  public final Op updateState(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-    List<Op> controlOps = updateStateList(values, sampleWeights);
-    return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
-  }
-
-  /**
-   * Creates a NoOp Operation with control dependencies to update the metric state
-   *
-   * @param labels the labels
-   * @param predictions the predictions
-   * @param sampleWeights sample weights to be applied to values, may be null.
-   * @return the Operation to update the metric state
-   */
-  public final Op updateState(
-      Operand<? extends TNumber> labels,
-      Operand<? extends TNumber> predictions,
-      Operand<? extends TNumber> sampleWeights) {
-    List<Op> controlOps = updateStateList(labels, predictions, sampleWeights);
-    return tf.withSubScope("updateState").withControlDependencies(controlOps).noOp();
-  }
+      Operand<? extends TNumber> sampleWeights);
 
   /**
    * Gets the current result of the metric
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
+   * @param type the data type for the result
+   * @param <T> the date type for the result
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
    * @return the result, possibly with control dependencies
    */
-  public abstract Operand<T> result();
+  <T extends TNumber> Operand<T> result(Ops tf, Class<T> type);
 
   /**
    * Resets any state variables to their initial values
    *
-   * @return the control operation for doing the reset
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
+   * @return the operation for doing the reset
    */
-  public abstract Op resetStates();
+  Op resetStates(Ops tf);
+
+  /**
+   * Creates a NoOp Operation with control dependencies to update the metric state
+   *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
+   * @param values the inputs to be passed to update state, this may not be null
+   * @param sampleWeights sample weights to be applied to values, may be null.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
+   * @return the Operation to update the metric state
+   */
+  Op updateState(
+      Ops tf, Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights);
+
+  /**
+   * Creates a NoOp Operation with control dependencies to update the metric state
+   *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
+   * @param labels the labels
+   * @param predictions the predictions
+   * @param sampleWeights sample weights to be applied to values, may be null.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
+   * @return the Operation to update the metric state
+   */
+  Op updateState(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Operand<? extends TNumber> sampleWeights);
 
   /**
    * Calls update state once, followed by a call to get the result
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param values the inputs to be passed to update state, this may not be null
    * @param sampleWeights sample weights to be applied to values, may be null.
+   * @param type the data type for the result
+   * @param <T> the date type for the result
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not have a Graph environment.
    * @return the result, possibly with control dependencies
    */
-  public final Operand<T> callOnce(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-    List<Op> controlOps = updateStateList(values, sampleWeights);
-    Ops ltf = tf.withSubScope("callOnce").withControlDependencies(controlOps);
-    return ltf.identity(result());
-  }
-
-  /**
-   * Gets a formatted name for a variable, in the form {@link #name} + "_" + varName.
-   *
-   * @param varName the base name for the variable
-   * @return the formatted variable name
-   */
-  protected String getVariableName(String varName) {
-    return String.format("%s_%s", this.name, varName);
-  }
-
-  /**
-   * Gets the TensorFlow Ops
-   *
-   * @return the TensorFlow Ops
-   */
-  public Ops getTF() {
-    return tf;
-  }
-
-  /**
-   * Gets the name of this metric.
-   *
-   * @return the name of this metric
-   */
-  public String getName() {
-    return name;
-  }
-
-  /**
-   * Gets the random number generator seed value
-   *
-   * @return the random number generator seed value
-   */
-  public long getSeed() {
-    return seed;
-  }
+  <T extends TNumber> Operand<T> callOnce(
+      Ops tf,
+      Operand<? extends TNumber> values,
+      Operand<? extends TNumber> sampleWeights,
+      Class<T> type);
 }

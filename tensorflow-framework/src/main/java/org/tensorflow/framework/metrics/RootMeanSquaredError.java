@@ -35,27 +35,25 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
   /**
    * Creates a RootMeanSquaredError metric with a name of {@link Class#getSimpleName()}
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public RootMeanSquaredError(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  public RootMeanSquaredError(long seed, Class<T> type) {
+    this(null, seed, type);
   }
 
   /**
    * Creates a RootMeanSquaredError metric
    *
-   * @param tf the TensorFlow Ops
    * @param name name of the metric instance. If null, name defaults to {@link
    *     Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public RootMeanSquaredError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public RootMeanSquaredError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
   }
 
   /**
@@ -69,28 +67,30 @@ public class RootMeanSquaredError<T extends TNumber> extends Mean<T> {
    */
   @Override
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    init(tf);
+    Operand<T> tLabels = cast(tf, labels, getInternalType());
+    Operand<T> tPredictions = cast(tf, predictions, getInternalType());
     Operand<T> tSampleWeights =
-        sampleWeights != null ? cast(getTF(), sampleWeights, getResultType()) : null;
+        sampleWeights != null ? cast(tf, sampleWeights, getInternalType()) : null;
 
-    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(getTF(), tLabels, tPredictions);
+    LossTuple<T> ops = LossesHelper.squeezeOrExpandDimensions(tf, tLabels, tPredictions);
     tPredictions = ops.getTarget();
     tLabels = ops.getLabels();
 
     Operand<T> errorSquared =
-        cast(getTF(), getTF().math.squaredDifference(tPredictions, tLabels), getResultType());
+        cast(tf, tf.math.squaredDifference(tPredictions, tLabels), getInternalType());
 
-    return super.updateStateList(errorSquared, tSampleWeights);
+    return super.updateStateList(tf, errorSquared, tSampleWeights);
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    return getTF().math.sqrt(getTF().math.divNoNan(this.total, this.count));
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
+    return cast(tf, tf.math.sqrt(tf.math.divNoNan(this.total, this.count)), resultType);
   }
 }

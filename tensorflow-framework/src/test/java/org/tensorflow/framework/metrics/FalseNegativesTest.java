@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -45,11 +47,10 @@ public class FalseNegativesTest {
 
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
-      FalseNegatives<TFloat64> instance = new FalseNegatives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+      FalseNegatives<TFloat64> instance = new FalseNegatives<>(1001L, TFloat64.class);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
 
       session.evaluate(3.0, result);
     }
@@ -63,11 +64,10 @@ public class FalseNegativesTest {
       Operand<TInt64> predictions = tf.constant(this.predArray);
       Operand<TInt64> labels = tf.constant(this.trueArray);
       Operand<TFloat64> sampleWeight = tf.constant(this.sampleWeightArray);
-      FalseNegatives<TFloat64> instance = new FalseNegatives<>(tf, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      FalseNegatives<TFloat64> instance = new FalseNegatives<>(1001L, TFloat64.class);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
 
       session.evaluate(5.0, result);
     }
@@ -95,11 +95,10 @@ public class FalseNegativesTest {
                 {1, 1, 1, 1}
               });
       FalseNegatives<TFloat32> instance =
-          new FalseNegatives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+          new FalseNegatives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat32.class);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       float[] expected = new float[] {1.f, 4.f, 6.f};
       session.evaluate(expected, result);
     }
@@ -129,13 +128,23 @@ public class FalseNegativesTest {
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[][] {{3.0}, {5.0}, {7.0}, {4.0}});
       FalseNegatives<TFloat64> instance =
-          new FalseNegatives<>(tf, new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+          new FalseNegatives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       double[] expected = new double[] {4., 16., 23.};
       session.evaluate(expected, result);
+    }
+  }
+
+  /** Test that Eager mode throws IllegalArgument Exception */
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      FalseNegatives<TFloat64> instance =
+          new FalseNegatives<>(new float[] {0.15f, 0.5f, 0.85f}, 1001L, TFloat64.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }

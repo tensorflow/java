@@ -16,9 +16,10 @@ package org.tensorflow.framework.metrics;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.op.core.OneHot;
 import org.tensorflow.types.TInt64;
@@ -43,32 +44,30 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class CategoricalAccuracy<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
 
   /**
    * Creates a CategoricalAccuracy metric, using {@link Class#getSimpleName()} for the metric name
    *
-   * @param tf the TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public CategoricalAccuracy(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  public CategoricalAccuracy(long seed, Class<T> type) {
+    this(null, seed, type);
   }
 
   /**
    * Creates a CategoricalAccuracy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public CategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public CategoricalAccuracy(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     super.setLoss(this);
   }
 
@@ -79,16 +78,23 @@ public class CategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
    * rather than as labels. If necessary, use {@link Ops#oneHot} to expand {@code labels} as a
    * vector.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels One-hot ground truth values.
    * @param predictions tThe prediction values.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Categorical accuracy values.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<TInt64> trueMax = getTF().math.argMax(labels, getTF().constant(-1));
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<TInt64> trueMax = tf.math.argMax(labels, tf.constant(-1));
 
-    Operand<TInt64> predMax = getTF().math.argMax(predictions, getTF().constant(-1));
-    return cast(getTF(), getTF().math.equal(trueMax, predMax), getResultType());
+    Operand<TInt64> predMax = tf.math.argMax(predictions, tf.constant(-1));
+    return cast(tf, tf.math.equal(trueMax, predMax), resultType);
   }
 }

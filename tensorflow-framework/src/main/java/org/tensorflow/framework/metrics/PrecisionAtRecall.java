@@ -42,7 +42,6 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()} and {@link
    * #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
    *
-   * @param tf The TensorFlow Ops
    * @param recall the recall. A scalar value in range [0, 1]
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -50,15 +49,14 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
    *     [0-1].
    */
-  public PrecisionAtRecall(Ops tf, float recall, long seed, Class<T> type) {
-    this(tf, null, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
+  public PrecisionAtRecall(float recall, long seed, Class<T> type) {
+    this(null, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
    * Creates a PrecisionRecall metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number of
    * thresholds
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
    * @param recall the recall. A scalar value in range [0, 1]
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -67,14 +65,13 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
    *     [0-1].
    */
-  public PrecisionAtRecall(Ops tf, String name, float recall, long seed, Class<T> type) {
-    this(tf, name, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
+  public PrecisionAtRecall(String name, float recall, long seed, Class<T> type) {
+    this(name, recall, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
    * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
    *
-   * @param tf The TensorFlow Ops
    * @param recall the recall. A scalar value in range [0, 1]
    * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
    *     recall.
@@ -84,14 +81,13 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
    *     [0-1].
    */
-  public PrecisionAtRecall(Ops tf, float recall, int numThresholds, long seed, Class<T> type) {
-    this(tf, null, recall, numThresholds, seed, type);
+  public PrecisionAtRecall(float recall, int numThresholds, long seed, Class<T> type) {
+    this(null, recall, numThresholds, seed, type);
   }
 
   /**
    * Creates a PrecisionRecall metric.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
    * @param recall the recall. A scalar value in range [0, 1]
    * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
@@ -102,9 +98,8 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if recall is not in the range
    *     [0-1].
    */
-  public PrecisionAtRecall(
-      Ops tf, String name, float recall, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, numThresholds, seed, type);
+  public PrecisionAtRecall(String name, float recall, int numThresholds, long seed, Class<T> type) {
+    super(name, numThresholds, seed, type);
     if (recall < 0f || recall > 1f)
       throw new IllegalArgumentException("recall must be in the range [0, 1].");
     this.recall = recall;
@@ -112,9 +107,8 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = getTF();
-
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
     Operand<T> div = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
     Operand<T> sub = tf.math.sub(div, cast(tf, tf.constant(recall), getType()));
     Operand<TInt32> minIndex = tf.math.argMin(tf.math.abs(sub), tf.constant(0), TInt32.class);
@@ -122,7 +116,7 @@ public class PrecisionAtRecall<T extends TNumber> extends SensitivitySpecificity
 
     Operand<T> trueSlice = tf.slice(truePositives, minIndex, tf.constant(new int[] {1}));
     Operand<T> falseSlice = tf.slice(falsePositives, minIndex, tf.constant(new int[] {1}));
-    return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
+    return cast(tf, tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice)), resultType);
   }
 
   /**

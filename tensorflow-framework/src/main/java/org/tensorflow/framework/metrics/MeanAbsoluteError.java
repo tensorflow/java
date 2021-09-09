@@ -14,49 +14,66 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the mean of absolute difference between labels and predictions.
  *
  * @param <T> The data type for the metric result.
  */
-public class MeanAbsoluteError<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class MeanAbsoluteError<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
 
+  /**
+   * Creates a Mean Absolute Error metric using {@link Class#getSimpleName()} for the metric name.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public MeanAbsoluteError(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
   /**
    * Creates a Mean Absolute Error metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  public MeanAbsoluteError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public MeanAbsoluteError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
   }
 
   /**
    * Computes the mean absolute error loss between labels and predictions.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the truth values or labels, shape = {@code [batch_size, d0, .. dN]}.
    * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Mean absolute error values, shape = {@code [batch_size, d0, .. dN-1]}.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.meanAbsoluteError(getTF(), tLabels, tPredictions);
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<U> tLabels = cast(tf, labels, resultType);
+    Operand<U> tPredictions = cast(tf, predictions, resultType);
+    return Losses.meanAbsoluteError(tf, tLabels, tPredictions);
   }
 }

@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -31,18 +33,17 @@ public class AccuracyTest {
   public void testCorrect() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Accuracy<TFloat32> instance = new Accuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Accuracy<TFloat32> instance = new Accuracy<>(1001L, TFloat32.class);
       int[] trueArray = {1, 2, 3, 4};
       float[] predArray = {1, 2, 3, 4};
       Operand<TInt32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 1)));
       Operand<TFloat32> predictions =
           tf.reshape(tf.constant(predArray), tf.constant(Shape.of(4, 1)));
-      Op op = instance.updateState(labels, predictions, null);
+      Op op = instance.updateState(tf, labels, predictions, null);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       session.evaluate(4F, total);
       session.evaluate(4, count);
       session.evaluate(1F, result);
@@ -53,8 +54,7 @@ public class AccuracyTest {
   public void testSampleWeight() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Accuracy<TFloat32> instance = new Accuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Accuracy<TFloat32> instance = new Accuracy<>(1001L, TFloat32.class);
       float[] trueArray = {2, 1};
       float[] predArray = {2, 0};
 
@@ -64,12 +64,12 @@ public class AccuracyTest {
 
       Operand<TFloat32> sampleWeight =
           tf.reshape(tf.constant(new float[] {.5F, .2F}), tf.constant(Shape.of(2, 1)));
-      Op op = instance.updateState(labels, predictions, sampleWeight);
+      Op op = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(op);
 
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       session.evaluate(.5F, total);
       session.evaluate(.7, count);
       session.evaluate(0.71428573f, result);
@@ -80,51 +80,59 @@ public class AccuracyTest {
   public void testVariableState() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
-      Accuracy<TFloat32> instance = new Accuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
+      Accuracy<TFloat32> instance = new Accuracy<>(1001L, TFloat32.class);
       float[] trueArray = {2, 1};
 
       Operand<TFloat32> labels = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(2, 1)));
 
       Operand<TFloat32> sampleWeight =
           tf.reshape(tf.constant(new float[] {.5F, .2F}), tf.constant(Shape.of(2, 1)));
-      Op op = instance.updateState(labels, labels, sampleWeight);
+      Op op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
       Variable<TFloat32> total = instance.getTotal();
       Variable<TFloat32> count = instance.getCount();
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       session.evaluate(0.7F, total);
       session.evaluate(.7, count);
       session.evaluate(1.0F, result);
 
       // 2nd run
-      op = instance.updateState(labels, labels, sampleWeight);
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
-      result = instance.result();
+      result = instance.result(tf, TFloat32.class);
       session.evaluate(1.4F, total);
       session.evaluate(1.4, count);
       session.evaluate(1.0F, result);
 
       // new instance same graph
-      instance = new Accuracy<>(tf, 1001L, TFloat32.class);
-      session.run(instance.resetStates());
-      op = instance.updateState(labels, labels, sampleWeight);
+      instance = new Accuracy<>(1001L, TFloat32.class);
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
       total = instance.getTotal();
       count = instance.getCount();
-      result = instance.result();
+      result = instance.result(tf, TFloat32.class);
       session.evaluate(0.7F, total);
       session.evaluate(.7, count);
       session.evaluate(1.0F, result);
 
       // reset variables
-      session.run(instance.resetStates());
-      result = instance.result();
-      op = instance.updateState(labels, labels, sampleWeight);
+      session.run(instance.resetStates(tf));
+      result = instance.result(tf, TFloat32.class);
+      op = instance.updateState(tf, labels, labels, sampleWeight);
       session.run(op);
       session.evaluate(0.7F, total);
       session.evaluate(.7, count);
       session.evaluate(1.0F, result);
+    }
+  }
+
+  /** Test that Eager mode throws IllegalArgument Exception */
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      Accuracy<TFloat32> instance = new Accuracy<>(1001L, TFloat32.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }
