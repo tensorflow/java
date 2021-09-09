@@ -34,22 +34,21 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
+public class MeanBaseMetricWrapper<T extends TNumber> extends Mean<T> {
 
   /** The loss function interface */
-  protected LossMetric<T> loss;
+  protected LossMetric loss;
 
   /**
    * Creates a Reducible Metric with a metric reductions of {@link MetricReduction#WEIGHTED_MEAN}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name for this metric. If null, name defaults to {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  protected MeanMetricWrapper(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  protected MeanBaseMetricWrapper(String name, long seed, Class<T> type) {
+    super(name, seed, type);
   }
 
   /**
@@ -57,7 +56,7 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
    *
    * @return the loss function.
    */
-  public LossMetric<T> getLoss() {
+  public LossMetric getLoss() {
     return loss;
   }
 
@@ -66,7 +65,7 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
    *
    * @param loss the loss function.
    */
-  protected void setLoss(LossMetric<T> loss) {
+  protected void setLoss(LossMetric loss) {
     this.loss = loss;
   }
 
@@ -84,9 +83,12 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
    *     [batch_size, d0, .. dN-1] (or can be broadcasted to this shape), then each loss element of
    *     predictions is scaled by the corresponding value of sampleWeights. (Note on dN-1: all loss
    *     functions reduce by 1 dimension, usually axis=-1.)
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return a List of control operations that updates the Mean state variables.
    */
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
@@ -94,11 +96,12 @@ public class MeanMetricWrapper<T extends TNumber> extends Mean<T> {
       throw new IllegalArgumentException("missing required inputs for labels and predictions");
     }
 
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
+    init(tf);
+    Operand<T> tLabels = cast(tf, labels, getInternalType());
+    Operand<T> tPredictions = cast(tf, predictions, getInternalType());
 
-    Operand<T> losses = loss.call(tLabels, tPredictions);
+    Operand<T> losses = loss.call(tf, tLabels, tPredictions, getInternalType());
 
-    return super.updateStateList(cast(getTF(), losses, predictions.type()), sampleWeights);
+    return super.updateStateList(tf, cast(tf, losses, predictions.type()), sampleWeights);
   }
 }

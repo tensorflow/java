@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.tensorflow.Operand;
+import org.tensorflow.framework.op.FrameworkOps;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
@@ -42,7 +43,7 @@ public class WeightsBroadcastOps {
   /**
    * Asserts that {@code weights} can be broadcast to {@code values}
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops.
    * @param weights the weights Operand
    * @param values Operand of values to which weights are applied.
    * @return {@code Operation} raising a tensorflow InvalidArgumentError if {@code weights} has
@@ -118,7 +119,7 @@ public class WeightsBroadcastOps {
    * Check to see that weights and values have the same rank, if they do, then check each
    * corresponding dim of each.
    *
-   * @param tf The TensorFlow Ops
+   * @param tf the TensorFlow Ops
    * @param weightsRank the rank operand for the weights
    * @param weightsShape the shape operand for the weights
    * @param valuesRank the rank operand for the values
@@ -141,7 +142,7 @@ public class WeightsBroadcastOps {
    * Checks that each dimension of the two shapes are the same size, or that the weight dimension
    * size is 1.
    *
-   * @param tf the TensorFlow Ops
+   * @param tf the TensorFlow Ops.
    * @param weightsShape the shape of the weights
    * @param valuesShape the shape of the values
    * @return a boolean Operand, true if all the dimensions of the two shapes are the same.
@@ -155,7 +156,8 @@ public class WeightsBroadcastOps {
         tf.concat(Arrays.asList(valuesShape2d, tf.onesLike(valuesShape2d)), tf.constant(1));
     Operand<TInt32> weightsShape2d = tf.expandDims(weightsShape, tf.constant(-1));
 
-    Operand<TInt32> invalidDims = SetsOps.difference(tf, weightsShape2d, validDims);
+    FrameworkOps fops = FrameworkOps.create(tf);
+    Operand<TInt32> invalidDims = fops.sets.difference(weightsShape2d, validDims);
     Operand<TInt32> numInvalidDims = tf.size(invalidDims, TInt32.class);
     return tf.math.equal(tf.constant(0), numInvalidDims);
   }
@@ -168,7 +170,7 @@ public class WeightsBroadcastOps {
    * When computing a weighted average, use this function to broadcast {@code weights} before
    * summing them; e.g., {@code reduceSum(w * v) / reduceSum(_broadcast_weights(w, v))}.
    *
-   * @param tf the TensorFlow ops
+   * @param tf the TensorFlow Ops
    * @param weights Operand whose shape is able to be broadcast to {@code values}
    * @param values Tensor` of any shape
    * @param <T> the type of Operand

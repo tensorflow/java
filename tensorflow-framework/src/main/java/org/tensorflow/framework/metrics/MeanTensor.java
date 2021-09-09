@@ -35,7 +35,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class MeanTensor<T extends TNumber> extends Metric<T> {
+public class MeanTensor<T extends TNumber> extends BaseMetric {
   public static final String TOTAL = "total";
   public static final String COUNT = "count";
   private final String totalName;
@@ -46,59 +46,50 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
   private Variable<T> count;
   private Assign<T> totalInitializer;
   private Assign<T> countInitializer;
-  private boolean initialized;
 
   /**
    * Creates a MeanTensor metric, using {@link Class#getSimpleName()} as the name
    *
-   * @param tf the TensorFlow ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public MeanTensor(Ops tf, long seed, Class<T> type) {
-    this(tf, null, seed, type);
+  public MeanTensor(long seed, Class<T> type) {
+    this(null, seed, type);
   }
   /**
    * Creates a MeanTensor metric
    *
-   * @param tf the TensorFlow ops
    * @param name the name of this metric, if null then {@link Class#getSimpleName()} is used
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  public MeanTensor(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed);
+  public MeanTensor(String name, long seed, Class<T> type) {
+    super(name, seed);
     this.type = type;
     this.totalName = this.getVariableName(TOTAL);
     this.countName = this.getVariableName(COUNT);
   }
 
-  /**
-   * Creates the Operations that initialize the total and count variables.
-   *
-   * @param shape the shape of the variables
-   * @return true if the variables need initialization, otherwise false;
-   */
-  private boolean init(Shape shape) {
-    if (!initialized) {
-      this.shape = shape;
+  /** {@inheritDoc} */
+  @Override
+  protected void init(Ops tf) {
+    checkIsGraph(tf);
+    if (!isInitialized() && shape != null) {
+      setTF(tf);
       Zeros<T> zeros = new Zeros<>();
-      Operand<T> zero = zeros.call(getTF(), getTF().constant(shape), type);
+      Operand<T> zero = zeros.call(tf, tf.constant(shape), type);
 
       if (total == null) {
-        total = getTF().withName(totalName).withInitScope().variable(zero);
-        totalInitializer = getTF().assign(total, zero);
+        total = tf.withName(totalName).withInitScope().variable(zero);
+        totalInitializer = tf.assign(total, zero);
       }
       if (count == null) {
-        count = getTF().withName(countName).withInitScope().variable(zero);
-        countInitializer = getTF().assign(count, zero);
+        count = tf.withName(countName).withInitScope().variable(zero);
+        countInitializer = tf.assign(count, zero);
       }
-      this.initialized = true;
-      return true;
-    } else {
-      return false;
+      setInitialized(true);
     }
   }
 
@@ -113,19 +104,19 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
    */
   @Override
   public List<Op> updateStateList(
-      Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
+      Ops tf, Operand<? extends TNumber> values, Operand<? extends TNumber> sampleWeights) {
+    if (shape == null) {
+      shape = values.shape();
+    }
+    init(tf);
     Operand<T> tValues = cast(tf, values, type);
     Operand<T> tSampleWeights = sampleWeights == null ? null : cast(tf, sampleWeights, type);
 
-    // update the shape if it is the first call.
-    boolean needsInitialization = init(values.shape());
-
-    if (!this.shape.equals(values.shape())) {
+    if (!shape.equals(values.shape())) {
       throw new IllegalArgumentException(
           String.format(
               "MeanTensor input values must always have the same shape. Expected shape (set during the first call): %s. Got %s",
-              this.shape.toString(), values.shape().toString()));
+              shape.toString(), values.shape().toString()));
     }
 
     Operand<T> numValues = tf.onesLike(tValues);
@@ -153,12 +144,7 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
       tValues = tf.math.mul(tValues, tSampleWeights);
     }
 
-    List<Op> controlOpsPre = new ArrayList<>();
-    if (needsInitialization) {
-      controlOpsPre.add(countInitializer);
-      controlOpsPre.add(totalInitializer);
-    }
-    Ops tf1 = tf.withSubScope("variables").withControlDependencies(controlOpsPre);
+    Ops tf1 = tf.withSubScope("MeanTensor.variables");
 
     List<Op> controlOps = new ArrayList<>();
     controlOps.add(tf1.assignAdd(this.count, numValues));
@@ -168,12 +154,13 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    if (!this.initialized) {
-      throw new IllegalStateException(
-          "MeanTensor does not have any result yet. Please  use `.update_state(value)` before retrieving the result.");
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
+    if (!isInitialized()) {
+      return cast(tf, tf.constant(0), resultType);
+    } else {
+      return cast(tf, tf.math.divNoNan(total, count), resultType);
     }
-    return getTF().math.divNoNan(total, count);
   }
 
   /** @return the total */
@@ -188,10 +175,15 @@ public class MeanTensor<T extends TNumber> extends Metric<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    List<Op> controlOpsPre = new ArrayList<>();
-    controlOpsPre.add(countInitializer);
-    controlOpsPre.add(totalInitializer);
-    return getTF().withSubScope("resetStates").withControlDependencies(controlOpsPre).noOp();
+  public Op resetStates(Ops tf) {
+    init(tf);
+    if (!isInitialized()) {
+      return tf.withSubScope("resetStates").noOp();
+    } else {
+      List<Op> controlOpsPre = new ArrayList<>();
+      controlOpsPre.add(countInitializer);
+      controlOpsPre.add(totalInitializer);
+      return tf.withSubScope("resetStates").withControlDependencies(controlOpsPre).noOp();
+    }
   }
 }

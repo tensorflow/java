@@ -14,6 +14,8 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -34,11 +36,10 @@ public class MeanIoUTest {
       Ops tf = session.getTF().withSubScope("testUnweighted");
       Operand<TInt64> predictions = tf.constant(new long[] {0, 1, 0, 1});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 1, 1});
-      MeanIoU<TFloat64> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat64.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, null);
+      MeanIoU<TFloat64> instance = new MeanIoU<>(numClasses, 1001L, TFloat64.class);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       double expected_result = (1. / (2. + 2. - 1.) + 1. / (2. + 2. - 1.)) / 2.;
       session.evaluate(expected_result, result);
     }
@@ -51,11 +52,10 @@ public class MeanIoUTest {
       Operand<TInt64> predictions = tf.constant(new long[] {0, 1, 0, 1});
       Operand<TInt64> labels = tf.constant(new long[] {0, 0, 1, 1});
       Operand<TFloat32> sampleWeight = tf.constant(new float[] {0.2f, 0.3f, 0.4f, 0.1f});
-      MeanIoU<TFloat32> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      MeanIoU<TFloat32> instance = new MeanIoU<>(numClasses, 1001L, TFloat32.class);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       float expected_result = (0.2f / (0.6f + 0.5f - 0.2f) + 0.1f / (0.4f + 0.5f - 0.1f)) / 2f;
       session.evaluate(expected_result, result);
     }
@@ -69,11 +69,10 @@ public class MeanIoUTest {
       Operand<TInt64> predictions = tf.constant(new long[][] {{0, 1}, {0, 1}});
       Operand<TInt64> labels = tf.constant(new long[][] {{0, 0}, {1, 1}});
       Operand<TFloat32> sampleWeight = tf.constant(new float[][] {{0.2f, 0.3f}, {0.4f, 0.1f}});
-      MeanIoU<TFloat32> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Op update = instance.updateState(labels, predictions, sampleWeight);
+      MeanIoU<TFloat32> instance = new MeanIoU<>(numClasses, 1001L, TFloat32.class);
+      Op update = instance.updateState(tf, labels, predictions, sampleWeight);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       float expected_result = (0.2f / (0.6f + 0.5f - 0.2f) + 0.1f / (0.4f + 0.5f - 0.1f)) / 2f;
       session.evaluate(expected_result, result);
     }
@@ -83,10 +82,9 @@ public class MeanIoUTest {
   public void testZeroValidEntries() {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF().withSubScope("testZeroValidEntries");
-      MeanIoU<TFloat32> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat32.class);
-      session.run(instance.getInitializer());
-      Operand<TFloat32> result = instance.result();
-      session.evaluate(0.0f, result);
+      MeanIoU<TFloat32> instance = new MeanIoU<>(numClasses, 1001L, TFloat32.class);
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
+      session.evaluate(0f, result);
     }
   }
 
@@ -97,13 +95,22 @@ public class MeanIoUTest {
       Operand<TFloat32> predictions = tf.constant(new float[] {1});
       Operand<TInt32> labels = tf.constant(new int[] {1});
 
-      MeanIoU<TFloat32> instance = new MeanIoU<>(tf, numClasses, 1001L, TFloat32.class);
+      MeanIoU<TFloat32> instance = new MeanIoU<>(numClasses, 1001L, TFloat32.class);
       session.initialize();
-      Op update = instance.updateState(labels, predictions, null);
+      Op update = instance.updateState(tf, labels, predictions, null);
       session.run(update);
-      Operand<TFloat32> result = instance.result();
+      Operand<TFloat32> result = instance.result(tf, TFloat32.class);
       float expected_result = (0f + 1f / (1f + 1f - 1f)) / 1f;
       session.evaluate(expected_result, result);
+    }
+  }
+
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      MeanIoU<TFloat32> instance = new MeanIoU<>(numClasses, 1001L, TFloat32.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }

@@ -14,6 +14,9 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.utils.TestSession;
@@ -34,11 +37,9 @@ class MeanSquaredErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       MeanSquaredError<TFloat64> instance =
-          new MeanSquaredError<>(tf, "MSE_testUnweighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      session.evaluate(0.0, instance.getTotal());
-      session.evaluate(0, instance.getCount());
-      session.evaluate(0., instance.getCount());
+          new MeanSquaredError<>("MSE_testUnweighted", 1001L, TFloat64.class);
+      assertNull(instance.getTotal());
+      assertNull(instance.getCount());
 
       int[] trueArray = {
         0, 1, 0, 1, 0,
@@ -55,11 +56,11 @@ class MeanSquaredErrorTest {
       Operand<TInt32> yTrue = tf.reshape(tf.constant(trueArray), tf.constant(Shape.of(4, 5)));
       Operand<TFloat32> yPrediction =
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
-      Op op = instance.updateState(yTrue, yPrediction, null);
+      Op op = instance.updateState(tf, yTrue, yPrediction, null);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       session.evaluate(2.0, total);
       session.evaluate(4, count);
       session.evaluate(0.5, result);
@@ -71,11 +72,9 @@ class MeanSquaredErrorTest {
     try (TestSession session = TestSession.createTestSession(tfMode)) {
       Ops tf = session.getTF();
       MeanSquaredError<TFloat64> instance =
-          new MeanSquaredError<>(tf, "MSE_testWeighted", 1001L, TFloat64.class);
-      session.run(instance.resetStates());
-      session.evaluate(0.0, instance.getTotal());
-      session.evaluate(0, instance.getCount());
-      session.evaluate(0., instance.getCount());
+          new MeanSquaredError<>("MSE_testWeighted", 1001L, TFloat64.class);
+      assertNull(instance.getTotal());
+      assertNull(instance.getCount());
 
       long[] trueArray = {
         0, 1, 0, 1, 0,
@@ -94,14 +93,23 @@ class MeanSquaredErrorTest {
           tf.reshape(tf.constant(predictionArray), tf.constant(Shape.of(4, 5)));
 
       Operand<TFloat64> sampleWeight = tf.constant(new double[] {1., 1.5, 2., 2.5});
-      Op op = instance.updateState(yTrue, yPrediction, sampleWeight);
+      Op op = instance.updateState(tf, yTrue, yPrediction, sampleWeight);
       session.run(op);
       Variable<TFloat64> total = instance.getTotal();
       Variable<TFloat64> count = instance.getCount();
-      Operand<TFloat64> result = instance.result();
+      Operand<TFloat64> result = instance.result(tf, TFloat64.class);
       session.evaluate(3.8, total);
       session.evaluate(7, count);
       session.evaluate(0.542857, result);
+    }
+  }
+
+  @Test
+  public void testEagerEnvironment() {
+    try (TestSession session = TestSession.createTestSession(TestSession.Mode.EAGER)) {
+      Ops tf = session.getTF();
+      MeanSquaredError<TFloat64> instance = new MeanSquaredError<>("MSE", 1001L, TFloat64.class);
+      assertThrows(IllegalArgumentException.class, () -> instance.updateState(tf, null, null));
     }
   }
 }

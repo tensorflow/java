@@ -31,7 +31,6 @@ import org.tensorflow.framework.metrics.impl.SymbolicShape;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.TBool;
 import org.tensorflow.types.family.TNumber;
@@ -88,7 +87,7 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class AUC<T extends TNumber> extends Metric<T> {
+public class AUC<T extends TNumber> extends BaseMetric {
 
   /** Default Fuzz factor. */
   public static final float EPSILON = 1e-7f;
@@ -109,14 +108,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
   private final String falsePositivesName;
   private final String trueNegativesName;
   private final String falseNegativesName;
-  private final Map<ConfusionMatrixEnum, Assign<T>> initializers = new HashMap<>();
   private final Class<T> type;
-
+  private final Zeros<T> zeros = new Zeros<>();
   /** The size of the label dimension. */
   private Integer numLabels;
 
   private Operand<T> labelWeights;
-
   /**
    * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
    *
@@ -124,7 +121,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * class dimension within each example.
    */
   private Variable<T> truePositives;
-
   /**
    * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
    *
@@ -132,7 +128,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * class dimension within each example.
    */
   private Variable<T> falsePositives;
-
   /**
    * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
    *
@@ -140,7 +135,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * class dimension within each example.
    */
   private Variable<T> trueNegatives;
-
   /**
    * If not {@link #multiLabel}, shape (T) where T is the number of thresholds.
    *
@@ -149,7 +143,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    */
   private Variable<T> falseNegatives;
 
-  private boolean initialized;
+  private Shape variableShape;
+  private Shape shape;
 
   /**
    * Creates an AUC (Area under the curve) metric using {@link #DEFAULT_NAME} for the metric name,
@@ -157,14 +152,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
    * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, long seed, Class<T> type) {
+  public AUC(long seed, Class<T> type) {
     this(
-        tf,
         null,
         DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
@@ -182,15 +175,13 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds, {@code
    * false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, String name, long seed, Class<T> type) {
+  public AUC(String name, long seed, Class<T> type) {
     this(
-        tf,
         name,
         DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
@@ -208,16 +199,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code null}
    * for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, int numThresholds, long seed, Class<T> type) {
+  public AUC(int numThresholds, long seed, Class<T> type) {
     this(
-        tf,
         null,
         numThresholds,
         AUCCurve.ROC,
@@ -235,16 +224,14 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * summation method, {@code null} for numThresholds, {@code false} for multiLabel, and {@code
    * null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, float[] thresholds, long seed, Class<T> type) {
+  public AUC(float[] thresholds, long seed, Class<T> type) {
     this(
-        tf,
         null,
         DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
@@ -261,7 +248,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
    * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
@@ -269,9 +255,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, String name, int numThresholds, long seed, Class<T> type) {
+  public AUC(String name, int numThresholds, long seed, Class<T> type) {
     this(
-        tf,
         name,
         numThresholds,
         AUCCurve.ROC,
@@ -289,7 +274,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * method, {@link #DEFAULT_NUM_THRESHOLDS} num thresholds, {@code false} for multiLabel, and
    * {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
@@ -297,9 +281,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, String name, float[] thresholds, long seed, Class<T> type) {
+  public AUC(String name, float[] thresholds, long seed, Class<T> type) {
     this(
-        tf,
         name,
         DEFAULT_NUM_THRESHOLDS,
         AUCCurve.ROC,
@@ -316,7 +299,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * the summation method, {@code null} for thresholds, {@code false} for multiLabel, and {@code
    * null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
@@ -326,9 +308,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, String name, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(String name, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
     this(
-        tf,
         name,
         numThresholds,
         curve,
@@ -345,7 +326,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * AUCSummationMethod#INTERPOLATION} for the summation method, {@link #DEFAULT_NUM_THRESHOLDS} num
    * thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
@@ -355,9 +335,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, String name, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(String name, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
     this(
-        tf,
         name,
         DEFAULT_NUM_THRESHOLDS,
         curve,
@@ -374,7 +353,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * {@link AUCSummationMethod#INTERPOLATION} for the summation method, {@code null} for thresholds,
    * {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -383,9 +361,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, int numThresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(int numThresholds, AUCCurve curve, long seed, Class<T> type) {
     this(
-        tf,
         null,
         numThresholds,
         curve,
@@ -402,7 +379,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * AUCSummationMethod#INTERPOLATION} for the summation method, {@code false} for multiLabel, and
    * {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -411,9 +387,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the confusion matrix variables.
    */
-  public AUC(Ops tf, float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
+  public AUC(float[] thresholds, AUCCurve curve, long seed, Class<T> type) {
     this(
-        tf,
         null,
         DEFAULT_NUM_THRESHOLDS,
         curve,
@@ -429,7 +404,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * Creates an AUC (Area under the curve) metric. using {@link #DEFAULT_NAME} for the metric name,,
    * {@code null} for thresholds, {@code false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -440,13 +414,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param type the data type for the confusion matrix variables.
    */
   public AUC(
-      Ops tf,
       int numThresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, null, numThresholds, curve, summationMethod, null, false, null, seed, type);
+    this(null, numThresholds, curve, summationMethod, null, false, null, seed, type);
   }
 
   /**
@@ -454,7 +427,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * {@code null} for numThresholds, {@code false} for multiLabel, and {@code null} for
    * labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
    * @param curve specifies the type of the curve to be computed, {@link AUCCurve#ROC} or {@link
@@ -465,30 +437,18 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param type the data type for the confusion matrix variables.
    */
   public AUC(
-      Ops tf,
       float[] thresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(
-        tf,
-        null,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        summationMethod,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
+    this(null, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@code null} for thresholds, {@code false}
    * for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. Values
    *     must be &gt; 1.
@@ -500,21 +460,19 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param type the data type for the confusion matrix variables.
    */
   public AUC(
-      Ops tf,
       String name,
       int numThresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(tf, name, numThresholds, curve, summationMethod, null, false, null, seed, type);
+    this(name, numThresholds, curve, summationMethod, null, false, null, seed, type);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric. using {@code null} for the numThresholds, {@code
    * false} for multiLabel, and {@code null} for labelWeights.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if {@code null} defaults to {@link #DEFAULT_NAME}
    * @param thresholds Optional values to use as the thresholds for discretizing the curve. If set,
    *     the numThresholds parameter is ignored. Values should be in [0, 1].
@@ -526,30 +484,18 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param type the data type for the confusion matrix variables.
    */
   public AUC(
-      Ops tf,
       String name,
       float[] thresholds,
       AUCCurve curve,
       AUCSummationMethod summationMethod,
       long seed,
       Class<T> type) {
-    this(
-        tf,
-        name,
-        DEFAULT_NUM_THRESHOLDS,
-        curve,
-        summationMethod,
-        thresholds,
-        false,
-        null,
-        seed,
-        type);
+    this(name, DEFAULT_NUM_THRESHOLDS, curve, summationMethod, thresholds, false, null, seed, type);
   }
 
   /**
    * Creates an AUC (Area under the curve) metric.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if name is null then use {@link #DEFAULT_NAME}.
    * @param numThresholds the number of thresholds to use when discretizing the roc curve. This
    *     includes the bracketing 0 and 1 thresholds, so the value must be &ge; 2.
@@ -576,7 +522,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
    *     a threshold value is less than 0 or greater than 1.
    */
   public AUC(
-      Ops tf,
       String name,
       int numThresholds,
       AUCCurve curve,
@@ -586,7 +531,7 @@ public class AUC<T extends TNumber> extends Metric<T> {
       Operand<T> labelWeights,
       long seed,
       Class<T> type) {
-    super(tf, name == null ? DEFAULT_NAME : name, seed);
+    super(name == null ? DEFAULT_NAME : name, seed);
     truePositivesName = getVariableName(TRUE_POSITIVES);
     falsePositivesName = getVariableName(FALSE_POSITIVES);
     trueNegativesName = getVariableName(TRUE_NEGATIVES);
@@ -630,82 +575,71 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     // Handle multilabel arguments.
 
-    if (labelWeights != null) {
-      // assert that labelWeights are non-negative.
-
-      this.labelWeights = labelWeights;
-      Op checks =
-          tf.withSubScope("AUC")
-              .assertThat(
-                  tf.math.greaterEqual(labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
-                  Collections.singletonList(
-                      tf.constant("All values of labelWeights must be non-negative.")));
-
-      Ops ltf =
-          tf.withSubScope("updateState").withControlDependencies(Collections.singletonList(checks));
-
-      this.labelWeights = ltf.identity(this.labelWeights);
-    }
+    this.labelWeights = labelWeights;
 
     if (multiLabel) {
       numLabels = null;
     }
   }
 
-  /**
-   * Initialize truePositives, falsePositives, trueNegatives, and falseNegatives variables, given
-   * the shape of the data.
-   *
-   * @param shape the prediction shape if called from updateState, otherwise null
-   */
-  @SuppressWarnings("unchecked")
-  private Map<ConfusionMatrixEnum, Assign<T>> build(Shape shape) {
-    Shape variableShape;
-    if (initialized) {
-      return Collections.EMPTY_MAP;
-    }
-    Ops tf = getTF();
+  /** {@inheritDoc} */
+  @Override
+  protected void init(Ops tf) {
+    checkIsGraph(tf);
+    if (shape != null && !isInitialized()) {
+      setTF(tf);
+      if (labelWeights != null) {
+        // assert that labelWeights are non-negative.
 
-    if (isMultiLabel()) {
-      if (shape == null) {
-        throw new IllegalArgumentException("For multiLabel, a shape must be provided");
+        Op checks =
+            tf.withSubScope("AUC")
+                .assertThat(
+                    tf.math.greaterEqual(
+                        labelWeights, cast(tf, tf.constant(0), labelWeights.type())),
+                    Collections.singletonList(
+                        tf.constant("All values of labelWeights must be non-negative.")));
+
+        Ops ltf =
+            tf.withSubScope("updateState")
+                .withControlDependencies(Collections.singletonList(checks));
+
+        this.labelWeights = ltf.identity(this.labelWeights);
       }
-      if (shape.numDimensions() != 2)
-        throw new IllegalArgumentException(
-            String.format(
-                "labels must have rank=2 when multiLabel is true. Found rank %d.",
-                shape.numDimensions()));
-      numLabels = (int) shape.size(1);
-      variableShape = Shape.of(numThresholds, numLabels);
-    } else {
-      variableShape = Shape.of(numThresholds);
-    }
+      if (isMultiLabel()) {
+        if (shape == null) {
+          throw new IllegalArgumentException("For multiLabel, a shape must be provided");
+        }
+        if (shape.numDimensions() != 2)
+          throw new IllegalArgumentException(
+              String.format(
+                  "labels must have rank=2 when multiLabel is true. Found rank %d.",
+                  shape.numDimensions()));
+        numLabels = (int) shape.size(1);
+        variableShape = Shape.of(numThresholds, numLabels);
+      } else {
+        variableShape = Shape.of(numThresholds);
+      }
 
-    // Create metric variables
-    Zeros<T> zeros = new Zeros<>();
-    Operand<T> zero = zeros.call(tf, tf.constant(variableShape), type);
-    if (truePositives == null) {
-      truePositives = tf.withName(getTruePositivesName()).withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_POSITIVES, tf.assign(truePositives, zero));
-    }
+      // Create metric variables
 
-    if (falsePositives == null) {
-      falsePositives = tf.withName(getFalsePositivesName()).withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_POSITIVES, tf.assign(falsePositives, zero));
-    }
+      Operand<T> zero = zeros.call(tf, tf.constant(variableShape), type);
+      if (truePositives == null) {
+        truePositives = tf.withName(getTruePositivesName()).withInitScope().variable(zero);
+      }
 
-    if (trueNegatives == null) {
-      trueNegatives = tf.withName(getTrueNegativesName()).withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.TRUE_NEGATIVES, tf.assign(trueNegatives, zero));
-    }
+      if (falsePositives == null) {
+        falsePositives = tf.withName(getFalsePositivesName()).withInitScope().variable(zero);
+      }
 
-    if (falseNegatives == null) {
-      falseNegatives = tf.withName(getFalseNegativesName()).withInitScope().variable(zero);
-      initializers.put(ConfusionMatrixEnum.FALSE_NEGATIVES, tf.assign(falseNegatives, zero));
-    }
+      if (trueNegatives == null) {
+        trueNegatives = tf.withName(getTrueNegativesName()).withInitScope().variable(zero);
+      }
 
-    initialized = true;
-    return initializers;
+      if (falseNegatives == null) {
+        falseNegatives = tf.withName(getFalseNegativesName()).withInitScope().variable(zero);
+      }
+      setInitialized(true);
+    }
   }
 
   /**
@@ -721,20 +655,20 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @return a List of Operations to update the metric state
    */
   @Override
-  @SuppressWarnings("unchecked")
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
+    if (shape == null) {
+      shape = predictions.shape();
+    }
+    init(tf);
     Operand<T> tLabels = cast(tf, labels, type);
     Operand<T> tPredictions = cast(tf, predictions, type);
     Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     List<Op> updateOperations = new ArrayList<>();
-    Map<ConfusionMatrixEnum, Assign<T>> varInitializers = Collections.EMPTY_MAP;
-    if (!initialized) {
-      varInitializers = build(tPredictions.shape());
-    }
+
     if (isMultiLabel() || getLabelWeights() != null) {
       // labels should have shape (number of examples, number of labels).
       List<SymbolicShape<? extends TNumber>> symbols = new ArrayList<>();
@@ -767,7 +701,6 @@ public class AUC<T extends TNumber> extends Metric<T> {
         MetricsHelper.updateConfusionMatrixVariables(
             tf,
             confusionMatrix,
-            varInitializers,
             tLabels,
             tPredictions,
             tf.constant(thresholds),
@@ -785,8 +718,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param input the input
    * @return the input with all positive numbers.
    */
-  private Operand<T> positive(Operand<T> input) {
-    return getTF().math.maximum(input, cast(getTF(), getTF().constant(0), input.type()));
+  private Operand<T> positive(Ops tf, Operand<T> input) {
+    return tf.math.maximum(input, cast(tf, tf.constant(0), input.type()));
   }
 
   /**
@@ -795,8 +728,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param input the input
    * @return the truth value of whether {@code input > 0}, element-wise.
    */
-  private Operand<TBool> isPositive(Operand<T> input) {
-    return getTF().math.greater(input, cast(getTF(), getTF().constant(0), input.type()));
+  private Operand<TBool> isPositive(Ops tf, Operand<T> input) {
+    return tf.math.greater(input, cast(tf, tf.constant(0), input.type()));
   }
 
   /**
@@ -807,9 +740,8 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @param size the size of the slice
    * @return the slice
    */
-  private Operand<T> slice(Operand<T> input, int begin, int size) {
-    return getTF()
-        .slice(input, getTF().constant(new int[] {begin}), getTF().constant(new int[] {size}));
+  private Operand<T> slice(Ops tf, Operand<T> input, int begin, int size) {
+    return tf.slice(input, tf.constant(new int[] {begin}), tf.constant(new int[] {size}));
   }
 
   /**
@@ -863,38 +795,37 @@ public class AUC<T extends TNumber> extends Metric<T> {
    * @see <a href="https://www.biostat.wisc.edu/~page/rocpr.pdf">The Relationship Between
    *     Precision-Recall and ROC Curves - Davis & Goadrich 2006</a>
    */
-  private Operand<T> interpolatePRAuc() {
+  private Operand<T> interpolatePRAuc(Ops tf) {
     // truePositives[:self.numThresholds - 1]
-    Ops tf = getTF();
-    Operand<T> tp0 = slice(truePositives, 0, getNumThresholds() - 1);
+    Operand<T> tp0 = slice(tf, truePositives, 0, getNumThresholds() - 1);
     // truePositives[1:]
-    Operand<T> tp1 = slice(truePositives, 1, -1);
+    Operand<T> tp1 = slice(tf, truePositives, 1, -1);
 
     Operand<T> dTP = tf.math.sub(tp0, tp1);
 
     Operand<T> p = tf.math.add(truePositives, falsePositives);
-    Operand<T> p0 = slice(p, 0, getNumThresholds() - 1);
-    Operand<T> p1 = slice(p, 1, -1);
+    Operand<T> p0 = slice(tf, p, 0, getNumThresholds() - 1);
+    Operand<T> p1 = slice(tf, p, 1, -1);
 
     Operand<T> dP = tf.math.sub(p0, p1);
 
-    Operand<T> precisionSlope = tf.math.divNoNan(dTP, positive(dP));
+    Operand<T> precisionSlope = tf.math.divNoNan(dTP, positive(tf, dP));
 
     Operand<T> intercept = tf.math.sub(tp1, tf.math.mul(precisionSlope, p1));
 
     Operand<T> safePRatio =
         tf.select(
-            tf.math.logicalAnd(isPositive(p0), isPositive(p1)),
-            tf.math.divNoNan(p0, positive(p1)),
+            tf.math.logicalAnd(isPositive(tf, p0), isPositive(tf, p1)),
+            tf.math.divNoNan(p0, positive(tf, p1)),
             tf.onesLike(p1));
 
-    Operand<T> fn1 = slice(falseNegatives, 1, -1);
+    Operand<T> fn1 = slice(tf, falseNegatives, 1, -1);
 
     Operand<T> aucTotalPos =
         tf.math.mul(
             precisionSlope, tf.math.add(dTP, tf.math.mul(intercept, tf.math.log(safePRatio))));
 
-    Operand<T> prAucIncrement = tf.math.divNoNan(aucTotalPos, positive(tf.math.add(tp1, fn1)));
+    Operand<T> prAucIncrement = tf.math.divNoNan(aucTotalPos, positive(tf, tf.math.add(tp1, fn1)));
 
     if (isMultiLabel()) {
       Operand<T> byLabelAuc = tf.reduceSum(prAucIncrement, tf.constant(0));
@@ -914,13 +845,12 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
     if (getCurve() == AUCCurve.PR && getSummationMethod() == AUCSummationMethod.INTERPOLATION) {
       // This use case is different and is handled separately.
-      return interpolatePRAuc();
+      return cast(tf, interpolatePRAuc(tf), resultType);
     }
-    Ops tf = getTF();
     Operand<T> x;
     Operand<T> y;
     Operand<T> recall = tf.math.divNoNan(truePositives, tf.math.add(truePositives, falseNegatives));
@@ -940,19 +870,22 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     // Find the rectangle heights based on `summationMethod`.
     // y[:self.numThresholds - 1]
-    Operand<T> ySlice1 = slice(y, 0, getNumThresholds() - 1);
+    Operand<T> ySlice1 = slice(tf, y, 0, getNumThresholds() - 1);
     // y[1:]
-    Operand<T> ySlice2 = slice(y, 1, -1);
+    Operand<T> ySlice2 = slice(tf, y, 1, -1);
 
     Operand<T> heights;
     switch (getSummationMethod()) {
       case INTERPOLATION:
+        //noinspection SuspiciousNameCombination
         heights = tf.math.div(tf.math.add(ySlice1, ySlice2), cast(tf, tf.constant(2), y.type()));
         break;
       case MINORING:
+        //noinspection SuspiciousNameCombination
         heights = tf.math.minimum(ySlice1, ySlice2);
         break;
       case MAJORING:
+        //noinspection SuspiciousNameCombination
         heights = tf.math.maximum(ySlice1, ySlice2);
         break;
       default:
@@ -962,33 +895,51 @@ public class AUC<T extends TNumber> extends Metric<T> {
 
     if (isMultiLabel()) {
       Operand<T> riemannTerms =
-          tf.math.mul(tf.math.sub(slice(x, 0, getNumThresholds() - 1), slice(x, 1, -1)), heights);
+          tf.math.mul(
+              tf.math.sub(slice(tf, x, 0, getNumThresholds() - 1), slice(tf, x, 1, -1)), heights);
       Operand<T> byLabelAuc = tf.reduceSum(riemannTerms, tf.constant(0));
 
       if (getLabelWeights() == null) {
-        return MetricsHelper.mean(tf, byLabelAuc);
+        return cast(tf, MetricsHelper.mean(tf, byLabelAuc), resultType);
       } else {
         // Weighted average of the label AUCs.
-        return tf.math.divNoNan(
-            tf.reduceSum(
-                tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, getLabelWeights())),
-            tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights())));
+        return cast(
+            tf,
+            tf.math.divNoNan(
+                tf.reduceSum(
+                    tf.math.mul(byLabelAuc, getLabelWeights()), allAxes(tf, getLabelWeights())),
+                tf.reduceSum(getLabelWeights(), allAxes(tf, getLabelWeights()))),
+            resultType);
       }
 
     } else {
-      Operand<T> slice1 = slice(x, 0, getNumThresholds() - 1);
-      Operand<T> slice2 = slice(x, 1, -1);
+      Operand<T> slice1 = slice(tf, x, 0, getNumThresholds() - 1);
+      Operand<T> slice2 = slice(tf, x, 1, -1);
       Operand<T> sub = tf.math.sub(slice1, slice2);
       Operand<T> operand = tf.math.mul(sub, heights);
-      return tf.reduceSum(operand, allAxes(tf, operand));
+      return cast(tf, tf.reduceSum(operand, allAxes(tf, operand)), resultType);
     }
   }
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    List<Op> updateOperations = new ArrayList<>(initializers.values());
-    return getTF().withSubScope("resetStates").withControlDependencies(updateOperations).noOp();
+  public Op resetStates(Ops tf) {
+    init(tf);
+    Operand<T> zero = zeros.call(tf, tf.constant(variableShape), type);
+    List<Op> controlList = new ArrayList<>();
+    if (truePositives != null) {
+      controlList.add(tf.assign(truePositives, zero));
+    }
+    if (falsePositives != null) {
+      controlList.add(tf.assign(falsePositives, zero));
+    }
+    if (trueNegatives != null) {
+      controlList.add(tf.assign(trueNegatives, zero));
+    }
+    if (falseNegatives != null) {
+      controlList.add(tf.assign(falseNegatives, zero));
+    }
+    return tf.withControlDependencies(controlList).noOp();
   }
 
   /** @return the numThresholds */
