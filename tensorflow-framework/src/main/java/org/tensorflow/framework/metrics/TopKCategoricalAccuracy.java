@@ -16,9 +16,10 @@ package org.tensorflow.framework.metrics;
 
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
@@ -27,38 +28,62 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class TopKCategoricalAccuracy<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
   public static final int DEFAULT_K = 5;
   /** Number of top elements to look at for computing accuracy. */
   private final int k;
 
   /**
    * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
+   * elements to look at for computing accuracy and using {@link Class#getSimpleName()} for the
+   * metric name.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
+   */
+  public TopKCategoricalAccuracy(long seed, Class<T> type) {
+    this(null, DEFAULT_K, seed, type);
+  }
+
+  /**
+   * Creates a TopKCategoricalAccuracy metric using {@link Class#getSimpleName()} for the metric
+   * name.
+   *
+   * @param k Number of top elements to look at for computing accuracy.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type The data type for the metric result
+   */
+  public TopKCategoricalAccuracy(int k, long seed, Class<T> type) {
+    this(null, k, seed, type);
+  }
+
+  /**
+   * Creates a TopKCategoricalAccuracy metric using {@link #DEFAULT_K} for {@code k}, Number of top
    * elements to look at for computing accuracy.
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type The data type for the metric result
    */
-  public TopKCategoricalAccuracy(Ops tf, String name, long seed, Class<T> type) {
-    this(tf, name, DEFAULT_K, seed, type);
+  public TopKCategoricalAccuracy(String name, long seed, Class<T> type) {
+    this(name, DEFAULT_K, seed, type);
   }
 
   /**
    * Creates a TopKCategoricalAccuracy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param k Number of top elements to look at for computing accuracy.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type The data type for the metric result
    */
-  public TopKCategoricalAccuracy(Ops tf, String name, int k, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public TopKCategoricalAccuracy(String name, int k, long seed, Class<T> type) {
+    super(name, seed, type);
     this.k = k;
     setLoss(this);
   }
@@ -66,15 +91,22 @@ public class TopKCategoricalAccuracy<T extends TNumber> extends MeanMetricWrappe
   /**
    * Computes how often targets are in the top {@code K} predictions.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the truth values or labels
    * @param predictions the predictions
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Top K categorical accuracy value.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Metrics.topKCategoricalAccuracy(getTF(), tLabels, tPredictions, k);
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<T> tLabels = cast(tf, labels, getInternalType());
+    Operand<T> tPredictions = cast(tf, predictions, getInternalType());
+    return cast(tf, Metrics.topKCategoricalAccuracy(tf, tLabels, tPredictions, k), resultType);
   }
 }

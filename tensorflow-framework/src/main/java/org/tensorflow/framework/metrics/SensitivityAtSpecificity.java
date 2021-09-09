@@ -51,7 +51,6 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    * Creates a SpecificityAtSensitivity metric with a name of {@link Class#getSimpleName()} and
    * {@link #DEFAULT_NUM_THRESHOLDS} for the number of thresholds
    *
-   * @param tf The TensorFlow Ops
    * @param specificity the specificity. A scalar value in range [0, 1]
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
@@ -59,15 +58,14 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
-  public SensitivityAtSpecificity(Ops tf, float specificity, long seed, Class<T> type) {
-    this(tf, null, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
+  public SensitivityAtSpecificity(float specificity, long seed, Class<T> type) {
+    this(null, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
    * Creates a SpecificityAtSensitivity metric with {@link #DEFAULT_NUM_THRESHOLDS} for the number
    * of thresholds
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
    * @param specificity the specificity. A scalar value in range [0, 1]
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -76,15 +74,13 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
-  public SensitivityAtSpecificity(
-      Ops tf, String name, float specificity, long seed, Class<T> type) {
-    this(tf, name, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
+  public SensitivityAtSpecificity(String name, float specificity, long seed, Class<T> type) {
+    this(name, specificity, DEFAULT_NUM_THRESHOLDS, seed, type);
   }
 
   /**
    * Creates a PrecisionRecall metric with a name of {@link Class#getSimpleName()}.
    *
-   * @param tf The TensorFlow Ops
    * @param specificity the specificity. A scalar value in range [0, 1]
    * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
    *     specificity.
@@ -94,15 +90,13 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    * @throws IllegalArgumentException if numThresholds &lt;= 0 or if specificity is not in the range
    *     [0-1].
    */
-  public SensitivityAtSpecificity(
-      Ops tf, float specificity, int numThresholds, long seed, Class<T> type) {
-    this(tf, null, specificity, numThresholds, seed, type);
+  public SensitivityAtSpecificity(float specificity, int numThresholds, long seed, Class<T> type) {
+    this(null, specificity, numThresholds, seed, type);
   }
 
   /**
    * Creates a PrecisionRecall metric.
    *
-   * @param tf The TensorFlow Ops
    * @param name the name of the metric, if null defaults to {@link Class#getSimpleName()}
    * @param specificity the specificity. A scalar value in range [0, 1]
    * @param numThresholds Defaults to 200. The number of thresholds to use for matching the given
@@ -114,8 +108,8 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
    *     [0-1].
    */
   public SensitivityAtSpecificity(
-      Ops tf, String name, float specificity, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, numThresholds, seed, type);
+      String name, float specificity, int numThresholds, long seed, Class<T> type) {
+    super(name, numThresholds, seed, type);
     if (specificity < 0f || specificity > 1f)
       throw new IllegalArgumentException("specificity must be in the range [0, 1].");
     this.specificity = specificity;
@@ -123,8 +117,8 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = getTF();
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
     Operand<T> specificities =
         tf.math.divNoNan(trueNegatives, tf.math.add(trueNegatives, falsePositives));
     Operand<T> sub = tf.math.sub(specificities, cast(tf, tf.constant(specificity), getType()));
@@ -133,7 +127,7 @@ public class SensitivityAtSpecificity<T extends TNumber> extends SensitivitySpec
 
     Operand<T> trueSlice = tf.slice(truePositives, minIndex, tf.constant(new int[] {1}));
     Operand<T> falseSlice = tf.slice(falseNegatives, minIndex, tf.constant(new int[] {1}));
-    return tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice));
+    return cast(tf, tf.math.divNoNan(trueSlice, tf.math.add(trueSlice, falseSlice)), resultType);
   }
 
   /**

@@ -21,11 +21,10 @@ import java.util.Collections;
 import java.util.List;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
-import org.tensorflow.framework.metrics.Metric;
+import org.tensorflow.framework.metrics.BaseMetric;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
@@ -35,21 +34,20 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends Metric<T> {
+public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends BaseMetric {
   public static final String ACCUMULATOR = "accumulator";
   public static final float DEFAULT_THRESHOLD = 0.5f;
   private final ConfusionMatrixEnum confusionMatrixCond;
   private final float[] thresholds;
   private final String accumulatorName;
   private final Class<T> type;
+  private final Zeros<T> zeros = new Zeros<>();
   private Variable<T> accumulator;
-  private Assign<T> initializer;
 
   /**
    * Creates a ConfusionMatrixConditionCount type of Metric, using a threshold of {@link
    * #DEFAULT_THRESHOLD}
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param confusionMatrixCond the confusion matrix condition to calculate
    * @param seed the seed for random number generation. An initializer created with a given seed
@@ -57,13 +55,12 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    * @param type the data type for the variables
    */
   public ConfusionMatrixConditionCount(
-      Ops tf, String name, ConfusionMatrixEnum confusionMatrixCond, long seed, Class<T> type) {
-    this(tf, name, confusionMatrixCond, DEFAULT_THRESHOLD, seed, type);
+      String name, ConfusionMatrixEnum confusionMatrixCond, long seed, Class<T> type) {
+    this(name, confusionMatrixCond, DEFAULT_THRESHOLD, seed, type);
   }
   /**
    * Creates a ConfusionMatrixConditionCount type of Metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param confusionMatrixCond the confusion matrix condition to calculate
    * @param threshold a threshold value in {@code [0, 1]}. A threshold is compared with prediction
@@ -74,19 +71,17 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    * @param type the data type for the variables
    */
   public ConfusionMatrixConditionCount(
-      Ops tf,
       String name,
       ConfusionMatrixEnum confusionMatrixCond,
       float threshold,
       long seed,
       Class<T> type) {
-    this(tf, name, confusionMatrixCond, new float[] {threshold}, seed, type);
+    this(name, confusionMatrixCond, new float[] {threshold}, seed, type);
   }
 
   /**
    * Creates a ConfusionMatrixConditionCount type of Metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param confusionMatrixCond the confusion matrix condition to calculate
    * @param thresholds threshold values in {@code [0, 1]}. A threshold is compared with prediction
@@ -97,41 +92,32 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    * @param type the data type for the variables
    */
   public ConfusionMatrixConditionCount(
-      Ops tf,
       String name,
       ConfusionMatrixEnum confusionMatrixCond,
       float[] thresholds,
       long seed,
       Class<T> type) {
-    super(tf, name, seed);
+    super(name, seed);
     accumulatorName = this.getVariableName(ACCUMULATOR);
     this.type = type;
     this.confusionMatrixCond = confusionMatrixCond;
     this.thresholds = thresholds;
-    init();
   }
 
-  /** Initialize the metric */
-  private void init() {
-    Shape variableShape = Shape.of(this.thresholds.length);
+  /** {@inheritDoc} */
+  @Override
+  protected void init(Ops tf) {
+    checkIsGraph(tf);
+    if (!isInitialized()) {
+      setTF(tf);
+      Shape variableShape = Shape.of(this.thresholds.length);
 
-    Zeros<T> zeros = new Zeros<>();
-    accumulator =
-        getTF()
-            .withName(getAccumulatorName())
-            .withInitScope()
-            .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
-    initializer =
-        getTF().assign(accumulator, zeros.call(getTF(), getTF().constant(variableShape), type));
-  }
-
-  /**
-   * Gets the initializer for the accumulator variable
-   *
-   * @return the initializer for the accumulator variable
-   */
-  public Assign<T> getInitializer() {
-    return initializer;
+      accumulator =
+          tf.withName(getAccumulatorName())
+              .withInitScope()
+              .variable(zeros.call(tf.withInitScope(), tf.constant(variableShape), type));
+      setInitialized(true);
+    }
   }
 
   /**
@@ -145,18 +131,18 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
    */
   @Override
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
+    init(tf);
     Operand<T> tLabels = cast(tf, labels, type);
     Operand<T> tPredictions = cast(tf, predictions, type);
     Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     return new ArrayList<>(
         MetricsHelper.updateConfusionMatrixVariables(
-            getTF(),
+            tf,
             Collections.singletonMap(confusionMatrixCond, accumulator),
-            Collections.singletonMap(confusionMatrixCond, initializer),
             tLabels,
             tPredictions,
             tf.constant(thresholds),
@@ -169,14 +155,17 @@ public abstract class ConfusionMatrixConditionCount<T extends TNumber> extends M
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    return getTF().identity(accumulator);
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> type) {
+    init(tf);
+    return cast(tf, tf.identity(accumulator), type);
   }
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    return initializer;
+  public Op resetStates(Ops tf) {
+    init(tf);
+    return tf.withName(accumulatorName)
+        .assign(accumulator, zeros.call(tf, tf.constant(accumulator.shape()), type));
   }
 
   /**

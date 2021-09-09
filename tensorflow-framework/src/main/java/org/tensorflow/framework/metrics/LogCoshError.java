@@ -14,14 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A metric that computes the logarithm of the hyperbolic cosine of the prediction error metric
@@ -29,34 +30,51 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * @param <T> The data type for the metric result.
  */
-public class LogCoshError<T extends TNumber> extends MeanMetricWrapper<T> implements LossMetric<T> {
+public class LogCoshError<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
 
+  /**
+   * Creates a LogCoshError metric using {@link Class#getSimpleName()} for the metric name.
+   *
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public LogCoshError(long seed, Class<T> type) {
+    this(null, seed, type);
+  }
   /**
    * Creates a LogCoshError metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the type for the variables and result
    */
-  public LogCoshError(Ops tf, String name, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+  public LogCoshError(String name, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
   }
 
   /**
    * Calculates the Logarithm of the hyperbolic cosine of the prediction error.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels Ground truth values, shape = {@code [batch_size, d0, .. dN]}.
    * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
-   * @return Logcosh error values, shape = {@code [batch_size, d0, .. dN-1]}.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
+   * @return the Logcosh error values, shape = {@code [batch_size, d0, .. dN-1]}.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.logCosh(getTF(), tLabels, tPredictions);
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<U> tLabels = cast(tf, labels, resultType);
+    Operand<U> tPredictions = cast(tf, predictions, resultType);
+    return Losses.logCosh(tf, tLabels, tPredictions);
   }
 }

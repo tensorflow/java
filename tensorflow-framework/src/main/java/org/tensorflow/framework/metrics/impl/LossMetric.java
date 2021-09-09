@@ -15,21 +15,25 @@ limitations under the License.
 package org.tensorflow.framework.metrics.impl;
 
 import org.tensorflow.Operand;
+import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
 
-/**
- * Interface for Metrics that wrap AbstractLoss functions.
- *
- * @param <T> The data type of the predictions.
- */
-public interface LossMetric<T extends TNumber> {
+/** Interface for Metrics that wrap AbstractLoss functions. */
+public interface LossMetric {
 
   /**
    * Calculates the weighted loss between {@code labels} and {@code predictions}
    *
+   * @param tf the TensorFlow Ops
    * @param labels the truth values or labels
    * @param predictions the predictions
+   * @param resultType the data type for the result
+   * @param <T> The data type of the predictions.
    * @return the loss
    */
-  Operand<T> call(Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions);
+  <T extends TNumber> Operand<T> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<T> resultType);
 }

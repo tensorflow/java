@@ -19,6 +19,7 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
 
 import java.util.Collections;
 import java.util.List;
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
 import org.tensorflow.framework.metrics.impl.MetricsHelper;
@@ -43,99 +44,94 @@ import org.tensorflow.types.family.TNumber;
  *
  * @param <T> The data type for the metric result
  */
-public class MeanIoU<T extends TNumber> extends Metric<T> {
+public class MeanIoU<T extends TNumber> extends BaseMetric {
 
   public static final String TOTAL_CONFUSION_MATRIX = "TOTAL_CONFUSION_MATRIX";
   private final String totalCMName;
   private final Class<T> type;
+
+  private final Zeros<T> zeros = new Zeros<>();
   /**
    * The possible number of labels the prediction task can have. This value must be provided, since
    * a confusion matrix of dimension = [numClasses, numClasses] will be allocated.
    */
   private final long numClasses;
 
-  private Variable<T> totalConfusionMatrix;
+  private final Shape variableShape;
   private Assign<T> initializer;
+  private Variable<T> totalConfusionMatrix;
 
   /**
    * Creates a metric MeanIoU, using name as {@link Class#getSimpleName()}
    *
-   * @param tf the TensorFlow Ops
    * @param numClasses The possible number of labels the prediction task can have
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  protected MeanIoU(Ops tf, long numClasses, long seed, Class<T> type) {
-    this(tf, null, numClasses, seed, type);
+  protected MeanIoU(long numClasses, long seed, Class<T> type) {
+    this(null, numClasses, seed, type);
   }
 
   /**
    * Creates a MeanIoU metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric, if null then {@link Class#getSimpleName()} is used
    * @param numClasses The possible number of labels the prediction task can have
    * @param seed the seed for random number generation. An initializer created with a given seed
    *     will always produce the same random tensor for a given shape and data type.
    * @param type the data type for the variables
    */
-  protected MeanIoU(Ops tf, String name, long numClasses, long seed, Class<T> type) {
-    super(tf, name, seed);
+  protected MeanIoU(String name, long numClasses, long seed, Class<T> type) {
+    super(name, seed);
     this.type = type;
     this.totalCMName = this.getVariableName(TOTAL_CONFUSION_MATRIX);
     this.numClasses = numClasses;
-    init();
+    variableShape = Shape.of(numClasses, numClasses);
   }
 
-  private void init() {
-    Shape variableShape = Shape.of(numClasses, numClasses);
-
-    if (totalConfusionMatrix == null) {
-      Zeros<T> zeros = new Zeros<>();
-      totalConfusionMatrix =
-          getTF()
-              .withName(totalCMName)
-              .withInitScope()
-              .variable(zeros.call(getTF(), getTF().constant(variableShape), type));
-      initializer =
-          getTF()
-              .assign(
-                  totalConfusionMatrix, zeros.call(getTF(), getTF().constant(variableShape), type));
+  /** {@inheritDoc} */
+  @Override
+  protected void init(Ops tf) {
+    checkIsGraph(tf);
+    if (!isInitialized()) {
+      setTF(tf);
+      Operand<T> zeroOp = zeros.call(tf, tf.constant(variableShape), type);
+      totalConfusionMatrix = tf.withName(totalCMName).withInitScope().variable(zeroOp);
+      initializer = tf.assign(totalConfusionMatrix, zeroOp);
+      setInitialized(true);
     }
   }
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    return initializer;
-  }
-
-  /**
-   * Gets the initializer for the totalConfusionMatrix variable
-   *
-   * @return the initializer for the totalConfusionMatrix variable
-   */
-  public Assign<T> getInitializer() {
-    return initializer;
+  public Op resetStates(Ops tf) {
+    init(tf);
+    return tf.withName(totalCMName)
+        .assign(totalConfusionMatrix, zeros.call(tf, tf.constant(variableShape), type));
   }
 
   /**
    * Accumulates the confusion matrix statistics.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the labels
    * @param predictions the predictions
    * @param sampleWeights Optional weighting of each example. Defaults to 1, if null. Rank is either
    *     0, or the same rank as labels, and must be broadcastable to labels.
    * @return the Operands that updates totalConfusionMatrix variable
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @throws IllegalArgumentException if the weights rank is not 0, and weights rank @{code !=}
    *     labels rank, and if the predictions size is not equal to the labels size
    */
   @Override
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
+    init(tf);
     if (sampleWeights != null) {
       long weightsRank = sampleWeights.shape().numDimensions();
       long labelsRank = labels.shape().numDimensions();
@@ -158,30 +154,30 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
               labelsSize, predictionsSize));
     }
 
-    Operand<T> tLabels = cast(getTF(), labels, type);
+    Operand<T> tLabels = cast(tf, labels, type);
     if (tLabels.shape().numDimensions() > 1) {
-      tLabels = getTF().shape.flatten(tLabels);
+      tLabels = tf.shape.flatten(tLabels);
     }
-    Operand<T> tPredictions = cast(getTF(), predictions, type);
+    Operand<T> tPredictions = cast(tf, predictions, type);
     if (tPredictions.shape().numDimensions() > 1) {
-      tPredictions = getTF().shape.flatten(tPredictions);
+      tPredictions = tf.shape.flatten(tPredictions);
     }
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(getTF(), sampleWeights, type) : null;
+    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
     if (tSampleWeights != null && tSampleWeights.shape().numDimensions() > 1) {
-      tSampleWeights = getTF().shape.flatten(tSampleWeights);
+      tSampleWeights = tf.shape.flatten(tSampleWeights);
     }
 
     // Accumulate the prediction to current confusion matrix.
     Operand<T> currentCM =
         MetricsHelper.confusionMatrix(
-            getTF(), tLabels, tPredictions, getTF().constant(numClasses), tSampleWeights, type);
-    return Collections.singletonList(getTF().assignAdd(totalConfusionMatrix, currentCM));
+            tf, tLabels, tPredictions, tf.constant(numClasses), tSampleWeights, type);
+    return Collections.singletonList(tf.assignAdd(totalConfusionMatrix, currentCM));
   }
 
   /** {@inheritDoc} */
   @Override
-  public Operand<T> result() {
-    Ops tf = getTF();
+  public <U extends TNumber> Operand<U> result(Ops tf, Class<U> resultType) {
+    init(tf);
     Operand<T> sumOverRow = tf.reduceSum(totalConfusionMatrix, tf.constant(0));
     Operand<T> sumOverCol = tf.reduceSum(totalConfusionMatrix, tf.constant(1));
     Operand<T> truePositives =
@@ -202,6 +198,6 @@ public class MeanIoU<T extends TNumber> extends Metric<T> {
     Operand<T> iou = tf.math.divNoNan(truePositives, denominator);
 
     Operand<T> iouSum = tf.reduceSum(iou, allAxes(tf, iou));
-    return tf.math.divNoNan(iouSum, numValidEntries);
+    return cast(tf, tf.math.divNoNan(iouSum, numValidEntries), resultType);
   }
 }

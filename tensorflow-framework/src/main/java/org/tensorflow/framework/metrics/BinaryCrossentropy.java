@@ -14,14 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.losses.Losses;
 import org.tensorflow.framework.metrics.impl.LossMetric;
-import org.tensorflow.framework.metrics.impl.MeanMetricWrapper;
+import org.tensorflow.framework.metrics.impl.MeanBaseMetricWrapper;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /**
  * A Metric that computes the binary cross-entropy loss between true labels and predicted labels.
@@ -31,16 +32,31 @@ import static org.tensorflow.framework.utils.CastHelper.cast;
  *
  * @param <T> The data type for the metric result
  */
-public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
-    implements LossMetric<T> {
+public class BinaryCrossentropy<T extends TNumber> extends MeanBaseMetricWrapper<T>
+    implements LossMetric {
 
   private final boolean fromLogits;
   private final float labelSmoothing;
 
   /**
+   * Creates a BinaryCrossentropy metric where name is {@link Class#getSimpleName()}.
+   *
+   * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
+   *     probability distribution.
+   * @param labelSmoothing value used to smooth labels, When 0, no smoothing occurs. When &gt; 0,
+   *     compute the loss between the predicted labels and a smoothed version of the true labels,
+   *     where the smoothing squeezes the labels towards 0.5. Larger values of label_smoothing
+   *     correspond to heavier smoothing.
+   * @param seed the seed for random number generation. An initializer created with a given seed
+   *     will always produce the same random tensor for a given shape and data type.
+   * @param type the type for the variables and result
+   */
+  public BinaryCrossentropy(boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    this(null, fromLogits, labelSmoothing, seed, type);
+  }
+  /**
    * Creates a BinaryCrossentropy metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of this metric, if null then metric name is {@link Class#getSimpleName()}.
    * @param fromLogits Whether to interpret predictions as a tensor of logit values as opposed to a
    *     probability distribution.
@@ -53,8 +69,8 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
    * @param type the type for the variables and result
    */
   public BinaryCrossentropy(
-      Ops tf, String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
-    super(tf, name, seed, type);
+      String name, boolean fromLogits, float labelSmoothing, long seed, Class<T> type) {
+    super(name, seed, type);
     setLoss(this);
     this.fromLogits = fromLogits;
     this.labelSmoothing = labelSmoothing;
@@ -63,16 +79,23 @@ public class BinaryCrossentropy<T extends TNumber> extends MeanMetricWrapper<T>
   /**
    * Computes the binary crossentropy loss between labels and predictions.
    *
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment.
    * @param labels the truth values or labels, has the same shape as predictions and shape = {@code
    *     [batch_size, d0, .. dN]}.
    * @param predictions the predictions, shape = {@code [batch_size, d0, .. dN]}.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @return Binary crossentropy loss value. shape = {@code [batch_size, d0, .. dN-1]}.
    */
   @Override
-  public Operand<T> call(
-      Operand<? extends TNumber> labels, Operand<? extends TNumber> predictions) {
-    Operand<T> tLabels = cast(getTF(), labels, getResultType());
-    Operand<T> tPredictions = cast(getTF(), predictions, getResultType());
-    return Losses.binaryCrossentropy(getTF(), tLabels, tPredictions, fromLogits, labelSmoothing);
+  public <U extends TNumber> Operand<U> call(
+      Ops tf,
+      Operand<? extends TNumber> labels,
+      Operand<? extends TNumber> predictions,
+      Class<U> resultType) {
+    init(tf);
+    Operand<U> tLabels = cast(tf, labels, resultType);
+    Operand<U> tPredictions = cast(tf, predictions, resultType);
+    return Losses.binaryCrossentropy(tf, tLabels, tPredictions, fromLogits, labelSmoothing);
   }
 }

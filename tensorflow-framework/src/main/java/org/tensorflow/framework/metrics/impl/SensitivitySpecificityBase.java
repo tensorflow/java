@@ -3,26 +3,24 @@ package org.tensorflow.framework.metrics.impl;
 import static org.tensorflow.framework.utils.CastHelper.cast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.tensorflow.Operand;
 import org.tensorflow.framework.initializers.Zeros;
-import org.tensorflow.framework.metrics.Metric;
+import org.tensorflow.framework.metrics.BaseMetric;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Op;
 import org.tensorflow.op.Ops;
-import org.tensorflow.op.core.Assign;
 import org.tensorflow.op.core.Variable;
 import org.tensorflow.types.family.TNumber;
 
 /**
  * Abstract base class for computing sensitivity and specificity.
  *
- * @param <T> The data type for the metric result
+ * @param <T> The data internalType for the metric result
  */
-public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metric<T> {
+public abstract class SensitivitySpecificityBase<T extends TNumber> extends BaseMetric {
 
   public static final int DEFAULT_NUM_THRESHOLDS = 200;
 
@@ -37,33 +35,30 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   private final String falsePositivesName;
   private final String trueNegativesName;
   private final String falseNegativesName;
-  private final Class<T> type;
+  private final Zeros<T> zeros = new Zeros<>();
+  private final Class<T> internalType;
   protected Variable<T> truePositives;
   protected Variable<T> falsePositives;
   protected Variable<T> trueNegatives;
   protected Variable<T> falseNegatives;
 
-  private Assign<T> truePositivesInitializer;
-  private Assign<T> falsePositivesInitializer;
-  private Assign<T> trueNegativesInitializer;
-  private Assign<T> falseNegativesInitializer;
-
   /**
    * Creates a SensitivitySpecificityBase Metric
    *
-   * @param tf the TensorFlow Ops
    * @param name the name of the metric instance, if null then {@link Class#getSimpleName()} is used
    * @param numThresholds The number of thresholds to use for matching the given recall.
    * @param seed the seed for random number generation. An initializer created with a given seed
-   *     will always produce the same random tensor for a given shape and data type.
-   * @param type the data type for the variables
+   *     will always produce the same random tensor for a given shape and data internalType.
+   * @param internalType the data internalType for the variables
    * @throws IllegalArgumentException if numThresholds &lt;= 0.
    */
   protected SensitivitySpecificityBase(
-      Ops tf, String name, int numThresholds, long seed, Class<T> type) {
-    super(tf, name, seed);
-    if (numThresholds <= 0) throw new IllegalArgumentException("numThresholds must be > 0.");
-    this.type = type;
+      String name, int numThresholds, long seed, Class<T> internalType) {
+    super(name, seed);
+    if (numThresholds <= 0) {
+      throw new IllegalArgumentException("numThresholds must be > 0.");
+    }
+    this.internalType = internalType;
     this.truePositivesName = this.getVariableName(TRUE_POSITIVES);
     this.falsePositivesName = this.getVariableName(FALSE_POSITIVES);
     this.trueNegativesName = this.getVariableName(TRUE_NEGATIVES);
@@ -80,60 +75,35 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
       }
       this.thresholds[numThresholds - 1] = 1f;
     }
-    init();
   }
 
-  /** Initializes the Variables */
-  private void init() {
-    Ops tf = getTF();
-    Zeros<T> zeros = new Zeros<>();
-    Shape varShape = Shape.of(numThresholds);
-    Operand<T> zero = zeros.call(tf, tf.constant(varShape), type);
+  /** {@inheritDoc} */
+  @Override
+  protected void init(Ops tf) {
+    checkIsGraph(tf);
+    if (!isInitialized()) {
+      setTF(tf);
+      Shape varShape = Shape.of(numThresholds);
+      Operand<T> zero = zeros.call(tf, tf.constant(varShape), internalType);
 
-    if (this.getTruePositives() == null) {
+      if (this.getTruePositives() == null) {
 
-      truePositives = tf.withName(truePositivesName).withInitScope().variable(zero);
-      truePositivesInitializer = tf.assign(truePositives, zero);
-    }
-    if (this.getFalsePositives() == null) {
+        truePositives = tf.withName(truePositivesName).withInitScope().variable(zero);
+      }
+      if (this.getFalsePositives() == null) {
 
-      falsePositives = tf.withName(falsePositivesName).withInitScope().variable(zero);
-      falsePositivesInitializer = tf.assign(falsePositives, zero);
-    }
-    if (this.getTrueNegatives() == null) {
+        falsePositives = tf.withName(falsePositivesName).withInitScope().variable(zero);
+      }
+      if (this.getTrueNegatives() == null) {
 
-      trueNegatives = tf.withInitScope().withName(trueNegativesName).variable(zero);
-      trueNegativesInitializer = tf.assign(trueNegatives, zero);
-    }
-    if (this.getFalseNegatives() == null) {
+        trueNegatives = tf.withInitScope().withName(trueNegativesName).variable(zero);
+      }
+      if (this.getFalseNegatives() == null) {
 
-      falseNegatives = tf.withInitScope().withName(falseNegativesName).variable(zero);
-      falseNegativesInitializer = tf.assign(falseNegatives, zero);
+        falseNegatives = tf.withInitScope().withName(falseNegativesName).variable(zero);
+      }
+      setInitialized(true);
     }
-  }
-
-  /**
-   * Gets a control dependency Op to initialize all the variables
-   *
-   * @return a control dependency Op to initialize all the variables
-   */
-  public Op initializeVariables() {
-    List<Op> varInitializers = new ArrayList<>();
-
-    if (truePositivesInitializer != null) {
-      varInitializers.add(truePositivesInitializer);
-    }
-    if (falsePositivesInitializer != null) {
-      varInitializers.add(falsePositivesInitializer);
-    }
-    if (trueNegativesInitializer != null) {
-      varInitializers.add(trueNegativesInitializer);
-    }
-    if (falseNegativesInitializer != null) {
-      varInitializers.add(falseNegativesInitializer);
-    }
-
-    return getTF().withControlDependencies(varInitializers).noOp();
   }
 
   /**
@@ -146,15 +116,16 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
    * @return a List of Operations to update the metric state.
    */
   @Override
-  @SuppressWarnings("unchecked")
   public List<Op> updateStateList(
+      Ops tf,
       Operand<? extends TNumber> labels,
       Operand<? extends TNumber> predictions,
       Operand<? extends TNumber> sampleWeights) {
-    Ops tf = getTF();
-    Operand<T> tLabels = cast(tf, labels, type);
-    Operand<T> tPredictions = cast(tf, predictions, type);
-    Operand<T> tSampleWeights = sampleWeights != null ? cast(tf, sampleWeights, type) : null;
+    init(tf);
+    Operand<T> tLabels = cast(tf, labels, internalType);
+    Operand<T> tPredictions = cast(tf, predictions, internalType);
+    Operand<T> tSampleWeights =
+        sampleWeights != null ? cast(tf, sampleWeights, internalType) : null;
 
     Map<ConfusionMatrixEnum, Variable<T>> confusionMatrix = new HashMap<>();
     confusionMatrix.put(ConfusionMatrixEnum.TRUE_POSITIVES, getTruePositives());
@@ -165,7 +136,6 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
     return MetricsHelper.updateConfusionMatrixVariables(
         tf,
         confusionMatrix,
-        Collections.EMPTY_MAP,
         tLabels,
         tPredictions,
         tf.constant(thresholds),
@@ -178,8 +148,29 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
 
   /** {@inheritDoc} */
   @Override
-  public Op resetStates() {
-    return initializeVariables();
+  public Op resetStates(Ops tf) {
+
+    Shape varShape = Shape.of(numThresholds);
+    Operand<T> zero = zeros.call(tf, tf.constant(varShape), internalType);
+
+    List<Op> controlList = new ArrayList<>();
+    if (this.getTruePositives() != null) {
+      controlList.add(tf.withName(truePositivesName).assign(this.getTruePositives(), zero));
+    }
+    if (this.getFalsePositives() != null) {
+      controlList.add(tf.withName(falsePositivesName).assign(this.getFalsePositives(), zero));
+    }
+    if (this.getTrueNegatives() != null) {
+      controlList.add(tf.withName(trueNegativesName).assign(this.getTrueNegatives(), zero));
+    }
+    if (this.getFalseNegatives() != null) {
+      controlList.add(tf.withName(falseNegativesName).assign(this.getFalseNegatives(), zero));
+    }
+    if (controlList.size() == 1) {
+      return controlList.get(0);
+    } else {
+      return tf.withControlDependencies(controlList).noOp();
+    }
   }
 
   /**
@@ -273,11 +264,15 @@ public abstract class SensitivitySpecificityBase<T extends TNumber> extends Metr
   }
 
   /**
-   * Gets the type
+   * Gets the internalType
    *
-   * @return the type
+   * @return the internalType
    */
   public Class<T> getType() {
-    return type;
+    return internalType;
+  }
+
+  public Class<T> getInternalType() {
+    return internalType;
   }
 }

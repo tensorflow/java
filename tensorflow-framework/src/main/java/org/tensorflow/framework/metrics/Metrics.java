@@ -14,14 +14,15 @@ limitations under the License.
 =======================================================================*/
 package org.tensorflow.framework.metrics;
 
+import static org.tensorflow.framework.utils.CastHelper.cast;
+
+import org.tensorflow.Graph;
 import org.tensorflow.Operand;
 import org.tensorflow.ndarray.Shape;
 import org.tensorflow.op.Ops;
 import org.tensorflow.types.TFloat32;
 import org.tensorflow.types.TInt32;
 import org.tensorflow.types.family.TNumber;
-
-import static org.tensorflow.framework.utils.CastHelper.cast;
 
 /** Static methods for computing metrics. */
 public class Metrics {
@@ -41,10 +42,12 @@ public class Metrics {
    *     //m.shape().toString == "[2]"
    * </pre>
    *
-   * @param tf the TensorFlow Ops.
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment..
    * @param labels the ground truth values.
    * @param predictions The prediction values.
    * @param k Number of top elements to look at for computing accuracy.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @param <T> the data type for the predictions and results
    * @return the Operand for the Top K categorical accuracy value.
    */
@@ -71,15 +74,16 @@ public class Metrics {
    *     //m.shape().toString == "[2]"
    * </pre>
    *
-   * @param tf the TensorFlow Ops.
+   * @param tf the TensorFlow Ops encapsulating a {@link Graph} environment..
    * @param labels the ground truth values.
    * @param predictions The prediction values.
    * @param k Number of top elements to look at for computing accuracy.
+   * @throws IllegalArgumentException if the TensorFlow Ops scope does not encapsulate a Graph
+   *     environment.
    * @param <T> the data type for the predictions and results
    * @param <U> the data type ofr the labels.
    * @return the Operand for the Sparse top K categorical accuracy value.
    */
-  @SuppressWarnings("unchecked")
   public static <T extends TNumber, U extends TNumber> Operand<T> sparseTopKCategoricalAccuracy(
       Ops tf, Operand<U> labels, Operand<T> predictions, int k) {
     Operand<T> tLabels = cast(tf, labels, predictions.type());
