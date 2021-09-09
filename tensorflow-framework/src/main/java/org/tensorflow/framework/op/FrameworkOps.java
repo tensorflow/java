@@ -164,8 +164,6 @@ public class FrameworkOps {
    *
    * <p>If an input can not be made an init op (i.e. a Placeholder), will throw an {@link
    * IllegalStateException} on op creation.
-   *
-   * @return a FrameworkOps with a scope that builds init operations
    */
   public FrameworkOps withInitScope() {
     return new FrameworkOps(scope.withInitScope());
