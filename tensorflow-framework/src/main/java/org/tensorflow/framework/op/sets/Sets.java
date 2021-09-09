@@ -31,6 +31,7 @@ public class Sets {
    *
    * <p>All but the last dimension of <code>a</code> and <code>b</code> must match
    *
+   * @param scope current scope
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -47,6 +48,7 @@ public class Sets {
    *
    * <p>All but the last dimension of <code>a</code> and <code>b</code> must match
    *
+   * @param scope current scope
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param aMinusB whether to subtract b from a, vs vice versa.
@@ -63,6 +65,7 @@ public class Sets {
   /**
    * Computes set union of elements in last dimension of <code>a</code> and <code>b</code>.
    *
+   * @param scope current scope
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -77,6 +80,7 @@ public class Sets {
   /**
    * Computes set intersection of elements in last dimension of <code>a</code> and <code>b</code>.
    *
+   * @param scope current scope
    * @param a The first operand representing set <code>a</code>
    * @param b The other operand representing set <code>b</code>
    * @param <T>the data type for the sets
@@ -92,6 +96,7 @@ public class Sets {
   /**
    * Compute set operation of elements in last dimension of <code>a</code> and <code>b</code>.
    *
+   * @param scope current scope
    * @param a The first set operation operand
    * @param b The other et operation operand
    * @param setOperation The set operation to perform, {@link Operation}.
