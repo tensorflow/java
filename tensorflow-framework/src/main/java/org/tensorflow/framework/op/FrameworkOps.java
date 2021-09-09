@@ -109,6 +109,10 @@ public class FrameworkOps {
    * Returns an API that builds operations with the provided name prefix.
    *
    * <p>@link Scope#withSubScope(String)}
+   *
+   * @param childScopeName name for the new child scope
+   * @return a new FrameworkOps that uses the child sub scope
+   * @throws IllegalArgumentException if the name is invalid
    */
   public FrameworkOps withSubScope(String childScopeName) {
     return new FrameworkOps(scope.withSubScope(childScopeName));
@@ -118,6 +122,10 @@ public class FrameworkOps {
    * Returns an API that uses the provided name for an op.
    *
    * <p>{@link Scope#withName(String)}
+   *
+   * @param opName name for an operator in the returned scope
+   * @return a new FrameworkOps that uses opName for operations.
+   * @throws IllegalArgumentException if the name is invalid
    */
   public FrameworkOps withName(String opName) {
     return new FrameworkOps(scope.withName(opName));
@@ -145,5 +153,19 @@ public class FrameworkOps {
    */
   public FrameworkOps withControlDependencies(Iterable<Op> controls) {
     return new FrameworkOps(scope.withControlDependencies(controls));
+  }
+
+  /**
+   * Returns an FrameworkOps that builds init operations.
+   *
+   * <p>Init operations will be initialized at session creation, will have their inputs (and control
+   * inputs) made init ops as well, and are ignored when used as control dependencies. Additionally,
+   * this scope ignores any control dependencies.
+   *
+   * <p>If an input can not be made an init op (i.e. a Placeholder), will throw an {@link
+   * IllegalStateException} on op creation.
+   */
+  public FrameworkOps withInitScope() {
+    return new FrameworkOps(scope.withInitScope());
   }
 }

@@ -396,6 +396,7 @@ public class TensorDot {
    *
    * <p>In general, {@code order(c) = order(a) + order(b) - 2*len(axes[0])}.
    *
+   * @param scope current scope
    * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
    * @param b {@code Operand} with the same type as {@code a}.
    * @param axis sum over the last N axes of a and the first N axes of b in order. If {@code
@@ -447,6 +448,7 @@ public class TensorDot {
    *
    * <p>
    *
+   * @param scope current scope
    * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
    * @param b {@code Operand} with the same type as {@code a}.
    * @param axes If axes is a scalar, sum over the last N axes of a and the first N axes of b in
@@ -502,6 +504,7 @@ public class TensorDot {
    *
    * <p>
    *
+   * @param scope current scope
    * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
    * @param b {@code Operand} with the same type as {@code a}.
    * @param axes the first and second row contain the set of unique integers specifying axes along
@@ -555,6 +558,7 @@ public class TensorDot {
    *
    * <p>
    *
+   * @param scope current scope
    * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
    * @param b {@code Operand} with the same type as {@code a}.
    * @param axes the first and second row contain the set of unique integers specifying axes along
@@ -608,6 +612,7 @@ public class TensorDot {
    *
    * <p>
    *
+   * @param scope current scope
    * @param a {@code Operand} of type {@code TFloat32} or {@code TFloat64}.
    * @param b {@code Operand} with the same type as {@code a}.
    * @param aAxis axes for the a Operand
