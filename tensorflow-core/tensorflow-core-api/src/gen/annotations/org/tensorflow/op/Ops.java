@@ -59,7 +59,6 @@ import org.tensorflow.op.core.BarrierReadySize;
 import org.tensorflow.op.core.BarrierTakeMany;
 import org.tensorflow.op.core.Batch;
 import org.tensorflow.op.core.BatchFunction;
-import org.tensorflow.op.core.BatchMatMulV3;
 import org.tensorflow.op.core.BatchToSpace;
 import org.tensorflow.op.core.BatchToSpaceNd;
 import org.tensorflow.op.core.Bitcast;
@@ -213,7 +212,6 @@ import org.tensorflow.op.core.Skipgram;
 import org.tensorflow.op.core.Slice;
 import org.tensorflow.op.core.Snapshot;
 import org.tensorflow.op.core.SpaceToBatchNd;
-import org.tensorflow.op.core.SparseSegmentSumGrad;
 import org.tensorflow.op.core.Split;
 import org.tensorflow.op.core.SplitV;
 import org.tensorflow.op.core.Squeeze;
@@ -296,7 +294,6 @@ import org.tensorflow.op.core.Variable;
 import org.tensorflow.op.core.VariableShape;
 import org.tensorflow.op.core.Where;
 import org.tensorflow.op.core.While;
-import org.tensorflow.op.core.XlaRemoveDynamicDimensionSize;
 import org.tensorflow.op.core.Zeros;
 import org.tensorflow.op.core.ZerosLike;
 import org.tensorflow.types.TBool;
@@ -840,42 +837,6 @@ public final class Ops {
       Long maxBatchSize, Long batchTimeoutMicros, List<Class<? extends TType>> Tout,
       BatchFunction.Options... options) {
     return BatchFunction.create(scope, inTensors, capturedTensors, f, numBatchThreads, maxBatchSize, batchTimeoutMicros, Tout, options);
-  }
-
-  /**
-   * Multiplies slices of two tensors in batches.
-   *  Multiplies all slices of {@code Tensor} {@code x} and {@code y} (each slice can be
-   *  viewed as an element of a batch), and arranges the individual results
-   *  in a single output tensor of the same batch size. Each of the
-   *  individual slices can optionally be adjointed (to adjoint a matrix
-   *  means to transpose and conjugate it) before multiplication by setting
-   *  the {@code adj_x} or {@code adj_y} flag to {@code True}, which are by default {@code False}.
-   *  <p>The input tensors {@code x} and {@code y} are 2-D or higher with shape {@code [..., r_x, c_x]}
-   *  and {@code [..., r_y, c_y]}.
-   *  <p>The output tensor is 2-D or higher with shape {@code [..., r_o, c_o]}, where:
-   *  <pre>
-   *  r_o = c_x if adj_x else r_x
-   *  c_o = r_y if adj_y else c_y
-   *  </pre>
-   *  <p>It is computed as:
-   *  <pre>
-   *  output[..., :, :] = matrix(x[..., :, :]) * matrix(y[..., :, :])
-   *  </pre>
-   *  <p><em>NOTE</em>: {@code BatchMatMulV3} supports broadcasting in the batch dimensions. More
-   *  about broadcasting
-   *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
-   *
-   * @param <V> data type for {@code output} output
-   * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
-   * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
-   * @param Tout If not spcified, Tout is the same type to input type.
-   * @param options carries optional attribute values
-   * @param <V> data type for {@code BatchMatMulV3} output and operands
-   * @return a new instance of BatchMatMulV3
-   */
-  public <V extends TType> BatchMatMulV3<V> batchMatMulV3(Operand<? extends TType> x,
-      Operand<? extends TType> y, Class<V> Tout, BatchMatMulV3.Options... options) {
-    return BatchMatMulV3.create(scope, x, y, Tout, options);
   }
 
   /**
@@ -5857,25 +5818,6 @@ public final class Ops {
   }
 
   /**
-   * Computes gradients for SparseSegmentSum.
-   *  Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
-   *  value is output_dim0.
-   *
-   * @param <T> data type for {@code output} output
-   * @param grad gradient propagated to the SparseSegmentSum op.
-   * @param indices indices passed to the corresponding SparseSegmentSum op.
-   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
-   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
-   * @param <T> data type for {@code SparseSegmentSumGrad} output and operands
-   * @return a new instance of SparseSegmentSumGrad
-   */
-  public <T extends TNumber> SparseSegmentSumGrad<T> sparseSegmentSumGrad(Operand<T> grad,
-      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
-      Operand<TInt32> outputDim0) {
-    return SparseSegmentSumGrad.create(scope, grad, indices, segmentIds, outputDim0);
-  }
-
-  /**
    * Splits a tensor into {@code num_split} tensors along one dimension.
    *
    * @param <T> data type for {@code output} output
@@ -8097,24 +8039,6 @@ public final class Ops {
   public While whileOp(Iterable<Operand<?>> input, ConcreteFunction cond, ConcreteFunction body,
       While.Options... options) {
     return While.create(scope, input, cond, body, options);
-  }
-
-  /**
-   * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
-   *  <pre>
-   *      dynamic dimension into a static dimension. The bound of the size of
-   *      dimension `dim_index` becomes the static dimension size.
-   *  </pre>
-   *
-   * @param <T> data type for {@code output} output
-   * @param input the input value
-   * @param dimIndex the dimIndex value
-   * @param <T> data type for {@code XlaRemoveDynamicDimensionSize} output and operands
-   * @return a new instance of XlaRemoveDynamicDimensionSize
-   */
-  public <T extends TType> XlaRemoveDynamicDimensionSize<T> xlaRemoveDynamicDimensionSize(
-      Operand<T> input, Operand<TInt32> dimIndex) {
-    return XlaRemoveDynamicDimensionSize.create(scope, input, dimIndex);
   }
 
   /**

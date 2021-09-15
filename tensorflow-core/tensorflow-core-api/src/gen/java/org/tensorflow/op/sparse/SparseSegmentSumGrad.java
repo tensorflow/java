@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.sparse;
 
 import org.tensorflow.Operand;
 import org.tensorflow.Operation;
@@ -26,50 +26,55 @@ import org.tensorflow.op.Scope;
 import org.tensorflow.op.annotation.Endpoint;
 import org.tensorflow.op.annotation.Operator;
 import org.tensorflow.types.TInt32;
-import org.tensorflow.types.family.TType;
+import org.tensorflow.types.family.TNumber;
 
 /**
- * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
- * <pre>
- *     dynamic dimension into a static dimension. The bound of the size of
- *     dimension `dim_index` becomes the static dimension size.
- * </pre>
+ * Computes gradients for SparseSegmentSum.
+ * Returns tensor &quot;output&quot; with same shape as grad, except for dimension 0 whose
+ * value is output_dim0.
  *
  * @param <T> data type for {@code output} output
  */
-@Operator
-public final class XlaRemoveDynamicDimensionSize<T extends TType> extends RawOp implements Operand<T> {
+@Operator(
+    group = "sparse"
+)
+public final class SparseSegmentSumGrad<T extends TNumber> extends RawOp implements Operand<T> {
   /**
    * The name of this op, as known by TensorFlow core engine
    */
-  public static final String OP_NAME = "XlaRemoveDynamicDimensionSize";
+  public static final String OP_NAME = "SparseSegmentSumGrad";
 
   private Output<T> output;
 
-  private XlaRemoveDynamicDimensionSize(Operation operation) {
+  private SparseSegmentSumGrad(Operation operation) {
     super(operation);
     int outputIdx = 0;
     output = operation.output(outputIdx++);
   }
 
   /**
-   * Factory method to create a class wrapping a new XlaRemoveDynamicDimensionSize operation.
+   * Factory method to create a class wrapping a new SparseSegmentSumGrad operation.
    *
    * @param scope current scope
-   * @param input the input value
-   * @param dimIndex the dimIndex value
-   * @param <T> data type for {@code XlaRemoveDynamicDimensionSize} output and operands
-   * @return a new instance of XlaRemoveDynamicDimensionSize
+   * @param grad gradient propagated to the SparseSegmentSum op.
+   * @param indices indices passed to the corresponding SparseSegmentSum op.
+   * @param segmentIds segment_ids passed to the corresponding SparseSegmentSum op.
+   * @param outputDim0 dimension 0 of &quot;data&quot; passed to SparseSegmentSum op.
+   * @param <T> data type for {@code SparseSegmentSumGrad} output and operands
+   * @return a new instance of SparseSegmentSumGrad
    */
   @Endpoint(
       describeByClass = true
   )
-  public static <T extends TType> XlaRemoveDynamicDimensionSize<T> create(Scope scope,
-      Operand<T> input, Operand<TInt32> dimIndex) {
-    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "XlaRemoveDynamicDimensionSize");
-    opBuilder.addInput(input.asOutput());
-    opBuilder.addInput(dimIndex.asOutput());
-    return new XlaRemoveDynamicDimensionSize<>(opBuilder.build());
+  public static <T extends TNumber> SparseSegmentSumGrad<T> create(Scope scope, Operand<T> grad,
+      Operand<? extends TNumber> indices, Operand<? extends TNumber> segmentIds,
+      Operand<TInt32> outputDim0) {
+    OperationBuilder opBuilder = scope.opBuilder(OP_NAME, "SparseSegmentSumGrad");
+    opBuilder.addInput(grad.asOutput());
+    opBuilder.addInput(indices.asOutput());
+    opBuilder.addInput(segmentIds.asOutput());
+    opBuilder.addInput(outputDim0.asOutput());
+    return new SparseSegmentSumGrad<>(opBuilder.build());
   }
 
   /**

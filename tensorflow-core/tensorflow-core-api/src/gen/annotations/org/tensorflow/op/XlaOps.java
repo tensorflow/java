@@ -36,6 +36,7 @@ import org.tensorflow.op.xla.Pad;
 import org.tensorflow.op.xla.Recv;
 import org.tensorflow.op.xla.Reduce;
 import org.tensorflow.op.xla.ReduceWindow;
+import org.tensorflow.op.xla.RemoveDynamicDimensionSize;
 import org.tensorflow.op.xla.ReplicaId;
 import org.tensorflow.op.xla.Scatter;
 import org.tensorflow.op.xla.SelectAndScatter;
@@ -367,6 +368,24 @@ public final class XlaOps {
       Operand<U> baseDilations, Operand<U> windowDilations, Operand<U> padding,
       ConcreteFunction computation) {
     return ReduceWindow.create(scope, input, initValue, windowDimensions, windowStrides, baseDilations, windowDilations, padding, computation);
+  }
+
+  /**
+   * Inverse of XlaSetDynamicDimensionSize. Make an xla bounded
+   *  <pre>
+   *      dynamic dimension into a static dimension. The bound of the size of
+   *      dimension `dim_index` becomes the static dimension size.
+   *  </pre>
+   *
+   * @param <T> data type for {@code output} output
+   * @param input the input value
+   * @param dimIndex the dimIndex value
+   * @param <T> data type for {@code XlaRemoveDynamicDimensionSize} output and operands
+   * @return a new instance of RemoveDynamicDimensionSize
+   */
+  public <T extends TType> RemoveDynamicDimensionSize<T> removeDynamicDimensionSize(
+      Operand<T> input, Operand<TInt32> dimIndex) {
+    return RemoveDynamicDimensionSize.create(scope, input, dimIndex);
   }
 
   /**

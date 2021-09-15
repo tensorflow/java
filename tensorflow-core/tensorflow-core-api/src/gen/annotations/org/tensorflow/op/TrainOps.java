@@ -510,16 +510,17 @@ public final class TrainOps {
    *  about broadcasting
    *   <a href="http://docs.scipy.org/doc/numpy/user/basics.broadcasting.html">here</a> .
    *
-   * @param <T> data type for {@code output} output
+   * @param <V> data type for {@code output} output
    * @param x 2-D or higher with shape {@code [..., r_x, c_x]}.
    * @param y 2-D or higher with shape {@code [..., r_y, c_y]}.
+   * @param Tout If not spcified, Tout is the same type to input type.
    * @param options carries optional attribute values
-   * @param <T> data type for {@code BatchMatMulV2} output and operands
+   * @param <V> data type for {@code BatchMatMulV3} output and operands
    * @return a new instance of BatchMatMul
    */
-  public <T extends TType> BatchMatMul<T> batchMatMul(Operand<T> x, Operand<T> y,
-      BatchMatMul.Options... options) {
-    return BatchMatMul.create(scope, x, y, options);
+  public <V extends TType> BatchMatMul<V> batchMatMul(Operand<? extends TType> x,
+      Operand<? extends TType> y, Class<V> Tout, BatchMatMul.Options... options) {
+    return BatchMatMul.create(scope, x, y, Tout, options);
   }
 
   /**

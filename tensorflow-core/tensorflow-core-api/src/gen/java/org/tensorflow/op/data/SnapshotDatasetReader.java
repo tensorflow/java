@@ -15,7 +15,7 @@ limitations under the License.
 
 // This class has been generated, DO NOT EDIT!
 
-package org.tensorflow.op.core;
+package org.tensorflow.op.data;
 
 import java.util.List;
 import org.tensorflow.Operand;
@@ -113,7 +113,7 @@ public final class SnapshotDatasetReader extends RawOp implements Operand<TType>
   }
 
   /**
-   * Optional attributes for {@link org.tensorflow.op.core.SnapshotDatasetReader}
+   * Optional attributes for {@link org.tensorflow.op.data.SnapshotDatasetReader}
    */
   public static class Options {
     private String compression;
